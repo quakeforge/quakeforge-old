@@ -1730,20 +1730,29 @@ void CL_InitCvars()
 	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");
 	cl_name = Cvar_Get ("_cl_name","player",CVAR_ARCHIVE,"None");
 	cl_color = Cvar_Get ("_cl_color","0",CVAR_ARCHIVE,"None");
-	cl_upspeed = Cvar_Get ("cl_upspeed","200",0,"None");
+	cl_upspeed = Cvar_Get ("cl_upspeed","200",0,
+			"Sets your vertical speed when in liquids");
 	cl_forwardspeed = Cvar_Get ("cl_forwardspeed","200",CVAR_ARCHIVE,
-				    "None");
-	cl_backspeed = Cvar_Get ("cl_backspeed","200",CVAR_ARCHIVE,"None");
-	cl_sidespeed = Cvar_Get ("cl_sidespeed","350",0,"None");
-	cl_movespeedkey = Cvar_Get ("cl_movespeedkey","2.0",0,"None");
-	cl_yawspeed = Cvar_Get ("cl_yawspeed","140",0,"None");
-	cl_pitchspeed = Cvar_Get ("cl_pitchspeed","150",0,"None");
-	cl_anglespeedkey = Cvar_Get ("cl_anglespeedkey","1.5",0,"None");
-	cl_shownet = Cvar_Get ("cl_shownet","0",0,"None");
+			    "Sets forward movement rate");
+	cl_backspeed = Cvar_Get ("cl_backspeed","200",CVAR_ARCHIVE,
+				"Sets backward movement rate");
+	cl_sidespeed = Cvar_Get ("cl_sidespeed","350",0,
+			"Sets how quickly you strafe");
+	cl_movespeedkey = Cvar_Get ("cl_movespeedkey","2.0",0,
+			"Set multiplier for how fast you move when running");
+	cl_yawspeed = Cvar_Get ("cl_yawspeed","140",0,
+			"Sets how quickly you turn left or right");
+	cl_pitchspeed = Cvar_Get ("cl_pitchspeed","150",0,
+				"Sets how fast you lookup and lookdown");
+	cl_anglespeedkey = Cvar_Get ("cl_anglespeedkey","1.5",0,
+			"Sets multiplier for how fast you turn when running");
+	cl_shownet = Cvar_Get ("cl_shownet","0",0,
+				"Toggle the display of current net status");
 	cl_nolerp = Cvar_Get ("cl_nolerp","0",0,"None");
 	cl_sbar = Cvar_Get ("cl_sbar","1",CVAR_ARCHIVE,"None");
 	cl_hudswap = Cvar_Get ("cl_hudswap","1",CVAR_ARCHIVE,"None");
-	cl_maxfps = Cvar_Get ("cl_maxfps","0",CVAR_ARCHIVE,"None");
+	cl_maxfps = Cvar_Get ("cl_maxfps","0",CVAR_ARCHIVE,
+				"Sets the maximum frames per second");
 	cl_timeout = Cvar_Get ("cl_timeout","60",0,"None");
 	cl_verstring = Cvar_Get ("cl_verstring",
 #ifdef QUAKEWORLD
