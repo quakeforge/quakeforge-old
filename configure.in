@@ -661,11 +661,6 @@ dnl Check for system services
 AC_EXEEXT
 AC_OBJEXT
 
-dnl if the user doesn't say otherwise, games belong in $prefix/games
-if test "x$bindir" = 'x${exec_prefix}/bin'; then
-   bindir='${exec_prefix}/games'
-fi
-
 
 AC_SUBST(RELEASE)
 AC_SUBST(RELEASE_CFLAGS)
