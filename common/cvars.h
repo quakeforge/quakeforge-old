@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern cvar_t gl_flashblend;
 
-// From r_local.h
+/* From r_local.h */
 extern cvar_t	r_draworder;
 extern cvar_t	r_speeds;
 extern cvar_t	r_timegraph;
@@ -45,4 +45,4 @@ extern cvar_t	r_reportedgeout;
 extern cvar_t	r_maxedges;
 extern cvar_t	r_numedges;
 
-#endif _CVARS_H
+#endif /* _CVARS_H */
