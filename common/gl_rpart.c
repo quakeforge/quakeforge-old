@@ -53,8 +53,6 @@ int			r_numparticles;
 vec3_t			r_pright, r_pup, r_ppn;
 
 
-extern cvar_t		*gl_particles;
-
 fire_t		r_fires[MAX_FIRES];
 
 /*
@@ -879,6 +877,9 @@ R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 	vec3_t		vec;
 	int			key;
 
+	if (!gl_fires->value)
+		return;
+
 	VectorSubtract (end, start, vec);
 	len = VectorNormalize (vec);
 	key = ent-cl_entities+1;
@@ -1008,6 +1009,9 @@ R_UpdateFires (void)
 {
 	int		i;
 	fire_t	*f;
+
+	if (!gl_fires->value)
+		return;
 
 	glDepthMask (0);
 	glDisable (GL_TEXTURE_2D);

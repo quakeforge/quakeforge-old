@@ -124,6 +124,9 @@ cvar_t	*gl_nocolors;
 cvar_t	*gl_keeptjunctions;
 cvar_t	*gl_doubleeyes;
 
+cvar_t	*gl_particles;
+cvar_t	*gl_fires;
+
 extern	cvar_t	*gl_ztrick;
 #ifdef QUAKEWORLD
 extern	cvar_t	*scr_fov;

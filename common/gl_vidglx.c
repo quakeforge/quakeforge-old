@@ -96,7 +96,6 @@ cvar_t	*vid_mode;
 cvar_t	*vid_glx_fullscreen;
 extern cvar_t	*gl_triplebuffer;
 extern cvar_t *vid_dga_mouseaccel;
-cvar_t	*gl_particles;
 
 #ifdef HAS_DGA
 static int	nummodes;
@@ -572,8 +571,6 @@ void VID_Init(unsigned char *palette)
 void VID_InitCvars()
 {
 	gl_triplebuffer = Cvar_Get("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
-	gl_particles = Cvar_Get("gl_particles","1",0,
-				"Sets the size of particles");
 }
 
 void

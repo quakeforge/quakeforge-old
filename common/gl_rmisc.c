@@ -231,6 +231,11 @@ void R_Init (void)
 	gl_nocolors = Cvar_Get ("gl_nocolors","0",0,"None");
 	gl_finish = Cvar_Get ("gl_finish","0",0,"None");
 
+	gl_particles = Cvar_Get ("gl_particles", "1", CVAR_NONE,
+			"Sets the size of particles, default 1");
+	gl_fires = Cvar_Get ("gl_fires", "1", CVAR_NONE,
+			"lavaball and rocket fireballs, set to 0 to disable");
+
 #ifdef QUAKEWORLD
 	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions","1",0,"None");
 #else
