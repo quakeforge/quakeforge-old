@@ -3,13 +3,14 @@
 # Quake general stuff
 #
 
+top_builddir	= ..
 PROJECT_DIR	:= @top_srcdir@
 BIN_PREFIX	:= common
 SRC_DIR		:= @srcdir@
 MODULE		:= common
 OBJ_PATTERN	= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
 
-include $(PROJECT_DIR)/Rules.mk
+include $(top_builddir)/Rules.mk
 
 SOUND_LIB	:= sound_lib.a
 

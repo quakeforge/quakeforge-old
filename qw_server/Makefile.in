@@ -3,13 +3,14 @@
 # Quake general stuff
 #
 
+top_builddir	= ..
 PROJECT_DIR	:= @top_srcdir@
 BIN_PREFIX	:= qw-server
 SRC_DIR		:= @srcdir@
 MODULE		:= qw_server
 OBJ_PATTERN	= $(BUILD_DIR)/%.@OBJEXT@
 
-include $(PROJECT_DIR)/Rules.mk
+include $(top_builddir)/Rules.mk
 
 ########################################################################
 #
