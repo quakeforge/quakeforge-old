@@ -667,7 +667,7 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 	
 	Con_Printf ("Added packfile %s (%.0f files)\n", packfile, numpackfiles);
 
-	COM_pak3_close(pak);
+	COM_pakzip_close(pak);
 	return pack_old;
 }
 #endif 
