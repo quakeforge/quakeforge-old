@@ -21,7 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define	QUAKE_GAME			// as opposed to utilities
 
-#include <config/config.h>
+#include <config.h>                     // generated from config.h.in
 
 #include <math.h>
 #include <string.h>
