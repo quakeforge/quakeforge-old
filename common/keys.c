@@ -333,6 +333,7 @@ void Key_Console (int key)
 
 			if (history_line == edit_line) {
 				key_lines[edit_line][0] = ']';
+				key_lines[edit_line][1] = 0;
 				key_linepos = 1;
 			} else {
 				Q_strcpy(key_lines[edit_line], key_lines[history_line]);
@@ -381,12 +382,13 @@ void Key_Console (int key)
 					strcpy(textCopied, clipText);
 	/* Substitutes a NULL for every token */strtok(textCopied, "\n\r\b");
 					i = strlen(textCopied);
-					if (i+key_linepos>=MAXCMDLINE)
-						i=MAXCMDLINE-key_linepos;
+					if (i + strlen(key_lines[edit_line]) >= MAXCMDLINE)
+						i = MAXCMDLINE - strlen(key_lines[edit_line]);
 					if (i>0) {
 						textCopied[i]=0;
+						// FIXME: actually INSERT the string, not append!
 						strcat(key_lines[edit_line], textCopied);
-						key_linepos+=i;;
+						key_linepos = strlen(key_lines[edit_line]);;
 					}
 					free(textCopied);
 				}
