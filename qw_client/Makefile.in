@@ -22,7 +22,7 @@ TARGET_DIR	:= $(PROJECT_ODIR)/targets
 BUILD_DIR	:= $(TARGET_DIR)/qw_client
 OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{client,common_lib}/%.o)
 
-LDFLAGS = @LDFLAGS@ @NET_LIBS@ -lm
+LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
@@ -56,11 +56,6 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
 #
 
 COMMON_LIB=common_lib.a
-
-SOUND_STYLE      = @SOUND_STYLE@
-ifeq ($(SOUND_STYLE),ALSA)
-LIBS += -lasound
-endif
 
 ifeq ($(HAS_SVGA),yes)
 SVGAQUAKE = $(BIN_PREFIX)-svga
@@ -427,7 +422,7 @@ ifneq ($(TDFXQUAKE),)
 
 ALL_TDFX_SRC  = $(GL_REND_SRC) \
 		gl_vidlinux_3dfx.c in_svgalib.c
-ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/client/%,$(addsuffix .@OBJEXT@,\
+ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/client/gl/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 

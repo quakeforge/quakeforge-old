@@ -19,7 +19,7 @@ mandir		= @mandir@
 
 BUILD_DIR	= $(PROJECT_ODIR)/targets/uquake
 
-LDFLAGS = @LDFLAGS@ @SND_LIBS@ @NET_LIBS@ -lm
+LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
