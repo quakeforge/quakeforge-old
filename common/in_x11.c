@@ -367,7 +367,9 @@ int IN_Init ()
 
 	Cvar_RegisterVariable(&_windowed_mouse);
 	Cvar_RegisterVariable(&m_filter);
+#ifdef HAS_DGA
 	Cvar_RegisterVariable(&vid_dga_mouseaccel);
+#endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;
 	mouse_avail = 1;
