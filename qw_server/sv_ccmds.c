@@ -127,6 +127,8 @@ void SV_Logfile_f (void)
 }
 
 
+extern cvar_t *sv_fraglogdir;
+
 /*
 ============
 SV_Fraglogfile_f
@@ -135,7 +137,8 @@ SV_Fraglogfile_f
 void SV_Fraglogfile_f (void)
 {
 	char	name[MAX_OSPATH];
-	int		i;
+	char	dir[MAX_OSPATH];
+	int		i, len;
 
 	if (sv_fraglogfile)
 	{
@@ -145,10 +148,42 @@ void SV_Fraglogfile_f (void)
 		return;
 	}
 
+	strncpy(dir, sv_fraglogdir->string, sizeof(dir));
+	if (dir[sizeof(dir)-1] || strstr(dir, ".."))
+		dir[0] = 0;
+
+	if (dir[0] == 0) // empty or invalid fraglogdir - use com_gamedir
+	{
+		i = MAX_OSPATH;
+		strcpy(dir, com_gamedir);
+	}
+	else if (dir[0] == '/' || dir[1] == ':') // e.g. A: (DOS or Win32)
+	{
+		i = 0;
+	}
+	else
+	{
+		i = strlen(com_gamedir);
+		strncpy(dir, va("%s/%s", com_gamedir, dir), sizeof(dir));
+	}
+
+// Make sure fraglogdir exists
+// FIXME: use Sys_CreatePath or something?
+	for (len = strlen(dir); i < len; i++)
+	{
+		if (dir[i] == '/')
+		{
+			dir[i] = 0;
+			Sys_mkdir(dir);
+			dir[i] = '/';
+		}
+	}
+	Sys_mkdir(va("%s", dir));
+
 	// find an unused name
 	for (i=0 ; i<1000 ; i++)
 	{
-		snprintf(name, sizeof(name), "%s/frag_%i.log", com_gamedir, i);
+		snprintf(name, sizeof(name), "%s/frag_%i.log", dir, i);
 		sv_fraglogfile = Qopen (name, "r");
 		if (!sv_fraglogfile)
 		{	// can't read it, so create this one

@@ -73,26 +73,19 @@ cvar_t	*password;
 //cvar_t	spectator_password = {"spectator_password", ""};	// password for entering as a sepctator
 cvar_t	*spectator_password;
 
-//cvar_t	allow_download = {"allow_download", "1"};
 cvar_t	*allow_download;
-//cvar_t	allow_download_skins = {"allow_download_skins", "1"};
 cvar_t	*allow_download_skins;
-//cvar_t	allow_download_models = {"allow_download_models", "1"};
 cvar_t	*allow_download_models;
-//cvar_t	allow_download_sounds = {"allow_download_sounds", "1"};
 cvar_t	*allow_download_sounds;
-//cvar_t	allow_download_maps = {"allow_download_maps", "1"};
 cvar_t	*allow_download_maps;
 
-//cvar_t sv_highchars = {"sv_highchars", "1"};
 cvar_t	*sv_highchars;
 
-//cvar_t sv_phs = {"sv_phs", "1"};
 cvar_t	*sv_phs;
 
-//cvar_t pausable	= {"pausable", "1"};
 cvar_t	*pausable;
 
+cvar_t	*sv_fraglogdir;
 
 //
 // game rules mirrored in svs.info
@@ -1431,6 +1424,8 @@ void SV_InitLocal (void)
 	sv_phs = Cvar_Get ("sv_phs","1",0,"None");
 
 	pausable = Cvar_Get ("pausable","1",0,"None");
+
+	sv_fraglogdir = Cvar_Get ("fraglogdir","",0,"Where to store fraglog files");
 
 	Cmd_AddCommand ("addip", SV_AddIP_f);
 	Cmd_AddCommand ("removeip", SV_RemoveIP_f);
