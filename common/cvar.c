@@ -63,9 +63,6 @@ same cvar display for all cvar commands
 */
 void Cvar_Display (cvar_t *var)
 {
-	char	val[32];
-	int	i;
-
 	Con_Printf ("%c%c%c ",
 			(var->flags & CVAR_ARCHIVE) ? 'A' : ' ',	// archived
 			(var->flags & CVAR_ROM) ? 'R' : ' ',		// read-only
