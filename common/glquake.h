@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _GLQUAKE_H
 #define _GLQUAKE_H
 
+#ifdef HAS_OGL
+
 #if !defined(__GNUC__) && !defined(__unix) && !defined(__unix__)
 #pragma warning(disable : 4244)     // MIPS
 #pragma warning(disable : 4136)     // X86
@@ -162,9 +164,7 @@ extern	qboolean	envmap;
 extern	int	currenttexture;
 extern	int	cnttextures[2];
 extern	int	particletexture;
-#ifdef QUAKEWORLD
 extern	int	netgraphtexture;	// netgraph texture
-#endif
 extern	int	playertextures;
 
 extern	int	skytexturenum;		// index in cl.loadmodel, not gl texture object
@@ -181,9 +181,7 @@ extern	cvar_t	r_shadows;
 extern	cvar_t	r_wateralpha;
 extern	cvar_t	r_dynamic;
 extern	cvar_t	r_novis;
-#ifdef QUAKEWORLD
 extern	cvar_t	r_netgraph;
-#endif
 extern  cvar_t  r_fog;
 extern  cvar_t  r_waterwarp;
 extern  cvar_t  r_volfog;
@@ -199,9 +197,7 @@ extern	cvar_t	gl_polyblend;
 extern	cvar_t	gl_keeptjunctions;
 extern	cvar_t	gl_flashblend;
 extern	cvar_t	gl_nocolors;
-#ifdef QUAKEWORLD
 extern	cvar_t	gl_finish;
-#endif
 extern	cvar_t	gl_doubleeyes;
 
 extern	int		gl_lightmap_format;
@@ -281,11 +277,10 @@ void R_DrawBrushModel (entity_t *e);
 void R_DrawWorld (void);
 void GL_BuildLightmaps (void);
 
-#ifdef QUAKEWORLD
 //
 // gl_ngraph.c
 //
 void R_NetGraph (void);
-#endif
 
+#endif // HAS_OGL
 #endif // _GLQUAKE_H

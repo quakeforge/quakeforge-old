@@ -155,11 +155,9 @@ extern	int		key_repeats[256];
 extern	int		key_count;			// incremented every key event
 extern	int		key_lastpress;
 
-#ifdef QUAKEWORLD
 extern char chat_buffer[];
 extern	int chat_bufferlen;
 extern	qboolean	chat_team;
-#endif // QUAKEWORLD
 
 void Key_Event (int key, qboolean down);
 void Key_Init (void);

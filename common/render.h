@@ -46,7 +46,7 @@ typedef struct efrag_s
 
 typedef struct entity_s
 {
-#ifndef QUAKEWORLD
+//#ifndef QUAKEWORLD
 	qboolean				forcelink;		// model changed
 
 	int						update_type;
@@ -57,7 +57,7 @@ typedef struct entity_s
 	vec3_t					msg_origins[2];	// last two updates (0 is newest)	
 	vec3_t					msg_angles[2];	// last two updates (0 is newest)
 	int						effects;		// light, particals, etc
-#endif
+//#endif
 	vec3_t					origin;
 	vec3_t					angles;	
 	struct model_s			*model;			// NULL = no model
@@ -66,10 +66,10 @@ typedef struct entity_s
 	float					syncbase;		// for client-side animations
 	byte					*colormap;
 	int						skinnum;		// for Alias models
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 	int						keynum;
 	struct player_info_s	*scoreboard;	// identify player
-#endif
+//#endif
 	int						visframe;		// last frame this entity was
 											//  found in an active leaf
 											

@@ -125,13 +125,10 @@ extern	qboolean	pr_trace;
 extern	dfunction_t	*pr_xfunction;
 extern	int			pr_xstatement;
 
-#ifdef QUAKEWORLD
 extern func_t SpectatorConnect;
 extern func_t SpectatorThink;
 extern func_t SpectatorDisconnect;
-#else
 extern unsigned short		pr_crc;
-#endif
 
 void PR_RunError (char *error, ...);
 

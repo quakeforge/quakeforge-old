@@ -123,10 +123,10 @@ void	VID_SetPalette (unsigned char *palette)
 	int		k;
 	unsigned short i;
 	unsigned	*table;
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 	FILE *f;
 	char s[255];
-#endif
+//#endif
 	float dist, bestdist;
 //
 // 8 8 8 encoding
@@ -150,7 +150,7 @@ void	VID_SetPalette (unsigned char *palette)
 	d_8to24table[255] &= 0xffffff;	// 255 is transparent
 
 	// JACK: 3D distance calcs - k is last closest, l is the distance.
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 	{
 		static qboolean palflag = false;
 
@@ -165,7 +165,7 @@ void	VID_SetPalette (unsigned char *palette)
 		fread(d_15to8table, 1<<15, 1, f);
 		fclose(f);
 	} else
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 	{
 		for (i=0; i < (1<<15); i++) {
 			/* Maps
@@ -190,7 +190,7 @@ void	VID_SetPalette (unsigned char *palette)
 			}
 			d_15to8table[i]=k;
 		}
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 		snprintf(s, sizeof(s), "%s/glquake", com_gamedir);
  		Sys_mkdir (s);
 		snprintf(s, sizeof(s), "%s/glquake/15to8.pal", com_gamedir);
@@ -198,7 +198,7 @@ void	VID_SetPalette (unsigned char *palette)
 			fwrite(d_15to8table, 1<<15, 1, f);
 			fclose(f);
 		}
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 	}
 }
 

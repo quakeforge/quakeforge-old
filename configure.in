@@ -289,6 +289,9 @@ if test "x$HAS_OGL" != xno; then
    fi
    CPPFLAGS="$save_CPPFLAGS"
 fi
+if test "x$HAS_OGL" = xyes; then
+  AC_DEFINE(HAS_OGL)
+fi
 
 dnl Make sure DGA works
 if test "x$HAS_DGA" = xyes; then

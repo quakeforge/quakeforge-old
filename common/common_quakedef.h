@@ -69,11 +69,7 @@ void	VID_UnlockBuffer (void);
 #include "keys.h"
 #include "console.h"
 #include "view.h"
-#ifndef QUAKEWORLD
 #include "menu.h"
-#elif !defined(SERVERONLY)
-#include "menu.h"
-#endif
 #include "crc.h"
 #include "cdaudio.h"
 
