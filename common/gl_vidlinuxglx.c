@@ -840,12 +840,17 @@ void VID_ExtraOptionCmd(int option_cursor)
 #endif
 
 #ifdef USE_DGA                    
-       			 XF86DGADirectVideo(dpy, DefaultScreen(dpy), 1x);
-       			 dgamouse = 1;
- 
-		        XGrabPointer(dpy, CurrentTime);
-			XGrabKeyboard(dpy, CurrentTime);
-			
+       			 XF86DGADirectVideo(dpy, DefaultScreen(dpy), vid_mesa_mode.value);
+       			dgamouse = vid_mesa_mode.value;
+ 			
+			if(vid_mesa_mode.value)
+			{
+		        	XGrabPointer(dpy, CurrentTime);
+				XGrabKeyboard(dpy, CurrentTime);
+			} else {
+				XUngrabPointer(dpy, CurrentTime);
+				XUngrabKeyboard(dpy, CurrentTime);
+
 			break;
 #endif
 
