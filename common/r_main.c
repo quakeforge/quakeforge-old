@@ -57,7 +57,9 @@ byte		*r_stack_start;
 
 qboolean	r_fov_greater_than_90;
 
+#ifdef QUAKEWORLD
 entity_t	r_worldentity;
+#endif
 
 //
 // view origin
@@ -96,8 +98,14 @@ int		r_polycount;
 int		r_drawnpolycount;
 int		r_wholepolycount;
 
-int			*pfrustum_indexes[4];
-int			r_frustum_indexes[4*6];
+#ifndef QUAKEWORLD
+#define VIEWMODNAME_LENGTH      256
+char	viewmodname[VIEWMODNAME_LENGTH+1];
+int 	modcount;
+#endif	// !QUAKEWORLD
+
+int		*pfrustum_indexes[4];
+int		r_frustum_indexes[4*6];
 
 int		reinit_surfcache = 1;	// if 1, surface cache is currently empty and
 								// must be reinitialized for current cache size
@@ -114,13 +122,21 @@ float	dp_time1, dp_time2, db_time1, db_time2, rw_time1, rw_time2;
 float	se_time1, se_time2, de_time1, de_time2, dv_time1, dv_time2;
 
 void R_MarkLeaves (void);
+#ifndef QUAKEWORLD
+void R_InitParticles (void);
+void R_DrawParticles (void);
+#endif	// !QUAKEWORLD
 
 cvar_t	r_draworder = {"r_draworder","0"};
 cvar_t	r_speeds = {"r_speeds","0"};
 cvar_t	r_timegraph = {"r_timegraph","0"};
+#ifdef QUAKEWORLD
 cvar_t	r_netgraph = {"r_netgraph","0"};
 cvar_t	r_zgraph = {"r_zgraph","0"};
 cvar_t	r_graphheight = {"r_graphheight","15"};
+#else 
+cvar_t	r_graphheight = {"r_graphheight","10"};
+#endif	// QUAKEWORLD
 cvar_t	r_clearcolor = {"r_clearcolor","2"};
 cvar_t	r_waterwarp = {"r_waterwarp","1"};
 cvar_t	r_fullbright = {"r_fullbright","0"};
@@ -144,8 +160,10 @@ extern cvar_t	scr_fov;
 void CreatePassages (void);
 void SetVisibilityByPassages (void);
 
+#ifdef QUAKEWORLD
 void R_NetGraph (void);
 void R_ZGraph (void);
+#endif	// QUAKEWORLD
 
 /*
 ==================
@@ -200,8 +218,10 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_draworder);
 	Cvar_RegisterVariable (&r_speeds);
 	Cvar_RegisterVariable (&r_timegraph);
+#ifdef QUAKEWORLD
 	Cvar_RegisterVariable (&r_netgraph);
 	Cvar_RegisterVariable (&r_zgraph);
+#endif	// QUAKEWORLD
 	Cvar_RegisterVariable (&r_graphheight);
 	Cvar_RegisterVariable (&r_drawflat);
 	Cvar_RegisterVariable (&r_ambient);
@@ -252,11 +272,12 @@ R_NewMap
 */
 void R_NewMap (void)
 {
-	int		i;
-	
+	int i;
+
+#ifdef QUAKEWORLD	
 	memset (&r_worldentity, 0, sizeof(r_worldentity));
 	r_worldentity.model = cl.worldmodel;
-
+#endif
 // clear out efrags in case the level hasn't been reloaded
 // FIXME: is this one short?
 	for (i=0 ; i<cl.worldmodel->numleafs ; i++)
@@ -306,7 +327,13 @@ void R_NewMap (void)
 
 	r_dowarpold = false;
 	r_viewchanged = false;
+#ifndef QUAKEWORLD
+#ifdef PASSAGES
+	CreatePassages ();
+#endif
+#endif	// !QUAKEWORLD
 }
+
 
 
 /*
@@ -366,8 +393,11 @@ void R_SetVrect (vrect_t *pvrectin, vrect_t *pvrect, int lineadj)
 		pvrect->y = 0;
 	else
 		pvrect->y = (h - pvrect->height)/2;
+	if ( lcd_x.value ) {
+		pvrect->y >>= 1;
+		pvrect->height >>=1;
+	}
 }
-
 
 /*
 ===============
@@ -561,7 +591,14 @@ void R_DrawEntitiesOnList (void)
 
 	for (i=0 ; i<cl_numvisedicts ; i++)
 	{
+#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
+#else
+		currententity = cl_visedicts[i];
+		
+		if (currententity == &cl_entities[cl.viewentity])
+			continue;	// don't draw the player
+#endif	// QUAKEWORLD
 
 		switch (currententity->model->type)
 		{
@@ -631,11 +668,19 @@ void R_DrawViewModel (void)
 	vec3_t		dist;
 	float		add;
 	dlight_t	*dl;
-	
+
+#ifdef QUAKEWORLD	
 	if (!r_drawviewmodel.value || r_fov_greater_than_90 || !Cam_DrawViewModel())
+#else
+	if (!r_drawviewmodel.value || r_fov_greater_than_90)
+#endif	// QUAKEWORLD
 		return;
 
+#ifdef QUAKEWORLD
 	if (cl.stats[STAT_ITEMS] & IT_INVISIBILITY)
+#else
+	if (cl.items & IT_INVISIBILITY)
+#endif	// QUAKEWORLD	
 		return;
 
 	if (cl.stats[STAT_HEALTH] <= 0)
@@ -682,6 +727,10 @@ void R_DrawViewModel (void)
 		r_viewlighting.shadelight = 192 - r_viewlighting.ambientlight;
 
 	r_viewlighting.plightvec = lightvec;
+	
+#ifdef QUAKE2
+	cl.light_level = r_viewlighting.ambientlight;
+#endif
 
 	R_AliasDrawModel (&r_viewlighting);
 }
@@ -772,7 +821,11 @@ void R_DrawBEntitiesOnList (void)
 
 	for (i=0 ; i<cl_numvisedicts ; i++)
 	{
+#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
+#else
+		currententity = cl_visedicts[i];
+#endif	// QUAKEWORLD
 
 		switch (currententity->model->type)
 		{
@@ -988,7 +1041,11 @@ SetVisibilityByPassages ();
 // done in screen.c
 	Sys_LowFPPrecision ();
 
+#ifdef QUAKEWORLD
 	if (!r_worldentity.model || !cl.worldmodel)
+#else
+	if (!cl_entities[0].model || !cl.worldmodel)
+#endif	// QUAKEWORLD
 		Sys_Error ("R_RenderView: NULL worldmodel");
 		
 	if (!r_dspeeds.value)
@@ -1042,11 +1099,13 @@ SetVisibilityByPassages ();
 	if (r_timegraph.value)
 		R_TimeGraph ();
 
+#ifdef QUAKEWORLD
 	if (r_netgraph.value)
 		R_NetGraph ();
 
 	if (r_zgraph.value)
 		R_ZGraph ();
+#endif	// QUAKEWORLD
 
 	if (r_aliasstats.value)
 		R_PrintAliasStats ();
@@ -1097,7 +1156,7 @@ void R_InitTurb (void)
 {
 	int		i;
 	
-	for (i=0 ; i<SIN_BUFFER_SIZE ; i++)
+	for (i=0 ; i < SIN_BUFFER_SIZE ; i++)
 	{
 		sintable[i] = AMP + sin(i*3.14159*2/CYCLE)*AMP;
 		intsintable[i] = AMP2 + sin(i*3.14159*2/CYCLE)*AMP2;	// AMP2, not 20
