@@ -431,7 +431,7 @@ void VID_Init(unsigned char *palette)
 		vid.conwidth = width;
 
 	vid.conwidth &= 0xfff8; // make it a multiple of eight
-	vid.conwidth = min(vid.conwidth, 320);
+	if(vid.conwidth < 320) vid.conwidth = 320;
 
 	// pick a conheight that matches with correct aspect
 	vid.conheight = vid.conwidth * 3 / 4;
