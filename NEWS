@@ -1,7 +1,12 @@
 NEWS for the QuakeForge project
 -------------------------------
+
+QuakeForge 0.2
+
 26 Jan 2000 - Waterwarp bug fixed
 	The waterwarp bug has been fixed, set r_waterwarp 1 to use it.
+
+QuakeForge 0.1.0
 
 22 Jan 2000 - cl_sbar and cl_hudswap in uquake
 	The cvars cl_sbar and cl_hudswap noe work in uquake just like they

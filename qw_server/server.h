@@ -1,4 +1,5 @@
 /*
+server.h
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,7 +20,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// server.h
 
 #define	QW_SERVER
 
@@ -121,30 +121,29 @@ typedef struct client_s
 {
 	sv_client_state_t	state;
 
-	int				spectator;			// non-interactive
-
-	qboolean		sendinfo;			// at end of frame, send info to all
+	int			spectator;		// non-interactive
+	qboolean		sendinfo;		// at end of frame, send info to all
 										// this prevents malicious multiple broadcasts
 	float			lastnametime;		// time of last name change
-	int				lastnamecount;		// time of last name change
-	unsigned		checksum;			// checksum for calcs
-	qboolean		drop;				// lose this guy next opportunity
-	int				lossage;			// loss percentage
+	int			lastnamecount;		// time of last name change
+	unsigned		checksum;		// checksum for calcs
+	qboolean		drop;			// lose this guy next opportunity
+	int			lossage;		// loss percentage
 
-	int				userid;							// identifying number
-	char			userinfo[MAX_INFO_STRING];		// infostring
+	int			userid;			// identifying number
+	char			userinfo[MAX_INFO_STRING];	// infostring
 
-	usercmd_t		lastcmd;			// for filling in big drops and partial predictions
-	double			localtime;			// of last message
-	int				oldbuttons;
+	usercmd_t		lastcmd;		// for filling in big drops and partial predictions
+	double			localtime;		// of last message
+	int			oldbuttons;
 
-	float			maxspeed;			// localized maxspeed
-	float			entgravity;			// localized ent gravity
+	float			maxspeed;		// localized maxspeed
+	float			entgravity;		// localized ent gravity
 
-	edict_t			*edict;				// EDICT_NUM(clientnum+1)
-	char			name[32];			// for printing to other people
+	edict_t			*edict;			// EDICT_NUM(clientnum+1)
+	char			name[32];		// for printing to other people
 										// extracted from userinfo
-	int				messagelevel;		// for filtering printed messages
+	int			messagelevel;		// for filtering printed messages
 
 	// the datagram is written to after every frame, but only cleared
 	// when it is sent out to the client.  overflow is tolerated.
@@ -152,10 +151,10 @@ typedef struct client_s
 	byte			datagram_buf[MAX_DATAGRAM];
 
 	// back buffers for client reliable data
-	sizebuf_t	backbuf;
+	sizebuf_t		backbuf;
 	int			num_backbuf;
 	int			backbuf_size[MAX_BACK_BUFFERS];
-	byte		backbuf_data[MAX_BACK_BUFFERS][MAX_MSGLEN];
+	byte			backbuf_data[MAX_BACK_BUFFERS][MAX_MSGLEN];
 
 	double			connection_started;	// or time of disconnect for zombies
 	qboolean		send_message;		// set on frames a datagram arived on
@@ -164,18 +163,18 @@ typedef struct client_s
 	float			spawn_parms[NUM_SPAWN_PARMS];
 
 // client known data for deltas	
-	int				old_frags;
+	int			old_frags;
 	
-	int				stats[MAX_CL_STATS];
+	int			stats[MAX_CL_STATS];
 
 
-	client_frame_t	frames[UPDATE_BACKUP];	// updates can be deltad from here
+	client_frame_t		frames[UPDATE_BACKUP];	// updates can be deltad from here
 
-	FILE			*download;			// file being downloaded
-	int				downloadsize;		// total bytes
-	int				downloadcount;		// bytes sent
+	FILE			*download;		// file being downloaded
+	int			downloadsize;		// total bytes
+	int			downloadcount;		// bytes sent
 
-	int				spec_track;			// entnum of player tracking
+	int			spec_track;		// entnum of player tracking
 
 	double			whensaid[10];       // JACK: For floodprots
  	int			whensaidhead;       // Head value for floodprots
@@ -189,11 +188,11 @@ typedef struct client_s
 	qboolean		remote_snap;
  
 //===== NETWORK ============
-	int				chokecount;
-	int				delta_sequence;		// -1 = no compression
-	int				ping;
+	int			chokecount;
+	int			delta_sequence;		// -1 = no compression
+	int			ping;
 	netchan_t		netchan;
-	int				msecs, msec_cheating;
+	int			msecs, msec_cheating;
 	double			last_check;
 } client_t;
 
@@ -262,7 +261,7 @@ typedef struct
 
 // edict->movetype values
 #define	MOVETYPE_NONE			0		// never moves
-#define	MOVETYPE_ANGLENOCLIP	1
+#define	MOVETYPE_ANGLENOCLIP		1
 #define	MOVETYPE_ANGLECLIP		2
 #define	MOVETYPE_WALK			3		// gravity
 #define	MOVETYPE_STEP			4		// gravity, special edge handling
@@ -274,32 +273,32 @@ typedef struct
 #define	MOVETYPE_BOUNCE			10
 
 // edict->solid values
-#define	SOLID_NOT				0		// no interaction with other objects
+#define	SOLID_NOT			0		// no interaction with other objects
 #define	SOLID_TRIGGER			1		// touch on edge, but not blocking
-#define	SOLID_BBOX				2		// touch on edge, block
+#define	SOLID_BBOX			2		// touch on edge, block
 #define	SOLID_SLIDEBOX			3		// touch on edge, but not an onground
-#define	SOLID_BSP				4		// bsp clip, touch on edge, block
+#define	SOLID_BSP			4		// bsp clip, touch on edge, block
 
 // edict->deadflag values
-#define	DEAD_NO					0
-#define	DEAD_DYING				1
-#define	DEAD_DEAD				2
+#define	DEAD_NO				0
+#define	DEAD_DYING			1
+#define	DEAD_DEAD			2
 
-#define	DAMAGE_NO				0
-#define	DAMAGE_YES				1
-#define	DAMAGE_AIM				2
+#define	DAMAGE_NO			0
+#define	DAMAGE_YES			1
+#define	DAMAGE_AIM			2
 
 // edict->flags
-#define	FL_FLY					1
-#define	FL_SWIM					2
-#define	FL_GLIMPSE				4
-#define	FL_CLIENT				8
-#define	FL_INWATER				16
-#define	FL_MONSTER				32
-#define	FL_GODMODE				64
-#define	FL_NOTARGET				128
-#define	FL_ITEM					256
-#define	FL_ONGROUND				512
+#define	FL_FLY				1
+#define	FL_SWIM				2
+#define	FL_GLIMPSE			4
+#define	FL_CLIENT			8
+#define	FL_INWATER			16
+#define	FL_MONSTER			32
+#define	FL_GODMODE			64
+#define	FL_NOTARGET			128
+#define	FL_ITEM				256
+#define	FL_ONGROUND			512
 #define	FL_PARTIALGROUND		1024	// not all corners are valid
 #define	FL_WATERJUMP			2048	// player jumping out of water
 
@@ -311,9 +310,9 @@ typedef struct
 #define	EF_DIMLIGHT 			8
 
 
-#define	SPAWNFLAG_NOT_EASY			256
+#define	SPAWNFLAG_NOT_EASY		256
 #define	SPAWNFLAG_NOT_MEDIUM		512
-#define	SPAWNFLAG_NOT_HARD			1024
+#define	SPAWNFLAG_NOT_HARD		1024
 #define	SPAWNFLAG_NOT_DEATHMATCH	2048
 
 #define	MULTICAST_ALL			0

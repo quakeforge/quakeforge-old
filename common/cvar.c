@@ -1,4 +1,5 @@
 /*
+cvar.c - dynamic variable tracking
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,17 +21,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cvar.c -- dynamic variable tracking
 
 #include <zone.h>
-#include "qtypes.h"
-#include "qstructs.h"
-#include "lib_replace.h"
-#include "console.h"
-#include "cmd.h"
-#include "client.h"
+#include <qtypes.h>
+#include <qstructs.h>
+#include <lib_replace.h>
+#include <console.h>
+#include <cmd.h>
+#include <client.h>
 #ifdef UQUAKE
-#include "server.h"
+#include <server.h>
+#endif
+#if defined(QUAKEWORLD) && defined(SERVERONLY)
+#include <server.h>
 #endif
 #include <string.h>
 

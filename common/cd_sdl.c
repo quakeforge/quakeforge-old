@@ -1,4 +1,5 @@
 /*
+cd_sdl.c - SDL CD audio routines
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -25,6 +26,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //       -- Mark Baker <homer1@together.net>
 
 #include <SDL/SDL.h>
+#include <cvar.h>
+#include <sound.h>
+#include <cdaudio.h>
+#include <console.h>
 
 #include "quakedef.h"
 
