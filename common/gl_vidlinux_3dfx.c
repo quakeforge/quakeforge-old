@@ -381,54 +381,7 @@ void Init_KBD(void)
 		for (i=0 ; i<128 ; i++)
 			scantokey[i] = ' ';
 
-		scantokey[69] = KP_NUM;
-		scantokey[98] = KP_DIVIDE;
-		scantokey[55] = KP_MULTIPLY;
-
-		scantokey[71] = KP_HOME;
-		scantokey[72] = KP_UPARROW;
-		scantokey[73] = KP_PGUP;
-		scantokey[74] = KP_MINUS;
-
-		scantokey[75] = KP_LEFTARROW;
-		scantokey[76] = KP_5;
-		scantokey[77] = KP_RIGHTARROW;
-		scantokey[78] = KP_PLUS;
-
-		scantokey[79] = KP_END;
-		scantokey[80] = KP_DOWNARROW;
-		scantokey[81] = KP_PGDN;
-
-		scantokey[82] = KP_INS;
-		scantokey[83] = KP_DEL;
-		scantokey[96] = KP_ENTER;
-
-		scantokey[42] = K_SHIFT;
-		scantokey[54] = K_SHIFT;
-		scantokey[103] = K_UPARROW;
-		scantokey[108] = K_DOWNARROW;
-		scantokey[105] = K_LEFTARROW;
-		scantokey[106] = K_RIGHTARROW;
-		scantokey[29] = K_CTRL;
-		scantokey[97] = K_CTRL;
-		scantokey[56] = K_ALT;
-		scantokey[100] = K_ALT;
-//		scantokey[58] = JK_CAPS;
-//		scantokey[69] = JK_NUM_LOCK;
 		scantokey[1 ] = K_ESCAPE;
-		scantokey[28] = K_ENTER;
-		scantokey[15] = K_TAB;
-		scantokey[14] = K_BACKSPACE;
-		scantokey[119] = K_PAUSE;
-		scantokey[57] = ' ';
-
-		scantokey[102] = K_HOME;
-		scantokey[104] = K_PGUP;
-		scantokey[107] = K_END;
-		scantokey[109] = K_PGDN;
-		scantokey[110] = K_INS;
-		scantokey[111] = K_DEL;
-
 		scantokey[2] = '1';
 		scantokey[3] = '2';
 		scantokey[4] = '3';
@@ -441,16 +394,51 @@ void Init_KBD(void)
 		scantokey[11] = '0';
 		scantokey[12] = '-';
 		scantokey[13] = '=';
-		scantokey[41] = '`';
+		scantokey[14] = K_BACKSPACE;
+		scantokey[15] = K_TAB;
+		scantokey[16] = 'q';       
+		scantokey[17] = 'w';       
+		scantokey[18] = 'e';       
+		scantokey[19] = 'r';       
+		scantokey[20] = 't';       
+		scantokey[21] = 'y';       
+		scantokey[22] = 'u';       
+		scantokey[23] = 'i';       
+		scantokey[24] = 'o';       
+		scantokey[25] = 'p';       
 		scantokey[26] = '[';
 		scantokey[27] = ']';
+		scantokey[28] = K_ENTER;
+		scantokey[29] = K_CTRL;
+		scantokey[30] = 'a';
+		scantokey[31] = 's';       
+		scantokey[32] = 'd';       
+		scantokey[33] = 'f';       
+		scantokey[34] = 'g';       
+		scantokey[35] = 'h';       
+		scantokey[36] = 'j';       
+		scantokey[37] = 'k';       
+		scantokey[38] = 'l';       
 		scantokey[39] = ';';
 		scantokey[40] = '\'';
+		scantokey[41] = '`';
+		scantokey[42] = K_SHIFT;
+		scantokey[43] = '\\';
+		scantokey[44] = 'z';       
+		scantokey[45] = 'x';       
+		scantokey[46] = 'c';
+		scantokey[47] = 'v';       
+		scantokey[48] = 'b';
+		scantokey[49] = 'n';       
+		scantokey[50] = 'm';       
 		scantokey[51] = ',';
 		scantokey[52] = '.';
 		scantokey[53] = '/';
-		scantokey[43] = '\\';
-
+		scantokey[54] = K_SHIFT;
+		scantokey[55] = KP_MULTIPLY;
+		scantokey[56] = K_ALT;
+		scantokey[57] = ' ';
+//		scantokey[58] = JK_CAPS;
 		scantokey[59] = K_F1;
 		scantokey[60] = K_F2;
 		scantokey[61] = K_F3;
@@ -461,34 +449,43 @@ void Init_KBD(void)
 		scantokey[66] = K_F8;
 		scantokey[67] = K_F9;
 		scantokey[68] = K_F10;
+		scantokey[69] = KP_NUM;
+//		scantokey[70] = FIXME!!
+		scantokey[71] = KP_HOME;
+		scantokey[72] = KP_UPARROW;
+		scantokey[73] = KP_PGUP;
+		scantokey[74] = KP_MINUS;
+		scantokey[75] = KP_LEFTARROW;
+		scantokey[76] = KP_5;
+		scantokey[77] = KP_RIGHTARROW;
+		scantokey[78] = KP_PLUS;
+		scantokey[79] = KP_END;
+		scantokey[80] = KP_DOWNARROW;
+		scantokey[81] = KP_PGDN;
+		scantokey[82] = KP_INS;
+		scantokey[83] = KP_DEL;
+//		FIXME! 84 - 86
 		scantokey[87] = K_F11;
 		scantokey[88] = K_F12;
-		scantokey[30] = 'a';
-		scantokey[48] = 'b';
-		scantokey[46] = 'c';
-		scantokey[32] = 'd';       
-		scantokey[18] = 'e';       
-		scantokey[33] = 'f';       
-		scantokey[34] = 'g';       
-		scantokey[35] = 'h';       
-		scantokey[23] = 'i';       
-		scantokey[36] = 'j';       
-		scantokey[37] = 'k';       
-		scantokey[38] = 'l';       
-		scantokey[50] = 'm';       
-		scantokey[49] = 'n';       
-		scantokey[24] = 'o';       
-		scantokey[25] = 'p';       
-		scantokey[16] = 'q';       
-		scantokey[19] = 'r';       
-		scantokey[31] = 's';       
-		scantokey[20] = 't';       
-		scantokey[22] = 'u';       
-		scantokey[47] = 'v';       
-		scantokey[17] = 'w';       
-		scantokey[45] = 'x';       
-		scantokey[21] = 'y';       
-		scantokey[44] = 'z';       
+//		FIXME! 89 - 95
+		scantokey[96] = KP_ENTER;
+		scantokey[97] = K_CTRL;
+		scantokey[98] = KP_DIVIDE;
+
+		scantokey[100] = K_ALT;
+		scantokey[102] = K_HOME;
+		scantokey[103] = K_UPARROW;
+		scantokey[104] = K_PGUP;
+		scantokey[105] = K_LEFTARROW;
+		scantokey[106] = K_RIGHTARROW;
+		scantokey[107] = K_END;
+		scantokey[108] = K_DOWNARROW;
+		scantokey[109] = K_PGDN;
+		scantokey[110] = K_INS;
+		scantokey[111] = K_DEL;
+
+		scantokey[119] = K_PAUSE;
+
 
 
 		if (keyboard_init())
