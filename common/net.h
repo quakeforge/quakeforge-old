@@ -45,7 +45,7 @@ struct qsockaddr
 
 typedef struct
 {
-#ifdef LINUX_IPV6
+#ifdef HAVE_IPV6
 	unsigned int ip[4];
 #else
 	byte	ip[4];
