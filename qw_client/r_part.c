@@ -420,25 +420,27 @@ void R_RocketTrail (vec3_t start, vec3_t end, int type)
 				break;
 			case 3:
 			case 5:
-				// tracer
-				static int tracercount;
+				{
+					// tracer
+					static int tracercount;
 
-				p->die = cl.time + 0.5;
-				p->type = pt_static;
-				if (type == 3)
-					p->color = 52 + ((tracercount&4)<<1);
-				else
-					p->color = 230 + ((tracercount&4)<<1);
+					p->die = cl.time + 0.5;
+					p->type = pt_static;
+					if (type == 3)
+						p->color = 52 + ((tracercount&4)<<1);
+					else
+						p->color = 230 + ((tracercount&4)<<1);
 
-				tracercount++;
+					tracercount++;
 
-				VectorCopy (start, p->org);
-				if (tracercount & 1) {
-					p->vel[0] = 30*vec[1];
-					p->vel[1] = 30*-vec[0];
-				} else {
-					p->vel[0] = 30*-vec[1];
-					p->vel[1] = 30*vec[0];
+					VectorCopy (start, p->org);
+					if (tracercount & 1) {
+						p->vel[0] = 30*vec[1];
+						p->vel[1] = 30*-vec[0];
+					} else {
+						p->vel[0] = 30*-vec[1];
+						p->vel[1] = 30*vec[0];
+					}
 				}
 				break;
 
