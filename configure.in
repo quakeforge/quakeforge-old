@@ -400,6 +400,27 @@ if test "x$RELEASE" = xyes; then
    fi
 fi
 
+dnl Quakeforge code has lots of C++ comments, which cause
+dnl problems with any compiler that is ANSI/ISO-C compliant.
+dnl Make the compiler swallow its pride...
+if test "x$GCC" != xyes; then
+   case "$target" in
+   *-aix*)
+	CFLAGS="$CFLAGS -qcpluscmt"
+	;;
+   *-irix6*)
+	CFLAGS="$CFLAGS -Xcpluscomm"
+	;;
+   *-solaris*)
+	CFLAGS="$CFLAGS -xCC"
+	;;
+  esac
+fi
+
+dnl We want warnings, lots of warnings...
+if test "x$GCC" = xyes; then
+   CFLAGS="$CFLAGS -Wall -pedantic"
+fi
 
 dnl Check for ia32
 AC_MSG_CHECKING(for an ia32 machine)
