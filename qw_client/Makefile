@@ -43,6 +43,7 @@ LDFLAGS=-lm
 SVGA_LDFLAGS=$(LDFLAGS) -lvga
 X11_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lX11 -lXext
 GL_X11_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lGL -lX11 -lXext
+GL_SVGA_LDFLAGS=-L$(X11_DIR)/lib -lvga -lMesaGL -lglide2x -lX11 -lXext
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_AS=$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
@@ -58,8 +59,8 @@ DO_O_CC=$(CC) -O $(CFLAGS) -o $@ -c $<
 
 SOFT_TARGETS=$(OBJ_DIR)/qw-client-svga \
 	$(OBJ_DIR)/qw-client-x
-GL_TARGETS=$(OBJ_DIR)/qw-client-gl# \
-#	$(OBJ_DIR)/qw-client-3dfx
+GL_TARGETS=$(OBJ_DIR)/qw-client-gl \
+	$(OBJ_DIR)/qw-client-glide
 
 debug:		debug-soft debug-gl
 
@@ -511,11 +512,11 @@ GL_OBJS = \
 	$(OBJ_DIR)/gl_obj/snd_mixa.o \
 	$(OBJ_DIR)/gl_obj/sys_dosa.o
 	
-#GL_SVGA_OBJS = $(OBJ_DIR)/gl_obj/gl_vidlinux.o
+GL_SVGA_OBJS = $(OBJ_DIR)/gl_obj/gl_vidlinux.o
 GL_X11_OBJS = $(OBJ_DIR)/gl_obj/gl_vidlinuxglx.o
 
-#$(OBJ_DIR)/qw-client-glide:	$(GL_OBJS) $(GL_SVGA_OBJS)
-#	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_SVGA_OBJS) $(LDFLAGS) $(GL_SVGA_LDFLAGS)
+$(OBJ_DIR)/qw-client-glide:	$(GL_OBJS) $(GL_SVGA_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_SVGA_OBJS) $(LDFLAGS) $(GL_SVGA_LDFLAGS)
 
 $(OBJ_DIR)/qw-client-gl:	$(GL_OBJS) $(GL_X11_OBJS)
 	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_X11_OBJS) $(LDFLAGS) $(GL_X11_LDFLAGS)
@@ -655,8 +656,8 @@ $(OBJ_DIR)/gl_obj/gl_rsurf.o:	$(CLIENT_DIR)/gl_rsurf.c
 $(OBJ_DIR)/gl_obj/gl_screen.o:	$(CLIENT_DIR)/gl_screen.c
 	$(DO_GL_CC)
 
-#$(OBJ_DIR)/gl_obj/gl_vidlinux.o: $(CLIENT_DIR)/gl_vidlinux.c
-#	$(DO_GL_CC)
+$(OBJ_DIR)/gl_obj/gl_vidlinux.o: $(CLIENT_DIR)/gl_vidlinux.c
+	$(DO_GL_CC)
 
 $(OBJ_DIR)/gl_obj/gl_vidlinuxglx.o: $(COMMON_DIR)/gl_vidlinuxglx.c
 	$(DO_GL_CC)
