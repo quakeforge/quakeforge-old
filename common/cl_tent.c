@@ -315,14 +315,15 @@ CL_ParseTEnt (void)
 		R_TeleportSplash (pos);
 		break;
 		
+#ifdef QUAKEWORLD
 	case TE_GUNSHOT:			// bullet hitting wall
+		cnt = MSG_ReadByte ();
 		pos[0] = MSG_ReadCoord ();
 		pos[1] = MSG_ReadCoord ();
 		pos[2] = MSG_ReadCoord ();
-		R_RunParticleEffect (pos, vec3_origin, 0, 20);
+		R_RunParticleEffect (pos, vec3_origin, 0, 20 * cnt);
 		break;
 		
-#ifdef QUAKEWORLD
 	case TE_BLOOD:				// bullets hitting body
 		cnt = MSG_ReadByte ();
 		pos[0] = MSG_ReadCoord ();
@@ -340,6 +341,13 @@ CL_ParseTEnt (void)
 #endif // QUAKEWORLD
 
 #ifdef UQUAKE
+	case TE_GUNSHOT:			// bullet hitting wall
+		pos[0] = MSG_ReadCoord ();
+		pos[1] = MSG_ReadCoord ();
+		pos[2] = MSG_ReadCoord ();
+		R_RunParticleEffect (pos, vec3_origin, 0, 20);
+		break;
+		
 // PGM 01/21/97 
 	case TE_BEAM:				// grappling hook beam
 		CL_ParseBeam (Mod_ForName("progs/beam.mdl", true));

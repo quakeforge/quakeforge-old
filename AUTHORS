@@ -177,3 +177,9 @@ D: Q1/QW tree merging
 N: Jason Nelson
 E: jason_nelson@email.msn.com
 D: VC win32 support.
+
+N: Jukka Sorjonen
+E: jukka.sorjonen@asikkala.fi
+D: Bug squasher (see below).
+D: QW network protocol fixes.
+D: Found out why our VERSION was messing things up..
