@@ -35,7 +35,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 int audio_fd;
 int snd_inited;
 
-static int bufpos;
 static int wbufp;
 static audio_info_t info;
 
@@ -44,8 +43,6 @@ static audio_info_t info;
 unsigned char dma_buffer[BUFFER_SIZE];
 unsigned char pend_buffer[BUFFER_SIZE];
 int pending;
-
-static int lastwrite = 0;
 
 qboolean SNDDMA_Init(void)
 {
@@ -173,14 +170,12 @@ Send sound to device if buffer isn't really the dma buffer
 */
 void SNDDMA_Submit(void)
 {
-	int samps;
 	int bsize;
 	int bytes, b;
 	static unsigned char writebuf[1024];
 	unsigned char *p;
 	int idx;
 	int stop = paintedtime;
-	extern int soundtime;
 
 	if (paintedtime < wbufp)
 		wbufp = 0; // reset
