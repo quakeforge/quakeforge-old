@@ -1,4 +1,5 @@
 /*
+model.c - model loading and caching
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,7 +21,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// models.c -- model loading and caching
 
 // models are the only shared resource between a client and server running
 // on the same machine.
@@ -1236,9 +1236,12 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 	header = (dheader_t *)buffer;
 
 	i = LittleLong (header->version);
-	if (i != BSPVERSION)
-		SV_SYS_ERROR ("Mod_LoadBrushModel: %s has wrong version number (%i should be %i)", mod->name, i, BSPVERSION);
+	if (!(i == BSPVERSION || i == CBSPVERSION))
+		SV_SYS_ERROR ("Mod_LoadBrushModel: %s has unknown version %i",
+				mod->name, i);
 
+	bspver = i;		// save BSP version for later use
+	
 // swap all the lumps
 	mod_base = (byte *)header;
 

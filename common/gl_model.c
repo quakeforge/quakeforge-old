@@ -1,4 +1,5 @@
 /*
+models.c - model loading and caching
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,23 +21,22 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// models.c -- model loading and caching
 
 // models are the only shared resource between a client and server running
 // on the same machine.
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "cvar.h"
-#include "sys.h"
-#include "mathlib.h"
-#include "glquake.h"
-#include "qendian.h"
-#include "lib_replace.h"
-#include "d_iface.h"
-#include "common.h"
-#include "crc.h"
-#include "console.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <cvar.h>
+#include <sys.h>
+#include <mathlib.h>
+#include <glquake.h>
+#include <qendian.h>
+#include <lib_replace.h>
+#include <d_iface.h>
+#include <common.h>
+#include <crc.h>
+#include <console.h>
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -52,7 +52,6 @@ byte	mod_novis[MAX_MAP_LEAFS/8];
 model_t	mod_known[MAX_MOD_KNOWN];
 int		mod_numknown;
 
-//cvar_t gl_subdivide_size = {"gl_subdivide_size", "128", CVAR_ARCHIVE};
 cvar_t	*gl_subdivide_size;
 
 /*
@@ -62,7 +61,6 @@ Mod_Init
 */
 void Mod_Init (void)
 {
-//	Cvar_RegisterVariable (&gl_subdivide_size);
 	gl_subdivide_size = Cvar_Get ("gl_subdivide_size","128",CVAR_ARCHIVE,
 					"None");
 	memset (mod_novis, 0xff, sizeof(mod_novis));
@@ -1181,8 +1179,11 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 	header = (dheader_t *)buffer;
 
 	i = LittleLong (header->version);
-	if (i != BSPVERSION)
-		Sys_Error ("Mod_LoadBrushModel: %s has wrong version number (%i should be %i)", mod->name, i, BSPVERSION);
+	if (!(i == BSPVERSION || i == CBSPVERSION))
+		Sys_Error ("Mod_LoadBrushModel: %s has unkonwn version %i",
+				mod->name, i);
+
+	bspver = i;		// save BSP version for later use
 
 // swap all the lumps
 	mod_base = (byte *)header;

@@ -1,4 +1,5 @@
 /*
+gl_rpart.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -21,12 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include "quakedef.h"
-#include "r_local.h"
+#include <quakedef.h>
+#include <r_local.h>
 
-#include "d_iface.h"
-#include "glquake.h"
-#include "mathlib.h"
+#include <d_iface.h>
+#include <glquake.h>
+#include <mathlib.h>
 
 extern particle_t	*active_particles, *free_particles;
 extern int			ramp1[8], ramp2[8], ramp3[8];

@@ -57,7 +57,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #define BSPVERSION	29
+#define CBSPVERSION	30
 #define	TOOLVERSION	2
+
+int		bspver;		// since we allow two BSP versions, we
+				//  need to know which we're using
+
 
 typedef struct
 {

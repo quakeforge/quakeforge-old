@@ -198,12 +198,25 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 		{
 			scale = d_lightstylevalue[surf->styles[maps]];
 			surf->cached_light[maps] = scale;	// 8.8 fraction
-			for (i=0 ; i<size ; i++)
+			for (i=0, j=0 ; i<size ; i++)
 			{
-				cblocklights[0][i] += lightmap[i] * scale;
-				cblocklights[1][i] += lightmap[i] * scale;
-				cblocklights[2][i] += lightmap[i] * scale;
-				blocklights[i] += lightmap[i] * scale;
+				if (bspver == CBSPVERSION)
+				{
+					cblocklights[0][i] +=
+						lightmap[j++] * scale;
+					cblocklights[1][i] +=
+						lightmap[j++] * scale;
+					cblocklights[2][i] +=
+						lightmap[j++] * scale;
+				} else {
+					cblocklights[0][i] +=
+						lightmap[i] * scale;
+					cblocklights[1][i] +=
+						lightmap[i] * scale;
+					cblocklights[2][i] +=
+						lightmap[i] * scale;
+				}
+				blocklights[i] += lightmap[j++] * scale;
 			}
 			lightmap += size;	// skip to next lightmap
 		}
