@@ -13,7 +13,7 @@ AC_PROG_CPP
 AC_PROG_MAKE_SET
 
 dnl Checks for header files.
-AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h \
+AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h sys/stat.h \
 	sys/socket.h netinet/in.h netdb.h arpa/inet.h sys/filio.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
 	dsound.h mmsystem.h initguid.h mme/mmsystem.h mme/mme_public.h \
@@ -45,8 +45,8 @@ dnl Checks for library functions.
 AC_FUNC_MMAP
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
-	putenv select socket strerror strstr snprintf _snprintf vsnprintf \
-	_vsnprintf)
+	stat putenv select socket strerror strstr \
+	snprintf _snprintf vsnprintf _vsnprintf)
 
 AC_ARG_ENABLE(release,
 [  --enable-release        compile release (with optimization)],
@@ -261,7 +261,7 @@ fi
 if test "x$HAS_DGA" != xyes; then
    DGA_LIBS=""
 else
-   AC_DEFINE(HAS_DGA,1)
+   AC_DEFINE(HAS_DGA)
    DGA_LIBS="-lXxf86dga -lXxf86vm"
 fi
 
