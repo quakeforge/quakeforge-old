@@ -418,9 +418,23 @@ void PR_ExecuteProgram (func_t fnum)
 
 while (1)
 {
+	int ofsa, ofsb, ofsc;
+
 	s++;	// next statement
 
 	st = &pr_statements[s];
+
+	// FIXME: offsets bigger than 32767 result in negative indexes into
+	//        pr_globals[].  This is a hack to make the 15 bit limit
+	//        temporarily 16 bit in this one case.  It should go away
+	//        when 32 bit limits are implemented in a new progs.dat
+	//        version.  (Fix by Yanster)
+
+	if (st->a & 0x8000) ofsa = (int)st->a + 0xFFFF; else ofsa = st->a;
+	if (st->b & 0x8000) ofsb = (int)st->b + 0xFFFF; else ofsb = st->b;
+	if (st->c & 0x8000) ofsc = (int)st->c + 0xFFFF; else ofsc = st->c;
+	// End of Evil Hack
+
 	a = (eval_t *)&pr_globals[st->a];
 	b = (eval_t *)&pr_globals[st->b];
 	c = (eval_t *)&pr_globals[st->c];
