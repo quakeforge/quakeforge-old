@@ -248,12 +248,13 @@ dlight_t *CL_AllocDlight (int key)
 	return dl;
 }
 #endif
-
+#ifdef QUAKEWORLD
 void CL_BeginServerConnect(void)
 {
 	connect_time = 0;
 	CL_CheckForResend();
 }
+#endif
 
 /*
 =================
@@ -276,6 +277,7 @@ void CL_Changing_f (void)
 	Con_Printf ("\nChanging map...\n");
 }
 
+#ifdef QUAKEWORLD
 /*
 =================
 CL_CheckForResend
@@ -298,14 +300,12 @@ void CL_CheckForResend (void)
 		return;
 
 	t1 = Sys_DoubleTime ();
-#ifdef QUAKEWORLD
 	if (!NET_StringToAdr (cls.servername, &adr))
 	{
 		Con_Printf ("Bad server address\n");
 		connect_time = -1;
 		return;
 	}
-#endif
 	if (!NET_IsClientLegal(&adr))
 	{
 		Con_Printf ("Illegal server address\n");
@@ -319,12 +319,11 @@ void CL_CheckForResend (void)
 
 	connect_time = realtime+t2-t1;	// for retransmit requests
 
-#ifdef QUAKEWORLD
 	Con_Printf ("Connecting to %s...\n", cls.servername);
-#endif
 	snprintf(data, sizeof(data), "%c%c%c%cgetchallenge\n", 255, 255, 255, 255);
 	NET_SendPacket (strlen(data), data, adr);
 }
+#endif
 
 /*
 =====================
@@ -935,6 +934,7 @@ void CL_NextDemo (void)
 	cls.demonum++;
 }
 
+#ifdef QUAKEWORLD
 /*
 ====================
 CL_Packet_f
@@ -982,6 +982,7 @@ void CL_Packet_f (void)
 
 	NET_SendPacket (out-send, send, adr);
 }
+#endif
 
 #ifdef UQUAKE
 /*
@@ -1026,6 +1027,7 @@ void CL_Quit_f (void)
 	Sys_Quit ();
 }
 
+#ifdef QUAKEWORLD
 /*
 =====================
 CL_Rcon_f
@@ -1082,6 +1084,7 @@ void CL_Rcon_f (void)
 	NET_SendPacket (strlen(message)+1, message
 		, to);
 }
+#endif
 
 #ifdef UQUAKE
 /*
@@ -1212,7 +1215,9 @@ void CL_Reconnect_f (void)
 #endif
 
 	CL_Disconnect();
+#ifdef QUAKEWORLD
 	CL_BeginServerConnect();
+#endif
 }
 
 #ifdef UQUAKE
@@ -1406,6 +1411,7 @@ void CL_RelinkEntities (void)
 }
 #endif
 
+#ifdef QUAKEWORLD
 /*
 =======================
 CL_SendConnectPacket
@@ -1426,14 +1432,12 @@ void CL_SendConnectPacket (void)
 		return;
 
 	t1 = Sys_DoubleTime ();
-#ifdef QUAKEWORLD
 	if (!NET_StringToAdr (cls.servername, &adr))
 	{
 		Con_Printf ("Bad server address\n");
 		connect_time = -1;
 		return;
 	}
-#endif
 	if (!NET_IsClientLegal(&adr))
 	{
 		Con_Printf ("Illegal server address\n");
@@ -1446,7 +1450,6 @@ void CL_SendConnectPacket (void)
 	t2 = Sys_DoubleTime ();
 
 	connect_time = realtime+t2-t1;	// for retransmit requests
-#ifdef QUAKEWORLD
 	cls.qport = Cvar_VariableValue("qport");
 
 	// Arrgh, this was not in the old binary only release, and eats up
@@ -1458,9 +1461,9 @@ void CL_SendConnectPacket (void)
 //	Con_Printf ("Connecting to %s...\n", cls.servername);
 	snprintf(data, sizeof(data), "%c%c%c%cconnect %i %i %i \"%s\"\n",
 		255, 255, 255, 255,	PROTOCOL_VERSION, cls.qport, cls.challenge, cls.userinfo);
-#endif
 	NET_SendPacket (strlen(data), data, adr);
 }
+#endif
 
 #ifdef UQUAKE
 /*
@@ -1729,8 +1732,10 @@ CL_Init
 */
 void CL_Init (void)
 {
+#ifdef QUAKEWORLD
 	extern	cvar_t		baseskin;
 	extern	cvar_t		noskins;
+#endif
 
 #ifdef UQUAKE
 	SZ_Alloc (&cls.netchan.message, 1024);
@@ -1801,8 +1806,10 @@ void CL_Init (void)
 
 	Cvar_RegisterVariable (&localid);
 
+#ifdef QUAKEWORLD
 	Cvar_RegisterVariable (&baseskin);
 	Cvar_RegisterVariable (&noskins);
+#endif
 
 	//
 	// info mirrors
@@ -1847,9 +1854,9 @@ void CL_Init (void)
 #endif
 	Cmd_AddCommand ("reconnect", CL_Reconnect_f);
 
+#ifdef QUAKEWORLD
 	Cmd_AddCommand ("rcon", CL_Rcon_f);
 	Cmd_AddCommand ("packet", CL_Packet_f);
-#ifdef QUAKEWORLD
 	Cmd_AddCommand ("user", CL_User_f);
 	Cmd_AddCommand ("users", CL_Users_f);
 

@@ -73,7 +73,9 @@ client_t	*host_client;			// current client
 
 jmp_buf 	host_abortserver;
 
-cvar_t	show_fps = {"show_fps","0"};			// set for running times
+//cvar_t	show_fps = {"show_fps","0"};			// set for running times
+extern cvar_t show_fps;
+
 
 int			fps_count;
 
@@ -81,7 +83,8 @@ byte		*host_basepal;
 byte		*host_colormap;
 
 cvar_t	host_framerate = {"host_framerate","0"};	// set for slow motion
-cvar_t	host_speeds = {"host_speeds","0"};			// set for running times
+//cvar_t	host_speeds = {"host_speeds","0"};			// set for running times
+extern cvar_t host_speeds;
 
 cvar_t	sys_ticrate = {"sys_ticrate","0.05"};
 cvar_t	serverprofile = {"serverprofile","0"};
@@ -96,7 +99,7 @@ cvar_t	noexit = {"noexit","0",false,true};
 #ifdef QUAKE2
 cvar_t	developer = {"developer","1"};	// should be 0 for release!
 #else
-cvar_t	developer = {"developer","0"};
+extern cvar_t	developer;// = {"developer","0"};
 #endif
 
 cvar_t	skill = {"skill","1"};						// 0 - 3

@@ -402,8 +402,8 @@ extern cvar_t	_windowed_mouse;
 extern entity_state_t	cl_baselines[MAX_EDICTS];
 #endif // QUAKEWORLD
 #ifdef UQUAKE
-extern entity_t		cl_entities[MAX_EDICTS];
-extern entity_t		cl_temp_entities[MAX_TEMP_ENTITIES];
+entity_t		cl_entities[MAX_EDICTS];
+entity_t		cl_temp_entities[MAX_TEMP_ENTITIES];
 #endif // UQUAKE
 extern efrag_t		cl_efrags[MAX_EFRAGS];
 extern entity_t		cl_static_entities[MAX_STATIC_ENTITIES];
