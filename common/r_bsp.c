@@ -653,7 +653,11 @@ void R_RenderWorld (void)
 
 	pbtofpolys = btofpolys;
 
+#ifdef QUAKEWORLD
+	currententity = &r_worldentity;
+#else
 	currententity = &cl_entities[0];
+#endif
 	VectorCopy (r_origin, modelorg);
 	clmodel = currententity->model;
 	r_pcurrentvertbase = clmodel->vertexes;
