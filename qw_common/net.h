@@ -25,6 +25,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // net.h -- quake's interface to the networking layer
 
+#include "qtypes.h"
+#include "common.h"
+
 #define	PORT_ANY	-1
 
 // Uncomment this line for IPv6 support
@@ -45,7 +48,6 @@ extern	netadr_t	net_local_adr;
 extern	netadr_t	net_from;		// address of who sent the packet
 extern	sizebuf_t	net_message;
 
-extern	cvar_t	hostname;
 
 extern	int		net_socket;
 
@@ -122,5 +124,8 @@ void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport);
 
 qboolean Netchan_CanPacket (netchan_t *chan);
 qboolean Netchan_CanReliable (netchan_t *chan);
+
+#include "qstructs.h"
+extern	cvar_t	hostname;
 
 #endif // _NET_H

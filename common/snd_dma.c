@@ -21,8 +21,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // snd_dma.c -- main control for any streaming sound output device
 
-#include "quakedef.h"
+#include <string.h>
+#include <stdlib.h>
+#include "qtypes.h"
+#include "sound.h"
+#include "mathlib.h"
 #include "model.h"
+#include "lib_replace.h"
+#include "cvar.h"
+#include "cmd.h"
+#include "sys.h"
+#include "common_quakedef.h"
+#include "qargs.h"
 
 #ifdef _WIN32
 #include "winquake.h"
@@ -36,9 +46,7 @@ void S_StopAllSounds(qboolean clear);
 void S_StopAllSoundsC(void);
 
 // QuakeWorld hack
-#ifdef QUAKEWORLD
 #define	viewentity	playernum+1
-#endif // QUAKEWORLD
 
 // =======================================================================
 // Internal sound data & structures

@@ -22,7 +22,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // Quake is a trademark of Id Software, Inc., (c) 1996 Id Software, Inc. All
 // rights reserved.
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "console.h"
+#include "cdaudio.h"
+#include "common.h"
+#include "sound.h"
+#include "cmd.h"
+#include "cvar.h"
 
 #include <stdio.h>
 #ifdef HAVE_UNISTD_H
@@ -43,6 +50,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef USE_BSD_CD
 # include <sys/cdio.h>
 #endif
+
 
 static qboolean cdValid = false;
 static qboolean	playing = false;

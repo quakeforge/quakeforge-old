@@ -22,6 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl.input.c  -- builds an intended movement command to send to the server
 
 #include "quakedef.h"
+#include "qtypes.h"
+#include "client.h"
+#include "console.h"
+#include "mathlib.h"
+#include "cvar.h"
+#include "input.h"
 
 cvar_t	cl_nodelta = {"cl_nodelta","0"};
 

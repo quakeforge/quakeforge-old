@@ -20,7 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "mathlib.h"
 
 
 movevars_t		movevars;

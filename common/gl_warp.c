@@ -6,7 +6,7 @@
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
-Portions Copyright (C) 1999,2000  Nelson Rush.
+	Portions Copyright (C) 1999,2000  Nelson Rush.
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -27,8 +27,10 @@ Portions Copyright (C) 1999,2000  Nelson Rush.
 	Boston, MA  02111-1307, USA
 */
 
+#include "qtypes.h"
 #include "quakedef.h"
 #include "glquake.h"
+#include "mathlib.h"
 
 extern	model_t	*loadmodel;
 

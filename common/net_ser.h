@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // net_ser.h
 
+#ifndef _NET_SER_H
+#define _NET_SER_H
+
 int			Serial_Init (void);
 void		Serial_Listen (qboolean state);
 void		Serial_SearchForHosts (qboolean xmit);
@@ -31,3 +34,5 @@ qboolean	Serial_CanSendMessage (qsocket_t *sock);
 qboolean	Serial_CanSendUnreliableMessage (qsocket_t *sock);
 void		Serial_Close (qsocket_t *sock);
 void		Serial_Shutdown (void);
+
+#endif // _NET_SER_H

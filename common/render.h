@@ -23,8 +23,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _RENDER_H
 #define _RENDER_H
 
+#include "qtypes.h"
 #include "vid.h"
-#include "model.h"
 
 // refresh.h -- public interface to refresh functions
 
@@ -42,6 +42,21 @@ typedef struct efrag_s
 	struct entity_s		*entity;
 	struct efrag_s		*entnext;
 } efrag_t;
+
+// entity_state_t is the information conveyed from the server
+// in an update message
+typedef struct
+{
+	int		number;			// edict index
+	int		flags;			// nolerp, etc
+	vec3_t	origin;
+	vec3_t	angles;
+	int		modelindex;
+	int		frame;
+	int		colormap;
+	int		skinnum;
+	int		effects;
+} entity_state_t;
 
 
 typedef struct entity_s

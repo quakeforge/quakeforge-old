@@ -26,15 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <bothdefs.h>
 #include <register_check.h>
-
-typedef unsigned char 		byte;
-#define _DEF_BYTE_
-
-// KJB Undefined true and false defined in SciTech's DEBUG.H header
-#undef true
-#undef false
-
-typedef enum {false, true}	qboolean;
+#include "qtypes.h"
 
 #define	MAX_INFO_STRING	196
 #define	MAX_SERVERINFO_STRING	512
@@ -51,6 +43,7 @@ typedef struct sizebuf_s
 	int		cursize;
 } sizebuf_t;
 
+#include "net.h"
 void SZ_Clear (sizebuf_t *buf);
 void *SZ_GetSpace (sizebuf_t *buf, int length);
 void SZ_Write (sizebuf_t *buf, void *data, int length);
@@ -94,12 +87,7 @@ void InsertLinkAfter (link_t *l, link_t *after);
 
 //============================================================================
 
-extern	short	(*BigShort) (short l);
-extern	short	(*LittleShort) (short l);
-extern	int	(*BigLong) (int l);
-extern	int	(*LittleLong) (int l);
-extern	float	(*BigFloat) (float l);
-extern	float	(*LittleFloat) (float l);
+#include "qendian.h"
 
 //============================================================================
 
@@ -138,33 +126,7 @@ void MSG_ReadDeltaUsercmd (struct usercmd_s *from, struct usercmd_s *cmd);
 
 //============================================================================
 
-#define Q_memset(d, f, c) memset((d), (f), (c))
-#define Q_memcpy(d, s, c) memcpy((d), (s), (c))
-#define Q_memcmp(m1, m2, c) memcmp((m1), (m2), (c))
-#define Q_strcpy(d, s) strcpy((d), (s))
-#define Q_strncpy(d, s, n) strncpy((d), (s), (n))
-#define Q_strlen(s) ((int)strlen(s))
-#define Q_strrchr(s, c) strrchr((s), (c))
-#define Q_strcat(d, s) strcat((d), (s))
-#define Q_strcmp(s1, s2) strcmp((s1), (s2))
-#define Q_strncmp(s1, s2, n) strncmp((s1), (s2), (n))
-
-#ifdef _WIN32
-
-#define Q_strcasecmp(s1, s2) _stricmp((s1), (s2))
-#define Q_strncasecmp(s1, s2, n) _strnicmp((s1), (s2), (n))
-
-#else
-
-#define Q_strcasecmp(s1, s2) strcasecmp((s1), (s2))
-#define Q_strncasecmp(s1, s2, n) strncasecmp((s1), (s2), (n))
-
-#endif
-
-int	Q_atoi (char *str);
-float Q_atof (char *str);
-
-
+#include "lib_replace.h"
 
 //============================================================================
 
@@ -194,21 +156,7 @@ char	*va(char *format, ...);
 
 //============================================================================
 
-extern int com_filesize;
-struct cache_user_s;
-
-extern	char	com_gamedir[MAX_OSPATH];
-
-void COM_WriteFile (char *filename, void *data, int len);
-int COM_FOpenFile (char *filename, FILE **file);
-void COM_CloseFile (FILE *h);
-
-byte *COM_LoadStackFile (char *path, void *buffer, int bufsize);
-byte *COM_LoadTempFile (char *path);
-byte *COM_LoadHunkFile (char *path);
-void COM_LoadCacheFile (char *path, struct cache_user_s *cu);
-void COM_CreatePath (char *path);
-void COM_Gamedir (char *dir);
+#include "quakefs.h"
 
 extern qboolean		standard_quake, rogue, hipnotic;
 

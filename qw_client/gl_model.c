@@ -25,8 +25,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // models are the only shared resource between a client and server running
 // on the same machine.
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "cvar.h"
+#include "sys.h"
+#include "mathlib.h"
 #include "glquake.h"
+#include "qendian.h"
+#include "lib_replace.h"
+#include "d_iface.h"
+#include "common.h"
+#include "crc.h"
+#include "console.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags

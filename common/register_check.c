@@ -29,6 +29,8 @@
 	Boston, MA  02111-1307, USA
 */
 
+#include "cvar.h"
+#include "quakefs.h"
 #include "quakedef.h"
 
 cvar_t registered = {"registered", "0"};
@@ -50,7 +52,6 @@ register_check ( void ) {
 
 	if (h) {
 		Cvar_Set ("registered", "1");
-		Con_Printf ("Playing registered version.\n");
-        	fclose (h);
+		fclose (h);
 	}
 }

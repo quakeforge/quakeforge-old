@@ -70,7 +70,7 @@ targets = $(SRVQUAKE)
 GENERAL_SRC = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c \
 	$(QW_NET_SRC) net_chan.c $(SRV_SRC) $(QW_SRV_SRC) \
         $(SRV_PR_SRC) $(QW_SRV_SYS_SRC) $(QW_GENERAL_SRC) \
-	register_check.c
+	register_check.c qendian.c qargs.c quakefs.c lib_replace.c
 ALL_QW_SRV_SRC = $(GENERAL_SRC) model.c
 # FIXME: add dos/win specifc source
 

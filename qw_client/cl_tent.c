@@ -21,8 +21,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // cl_tent.c -- client side temporary entities
 
+#include "qtypes.h"
 #include "quakedef.h"
 #include "model.h"
+#include "sound.h"
+#include "client.h"
+#include "mathlib.h"
+#include "console.h"
 
 
 #define	MAX_BEAMS	8

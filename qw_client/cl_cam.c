@@ -28,8 +28,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Player moves as a spectator, but the camera tracks and enemy player
  */
 
+#include "qtypes.h"
 #include "quakedef.h"
 #include "winquake.h"
+#include "mathlib.h"
+#include "client.h"
+#include "sbar.h"
+#include "cvar.h"
+#include "console.h"
 
 #define	PM_SPECTATORMAXSPEED	500
 #define	PM_STOPSPEED	100

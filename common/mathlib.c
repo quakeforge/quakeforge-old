@@ -23,7 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // mathlib.c -- math primitives
 
 #include <math.h>
+#include "qtypes.h"
 #include "quakedef.h"
+#include "mathlib.h"
 
 void Sys_Error (char *error, ...);
 
@@ -34,7 +36,7 @@ int nanmask = 255<<23;
 
 #define DEG2RAD( a ) ( a * M_PI ) / 180.0F
 
-void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal )
+static void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal)
 {
 	float d;
 	vec3_t n;
@@ -56,7 +58,7 @@ void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal )
 /*
 ** assumes "src" is normalized
 */
-void PerpendicularVector( vec3_t dst, const vec3_t src )
+static void PerpendicularVector( vec3_t dst, const vec3_t src )
 {
 	int	pos;
 	int i;

@@ -44,6 +44,10 @@ void	VID_UnlockBuffer (void);
 #define	VID_UnlockBuffer()
 #endif
 
+#include "qtypes.h"
+#include "qstructs.h"
+
+/*
 #include "common.h"
 #include "bspfile.h"
 #include "vid.h"
@@ -76,6 +80,7 @@ void	VID_UnlockBuffer (void);
 #include "cdaudio.h"
 
 #include "cvars.h"
+*/
 
 #ifndef max
 #define max(a,b) ((a) > (b) ? (a) : (b))
@@ -94,32 +99,6 @@ void	VID_UnlockBuffer (void);
 #if !defined(HAVE_VSNPRINTF) && defined(HAVE__VSNPRINTF)
 # define vsnprintf _vsnprintf
 #endif
-#if !defined(HAVE_SNPRINTF) && !defined(HAVE__SNPRINTF)
-#ifdef HAVE_VSNPRINTF
-# define snprintf vsnprintf
-#elif defined(HAVE__VSNPRINTF)
-# define snprintf _vsnprintf
-#endif
-#endif
-
-//=============================================================================
-
-// the host system specifies the base of the directory tree, the
-// command line parms passed to the program, and the amount of memory
-// available for the program to use
-
-typedef struct
-{
-	char	*basedir;
-	char	*cachedir;		// for development over ISDN lines
-	int	argc;
-	char	**argv;
-	void	*membase;
-	int	memsize;
-} quakeparms_t;
-
-
-//=============================================================================
 
 #define MAX_NUM_ARGVS	50
 

@@ -27,8 +27,13 @@
 	Boston, MA  02111-1307, USA.
 */
 
+#include "qtypes.h"
 #include "quakedef.h"
 #include "glquake.h"
+#include "mathlib.h"
+#include "console.h"
+#include "view.h"
+#include "sound.h"
 
 entity_t	r_worldentity;
 

@@ -23,8 +23,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // screen.c -- master for refresh, status bar, console, chat, notify, etc
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "client.h"
+#include "draw.h"
+#include "keys.h"
+#include "cvar.h"
 #include "glquake.h"
+#include "console.h"
+#include "screen.h"
+#include "sbar.h"
+#include "menu.h"
+#include "sound.h"
+
 #include <time.h>
 
 /*

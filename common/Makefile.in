@@ -1,0 +1,186 @@
+########################################################################
+#
+# Quake general stuff
+#
+
+PROJECT_DIR	:= @top_srcdir@
+PROJECT_ODIR	:= ..
+SRC_DIR		:= @srcdir@
+COMMON_DIR	:= $(PROJECT_DIR)/common
+COMMON_ODIR	:= $(PROJECT_ODIR)/common
+BIN_PREFIX	:= common
+
+DESTDIR		:=
+
+prefix		:= @prefix@
+exec_prefix	:= @exec_prefix@
+bindir		:= @bindir@
+mandir		:= @mandir@
+
+TARGET_DIR	:= $(PROJECT_ODIR)/targets
+BUILD_DIR	:= $(TARGET_DIR)/common
+OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{sound,common}_lib/%.o)
+
+SOUND_LIB	:= sound_lib.a
+
+LDFLAGS = @LDFLAGS@ -lm
+LIBS = @LIBS@
+CC = @CC@
+INTEL_ARCH = @INTEL_ARCH@
+
+ifneq ($(SRC_DIR),.)
+SRC_DIR_INC = -I$(SRC_DIR)
+endif
+
+HAS_MGL    = @HAS_MGL@
+HAS_GGI    = @HAS_GGI@
+HAS_SVGA   = @HAS_SVGA@
+HAS_GLIDE  = @HAS_GLIDE@
+HAS_TDFXGL = @HAS_TDFXGL@
+HAS_OGL    = @HAS_OGL@
+HAS_XIL    = @HAS_XIL@
+HAS_X11    = @HAS_X11@
+HAS_SDL    = @HAS_SDL@
+
+MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
+                then \
+                   true; \
+                else \
+		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
+		   mkdir -p $(BUILD_DIR)/$$DIR; \
+                fi
+
+
+
+RELEASE = @RELEASE@
+ifeq ($(RELEASE),yes)
+OPTFLAGS = @RELEASE_CFLAGS@
+else
+OPTFLAGS = -g
+endif
+
+lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB)
+targets       = $(lib_targets)
+CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
+.PHONY: $(targets) $(CLEAN_TARGETS)
+
+all: $(targets)
+########################################################################
+#
+# Source files
+#
+
+ifeq ($(INTEL_ARCH),yes)
+
+# Source file the Intel archictecture only
+
+SOUND_SRC += snd_mixa.s
+else
+
+# Source files for non-Intel platforms
+endif
+
+# System specific source files
+
+CD_AUDIO_SRC   = cd_wrapper.c
+
+# Sound source
+
+SOUND_STYLE      = @SOUND_STYLE@
+
+ifeq ($(SOUND_STYLE),ALSA)
+SOUND_SRC += snd_dma.c snd_alsa.c
+endif
+ifeq ($(SOUND_STYLE),OSS)
+SOUND_SRC += snd_dma.c snd_oss.c
+endif
+ifeq ($(SOUND_STYLE),Solaris)
+SOUND_SRC += snd_dma.c snd_sun.c
+endif
+ifeq ($(SOUND_STYLE),MME)
+SOUND_SRC += snd_dma.c snd_mme.c
+endif
+ifeq ($(SOUND_STYLE),Windows)
+SOUND_SRC += snd_dma.c snd_win.c
+endif
+ifeq ($(SOUND_STYLE),NULL)
+SOUND_SRC += snd_null.c
+endif
+
+SOUND_SRC        += snd_mem.c snd_mix.c
+
+# Networking source files
+#
+# Uncomment the second line to add IPv6 support
+
+QW_NET_SRC     = net_udp.c net_com.c mdfour.c
+#QW_NET_SRC	= net_udp6.c net_com.c mdfour.c
+
+
+########################################################################
+#
+# Directory specific stuff
+#
+DEFS = @DEFS@
+CFLAGS = @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. \
+$(SRC_DIR_INC) -I$(COMMON_ODIR) -I$(COMMON_DIR)
+
+
+###########################################################################
+#
+# Compilation rules
+#
+
+$(OBJ_PATTERN): $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(SRC_DIR)/%.s
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+###########################################################################
+#
+# Specific target rules
+#
+
+# Lib Software targets
+
+SOUND_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/sound_lib/%,$(addsuffix \
+			  .@OBJEXT@, $(basename $(SOUND_SRC) .c .s)))
+
+sound_lib_DIR:
+	@DIR=sound_lib; $(MAKE_SURE_DIR)
+
+$(SOUND_LIB): sound_lib_DIR $(TARGET_DIR)/sound_lib.a
+
+$(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
+	#gcc -Wall -shared -o $@ $(SOUND_LIB_OBJS)
+	ar cru $@ $(SOUND_LIB_OBJS)
+	ranlib $@
+
+
+###########################################################################
+#
+# Misc targets
+#
+
+distclean: clean
+	rm -f Makefile
+
+$(CLEAN_TARGETS):
+	rm -f $(BUILD_DIR)/../$(subst clean-,,$@)
+
+clean-sound_lib:
+	rm -rf $(BUILD_DIR)/$(subst clean-,,$@)
+
+clean: clean-sound_lib $(CLEAN_TARGETS)
+	-rmdir $(BUILD_DIR)
+
+install: $(targets)
+	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)
+	for i in $(targets); do \
+	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	     $(DESTDIR)/$(bindir)/$$i; \
+	done
+
+check:
+	@echo check not implemented

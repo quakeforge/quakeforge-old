@@ -21,7 +21,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "cvar.h"
+#include "client.h"
+#include "console.h"
 
 cvar_t		baseskin = {"baseskin", "base"};
 cvar_t		noskins = {"noskins", "0"};

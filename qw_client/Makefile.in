@@ -3,24 +3,26 @@
 # Quake general stuff
 #
 
-PROJECT_DIR	= @top_srcdir@
-PROJECT_ODIR	= ..
-SRC_DIR		= @srcdir@
-QW_COMMON_DIR	= $(PROJECT_DIR)/qw_common
-COMMON_DIR	= $(PROJECT_DIR)/common
-COMMON_ODIR	= $(PROJECT_ODIR)/common
-BIN_PREFIX	= qw-client
+PROJECT_DIR	:= @top_srcdir@
+PROJECT_ODIR	:= ..
+SRC_DIR		:= @srcdir@
+QW_COMMON_DIR	:= $(PROJECT_DIR)/qw_common
+COMMON_DIR	:= $(PROJECT_DIR)/common
+COMMON_ODIR	:= $(PROJECT_ODIR)/common
+BIN_PREFIX	:= qw-client
 
-DESTDIR		=
+DESTDIR		:=
 
-prefix		= @prefix@
-exec_prefix	= @exec_prefix@
-bindir		= @bindir@
-mandir		= @mandir@
+prefix		:= @prefix@
+exec_prefix	:= @exec_prefix@
+bindir		:= @bindir@
+mandir		:= @mandir@
 
-BUILD_DIR	= $(PROJECT_ODIR)/targets/qw_client
+TARGET_DIR	:= $(PROJECT_ODIR)/targets
+BUILD_DIR	:= $(TARGET_DIR)/qw_client
+OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{gl,soft,common_lib}/%.o)
 
-LDFLAGS = @LDFLAGS@ @SND_LIBS@ @NET_LIBS@ -lm
+LDFLAGS = @LDFLAGS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
@@ -113,7 +115,6 @@ CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
 SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
 	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
 	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
-XTRA_SND_SRC = snd_mixa.s
 else
 
 # Source files for non-Intel platforms
@@ -124,29 +125,6 @@ endif
 # System specific source files
 
 CD_AUDIO_SRC   = cd_wrapper.c
-
-# Sound source
-
-SND_STYLE      = @SND_STYLE@
-SND_SRC = snd_null.c
-
-ifeq ($(SND_STYLE),ALSA)
-SND_SRC = snd_dma.c snd_alsa.c
-endif
-ifeq ($(SND_STYLE),OSS)
-SND_SRC = snd_dma.c snd_oss.c
-endif
-ifeq ($(SND_STYLE),Solaris)
-SND_SRC = snd_dma.c snd_sun.c
-endif
-ifeq ($(SND_STYLE),MME)
-SND_SRC = snd_dma.c snd_mme.c
-endif
-ifeq ($(SND_STYLE),Windows)
-SND_SRC = snd_dma.c snd_win.c
-endif
-
-SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 
 SYS_SRC        = sys_common.c @QW_CL_SYS_SRC@
 
@@ -160,7 +138,7 @@ QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 # Common source files
 
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
-                 wad.c zone.c cvars.c
+                 wad.c zone.c cvars.c qendian.c lib_replace.c quakefs.c qargs.c
 
 # GL renderer source
 
@@ -194,7 +172,7 @@ QW_GENERAL_SRC = pmove.c pmovetst.c
 
 # Source common to QW/UQuake
 CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
-	$(CL_ADDITIONAL_GENERAL_SRC) $(SND_SRC) r_part.c
+	$(CL_ADDITIONAL_GENERAL_SRC) $(CD_AUDIO_SRC) r_part.c
 
 
 ########################################################################
@@ -216,61 +194,30 @@ GENERAL_SRC = $(CL_COMMON_SRC) \
 # Compilation rules
 #
 
-# Common lib targets.
-
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(SRC_DIR)/%.c
+$(OBJ_PATTERN): $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(SRC_DIR)/%.s
+$(OBJ_PATTERN): $(SRC_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(COMMON_DIR)/%.c
+$(OBJ_PATTERN): $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(COMMON_DIR)/%.s
+$(OBJ_PATTERN): $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(BUILD_DIR)/common_lib/%.o: $(QW_COMMON_DIR)/%.c
+$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 # Software targets
 soft_DIR:
 	@DIR=soft; $(MAKE_SURE_DIR)
 
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/soft/%.o: $(QW_COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
 
 # GL targets
 
 gl_DIR:
 	@DIR=gl; $(MAKE_SURE_DIR)
-
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/gl/%.o: $(QW_COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
 
 ###########################################################################
 #
@@ -286,7 +233,7 @@ common_lib_DIR:
 
 $(COMMON_LIB): common_lib_DIR $(BUILD_DIR)/common_lib.a
 
-$(BUILD_DIR)/common_lib.a: $(ALL_COMMON_LIB_OBJS)
+$(BUILD_DIR)/common_lib.a: common_lib_DIR $(ALL_COMMON_LIB_OBJS)
 	ar cru $@ $(ALL_COMMON_LIB_OBJS)
 	ranlib $@
 
@@ -294,11 +241,11 @@ $(BUILD_DIR)/common_lib.a: $(ALL_COMMON_LIB_OBJS)
 
 ifneq ($(X11QUAKE),)
 
-ALL_X11_SRC  = $(CD_AUDIO_SRC) $(SW_REND_SRC) @X11_VID_SRC@\
+ALL_X11_SRC  = $(SW_REND_SRC) @X11_VID_SRC@\
                model.c
 ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                           $(basename $(ALL_X11_SRC) .c .s))) \
-			  $(BUILD_DIR)/common_lib.a
+			  $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 X11_CFLAGS  = -DX11 @X_CFLAGS@
 X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@
@@ -322,11 +269,11 @@ endif
 # SVGALib software target
 
 ifneq ($(SVGAQUAKE),)
-ALL_SVGA_SRC = $(CD_AUDIO_SRC) $(SW_REND_SRC) \
+ALL_SVGA_SRC = $(SW_REND_SRC) \
 		vid_svgalib.c in_svgalib.c d_copy.s model.c
 ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_SVGA_SRC) .c .s))) \
-		$(BUILD_DIR)/common_lib.a
+		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 SVGA_CFLAGS  = @SVGA_CFLAGS@
 SVGA_LDFLAGS = @SVGA_LIBS@
@@ -351,11 +298,11 @@ endif
 ifneq ($(GGIQUAKE),)
 
 # Map the list of source files into a list of object files
-ALL_GGI_SRC   = $(CD_AUDIO_SRC) $(SW_REND_SRC) vid_ggi.c\
+ALL_GGI_SRC   = $(SW_REND_SRC) vid_ggi.c\
                 model.c
 ALL_GGI_OBJS  = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_GGI_SRC) .c .s))) \
-		$(BUILD_DIR)/common_lib.a
+		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 GGI_SRC     = vid_ggi.c
 GGI_CFLAGS  = -DGGI @GGI_CFLAGS@
@@ -379,7 +326,7 @@ ALL_SDL_SRC  = $(SW_REND_SRC) $(SDL_SRC) vid_sdl.c cd_sdl.c\
                model.c
 ALL_SDL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_SDL_SRC) .c .s))) \
-	       $(BUILD_DIR)/common_lib.a
+	       $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 SDL_CFLAGS  = @SDL_CFLAGS@ -DSDL
 SDL_LDFLAGS = @SDL_LIBS@
@@ -403,11 +350,11 @@ endif
 ifneq ($(MGLQUAKE),)
 
 # Map the list of source files into a list of object files
-ALL_MGL_SRC = $(CD_AUDIO_SRC) $(SW_REND_SRC) \
+ALL_MGL_SRC = $(SW_REND_SRC) \
 	vid_win.c in_win.c model.c
 ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_MGL_SRC) .c .s))) \
-	       $(BUILD_DIR)/common_lib.a
+	       $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 MGL_CFLAGS  = -DMGL @MGL_CFLAGS@
 MGL_LDFLAGS = @MGL_LIBS@ -lm
@@ -426,11 +373,11 @@ endif
 # X11 GL target
 
 ifneq ($(GLQUAKE),)
-ALL_GL_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
+ALL_GL_SRC  = $(GL_REND_SRC) \
 	gl_vidglx.c dga_check.c
 ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s))) \
-	      $(BUILD_DIR)/common_lib.a
+	      $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 GL_CFLAGS  = @OGL_CFLAGS@
 GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
@@ -453,11 +400,11 @@ endif
 # 3Dfx GL MCD target
 
 ifneq ($(TDFXQUAKE),)
-ALL_TDFX_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
+ALL_TDFX_SRC  = $(GL_REND_SRC) \
 		gl_vidlinux_3dfx.c in_svgalib.c
 ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
-		$(BUILD_DIR)/common_lib.a
+		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 TDFX_CFLAGS  = @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
@@ -494,7 +441,7 @@ clean: clean-soft clean-gl clean-common_lib $(CLEAN_TARGETS)
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)
 	for i in $(targets); do \
-	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	   $(PROJECT_DIR)/install-sh -m 755 $(TARGET_DIR)/$$i \
 	     $(DESTDIR)/$(bindir)/$$i; \
 	done
 

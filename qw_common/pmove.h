@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __PMOVE_H
 
 #include "pmove_simple.h"
+#include "model.h"
+#include "protocol.h"
 
 typedef struct
 {

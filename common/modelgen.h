@@ -29,6 +29,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // * pass data from one to the other via model files.      *
 // *********************************************************
 
+#ifndef _MODELGEN_H
+#define _MODELGEN_H
+
 #ifdef INCLUDELIBS
 
 #include <stdlib.h>
@@ -52,7 +55,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef SYNCTYPE_T
 #define SYNCTYPE_T
 typedef enum {ST_SYNC=0, ST_RAND } synctype_t;
-#endif
+#endif // SYNCTYPE_T
 
 typedef enum { ALIAS_SINGLE=0, ALIAS_GROUP } aliasframetype_t;
 
@@ -134,3 +137,4 @@ typedef struct {
 #define IDPOLYHEADER	(('O'<<24)+('P'<<16)+('D'<<8)+'I')
 														// little-endian "IDPO"
 
+#endif // _MODELGEN_H

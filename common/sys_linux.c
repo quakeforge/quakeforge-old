@@ -43,6 +43,9 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
+#include "qtypes.h"
+#include "sys.h"
+#include "common.h"
 
 #ifndef QUAKEWORLD
 qboolean	isDedicated;

@@ -40,3 +40,11 @@
 
 /* Define this to use experimental code */
 #undef _EXPERIMENTAL_
+
+@BOTTOM@
+
+#ifdef	__i386__
+#define id386	1
+#else
+#define id386	0
+#endif

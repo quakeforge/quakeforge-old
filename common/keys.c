@@ -21,6 +21,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 #include "quakedef.h"
+#include "qtypes.h"
+#include "keys.h"
+#include "cmd.h"
+#include "cvar.h"
+#include "client.h"
+#include "lib_replace.h"
+#include "console.h"
+#include "menu.h"
+#include "screen.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #endif

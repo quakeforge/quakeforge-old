@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include "qtypes.h"
+#include "draw.h"
+
 //
 // the net drivers should just set the apropriate bits in m_activenet,
 // instead of having the menu code look through their internal tables

@@ -24,6 +24,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _CLIENT_H
 #define _CLIENT_H
 
+#include "qtypes.h"
+#include "zone.h"
+#include "protocol.h"
+#include "vid.h"
+#include "render.h"
+#include "common.h"
+#include "sys.h"
+#include "cmd.h"
+
 typedef struct
 {
 	char		name[16];
@@ -59,7 +68,6 @@ typedef struct
 } player_state_t;
 
 
-#define	MAX_SCOREBOARDNAME	16
 typedef struct player_info_s
 {
 	int		userid;
@@ -100,12 +108,6 @@ typedef struct
 	qboolean	invalid;		// true if the packet_entities delta was invalid
 } frame_t;
 
-
-typedef struct
-{
-	int		destcolor[3];
-	int		percent;		// 0-256
-} cshift_t;
 
 #define	CSHIFT_CONTENTS	0
 #define	CSHIFT_DAMAGE	1
@@ -209,6 +211,7 @@ extern client_static_t	cls;
 // the client_state_t structure is wiped completely at every
 // server signon
 //
+/*
 typedef struct
 {
 	int	servercount;	// server identification for prespawns
@@ -293,6 +296,8 @@ typedef struct
 // all player information
 	player_info_t	players[MAX_CLIENTS];
 } client_state_t;
+extern	client_state_t	cl;
+*/
 
 
 //
@@ -332,7 +337,6 @@ extern	cvar_t	name;
 
 #define	MAX_STATIC_ENTITIES	128			// torches, etc
 
-extern	client_state_t	cl;
 
 // FIXME, allocate dynamically
 extern	entity_state_t	cl_baselines[MAX_EDICTS];

@@ -1,5 +1,7 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,6 +21,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // cvar.h
 
+#ifndef _CVAR_H
+#define _CVAR_H
+
+#include "qtypes.h"
+#include "qstructs.h"
 /*
 
 cvar_t variables are used to hold scalar or string variables that can be changed or displayed at the console or prog code as well as accessed directly
@@ -52,16 +59,6 @@ Cvars are restricted from having the same names as commands to keep this
 interface from being ambiguous.
 */
 
-typedef struct cvar_s
-{
-	char	*name;
-	char	*string;
-	qboolean archive;		// set to true to cause it to be saved to vars.rc
-	qboolean server;		// notifies players when changed
-	float	value;
-	struct cvar_s *next;
-} cvar_t;
-
 void 	Cvar_RegisterVariable (cvar_t *variable);
 // registers a cvar that allready has the name, string, and optionally the
 // archive elements set.
@@ -94,3 +91,4 @@ void 	Cvar_WriteVariables (FILE *f);
 cvar_t *Cvar_FindVar (char *var_name);
 
 extern cvar_t	*cvar_vars;
+#endif // _CVAR_H

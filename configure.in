@@ -3,7 +3,7 @@ AC_PREREQ(2.13)
 AC_INIT(common/crc.h)
 
 dnl Version of this release
-QF_VERSION=0.1-pre
+QF_VERSION=0.1.1-devel
 VERSION=2.40
 AC_DEFINE_UNQUOTED(QF_VERSION,"$QF_VERSION")
 AC_DEFINE_UNQUOTED(VERSION,"$VERSION")
@@ -495,11 +495,11 @@ esac
 dnl Check for sound libraries
 AC_CHECK_LIB(mme,waveOutOpen,HAVE_LIBMME=yes)
 
-SND_LIBS=""
-SND_STYLE=""
+SOUND_LIBS=""
+SOUND_STYLE=""
 AC_MSG_CHECKING(for sound support)
 if test "x$enable_alsa" = "xyes"; then
-   if test -z "$SND_STYLE" -a "x$ac_cv_header_sys_asoundlib_h" = "xyes"; then
+   if test -z "$SOUND_STYLE" -a "x$ac_cv_header_sys_asoundlib_h" = "xyes"; then
       AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <sys/asoundlib.h>
 #if defined(SND_LIB_MAJOR) && defined(SND_LIB_MINOR)
@@ -507,55 +507,55 @@ if test "x$enable_alsa" = "xyes"; then
 QF_maGiC_VALUE
 #endif
 #endif
-      ],[ SND_STYLE="ALSA" SND_LIBS="-lasound"])
+      ],[ SOUND_STYLE="ALSA" SOUND_LIBS="-lasound"])
    fi
 fi
 
-if test -z "$SND_STYLE" -a "x$ac_cv_header_sys_soundcard_h" = "xyes"; then
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_sys_soundcard_h" = "xyes"; then
    AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <sys/soundcard.h>
 #ifdef SNDCTL_DSP_SETTRIGGER
 QF_maGiC_VALUE
 #endif
-    ], SND_STYLE="OSS")
+    ], SOUND_STYLE="OSS")
 fi
-if test -z "$SND_STYLE" -a "x$ac_cv_header_linux_soundcard_h" = "xyes"; then
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_linux_soundcard_h" = "xyes"; then
    AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <linux/soundcard.h>
 #ifdef SNDCTL_DSP_SETTRIGGER
 QF_maGiC_VALUE
 #endif
-    ], SND_STYLE="OSS")
+    ], SOUND_STYLE="OSS")
 fi
-if test -z "$SND_STYLE" -a "x$ac_cv_header_machine_soundcard_h" = "xyes"; then
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_machine_soundcard_h" = "xyes"; then
    AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <machine/soundcard.h>
 #ifdef SNDCTL_DSP_SETTRIGGER
 QF_maGiC_VALUE
 #endif
-    ], SND_STYLE="OSS")
+    ], SOUND_STYLE="OSS")
 fi
 
-if test -z "$SND_STYLE" -a "x$ac_cv_header_sys_audioio_h" = "xyes"; then
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_sys_audioio_h" = "xyes"; then
   AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <sys/audioio.h>
 #ifdef AUDIO_SETINFO
 QF_maGiC_VALUE
 #endif
-    ], SND_STYLE="Solaris")
+    ], SOUND_STYLE="Solaris")
 fi
-if test -z "$SND_STYLE" -a "x$ac_cv_header_mme_mmsystem_h" = "xyes" -a \
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_mme_mmsystem_h" = "xyes" -a \
 	"x$HAVE_LIBMME" = "xyes"; then
   AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <mme/mmsystem.h>
 #ifdef WAVE_OPEN_SHAREABLE
 QF_maGiC_VALUE
 #endif
-    ], SND_STYLE="MME"
-       SND_LIBS="-lmme")
+    ], SOUND_STYLE="MME"
+       SOUND_LIBS="-lmme")
 fi
 
-if test -z "$SND_STYLE" -a "x$ac_cv_header_windows_h" = "xyes" -a \
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_windows_h" = "xyes" -a \
 	"x$ac_cv_header_mmsystem_h" = "xyes"; then
   AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <windows.h>
@@ -565,14 +565,15 @@ if test -z "$SND_STYLE" -a "x$ac_cv_header_windows_h" = "xyes" -a \
 QF_maGiC_VALUE
 #endif
 #endif
-    ], SND_STYLE="Windows"
-       SND_LIBS="-lwinmm")
+    ], SOUND_STYLE="Windows"
+       SOUND_LIBS="-lwinmm")
 fi
 
-if test "x$SND_STYLE" = "x"; then
+if test "x$SOUND_STYLE" = "x"; then
    AC_MSG_RESULT(no)
+   SOUND_STYLE="NULL"
 else
-   AC_MSG_RESULT(yes ($SND_STYLE style))
+   AC_MSG_RESULT(yes ($SOUND_STYLE style))
 fi
 
 
@@ -730,8 +731,8 @@ AC_SUBST(TDFXGL_LIBS)
 AC_SUBST(HAS_SDL)
 AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
-AC_SUBST(SND_STYLE)
-AC_SUBST(SND_LIBS)
+AC_SUBST(SOUND_STYLE)
+AC_SUBST(SOUND_LIBS)
 AC_SUBST(DYN_LIBS)
 AC_SUBST(INTEL_ARCH)
 AC_SUBST(NET_LIBS)
@@ -750,6 +751,7 @@ AC_OUTPUT(
 	qw_client/Makefile
 	qw_server/Makefile
 	uquake/Makefile
+	common/Makefile
 	Makefile
 	rpm/quakeforge.spec
 	rpm/build_rpm

@@ -22,8 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // gl_mesh.c: triangle model functions
 
+#include "qtypes.h"
 #include "quakedef.h"
-#include "glquake.h"
+#include "model.h"
+#include "console.h"
+#include "common.h"
+#include "sys.h"
 
 /*
 =================================================================

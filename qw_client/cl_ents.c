@@ -21,7 +21,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // cl_ents.c -- entity parsing and management
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "cvar.h"
+#include "client.h"
+#include "console.h"
+#include "mathlib.h"
+#include "view.h"
+#include "cvars.h"
 
 extern	cvar_t	cl_predict_players;
 extern	cvar_t	cl_predict_players2;

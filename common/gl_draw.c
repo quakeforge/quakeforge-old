@@ -23,8 +23,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // draw.c -- this is the only file outside the refresh that touches the
 // vid buffer
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "cvar.h"
+#include "wad.h"
 #include "glquake.h"
+#include "console.h"
+#include "sbar.h"
 
 extern unsigned char d_15to8table[65536];
 extern cvar_t crosshair, cl_crossx, cl_crossy, crosshaircolor;

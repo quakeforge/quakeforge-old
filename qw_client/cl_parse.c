@@ -22,9 +22,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // cl_parse.c  -- parse a message received from the server
 
+#include "qtypes.h"
 #include "quakedef.h"
 #include "model.h"
 #include "pmove.h"
+#include "glquake.h"
+#include "console.h"
+#include "mathlib.h"
+#include "sound.h"
+#include "cdaudio.h"
+#include "sbar.h"
+#include "screen.h"
 
 char *svc_strings[] =
 {
@@ -1036,7 +1044,6 @@ void CL_ParseServerMessage (void)
 	int			i, j;
 
 	received_framecount = host_framecount;
-	cl.last_servermessage = realtime;
 	CL_ClearProjectiles ();
 
 //

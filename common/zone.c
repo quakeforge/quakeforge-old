@@ -21,7 +21,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // Z_zone.c
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "sys.h"
+#include "lib_replace.h"
+#include "common.h"
+#include "console.h"
+#include "cmd.h"
 
 //#define	DYNAMIC_SIZE	0xc000
 #define	DYNAMIC_SIZE	0x20000

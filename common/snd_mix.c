@@ -21,7 +21,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // snd_mix.c -- portable code to mix sounds for snd_dma.c
 
-#include "quakedef.h"
+#include "config.h"
+#include "qtypes.h"
+#include "sound.h"
+#include "lib_replace.h"
 
 #ifdef _WIN32
 #include "winquake.h"

@@ -20,8 +20,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#include "qtypes.h"
 #include "quakedef.h"
 #include "winquake.h"
+#include "cvar.h"
+#include "client.h"
+#include "console.h"
+#include "mathlib.h"
 
 cvar_t	cl_nopred = {"cl_nopred","0"};
 cvar_t	cl_pushlatency = {"pushlatency","-999"};
