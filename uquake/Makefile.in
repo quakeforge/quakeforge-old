@@ -430,7 +430,7 @@ ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s)))
 
 GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
-GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
 
 $(BUILD_DIR)/gl/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
