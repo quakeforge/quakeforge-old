@@ -32,6 +32,7 @@
 // models are the only shared resource between a client and server running
 // on the same machine.
 
+#include <common_quakedef.h>	// WIN32: _snprintf is defined here
 #include <string.h>
 #include <model.h>
 #include <qendian.h>
