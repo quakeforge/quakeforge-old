@@ -70,7 +70,7 @@ cvar_t * cl_chasecam;
 cvar_t *cl_chasecam_up;
 cvar_t *cl_chasecam_back;
 cvar_t *cl_chasecam_right;
-
+cvar_t *cl_chasecam_mode;
 vec3_t	chase_pos;
 vec3_t	chase_angles;
 
@@ -79,13 +79,14 @@ vec3_t	chase_dest_angles;
 
 void Chase_Init (void) {
 	cl_chasecam = Cvar_Get ("cl_chasecam", "0", CVAR_ARCHIVE,
-			"None");
+			"Enable the chasecam (boolean)");
 	cl_chasecam_up = Cvar_Get ("cl_chasecam_up","16",CVAR_ARCHIVE,
-			"None");
+			"Determines the height of the chasecam");
 	cl_chasecam_back = Cvar_Get ("cl_chasecam_back","100",CVAR_ARCHIVE,
-			"None");
+			"Determines how far away the chasecam is away from the player on the axis parallel to the ground.");
 	cl_chasecam_right = Cvar_Get ("cl_chasecam_right","0", CVAR_ARCHIVE,
-			"None");
+			"Pans the chasecam to the left/right of the player in chasecam mode.");
+	cl_chasecam_mode = Cvar_Get ("cl_chasecam_mode", "0", CVAR_ARCHIVE, "Determines the mode used for the chasecam.\nRear (normal)=0\nOverhead=1\n----\nSettings recommended:\nIf using overhead set cl_chasecam_back 0, otherwise set to 100\nalso if you use overhead, a cl_chasecam_up of 100 is nice, otherwise use a value between 0 and 20");
 }
 
 void Chase_Reset (void) {
@@ -103,21 +104,38 @@ void TraceLine (vec3_t start, vec3_t end, vec3_t impact) {
 }
 
 void Chase_Update (void) {
-
-	int		i;
+	int i;
 	float	dist;
 	vec3_t	forward, up, right;
 	vec3_t	dest, stop;
+
+	// Save this for sideview
+	// int dir=1;
 
 	// if can't see player, reset
 	AngleVectors (cl.viewangles, forward, right, up);
 
 	// calc exact destination
-	for (i=0 ; i<3 ; i++)
-		chase_dest[i] = r_refdef.vieworg[i]
-			- forward[i] * cl_chasecam_back->value
-			- right[i] * cl_chasecam_right->value;
-	chase_dest[2] = r_refdef.vieworg[2] + cl_chasecam_up->value;
+
+// This is for the side-view code which isn't working yet.
+/*
+	if(dir==-1&&cl.viewangles[YAW]<210&&cl.viewangles[YAW]>150)
+		dir=-1;
+*/
+
+	if(cl_chasecam_mode->value!=0) 
+	{
+		chase_dest[0] = r_refdef.vieworg[0] - cl_chasecam_right->value;
+		chase_dest[1] = r_refdef.vieworg[1] - cl_chasecam_back->value;
+		chase_dest[2] = r_refdef.vieworg[2] + cl_chasecam_up->value;
+	}
+	else
+	{
+		for (i=0 ; i<3 ; i++)
+			chase_dest[i] = r_refdef.vieworg[i]
+        		- forward[i] * cl_chasecam_back->value
+        		- right[i] * cl_chasecam_right->value;
+	}
 
 	// find the spot the player is looking at
 	VectorMA (r_refdef.vieworg, 4096, forward, dest);
@@ -128,10 +146,22 @@ void Chase_Update (void) {
 	dist = DotProduct (stop, forward);
 	if (dist < 1)
 		dist = 1;
-	r_refdef.viewangles[PITCH] = -atan(stop[2] / dist) / M_PI * 180;
+	
+	// Yaw stuff here is/was for the side view which i'm still working on.
+
+// This here flipps the direction of the overhead.. might want this later but for yaw
+//	r_refdef.viewangles[YAW]=-atan(stop[2] / dist) / M_PI * 180;
+
+	// Top View :)
+	if(cl_chasecam_mode->value==1)
+		r_refdef.viewangles[PITCH]=90;
+	else 	// If not top view..
+		r_refdef.viewangles[PITCH] = -atan(stop[2] / dist) / M_PI * 180;
+
 
 	// move towards destination
 	VectorCopy (chase_dest, r_refdef.vieworg);
+
 }
 
 static void vectoangles(vec3_t vec, vec3_t ang)
@@ -275,6 +305,7 @@ static qboolean Cam_IsVisible(player_state_t *player, vec3_t vec)
 	d = vlen(v);
 	if (d < 16)
 		return false;
+
 	return true;
 }
 
@@ -284,8 +315,11 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
     vec3_t vec, vec2;
 	vec3_t forward, right, up;
 
+	if(cl_chasecam_mode->value>0)
+		 return 0;
+
 	VectorCopy(player->viewangles, vec);
-    vec[0] = 0;
+	vec[0] = 0;
 	AngleVectors (vec, forward, right, up);
 //	for (i = 0; i < 3; i++)
 //		forward[i] *= 3;
@@ -293,14 +327,14 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
     max = 1000;
 	VectorAdd(forward, up, vec2);
 	VectorAdd(vec2, right, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorAdd(forward, up, vec2);
 	VectorSubtract(vec2, right, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
     }
 	VectorAdd(forward, right, vec2);
@@ -365,6 +399,7 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
 	}
 	locked = true;
 	VectorCopy(vec, desired_position);
+
 	return true;
 }
 
@@ -398,6 +433,9 @@ void Cam_Track(usercmd_t *cmd)
 	frame_t *frame;
 	vec3_t vec;
 	float len;
+	
+	if(cl_chasecam->value>0)
+		return;
 
 	if (!cl.spectator)
 		return;
