@@ -28,7 +28,7 @@ Autoconf support:
 
 Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
-  Marcus Sundber <mackan@stacken.kth.se>
+  Marcus Sundberg <mackan@stacken.kth.se>
   Robert S. Elsner <sockman@ngfc.com>
 
 GL renderer fixes/optimizations:

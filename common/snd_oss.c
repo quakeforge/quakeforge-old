@@ -17,20 +17,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-#include <sys/shm.h>
-#include <sys/wait.h>
-#include <linux/soundcard.h>
-#include <stdio.h>
 #include "quakedef.h"
 
-int audio_fd;
-int snd_inited;
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#ifdef HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
+#ifdef HAVE_SYS_MMAN_H
+# include <sys/mman.h>
+#endif
+#if defined HAVE_SYS_SOUNDCARD_H
+# include <sys/soundcard.h>
+#elif defined HAVE_LINUX_SOUNDCARD_H
+# include <linux/soundcard.h>
+#elif HAVE_MACHINE_SOUNDCARD_H
+# include <machine/soundcard.h>
+#endif
+
+static int audio_fd;
+static int snd_inited;
 
 static int tryrates[] = { 11025, 22051, 44100, 8000 };
 
