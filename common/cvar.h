@@ -90,6 +90,12 @@ typedef struct cvar_s
 #define CVAR_CHEAT			512	// can not be changed if cheats are disabled
 #define CVAR_NORESTART		1024	// do not clear when a cvar_restart is issued
 
+// Zoid| A good CVAR_ROM example is basepath.  The code should read "cvar_t
+// *fs_basepath = CvarGet("fs_basepath", ".", CVAR_ROM);  The user can
+// override that with +set fs_basepath <blah> since the command line +set gets
+// created _before_ the C code for fs_basepath setup is called.  The code goes
+// "look, the user made fs_basepath already", uses the users value, but sets
+// CVAR_ROM as per the call.
 
 void 	Cvar_RegisterVariable (cvar_t *variable);
 // registers a cvar that allready has the name, string, and optionally the
