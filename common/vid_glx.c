@@ -1,5 +1,5 @@
 /*
-	gl_vidglx.c
+	vid_glx.c
 
 	OpenGL GLX video driver
 

@@ -1,5 +1,5 @@
 /*
-	gl_vidlinux_3dfx.c
+	vid_3dfxsvga.c
 
 	OpenGL device driver for 3Dfx chipsets running Linux
 

@@ -693,7 +693,7 @@ SOURCE=..\common\gl_screen.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\common\gl_vidnt.c
+SOURCE=..\common\vid_nt_gl.c
 
 !IF  "$(CFG)" == "uquake - Win32 Release"
 

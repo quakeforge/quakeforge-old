@@ -351,7 +351,7 @@ endif
 
 ifneq ($(GLQUAKE),)
 ALL_GL_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
-	gl_vidglx.c dga_check.c in_x11.c context_x11.c
+	vid_glx.c dga_check.c in_x11.c context_x11.c
 ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s))) \
 	      $(BUILD_DIR)/common_lib.a \
@@ -360,7 +360,7 @@ ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 GL_CFLAGS  = @OGL_CFLAGS@
 GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@
 
-$(BUILD_DIR)/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
+$(BUILD_DIR)/vid_glx.o: $(COMMON_DIR)/vid_glx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
@@ -379,7 +379,7 @@ endif
 
 ifneq ($(TDFXQUAKE),)
 ALL_TDFX_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
-		gl_vidlinux_3dfx.c in_svgalib.c
+		vid_3dfxsvga.c in_svgalib.c
 ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a \
@@ -388,7 +388,7 @@ ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 TDFX_CFLAGS  = @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
 
-$(BUILD_DIR)/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
+$(BUILD_DIR)/vid_3dfxsvga.@OBJEXT@: $(COMMON_DIR)/vid_3dfxsvga.c
 	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
 
 $(TDFXQUAKE): $(BUILD_DIR)/../$(TDFXQUAKE)
