@@ -266,6 +266,5 @@ void SV_SpawnServer (char *server);
 #endif
 
 void SV_Frame ( void );
-void SV_Shutdown ( qboolean );
 
 #endif // _SERVER_H
