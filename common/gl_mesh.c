@@ -322,6 +322,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		//
 		sprintf (fullpath, "%s/%s", com_gamedir, cache);
 		f = fopen (fullpath, "wb");
+#ifdef QUAKEWORLD
 		if (!f) {
 			char gldir[MAX_OSPATH];
 
@@ -329,6 +330,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 			Sys_mkdir (gldir);
 			f = fopen (fullpath, "wb");
 		}
+#endif
 
 		if (f)
 		{

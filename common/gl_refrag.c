@@ -135,8 +135,7 @@ void R_SplitEntityOnNode (mnode_t *node)
 // NODE_MIXED
 
 	splitplane = node->plane;
-//	sides = BOX_ON_PLANE_SIDE(r_emins, r_emaxs, splitplane);
-	sides = BoxOnPlaneSide(r_emins, r_emaxs, splitplane);
+	sides = BOX_ON_PLANE_SIDE(r_emins, r_emaxs, splitplane);
 	
 	if (sides == 3)
 	{
@@ -217,7 +216,11 @@ void R_StoreEfrags (efrag_t **ppefrag)
 			if ((pent->visframe != r_framecount) &&
 				(cl_numvisedicts < MAX_VISEDICTS))
 			{
+#ifdef QUAKEWORLD
+				cl_visedicts[cl_numvisedicts++] = *pent;
+#else // QUAKEWORLD
 				cl_visedicts[cl_numvisedicts++] = pent;
+#endif // QUAKEWORLD
 
 			// mark that we've recorded this entity for this frame
 				pent->visframe = r_framecount;
