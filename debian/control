@@ -6,7 +6,7 @@ Standards-Version: 3.0.1
 
 Package: quake-svga
 Architecture: i386
-Depends: ${shlibs:Depends}, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, quake-game
 Replaces: squake, quake-common
 Provides: quake
 Description: First person shooting game - SVGALib version
@@ -20,7 +20,7 @@ Description: First person shooting game - SVGALib version
 Package: quake-x11
 Architecture: any
 Replaces: xquake, quake-common
-Depends: ${shlibs:Depends}, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, quake-game
 Provides: quake
 Description: First person shooting game - X11 version
  QuakeForge is a source port of Quake, the successor to Id Software's very
@@ -31,7 +31,7 @@ Description: First person shooting game - X11 version
 
 Package: quake-ggi
 Architecture: any
-Depends: ${shlibs:Depends}, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, quake-game
 Provides: quake
 Description: First person shooting game - GGI version
  QuakeForge is a source port of Quake, the successor to Id Software's very
@@ -42,7 +42,7 @@ Description: First person shooting game - GGI version
 
 Package: quake-gl
 Architecture: any
-Depends: ${shlibs:Depends}, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, quake-game
 Provides: quake
 Replaces: glquake-glx, quake-common
 Description: First person shooting game - GL version
@@ -54,7 +54,7 @@ Description: First person shooting game - GL version
 
 Package: quake-3dfx
 Architecture: any
-Depends: ${shlibs:Depends}, mesag3-glide2 (>= 3.1-1), libglide2, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, mesag3-glide2 (>= 3.1-1), libglide2, quake-game
 Provides: quake
 Replaces: glquake-3dfxgl, quake-common
 Description: First person shooting game - 3dfx GL version
@@ -66,7 +66,7 @@ Description: First person shooting game - 3dfx GL version
 
 Package: quake-sdl
 Architecture: any
-Depends: ${shlibs:Depends}, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, quake-game
 Provides: quake
 Description: First person shooting game - SDL version
  QuakeForge is a source port of Quake, the successor to Id Software's very
@@ -77,7 +77,7 @@ Description: First person shooting game - SDL version
 
 Package: quake-server
 Architecture: any
-Depends: ${shlibs:Depends}, quake-lib (>= 1.06-5) | quake-lib-stub
+Depends: ${shlibs:Depends}, quake-game
 Provides: quake
 Description: First person shooting game - dedicated server
  QuakeForge is a source port of Quake, the successor to Id Software's very

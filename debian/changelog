@@ -1,4 +1,4 @@
-quakeforge (0.1-20000117-1) frozen unstable; urgency=HIGH
+quakeforge (0.1.0-1) frozen unstable; urgency=HIGH
 
   * "0.0.9-1" was actually "0.1-20000103-1"
   * Fixed the sig4's in the SVGALib-using targets

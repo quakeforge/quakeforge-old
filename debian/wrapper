@@ -1,0 +1,60 @@
+#!/bin/sh
+
+quakedir=/usr/share/games/quake   # Where quake is installed
+symtree=$HOME/.quake              # Where to put the symlink tree
+
+# returns what symlink actually points to
+readlink () {
+	perl -e '
+		$l = shift; 
+		exit 1 unless -l $l; 
+		$r = readlink $l;
+		exit 1 unless $r; 
+		print "$r\n"
+	' $1;
+}
+
+if test \! -d "$quakedir"; then
+	echo "$0: directory \"$quakedir\" not found" >&2
+	exit 2
+fi
+
+if test \! -d $symtree; then
+	mkdir -p $symtree
+fi
+
+
+# Remove all old symlinks in $symtree directory.
+cd $symtree
+for i in `find -type l`; do
+	if test "x`readlink $i | grep $quakedir`" != x; then
+		echo "Removing symlink $i"
+		rm -f $i
+	fi
+done
+
+# build the symlink tree
+cd $quakedir
+for i in `find -type d -maxdepth 1`; do
+	files=`find $i \! -type d`
+	for j in $files; do
+		oldj=$j
+		j=`echo "$j" | tr A-Z a-z`	
+		mkdir -p $symtree/`dirname $j`
+		ln -s "$quakedir/$oldj" $symtree/$j
+	done
+done
+
+# Remove any empty directories.
+cd $symtree
+find -type d | xargs rmdir 2>/dev/null
+
+# base is special, we need to handle that ourselves
+rm -f base
+ourbase=`readlink /etc/alternatives/quake-game-base`
+echo "ourbase $ourbase"
+echo "basename of ourbase `basename $ourbase`"
+ln -s `basename $ourbase` base
+
+$0.real $@
+
