@@ -20,7 +20,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // console.c
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "console.h"
+#include "keys.h"
+#include "lib_replace.h"
+#include "client.h"
+#include "cvar.h"
+#include "screen.h"
+#include "draw.h"
+#include "cmd.h"
+#include "sound.h"
+#include "sys.h"
+
 #ifdef NeXT
 #include <libc.h>
 #endif
