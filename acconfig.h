@@ -47,8 +47,8 @@
 /* Define this if your system has socklen_t */
 #undef HAS_SOCKLEN_T
 #ifndef HAS_SOCKLEN_T
-typedef int socklen_t;
-#   define HAS_SOCKLEN_T
+#	define socklen_t int
+#	define HAS_SOCKLEN_T
 #endif
 
 @BOTTOM@
