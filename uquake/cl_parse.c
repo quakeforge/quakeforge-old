@@ -20,6 +20,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl_parse.c  -- parse a message received from the server
 
 #include "quakedef.h"
+#include <protocol.h>
+#include <sound.h>
+#include <net.h>
+#include <sys.h>
+#include <console.h>
+#include <sbar.h>
+#include <mathlib.h>
+#include <cdaudio.h>
+#include <screen.h>
+#include <lib_replace.h>
+#include <cmd.h>
 
 void CL_ParseUpdate (int bits);
 
@@ -330,7 +341,7 @@ void CL_ParseBaseline (entity_t *ent)
 	ent->baseline.modelindex = MSG_ReadByte ();
 	ent->baseline.frame = MSG_ReadByte ();
 	ent->baseline.colormap = MSG_ReadByte();
-	ent->baseline.skin = MSG_ReadByte();
+	ent->baseline.skinnum = MSG_ReadByte();
 	for (i=0 ; i<3 ; i++)
 	{
 		ent->baseline.origin[i] = MSG_ReadCoord ();
@@ -363,10 +374,12 @@ void CL_ParseClientdata (int bits)
 	VectorCopy (cl.mvelocity[0], cl.mvelocity[1]);
 	for (i=0 ; i<3 ; i++)
 	{
-		if (bits & (SU_PUNCH1<<i) )
-			cl.punchangle[i] = MSG_ReadChar();
-		else
-			cl.punchangle[i] = 0;
+		if (bits & (SU_PUNCH1<<i) ) {
+			if (PITCH == i)
+				cl.punchangle = MSG_ReadChar();
+			else
+				MSG_ReadChar();
+		}
 		if (bits & (SU_VELOCITY1<<i) )
 			cl.mvelocity[0][i] = MSG_ReadChar()*16;
 		else
@@ -479,7 +492,7 @@ void CL_ParseStatic (void)
 	ent->model = cl.model_precache[ent->baseline.modelindex];
 	ent->frame = ent->baseline.frame;
 	ent->colormap = vid.colormap;
-	ent->skinnum = ent->baseline.skin;
+	ent->skinnum = ent->baseline.skinnum;
 	ent->effects = ent->baseline.effects;
 
 	VectorCopy (ent->baseline.origin, ent->origin);
@@ -614,7 +627,8 @@ void CL_ParseServerMessage (void)
 			break;
 			
 		case svc_setview:
-			cl.viewentity = MSG_ReadShort ();
+			cl.playernum = MSG_ReadShort ();
+			cl.playernum--;
 			break;
 					
 		case svc_lightstyle:
@@ -725,7 +739,8 @@ void CL_ParseServerMessage (void)
 
 		case svc_cdtrack:
 			cl.cdtrack = MSG_ReadByte ();
-			cl.looptrack = MSG_ReadByte ();
+			//cl.looptrack = MSG_ReadByte ();
+			MSG_ReadByte ();
 			if ( (cls.demoplayback || cls.demorecording) && (cls.forcetrack != -1) )
 				CDAudio_Play ((byte)cls.forcetrack, true);
 			else

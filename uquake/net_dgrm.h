@@ -20,6 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // net_dgrm.h
 
 
+#ifndef _NET_DGRM_H
+#define _NET_DGRM_H
+
+#include <qtypes.h>
+#include <net.h>
+
 int			Datagram_Init (void);
 void		Datagram_Listen (qboolean state);
 void		Datagram_SearchForHosts (qboolean xmit);
@@ -32,3 +38,5 @@ qboolean	Datagram_CanSendMessage (qsocket_t *sock);
 qboolean	Datagram_CanSendUnreliableMessage (qsocket_t *sock);
 void		Datagram_Close (qsocket_t *sock);
 void		Datagram_Shutdown (void);
+
+#endif // _NET_DGRM_H

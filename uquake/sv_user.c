@@ -20,6 +20,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // sv_user.c -- server code for moving users
 
 #include "quakedef.h"
+#include <qtypes.h>
+#include <mathlib.h>
+#include <lib_replace.h>
+#include <view.h>
+#include <sys.h>
+#include <net.h>
+#include <console.h>
+#include <cmd.h>
+#include <keys.h>
+#include <protocol.h>
 
 edict_t	*sv_player;
 

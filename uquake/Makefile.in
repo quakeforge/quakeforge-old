@@ -8,7 +8,7 @@ PROJECT_ODIR	= ..
 SRC_DIR		= @srcdir@
 COMMON_DIR	= $(PROJECT_DIR)/common
 COMMON_ODIR	= $(PROJECT_ODIR)/common
-BIN_PREFIX	= quake
+BIN_PREFIX	= uquake
 
 DESTDIR		=
 
@@ -17,9 +17,10 @@ exec_prefix	= @exec_prefix@
 bindir		= @bindir@
 mandir		= @mandir@
 
-BUILD_DIR	= $(PROJECT_ODIR)/targets/uquake
+TARGET_DIR	= $(PROJECT_ODIR)/targets
+BUILD_DIR	= $(TARGET_DIR)/uquake
 
-LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
+LDFLAGS = @LDFLAGS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
@@ -123,7 +124,6 @@ CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
 SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
 	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
 	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
-XTRA_SND_SRC = snd_mixa.s
 else
 
 # Source files for non-Intel platforms
@@ -134,29 +134,6 @@ endif
 # System specific source files
 
 CD_AUDIO_SRC = cd_wrapper.c
-
-# Sound source
-
-SND_STYLE      = @SND_STYLE@
-SND_SRC        = snd_null.c
-
-ifeq ($(SND_STYLE),ALSA)
-SND_SRC = snd_dma.c snd_alsa.c
-endif
-ifeq ($(SND_STYLE),OSS)
-SND_SRC = snd_dma.c snd_oss.c
-endif
-ifeq ($(SND_STYLE),Solaris)
-SND_SRC = snd_dma.c snd_sun.c
-endif
-ifeq ($(SND_STYLE),MME)
-SND_SRC = snd_dma.c snd_mme.c
-endif
-ifeq ($(SND_STYLE),Windows)
-SND_SRC = snd_dma.c snd_win.c
-endif
-
-SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 
 SYS_SRC        = sys_common.c @SYS_SRC@
 
@@ -176,7 +153,7 @@ UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 # Common source files
 
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
-                 wad.c zone.c cvars.c
+                 wad.c zone.c cvars.c lib_replace.c qendian.c quakefs.c
 
 # GL renderer source
 
@@ -205,7 +182,7 @@ SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c
 
 # Source common to QW/UQuake
 CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
-	$(CL_ADDITIONAL_GENERAL_SRC) $(SND_SRC) r_part.c
+	$(CL_ADDITIONAL_GENERAL_SRC) r_part.c
 
 
 ########################################################################
@@ -300,7 +277,8 @@ ifneq ($(X11QUAKE),)
 ALL_X11_SRC  = $(CD_AUDIO_SRC) $(SW_REND_SRC) @X11_VID_SRC@ model.c
 ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
 			  $(basename $(ALL_X11_SRC) .c .s))) \
-			  $(BUILD_DIR)/common_lib.a
+			  $(BUILD_DIR)/common_lib.a \
+			  $(TARGET_DIR)/sound_lib.a
 
 X11_CFLAGS  = -DX11 @X_CFLAGS@
 X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@
@@ -328,7 +306,8 @@ ALL_SVGA_SRC  = $(CD_AUDIO_SRC) $(SW_REND_SRC) \
 		vid_svgalib.c in_svgalib.c d_copy.s model.c
 ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_SVGA_SRC) .c .s))) \
-		$(BUILD_DIR)/common_lib.a
+		$(BUILD_DIR)/common_lib.a \
+		$(TARGET_DIR)/sound_lib.a
 
 SVGA_CFLAGS  = @SVGA_CFLAGS@
 SVGA_LDFLAGS = @SVGA_LIBS@
@@ -357,7 +336,8 @@ ALL_GGI_SRC   = $(CD_AUDIO_SRC) $(SW_REND_SRC) vid_ggi.c\
                 model.c
 ALL_GGI_OBJS  = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_GGI_SRC) .c .s))) \
-		$(BUILD_DIR)/common_lib.a
+		$(BUILD_DIR)/common_lib.a \
+		$(TARGET_DIR)/sound_lib.a
 
 GGI_SRC     = vid_ggi.c
 GGI_CFLAGS  = -DGGI @GGI_CFLAGS@
@@ -381,7 +361,8 @@ ALL_SDL_SRC  = $(SW_REND_SRC) $(SDL_SRC) vid_sdl.c cd_sdl.c\
                model.c
 ALL_SDL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_SDL_SRC) .c .s))) \
-	       $(BUILD_DIR)/common_lib.a
+	       $(BUILD_DIR)/common_lib.a \
+	       $(TARGET_DIR)/sound_lib.a
 
 SDL_CFLAGS  = @SDL_CFLAGS@ -DSDL
 SDL_LDFLAGS = @SDL_LIBS@
@@ -409,7 +390,8 @@ ALL_MGL_SRC = $(CD_AUDIO_SRC) $(SW_REND_SRC) \
 	vid_win.c in_win.c conproc.c model.c
 ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_MGL_SRC) .c .s))) \
-	       $(BUILD_DIR)/common_lib.a
+	       $(BUILD_DIR)/common_lib.a \
+	       $(TARGET_DIR)/sound_lib.a
 
 MGL_CFLAGS  = @MGL_CFLAGS@ -DMGL
 MGL_LDFLAGS = @MGL_LIBS@
@@ -438,7 +420,8 @@ ALL_VGA_SRC = $(CD_AUDIO_SRC) $(SW_REND_SRC) $(DOS_NET_SRC) \
 	d_copy.s model.c
 ALL_VGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_VGA_SRC) .c .s))) \
-	       $(BUILD_DIR)/common_lib.a
+	       $(BUILD_DIR)/common_lib.a \
+	       $(TARGET_DIR)/sound_lib.a
 
 VGA_CFLAGS  = @VGA_CFLAGS@ -DVGA
 VGA_LDFLAGS = @VGA_LIBS@
@@ -464,7 +447,8 @@ ALL_GL_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
 	gl_vidglx.c dga_check.c
 ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s))) \
-	      $(BUILD_DIR)/common_lib.a
+	      $(BUILD_DIR)/common_lib.a \
+	      $(TARGET_DIR)/sound_lib.a
 
 GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
 GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
@@ -491,7 +475,8 @@ ALL_TDFX_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
 		gl_vidlinux_3dfx.c in_svgalib.c
 ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
-		$(BUILD_DIR)/common_lib.a
+		$(BUILD_DIR)/common_lib.a \
+		$(TARGET_DIR)/sound_lib.a
 
 TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@

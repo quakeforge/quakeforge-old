@@ -49,6 +49,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <keys.h>
 #include <cvar.h>
 #include <menu.h>
+#include <sys.h>
+#include <cmd.h>
+#include <lib_replace.h>
+#include <draw.h>
+#include <console.h>
 
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};
@@ -967,7 +972,7 @@ GetEvent(void)
 		mouse_in_window = false;
 		break;
 /* Host_Quit_f only available in uquake */
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	case ClientMessage:
 		if (x_event.xclient.data.l[0] == aWMDelete) Host_Quit_f();
 		break;

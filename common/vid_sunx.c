@@ -997,7 +997,7 @@ GetEvent(void)
 		mouse_in_window = false;
 		break;
 /* Host_Quit_f only available in uquake */
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	case ClientMessage:
 		if (x_event.xclient.data.l[0] == aWMDelete) Host_Quit_f();
 		break;

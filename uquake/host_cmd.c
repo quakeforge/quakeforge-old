@@ -20,6 +20,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "quakedef.h"
+#include <qtypes.h>
+#include <cvar.h>
+#include <net.h>
+#include <cmd.h>
+#include <keys.h>
+#include <console.h>
+#include <sys.h>
+#include <screen.h>
+#include <lib_replace.h>
+#include <protocol.h>
 
 extern cvar_t	pausable;
 
@@ -932,7 +942,7 @@ void Host_Name_f (void)
 		if (Q_strcmp(cl_name.string, newName) == 0)
 			return;
 		Cvar_Set ("_cl_name", newName);
-		if (cls.state == ca_connected)
+		if (cls.state >= ca_connected)
 			Cmd_ForwardToServer ();
 		return;
 	}
@@ -1132,7 +1142,7 @@ void Host_Color_f(void)
 	if (cmd_source == src_command)
 	{
 		Cvar_SetValue ("_cl_color", playercolor);
-		if (cls.state == ca_connected)
+		if (cls.state >= ca_connected)
 			Cmd_ForwardToServer ();
 		return;
 	}

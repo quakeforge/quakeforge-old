@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl_parse.c  -- parse a message received from the server
 
 #include "quakedef.h"
+#include <protocol.h>
+#include <mathlib.h>
+#include <sys.h>
 
 entity_t *CL_EntityNum (int num);
 
@@ -119,7 +122,7 @@ if (bits&(1<<i))
 	if (bits & U_SKIN)
 		ent->skinnum = MSG_ReadByte();
 	else
-		ent->skinnum = ent->baseline.skin;
+		ent->skinnum = ent->baseline.skinnum;
 
 	if (bits & U_EFFECTS)
 		ent->effects = MSG_ReadByte();

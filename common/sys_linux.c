@@ -46,8 +46,9 @@
 #include "qtypes.h"
 #include "sys.h"
 #include "common.h"
+#include <lib_replace.h>
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 qboolean	isDedicated;
 #endif
 
@@ -230,7 +231,7 @@ void floating_point_exception_handler(int whatever) {
 
 char *Sys_ConsoleInput(void) {
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	static char text[256];
 	fd_set		fdset;
 	int			len;
@@ -272,7 +273,7 @@ int main (int c, char **v) {
 	double		time, oldtime, newtime;
 	quakeparms_t parms;
 	int j;
-#ifndef QUAKEWORLD	
+#ifdef UQUAKE
 	extern int vcrFile;
 	extern int recording;
 #endif
@@ -318,7 +319,7 @@ int main (int c, char **v) {
 		newtime = Sys_DoubleTime ();
 		time = newtime - oldtime;
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 		if (cls.state == ca_dedicated) {   // play vcrfiles at max speed
 			if (time < sys_ticrate.value && (vcrFile == -1 || recording) ) {
 				usleep(1);

@@ -191,7 +191,7 @@ void Cbuf_Execute (void)
 		}
 
 // execute the command line
-		Cmd_ExecuteString (line);
+		Cmd_ExecuteString (line, src_command);
 		
 		if (cmd_wait)
 		{	// skip out while text still remains in buffer, leaving it
@@ -420,6 +420,7 @@ static	int			cmd_argc;
 static	char		*cmd_argv[MAX_ARGS];
 static	char		*cmd_null_string = "";
 static	char		*cmd_args = NULL;
+cmd_source_t		cmd_source;
 
 
 
@@ -677,11 +678,12 @@ A complete command line has been parsed, so try to execute it
 FIXME: lookupnoadd the token to speed search?
 ============
 */
-void	Cmd_ExecuteString (char *text)
+void	Cmd_ExecuteString (char *text, cmd_source_t src)
 {	
 	cmd_function_t	*cmd;
 	cmdalias_t		*a;
 
+	cmd_source = src;
 	Cmd_TokenizeString (text);
 			
 // execute the command line

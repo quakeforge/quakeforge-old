@@ -26,6 +26,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #   include "quakedef.h"
 #endif
 
+#include <qtypes.h>
+#include <mathlib.h>
+#include <cvar.h>
+#include <protocol.h>
+#include <cmd.h>
+#include <sys.h>
+
 #define	RETURN_EDICT(e) (((int *)pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))
 #define	RETURN_STRING(s) (((int *)pr_globals)[OFS_RETURN] = PR_SetString(s))
 
@@ -551,7 +558,7 @@ void PF_random (void)
 	G_FLOAT(OFS_RETURN) = num;
 }
 
-#ifndef QUAKEWORLD /* !QUAKEWORLD */
+#ifdef UQUAKE /* UQUAKE */
 /*
 =================
 PF_particle
@@ -645,7 +652,7 @@ void PF_sound (void)
 	volume = G_FLOAT(OFS_PARM3) * 255;
 	attenuation = G_FLOAT(OFS_PARM4);
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (volume < 0 || volume > 255)
 		Sys_Error ("SV_StartSound: volume = %i", volume);
 
@@ -1131,7 +1138,7 @@ void PF_precache_model (void)
 		if (!sv.model_precache[i])
 		{
 			sv.model_precache[i] = s;
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 			sv.models[i] = Mod_ForName (s, true);
 #endif
 			return;
@@ -1825,12 +1832,7 @@ void PF_infokey (void)
 		if (!strcmp(key, "ip"))
 			value = strcpy(ov, NET_BaseAdrToString (svs.clients[e1-1].netchan.remote_address));
 		else if (!strcmp(key, "ping")) {
-#ifndef QUAKEWORLD
-			int ping = SV_CalcPing (&svs.clients[e1-1]);
-			snprintf(ov, sizeof(ov), "%d", ping);
-#else
 			snprintf(ov, sizeof(ov), "%d", svs.clients[e1-1].ping);
-#endif
 			value = ov;
 		} else
 			value = Info_ValueForKey (svs.clients[e1-1].userinfo, key);

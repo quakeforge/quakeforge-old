@@ -21,6 +21,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl_main.c  -- client main loop
 
 #include "quakedef.h"
+#include <qtypes.h>
+#include <qstructs.h>
+#include <sound.h>
+#include <net.h>
+#include <console.h>
+#include <screen.h>
+#include <mathlib.h>
+#include <cmd.h>
+#include <protocol.h>
+#include <cvar.h>
+#include <input.h>
 
 // we need to declare some mouse variables here, because the menu system
 // references them even when on a unix system.
@@ -111,7 +122,7 @@ void CL_Disconnect (void)
 // if running a local server, shut it down
 	if (cls.demoplayback)
 		CL_StopPlayback ();
-	else if (cls.state == ca_connected)
+	else if (cls.state >= ca_connected)
 	{
 		if (cls.demorecording)
 			CL_Stop_f ();
@@ -187,6 +198,7 @@ Con_DPrintf ("CL_SignonReply: %i\n", cls.signon);
 	case 1:
 		MSG_WriteByte (&cls.message, clc_stringcmd);
 		MSG_WriteString (&cls.message, "prespawn");
+		cls.state = ca_onserver;
 		break;
 		
 	case 2:		
@@ -209,6 +221,7 @@ Con_DPrintf ("CL_SignonReply: %i\n", cls.signon);
 		
 	case 4:
 		SCR_EndLoadingPlaque ();		// allow normal screen updates
+		cls.state = ca_active;
 		break;
 	}
 }
@@ -611,7 +624,7 @@ void CL_RelinkEntities (void)
 
 		ent->forcelink = false;
 
-		if (i == cl.viewentity && !cl_chasecam.value)
+		if (i == cl.playernum + 1 && !cl_chasecam.value)
 			continue;
 
 #ifdef QUAKE2
@@ -652,7 +665,7 @@ int CL_ReadFromServer (void)
 		
 		cl.last_received_message = realtime;
 		CL_ParseServerMessage ();
-	} while (ret && cls.state == ca_connected);
+	} while (ret && cls.state >= ca_connected);
 	
 	if (cl_shownet.value)
 		Con_Printf ("\n");
@@ -675,7 +688,7 @@ void CL_SendCmd (void)
 {
 	usercmd_t		cmd;
 
-	if (cls.state != ca_connected)
+	if (cls.state < ca_connected)
 		return;
 
 	if (cls.signon == SIGNONS)

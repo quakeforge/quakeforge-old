@@ -34,6 +34,8 @@
 #include "console.h"
 #include "view.h"
 #include "sound.h"
+#include <cvar.h>
+#include <sys.h>
 
 entity_t	r_worldentity;
 

@@ -138,7 +138,7 @@ void CDAudio_Update()
 
 int CDAudio_Init()
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (cls.state == ca_dedicated)
 		return -1;
 #endif

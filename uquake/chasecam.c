@@ -24,6 +24,8 @@
 */
 
 #include "quakedef.h"
+#include <cvar.h>
+#include <mathlib.h>
 
 cvar_t	cl_chasecam 		= {"cl_chasecam", "0", true};
 cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16", true};

@@ -29,6 +29,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "sound.h"
 #include "keys.h"
 #include "menu.h"
+#include <sys.h>
+#include <lib_replace.h>
+#include <draw.h>
 
 #ifndef _EXPERIMENTAL_
 # undef HAS_DGA

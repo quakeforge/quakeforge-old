@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // server.h
 
+#ifndef _SERVER_H
+#define _SERVER_H
+
 #include <qtypes.h>
 #include <progs.h>
 #include <setjmp.h>
@@ -259,3 +262,5 @@ void SV_SpawnServer (char *server, char *startspot);
 #else
 void SV_SpawnServer (char *server);
 #endif
+
+#endif // _SERVER_H

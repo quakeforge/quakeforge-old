@@ -28,6 +28,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <screen.h>
 #include <view.h>
 #include <sound.h>
+#include <cmd.h>
+#include <sys.h>
+#include <console.h>
 
 //#define	PASSAGES
 
@@ -103,11 +106,11 @@ int		r_polycount;
 int		r_drawnpolycount;
 int		r_wholepolycount;
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 #define VIEWMODNAME_LENGTH      256
 char	viewmodname[VIEWMODNAME_LENGTH+1];
 int 	modcount;
-#endif	// !QUAKEWORLD
+#endif	// UQUAKE
 
 int		*pfrustum_indexes[4];
 int		r_frustum_indexes[4*6];
@@ -127,10 +130,10 @@ float	dp_time1, dp_time2, db_time1, db_time2, rw_time1, rw_time2;
 float	se_time1, se_time2, de_time1, de_time2, dv_time1, dv_time2;
 
 void R_MarkLeaves (void);
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 void R_InitParticles (void);
 void R_DrawParticles (void);
-#endif	// !QUAKEWORLD
+#endif	// UQUAKE
 
 cvar_t	r_draworder = {"r_draworder","0"};
 cvar_t	r_speeds = {"r_speeds","0"};
@@ -332,9 +335,9 @@ void R_NewMap (void)
 
 	r_dowarpold = false;
 	r_viewchanged = false;
-#if !defined(QUAKEWORLD) && defined(PASSAGES)
+#if defined(UQUAKE) && defined(PASSAGES)
 	CreatePassages ();
-#endif	// !QUAKEWORLD && PASSAGES
+#endif	// UQUAKE && PASSAGES
 }
 
 
@@ -599,7 +602,7 @@ void R_DrawEntitiesOnList (void)
 #else
 		currententity = cl_visedicts[i];
 		
-		if (currententity == &cl_entities[cl.viewentity])
+		if (currententity == &cl_entities[cl.playernum + 1])
 			continue;	// don't draw the player
 #endif	// QUAKEWORLD
 

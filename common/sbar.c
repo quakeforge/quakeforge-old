@@ -30,6 +30,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "draw.h"
 #include "sbar.h"
 #include "screen.h"
+#include "cmd.h"
+#include <protocol.h>
 
 int			sb_updates;		// if >= vid.numpages, no update needed
 
@@ -60,7 +62,7 @@ qboolean	sb_showteamscores;
 
 int			sb_lines;			// scan lines to draw
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 qpic_t      *rsb_invbar[2];
 qpic_t      *rsb_weapons[5];
 qpic_t      *rsb_items[2];
@@ -268,7 +270,7 @@ void Sbar_Init (void)
 	sb_ibar = Draw_PicFromWad ("ibar");
 	sb_scorebar = Draw_PicFromWad ("scorebar");
 	
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (hipnotic)	//MED 01/04/97 added new hipnotic weapons
 	{
 	  hsb_weapons[0][0] = Draw_PicFromWad ("inv_laser");
@@ -318,7 +320,7 @@ void Sbar_Init (void)
 		rsb_ammo[1] = Draw_PicFromWad ("r_ammomulti");
 		rsb_ammo[2] = Draw_PicFromWad ("r_ammoplasma");
 	}
-#endif	// !QUAKEWORLD
+#endif	// UQUAKE
 }
 
 
@@ -333,7 +335,7 @@ Sbar_DrawPic
 */
 void Sbar_DrawPic (int x, int y, qpic_t *pic)
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_Pic (x + ((vid.width - 320)>>1), 
@@ -352,7 +354,7 @@ JACK: Draws a portion of the picture in the status bar.
 void Sbar_DrawSubPic(int x, int y, qpic_t *pic, 
 		int srcx, int srcy, int width, int height) 
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_SubPic (x + ((vid.width - 320)>>1), 
@@ -372,7 +374,7 @@ Sbar_DrawTransPic
 */
 void Sbar_DrawTransPic (int x, int y, qpic_t *pic)
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_TransPic (x + ((vid.width - 320)>>1), 
@@ -391,7 +393,7 @@ Draws one solid graphics character
 */
 void Sbar_DrawCharacter (int x, int y, int num)
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_Character (x + ((vid.width - 320)>>1) + 4, 
@@ -408,7 +410,7 @@ Sbar_DrawString
 */
 void Sbar_DrawString (int x, int y, char *str)
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_String (x + ((vid.width - 320)>>1), 
@@ -486,8 +488,6 @@ void Sbar_DrawNum (int x, int y, int num, int digits, int color)
 //=============================================================================
 
 #ifdef QUAKEWORLD
-//ZOID: this should be MAX_CLIENTS, not MAX_SCOREBOARD!!
-//int		fragsort[MAX_SCOREBOARD];
 int		fragsort[MAX_CLIENTS];
 int		scoreboardlines;
 typedef struct {
@@ -675,7 +675,7 @@ void Sbar_SoloScoreboard (void)
 	snprintf(str, sizeof(str),"Time :%3i:%i%i", minutes, tens, units);
 	Sbar_DrawString (184, 4, str);
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	// draw level name
 	l = strlen (cl.levelname);
 	Sbar_DrawString (232 - l*4, 12, cl.levelname);
@@ -689,7 +689,7 @@ Sbar_DrawScoreboard
 */
 void Sbar_DrawScoreboard (void)
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	Sbar_SoloScoreboard ();
 	if (cl.gametype == GAME_DEATHMATCH)
 		Sbar_DeathmatchOverlay (0);
@@ -715,7 +715,7 @@ void Sbar_DrawInventory (void)
 	headsup = !(cl_sbar.value || scr_viewsize.value<100);
 	hudswap = cl_hudswap.value; // Get that nasty float out :)
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (hipnotic)
 		headsup = false;
 	
@@ -762,7 +762,7 @@ void Sbar_DrawInventory (void)
 		}
 	}
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	// hipnotic weapons
 	if (hipnotic) {
 	
@@ -850,7 +850,7 @@ void Sbar_DrawInventory (void)
 				sb_updates = 0;
 			}
 			else {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 				//MED 01/04/97 changed keys
 				if (!hipnotic || (i>1)) {
 					Sbar_DrawPic (192 + i*16, -16, sb_items[i]);
@@ -862,7 +862,7 @@ void Sbar_DrawInventory (void)
 			if (time &&	time > cl.time - 2)
 				sb_updates = 0;
 		}
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 		// hipnotic items
 		if (hipnotic) {
 			for (i=0 ; i<2 ; i++) {
@@ -910,7 +910,7 @@ void Sbar_DrawInventory (void)
 					sb_updates = 0;
 			}
 		}
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	}
 #endif
 }
@@ -990,11 +990,7 @@ void Sbar_DrawFrags (void)
 		Sbar_DrawCharacter ( (x + 2) * 8 , -24, num[1]);
 		Sbar_DrawCharacter ( (x + 3) * 8 , -24, num[2]);
 
-#ifdef QUAKEWORLD
 		if (k == cl.playernum) {
-#else
-		if (k == cl.viewentity - 1) {
-#endif
 			Sbar_DrawCharacter ( x * 8 + 2, -24, 16);
 			Sbar_DrawCharacter ( (x + 4) * 8 -4, -24, 17);
 		}
@@ -1014,7 +1010,7 @@ void Sbar_DrawFace (void)
 {
 	int		f, anim;
 	
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	// PGM 01/19/97 - team color drawing
 	// PGM 03/02/97 - fixed so color swatch only appears in CTF modes
 	if (rogue &&
@@ -1026,7 +1022,7 @@ void Sbar_DrawFace (void)
 		char			num[12];
 		scoreboard_t	*s;
 		
-		s = &cl.scores[cl.viewentity - 1];
+		s = &cl.scores[cl.playernum];
 		// draw background
 		top = s->colors & 0xf0;
 		bottom = (s->colors & 15)<<4;
@@ -1110,7 +1106,7 @@ void Sbar_DrawNormal (void)
 	if (cl_sbar.value || scr_viewsize.value<100)
 	Sbar_DrawPic (0, 0, sb_sbar);
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (hipnotic) {
 		if (Sbar_Items() & IT_KEY1)
 			Sbar_DrawPic (209, 3, sb_items[0]);
@@ -1124,7 +1120,7 @@ void Sbar_DrawNormal (void)
 		Sbar_DrawNum (24, 0, 666, 3, 1);
 		Sbar_DrawPic (0, 0, draw_disc);
 	} else {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 		if (rogue) {
 			Sbar_DrawNum (24, 0, cl.stats[STAT_ARMOR], 3,
 			cl.stats[STAT_ARMOR] <= 25);
@@ -1144,7 +1140,7 @@ void Sbar_DrawNormal (void)
 				Sbar_DrawPic (0, 0, sb_armor[1]);
 			else if (Sbar_Items() & IT_ARMOR1)
 				Sbar_DrawPic (0, 0, sb_armor[0]);
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 		}
 #endif
 	}
@@ -1157,7 +1153,7 @@ void Sbar_DrawNormal (void)
 	, cl.stats[STAT_HEALTH] <= 25);
 
 // ammo icon
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (rogue) {
 		if (Sbar_Items() & RIT_SHELLS)
 			Sbar_DrawPic (224, 0, sb_ammo[0]);
@@ -1183,7 +1179,7 @@ void Sbar_DrawNormal (void)
 			Sbar_DrawPic (224, 0, sb_ammo[2]);
 		else if (Sbar_Items() & IT_CELLS)
 			Sbar_DrawPic (224, 0, sb_ammo[3]);
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	}
 #endif	// !QUAKEWORLD
 	Sbar_DrawNum (248, 0, cl.stats[STAT_AMMO], 3
@@ -1210,7 +1206,7 @@ void Sbar_Draw (void)
 	if (!headsup && sb_lines && vid.width > 320)
 		Draw_TileClear (0, vid.height - sb_lines, vid.width, sb_lines);
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (sb_lines > 24)
 	{
 		Sbar_DrawInventory ();
@@ -1795,7 +1791,7 @@ void Sbar_DeathmatchOverlay (int start)
 		Draw_Character ( x+16 , y, num[1]);
 		Draw_Character ( x+24 , y, num[2]);
 
-		if (k == cl.viewentity - 1)
+		if (k == cl.playernum)
 			Draw_Character ( x - 8, y, 12);
 
 #if 0
@@ -1856,7 +1852,7 @@ void Sbar_MiniDeathmatchOverlay (void)
 
 	//find us
 	for (i = 0; i < scoreboardlines; i++)
-		if (fragsort[i] == cl.viewentity - 1)
+		if (fragsort[i] == cl.playernum)
 			break;
 
     if (i == scoreboardlines) // we're not there
@@ -1894,7 +1890,7 @@ void Sbar_MiniDeathmatchOverlay (void)
 		Draw_Character ( x+16 , y, num[1]);
 		Draw_Character ( x+24 , y, num[2]);
 
-		if (k == cl.viewentity - 1) {
+		if (k == cl.playernum) {
 			Draw_Character ( x, y, 16);
 			Draw_Character ( x + 32, y, 17);
 		}
@@ -1932,7 +1928,7 @@ Sbar_IntermissionOverlay
 */
 void Sbar_IntermissionOverlay (void)
 {
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	qpic_t	*pic;
 	int		dig;
 	int		num;

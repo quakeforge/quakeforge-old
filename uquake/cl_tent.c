@@ -20,6 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl_tent.c -- client side temporary entities
 
 #include "quakedef.h"
+#include <qtypes.h>
+#include <sound.h>
+#include <mathlib.h>
+#include <protocol.h>
+#include <console.h>
+#include <sys.h>
 
 int			num_temp_entities;
 entity_t	cl_temp_entities[MAX_TEMP_ENTITIES];
@@ -341,9 +347,9 @@ void CL_UpdateTEnts (void)
 			continue;
 
 	// if coming from the player, update the start position
-		if (b->entity == cl.viewentity)
+		if (b->entity == cl.playernum + 1)
 		{
-			VectorCopy (cl_entities[cl.viewentity].origin, b->start);
+			VectorCopy (cl_entities[cl.playernum + 1].origin, b->start);
 		}
 
 	// calculate pitch and yaw

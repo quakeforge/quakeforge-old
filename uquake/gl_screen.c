@@ -25,6 +25,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "glquake.h"
+#include <qtypes.h>
+#include <sys.h>
+#include <cvar.h>
+#include <keys.h>
+#include <draw.h>
+#include <sbar.h>
+#include <cmd.h>
+#include <console.h>
+#include <sound.h>
+#include <screen.h>
+#include <menu.h>
 
 #include <time.h>
 
@@ -552,9 +563,7 @@ void SCR_SetUpToDrawConsole (void)
 		return;         // never a console with loading plaque
 		
 // decide on the height of the console
-	con_forcedup = !cl.worldmodel || cls.signon != SIGNONS;
-
-	if (con_forcedup)
+	if (cls.state != ca_active)
 	{
 		scr_conlines = vid.height;              // full screen
 		scr_con_current = scr_conlines;
@@ -599,7 +608,7 @@ void SCR_DrawConsole (void)
 	if (scr_con_current)
 	{
 		scr_copyeverything = 1;
-		Con_DrawConsole (scr_con_current, true);
+		Con_DrawConsole (scr_con_current);
 		clearconsole = 0;
 	}
 	else
@@ -693,7 +702,7 @@ void SCR_BeginLoadingPlaque (void)
 {
 	S_StopAllSounds (true);
 
-	if (cls.state != ca_connected)
+	if (cls.state < ca_connected)
 		return;
 	if (cls.signon != SIGNONS)
 		return;

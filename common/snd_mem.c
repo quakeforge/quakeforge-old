@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "string.h"
 #include "quakefs.h"
 #include "sys.h"
+#include <console.h>
 
 int			cache_full_cycle;
 

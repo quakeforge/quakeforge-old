@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "net_loop.h"
+#include <lib_replace.h>
+#include <sys.h>
+#include <console.h>
 
 qboolean	localconnectpending = false;
 qsocket_t	*loop_client = NULL;

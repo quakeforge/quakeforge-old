@@ -55,6 +55,14 @@ unsigned long inet_addr(const char *cp);
 
 #include "quakedef.h"
 #include "net_dgrm.h"
+#include <qtypes.h>
+#include <cmd.h>
+#include <lib_replace.h>
+#include <console.h>
+#include <sys.h>
+#include <cvar.h>
+#include <screen.h>
+#include <keys.h>
 
 // these two macros are to make the code more readable
 #define sfunc	net_landrivers[sock->landriver]
@@ -124,6 +132,7 @@ void NET_Ban_f (void)
 			return;
 		print = SV_ClientPrintf;
 	}
+
 
 	switch (Cmd_Argc ())
 	{

@@ -56,6 +56,15 @@ Driver: Mesa 3.1, Software
 Target: all, (x11/svga)
 Extra: at 16bpp
 
+Name: Zephaniah E. Hull.
+Email: mercury@quakeforge.net
+Chip: P200MMX
+Distro: Debian Potato
+Kernel: 2.3.x
+Card: 4mb V1
+Driver: 3dfxgl
+Target: -3dfx, -svga, -x11, -ggi, -gl (barely).
+
 Chip: K6-2 350MHz, K6-2 350Mhz, K6-2 266Mhz
 Distro: n/a
 Kernel: 2.2, 2.2, 2.0

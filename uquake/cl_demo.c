@@ -19,7 +19,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include <qtypes.h>
 #include "quakedef.h"
+#include <net.h>
+#include <sys.h>
+#include <mathlib.h>
+#include <cmd.h>
+#include <console.h>
+#include <protocol.h>
 
 void CL_FinishTimeDemo (void);
 
@@ -216,7 +223,7 @@ void CL_Record_f (void)
 		return;
 	}
 
-	if (c == 2 && cls.state == ca_connected)
+	if (c == 2 && cls.state >= ca_connected)
 	{
 		Con_Printf("Can not record - already connected to server\nClient demo recording must be started before connecting\n");
 		return;

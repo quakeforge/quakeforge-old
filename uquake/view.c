@@ -22,6 +22,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "r_local.h"
 #include "draw.h" /* For Draw_Crosshair() */
+#include <mathlib.h>
+#include <qtypes.h>
+#include <qstructs.h>
+#include <cmd.h>
+#include <screen.h>
+#include <console.h>
+#include <cvar.h>
 
 /*
 
@@ -359,7 +366,7 @@ void V_ParseDamage (void)
 //
 // calculate view angle kicks
 //
-	ent = &cl_entities[cl.viewentity];
+	ent = &cl_entities[cl.playernum + 1];
 	
 	VectorSubtract (from, ent->origin, from);
 	VectorNormalize (from);
@@ -597,7 +604,7 @@ void V_BoundOffsets (void)
 {
 	entity_t	*ent;
 	
-	ent = &cl_entities[cl.viewentity];
+	ent = &cl_entities[cl.playernum + 1];
 
 // absolutely bound refresh reletive to entity clipping hull
 // so the view can never be inside a solid wall
@@ -642,7 +649,7 @@ void V_CalcViewRoll (void)
 {
 	float		side;
 		
-	side = V_CalcRoll (cl_entities[cl.viewentity].angles, cl.velocity);
+	side = V_CalcRoll (cl_entities[cl.playernum + 1].angles, cl.velocity);
 	r_refdef.viewangles[ROLL] += side;
 
 	if (v_dmg_time > 0)
@@ -673,7 +680,7 @@ void V_CalcIntermissionRefdef (void)
 	float		old;
 
 // ent is the player model (visible when out of body)
-	ent = &cl_entities[cl.viewentity];
+	ent = &cl_entities[cl.playernum + 1];
 // view is the weapon model (only visible from inside body)
 	view = &cl.viewent;
 
@@ -706,7 +713,7 @@ void V_CalcRefdef (void)
 	V_DriftPitch ();
 
 // ent is the player model (visible when out of body)
-	ent = &cl_entities[cl.viewentity];
+	ent = &cl_entities[cl.playernum + 1];
 // view is the weapon model (only visible from inside body)
 	view = &cl.viewent;
 	
@@ -788,7 +795,7 @@ void V_CalcRefdef (void)
 	view->colormap = vid.colormap;
 
 // set up the refresh position
-	VectorAdd (r_refdef.viewangles, cl.punchangle, r_refdef.viewangles);
+	r_refdef.viewangles[PITCH] += cl.punchangle;
 
 // smooth out stair step ups
 if (cl.onground && ent->origin[2] - oldz > 0)
@@ -827,7 +834,7 @@ extern vrect_t	scr_vrect;
 
 void V_RenderView (void)
 {
-	if (con_forcedup)
+	if (cls.state != ca_active)
 		return;
 
 // don't allow cheats in multiplayer

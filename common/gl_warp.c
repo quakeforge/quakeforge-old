@@ -31,6 +31,7 @@
 #include "quakedef.h"
 #include "glquake.h"
 #include "mathlib.h"
+#include <sys.h>
 
 extern	model_t	*loadmodel;
 

@@ -21,6 +21,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "r_local.h"
+#include <qtypes.h>
+#include <console.h>
+#include <lib_replace.h>
+#include <cvar.h>
+#include <sys.h>
+#include <sound.h>
+#include <keys.h>
+#include <view.h>
+#include <render.h>
+#include <net.h>
+#include <menu.h>
+#include <sbar.h>
+#include <cdaudio.h>
+#include <cmd.h>
+#include <input.h>
+#include <draw.h>
+#include <screen.h>
+#include <wad.h>
+#include <protocol.h>
+#include <mathlib.h>
 
 /*
 
@@ -426,7 +446,7 @@ void Host_ShutdownServer(qboolean crash)
 	sv.active = false;
 
 // stop all client sounds immediately
-	if (cls.state == ca_connected)
+	if (cls.state >= ca_connected)
 		CL_Disconnect ();
 
 // flush any pending messages - like the score!!!
@@ -698,7 +718,7 @@ void _Host_Frame (float time)
 	host_time += host_frametime;
 
 // fetch results from server
-	if (cls.state == ca_connected)
+	if (cls.state >= ca_connected)
 	{
 		CL_ReadFromServer ();
 	}

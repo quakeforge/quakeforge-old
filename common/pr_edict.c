@@ -28,6 +28,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #endif
 
+#include <qtypes.h>
+#include <lib_replace.h>
+#include <mathlib.h>
+#include <sys.h>
+#include <cmd.h>
+#include <crc.h>
+#include <cvar.h>
+
 dprograms_t		*progs;
 dfunction_t		*pr_functions;
 char			*pr_strings;

@@ -31,6 +31,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "cvar.h"
 #include "screen.h"
 #include "draw.h"
+#include <cmd.h>
+#include <sys.h>
 
 int			con_ormask;
 console_t	con_main;
@@ -594,6 +596,7 @@ void Con_DrawConsole (int lines)
 			Draw_Character ( (x+1)<<3, y, text[x]);
 	}
 
+#ifdef QUAKEWORLD
 	// draw the download bar
 	// figure out width
 	if (cls.download) {
@@ -636,6 +639,7 @@ void Con_DrawConsole (int lines)
 		for (i = 0; i < strlen(dlbar); i++)
 			Draw_Character ( (i+1)<<3, y, dlbar[i]);
 	}
+#endif
 
 
 // draw the input prompt, user text, and cursor if desired

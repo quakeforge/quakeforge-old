@@ -160,6 +160,7 @@ typedef struct
 							// to decay light values and smooth step ups
 	
 	qboolean	onground;
+	qboolean	inwater;
 	float		viewheight;
 	float		idealpitch;
 	int			maxclients;

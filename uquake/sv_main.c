@@ -21,6 +21,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // sv_main.c -- server main program
 
 #include "quakedef.h"
+#include <qtypes.h>
+#include <cvar.h>
+#include <protocol.h>
+#include <sys.h>
+#include <console.h>
+#include <sound.h>
+#include <lib_replace.h>
+#include <mathlib.h>
+#include <net.h>
+#include <cmd.h>
 
 server_t		sv;
 server_static_t	svs;
@@ -490,7 +500,7 @@ void SV_WriteEntitiesToClient (edict_t	*clent, sizebuf_t *msg)
 		if (ent->baseline.colormap != ent->v.colormap)
 			bits |= U_COLORMAP;
 			
-		if (ent->baseline.skin != ent->v.skin)
+		if (ent->baseline.skinnum != ent->v.skin)
 			bits |= U_SKIN;
 			
 		if (ent->baseline.frame != ent->v.frame)
@@ -940,7 +950,7 @@ void SV_CreateBaseline (void)
 		VectorCopy (svent->v.origin, svent->baseline.origin);
 		VectorCopy (svent->v.angles, svent->baseline.angles);
 		svent->baseline.frame = svent->v.frame;
-		svent->baseline.skin = svent->v.skin;
+		svent->baseline.skinnum = svent->v.skin;
 		if (entnum > 0 && entnum <= svs.maxclients)
 		{
 			svent->baseline.colormap = entnum;
@@ -962,7 +972,7 @@ void SV_CreateBaseline (void)
 		MSG_WriteByte (&sv.signon, svent->baseline.modelindex);
 		MSG_WriteByte (&sv.signon, svent->baseline.frame);
 		MSG_WriteByte (&sv.signon, svent->baseline.colormap);
-		MSG_WriteByte (&sv.signon, svent->baseline.skin);
+		MSG_WriteByte (&sv.signon, svent->baseline.skinnum);
 		for (i=0 ; i<3 ; i++)
 		{
 			MSG_WriteCoord(&sv.signon, svent->baseline.origin[i]);

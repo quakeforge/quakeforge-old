@@ -345,7 +345,7 @@ int CDAudio_Init(void)
 {
 	int i;
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (cls.state == ca_dedicated)
 		return -1;
 #endif

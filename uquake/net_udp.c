@@ -22,6 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // net_udp.c
 
 #include "quakedef.h"
+#include <qtypes.h>
+#include <lib_replace.h>
+#include <sys.h>
+#include <cvar.h>
+#include <net.h>
+#include <console.h>
 
 #include <stdio.h>
 #include <errno.h>

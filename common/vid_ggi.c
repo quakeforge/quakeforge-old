@@ -35,6 +35,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <keys.h>
 #include <cvar.h>
 #include <menu.h>
+#include <sys.h>
+#include <lib_replace.h>
+#include <draw.h>
+#include <console.h>
 
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];

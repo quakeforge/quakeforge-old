@@ -69,6 +69,15 @@ then searches for a command or variable that matches the first token.
 
 typedef void (*xcommand_t) (void);
 
+typedef enum
+{
+	src_client,     // came in over a net connection as a clc_stringcmd
+					// host_client will be valid during this state.
+	src_command     // from the command buffer
+} cmd_source_t;
+
+extern  cmd_source_t    cmd_source;
+
 void	Cmd_Init (void);
 
 void	Cmd_AddCommand (char *cmd_name, xcommand_t function);
@@ -100,7 +109,7 @@ void Cmd_TokenizeString (char *text);
 // Takes a null terminated string.  Does not need to be /n terminated.
 // breaks the string up into arg tokens.
 
-void	Cmd_ExecuteString (char *text);
+void	Cmd_ExecuteString (char *text, cmd_source_t src);
 // Parses a single line of text into arguments and tries to execute it
 // as if it was typed at the console
 

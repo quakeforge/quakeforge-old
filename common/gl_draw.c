@@ -30,6 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "glquake.h"
 #include "console.h"
 #include "sbar.h"
+#include <sys.h>
+#include <cmd.h>
+#include <lib_replace.h>
 
 extern unsigned char d_15to8table[65536];
 extern cvar_t crosshair, cl_crossx, cl_crossy, crosshaircolor;

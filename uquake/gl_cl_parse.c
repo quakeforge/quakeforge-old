@@ -21,6 +21,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "glquake.h"
+#include <protocol.h>
+#include <sys.h>
+#include <mathlib.h>
+
 entity_t *CL_EntityNum (int num);
 
 /*
@@ -123,7 +127,7 @@ if (bits&(1<<i))
 		if (bits & U_SKIN)
 			skin = MSG_ReadByte();
 		else
-			skin = ent->baseline.skin;
+			skin = ent->baseline.skinnum;
 		if (skin != ent->skinnum) {
 			ent->skinnum = skin;
 			if (num > 0 && num <= cl.maxclients)

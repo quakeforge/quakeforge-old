@@ -326,7 +326,7 @@ int CDAudio_Init(void)
 	MCI_SET_PARMS	mciSetParms;
 	int	n;
 
-#ifndef QUAKEWORLD
+#ifdef UQUAKE
 	if (cls.state == ca_dedicated)
 		return -1;
 #endif

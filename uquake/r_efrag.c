@@ -21,6 +21,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "r_local.h"
+#include <console.h>
+#include <mathlib.h>
+#include <sys.h>
 
 mnode_t	*r_pefragtopnode;
 
