@@ -128,6 +128,10 @@ void Con_Clear_f (void)
 {
 	Q_memset (con_main.text, ' ', CON_TEXTSIZE);
 	Q_memset (con_chat.text, ' ', CON_TEXTSIZE);
+	con_main.numlines = 0;
+	con_chat.numlines = 0;
+	con_main.display = con_main.current;
+	con_chat.display = con_chat.current;
 }
 
 
@@ -288,6 +292,8 @@ void Con_Linefeed (void)
 	if (con->display == con->current)
 		con->display++;
 	con->current++;
+	if (con->numlines < con_totallines)
+		con->numlines++;
 	Q_memset (&con->text[(con->current%con_totallines)*con_linewidth]
 	, ' ', con_linewidth);
 }
@@ -400,6 +406,7 @@ void Con_Printf (char *fmt, ...)
 // write it to the scrollable buffer
 	Con_Print (msg);
 
+#if 0
 // update the screen immediately if the console is displayed
 	if (cls.state != ca_active)
 	{
@@ -412,6 +419,7 @@ void Con_Printf (char *fmt, ...)
 			inupdate = false;
 		}
 	}
+#endif
 }
 
 /*

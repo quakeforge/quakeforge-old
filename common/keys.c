@@ -56,8 +56,6 @@ cvar_t	*cl_constyle;
 #define		MAXCMDLINE	256
 char	key_lines[32][MAXCMDLINE];
 int		key_linepos;
-int		shift_down=false;
-int		ctrl_down=false;
 int		key_lastpress;
 
 int		edit_line=0;
@@ -365,7 +363,8 @@ no_lf:
 	    case K_MWHEELUP:
 	    case KP_PGUP:
 	    case K_PGUP:
-			con->display -= 2;
+			if (con->display - con->current + con->numlines > 2)
+				con->display -= 2;
 			return;
 
 	    case K_MWHEELDOWN:
@@ -378,15 +377,18 @@ no_lf:
 
 	    case KP_HOME:
 	    case K_HOME:
-			if (ctrl_down)
-				con->display = con->current - con_totallines + 10;
+			if (keydown[K_CTRL])
+			{
+				if (con->numlines > 10)
+					con->display = con->current - con->numlines + 10;
+			}
 			else
 				key_linepos = 1;
 			return;
 
 	    case KP_END:
 	    case K_END:
-			if (ctrl_down)
+			if (keydown[K_CTRL])
 				con->display = con->current;
 			else
 				key_linepos = strlen(key_lines[edit_line]);
@@ -817,12 +819,6 @@ void Key_Event (int key, qboolean down)
 			Con_Printf ("%s is unbound, hit F4 to set.\n", Key_KeynumToString (key) );
 	}
 
-	if (key == K_SHIFT)
-		shift_down = down;
-
-	if (key == K_CTRL)
-		ctrl_down = down;
-
 	if (key_dest == key_message && cls.state != ca_active)
 		key_dest = key_console;
 		
@@ -917,7 +913,7 @@ void Key_Event (int key, qboolean down)
 	if (!down)
 		return;		// other systems only care about key down events
 
-	if (shift_down)
+	if (keydown[K_SHIFT])
 		key = keyshift[key];
 
 	switch (key_dest)
