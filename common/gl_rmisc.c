@@ -196,8 +196,8 @@ void R_Init (void)
 #endif /* QUAKEWORLD */
 	Cvar_RegisterVariable (&r_fog);
 	Cvar_RegisterVariable (&r_waterwarp);
-	Cvar_RegisterVariable (&r_volfog);
 #ifdef _EXPERIMENTAL_
+	Cvar_RegisterVariable (&r_volfog);
 	Cvar_RegisterVariable (&r_waterripple);
 #endif
 
