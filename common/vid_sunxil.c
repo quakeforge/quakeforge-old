@@ -307,21 +307,6 @@ static Cursor CreateNullCursor(Display *display, Window root)
 }
 
 
-void VID_MenuDraw( void )
-{
-	qpic_t		*p;
-    char		*ptr;
-    int			i, j, column, row, dup;
-    char		temp[100];
-
-    p = Draw_CachePic ("gfx/vidmodes.lmp");
-    M_DrawPic ( (320-p->width)/2, 4, p);
-	M_Print (4*8, 36 + MAX_COLUMN_SIZE * 8 + 8, "Video mode switching unavailable");
-	M_Print (9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
-}
-
-void VID_MenuKey( int key ) { M_Menu_Options_f (); }
-
 // Called at startup to set up translation tables, takes 256 8 bit RGB values
 // the palette data will go away after the call, so it must be copied off if
 // the video driver will need it again
@@ -628,9 +613,6 @@ void	VID_Init (unsigned char *palette)
 	VID_ResetFramebuffer();
 
 	D_InitCaches (surfcache, sizeof(surfcache));
-	
-	vid_menudrawfn = VID_MenuDraw;
-	vid_menukeyfn = VID_MenuKey;
 }
 
 VID_ResetFramebuffer()

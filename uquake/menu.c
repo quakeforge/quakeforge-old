@@ -1554,10 +1554,11 @@ void M_Keys_Key (int k)
 static void
 vid_menudraw(void)
 {
-	qpic_t		*p;
+// DDOI - Moved title pic to M_Video_Draw()
+//	qpic_t		*p;
 
-	p = Draw_CachePic("gfx/vidmodes.lmp");
-	M_DrawPic ((320-p->width)/2, 4, p);
+//	p = Draw_CachePic("gfx/vidmodes.lmp");
+//	M_DrawPic ((320-p->width)/2, 4, p);
 	M_Print(4*8, 36 + MAX_COLUMN_SIZE * 8 + 8,
 		"Video mode switching unavailable");
 	M_Print(9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
@@ -1585,6 +1586,11 @@ void M_Menu_Video_f (void)
 
 void M_Video_Draw(void)
 {
+	qpic_t *p;
+
+	p = Draw_CachePic("gfx/vidmodes.lmp");
+	M_DrawPic((320-p->width)/2,4, p);
+
 	if (vid_menudrawfn == NULL) {
 		Sys_Error("M_Video_Draw called when vid_menudrawfn == NULL!\n");
 	}

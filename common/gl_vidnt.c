@@ -1863,14 +1863,10 @@ VID_MenuDraw
 */
 void VID_MenuDraw (void)
 {
-	qpic_t		*p;
 	char		*ptr;
 	int			lnummodes, i, j, k, column, row, dup, dupmode;
 	char		temp[100];
 	vmode_t		*pv;
-
-	p = Draw_CachePic ("gfx/vidmodes.lmp");
-	M_DrawPic ( (320-p->width)/2, 4, p);
 
 	vid_wmodes = 0;
 	lnummodes = VID_NumModes ();

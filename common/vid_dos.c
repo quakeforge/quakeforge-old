@@ -577,7 +577,6 @@ VID_MenuDraw
 */
 void VID_MenuDraw (void)
 {
-	qpic_t		*p;
 	char		*ptr;
 	int			nummodes, i, j, column, row, dup;
 	char		temp[100];
@@ -585,9 +584,6 @@ void VID_MenuDraw (void)
 	vid_wmodes = 0;
 	nummodes = VID_NumModes ();
 	
-	p = Draw_CachePic ("gfx/vidmodes.lmp");
-	M_DrawPic ( (320-p->width)/2, 4, p);
-
 	for (i=0 ; i<nummodes ; i++)
 	{
 		if (vid_wmodes < MAX_MODEDESCS)
