@@ -1050,6 +1050,9 @@ void DrawTextureChains (void)
 			R_DrawSkyChain (s);
 		else
 		{
+			if ((s->flags & SURF_DRAWTURB) &&
+					r_wateralpha.value != 1.0)
+				continue;  // draw translucent water later
 			for ( ; s ; s=s->texturechain)
 				R_RenderBrushPoly (s);
 		}

@@ -6,6 +6,10 @@ NEWS for the QuakeForge project
 	the fog density rather than a simple toggle control.  Eric Windisch
 	recommends setting r_fog to .0005 if you're going to use it.
 
+19 Jan 2000 - removed cvar r_mirroralpha
+	This was a cheap hack which affected one texture on one map of the
+	entire game.  It also wasn't working right, so it's been removed.
+
 19 Jan 2000 - time cheats revisited
 	The final word in detecting time/speed cheating is here at long
 	last!  Still catches an occasional person who is "not cheating", but
