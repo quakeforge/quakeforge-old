@@ -350,7 +350,7 @@ int COM_FOpenFile (char *filename, FILE **file)
 ============
 COM_LoadFile
 
-Filename are reletive to the quake directory.
+Filename are relative to the quake directory.
 Allways appends a 0 byte to the loaded data.
 ============
 */
@@ -570,7 +570,6 @@ COM_pak3_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
 
 #endif
 
-// Todo: Make This work! :)
 #if defined _EXPERIMENTAL_ && GENERATIONS 
 pack_t *COM_LoadQ3PackFile (char *packfile)
 {
@@ -581,18 +580,12 @@ pack_t *COM_LoadQ3PackFile (char *packfile)
 	unzFile            		*pak;
 	pack_t 				*pack_old;
 	int 				status;
-//	int                           packhandle;
 	dpackfile_t            		info[MAX_FILES_IN_PACK];
-//	unz_file_info		fileInfo;
 	char szCurrentFileName[UNZ_MAXFILENAMEINZIP+1];
-//	int err;
 
 	pak = unzOpen(packfile);
 
-//	numpackfiles = header.dirlen / sizeof(dpackfile_t);
-//	numpackfiles = COM_pak3_getlen(*pak)/sizeof(unzFile);	
 	numpackfiles = 0;
-//= COM_pak3_getlen(pak)/sizeof(unzFile);
 	Con_Printf ("Assigned Numpackfiles\n");
 
 	if (!pak)
@@ -635,6 +628,48 @@ pack_t *COM_LoadQ3PackFile (char *packfile)
 }
 #endif 
 
+void COM_LoadGameDirectory(char *dir)
+{
+        int                             i;
+        searchpath_t    *search;
+        pack_t                  *pak;
+        char                    pakfile[MAX_OSPATH];
+        char                    *p;
+	
+	// Load all Pak1 files:
+        for (i=0 ; ; i++)
+        {
+             
+		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
+		
+		pak = COM_LoadPackFile(pakfile);                
+		if(!pak)
+
+                search = Hunk_Alloc (sizeof(searchpath_t));
+                search->pack = pak;
+                search->next = com_searchpaths;
+                com_searchpaths = search;
+        }
+
+#if defined _EXPERIMENTAL_ && GENERATIONS
+	// Load all Pak3 files.
+        for (i=0 ; ; i++)
+        {
+		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak3", dir, i);
+                pak = COM_LoadPak3File(pakfile);
+ 
+                if(!pak)
+                        break;
+
+                search = Hunk_Alloc (sizeof(searchpath_t));
+                search->pack = pak;
+                search->next = com_searchpaths;
+                com_searchpaths = search;
+        }
+#endif
+}
+
+
 /*
 ================
 COM_AddGameDirectory
@@ -668,18 +703,8 @@ void COM_AddGameDirectory (char *dir)
 //
 // add any pak files in the format pak0.pak pak1.pak, ...
 //
-	for (i=0 ; ; i++)
-	{
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
-		pak = COM_LoadPackFile (pakfile);
-		if (!pak)
-			break;
-		search = Hunk_Alloc (sizeof(searchpath_t));
-		search->pack = pak;
-		search->next = com_searchpaths;
-		com_searchpaths = search;		
-	}
 
+	COM_LoadGameDirectory(dir);
 }
 
 /*
@@ -744,17 +769,9 @@ void COM_Gamedir (char *dir)
 	//
 	// add any pak files in the format pak0.pak pak1.pak, ...
 	//
-	for (i=0 ; ; i++)
-	{
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", com_gamedir, i);
-		pak = COM_LoadPackFile (pakfile);
-		if (!pak)
-			break;
-		search = Z_Malloc (sizeof(searchpath_t));
-		search->pack = pak;
-		search->next = com_searchpaths;
-		com_searchpaths = search;		
-	}
+
+	COM_LoadGameDirectory(dir);
+	//}
 }
 
 /*
