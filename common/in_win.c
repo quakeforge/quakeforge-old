@@ -43,7 +43,6 @@ HRESULT (WINAPI *pDirectInputCreate)(HINSTANCE hinst, DWORD dwVersion,
 	LPDIRECTINPUT * lplpDirectInput, LPUNKNOWN punkOuter);
 
 // mouse variables
-//cvar_t	m_filter = {"m_filter","0"};
 cvar_t	*m_filter;
 
 int		mouse_buttons;
@@ -93,43 +92,24 @@ PDWORD	pdwRawValue[JOY_MAX_AXES];
 // each time.  this avoids any problems with getting back to a default usage
 // or when changing from one controller to another.  this way at least something
 // works.
-//cvar_t	in_joystick = {"joystick","0", CVAR_ARCHIVE};
 cvar_t	*in_joystick;
-//cvar_t	joy_name = {"joyname", "joystick"};
 cvar_t	*joy_name;
-//cvar_t	joy_advanced = {"joyadvanced", "0"};
 cvar_t	*joy_advanced;
-//cvar_t	joy_advaxisx = {"joyadvaxisx", "0"};
 cvar_t	*joy_advaxisx;
-//cvar_t	joy_advaxisy = {"joyadvaxisy", "0"};
 cvar_t	*joy_advaxisy;
-//cvar_t	joy_advaxisz = {"joyadvaxisz", "0"};
 cvar_t	*joy_advaxisz;
-//cvar_t	joy_advaxisr = {"joyadvaxisr", "0"};
 cvar_t	*joy_advaxisr;
-//cvar_t	joy_advaxisu = {"joyadvaxisu", "0"};
 cvar_t	*joy_advaxisu;
-//cvar_t	joy_advaxisv = {"joyadvaxisv", "0"};
 cvar_t	*joy_advaxisv;
-//cvar_t	joy_forwardthreshold = {"joyforwardthreshold", "0.15"};
 cvar_t	*joy_forwardthreshold;
-//cvar_t	joy_sidethreshold = {"joysidethreshold", "0.15"};
 cvar_t	*joy_sidethreshold;
-//cvar_t	joy_pitchthreshold = {"joypitchthreshold", "0.15"};
 cvar_t	*joy_pitchthreshold;
-//cvar_t	joy_yawthreshold = {"joyyawthreshold", "0.15"};
 cvar_t	*joy_yawthreshold;
-//cvar_t	joy_forwardsensitivity = {"joyforwardsensitivity", "-1.0"};
 cvar_t	*joy_forwardsensitivity;
-//cvar_t	joy_sidesensitivity = {"joysidesensitivity", "-1.0"};
 cvar_t	*joy_sidesensitivity;
-//cvar_t	joy_pitchsensitivity = {"joypitchsensitivity", "1.0"};
 cvar_t	*joy_pitchsensitivity;
-//cvar_t	joy_yawsensitivity = {"joyyawsensitivity", "-1.0"};
 cvar_t	*joy_yawsensitivity;
-//cvar_t	joy_wwhack1 = {"joywwhack1", "0.0"};
 cvar_t	*joy_wwhack1;
-//cvar_t	joy_wwhack2 = {"joywwhack2", "0.0"};
 cvar_t	*joy_wwhack2;
 
 qboolean	joy_avail, joy_advancedinit, joy_haspov;
@@ -512,48 +492,31 @@ IN_Init
 void IN_Init (void)
 {
 	// mouse variables
-//	Cvar_RegisterVariable (&m_filter);
-	m_filter = Cvar_Get ("m_filter","0");
+	m_filter = Cvar_Get ("m_filter","0",0,"None");
 
 	// joystick variables
-//	Cvar_RegisterVariable (&in_joystick);
-	in_joystick = Cvar_Get ("in_joystick","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&joy_name);
-	joy_name = Cvar_Get ("joy_name","joystick");
-//	Cvar_RegisterVariable (&joy_advanced);
-	joy_advanced = Cvar_Get ("joy_advanced","0");
-//	Cvar_RegisterVariable (&joy_advaxisx);
-	joy_advaxisx = Cvar_Get ("joy_advaxisx","0");
-//	Cvar_RegisterVariable (&joy_advaxisy);
-	joy_advaxisy = Cvar_Get ("joy_advaxisy","0");
-//	Cvar_RegisterVariable (&joy_advaxisz);
-	joy_advaxisz = Cvar_Get ("joy_advaxisz","0");
-//	Cvar_RegisterVariable (&joy_advaxisr);
-	joy_advaxisr = Cvar_Get ("joy_advaxisr","0");
-//	Cvar_RegisterVariable (&joy_advaxisu);
-	joy_advaxisu = Cvar_Get ("joy_advaxisu","0");
-//	Cvar_RegisterVariable (&joy_advaxisv);
-	joy_advaxisv = Cvar_Get ("joy_adaxisv","0");
-//	Cvar_RegisterVariable (&joy_forwardthreshold);
-	joy_forwardthreshold = Cvar_Get ("joy_forwardthreshold","0.15");
-//	Cvar_RegisterVariable (&joy_sidethreshold);
-	joy_sidethreshold = Cvar_Get ("joy_sidethreshold","0.15");
-//	Cvar_RegisterVariable (&joy_pitchthreshold);
-	joy_pitchthreshold = Cvar_Get ("joy_pitchthreshold","0.15");
-//	Cvar_RegisterVariable (&joy_yawthreshold);
-	joy_yawthreshold = Cvar_Get ("joy_yawthreshold","0.15");
-//	Cvar_RegisterVariable (&joy_forwardsensitivity);
-	joy_forwardsensitivity = Cvar_Get ("joy_forwardsensitivity","-1.0");
-//	Cvar_RegisterVariable (&joy_sidesensitivity);
-	joy_sidesensitivity = Cvar_Get ("joy_sidesensitivity","-1.0");
-//	Cvar_RegisterVariable (&joy_pitchsensitivity);
-	joy_pitchsensitivity = Cvar_Get ("joy_pitchsensitivity","-1.0");
-//	Cvar_RegisterVariable (&joy_yawsensitivity);
-	joy_yawsensitvity = Cvar_Get ("joy_yawsensitivity","-1.0");
-//	Cvar_RegisterVariable (&joy_wwhack1);
-	joy_wwhack1 = Cvar_Get ("joy_wwhack1","0.0");
-//	Cvar_RegisterVariable (&joy_wwhack2);
-	joy_wwhack2 = Cvar_Get ("joy_wwhack2","0.0");
+	in_joystick = Cvar_Get ("in_joystick","0",CVAR_ARCHIVE,"None");
+	joy_name = Cvar_Get ("joy_name","joystick",0,"None");
+	joy_advanced = Cvar_Get ("joy_advanced","0",0,"None");
+	joy_advaxisx = Cvar_Get ("joy_advaxisx","0",0,"None");
+	joy_advaxisy = Cvar_Get ("joy_advaxisy","0",0,"None");
+	joy_advaxisz = Cvar_Get ("joy_advaxisz","0",0,"None");
+	joy_advaxisr = Cvar_Get ("joy_advaxisr","0",0,"None");
+	joy_advaxisu = Cvar_Get ("joy_advaxisu","0",0,"None");
+	joy_advaxisv = Cvar_Get ("joy_adaxisv","0",0,"None");
+	joy_forwardthreshold = Cvar_Get ("joy_forwardthreshold","0.15",0,
+					"None");
+	joy_sidethreshold = Cvar_Get ("joy_sidethreshold","0.15",0,"None");
+	joy_pitchthreshold = Cvar_Get ("joy_pitchthreshold","0.15",0,"None");
+	joy_yawthreshold = Cvar_Get ("joy_yawthreshold","0.15",0,"None");
+	joy_forwardsensitivity = Cvar_Get ("joy_forwardsensitivity","-1.0",0,
+						"None");
+	joy_sidesensitivity = Cvar_Get ("joy_sidesensitivity","-1.0",0,"None");
+	joy_pitchsensitivity = Cvar_Get ("joy_pitchsensitivity","-1.0",0,
+					"None");
+	joy_yawsensitvity = Cvar_Get ("joy_yawsensitivity","-1.0",0,"None");
+	joy_wwhack1 = Cvar_Get ("joy_wwhack1","0.0",0,"None");
+	joy_wwhack2 = Cvar_Get ("joy_wwhack2","0.0",0,"None");
 
 	Cmd_AddCommand ("force_centerview", Force_CenterView_f);
 	Cmd_AddCommand ("joyadvancedupdate", Joy_AdvancedUpdate_f);

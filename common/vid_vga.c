@@ -392,11 +392,11 @@ int VGA_InitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 
 	if (_vid_wait_override->value)
 	{
-		Cvar_SetValue ("vid_wait", (float)VID_WAIT_VSYNC);
+		"vid_wait"->value = (float)VID_WAIT_VSYNC;
 	}
 	else
 	{
-		Cvar_SetValue ("vid_wait", (float)VID_WAIT_NONE);
+		vid_wait->value = (float)VID_WAIT_NONE;
 	}
 
 	D_InitCaches (vid_surfcache, vid_surfcachesize);

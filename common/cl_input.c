@@ -35,7 +35,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <protocol.h>
 #include <input.h>
 
-// cvar_t	cl_nodelta = {"cl_nodelta","0"};
 cvar_t	*cl_nodelta;
 
 /*
@@ -230,19 +229,6 @@ float CL_KeyState (kbutton_t *key)
 
 
 //==========================================================================
-/*
-cvar_t	cl_upspeed = {"cl_upspeed","200"};
-cvar_t	cl_forwardspeed = {"cl_forwardspeed","200", CVAR_ARCHIVE};
-cvar_t	cl_backspeed = {"cl_backspeed","200", CVAR_ARCHIVE};
-cvar_t	cl_sidespeed = {"cl_sidespeed","350"};
-
-cvar_t	cl_movespeedkey = {"cl_movespeedkey","2.0"};
-
-cvar_t	cl_yawspeed = {"cl_yawspeed","140"};
-cvar_t	cl_pitchspeed = {"cl_pitchspeed","150"};
-
-cvar_t	cl_anglespeedkey = {"cl_anglespeedkey","1.5"};
-*/
 cvar_t	*cl_upspeed;
 cvar_t	*cl_forwardspeed;
 cvar_t	*cl_backspeed;
@@ -638,7 +624,6 @@ void CL_InitInput (void)
 	Cmd_AddCommand ("-mlook", IN_MLookUp);
 
 	cl_nodelta = Cvar_Get ("cl_nodelta","0",0,"None");
-//	 Cvar_RegisterVariable (&cl_nodelta);
 }
 
 /*

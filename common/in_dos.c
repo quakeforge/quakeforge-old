@@ -77,7 +77,6 @@ typedef struct
 } externControl_t;
 */
 
-//cvar_t	m_filter = {"m_filter","1"};
 cvar_t	*m_filter;
 
 qboolean	mouse_avail;
@@ -88,9 +87,7 @@ float	mouse_x, mouse_y;
 float	old_mouse_x, old_mouse_y;
 
 
-//cvar_t	in_joystick = {"joystick","1"};
 cvar_t	*in_joystick;
-//cvar_t	joy_numbuttons = {"joybuttons","4", CVAR_ARCHIVE};
 cvar_t	*joy_numbuttons;
 
 qboolean	joy_avail;
@@ -106,7 +103,6 @@ qboolean		extern_avail;
 int				extern_buttons;
 int				extern_oldbuttonstate;
 int				extern_buttonstate;
-//cvar_t	aux_look = {"auxlook","1", CVAR_ARCHIVE};
 cvar_t	*aux_look;
 externControl_t	*extern_control;
 void IN_StartupExternal (void);
@@ -166,13 +162,9 @@ void IN_Init (void)
 {
 	int i;
 
-//	Cvar_RegisterVariable (&m_filter);
 	m_filter = Cvar_Get ("m_filter","1");
-//	Cvar_RegisterVariable (&in_joystick);
 	in_joystick = Cvar_Get ("in_joystick","1");
-//	Cvar_RegisterVariable (&joy_numbuttons);
 	joy_numbuttons = Cvar_Get ("joy_numbuttons","4",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&aux_look);
 	aux_look = Cvar_Get ("auxlook","1",CVAR_ARCHIVE);
 	Cmd_AddCommand ("toggle_auxlook", Toggle_AuxLook_f);
 	Cmd_AddCommand ("force_centerview", Force_CenterView_f);

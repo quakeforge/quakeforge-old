@@ -122,9 +122,8 @@ is marked
 */
 void Sys_Init (void)
 {
-//	Cvar_RegisterVariable (&sys_nostdout);
 	/* Fix this sometime. */
-	sys_nostdout = Cvar_Get ("sys_nostdout","0");
+	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 }
 
 /*

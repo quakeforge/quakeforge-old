@@ -35,11 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 extern unsigned char d_15to8table[65536];
 extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor;
 
-//cvar_t		gl_nobind = {"gl_nobind", "0"};
 cvar_t	*gl_nobind;
-//cvar_t		gl_max_size = {"gl_max_size", "1024"};
 cvar_t	*gl_max_size;
-//cvar_t		gl_picmip = {"gl_picmip", "0"};
 cvar_t	*gl_picmip;
 
 byte		*draw_chars;				// 8*8 graphic characters

@@ -242,7 +242,7 @@ qboolean CheckPixelMultiply (void)
 
 		old_pixel = current_pixel_multiply;
 		current_pixel_multiply = m;
-		Cvar_SetValue("pixel_multiply", m);
+		pixel_multiply->value = m;
 		
 		if(XGetWindowAttributes(x_disp, x_win, & wattr) == 0)
 			return true; // ???
@@ -383,8 +383,7 @@ void	VID_Init (unsigned char *palette)
 	
 	Cmd_AddCommand ("gamma", VID_Gamma_f);
 
-//	Cvar_RegisterVariable (&pixel_multiply);
-	pixel_multiply = Cvar_Get ("pixel_multiply","2",CVAR_ARCHIVE);
+	pixel_multiply = Cvar_Get ("pixel_multiply","2",CVAR_ARCHIVE,"None");
 
 	if (pipe(render_pipeline) < 0) 
 		Sys_Error("VID_Init: pipe");
@@ -500,7 +499,7 @@ void	VID_Init (unsigned char *palette)
 // See if we're going to do pixel multiply
 //
 	if (pixel_multiply->value < 1 || pixel_multiply->value > 4)
-		Cvar_SetValue("pixel_multiply", 2);
+		pixel_multiply->value = 2;
 	current_pixel_multiply = pixel_multiply->value;
 
 	w = 320*current_pixel_multiply; // minimum width
@@ -1184,12 +1183,15 @@ void Sys_SendKeyEvents(void)
 			   }
 }
 
+void IN_SendKeyEvents (void)
+{
+	Sys_SendKeyEvents ();
+}
+
 void IN_Init (void)
 {
-//	Cvar_RegisterVariable (&_windowed_mouse);
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&m_filter);
-	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE);
+	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
    if ( COM_CheckParm ("-nomouse") )
      return;
    mouse_x = mouse_y = 0.0;
@@ -1270,7 +1272,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 
 	}

@@ -100,25 +100,15 @@ float           scr_con_current;
 float           scr_conlines;           // lines of console to display
 
 float           oldscreensize, oldfov;
-//cvar_t          scr_viewsize = {"viewsize","100", CVAR_ARCHIVE};
 cvar_t	*scr_viewsize;
-//cvar_t          scr_fov = {"fov","90"}; // 10 - 170
 cvar_t	*scr_fov;
-//cvar_t          scr_conspeed = {"scr_conspeed","300"};
 cvar_t	*scr_conspeed;
-//cvar_t          scr_centertime = {"scr_centertime","2"};
 cvar_t	*scr_centertime;
-//cvar_t          scr_showram = {"showram","1"};
 cvar_t	*scr_showram;
-//cvar_t          scr_showturtle = {"showturtle","0"};
 cvar_t	*scr_showturtle;
-//cvar_t          scr_showpause = {"showpause","1"};
 cvar_t	*scr_showpause;
-//cvar_t          scr_printspeed = {"scr_printspeed","8"};
 cvar_t	*scr_printspeed;
-//cvar_t			scr_allowsnap = {"scr_allowsnap", "1"};
 cvar_t	*scr_allowsnap;
-//cvar_t			gl_triplebuffer = {"gl_triplebuffer", "1", CVAR_ARCHIVE };
 cvar_t	*gl_triplebuffer;
 extern  		cvar_t  *crosshair;
 
@@ -403,25 +393,15 @@ SCR_Init
 */
 void SCR_Init (void)
 {
-//	Cvar_RegisterVariable (&scr_fov);
 	scr_fov = Cvar_Get ("fov","90",0,"None");
-//	Cvar_RegisterVariable (&scr_viewsize);
 	scr_viewsize = Cvar_Get ("viewsize","100",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&scr_conspeed);
 	scr_conspeed = Cvar_Get ("scr_conspeed","300",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&scr_showram);
 	scr_showram = Cvar_Get ("scr_showram","1",0,"None");
-//	Cvar_RegisterVariable (&scr_showturtle);
 	scr_showturtle = Cvar_Get ("scr_showturtle","0",0,"None");
-//	Cvar_RegisterVariable (&scr_showpause);
 	scr_showpause = Cvar_Get ("scr_showpause","1",0,"None");
-//	Cvar_RegisterVariable (&scr_centertime);
 	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
-//	Cvar_RegisterVariable (&scr_printspeed);
 	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
-//	Cvar_RegisterVariable (&scr_allowsnap);
 	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",0,"None");
-//	Cvar_RegisterVariable (&gl_triplebuffer);
 	gl_triplebuffer = Cvar_Get ("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 
 //

@@ -1151,13 +1151,17 @@ Sys_SendKeyEvents(void)
 	}
 }
 
-<<<<<<< vid_sunx.c
+
+void
+IN_SendKeyEvents (void)
+{
+	Sys_SendKeyEvents ();
+}
 
 void
 IN_Init(void)
 {
-//	Cvar_RegisterVariable(&m_filter);
-	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE);
+	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
 	if (COM_CheckParm("-nomouse")) return;
 	mouse_x = mouse_y = 0.0;
 	mouse_avail = 1;
@@ -1217,8 +1221,6 @@ IN_Move(usercmd_t *cmd)
 	mouse_x = mouse_y = 0.0;
 }
 
-=======
->>>>>>> 1.27
 void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
@@ -1230,7 +1232,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch (option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 	}
 }

@@ -206,8 +206,8 @@ void VID_RememberWindowPos (void)
 			(rect.right > 0)                             &&
 			(rect.bottom > 0))
 		{
-			Cvar_SetValue ("vid_window_x", (float)rect.left);
-			Cvar_SetValue ("vid_window_y", (float)rect.top);
+			vid_window_x->value = (float)rect.left;
+			vid_window_y->value = (float)rect.top;
 		}
 	}
 }
@@ -226,8 +226,7 @@ void VID_CheckWindowXY (void)
 		((int)vid_window_x->value < 0)									   ||
 		((int)vid_window_y->value < 0))
 	{
-		Cvar_SetValue ("vid_window_x", 0.0);
-		Cvar_SetValue ("vid_window_y", 0.0 );
+		vid_window_x->value = vid_window_y->value = 0.0;
 	}
 }
 
@@ -1306,8 +1305,7 @@ qboolean VID_SetWindowedMode (int modenum)
 	{
 		if (COM_CheckParm ("-resetwinpos"))
 		{
-			Cvar_SetValue ("vid_window_x", 0.0);
-			Cvar_SetValue ("vid_window_y", 0.0);
+			vid_window_x->value = vid_window_y->value = 0.0;
 		}
 
 		windowed_mode_set = 1;
@@ -1662,11 +1660,11 @@ int VID_SetMode (int modenum, unsigned char *palette)
 				modenum = vid_default;
 			}
 
-			Cvar_SetValue ("vid_mode", (float)modenum);
+			vid_mode->value = (float)modenum;
 		}
 		else
 		{
-			Cvar_SetValue ("vid_mode", (float)vid_modenum);
+			vid_mode->value = (float)vid_modenum;
 			return 0;
 		}
 	}
@@ -1753,7 +1751,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 	ReleaseDC(NULL,hdc);
 
 	vid_modenum = modenum;
-	Cvar_SetValue ("vid_mode", (float)vid_modenum);
+	vid_mode->value = (float)vid_modenum;
 
 	if (!VID_AllocBuffers (vid.width, vid.height))
 	{
@@ -2140,50 +2138,29 @@ void	VID_Init (unsigned char *palette)
 	int	i, bestmatchmetric, t, dr, dg, db, bestmatch = 0;
 	int	basenummodes;
 	byte	*ptmp;
-<<<<<<< vid_win.c
 
-//	Cvar_RegisterVariable (&vid_mode);
-	vid_mode = Cvar_Get ("vid_mode","0");
-//	Cvar_RegisterVariable (&vid_wait);
-	vid_wait = Cvar_Get ("vid_wait","0");
-//	Cvar_RegisterVariable (&vid_nopageflip);
-	vid_nopageflip = Cvar_Get ("vid_nopageflip","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&_vid_wait_override);
-	_vid_wait_override = Cvar_Get ("_vid_wait_override","0",CVAR_ARCHIVE);
-=======
+	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
+	vid_wait = Cvar_Get ("vid_wait","0",0,"None");
+	vid_nopageflip = Cvar_Get ("vid_nopageflip","0",CVAR_ARCHIVE,"None");
+	_vid_wait_override = Cvar_Get ("_vid_wait_override","0",CVAR_ARCHIVE,
+					"None");
 
-	plugin_load("input");
-
-	IN->Init();
-
-	Cvar_RegisterVariable (&vid_mode);
-	Cvar_RegisterVariable (&vid_wait);
-	Cvar_RegisterVariable (&vid_nopageflip);
-	Cvar_RegisterVariable (&_vid_wait_override);
->>>>>>> 1.17
-	Cvar_RegisterVariable (&_vid_default_mode);
-	_vid_default_mode = Cvar_Get ("_vid_default_mode","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&_vid_default_mode_win);
+	_vid_default_mode = Cvar_Get ("_vid_default_mode","0",CVAR_ARCHIVE,
+					"None");
 	_vid_default_mode_win = Cvar_Get ("_vid_default_mode_win","3",
-						CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_config_x);
-	vid_config_x = Cvar_Get ("vid_config_x","800",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_config_y);
-	vid_config_y = Cvar_Get ("vid_config_y","600",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_stretch_by_2);
-	vid_stretch_by_2 = Cvar_Get ("vid_stretch_by_2","1",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&_windowed_mouse);
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_fullscreen_mode);
-	vid_fullscreen_mode = Cvar_Get ("vid_fullscreen_mode","3",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_windowed_mode);
-	vid_windowed_mode = Cvar_Get ("vid_windowed_mode","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&block_switch);
-	block_switch = Cvar_Get ("block_switch","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_window_x);
-	vid_window_x = Cvar_Get ("vid_window_x","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_window_y);
-	vid_window_y = Cvar_Get ("vid_window_y","0",CVAR_ARCHIVE);
+						CVAR_ARCHIVE,"None");
+	vid_config_x = Cvar_Get ("vid_config_x","800",CVAR_ARCHIVE,"None");
+	vid_config_y = Cvar_Get ("vid_config_y","600",CVAR_ARCHIVE,"None");
+	vid_stretch_by_2 = Cvar_Get ("vid_stretch_by_2","1",CVAR_ARCHIVE,
+					"None");
+	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+	vid_fullscreen_mode = Cvar_Get ("vid_fullscreen_mode","3",CVAR_ARCHIVE,
+					"None");
+	vid_windowed_mode = Cvar_Get ("vid_windowed_mode","0",CVAR_ARCHIVE,
+					"None");
+	block_switch = Cvar_Get ("block_switch","0",CVAR_ARCHIVE,"None");
+	vid_window_x = Cvar_Get ("vid_window_x","0",CVAR_ARCHIVE,"None");
+	vid_window_y = Cvar_Get ("vid_window_y","0",CVAR_ARCHIVE,"None");
 
 	Cmd_AddCommand ("vid_testmode", VID_TestMode_f);
 	Cmd_AddCommand ("vid_nummodes", VID_NumModes_f);
@@ -2432,8 +2409,7 @@ void	VID_Update (vrect_t *rects)
 			{
 				if (COM_CheckParm ("-resetwinpos"))
 				{
-					Cvar_SetValue ("vid_window_x", 0.0);
-					Cvar_SetValue ("vid_window_y", 0.0);
+					vid_window_x->value = vid_window_y->value = 0.0;
 				}
 
 				VID_CheckWindowXY ();
@@ -2450,17 +2426,16 @@ void	VID_Update (vrect_t *rects)
 
 			if (COM_CheckParm ("-resetwinpos"))
 			{
-				Cvar_SetValue ("vid_window_x", 0.0);
-				Cvar_SetValue ("vid_window_y", 0.0);
+				vid_window_x->value = vid_window_y->value = 0.0;
 			}
 
 			if ((_vid_default_mode_win->value < 0) ||
 				(_vid_default_mode_win->value >= nummodes))
 			{
-				Cvar_SetValue ("_vid_default_mode_win", windowed_default);
+				_vid_default_mode_win->value = windowed_default;
 			}
 
-			Cvar_SetValue ("vid_mode", _vid_default_mode_win->value);
+			vid_mode->value = _vid_default_mode_win->value;
 		}
 	}
 
@@ -2480,7 +2455,7 @@ void	VID_Update (vrect_t *rects)
 		if ((int)vid_mode->value != vid_realmode)
 		{
 			VID_SetMode ((int)vid_mode->value, vid_curpal);
-			Cvar_SetValue ("vid_mode", (float)vid_modenum);
+			vid_mode->value = (float)vid_modenum;
 								// so if mode set fails, we don't keep on
 								//  trying to set that mode
 			vid_realmode = vid_modenum;
@@ -3445,7 +3420,7 @@ void VID_MenuKey (int key)
 	case 'd':
 		S_LocalSound ("misc/menu1.wav");
 		firstupdate = 0;
-		Cvar_SetValue ("_vid_default_mode_win", vid_modenum);
+		_vid_default_mode_win->value = vid_modenum;
 		break;
 
 	default:
@@ -3466,7 +3441,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 
 	}

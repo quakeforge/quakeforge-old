@@ -889,7 +889,6 @@ void IN_Frame(void)
 void
 IN_Init(void)
 {
-//	Cvar_RegisterVariable(&m_filter);
 	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE, "None");
 	if (COM_CheckParm ("-nomouse")) return;
 
@@ -958,7 +957,7 @@ VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 
 	}

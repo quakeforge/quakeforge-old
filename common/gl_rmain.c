@@ -85,78 +85,45 @@ texture_t	*r_notexture_mip;
 
 int		d_lightstylevalue[256];	// 8.8 fraction of base light value
 
-//cvar_t		r_clearcolor = {"r_clearcolor", "2"};
 cvar_t	*r_clearcolor;
 
 void R_MarkLeaves (void);
 
-//cvar_t	r_norefresh = {"r_norefresh","0"};
 cvar_t	*r_norefresh;
-//cvar_t	r_drawentities = {"r_drawentities","1"};
 cvar_t	*r_drawentities;
-//cvar_t	r_drawviewmodel = {"r_drawviewmodel","1"};
 cvar_t	*r_drawviewmodel;
-//cvar_t	r_speeds = {"r_speeds","0"};
 cvar_t	*r_speeds;
-//cvar_t	r_fullbright = {"r_fullbright","0"};
 cvar_t	*r_fullbright;
-//cvar_t	r_lightmap = {"r_lightmap","0"};
 cvar_t	*r_lightmap;
-//cvar_t	r_shadows = {"r_shadows","0"};
 cvar_t	*r_shadows;
-//cvar_t	r_wateralpha = {"r_wateralpha","1"};
 cvar_t	*r_wateralpha;
-//cvar_t	r_dynamic = {"r_dynamic","1"};
 cvar_t	*r_dynamic;
-//cvar_t	r_novis = {"r_novis","0"};
 cvar_t	*r_novis;
 #ifdef QUAKEWORLD
-//cvar_t	r_netgraph = {"r_netgraph","0"};
 cvar_t	*r_netgraph;
 #endif
 
 // All the fog code was disabled for QuakeWold
 // _reduced_ visability shouldn't be considered cheating :)
-//cvar_t  r_fog = {"r_fog", "0"};
 cvar_t	*r_fog;
-//cvar_t  r_volfog = {"r_volfog", "0"};
 cvar_t *r_volfog;
 
 // Waterwarp should be completely disabled for release 
 // since we are too lazy to actually fix it ;)
-//cvar_t  r_waterwarp = {"r_waterwarp", "0"};
 cvar_t	*r_waterwarp;
 
-//cvar_t  r_waterripple = {"r_waterripple", "0"};
 cvar_t	*r_waterripple;
 
-//cvar_t	gl_finish = {"gl_finish","0"};
 cvar_t	*gl_finish;
-//cvar_t	gl_clear = {"gl_clear","0"};
 cvar_t	*gl_clear;
-//cvar_t	gl_cull = {"gl_cull","1"};
 cvar_t	*gl_cull;
-//cvar_t	gl_texsort = {"gl_texsort","1"};
 cvar_t	*gl_texsort;
-//cvar_t	gl_smoothmodels = {"gl_smoothmodels","1"};
 cvar_t	*gl_smoothmodels;
-//cvar_t	gl_affinemodels = {"gl_affinemodels","0"};
 cvar_t	*gl_affinemodels;
-//cvar_t	gl_polyblend = {"gl_polyblend","1"};
 cvar_t	*gl_polyblend;
-//cvar_t	gl_playermip = {"gl_playermip","0"};
 cvar_t	*gl_playermip;
-//cvar_t	gl_nocolors = {"gl_nocolors","0"};
 cvar_t	*gl_nocolors;
-/*
-#ifdef QUAKEWORLD
-cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","1"};
-#else
-cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","0"};
-#endif
-*/
 cvar_t	*gl_keeptjunctions;
-//cvar_t	gl_doubleeyes = {"gl_doubleeyes", "1", CVAR_ARCHIVE};
 cvar_t	*gl_doubleeyes;
 
 extern	cvar_t	*gl_ztrick; 

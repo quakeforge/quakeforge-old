@@ -48,7 +48,6 @@ cmdalias_t	*cmd_alias;
 
 qboolean	cmd_wait;
 
-//cvar_t cl_warncmd = {"cl_warncmd", "0"};
 cvar_t	*cl_warncmd;
 //=============================================================================
 

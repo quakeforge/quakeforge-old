@@ -636,7 +636,7 @@ int VID_ExtraInitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 		de_exists                  &&
 		(_vid_wait_override->value == 0.0))
 	{
-		Cvar_SetValue ("vid_wait", (float)VID_WAIT_DISPLAY_ENABLE);
+		vid_wait->value = (float)VID_WAIT_DISPLAY_ENABLE;
 
 		VID_displayedpage = 0;
 		VID_currentpage = 1;
@@ -645,12 +645,12 @@ int VID_ExtraInitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 	{
 		if ((lvid->numpages == 1) && (_vid_wait_override->value == 0.0))
 		{
-			Cvar_SetValue ("vid_wait", (float)VID_WAIT_NONE);
+			vid_wait->value = (float)VID_WAIT_NONE;
 			VID_displayedpage = VID_currentpage = 0;
 		}
 		else
 		{
-			Cvar_SetValue ("vid_wait", (float)VID_WAIT_VSYNC);
+			vid_wait->value = (float)VID_WAIT_VSYNC;
 
 			VID_displayedpage = 0;
 

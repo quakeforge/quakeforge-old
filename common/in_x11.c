@@ -341,7 +341,7 @@ static void IN_ExtraOptionCmd(int option_cursor)
 {
 	switch (option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 	}
 }

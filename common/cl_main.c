@@ -91,53 +91,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 qboolean	noclip_anglehack;		// remnant from old quake
 
 
-//cvar_t	rcon_password = {"rcon_password", "", CVAR_NONE};
 cvar_t	*rcon_password;
-
-//cvar_t	rcon_address = {"rcon_address", ""};
 cvar_t	*rcon_address;
-
-//cvar_t	cl_timeout = {"cl_timeout", "60"};
 cvar_t	*cl_timeout;
 
 // these two are not intended to be set directly
-//cvar_t	cl_name = {"_cl_name", "player", CVAR_ARCHIVE};
-//cvar_t	cl_color = {"_cl_color", "0", CVAR_ARCHIVE};
 cvar_t	*cl_name;
 cvar_t	*cl_color;
 
-//cvar_t	cl_shownet = {"cl_shownet","0"};	// can be 0, 1, or 2
-//cvar_t	cl_nolerp = {"cl_nolerp","0"};
 cvar_t	*cl_shownet;
 cvar_t	*cl_nolerp;
 
-//cvar_t	cl_sbar 	= {"cl_sbar", "1", CVAR_ARCHIVE};
-//cvar_t	cl_hudswap	= {"cl_hudswap", "1", CVAR_ARCHIVE};
-//cvar_t	cl_maxfps	= {"cl_maxfps", "0", CVAR_ARCHIVE};
 cvar_t	*cl_sbar;
 cvar_t	*cl_hudswap;
 cvar_t	*cl_maxfps;
 
-//cvar_t	lookspring = {"lookspring","0", CVAR_ARCHIVE};
-//cvar_t	lookstrafe = {"lookstrafe","0", CVAR_ARCHIVE};
-//cvar_t	sensitivity = {"sensitivity","3", CVAR_ARCHIVE};
 cvar_t	*lookspring;
 cvar_t	*lookstrafe;
 cvar_t	*sensitivity;
 
-//cvar_t	m_pitch = {"m_pitch","0.022", CVAR_ARCHIVE};
-//cvar_t	m_yaw = {"m_yaw","0.022", CVAR_ARCHIVE};
-//cvar_t	m_forward = {"m_forward","1", CVAR_ARCHIVE};
-//cvar_t	m_side = {"m_side","0.8", CVAR_ARCHIVE};
 cvar_t	*m_pitch;
 cvar_t	*m_yaw;
 cvar_t	*m_forward;
 cvar_t	*m_side;
 
-//cvar_t	entlatency = {"entlatency", "20"};
-//cvar_t	cl_predict_players = {"cl_predict_players", "1"};
-//cvar_t	cl_predict_players2 = {"cl_predict_players2", "1"};
-//cvar_t	cl_solid_players = {"cl_solid_players", "1"};
 cvar_t	*entlatency;
 cvar_t	*cl_predict_players;
 cvar_t	*cl_predict_players2;
@@ -145,7 +122,6 @@ cvar_t	*cl_solid_players;
 
 extern cvar_t	*sys_nostdout;
 
-//cvar_t  localid = {"localid", ""};
 cvar_t	*localid;
 
 #ifdef QUAKEWORLD
@@ -155,28 +131,17 @@ static qboolean allowremotecmd = true;
 //
 // info mirrors
 //
-//cvar_t	password = {"password", "", CVAR_USERINFO|CVAR_SERVERINFO };
 cvar_t	*password;
-//cvar_t	spectator = {"spectator", "",CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*spectator;
-//cvar_t	name = {"name","unnamed", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*name;
-//cvar_t	team = {"team","", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*team;
-//cvar_t	skin = {"skin","", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*skin;
-//cvar_t	topcolor = {"topcolor","0", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*topcolor;
-//cvar_t	bottomcolor = {"bottomcolor","0", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*bottomcolor;
-//cvar_t	rate = {"rate","2500", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*rate;
-//cvar_t	noaim = {"noaim","0", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*noaim;
-//cvar_t	msg = {"msg","1", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*msg;
 
-//extern cvar_t cl_hightrack;
 extern cvar_t	*cl_hightrack;
 
 client_static_t	cls;
@@ -212,11 +177,8 @@ byte		*host_colormap;
 
 netadr_t	master_adr;				// address of the master server
 
-//cvar_t	host_speeds = {"host_speeds","0"};			// set for running times
 cvar_t	*host_speeds;
-//cvar_t	show_fps = {"show_fps","0"};			// set for running times
 cvar_t	*show_fps;
-//cvar_t	developer = {"developer","0"};
 cvar_t	*developer;
 
 void Master_Connect_f (void);

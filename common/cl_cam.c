@@ -47,11 +47,7 @@ static qboolean locked = false;
 static int oldbuttons;
 
 // track high fragger
-//cvar_t cl_hightrack = {"cl_hightrack", "0" };
 cvar_t *cl_hightrack;
-
-//cvar_t cl_camera_maxpitch = {"cl_camera_maxpitch", "10" };
-//cvar_t cl_camera_maxyaw = {"cl_camera_maxyaw", "30" };
 
 qboolean cam_forceview;
 vec3_t cam_viewangles;
@@ -86,12 +82,6 @@ void Chase_Init (void) {
 				     "None");
 	cl_chasecam_right = Cvar_Get ("cl_chasecam_right","0", CVAR_ARCHIVE,
 				      "None");
-/*
-	Cvar_RegisterVariable (&cl_chasecam);
-	Cvar_RegisterVariable (&cl_chasecam_up);
-	Cvar_RegisterVariable (&cl_chasecam_back);
-	Cvar_RegisterVariable (&cl_chasecam_right);
-*/
 }
 
 void Chase_Reset (void) {
@@ -652,12 +642,8 @@ void Cam_Reset(void)
 void CL_InitCam(void)
 {
 	cl_hightrack = Cvar_Get ("cl_hightrack","0",0,"None");	
-/*
-	Cvar_RegisterVariable (&cl_hightrack);
-	Cvar_RegisterVariable (&cl_chasecam);
 //	Cvar_RegisterVariable (&cl_camera_maxpitch);
 //	Cvar_RegisterVariable (&cl_camera_maxyaw);
-*/
 }
 
 

@@ -149,41 +149,20 @@ qboolean gl_mtexable = false;
 
 //====================================
 
-//cvar_t		gl_ztrick = {"gl_ztrick", "1", CVAR_ARCHIVE};
 cvar_t	*gl_ztrick;
 
-//cvar_t		vid_mode = {"vid_mode", "0", CVAR_NONE};
 cvar_t	*vid_mode;
 // Note that 0 is MODE_WINDOWED
-//cvar_t		_vid_default_mode = {"_vid_default_mode", "0", CVAR_ARCHIVE};
 cvar_t	*_vid_default_mode;
 // Note that 3 is MODE_FULLSCREEN_DEFAULT
-<<<<<<< gl_vidnt.c
-//cvar_t		_vid_default_mode_win = {"_vid_default_mode_win", "3", CVAR_ARCHIVE};
 cvar_t	*_vid_default_mode_win;
-//cvar_t		vid_wait = {"vid_wait", "0"};
 cvar_t	*vid_wait;
-//cvar_t		vid_nopageflip = {"vid_nopageflip", "0", CVAR_ARCHIVE};
 cvar_t	*vid_nopageflip;
-//cvar_t		_vid_wait_override = {"_vid_wait_override", "0", CVAR_ARCHIVE};
 cvar_t	*_vid_wait_override;
-//cvar_t		vid_config_x = {"vid_config_x", "800", CVAR_ARCHIVE};
 cvar_t	*vid_config_x;
-//cvar_t		vid_config_y = {"vid_config_y", "600", CVAR_ARCHIVE};
 cvar_t	*vid_config_y;
-//cvar_t		vid_stretch_by_2 = {"vid_stretch_by_2", "1", CVAR_ARCHIVE};
 cvar_t	*vid_stretch_by_2;
-//cvar_t		_windowed_mouse = {"_windowed_mouse", "1", CVAR_ARCHIVE};
 cvar_t	*_windowed_mouse;
-=======
-cvar_t		_vid_default_mode_win = {"_vid_default_mode_win", "3", CVAR_ARCHIVE};
-cvar_t		vid_wait = {"vid_wait", "0"};
-cvar_t		vid_nopageflip = {"vid_nopageflip", "0", CVAR_ARCHIVE};
-cvar_t		_vid_wait_override = {"_vid_wait_override", "0", CVAR_ARCHIVE};
-cvar_t		vid_config_x = {"vid_config_x", "800", CVAR_ARCHIVE};
-cvar_t		vid_config_y = {"vid_config_y", "600", CVAR_ARCHIVE};
-cvar_t		vid_stretch_by_2 = {"vid_stretch_by_2", "1", CVAR_ARCHIVE};
->>>>>>> 1.20
 
 int			window_center_x, window_center_y, window_x, window_y, window_width, window_height;
 RECT		window_rect;
@@ -467,7 +446,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 	SetForegroundWindow (mainwindow);
 	VID_SetPalette (palette);
 	vid_modenum = modenum;
-	Cvar_SetValue ("vid_mode", (float)vid_modenum);
+	vid_mode->value = (float)vid_modenum;
 
 	while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
 	{
@@ -1611,43 +1590,22 @@ void	VID_Init (unsigned char *palette)
 
 	memset(&devmode, 0, sizeof(devmode));
 
-<<<<<<< gl_vidnt.c
-//	Cvar_RegisterVariable (&vid_mode);
-	vid_mode = Cvar_Get ("vid_mode","0");
-//	Cvar_RegisterVariable (&vid_wait);
-	vid_wait = Cvar_Get ("vid_wait","0");
-//	Cvar_RegisterVariable (&vid_nopageflip);
-	_vid_nopageflip = Cvar_Get ("_vid_nopageflip","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&_vid_wait_override)
-	_vid_wait_override = Cvar_Get ("_vid_wait_override","0",CVAR_ARCHIVE);
+	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
+	vid_wait = Cvar_Get ("vid_wait","0",0,"None");
+	_vid_nopageflip = Cvar_Get ("_vid_nopageflip","0",CVAR_ARCHIVE,"None");
+	_vid_wait_override = Cvar_Get ("_vid_wait_override","0",CVAR_ARCHIVE,
+					"None");
 	
-//	Cvar_RegisterVariable (&_vid_default_mode);
-	_vid_default_mode = Cvar_Get ("_vid_default_mode","0",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&_vid_default_mode_win);
+	_vid_default_mode = Cvar_Get ("_vid_default_mode","0",CVAR_ARCHIVE,
+					"None");
 	_vid_default_mode_win = Cvar_Get ("_vid_default_mode_win","0",
-					CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_config_x);
-	vid_config_x = Cvar_Get ("vid_config_x","800",CVAR_ARCHIVE,"800");
-//	Cvar_RegisterVariable (&vid_config_y);
-	vid_config_y = Cvar_Get ("vid_config_y","600",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&vid_stretch_by_2);
-	vid_stretch_by_2 = Cvar_Get ("vid_stretch_by_2","1",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&_windowed_mouse);
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","1",CVAR_ARCHIVE);
-//	Cvar_RegisterVariable (&gl_ztrick);
-	gl_ztrick = Cvar_Get ("gl_ztrick","1",CVAR_ARCHIVE);
-=======
-	Cvar_RegisterVariable (&vid_mode);
-	Cvar_RegisterVariable (&vid_wait);
-	Cvar_RegisterVariable (&vid_nopageflip);
-	Cvar_RegisterVariable (&_vid_wait_override);
-	Cvar_RegisterVariable (&_vid_default_mode);
-	Cvar_RegisterVariable (&_vid_default_mode_win);
-	Cvar_RegisterVariable (&vid_config_x);
-	Cvar_RegisterVariable (&vid_config_y);
-	Cvar_RegisterVariable (&vid_stretch_by_2); 
-	Cvar_RegisterVariable (&gl_ztrick);
->>>>>>> 1.20
+					CVAR_ARCHIVE,"None");
+	vid_config_x = Cvar_Get ("vid_config_x","800",CVAR_ARCHIVE,"None");
+	vid_config_y = Cvar_Get ("vid_config_y","600",CVAR_ARCHIVE,"None");
+	vid_stretch_by_2 = Cvar_Get ("vid_stretch_by_2","1",CVAR_ARCHIVE,
+					"None");
+	_windowed_mouse = Cvar_Get ("_windowed_mouse","1",CVAR_ARCHIVE,"None");
+	gl_ztrick = Cvar_Get ("gl_ztrick","1",CVAR_ARCHIVE,"None");
 
 	Cmd_AddCommand ("vid_nummodes", VID_NumModes_f);
 	Cmd_AddCommand ("vid_describecurrentmode", VID_DescribeCurrentMode_f);
@@ -2015,7 +1973,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
+		_windowed_mouse-> = !_windowed_mouse->value;
 		break;
 
 	}

@@ -46,7 +46,6 @@ int			con_totallines;		// total lines in console scrollback
 float		con_cursorspeed = 4;
 
 
-//cvar_t		con_notifytime = {"con_notifytime","3"};		//seconds
 cvar_t	*con_notifytime;
 
 #define	NUM_CON_TIMES 4
