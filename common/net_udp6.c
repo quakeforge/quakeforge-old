@@ -91,12 +91,6 @@
 #define MAXHOSTNAMELEN	512
 #endif
 
-#ifdef __sun__
-#define s6_addr32       _S6_un._S6_u32
-#define ss_family	__ss_family
-#define ss_len	__ss_len
-#endif __sun__
-
 #ifdef __GLIBC__ // glibc macro
 #define s6_addr32       in6_u.u6_addr32
 #define ss_family __ss_family

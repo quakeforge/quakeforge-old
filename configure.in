@@ -837,7 +837,9 @@ dnl check for X11 video driver
 AC_MSG_CHECKING(for X11 video driver)
 case "${target}" in
    *-solaris*) 
-      X11_VID_SRC="vid_sunx.c" ;;
+      X11_VID_SRC="vid_sunx.c" 
+      LIBS="$LIBS -lsocket -lnsl" 
+      ;;
    *)
       if test "x$HAS_X11"; then
          X11_VID_SRC="vid_x11.c";

@@ -50,7 +50,6 @@ struct qsockaddr
 	unsigned char sa_data[14];
 };
 
-
 #ifdef _WIN32
 #ifdef HAVE_IPV6
 typedef unsigned int    u_int32_t;

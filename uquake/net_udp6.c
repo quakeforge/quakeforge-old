@@ -37,6 +37,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/socket.h>
 #include <net/if.h>
 
+#ifdef __sun__
+/* Get definition of SIOCGIFCONF used in grab_myaddr() */
+#include <sys/sockio.h>
+#endif
+
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
 #define model_t quakeforgemodel_t
 
