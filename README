@@ -231,6 +231,8 @@ User testimonies:
    Linux 2.0, k6-2-266, quake-x11 -bpp 16
    Linux 2.2, Slackware 7, PII-300, Xfree86 3.3.5, TNT(Velocity 4400/new GLX), Mesa 3.1
       libvga.so.1.4.0, tested all clients, GL freeze problem (dont use new GLX drivers)
+   Linux 2.x, Mandrake 6.1, Dell G1 400, Creative Riva TNT 16MB, Mesa 3.1, XFree86 3.3.5, Nvidia GLX driver. Tested quake-x11, works.
+   Linux 2.x, RedHat 6.1, Dell G1 400, onboard S3, quake-x11 works.
    FreeBSD 2.2.8 - X11
    FreeBSD 3.2 - X11
    FreeBSD 4.0 - X11 and TNT2/GLX
