@@ -23,3 +23,5 @@ dsl0199.netquest.net       Clan Arena
 209.16.199.9:27501         aXe TF 2.9
 
 Z63.11.44.207              nerf
+
+quake.orc.ru:27504         Teamplay/Duel
