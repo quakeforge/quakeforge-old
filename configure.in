@@ -178,8 +178,8 @@ fi
 dnl Check for DGA support
 AC_ARG_ENABLE(DGA,
 [  --enable-DGA            use XFree86 DGA extension, if available],
-HAS_DGA=$enableval, HAS_DGA=auto)
-if test "x$HAS_DGA" == xyes; then
+HAS_DGA=$enable_DGA)
+if test "x$HAS_DGA" = xyes; then
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$X_CFLAGS $CPPFLAGS"
    AC_CHECK_HEADER(X11/extensions/xf86dga.h, HAS_DGA=yes, HAS_DGA=no)
