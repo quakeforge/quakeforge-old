@@ -722,7 +722,7 @@ Host_WriteConfiguration ( void )
 	QFile	*f;
 
 	// Only write cvars if we are non-dedicated
-	if (host_initialized & !isDedicated) {
+	if (host_initialized && !isDedicated) {
 		f = Qopen (va("%s/config.cfg",com_gamedir), "w");
 		if ( !f ) {
 			Con_Printf ("Couldn't write config.cfg.\n");

@@ -1459,13 +1459,14 @@ void Host_Kick_f (void)
 
 	if (i < svs.maxclients)
 	{
-		if (cmd_source == src_command)
+		if (cmd_source == src_command) {
 			if (cls.state == ca_dedicated)
 				who = "Console";
 			else
 				who = cl_name->string;
-		else
+		} else {
 			who = save->name;
+		}
 
 		// can't kick yourself!
 		if (host_client == save)
