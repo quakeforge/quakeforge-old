@@ -1,4 +1,5 @@
 /*
+net_chan.c - network channel
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,12 +20,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include "qtypes.h"
-#include "quakedef.h"
-#include "cvar.h"
-#include "common.h"
-#include "client.h"
-#include "console.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <cvar.h>
+#include <common.h>
+#include <client.h>
+#include <console.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -87,11 +88,8 @@ to the new value before sending out any replies.
 */
 
 int		net_drop;
-//cvar_t	showpackets = {"showpackets", "0"};
 cvar_t	*showpackets;
-//cvar_t	showdrop = {"showdrop", "0"};
 cvar_t	*showdrop;
-//cvar_t	qport = {"qport", "0"};
 cvar_t	*qport;
 
 /*
@@ -111,13 +109,10 @@ void Netchan_Init (void)
 	port = ((int)(getpid()+getuid()*1000) * time(NULL)) & 0xffff;
 #endif
 
-//	Cvar_RegisterVariable (&showpackets);
 	showpackets = Cvar_Get ("showpackets","0",0,"None");
-//	Cvar_RegisterVariable (&showdrop);
 	showdrop = Cvar_Get ("showdrop","0",0,"None");
-//	Cvar_RegisterVariable (&qport);
 	qport = Cvar_Get ("qport","0",0,"None");
-	qport->value = port;
+	Cvar_Set ("qport", va("%i", port));
 }
 
 /*
