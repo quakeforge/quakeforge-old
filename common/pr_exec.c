@@ -477,6 +477,10 @@ while (1)
 		c->_float = a->_float / b->_float;
 		break;
 
+	case OP_MOD_F:
+		c->_float = (int)a->_float % (int)b->_float;
+		break;
+
 	case OP_BITAND:
 		c->_float = (int)a->_float & (int)b->_float;
 		break;
