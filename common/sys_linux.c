@@ -221,7 +221,7 @@ void Sys_EditFile(char *filename) {
 			editor = getenv("EDIT");
 		if (!editor)
 			editor = "vi";
-		sprintf(cmd, "xterm -e %s %s", editor, filename);
+		snprintf(cmd, sizeof(cmd), "xterm -e %s %s", editor, filename);
 		system(cmd);
 	}
 }

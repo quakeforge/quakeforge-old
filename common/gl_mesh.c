@@ -320,13 +320,13 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		//
 		// save out the cached version
 		//
-		sprintf (fullpath, "%s/%s", com_gamedir, cache);
+		snprintf(fullpath, sizeof(fullpath), "%s/%s", com_gamedir, cache);
 		f = fopen (fullpath, "wb");
 #ifdef QUAKEWORLD
 		if (!f) {
 			char gldir[MAX_OSPATH];
 
-			sprintf (gldir, "%s/glquake", com_gamedir);
+			snprintf(gldir, sizeof(gldir), "%s/glquake", com_gamedir);
 			Sys_mkdir (gldir);
 			f = fopen (fullpath, "wb");
 		}

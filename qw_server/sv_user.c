@@ -736,11 +736,11 @@ void SV_Say (qboolean team)
 	}
 
 	if (host_client->spectator && (!sv_spectalk.value || team))
-		sprintf (text, "[SPEC] %s: ", host_client->name);
+		snprintf(text, sizeof(text), "[SPEC] %s: ", host_client->name);
 	else if (team)
-		sprintf (text, "(%s): ", host_client->name);
+		snprintf(text, sizeof(text), "(%s): ", host_client->name);
 	else {
-		sprintf (text, "%s: ", host_client->name);
+		snprintf(text, sizeof(text), "%s: ", host_client->name);
 	}
 
 	if (fp_messages) {
@@ -924,9 +924,9 @@ void SV_Pause_f (void)
 	}
 
 	if (sv.paused)
-		sprintf (st, "%s paused the game\n", host_client->name);
+		snprintf(st, sizeof(st), "%s paused the game\n", host_client->name);
 	else
-		sprintf (st, "%s unpaused the game\n", host_client->name);
+		snprintf(st, sizeof(st), "%s unpaused the game\n", host_client->name);
 
 	SV_TogglePause(st);
 }

@@ -576,7 +576,7 @@ void Sys_Quit (void)
 		memcpy (screen, d, sizeof(screen));
 
 // write the version number directly to the end screen
-	sprintf (ver, " v" VERSION);
+	snprintf(ver, sizeof(ver), " v" VERSION);
 	for (i=0 ; i<6 ; i++)
 		screen[0*80*2 + 72*2 + i*2] = ver[i];
 

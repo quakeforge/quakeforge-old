@@ -996,6 +996,6 @@ char *inet_ntoa (struct in_addr in)
 {
 	static char buf [32];
 
-	sprintf(buf, "%u.%u.%u.%u", in.S_un.S_un_b.s_b1, in.S_un.S_un_b.s_b2, in.S_un.S_un_b.s_b3, in.S_un.S_un_b.s_b4);
+	snprintf(buf, sizeof(buf), "%u.%u.%u.%u", in.S_un.S_un_b.s_b1, in.S_un.S_un_b.s_b2, in.S_un.S_un_b.s_b3, in.S_un.S_un_b.s_b4);
 	return buf;
 }

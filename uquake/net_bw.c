@@ -621,7 +621,7 @@ char *BW_AddrToString (struct qsockaddr *addr)
 {
 	static char buffer[22];
 
-	sprintf(buffer, "%d.%d.%d.%d:%d",
+	snprintf(buffer, sizeof(buffer), "%d.%d.%d.%d:%d",
 		((struct sockaddr_in *)addr)->sin_addr.s_net,
 		((struct sockaddr_in *)addr)->sin_addr.s_host,
 		((struct sockaddr_in *)addr)->sin_addr.s_lh,

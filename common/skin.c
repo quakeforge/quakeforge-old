@@ -117,12 +117,12 @@ byte	*Skin_Cache (skin_t *skin)
 //
 // load the pic from disk
 //
-	sprintf (name, "skins/%s.pcx", skin->name);
+	snprintf(name, sizeof(name), "skins/%s.pcx", skin->name);
 	raw = COM_LoadTempFile (name);
 	if (!raw)
 	{
 		Con_Printf ("Couldn't load skin %s\n", name);
-		sprintf (name, "skins/%s.pcx", baseskin.string);
+		snprintf(name, sizeof(name), "skins/%s.pcx", baseskin.string);
 		raw = COM_LoadTempFile (name);
 		if (!raw)
 		{

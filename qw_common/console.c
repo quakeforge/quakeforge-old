@@ -619,7 +619,7 @@ void Con_DrawConsole (int lines)
 		dlbar[i++] = '\x82';
 		dlbar[i] = 0;
 
-		sprintf(dlbar + strlen(dlbar), " %02d%%", cls.downloadpercent);
+		snprintf(dlbar + strlen(dlbar), sizeof(dlbar + strlen(dlbar)), " %02d%%", cls.downloadpercent);
 
 		// draw it
 		y = con_vislines-22 + 8;

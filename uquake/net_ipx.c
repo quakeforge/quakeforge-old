@@ -577,7 +577,7 @@ char *IPX_AddrToString (struct qsockaddr *addr)
 {
 	static char buf[28];
 
-	sprintf(buf, "%02x%02x%02x%02x:%02x%02x%02x%02x%02x%02x:%u",
+	snprintf(buf, sizeof(buf), "%02x%02x%02x%02x:%02x%02x%02x%02x%02x%02x:%u",
 		((struct sockaddr_ipx *)addr)->sipx_addr.network[0],
 		((struct sockaddr_ipx *)addr)->sipx_addr.network[1],
 		((struct sockaddr_ipx *)addr)->sipx_addr.network[2],
@@ -659,12 +659,12 @@ int IPX_GetAddrFromName (char *name, struct qsockaddr *addr)
 
 	if (n == 12)
 	{
-		sprintf(buf, "00000000:%s:%u", name, net_hostport);
+		snprintf(buf, sizeof(buf), "00000000:%s:%u", name, net_hostport);
 		return IPX_StringToAddr (buf, addr);
 	}
 	if (n == 21)
 	{
-		sprintf(buf, "%s:%u", name, net_hostport);
+		snprintf(buf, sizeof(buf), "%s:%u", name, net_hostport);
 		return IPX_StringToAddr (buf, addr);
 	}
 	if (n > 21 && n <= 27)

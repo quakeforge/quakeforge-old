@@ -1006,9 +1006,9 @@ void PF_ftos (void)
 	v = G_FLOAT(OFS_PARM0);
 	
 	if (v == (int)v)
-		sprintf (pr_string_temp, "%d",(int)v);
+		snprintf(pr_string_temp, sizeof(pr_string_temp), "%d",(int)v);
 	else
-		sprintf (pr_string_temp, "%5.1f",v);
+		snprintf(pr_string_temp, sizeof(pr_string_temp), "%5.1f",v);
 	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
 }
 
@@ -1021,7 +1021,7 @@ void PF_fabs (void)
 
 void PF_vtos (void)
 {
-	sprintf (pr_string_temp, "'%5.1f %5.1f %5.1f'", G_VECTOR(OFS_PARM0)[0], G_VECTOR(OFS_PARM0)[1], G_VECTOR(OFS_PARM0)[2]);
+	snprintf(pr_string_temp, sizeof(pr_string_temp), "'%5.1f %5.1f %5.1f'", G_VECTOR(OFS_PARM0)[0], G_VECTOR(OFS_PARM0)[1], G_VECTOR(OFS_PARM0)[2]);
 	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
 }
 
@@ -1818,7 +1818,7 @@ void PF_infokey (void)
 			value = strcpy(ov, NET_BaseAdrToString (svs.clients[e1-1].netchan.remote_address));
 		else if (!strcmp(key, "ping")) {
 			int ping = SV_CalcPing (&svs.clients[e1-1]);
-			sprintf(ov, "%d", ping);
+			snprintf(ov, sizeof(ov), "%d", ping);
 			value = ov;
 		} else
 			value = Info_ValueForKey (svs.clients[e1-1].userinfo, key);

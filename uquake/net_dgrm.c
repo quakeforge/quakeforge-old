@@ -92,7 +92,7 @@ char *StrAddr (struct qsockaddr *addr)
 	int n;
 
 	for (n = 0; n < 16; n++)
-		sprintf (buf + n * 2, "%02x", *p++);
+		snprintf(buf + n * 2, sizeof(buf), "%02x", *p++);
 	return buf;
 }
 #endif

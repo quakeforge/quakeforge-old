@@ -49,6 +49,9 @@ Math fixes/optimizations:
   Zinx Verituse <zinx@linuxfreak.com>
   Nelson J. Rush <chesterrr@att.net>
 
+Buffer overflow fixes:
+  Nelson J. Rush <chesterrr@att.net>
+
 Documentation:
   Nelson J. Rush <chesterrr@att.net>
   Joseph Carter <knghtbrd@debian.org>

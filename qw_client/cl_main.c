@@ -238,7 +238,7 @@ void CL_SendConnectPacket (void)
 	//Info_SetValueForStarKey (cls.userinfo, "*ip", NET_AdrToString(adr), MAX_INFO_STRING);
 
 //	Con_Printf ("Connecting to %s...\n", cls.servername);
-	sprintf (data, "%c%c%c%cconnect %i %i %i \"%s\"\n",
+	snprintf(data, sizeof(data), "%c%c%c%cconnect %i %i %i \"%s\"\n",
 		255, 255, 255, 255,	PROTOCOL_VERSION, cls.qport, cls.challenge, cls.userinfo);
 	NET_SendPacket (strlen(data), data, adr);
 }
@@ -285,7 +285,7 @@ void CL_CheckForResend (void)
 	connect_time = realtime+t2-t1;	// for retransmit requests
 
 	Con_Printf ("Connecting to %s...\n", cls.servername);
-	sprintf (data, "%c%c%c%cgetchallenge\n", 255, 255, 255, 255);
+	snprintf(data, sizeof(data), "%c%c%c%cgetchallenge\n", 255, 255, 255, 255);
 	NET_SendPacket (strlen(data), data, adr);
 }
 
@@ -565,9 +565,9 @@ void CL_Color_f (void)
 	if (bottom > 13)
 		bottom = 13;
 	
-	sprintf (num, "%i", top);
+	snprintf(num, sizeof(num), "%i", top);
 	Cvar_Set ("topcolor", num);
-	sprintf (num, "%i", bottom);
+	snprintf(num, sizeof(num), "%i", bottom);
 	Cvar_Set ("bottomcolor", num);
 }
 
@@ -755,7 +755,7 @@ void CL_NextDemo (void)
 		}
 	}
 
-	sprintf (str,"playdemo %s\n", cls.demos[cls.demonum]);
+	snprintf(str, sizeof(str),"playdemo %s\n", cls.demos[cls.demonum]);
 	Cbuf_InsertText (str);
 	cls.demonum++;
 }
@@ -1028,7 +1028,7 @@ void CL_Download_f (void)
 		return;
 	}
 
-	sprintf (cls.downloadname, "%s/%s", com_gamedir, Cmd_Argv(1));
+	snprintf(cls.downloadname, sizeof(cls.downloadname), "%s/%s", com_gamedir, Cmd_Argv(1));
 
 	p = cls.downloadname;
 	for (;;) {

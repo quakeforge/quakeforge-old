@@ -781,7 +781,7 @@ int TTY_Connect(int handle, char *host)
 		key_count = -2;
 
 		Con_Printf ("Dialing...\n");
-		sprintf(dialstring, "AT D%c %s\r", p->dialType, host);
+		snprintf(dialstring, sizeof(dialstring), "AT D%c %s\r", p->dialType, host);
 		Modem_Command (p, dialstring);
 		start = Sys_DoubleTime();
 		while(1)
@@ -1154,7 +1154,7 @@ int TTY_Init(void)
 		handleToPort[n] = p;
 		p->portNumber = n;
 		p->dialType = 'T';
-		sprintf(p->name, "com%u", n+1);
+		snprintf(p->name, sizeof(p->name), "com%u", n+1);
 		Cmd_AddCommand (p->name, Com_f);
 		ResetComPortConfig (p);
 	}

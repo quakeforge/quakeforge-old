@@ -92,7 +92,7 @@ void R_ReadPointFile_f (void)
 	particle_t	*p;
 	char	name[MAX_OSPATH];
 	
-// FIXME	sprintf (name,"maps/%s.pts", sv.name);
+// FIXME	snprintf(name, sizeof(name),"maps/%s.pts", sv.name);
 
 	COM_FOpenFile (name, &f);
 	if (!f)
