@@ -2,7 +2,7 @@ The original Quake, QuakeWorld, and QuakeWorld server:
   ID Software, Inc  http://www.idsoftware.com
 
 QuakeForge Maintainer:
-  Nelson Rush <chesterrr@att.net>
+  Nelson J. Rush <chesterrr@att.net>
 
 QW/Q1 tree merging:
   Jeff Teunissen <deek@dusknet.dhis.net>
@@ -27,3 +27,5 @@ Sound cleanups:
 Input handling cleanups:
   Zephaniah E. Hull <warp@whitestar.soark.net>
 
+Documentation:
+  Nelson J. Rush <chesterrr@att.net>

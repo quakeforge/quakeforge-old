@@ -1,7 +1,218 @@
-This is the current CVS source for QuakeForge, our tree for the future
-unification of the Quake and QuakeWorld sources. I wish I could say more, but
-we're currently working hard on getting the original Quake to compile under the
-merged tree. Once it's compiling and running in the current state, merging and
-enhancement will continue. :)
+Quake
 
-				-- Deek (d2deek@pmail.net)
+Copyright (C) 1996-2000. Id Software, Inc.
+Copyright (C) 1999,2000. The QuakeForge Project.
+Parts copyright individual authors.
+
+The QuakeForge Project would like to thank Id Software for the release of
+Quake 1 under the GPL and their support of the open source community.
+
+This file details how to get Quake running on your system and what to do
+if you have problems.  We would like to thank Gandalf Technologies, Inc
+and MPath Interactive for the use of their technology.  We would also like to
+thank Trent Reznor and Nine Inch Nails for their tremendous contributions
+to Quake's entire audio portion.
+
+The NIN logo is a Registered Trademark licensed to Nothing Interactive, Inc.
+All Rights Reserved.
+
+Table of Contents
+-----------------
+
+I.	Quake System Requirements
+II.	Running and Compiling Quake
+III.	Audio Setup (removed)
+IV.	CD Audio Input (removed)
+V.	Mouse Setup (removed)
+VI.	Booting Clean (removed)
+VII.	Known Bug Fixes
+VIII.	Known Problems
+IX.	Troubleshooting
+X.	Technical Support
+XI.	Joystick notes
+XII.	License
+
+
+I. Quake System Requirements
+----------------------------
+IBM PC and Compatibles, PPC, Alpha, UltraSparc, Indigo2
+VGA Compatible Display or better
+8MB RAM minimum, 16MB recommended (16 MB required for running under Win95)
+CD-ROM drive no longer *required*
+Linux, FreeBSD, IRIX, MS-DOS 5.0 or better, Windows 95
+Hard drive space - 30MB for Shareware, 80MB for registered.
+Floating point processor required.
+
+
+II. Running and Compiling Quake
+-------------------------------
+
+Read the INSTALL file for more information on compiling.
+
+After you have compiled successfully, you must download the shareware
+version of Quake 1 to play. Insert the proper binaries in the same
+directory as the unpacked shareware files, and run.
+
+
+III. Audio Setup
+----------------
+
+Removed, to be combined under a section named, "OS Specific Issues"
+
+
+IV. CD Audio Input
+------------------
+
+Removed, to be combined under a section named, "OS Specific Issues"
+
+
+V. Mouse Setup
+--------------
+
+Removed, to be combined under a section named, "OS Specific Issues"
+
+
+VI. Booting Clean
+-----------------
+
+Removed, to be combined under a section named, "OS Specific Issues"
+
+
+VII. Known bug fixes
+--------------------
+
+In software rendering, flicker can occur... If you notice any flickering,
+type the following in the quake console: gl_ztrick 0
+
+Add that to your quake configuration files, so you don't have to
+constantly type it every time you play.
+
+
+VIII. Known Problems
+--------------------
+
+Problem: Zombies sometime get stuck on the ground and connot get back up.
+(You can still hear them, but you cannot kill them. This bug makes it
+impossible to get 100% kills on whatever level it occurs on.)
+Solution: There is no workaround for this bug.
+
+Problem: It is sometimes possible for the player to get stuck in a room or
+in a wall.
+Solution: If you get stuck, use the 'kill' console command. It is a good
+idea to save your game often.
+
+Problem: View centering problems. Sometimes during a game, the view will
+not
+center properly.  The end result is the player view looking up torwards
+the
+ceiling while walking.
+Solution: Exit to the next level or use the 'kill' console command..
+
+
+IX. Troubleshooting
+-------------------
+
+If Quake fails to start up, or has problems not addressed elsewhere in the
+documentation, try the -safe command line switch, which disables a number
+of parts of Quake that can be problems if there are hardware or
+configuration
+problems.  The -safe command line switch is equivalent to -stdvid,
+-nosound,
+-nonet, and -nocdaudio together.  Those four switches do the following:
+
+-stdvid: disables VESA video modes.
+
+-nosound: disables sound card support.
+
+-nonet: disables network card support.
+
+-nocdaudio: disables CD audio support.
+
+If -safe makes the problem go away, try using each of the switches
+individually to isolate the area in which you're experiencing the problem,
+then either correct the configuration or hardware problem or play Quake
+with
+that functionality disabled.
+
+If you still have problems, try booting clean in conjunction with
+the -safe command line parameter.  For information on booting clean, refer
+to the "Booting Clean" section above.
+
+If you experience page faults while running Quarterdeck's QDPMI DPMI
+server,
+this is caused by a bug in QDPMI.  Workarounds:  Remove QDPMI from
+CONFIG.SYS,
+issue the command QDPMI OFF before running QUAKE, or get the update patch
+for QDPMI from Quarterdeck.  You may be running QDPMI without knowing it
+if
+you have QEMM installed, because it can be installed as part of the QEMM
+installation.
+
+
+X. Technical Support
+--------------------
+
+Do *not* call Id Software for tech support with QuakeForge's modified
+Quake, they no longer support our particular version and wouldn't know how
+to help you anyways. Please go to the QuakeForge homepage for more
+information on support at: http://www.quakeforge.net/
+
+Thank you.
+
+
+XI. Joystick notes
+------------------
+Your joystick must be plugged in when Quake is launched.
+
+If you have a joystick plugged in, but don't want to use it in Quake
+(it slows the game down a few percent), or you have weird hardware that
+doesn't like being tested as a joystick add "-nojoy" to your Quake
+command line.
+
+You can turn off joystick reading during the game by typing "joystick 0"
+at
+the Quake command console.
+
+You MUST configure your buttons from the configure keys menu before they
+will
+work.  There is no default configuration. 
+
+If your joystick or interface card improperly sets the third or fourth
+joystick buttons, type "joybuttons 2" at the quake console or in your
+.CFG file.
+
+The "mlook" button command now lets the joystick as well as the mouse
+control
+pitch angles.
+
+The "sidestep" buttom command works on joysticks as with mice and keyboard
+movement.
+
+The "invert mouse up/down" menu option also inverts the joystick pitch
+direction.
+
+
+XII. License
+------------
+
+Quake
+
+Copyright (C) 1996-2000. Id Software, Inc.
+Copyright (C) 1999,2000. The QuakeForge Project.
+Parts copyright individual authors.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published 
+by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,  
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+See file COPYING for license details.
