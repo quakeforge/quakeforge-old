@@ -30,6 +30,7 @@ LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
+NO_ASMOPT = @NO_ASMOPT@
 
 ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
@@ -110,10 +111,11 @@ all: $(targets)
 # Source files
 #
 
-ifeq ($(INTEL_ARCH),yes)
+ifneq ($(NO_ASMOPT),yes)
 
 # Source file the Intel archictecture only
 
+CFLAGS = -Did386=1
 UQ_GENERAL_SRC         = worlda.s
 UQ_SWREND_SRC_PLAT     = dosasm.s
 CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
@@ -124,6 +126,7 @@ else
 
 # Source files for non-Intel platforms
 
+CFLAGS = -Did386=0
 SWREND_SRC_PLAT = nonintel.c
 endif
 
@@ -184,7 +187,7 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 # Directory specific stuff
 #
 DEFS = @DEFS@
-CFLAGS = @CFLAGS@ -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. \
+CFLAGS += @CFLAGS@ -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. \
 $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
 
 GENERAL_SRC = $(CL_COMMON_SRC) \

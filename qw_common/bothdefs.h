@@ -26,12 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _BOTHDEFS_H
 #define _BOTHDEFS_H
 
-#if (defined(_M_IX86) || defined(__i386__))
-#define id386	1
-#else
-#define id386	0
-#endif
-
 #ifdef SERVERONLY		// no asm in dedicated server
 #undef id386
 #endif
