@@ -27,16 +27,22 @@ Autoconf support:
 Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
   Marcus Sundber <mackan@stacken.kth.se>
+  Robert S. Elsner <sockman@ngfc.com>
 
 GL renderer fixes/optimizations:
   Zephaniah E. Hull <warp@whitestar.soark.net>
   Eric Windisch <windisch@nni.com>
 
-Input handling cleanups:
+Input handling fixes/optimizations:
+  Michael Pujos <mpujos@mail.dotcom.fr>
+  Filip Van Raemdonck <filipvr@xs4all.be>
   Zephaniah E. Hull <warp@whitestar.soark.net>
+  Marcus Sundberg <mackan@stacken.kth.se>
 
-Math cleanups/optimizations:
+Math fixes/optimizations:
+  Zinx Verituse <zinx@linuxfreak.com>
   Nelson J. Rush <chesterrr@att.net>
 
 Documentation:
   Nelson J. Rush <chesterrr@att.net>
+  Joseph Carter <knghtbrd@debian.org>

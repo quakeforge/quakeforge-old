@@ -11,6 +11,8 @@ to quake-devel@lists.sourceforge.net with details.
    shared data dir and all files written should be placed into ~/.quake
  * sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix some
    possible buffer overruns
+ * Devise and implement a way to ensure original gameplay compatibility
+   while still letting us expand and extend the quake engine
  * configure.in: clean up the intel -mcpu stuff
  * Audio support for more platforms
  * Add OpenGL multi-pass texturing replacement for when multi-texturing
@@ -20,18 +22,34 @@ to quake-devel@lists.sourceforge.net with details.
  * Remove dependency on GNU make or migrate to automake
  * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
    on systems with XFree86 available
+ * Merge in GGIQuake
  * Merge SDLQuake (BigM created a patch against an older revision of our
    main tree)
  * Add currently removed documentation to the README, and also add more
-   information to explain things that we've done, or broken.
- * Prep Aftershock for a future merge with the main tree.
- * Add localized volumetric fog, water, etc.
- * Implement a wind (airflow) engine.
- * Add a more modern portal engine.
+   information to explain things that we've done, or broken
+ * Prep Aftershock for a future merge with the main tree
+ * Add localized volumetric fog, water, etc
+ * Implement a wind (airflow) engine
+ * Add a more modern portal engine
+ * Add a terrain engine
  * Add cloudy skies, using the wind and fog engines
  * Add some flags to the setup menu, ie. gl_ztrick and +mlook
- * Add gl_ztrick to the cvars saved in config.cfg
  * Allow more video and bpp modes
+ * Support for camera rooms ala Unreal
  * Make every object depend on dead-reckoning for network play, ie. no
    "moving entities"
  * Add XInput stuff
+ * Allow any charcell .pcf to be used as console font
+ * Use dynamic memory
+ * Remove arbitrary limits such as max number of players
+ * Fixes for various exploits/cheats
+ * Dynamically loaded (at run time) renderers
+ * Optional basic server authentication
+ * Pluggable server authentication
+ * Enhanced console (improved history and cmdline editing)
+ * Integrate some sort of packet compression ala Qizmo
+ * Fix q1/qw smurf attack
+ * Fix oversized packet QW server crash
+ * DOS/Win support in autoconf
+ * Remove all of the #ifdef IDGODS stuff
+ 
