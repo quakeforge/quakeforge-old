@@ -24,25 +24,38 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _SERVER_H
 #define _SERVER_H
 
-#include "config.h"
+#ifdef _WIN32
+#pragma warning( disable : 4244 4127 4201 4214 4514 4305 4115 4018)
+#endif
 
+#include <qtypes.h>
 #include <progs.h>
+#include <setjmp.h>
 
+#ifdef QUAKEWORLD
 #define	QW_SERVER
-
+#endif
 #define	MAX_MASTERS	8				// max recipients for heartbeat packets
-
 #define	MAX_SIGNON_BUFFERS	8
 #define MAX_MSECS 100
 
 typedef enum {
+	RD_NONE,
+	RD_CLIENT,
+	RD_PACKET
+} redirect_t;
+
+typedef enum {
+#ifdef QUAKEWORLD
 	ss_dead,			// no map loaded
+#endif
 	ss_loading,			// spawning level edicts
 	ss_active			// actively running
 } server_state_t;
 // some qc commands are only valid before the server has finished
 // initializing (precache commands, static sounds / objects, etc)
 
+#ifdef QUAKEWORLD
 typedef struct
 {
 	qboolean	active;				// false when server is going down
@@ -99,9 +112,49 @@ typedef struct
 	int			signon_buffer_size[MAX_SIGNON_BUFFERS];
 	byte		signon_buffers[MAX_SIGNON_BUFFERS][MAX_DATAGRAM];
 } server_t;
+#else
+typedef struct
+{
+	qboolean	active;				// false if only a net client
 
+	qboolean	paused;
+	qboolean	loadgame;			// handle connections specially
 
-#define	NUM_SPAWN_PARMS			16
+	double		time;
+	
+	int			lastcheck;			// used by PF_checkclient
+	double		lastchecktime;
+	
+	char		name[64];			// map name
+#ifdef QUAKE2
+	char		startspot[64];
+#endif
+	char		modelname[64];		// maps/<name>.bsp, for model_precache[0]
+	struct model_s 	*worldmodel;
+	char		*model_precache[MAX_MODELS];	// NULL terminated
+	struct model_s	*models[MAX_MODELS];
+	char		*sound_precache[MAX_SOUNDS];	// NULL terminated
+	char		*lightstyles[MAX_LIGHTSTYLES];
+	int			num_edicts;
+	int			max_edicts;
+	edict_t		*edicts;			// can NOT be array indexed, because
+									// edict_t is variable sized, but can
+									// be used to reference the world ent
+	server_state_t	state;			// some actions are only valid during load
+
+	sizebuf_t	datagram;
+	byte		datagram_buf[MAX_DATAGRAM];
+
+	sizebuf_t	reliable_datagram;	// copied to all clients at end of frame
+	byte		reliable_datagram_buf[MAX_DATAGRAM];
+
+	sizebuf_t	signon;
+	byte		signon_buf[8192];
+} server_t;
+#endif
+
+#define	NUM_PING_TIMES		16
+#define	NUM_SPAWN_PARMS		16
 
 typedef enum
 {
@@ -124,6 +177,7 @@ typedef struct
 
 #define MAX_BACK_BUFFERS 4
 
+#ifdef QUAKEWORLD
 typedef struct client_s
 {
 	sv_client_state_t	state;
@@ -202,6 +256,40 @@ typedef struct client_s
 	int			msecs, msec_cheating;
 	double			last_check;
 } client_t;
+#else
+typedef struct client_s
+{
+	qboolean		active;				// false = client is free
+	qboolean		spawned;			// false = don't send datagrams
+	qboolean		dropasap;			// has been told to go to another level
+	qboolean		privileged;			// can execute any host command
+	qboolean		sendsignon;			// only valid before spawned
+
+	double			last_message;		// reliable messages must be sent
+										// periodically
+
+	struct qsocket_s *netconnection;	// communications handle
+
+	usercmd_t		cmd;				// movement
+	vec3_t			wishdir;			// intended motion calced from cmd
+
+	sizebuf_t		message;			// can be added to at any time,
+										// copied and clear once per frame
+	byte			msgbuf[MAX_MSGLEN];
+	edict_t			*edict;				// EDICT_NUM(clientnum+1)
+	char			name[32];			// for printing to other people
+	int				colors;
+		
+	float			ping_times[NUM_PING_TIMES];
+	int				num_pings;			// ping_times[num_pings%NUM_PING_TIMES]
+
+// spawn parms are carried from level to level
+	float			spawn_parms[NUM_SPAWN_PARMS];
+
+// client known data for deltas	
+	int				old_frags;
+} client_t;
+#endif
 
 // a client can leave the server in one of four ways:
 // dropping properly by quiting or disconnecting
@@ -210,7 +298,6 @@ typedef struct client_s
 // a program error, like an overflowed reliable buffer
 
 //=============================================================================
-
 
 #define	STATFRAMES	100
 typedef struct
@@ -277,6 +364,36 @@ typedef struct
 
 //============================================================================
 
+#ifdef QUAKE2
+// server flags
+#define	SFL_EPISODE_1		1
+#define	SFL_EPISODE_2		2
+#define	SFL_EPISODE_3		4
+#define	SFL_EPISODE_4		8
+#define	SFL_NEW_UNIT		16
+#define	SFL_NEW_EPISODE		32
+#define	SFL_CROSS_TRIGGERS	65280
+#endif
+
+//============================================================================
+
+extern	cvar_t	teamplay;
+extern	cvar_t	skill;
+extern	cvar_t	deathmatch;
+extern	cvar_t	coop;
+extern	cvar_t	fraglimit;
+extern	cvar_t	timelimit;
+
+extern	server_static_t	svs;				// persistant server info
+extern	server_t		sv;					// local server
+
+extern	client_t	*host_client;
+
+extern	jmp_buf 	host_abortserver;
+
+extern	double		host_time;
+
+extern	edict_t		*sv_player;
 extern	cvar_t	sv_mintic, sv_maxtic;
 extern	cvar_t	sv_maxspeed;
 
@@ -304,105 +421,91 @@ extern	QFile		*sv_logfile;
 extern	QFile		*sv_fraglogfile;
 
 //===========================================================
-
 //
 // sv_main.c
 //
-void SV_Shutdown (void);
-void SV_Frame (float time);
-void SV_FinalMessage (char *message);
-void SV_DropClient (client_t *drop);
 
+#ifdef QUAKEWORLD
+void SV_Shutdown (void);
+void SV_DropClient (client_t *drop);
+void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg);
+void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...);
+void SV_BroadcastPrintf (int level, char *fmt, ...);
+void SV_Frame (float time);
+#else
+void SV_Shutdown (qboolean crash);
+void SV_DropClient (qboolean crash);
+void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg);
+void SV_ClientPrintf (char *fmt, ...);
+void SV_BroadcastPrintf (char *fmt, ...);
+void SV_Frame ( void );
+#endif
+
+void SV_AddClientToServer (struct qsocket_s	*ret);
+void SV_AddGravity (edict_t *ent, float scale);
+void SV_BeginRedirect (redirect_t rd);
+void SV_BroadcastCommand (char *fmt, ...);
 int SV_CalcPing (client_t *cl);
+qboolean SV_CheckBottom (edict_t *ent);
+void SV_CheckForNewClients (void);
+void SV_CheckVelocity (edict_t *ent);
+void SV_ClearDatagram (void);
+void SV_ClientThink (void);
+void SV_EndRedirect (void);
+void SV_Error (char *error, ...);
+void SV_ExecuteClientMessage (client_t *cl);
+void SV_ExecuteUserCommand (char *s);
+void SV_ExtractFromUserinfo (client_t *cl);
+void SV_FinalMessage (char *message);
+void SV_FindModelNumbers (void);
+void SV_FlushSignon (void);
 void SV_FullClientUpdate (client_t *client, sizebuf_t *buf);
 void SV_FullClientUpdateToClient (client_t *client, client_t *cl);
-
+void SV_Impact (edict_t *e1, edict_t *e2);
+#ifdef QUAKEWORLD
+void SV_Init (quakeparms_t *parms);
+#else
+void SV_Init (void);
+#endif
+void SV_InitOperatorCommands (void);
 int SV_ModelIndex (char *name);
+void SV_MoveToGoal (void);
+void SV_Multicast (vec3_t origin, int to);
+void SV_Physics (void);
+void SV_Physics_Client (edict_t	*ent);
+void SV_Physics_Toss (edict_t *ent);
+void SV_ProgStartFrame (void);
+qboolean SV_RunThink (edict_t *ent);
+void SV_RunClients (void);
+void SV_RunNewmis (void);
+void SV_SaveSpawnparms (void);
+void SV_SendClientMessages (void);
+void SV_SendMessagesToAll (void);
+void SV_SendServerinfo (client_t *client);
+void SV_SetIdealPitch (void);
+void SV_SetMoveVars(void);
+#ifdef QUAKE2
+void SV_SpawnServer (char *server, char *startspot);
+#else
+void SV_SpawnServer (char *server);
+#endif
+void SV_StartParticle (vec3_t org, vec3_t dir, int color, int count);
+void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
+    float attenuation);
+void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
+    float attenuation);
+void SV_Status_f (void);
+void SV_TogglePause (const char *msg);
+void SV_UserInit (void);
+void SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
 
-qboolean SV_CheckBottom (edict_t *ent);
+qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink);
 qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink);
 
-void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg);
-
-void SV_MoveToGoal (void);
-
-void SV_SaveSpawnparms (void);
-
-void SV_Physics_Client (edict_t	*ent);
-
-void SV_ExecuteUserCommand (char *s);
-void SV_InitOperatorCommands (void);
-
-void SV_SendServerinfo (client_t *client);
-void SV_ExtractFromUserinfo (client_t *cl);
-
-
+void HeartBeat (void);
 void HeartBeat_Master (void);
 void Master_Packet (void);
 void Shutdown_Master (void);
-
-//
-// sv_init.c
-//
-void SV_SpawnServer (char *server);
-void SV_FlushSignon (void);
-
-
-//
-// sv_phys.c
-//
-void SV_ProgStartFrame (void);
-void SV_Physics (void);
-void SV_CheckVelocity (edict_t *ent);
-void SV_AddGravity (edict_t *ent, float scale);
-qboolean SV_RunThink (edict_t *ent);
-void SV_Physics_Toss (edict_t *ent);
-void SV_RunNewmis (void);
-void SV_Impact (edict_t *e1, edict_t *e2);
-void SV_SetMoveVars(void);
-
-//
-// sv_send.c
-//
-void SV_SendClientMessages (void);
-
-void SV_Multicast (vec3_t origin, int to);
-void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
-    float attenuation);
-void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...);
-void SV_BroadcastPrintf (int level, char *fmt, ...);
-void SV_BroadcastCommand (char *fmt, ...);
-void SV_SendMessagesToAll (void);
-void SV_FindModelNumbers (void);
-
-//
-// sv_user.c
-//
-void SV_ExecuteClientMessage (client_t *cl);
-void SV_UserInit (void);
-void SV_TogglePause (const char *msg);
-
-
-//
-// svonly.c
-//
-typedef enum {RD_NONE, RD_CLIENT, RD_PACKET} redirect_t;
-void SV_BeginRedirect (redirect_t rd);
-void SV_EndRedirect (void);
-
-//
-// sv_ccmds.c
-//
-void SV_Status_f (void);
-
-//
-// sv_ents.c
-//
-void SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
-
-//
-// sv_nchan.c
-//
 
 void ClientReliableCheckBlock(client_t *cl, int maxsize);
 void ClientReliable_FinishWrite(client_t *cl);
@@ -417,9 +520,18 @@ void ClientReliableWrite_Long(client_t *cl, int c);
 void ClientReliableWrite_Short(client_t *cl, int c);
 void ClientReliableWrite_String(client_t *cl, char *s);
 void ClientReliableWrite_SZ(client_t *cl, void *data, int len);
+//
+// host
+//
+extern	quakeparms_t host_parms;
 
-// The Heartbeat function
+extern	cvar_t		sys_nostdout;
+extern	cvar_t		developer;
 
-void HeartBeat (void);
+extern	qboolean	host_initialized;		// true if into command execution
+extern	double		host_frametime;
+extern	double		realtime;			// not bounded in any way, changed at
+										// start of every frame, never reset
+
 
 #endif // _SERVER_H
