@@ -591,11 +591,7 @@ R_DrawEntitiesOnList ( void ) {
 
 	// draw sprites seperately, because of alpha blending
 	for (i=0 ; i<cl_numvisedicts ; i++) {
-#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
-#else
-		currententity = cl_visedicts[i];
-#endif
 		switch (currententity->model->type) {
 		case mod_alias:
 			R_DrawAliasModel (currententity);
@@ -611,11 +607,7 @@ R_DrawEntitiesOnList ( void ) {
 	}
 
 	for (i=0 ; i<cl_numvisedicts ; i++) {
-#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
-#else
-		currententity = cl_visedicts[i];
-#endif
 
 		switch (currententity->model->type) {
 		case mod_sprite:

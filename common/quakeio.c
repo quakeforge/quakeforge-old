@@ -13,7 +13,7 @@ QFile *Qopen(const char *path, const char *mode)
 			zip=1;
 			continue;
 		}
-		p++;
+		*p++=*mode;
 	}
 	*p=0;
 
