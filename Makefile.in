@@ -42,7 +42,6 @@ configure: configure.in acconfig.h
 
 Makefile: Makefile.in configure \
           qw_client/Makefile qw_server/Makefile uquake/Makefile
-	./configure
 
 qw_client/Makefile: qw_client/Makefile.in configure
 	./configure

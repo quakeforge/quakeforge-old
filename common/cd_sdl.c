@@ -114,9 +114,14 @@ void CDAudio_Update()
 
 int CDAudio_Init()
 {
-	if((cls.state == ca_dedicated) || COM_CheckParm("-nocdaudio"))
+#ifndef QUAKEWORLD
+	if (cls.state == ca_dedicated)
 		return -1;
-		
+#endif
+
+	if (COM_CheckParm("-nocdaudio"))
+		return -1;
+
 	cd_id = SDL_CDOpen(0);
 	if(!cd_id)
 	{

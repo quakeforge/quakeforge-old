@@ -17,13 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-#if defined(SDL)
-# include "cd_sdl.c"
-#elif defined(__linux__)
-# include "cd_linux.c"
+#if defined(__linux__)
+#	include "cd_linux.c"
 #elif defined(_WIN32)
-# include "cd_win.c"
+#	include "cd_win.c"
 #else
-# include "cd_null.c"
+#	include "cd_null.c"
 #endif
