@@ -76,11 +76,12 @@ DO_GL_AS=$(CC) $(CFLAGS) $(GL_CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 # SETUP AND BUILD
 #############################################################################
 
-TARGETS=$(BUILDDIR)/bin/squake \
-	$(BUILDDIR)/bin/xquake \
-	$(BUILDDIR)/bin/glquake \
-	$(BUILDDIR)/bin/glquake.3dfx
-	# $(BUILDDIR)/bin/unixded
+#TARGETS=$(BUILDDIR)/bin/squake \
+#	$(BUILDDIR)/bin/xquake \
+#	$(BUILDDIR)/bin/glquake \
+#	$(BUILDDIR)/bin/glquake.3dfx
+#	# $(BUILDDIR)/bin/unixded
+TARGETS=$(BUILDDIR)/bin/glquake.3dfx
 
 build_debug:
 	@-mkdir $(BUILD_DEBUG_DIR) \

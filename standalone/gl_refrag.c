@@ -135,8 +135,8 @@ void R_SplitEntityOnNode (mnode_t *node)
 // NODE_MIXED
 
 	splitplane = node->plane;
-//	sides = BOX_ON_PLANE_SIDE(r_emins, r_emaxs, splitplane);
-	sides = BoxOnPlaneSide(r_emins, r_emaxs, splitplane);
+	sides = BOX_ON_PLANE_SIDE(r_emins, r_emaxs, splitplane);
+//	sides = BoxOnPlaneSide(r_emins, r_emaxs, splitplane);
 	
 	if (sides == 3)
 	{
