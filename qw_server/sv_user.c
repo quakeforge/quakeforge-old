@@ -1363,36 +1363,42 @@ void SV_PreRunCmd(void)
 SV_RunCmd
 ===========
 */
-void SV_RunCmd (usercmd_t *ucmd)
+void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 {
 	edict_t		*ent;
-	int			i, n;
-	int			oldmsec;
+	int		i, n;
+	int		oldmsec;
+	double		tmp_time;
 
-	//MBD: The id client limits msec to 100.
-	if (ucmd->msec > 100) {
-		Con_Printf("Speed cheat detected for player %s\n",
-			       	host_client->name);
-		// We want to punish people that tries to do this. Let us 
-		//  set their fps to 1000
-		ucmd->msec = 1;
-		// This has the added benefit that the server eventually will
-		//  KICK the player, calling him a timedemo cheater.
-		//  Neat, huh? :-)
-	}
-
-	cmd = *ucmd;
-
-	// chop up very long commands
-	if (cmd.msec > 50)
-	{
+	if (!inside) {
 		oldmsec = ucmd->msec;
-		cmd.msec = oldmsec/2;
-		SV_RunCmd (&cmd);
-		cmd.msec = oldmsec/2;
-		cmd.impulse = 0;
-		SV_RunCmd (&cmd);
-		return;
+		tmp_time = realtime - host_client->frame_time_2;
+		tmp_time /= 2;
+		ucmd->msec = tmp_time * 1000;
+		if (ucmd->msec > oldmsec)
+			ucmd->msec = oldmsec;
+
+		if (abs(oldmsec - ucmd->msec) > 10) {
+			printf("tmp_time: %f, realtime: %f, frame_time_1: %f\n",
+					tmp_time, realtime, host_client->frame_time_1);
+			printf("oldmsec: '%d', msec: '%d'\n", oldmsec, 
+					ucmd->msec);
+		}
+		host_client->frame_time_2 = host_client->frame_time_1;
+		host_client->frame_time_1 = realtime;
+
+		cmd = *ucmd;
+
+		// chop up very long commands
+		if (cmd.msec > 50) {
+			oldmsec = ucmd->msec;
+			cmd.msec = oldmsec/2;
+			SV_RunCmd (&cmd, 1);
+			cmd.msec = oldmsec/2;
+			cmd.impulse = 0;
+			SV_RunCmd (&cmd, 1);
+			return;
+		}
 	}
 
 	if (!sv_player->v.fixangle)
@@ -1651,15 +1657,15 @@ void SV_ExecuteClientMessage (client_t *cl)
 				{
 					while (net_drop > 2)
 					{
-						SV_RunCmd (&cl->lastcmd);
+						SV_RunCmd (&cl->lastcmd, 0);
 						net_drop--;
 					}
 					if (net_drop > 1)
-						SV_RunCmd (&oldest);
+						SV_RunCmd (&oldest, 0);
 					if (net_drop > 0)
-						SV_RunCmd (&oldcmd);
+						SV_RunCmd (&oldcmd, 0);
 				}
-				SV_RunCmd (&newcmd);
+				SV_RunCmd (&newcmd, 0);
 
 				SV_PostRunCmd();
 			}
