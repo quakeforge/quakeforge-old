@@ -23,8 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "r_local.h"
-#include <mathlib.h>
 #include <console.h>
+#include <mathlib.h>
+#include <sys.h>
 
 mnode_t	*r_pefragtopnode;
 
@@ -211,7 +212,11 @@ void R_AddEfrags (entity_t *ent)
 	if (!ent->model)
 		return;
 
+#ifdef QUAKEWORLD
 	if (ent == &r_worldentity)
+#else
+	if (ent == cl_entities)
+#endif
 		return;		// never add the world
 
 	r_addent = ent;
@@ -262,7 +267,11 @@ void R_StoreEfrags (efrag_t **ppefrag)
 			if ((pent->visframe != r_framecount) &&
 				(cl_numvisedicts < MAX_VISEDICTS))
 			{
+#ifdef QUAKEWORLD
 				cl_visedicts[cl_numvisedicts++] = *pent;
+#else
+				cl_visedicts[cl_numvisedicts++] = pent;
+#endif
 
 			// mark that we've recorded this entity for this frame
 				pent->visframe = r_framecount;
