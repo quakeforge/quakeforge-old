@@ -338,7 +338,7 @@ int main (int c, char **v) {
 	if (COM_CheckParm("-nostdout")) {
 		nostdout = 1;
 	} else {
-		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
+		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | O_NDELAY);
 #ifdef QUAKEWORLD
 		printf ("QuakeForge (QW Client) v%s\n", VERSION);
 #else

@@ -4,13 +4,8 @@
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA
 
-/* Define if you have an old Mesa that defines APIENTRY instead
-   of GLAPIENTRY */
-#undef GLAPIENTRY_IS_APIENTRY
-
-#ifdef GLAPIENTRY_IS_APIENTRY
-#  define GLAPIENTRY   APIENTRY
-#endif
+/* If your version of OpenGL uses APIENTRY, define GLAPIENTRY to be APIENTRY*/
+#undef GLAPIENTRY
 
 /* Define this to something sane if you don't have stricmp */
 #undef stricmp

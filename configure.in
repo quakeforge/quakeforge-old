@@ -167,7 +167,7 @@ if test "x$HAS_OGL" != xno; then
       AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT in GL/gl.h)
       AC_TRY_COMPILE([#include "GL/gl.h"],
         [ int x = (int) GL_COLOR_INDEX8_EXT;],
-        AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT,1) AC_MSG_RESULT(yes),
+        AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT) AC_MSG_RESULT(yes),
         AC_MSG_RESULT(no))
 
       AC_MSG_CHECKING(for GLAPIENTRY in GL/gl.h)
@@ -178,14 +178,12 @@ if test "x$HAS_OGL" != xno; then
          AC_MSG_RESULT(yes)
       else
          AC_MSG_RESULT(no)
-	 AC_MSG_CHECKING(for APIENTRY in GL/gl.h)
-	 AC_TRY_COMPILE([#include "GL/gl.h"],
-	 [ int x = APIENTRY printf("");],
-	 HAS_APIENTRY=1 AC_MSG_RESULT(yes),
-	 HAS_APIENTRY=0 AC_MSG_RESULT(no))
-	 if test "x$HAS_APIENTRY" != xno; then
-	    AC_DEFINE(GLAPIENTRY_IS_APIENTRY, 1)
-	 fi
+      
+         AC_MSG_CHECKING(for APIENTRY in GL/gl.h)
+         AC_TRY_COMPILE([#include "GL/gl.h"],
+           [ int x = APIENTRY printf("");],
+           AC_DEFINE(GLAPIENTRY, APIENTRY) AC_MSG_RESULT(yes),
+	   AC_DEFINE(GLAPIENTRY, ) AC_MSG_RESULT(no))
       fi
       if test "x$HAS_GLIDE" != xno; then
          CPPFLAGS="$GLIDE_CFLAGS $CPPFLAGS"
