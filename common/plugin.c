@@ -1,5 +1,5 @@
 /*
-	host.c
+	plugin.c
 	
 	(description)
 	
@@ -78,3 +78,4 @@ void plugin_unload(void *handle)
 {
 	dlclose(handle);
 }
+

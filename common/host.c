@@ -44,7 +44,6 @@
 #include <client.h>
 #include <view.h>
 #include <wad.h>
-#include <input.h>
 #include <sound.h>
 #include <cdaudio.h>
 #include <keys.h>
@@ -579,8 +578,9 @@ Host_Init ( quakeparms_t *parms)
 		if (!host_colormap)
 			Sys_Error ("Couldn't load gfx/colormap.lmp");
 
-		plugin_load("./in_x11.so");
-		IN->Init();
+//		plugin_load("./in_x11.so");
+//		IN->Init();
+//			Not the best place to load the plugin...
 		VID_Init(host_basepal);
 		Draw_Init();
 		SCR_Init();

@@ -1,4 +1,5 @@
 /*
+plugin.h
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -45,4 +46,4 @@ int plugin_load(char *filename);
 void plugin_unload(void *handle);
 
 
-#endif	// __MODULES__:w
+#endif	// __MODULES__

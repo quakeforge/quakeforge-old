@@ -56,6 +56,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <draw.h>
 #include <console.h>
 #include <client.h>
+#include <plugin.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -471,6 +472,8 @@ void	VID_Init (unsigned char *palette)
 	int num_visuals;
 	int template_mask;
 
+	plugin_load("./in_x11.so");
+	IN->Init();
 	S_Init();	// sound is initialized here
 
 	Cmd_AddCommand("gamma", VID_Gamma_f);

@@ -54,7 +54,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <protocol.h>
 #include <cvar.h>
-#include <input.h>
 #include <screen.h>
 #include <zone.h>
 #include <client.h>
