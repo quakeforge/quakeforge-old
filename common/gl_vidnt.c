@@ -1592,7 +1592,7 @@ void	VID_Init (unsigned char *palette)
 
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
 	vid_wait = Cvar_Get ("vid_wait","0",0,"None");
-	_vid_nopageflip = Cvar_Get ("_vid_nopageflip","0",CVAR_ARCHIVE,"None");
+	vid_nopageflip = Cvar_Get ("_vid_nopageflip","0",CVAR_ARCHIVE,"None");
 	_vid_wait_override = Cvar_Get ("_vid_wait_override","0",CVAR_ARCHIVE,
 					"None");
 	
@@ -1973,7 +1973,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		_windowed_mouse-> = !_windowed_mouse->value;
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 
 	}
