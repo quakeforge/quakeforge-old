@@ -245,9 +245,6 @@ if test "x$HAS_SVGA" != xno; then
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $SVGA_CFLAGS"
    AC_CHECK_HEADER(vga.h, HAS_SVGA=yes, HAS_SVGA=no)
-   if test "x$HAS_SVGA" != xyes; then
-        HAS_TDFXGL=no
-   fi
    CPPFLAGS="$save_CPPFLAGS"
 fi
 
@@ -449,36 +446,46 @@ fi
 dnl Check for xil
 AC_CHECK_LIB(xil,xil_import, HAS_XIL=yes, HAS_XIL=no)
 
+# 3Dfx stuff..
+
+# First we see if we can use mesa with glide support..
+# if not then try the MiniGL..
+
 TDFXGL_CFLAGS=""
 TDFXGL_LIBS=""
 TDFXGL_NAME=""
-AC_ARG_WITH(3dfxgl,
-[  --with-3dfxgl=DIR       use 3Dfx MiniGL library found in DIR],
-HAS_TDFXGL=$withval, HAS_TDFXGL=auto)
-AC_ARG_WITH(3dfxgl-name,
-[  --with-3dfxgl-name=NAME
-                          use -lNAME instead of -l3dfxgl],
-TDFXGL_NAME=$withval, TDFXGL_NAME=3dfxgl)
-if test "x$HAS_TDFXGL" != xno; then
-   if test "x$HAS_TDFXGL" != xauto; then
-      TDFXGL_LIBS="-L$withval"
+AC_ARG_WITH(3dfx, [--with-3dfx	Support 3Dfx output for the V1/V2, if a argument is specified it will be used as the GL wrapper lib for glide.],
+   HAS_3dfx=$withval, HAS_3dfx=auto)
+AC_MSG_CHECKING(for 3Dfx support)
+if test "x$HAS_3dfx" != xno; then
+   if test "x$HAS_3dfx" != xauto; then
+      TDFXGL_NAME="$HAS_3dfx"
    fi
-   if test "x$HAS_GLIDE" != x; then
-      if test "x$HAS_OGL" != x; then
-         if test "x$HAS_SVGA" != x; then
-	    AC_CHECK_LIB($TDFXGL_NAME, glColor4f, 
-	      HAS_TDFXGL=yes, HAS_TDFXGL=no, [$GLIDE_LIBS $TDFXGL_LIBS])
+   if test -n "$HAS_GLIDE"; then
+      if test -n "$HAS_SVGA"; then
+	 if test -z "$TDFXGL_NAME"; then
+	    if test -n "$HAS_FXMESA"; then
+	       TDFXGL_NAME=MesaGL
+	    fi
+	 fi
+	 if test -z "$TDFXGL_NAME"; then
+	    AC_CHECK_LIB("3dfxgl", glColor4f, 
+	       TDFXGL_NAME=3dfxgl, TDFXGL_NAME=, 
+	       [$GLIDE_LIBS $TDFXGL_LIBS])
 	 fi
       fi
    fi
 fi
-if test "x$HAS_TDFXGL" = xyes; then
+if test -n "$TDFXGL_NAME"; then
    TDFXGL_CFLAGS="$GLIDE_CFLAGS"
    TDFXGL_LIBS="$TDFXGL_LIBS $GLIDE_LIBS -l$TDFXGL_NAME"
+   HAS_TDFXGL="yes"
+   AC_MSG_RESULT(yes (using $TDFXGL_NAME))
 else
    TDFXGL_NAME=""
    TDFXGL_LIBS=""
    HAS_TDFXGL="no"
+   AC_MSG_RESULT(no)
 fi
 
 
