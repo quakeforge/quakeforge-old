@@ -1042,8 +1042,6 @@ cl.simangles[ROLL] = 0;	// FIXME
 	R_RenderView ();
 #endif
 
-	if (crosshair->value)
-		Draw_Crosshair();
 }
 
 //============================================================================

@@ -39,6 +39,8 @@
 #define BMODEL_FULLY_CLIPPED	0x10 // value returned by R_BmodelCheckBBox ()
 									 //  if bbox is trivially rejected
 
+extern cvar_t	*crosshair;
+
 //===========================================================================
 // viewmodel lighting
 

@@ -1264,6 +1264,9 @@ void SCR_UpdateScreen (void)
 	}
 	else
 	{
+		if (crosshair->value)
+			Draw_Crosshair ();
+
 		SCR_DrawRam ();
 		SCR_DrawNet ();
 		SCR_DrawTurtle ();
