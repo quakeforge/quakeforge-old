@@ -33,5 +33,8 @@ GL renderer fixes/optimizations:
 Input handling cleanups:
   Zephaniah E. Hull <warp@whitestar.soark.net>
 
+Math cleanups/optimizations:
+  Nelson J. Rush <chesterrr@att.net>
+
 Documentation:
   Nelson J. Rush <chesterrr@att.net>
