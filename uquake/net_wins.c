@@ -210,7 +210,7 @@ int WINS_Init (void)
 					break;
 			buff[i] = 0;
 		}
-		Cvar_Set ("hostname", buff);
+		Cvar_Set (hostname, buff);
 	}
 
 	i = COM_CheckParm ("-ip");

@@ -355,9 +355,9 @@ void CL_Color_f (void)
 		bottom = 13;
 
 	snprintf(num, sizeof(num), "%i", top);
-	Cvar_Set ("topcolor", num);
+	Cvar_Set (topcolor, num);
 	snprintf(num, sizeof(num), "%i", bottom);
-	Cvar_Set ("bottomcolor", num);
+	Cvar_Set (bottomcolor, num);
 }
 
 /*
@@ -463,7 +463,7 @@ void CL_ConnectionlessPacket (void)
 				"You may need to reload your server browser and QuakeForge.\n",
 				s, localid->string);
 			Con_Printf("===========================\n");
-			Cvar_Set("localid", "");
+			Cvar_Set(localid, "");
 			return;
 		}
 

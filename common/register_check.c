@@ -52,7 +52,7 @@ register_check ( void )
 	COM_FOpenFile("gfx/pop.lmp", &h);
 
 	if (h) {
-		Cvar_Set ("registered", "1");
+		Cvar_Set (registered, "1");
 		Qclose (h);
 	}
 }

@@ -2135,7 +2135,7 @@ void VID_Gamma_f (void)
 		return;
 	}
 
-	Cvar_Set ("v_gamma", Cmd_Argv(1));
+	Cvar_Set (v_gamma, Cmd_Argv(1));
 }
 
 

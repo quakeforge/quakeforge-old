@@ -78,7 +78,7 @@ typedef struct cvar_s
 
 cvar_t	*Cvar_Get (char *name, char *value, int cvarflags, char *description);
 
-void 	Cvar_Set (char *var_name, char *value);
+void 	Cvar_Set (cvar_t *var, char *value);
 // equivelant to "<name> <variable>" typed at the console
 
 float	Cvar_VariableValue (char *var_name);

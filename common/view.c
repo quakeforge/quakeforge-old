@@ -980,9 +980,9 @@ cl.simangles[ROLL] = 0;	// FIXME
 #else
 	// don't allow cheats in multiplayer
 	if (cl.maxclients > 1) {
-		Cvar_Set ("scr_ofsx", "0");
-		Cvar_Set ("scr_ofsy", "0");
-		Cvar_Set ("scr_ofsz", "0");
+		Cvar_Set (scr_ofsx, "0");
+		Cvar_Set (scr_ofsy, "0");
+		Cvar_Set (scr_ofsz, "0");
 	}
 #endif
 

@@ -122,9 +122,9 @@ qboolean IN_ReadJoystick (void);
 void Toggle_AuxLook_f (void)
 {
 	if (aux_look->value)
-		Cvar_Set ("auxlook","0");
+		Cvar_Set (aux_look,"0");
 	else
-		Cvar_Set ("auxlook","1");
+		Cvar_Set (aux_look,"1");
 }
 
 

@@ -803,7 +803,7 @@ void Cmd_CmdList_f (void)
 		Con_Printf("%s\n", cmd->name);
 	}
 
-	Con_Printf ("%d commands\n", i);
+	Con_Printf ("------------\n%d commands\n", i);
 }
 
 /*

@@ -136,32 +136,27 @@ Cvar_Set
 ============
 */
 #if defined(QUAKEWORLD)
-void Cvar_Set (char *var_name, char *value)
+void Cvar_Set (cvar_t *var, char *value)
 {
-	cvar_t	*var;
-
-	var = Cvar_FindVar (var_name);
 	if (!var)
-	{	// there is an error in C code if this happens
-		Con_Printf ("Cvar_Set: variable %s not found\n", var_name);
 		return;
-	}
+
 	if(var->flags&CVAR_ROM) return;
 #ifdef SERVERONLY
 	if (var->flags&CVAR_SERVERINFO)
 	{
-		Info_SetValueForKey (svs.info, var_name, value, MAX_SERVERINFO_STRING);
-		SV_SendServerInfoChange(var_name, value);
+		Info_SetValueForKey (svs.info, var->name, value, MAX_SERVERINFO_STRING);
+		SV_SendServerInfoChange(var->name, value);
 //		SV_BroadcastCommand ("fullserverinfo \"%s\"\n", svs.info);
 	}
 #else
 	if (var->flags&CVAR_USERINFO)
 	{
-		Info_SetValueForKey (cls.userinfo, var_name, value, MAX_INFO_STRING);
+		Info_SetValueForKey (cls.userinfo, var->name, value, MAX_INFO_STRING);
 		if (cls.state >= ca_connected)
 		{
 			MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
-			SZ_Print (&cls.netchan.message, va("setinfo \"%s\" \"%s\"\n", var_name, value));
+			SZ_Print (&cls.netchan.message, va("setinfo \"%s\" \"%s\"\n", var->name, value));
 		}
 	}
 #endif
@@ -173,17 +168,12 @@ void Cvar_Set (char *var_name, char *value)
 	var->value = Q_atof (var->string);
 }
 #elif defined(UQUAKE)
-void Cvar_Set (char *var_name, char *value)
+void Cvar_Set (cvar_t *var, char *value)
 {
-	cvar_t	*var;
 	qboolean changed;
 
-	var = Cvar_FindVar (var_name);
 	if (!var)
-	{	// there is an error in C code if this happens
-		Con_Printf ("Cvar_Set: variable %s not found\n", var_name);
 		return;
-	}
 
 	// Don't change if this is a CVAR_ROM
 	if(var->flags&CVAR_ROM) return;
@@ -227,7 +217,7 @@ qboolean	Cvar_Command (void)
 		return true;
 	}
 
-	Cvar_Set (v->name, Cmd_Argv(1));
+	Cvar_Set (v, Cmd_Argv(1));
 	return true;
 }
 
@@ -265,7 +255,7 @@ void Cvar_Set_f(void)
 	var = Cvar_FindVar (var_name);
 	if (var)
 	{
-		Cvar_Set (var->name, value);
+		Cvar_Set (var, value);
 	}
 	else
 	{
@@ -291,7 +281,7 @@ void Cvar_Toggle_f (void)
 		return;
 	}
 
-	Cvar_Set (var->name, var->value ? "0" : "1");
+	Cvar_Set (var, var->value ? "0" : "1");
 }
 
 void Cvar_Help_f (void)
@@ -318,11 +308,13 @@ void Cvar_Help_f (void)
 void Cvar_CvarList_f (void)
 {
 	cvar_t	*var;
+	int i;
 
-	for (var = cvar_vars; var ; var = var->next)
+	for (var=cvar_vars, i=0 ; var ; var=var->next, i++)
 	{
 		Con_Printf("%s\n",var->name);
 	}
+	Con_Printf ("------------\n%d variables\n", i);
 }
 
 void Cvar_Init()

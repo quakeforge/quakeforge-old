@@ -840,7 +840,7 @@ R_SetupFrame ( void ) {
 		r_wateralpha->value = 1;
 #else
 	if (cl.maxclients > 1)
-		Cvar_Set ("r_fullbright", "0");
+		Cvar_Set (r_fullbright, "0");
 #endif
 
 	R_AnimateLight ();

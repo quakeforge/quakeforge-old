@@ -217,7 +217,7 @@ void S_Init (void)
 
 	if (host_parms.memsize < 0x800000)
 	{
-		Cvar_Set ("loadas8bit", "1");
+		Cvar_Set (loadas8bit, "1");
 		Con_Printf ("loading all sounds as 8bit\n");
 	}
 

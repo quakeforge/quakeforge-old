@@ -297,15 +297,15 @@ static void SCR_CalcRefdef (void)
 
 // bound viewsize
 	if (scr_viewsize->value < 30)
-		Cvar_Set ("viewsize","30");
+		Cvar_Set (scr_viewsize,"30");
 	if (scr_viewsize->value > 120)
-		Cvar_Set ("viewsize","120");
+		Cvar_Set (scr_viewsize,"120");
 
 // bound field of view
 	if (scr_fov->value < 10)
-		Cvar_Set ("fov","10");
+		Cvar_Set (scr_fov,"10");
 	if (scr_fov->value > 170)
-		Cvar_Set ("fov","170");
+		Cvar_Set (scr_fov,"170");
 
 	size = scr_viewsize->value;
 

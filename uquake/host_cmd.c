@@ -1001,7 +1001,7 @@ void Host_Name_f (void)
 	{
 		if (Q_strcmp(cl_name->string, newName) == 0)
 			return;
-		Cvar_Set ("_cl_name", newName);
+		Cvar_Set (cl_name, newName);
 		if (cls.state >= ca_connected)
 			Cmd_ForwardToServer ();
 		return;

@@ -844,7 +844,7 @@ forward:
 		if (Q_strcmp(cl_name->string, setup_myname) != 0)
 			Cbuf_AddText ( va ("name \"%s\"\n", setup_myname) );
 		if (Q_strcmp(hostname->string, setup_hostname) != 0)
-			Cvar_Set("hostname", setup_hostname);
+			Cvar_Set(hostname, setup_hostname);
 		if (setup_top != setup_oldtop || setup_bottom != setup_oldbottom)
 			Cbuf_AddText( va ("color %i %i\n", setup_top, setup_bottom) );
 		m_entersound = true;
@@ -1118,19 +1118,19 @@ M_AdjustSliders ( int dir )
 
 	switch (options_cursor) {
 		case 3:	// screen size
-			Cvar_Set("scr_viewsize", va("%d",
-					bound(30, scr_viewsize->value + (dir * 10), 120)));
+			Cvar_Set(scr_viewsize, va("%d",
+					bound(30, (int)scr_viewsize->value + (dir * 10), 120)));
 			break;
 		case 4:	// gamma
-			Cvar_Set("v_gamma", va("%f",
+			Cvar_Set(v_gamma, va("%f",
 					bound(0.5, v_gamma->value - (dir * 0.05), 1)));
 			break;
 		case 5:	// mouse speed
-			Cvar_Set("sensitivity", va("%f",
+			Cvar_Set(sensitivity, va("%f",
 					bound(1, sensitivity->value + (dir * 0.05), 11)));
 			break;
 		case 6:	// music volume
-			Cvar_Set("bgmvolume", va("%f",
+			Cvar_Set(bgmvolume, va("%f",
 #ifdef _WIN32
 					bound(0, bgmvolume->value + dir, 1)));
 #else
@@ -1138,37 +1138,37 @@ M_AdjustSliders ( int dir )
 #endif
 			break;
 		case 7:	// sfx volume
-			Cvar_Set("volume", va("%f",	bound(0, volume->value + (dir * 0.1), 1)));
+			Cvar_Set(volume, va("%f",	bound(0, volume->value + (dir * 0.1), 1)));
 			break;
 
 		case 8:	// allways run
 			if (cl_forwardspeed->value > 200) {
-				Cvar_Set("cl_forwardspeed", va("%d", 200));
-				Cvar_Set("cl_backspeed", va("%d", 200));
+				Cvar_Set(cl_forwardspeed, va("%d", 200));
+				Cvar_Set(cl_backspeed, va("%d", 200));
 			} else {
-				Cvar_Set("cl_forwardspeed", va("%d", 400));
-				Cvar_Set("cl_backspeed", va("%d", 400));
+				Cvar_Set(cl_forwardspeed, va("%d", 400));
+				Cvar_Set(cl_backspeed, va("%d", 400));
 			}
 			break;
 
 		case 9:	// invert mouse
-			Cvar_Set("m_pitch", va("%f", -m_pitch->value));
+			Cvar_Set(m_pitch, va("%f", -m_pitch->value));
 			break;
 
 		case 10:	// lookspring
-			Cvar_Set("lookspring", va("%d", !lookspring->value));
+			Cvar_Set(lookspring, va("%d", !lookspring->value));
 			break;
 
 		case 11:	// lookstrafe
-			Cvar_Set("lookstrafe", va("%d", !lookstrafe->value));
+			Cvar_Set(lookstrafe, va("%d", !lookstrafe->value));
 			break;
 
 		case 12:	// Use old-style sbar
-			Cvar_Set("cl_sbar", va("%d", !cl_sbar->value));
+			Cvar_Set(cl_sbar, va("%d", !cl_sbar->value));
 			break;
 
 		case 13:	// HUD on left side
-			Cvar_Set("cl_hudswap", va("%d", !cl_hudswap->value));
+			Cvar_Set(cl_hudswap, va("%d", !cl_hudswap->value));
 			break;
 
 		default:

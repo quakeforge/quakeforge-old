@@ -353,10 +353,10 @@ void TTY_SetComPortConfig (int portNumber, int port, int irq, int baud, qboolean
 	else
 		temp = 0.0;
 
-	Cvar_SetValue ("_config_com_port", (float)port);
-	Cvar_SetValue ("_config_com_irq", (float)irq);
-	Cvar_SetValue ("_config_com_baud", (float)baud);
-	Cvar_SetValue ("_config_com_modem", temp);
+	Cvar_SetValue (config_com_port, (float)port);
+	Cvar_SetValue (config_com_irq, (float)irq);
+	Cvar_SetValue (config_com_baud, (float)baud);
+	Cvar_SetValue (config_com_modem, temp);
 }
 
 void TTY_GetModemConfig (int portNumber, char *dialType, char *clear, char *init, char *hangup)
@@ -382,10 +382,10 @@ void TTY_SetModemConfig (int portNumber, char *dialType, char *clear, char *init
 
 	p->modemInitialized = false;
 
-	Cvar_Set ("_config_modem_dialtype", dialType);
-	Cvar_Set ("_config_modem_clear", clear);
-	Cvar_Set ("_config_modem_init", init);
-	Cvar_Set ("_config_modem_hangup", hangup);
+	Cvar_Set (config_modem_dialtype, dialType);
+	Cvar_Set (config_modem_clear, clear);
+	Cvar_Set (config_modem_init, init);
+	Cvar_Set (config_modem_hangup, hangup);
 }
 
 
