@@ -21,14 +21,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "glquake.h"
-#include "cvar.h"
-#include "console.h"
-#include "sound.h"
-#include "keys.h"
-#include "menu.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <glquake.h>
+#include <cvar.h>
+#include <console.h>
+#include <sound.h>
+#include <keys.h>
+#include <menu.h>
 #include <sys.h>
 #include <lib_replace.h>
 #include <draw.h>
@@ -62,7 +62,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # include <X11/extensions/xf86dga.h>
 # include <X11/extensions/xf86vmode.h>
 #endif
-#include "dga_check.h"
+#include <dga_check.h>
 
 #ifdef XMESA
 # include <GL/xmesa.h>
@@ -431,14 +431,17 @@ void VID_Init(unsigned char *palette)
 		vid.conwidth = width;
 
 	vid.conwidth &= 0xfff8; // make it a multiple of eight
-	if(vid.conwidth < 320) vid.conwidth = 320;
+	if (vid.conwidth < 320)
+		vid.conwidth = 320;
 
 	// pick a conheight that matches with correct aspect
 	vid.conheight = vid.conwidth * 3 / 4;
 
 	i = COM_CheckParm ("-conheight");
 	if ( i != 0 )	// Set console height, but no smaller than 200 px
-		vid.conheight = min(Q_atoi(com_argv[i+1]), 200);
+		vid.conheight = Q_atoi(com_argv[i+1]);
+	if (vid.conheight < 200)
+		vid.conheight = 200;
 
 	x_disp = XOpenDisplay(NULL);
 	if ( !x_disp ) {
@@ -547,7 +550,8 @@ void VID_Init(unsigned char *palette)
 	// Check for 3DFX Extensions and initialize them.
 	VID_Init8bitPalette();
 
-	Con_SafePrintf ("Video mode %dx%d initialized.\n", width, height);
+	Con_SafePrintf ("Video mode %dx%d initialized.\n",
+			width, height);
 
 	vid.recalc_refdef = 1;		// force a surface cache flush
 }
