@@ -578,13 +578,13 @@ void Draw_Crosshair(void)
 		glBegin (GL_QUADS);
 		
 		glTexCoord2f (0, 0);
-		glVertex2f (x - 7, y - 7);
+		glVertex2f (x - 7, y - 1);
 		glTexCoord2f (1, 0);
-		glVertex2f (x + 9, y - 7);
+		glVertex2f (x + 9, y - 1);
 		glTexCoord2f (1, 1);
-		glVertex2f (x + 9, y + 9);
+		glVertex2f (x + 9, y + 17);
 		glTexCoord2f (0, 1);
-		glVertex2f (x - 7, y + 9);
+		glVertex2f (x - 7, y + 17);
 		
 		glEnd ();
 		
