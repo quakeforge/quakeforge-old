@@ -386,6 +386,7 @@ void R_DrawSequentialPoly (msurface_t *s)
 			glBlendFunc (GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
 
 		glDisable (GL_BLEND);
+		
 	}
 
 	//
@@ -726,7 +727,7 @@ void R_BlendLightmaps (void)
 		{
 //			if (p->flags & SURF_UNDERWATER)
 //				DrawGLWaterPolyLightmap (p);
-			if (((r_viewleaf->contents==CONTENTS_EMPTY && (p->flags & SURF_UNDERWATER)) ||
+			if (r_waterwarp.value && ((r_viewleaf->contents==CONTENTS_EMPTY && (p->flags & SURF_UNDERWATER)) ||
 				(r_viewleaf->contents!=CONTENTS_EMPTY && !(p->flags & SURF_UNDERWATER)))
 				&& !(p->flags & SURF_DONTWARP))
 				DrawGLWaterPolyLightmap (p);
@@ -786,7 +787,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 		return;
 	}
 
-	if (((r_viewleaf->contents==CONTENTS_EMPTY && (fa->flags & SURF_UNDERWATER)) ||
+	if (r_waterwarp.value&&((r_viewleaf->contents==CONTENTS_EMPTY && (fa->flags & SURF_UNDERWATER)) ||
 		(r_viewleaf->contents!=CONTENTS_EMPTY && !(fa->flags & SURF_UNDERWATER)))
 		&& !(fa->flags & SURF_DONTWARP))
 		DrawGLWaterPoly (fa->polys);
@@ -1284,7 +1285,7 @@ void R_RecursiveWorldNode (mnode_t *node)
 				// don't backface underwater surfaces, because they warp
 //				if ( !(surf->flags & SURF_UNDERWATER) && ( (dot < 0) ^ !!(surf->flags & SURF_PLANEBACK)) )
 //					continue;		// wrong side
-				if ( !(((r_viewleaf->contents==CONTENTS_EMPTY && (surf->flags & SURF_UNDERWATER)) ||
+				if (r_waterwarp.value && !(((r_viewleaf->contents==CONTENTS_EMPTY && (surf->flags & SURF_UNDERWATER)) ||
 					(r_viewleaf->contents!=CONTENTS_EMPTY && !(surf->flags & SURF_UNDERWATER)))
 					&& !(surf->flags & SURF_DONTWARP)) && ( (dot < 0) ^ !!(surf->flags & SURF_PLANEBACK)) )
 					continue;		// wrong side
