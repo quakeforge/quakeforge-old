@@ -565,7 +565,7 @@ void VID_Init(unsigned char *palette)
 						visinfo->visual, mask, &attr);
 	XMapWindow(x_disp, x_win);
 #ifdef HAS_VIDMODE
-	if (hasvidmode) {
+	if (hasvidmode && vid_fullscreen->value) {
 		XRaiseWindow(x_disp, x_win);
 		XGrabKeyboard(x_disp, x_win, 1, GrabModeAsync, GrabModeAsync,
 					  CurrentTime);
