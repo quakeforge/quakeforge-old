@@ -212,3 +212,7 @@
 
 /* Define what the base path should be */
 #define FS_BASEPATH "."
+
+/* Define the name of the global config file */
+#define GLOBAL_CFG_FILE ".\\qforge.cfg"
+

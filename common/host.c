@@ -556,23 +556,19 @@ Host_Init (quakeparms_t *parms)
 	// would have been nice if Cmd_Exec_f could have been used, but it
 	// only reads from within the quake file system, and changing that is
 	// probably Not A Good Thing (tm).
-#if defined(GLOBAL_CFG_FILE)
 	global_cfg_file = Cvar_Get("global_cfg_file", GLOBAL_CFG_FILE,
 			CVAR_ROM, "global configuration file");
 
 	Cmd_Exec_File (global_cfg_file->string);
 	Cbuf_Execute_Sets ();
-#endif
 
 	CL_InitCvars ();
 	SCR_InitCvars ();
 	VID_InitCvars ();
 	COM_Init ();
 
-#if defined(GLOBAL_CFG_FILE)
 	Cmd_Exec_File (global_cfg_file->string);
 	Cbuf_Execute ();
-#endif
 
 	// reparse the command line for + commands other than set (sets still done,
 	// but it doesn't matter)
