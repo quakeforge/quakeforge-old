@@ -207,6 +207,13 @@ void R_Init (void)
 			"Toggles drawing of your weapon");
 	r_shadows = Cvar_Get ("r_shadows", "0", CVAR_NONE,
 			"None");
+
+	// FIXME: Document these ..   --KB
+	r_interpanimation = Cvar_Get ("r_interpanimation", "1", CVAR_ARCHIVE,
+			"");
+	r_interptransform = Cvar_Get ("r_interptransform", "1", CVAR_ARCHIVE,
+			"");
+
 	r_wateralpha = Cvar_Get ("r_wateralpha", "1", CVAR_NONE,
 			"Alpha value for water textures, valid range is "
 			"between 0 and 1.  Leave it at 1 unless you have "

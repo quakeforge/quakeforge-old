@@ -68,65 +68,70 @@ typedef struct
 
 typedef struct entity_s
 {
-//#ifndef QUAKEWORLD
-	qboolean				forcelink;		// model changed
+	qboolean		forcelink;	// model changed
 
-	int						update_type;
+	int			update_type;
 
-	entity_state_t			baseline;		// to fill in defaults in updates
+	entity_state_t		baseline;	// to fill defaults in updates
 
-	double					msgtime;		// time of last update
-	vec3_t					msg_origins[2];	// last two updates (0 is newest)
-	vec3_t					msg_angles[2];	// last two updates (0 is newest)
-	int						effects;		// light, particals, etc
-//#endif
-	vec3_t					origin;
-	vec3_t					angles;
-	struct model_s			*model;			// NULL = no model
-	struct efrag_s			*efrag;			// linked list of efrags
-	int						frame;
-	float					syncbase;		// for client-side animations
-	byte					*colormap;
-	int						skinnum;		// for Alias models
-//#ifdef QUAKEWORLD
-	int						keynum;
+	double			msgtime;	// time of last update
+	vec3_t			msg_origins[2];	// last 2 updates (0 is newest)
+	vec3_t			msg_angles[2];	// last 2 updates (0 is newest)
+	int			effects;	// light, particles, etc
+	float			translate_start_time;
+	vec3_t			origin1;
+	vec3_t			origin2;
+	vec3_t			origin;
+	float			rotate_start_time;
+	vec3_t			angles1;
+	vec3_t			angles2;
+	vec3_t			angles;
+	struct model_s		*model;		// NULL = no model
+	struct efrag_s		*efrag;		// linked list of efrags
+	int			frame;
+	float			frame_start_time;
+	float			frame_interval;
+	int			pose1, pose2;
+	float			syncbase;	// for client-side animations
+	byte			*colormap;
+	int			skinnum;	// for Alias models
+	int			keynum;
 	struct player_info_s	*scoreboard;	// identify player
-//#endif
-	int						visframe;		// last frame this entity was
-											//  found in an active leaf
+	int			visframe;	// last frame this entity was
+						//  found in an active leaf
 
-	int						dlightframe;	// dynamic lighting
-	int						dlightbits;
+	int			dlightframe;	// dynamic lighting
+	int			dlightbits;
 
 // FIXME: could turn these into a union
-	int						trivial_accept;
-	struct mnode_s			*topnode;		// for bmodels, first world node
-											//  that splits bmodel, or NULL if
-											//  not split
+	int			trivial_accept;
+	struct mnode_s		*topnode;	// for bmodels, first world node
+						//  that splits bmodel, or NULL
+						//  if not split
 } entity_t;
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct
 {
-	vrect_t		vrect;				// subwindow in video for refresh
-									// FIXME: not need vrect next field here?
-	vrect_t		aliasvrect;			// scaled Alias version
-	int			vrectright, vrectbottom;	// right & bottom screen coords
-	int			aliasvrectright, aliasvrectbottom;	// scaled Alias versions
-	float		vrectrightedge;			// rightmost right edge we care about,
+	vrect_t		vrect;			// subwindow in video for refresh
+						// FIXME: not need vrect next field here?
+	vrect_t		aliasvrect;		// scaled Alias version
+	int		vrectright, vrectbottom;	// right & bottom screen coords
+	int		aliasvrectright, aliasvrectbottom;	// scaled Alias versions
+	float		vrectrightedge;		// rightmost right edge we care about,
 										//  for use in edge list
-	float		fvrectx, fvrecty;		// for floating-point compares
+	float		fvrectx, fvrecty;	// for floating-point compares
 	float		fvrectx_adj, fvrecty_adj; // left and top edges, for clamping
-	int			vrect_x_adj_shift20;	// (vrect.x + 0.5 - epsilon) << 20
-	int			vrectright_adj_shift20;	// (vrectright + 0.5 - epsilon) << 20
+	int		vrect_x_adj_shift20;	// (vrect.x + 0.5 - epsilon) << 20
+	int		vrectright_adj_shift20;	// (vrectright + 0.5 - epsilon) << 20
 	float		fvrectright_adj, fvrectbottom_adj;
 										// right and bottom edges, for clamping
-	float		fvrectright;			// rightmost edge, for Alias clamping
-	float		fvrectbottom;			// bottommost edge, for Alias clamping
+	float		fvrectright;		// rightmost edge, for Alias clamping
+	float		fvrectbottom;		// bottommost edge, for Alias clamping
 	float		horizontalFieldOfView;	// at Z = 1.0, this many X is visible
 										// 2.0 = 90 degrees
-	float		xOrigin;			// should probably allways be 0.5
-	float		yOrigin;			// between be around 0.3 to 0.5
+	float		xOrigin;		// should probably allways be 0.5
+	float		yOrigin;		// between be around 0.3 to 0.5
 
 	vec3_t		vieworg;
 	vec3_t		viewangles;

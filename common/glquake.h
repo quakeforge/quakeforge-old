@@ -185,6 +185,8 @@ extern	cvar_t	*r_waterwarp;
 extern	cvar_t	*r_fullbright;
 extern	cvar_t	*r_lightmap;
 extern	cvar_t	*r_shadows;
+extern	cvar_t	*r_interpanimation;
+extern	cvar_t	*r_interptransform;
 extern	cvar_t	*r_wateralpha;
 extern	cvar_t	*r_dynamic;
 extern	cvar_t	*r_novis;

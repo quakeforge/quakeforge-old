@@ -97,6 +97,8 @@ cvar_t	*r_speeds;
 cvar_t	*r_fullbright;
 cvar_t	*r_lightmap;
 cvar_t	*r_shadows;
+cvar_t	*r_interpanimation;
+cvar_t	*r_interptransform;
 cvar_t	*r_wateralpha;
 cvar_t	*r_dynamic;
 cvar_t	*r_novis;
@@ -150,13 +152,80 @@ R_CullBox (vec3_t mins, vec3_t maxs) {
 }
 
 void
-R_RotateForEntity (entity_t *e) {
-    glTranslatef (e->origin[0],  e->origin[1],  e->origin[2]);
+R_BlendedRotateForEntity (entity_t *e)
+{
+	float		blend;
+	vec3_t		d;
+	int		i;
 
-    glRotatef (e->angles[1],  0, 0, 1);
-    glRotatef (-e->angles[0],  0, 1, 0);
+	if (e->translate_start_time == 0)
+	{
+		e->translate_start_time = realtime;
+		VectorCopy (e->origin, e->origin1);
+		VectorCopy (e->origin, e->origin2);
+	}
+
+	if (!VectorCompare (e->origin, e->origin2))
+	{
+		e->translate_start_time = realtime;
+		VectorCopy (e->origin2, e->origin1);
+		VectorCopy (e->origin,  e->origin2);
+		blend = 0;
+	} else {
+		blend = (realtime - e->translate_start_time) / 0.1;
+
+		if (cl.paused || blend > 1)
+			blend = 1;
+	}
+
+	VectorSubtract (e->origin2, e->origin1, d);
+
+	glTranslatef (e->origin1[0] + (blend * d[0]),
+			e->origin1[1] + (blend * d[1]),
+			e->origin1[2] + (blend * d[2]));
+
+	if (e->rotate_start_time == 0)
+	{
+		e->rotate_start_time = realtime;
+		VectorCopy (e->angles, e->angles1);
+		VectorCopy (e->angles, e->angles2);
+	}
+
+	if (!VectorCompare (e->angles, e->angles2))
+	{
+		e->rotate_start_time = realtime;
+		VectorCopy (e->angles2, e->angles1);
+		VectorCopy (e->angles,  e->angles2);
+		blend = 0;
+	} else {
+		blend = (realtime - e->rotate_start_time) / 0.1;
+
+		if (cl.paused || blend > 1)
+			blend = 1;
+	}
+
+	VectorSubtract (e->angles2, e->angles1, d);
+
+	for (i = 0; i < 3; i++)
+		if (d[i] > 180)
+			d[i] -= 360;
+		else if (d[i] < -180)
+			d[i] += 360;
+
+	glRotatef ( e->angles1[1] + ( blend * d[1]),  0, 0, 1);
+	glRotatef (-e->angles1[0] + (-blend * d[0]),  0, 1, 0);
+	glRotatef ( e->angles1[2] + ( blend * d[2]),  1, 0, 0);
+}
+
+void
+R_RotateForEntity (entity_t *e)
+{
+	glTranslatef (e->origin[0],  e->origin[1],  e->origin[2]);
+
+	glRotatef (e->angles[1],  0, 0, 1);
+	glRotatef (-e->angles[0],  0, 1, 0);
 	//ZOID: fixed z angle
-    glRotatef (e->angles[2],  1, 0, 0);
+	glRotatef (e->angles[2],  1, 0, 0);
 }
 
 /*
@@ -167,7 +236,8 @@ R_RotateForEntity (entity_t *e) {
 	R_GetSpriteFrame
 */
 mspriteframe_t
-*R_GetSpriteFrame (entity_t *currententity) {
+*R_GetSpriteFrame (entity_t *currententity)
+{
 
 	msprite_t		*psprite;
 	mspritegroup_t	*pspritegroup;
@@ -211,7 +281,8 @@ mspriteframe_t
 	R_DrawSpriteModel
 */
 void
-R_DrawSpriteModel (entity_t *e) {
+R_DrawSpriteModel (entity_t *e)
+{
 
 	vec3_t	point;
 	mspriteframe_t	*frame;
@@ -289,7 +360,7 @@ float	r_avertexnormal_dots[SHADEDOT_QUANT][256] =
 
 float	*shadedots = r_avertexnormal_dots[0];
 
-int	lastposenum;
+int	lastposenum, lastposenum0;
 
 /*
 	GL_DrawAliasFrame
@@ -297,7 +368,6 @@ int	lastposenum;
 void
 GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 {
-
 	float		l;
 	trivertx_t	*verts;
 	int		*order;
@@ -324,7 +394,8 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 		}
 
 		do
-		{	// texture coordinates come from the draw list
+		{
+			// texture coordinates come from the draw list
 			glTexCoord2f (((float *)order)[0],
 					((float *)order)[1]);
 			order += 2;
@@ -332,11 +403,8 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 			// normals and vertexes come from the frame list
 
 			l = shadedots[verts->lightnormalindex] * shadelight[3];
-			if (shadelight[0] || shadelight[1] || shadelight[2])
-				//glColor3f (l*shadelight[0], l*shadelight[1], l*shadelight[2]);
-				glColor3f (min(l+shadelight[0], 1), min(l+shadelight[1], 1), 
-						   min(l+shadelight[2], 1));
-			else
+			glColor3f (l+shadelight[0], l+shadelight[1], 
+					l+shadelight[2]);
 				glColor3f (l, l, l);
 
 			glVertex3f (verts->v[0], verts->v[1], verts->v[2]);
@@ -348,13 +416,86 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 
 
 /*
+	GL_DrawAliasBlendedFrame
+*/
+void
+GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
+		float blend)
+{
+	float		l;
+	trivertx_t	*verts1;
+	trivertx_t	*verts2;
+	int		*order;
+	int		count;
+	vec3_t		d;
+
+	lastposenum0 = pose1;
+	lastposenum = pose2;
+
+	verts1 = (trivertx_t *)((byte *)paliashdr +
+			paliashdr->posedata);
+	verts2 = verts1;
+	
+	verts1 += pose1 * paliashdr->poseverts;
+	verts2 += pose2 * paliashdr->poseverts;
+
+	order = (int *)((byte *)paliashdr + paliashdr->commands);
+
+	while (1)
+	{
+		// get the vertex count and primitive type
+		count = *order++;
+		if (!count)
+			break;		// done
+		if (count < 0)
+		{
+			count = -count;
+			glBegin (GL_TRIANGLE_FAN);
+		} else {
+			glBegin (GL_TRIANGLE_STRIP);
+		}
+
+		do
+		{
+			// texture coordinates come from the draw list
+			glTexCoord2f (((float *)order)[0],
+					((float *)order)[1]);
+			order += 2;
+
+			// normals and vertexes come from the frame list
+
+			d[0] = shadedots[verts2->lightnormalindex] -
+				shadedots[verts1->lightnormalindex];
+
+			l = (shadedots[verts1->lightnormalindex] +
+					(blend * d[0])) * shadelight[3];
+			
+			glColor3f (l+shadelight[0], l+shadelight[1], 
+					l+shadelight[2]);
+
+			VectorSubtract(verts2->v, verts1->v, d);
+
+			glVertex3f (verts1->v[0] + (blend * d[0]),
+					verts1->v[1] + (blend * d[1]),
+					verts1->v[2] + (blend * d[2]));
+
+			verts1++;
+			verts2++;
+		} while (--count);
+		glEnd ();
+	}
+}
+
+
+
+/*
 	GL_DrawAliasShadow
 */
 extern	vec3_t			lightspot;
 
 void
-GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum) {
-
+GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
+{
 	trivertx_t	*verts;
 	int		*order;
 	vec3_t	point;
@@ -404,35 +545,88 @@ GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum) {
 	}
 }
 
+
 /*
 	R_SetupAliasFrame
 */
-void R_SetupAliasFrame (int frame, aliashdr_t *paliashdr) {
-
-	int				pose, numposes;
+void
+R_SetupAliasFrame (int frame, aliashdr_t *paliashdr)
+{
+	int			pose, numposes;
 	float			interval;
 
-	if ((frame >= paliashdr->numframes) || (frame < 0)) {
-		Con_DPrintf ("R_AliasSetupFrame: no such frame %d\n", frame);
+	if ((frame >= paliashdr->numframes) || (frame < 0))
+	{
+		Con_DPrintf ("R_SetupAliasFrame: no such frame %d\n", frame);
 		frame = 0;
 	}
 
 	pose = paliashdr->frames[frame].firstpose;
 	numposes = paliashdr->frames[frame].numposes;
 
-	if (numposes > 1) {
+	if (numposes > 1)
+	{
 		interval = paliashdr->frames[frame].interval;
 		pose += (int)(cl.time / interval) % numposes;
 	}
 	GL_DrawAliasFrame (paliashdr, pose);
 }
 
+
+/*
+	R_SetupAliasBlendedFrame
+*/
+void
+R_SetupAliasBlendedFrame (int frame, aliashdr_t *paliashdr, entity_t *e)
+{
+	int			pose, numposes;
+	float			blend;
+
+	if ((frame >= paliashdr->numframes) || (frame < 0))
+	{
+		Con_DPrintf ("R_SetupAliasFrame: no such frame %d\n", frame);
+		frame = 0;
+	}
+
+	pose = paliashdr->frames[frame].firstpose;
+	numposes = paliashdr->frames[frame].numposes;
+
+	if (numposes > 1)
+	{
+		e->frame_interval = paliashdr->frames[frame].interval;
+		pose += (int)(cl.time / e->frame_interval) % numposes;
+		Con_DPrintf ("0x%x\n", e);
+		Con_DPrintf ("1st: pose = %i  pose2 = %i  pose1 = %i\n",
+				pose, e->pose2, e->pose1);
+	} else
+		e->frame_interval = 0.1;
+
+	if (e->pose2 != pose)
+	{
+		if (numposes > 1)
+			Con_DPrintf ("2nd: pose = %i  pose2 = %i  pose1 = %i\n",
+					pose, e->pose2, e->pose1);
+		e->frame_start_time = realtime;
+		e->pose1 = e->pose2;
+		e->pose2 = pose;
+		if (numposes > 1)
+			Con_DPrintf ("3rd: pose = %i  pose2 = %i  pose1 = %i\n",
+					pose, e->pose2, e->pose1);
+		blend = 0;
+	} else
+		blend = (realtime - e->frame_start_time) / e->frame_interval;
+
+	if (cl.paused || blend > 1) blend = 1;
+
+	GL_DrawAliasBlendedFrame (paliashdr, e->pose1, e->pose2, blend);
+}
+
 /*
 	R_DrawAliasModel
 */
 void
-R_DrawAliasModel (entity_t *e) {
-
+R_DrawAliasModel (entity_t *e)
+{
 	int		i;
 	int		*j;
 	int		lnum;
@@ -484,9 +678,12 @@ R_DrawAliasModel (entity_t *e) {
 				// ZOID: models should be affected by
 				//       dlights as well
 				if (r_dynamic->value) {
-					shadelight[0] += cl_dlights[lnum].color[0];
-					shadelight[1] += cl_dlights[lnum].color[1];
-					shadelight[2] += cl_dlights[lnum].color[2];
+					shadelight[0] +=
+						cl_dlights[lnum].color[0];
+					shadelight[1] +=
+						cl_dlights[lnum].color[1];
+					shadelight[2] +=
+						cl_dlights[lnum].color[2];
 					shadelight[3] += add;
 				}
 			}
@@ -538,7 +735,11 @@ R_DrawAliasModel (entity_t *e) {
 	*/
 	GL_DisableMultitexture();
 	glPushMatrix ();
-	R_RotateForEntity (e);
+
+	if (r_interptransform->value)
+		R_BlendedRotateForEntity (e);
+	else
+		R_RotateForEntity (e);
 
 	if (!strcmp (clmodel->name, "progs/eyes.mdl") &&
 			gl_doubleeyes->value)
@@ -588,7 +789,12 @@ R_DrawAliasModel (entity_t *e) {
 	if (gl_affinemodels->value)
 		glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
-	R_SetupAliasFrame (currententity->frame, paliashdr);
+	if (r_interpanimation->value)
+		R_SetupAliasBlendedFrame (currententity->frame, paliashdr,
+				currententity);
+	else
+		R_SetupAliasFrame (currententity->frame, paliashdr);
+
 
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
@@ -598,7 +804,8 @@ R_DrawAliasModel (entity_t *e) {
 
 	glPopMatrix ();
 
-	if (r_shadows->value) {
+	if (r_shadows->value)
+	{
 		glPushMatrix ();
 		R_RotateForEntity (e);
 		glDisable (GL_TEXTURE_2D);
@@ -617,8 +824,8 @@ R_DrawAliasModel (entity_t *e) {
 	R_DrawEntitiesOnList
 */
 void
-R_DrawEntitiesOnList ( void ) {
-
+R_DrawEntitiesOnList ( void )
+{
 	int		i;
 
 	if (!r_drawentities->value)
@@ -661,7 +868,6 @@ R_DrawEntitiesOnList ( void ) {
 void
 R_DrawViewModel ( void )
 {
-
 	float		ambient[4], diffuse[4];
 	int		*j;
 	int		shadelight[4];
@@ -747,7 +953,8 @@ R_DrawViewModel ( void )
 	R_PolyBlend
 */
 void
-R_PolyBlend ( void ) {
+R_PolyBlend ( void )
+{
 	if (!gl_polyblend->value)
 		return;
 	if (!v_blend[3])
@@ -782,7 +989,8 @@ R_PolyBlend ( void ) {
 
 
 int
-SignbitsForPlane ( mplane_t *out ) {
+SignbitsForPlane ( mplane_t *out )
+{
 	int	bits, j;
 
 	// for fast box on planeside test
@@ -796,8 +1004,8 @@ SignbitsForPlane ( mplane_t *out ) {
 }
 
 void
-R_SetFrustum ( void ) {
-
+R_SetFrustum ( void )
+{
 	int		i;
 
 	if (r_refdef.fov_x == 90) {
@@ -864,7 +1072,9 @@ R_SetupFrame ( void )
 }
 
 void
-MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar ) {
+MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear,
+		GLdouble zFar )
+{
 
    GLdouble xmin, xmax, ymin, ymax;
 
@@ -882,8 +1092,8 @@ MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar 
 	R_SetupGL
 */
 void
-R_SetupGL ( void ) {
-
+R_SetupGL ( void )
+{
 	float	screenaspect;
 	//float	yfov;
 	extern	int glwidth, glheight;
@@ -958,8 +1168,8 @@ R_SetupGL ( void ) {
 	r_refdef must be set before the first call
 */
 void
-R_RenderScene ( void ) {
-
+R_RenderScene ( void )
+{
 	R_SetupFrame ();
 	R_SetFrustum ();
 
@@ -987,7 +1197,8 @@ R_RenderScene ( void ) {
 	R_Clear
 */
 void
-R_Clear ( void ) {
+R_Clear ( void )
+{
 	static int l;
 
 	if (gl_ztrick->value)
@@ -1043,8 +1254,8 @@ extern cvar_t *crosshaircolor;
 	r_refdef must be set before the first call
 */
 void
-R_RenderView ( void ) {
-
+R_RenderView ( void )
+{
 	double	time1 = 0, time2 = 0;
 	// Fixme: the last argument should be a cvar... r_fog_gamma
 	GLfloat colors[4] = {(GLfloat) 1.0, (GLfloat) 1.0, (GLfloat) 1, (GLfloat) 0.1};
@@ -1115,3 +1326,4 @@ R_RenderView ( void ) {
 		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys);
 	}
 }
+
