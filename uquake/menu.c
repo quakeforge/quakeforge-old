@@ -1064,7 +1064,7 @@ again:
 
 
 #define	SLIDER_RANGE	10
-#define LOCAL_OPTIONS_ITEMS   12
+#define LOCAL_OPTIONS_ITEMS   13
 
 extern int	VID_options_items;
 static int	options_cursor;
@@ -1165,8 +1165,8 @@ void M_AdjustSliders (int dir)
 		break;
 
 	default:
-//		VID_ExtraOptionCmd(options_cursor-(options_items-4));
-		VID_ExtraOptionCmd(options_cursor);
+		VID_ExtraOptionCmd(options_cursor-(options_items-4));
+//		VID_ExtraOptionCmd(options_cursor);
 	}
 }
 
