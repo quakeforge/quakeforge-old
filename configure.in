@@ -93,8 +93,6 @@ if test "x$HAS_DGA" != xno; then
 fi
 
 dnl Checks for VGA support
-VGA_CFLAGS=""
-VGA_LIBS=""
 case "${target}" in
   i?86-*-*djgpp* | i?86-*-*msdos*)
 	HAS_VGA=yes
@@ -105,8 +103,6 @@ case "${target}" in
 esac
 
 dnl Checks for MGL support
-MGL_CFLAGS=""
-MGL_LIBS=""
 AC_ARG_WITH(mgl,
 [  --with-mgl=DIR          use MGL found in DIR],
 HAS_MGL=$withval, HAS_MGL=auto)
@@ -115,8 +111,8 @@ if test "x$HAS_MGL" != xno; then
    HAS_MGL=no
  else
    if test "x$HAS_MGL" != xauto; then
-      MGL_CFLAGS="-I$withval/include"
-      MGL_LIBS="-L$withval/lib"
+      MGL_CFLAGS="$MGL_CFLAGS -I$withval/include"
+      MGL_LIBS="$MGL_LIBS -L$withval/lib"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $MGL_CFLAGS"
@@ -126,15 +122,13 @@ if test "x$HAS_MGL" != xno; then
 fi
 
 dnl Checks for GGI support
-GGI_CFLAGS=""
-GGI_LIBS=""
 AC_ARG_WITH(ggi,
 [  --with-ggi=DIR          use LibGGI found in DIR],
 HAS_GGI=$withval, HAS_GGI=auto)
 if test "x$HAS_GGI" != xno; then
    if test "x$HAS_GGI" != xauto; then
-      GGI_CFLAGS="-I$withval/include"
-      GGI_LIBS="-L$withval/lib"
+      GGI_CFLAGS="$GGI_CFLAGS -I$withval/include"
+      GGI_LIBS="$GGI_LIBS -L$withval/lib"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $GGI_CFLAGS"
@@ -143,15 +137,13 @@ if test "x$HAS_GGI" != xno; then
 fi
 
 dnl Checks for SVGALib support
-SVGA_CFLAGS=""
-SVGA_LIBS=""
 AC_ARG_WITH(svga,
 [  --with-svga=DIR         use SVGALib found in DIR],
 HAS_SVGA=$withval, HAS_SVGA=auto)
 if test "x$HAS_SVGA" != xno; then
    if test "x$HAS_SVGA" != xauto; then
-      SVGA_CFLAGS="-I$withval/include"
-      SVGA_LIBS="-L$withval/lib"
+      SVGA_CFLAGS="$SVGA_CFLAGS= -I$withval/include"
+      SVGA_LIBS="$SVGA_LIBS -L$withval/lib"
    dnl The default system location is /usr/include or /usr/local/include
    dnl and we (obviously) don't need to set CFLAGS for that
    fi
@@ -165,15 +157,13 @@ if test "x$HAS_SVGA" != xno; then
 fi
 
 dnl Checks for SDL support
-SDL_CFLAGS=""
-SDL_LIBS=""
 AC_ARG_WITH(sdl,
 [  --with-sdl=DIR          use SDL found in DIR],
 HAS_SDL=$withval, HAS_SDL=auto)
 if test "x$HAS_SDL" != xno; then
    if test "x$HAS_SDL" != xauto; then
-      SDL_CFLAGS="-I$withval/include"
-      SDL_LIB="-L$withbal/lib"
+      SDL_CFLAGS="$SDL_CFLAGS -I$withval/include"
+      SDL_LIB="$SDL_LIBS -L$withbal/lib"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
@@ -183,17 +173,15 @@ fi
 
 
 dnl Checks for GLIDE support
-GLIDE_CFLAGS=""
-GLIDE_LIBS=""
 AC_ARG_WITH(glide,
 [  --with-glide=DIR        use the GLIDE 2.x SDK found in DIR],
 HAS_GLIDE=$withval, HAS_GLIDE=auto)
 if test "x$HAS_GLIDE" != xno; then
    if test "x$HAS_GLIDE" != xauto; then
-      GLIDE_CFLAGS="-I$withval/include"
-      GLIDE_LIBS="-L$withval/lib"
+      GLIDE_CFLAGS="$GLIDE_CFLAGS -I$withval/include"
+      GLIDE_LIBS="$GLIDE_LIBS -L$withval/lib"
    else
-      GLIDE_CFLAGS="-I/usr/include/glide -I/usr/local/include/glide"
+      GLIDE_CFLAGS="$GLIDE_CFLAGS -I/usr/include/glide -I/usr/local/include/glide"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $GLIDE_CFLAGS"
@@ -205,8 +193,6 @@ if test "x$HAS_GLIDE" != xno; then
 fi
 
 dnl Checks for OGL support
-OGL_CFLAGS=""
-OGL_LIBS=""
 dnl GL is a special case, we need seperate includes/libs entires
 AC_ARG_WITH(opengl,
 [  --with-opengl=DIR       use OpenGL with libraries found in DIR],
@@ -220,12 +206,12 @@ if test "x$OGL_INCLUDES" = xno; then
 fi
 if test "x$HAS_OGL" != xno; then
    if test "x$HAS_OGL" != xauto; then
-      OGL_LIBS="-L$HAS_OGL"
+      OGL_LIBS="$OGL_LIBS -L$HAS_OGL"
    fi
    if test "x$OGL_INCLUDES" != xauto; then
-      OGL_CFLAGS="-I$OGL_INCLUDES"
+      OGL_CFLAGS="$OGL_CFLAGS -I$OGL_INCLUDES"
    else
-      OGL_CFLAGS="-I/usr/local/include -I${x_includes:-.}"
+      OGL_CFLAGS="$OGL_CFLAGS -I/usr/local/include -I${x_includes:-.}"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $OGL_CFLAGS"
