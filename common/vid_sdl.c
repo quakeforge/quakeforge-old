@@ -25,7 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "d_local.h"
 
-cvar_t          _windowed_mouse = {"_windowed_mouse","1", true};
+cvar_t          _windowed_mouse = {"_windowed_mouse","0", true};
+static float old_windowed_mouse = 0;
 
 viddef_t    vid;                // global video state
 unsigned short  d_8to16table[256];
@@ -81,6 +82,8 @@ void    VID_Init (unsigned char *palette)
     Uint32 flags;
 
     S_Init();
+
+    Cvar_RegisterVariable(&_windowed_mouse);
     // Load the SDL library
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_CDROM)<0) //|SDL_INIT_AUDIO|SDL_INIT_CDROM) < 0)
         Sys_Error("VID: Couldn't load SDL: %s", SDL_GetError());
@@ -317,8 +320,10 @@ void Sys_SendKeyEvents(void)
                 break;
 
             case SDL_MOUSEMOTION:
-                if ( (event.motion.x != (vid.width/2)) ||
-                     (event.motion.y != (vid.height/2)) ) {
+                if (_windowed_mouse.value)
+		{
+		   if ((event.motion.x != (vid.width/2)) ||
+			(event.motion.y != (vid.height/2)) ) {
                     mouse_x = event.motion.xrel*10;
                     mouse_y = event.motion.yrel*10;
                     if ( (event.motion.x < ((vid.width/2)-(vid.width/4))) ||
@@ -327,6 +332,7 @@ void Sys_SendKeyEvents(void)
                          (event.motion.y > ((vid.height/2)+(vid.height/4))) ) {
                         SDL_WarpMouse(vid.width/2, vid.height/2);
                     }
+		  }
                 }
                 break;
 
@@ -338,11 +344,20 @@ void Sys_SendKeyEvents(void)
                 break;
         }
     }
+     if (old_windowed_mouse != _windowed_mouse.value)
+	{ old_windowed_mouse = _windowed_mouse.value;
+	  if (_windowed_mouse.value && !COM_CheckParm("-nomouse"))
+	  { mouse_avail = 1;
+	  }
+	  else
+	  { mouse_avail = 0;
+	  }
+	}
 }
 
 void IN_Init (void)
 {
-    if ( COM_CheckParm ("-nomouse") )
+    if ( COM_CheckParm("-nomouse") && !_windowed_mouse.value)
         return;
     mouse_x = mouse_y = 0.0;
     mouse_avail = 1;
