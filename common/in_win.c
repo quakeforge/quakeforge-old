@@ -29,6 +29,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #include <dinput.h>
 //#include "dosisms.h"
+#include "client.h"
+#include <cmd.h>
+#include <console.h>
+#include <qargs.h>
+#include <lib_replace.h>
+#include <keys.h>
 
 #define DINPUT_BUFFERSIZE           16
 #define iDirectInputCreate(a,b,c,d)	pDirectInputCreate(a,b,c,d)

@@ -25,8 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //char *date = "Dec 21 1999";
 //char *time = "00:00:00";
-char *date = __DATE__ ;
-char *time = __TIME__ ;
+char *ddate = __DATE__ ;
+char *dtime = __TIME__ ;
 
 char *mon[12] = 
 { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };

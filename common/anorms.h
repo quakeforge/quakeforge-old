@@ -19,6 +19,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#ifdef WIN32
+#pragma warning(disable:4305)
+#endif
 {-0.525731, 0.000000, 0.850651}, 
 {-0.442863, 0.238856, 0.864188}, 
 {-0.295242, 0.000000, 0.955423}, 

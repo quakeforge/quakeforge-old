@@ -29,12 +29,17 @@
 	59 Temple Place - Suite 330
 	Boston, MA  02111-1307, USA.
 */
-
 #include <string.h>
 #include <stdio.h>
+#ifndef WIN32
 #include <dlfcn.h>
-#include <stdlib.h>
 #include <sys/param.h>
+#else
+#define LIBDIR ""
+#include "input.h"
+#endif
+
+#include <stdlib.h>
 
 #include <config.h>
 #include <net.h>
@@ -42,6 +47,10 @@
 #include <cvar.h>
 
 cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
+
+input_pi *IN;
+
+#ifndef WIN32
 
 void *_plugin_load(const char *filename)
 {
@@ -105,3 +114,30 @@ void plugin_unload(void *handle)
 	dlclose(handle);
 }
 
+
+#else
+
+input_pi Winput;
+int IN_Init();
+void IN_Move(usercmd_t *);
+void IN_Commands();
+void Sys_SendKeyEvents();
+void IN_Shutdown (void);
+
+int plugin_load(char *filename)
+{
+	IN = &Winput;
+	Winput.description = "Windows Input";
+	Winput.Init = IN_Init;
+	Winput.Move = IN_Move;
+	Winput.Commands = IN_Frame;
+	Winput.SendKeyEvents = IN_SendKeyEvents;
+	Winput.Shutdown = IN_Shutdown;
+	return 1;
+}
+
+void plugin_unload(void *handle)
+{
+	
+}
+#endif

@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakefs.h"
 #include "qendian.h"
 #include "sys.h"
+#include "console.h"
 
 int			wad_numlumps;
 lumpinfo_t	*wad_lumps;
@@ -65,7 +66,59 @@ void W_CleanupName (char *in, char *out)
 		out[i] = 0;
 }
 
+#ifndef QUAKEWORLD
+/*
+====================
+W_OpenWadFile
+====================
+*/
+wadfile_t * W_OpenWadFile (char *filename)
+{
+	lumpinfo_t		*lump_p;
+	wadinfo_t		header;
+	unsigned		i;
+	int				infotableofs;
+	int				wadhandle;
+	wadfile_t		*wadfile = NULL;
 
+	wadfile = Hunk_Alloc (sizeof(wadfile_t));
+	if (!wadfile)
+		Sys_Error ("W_LoadWadFile: couldn't allocate wadfile.n");
+
+	if (Sys_FileOpenRead (filename, &wadhandle) == -1)
+	{
+		return NULL;
+	}
+
+	Sys_FileRead(wadhandle, (void *)&header, sizeof(header));
+
+	
+	if (header.identification[0] != 'W'
+	|| header.identification[1] != 'A'
+	|| header.identification[2] != 'D'
+	|| header.identification[3] != '2')
+		Sys_Error ("Wad file %s doesn't have WAD2 id\n",filename);
+		
+	wadfile->wad_numlumps = LittleLong(header.numlumps);
+	infotableofs = LittleLong(header.infotableofs);
+	wadfile->wad_lumps = (lumpinfo_t *)Hunk_Alloc(sizeof(lumpinfo_t) * wadfile->wad_numlumps);
+
+	Sys_FileSeek (wadhandle, infotableofs);
+	Sys_FileRead (wadhandle, wadfile->wad_lumps, (sizeof(lumpinfo_t) * wadfile->wad_numlumps));
+
+	for (i=0, lump_p = wadfile->wad_lumps ; i<wadfile->wad_numlumps ; i++,lump_p++)
+	{
+		lump_p->filepos = LittleLong(lump_p->filepos);
+		lump_p->size = LittleLong(lump_p->size);
+		W_CleanupName (lump_p->name, lump_p->name);
+		if (lump_p->type == TYP_QPIC)
+			SwapPic ( (qpic_t *)(wadfile->wad_base + lump_p->filepos));
+	}
+	Con_Printf("Added WAD file %s.\n", filename);
+	wadfile->wad_handle = wadhandle;
+	return (wadfile);
+}
+#endif
 
 /*
 ====================
@@ -79,6 +132,8 @@ void W_LoadWadFile (char *filename)
 	unsigned		i;
 	int				infotableofs;
 	
+	FILE *f = fopen("debug.log", "w");
+
 	wad_base = COM_LoadHunkFile (filename);
 	if (!wad_base)
 		Sys_Error ("W_LoadWadFile: couldn't load %s", filename);
@@ -95,14 +150,19 @@ void W_LoadWadFile (char *filename)
 	infotableofs = LittleLong(header->infotableofs);
 	wad_lumps = (lumpinfo_t *)(wad_base + infotableofs);
 	
+
 	for (i=0, lump_p = wad_lumps ; i<wad_numlumps ; i++,lump_p++)
 	{
 		lump_p->filepos = LittleLong(lump_p->filepos);
 		lump_p->size = LittleLong(lump_p->size);
 		W_CleanupName (lump_p->name, lump_p->name);
+		fprintf(f, "%i: %s\n", i, lump_p->name);
 		if (lump_p->type == TYP_QPIC)
 			SwapPic ( (qpic_t *)(wad_base + lump_p->filepos));
 	}
+
+	fclose(f);
+
 }
 
 
@@ -116,9 +176,9 @@ lumpinfo_t	*W_GetLumpinfo (char *name)
 	int		i;
 	lumpinfo_t	*lump_p;
 	char	clean[16];
-	
+
 	W_CleanupName (name, clean);
-	
+
 	for (lump_p=wad_lumps, i=0 ; i<wad_numlumps ; i++,lump_p++)
 	{
 		if (!strcmp(clean, lump_p->name))
@@ -126,6 +186,7 @@ lumpinfo_t	*W_GetLumpinfo (char *name)
 	}
 	
 	Sys_Error ("W_GetLumpinfo: %s not found", name);
+
 	return NULL;
 }
 

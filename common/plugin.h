@@ -26,6 +26,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <net.h>
 
+// Input plugin interface.
+typedef struct
+{
+    void *handle;
+    char *filename;
+    char *description;
+
+    int (*Init)();
+    void (*Shutdown)();
+    void (*Commands)();
+    void (*SendKeyEvents)();
+    void (*Move)(usercmd_t *);
+} input_pi;
+
+#ifdef WIN32
+#ifdef IN
+#undef IN
+#endif
+#endif
+
+extern input_pi *IN;
+
 int plugin_load(char *filename);
 void plugin_unload(void *handle);
 

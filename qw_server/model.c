@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <protocol.h>
 #include <server.h>
 #include <mathlib.h>
+#include <quakedef.h>
+#include <quakedef.h>
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags

@@ -61,12 +61,12 @@ IDI_ICON2               ICON    DISCARDABLE     "quake.ico"
 // Dialog
 //
 
-IDD_DIALOG1 DIALOGEX 0, 0, 62, 21
+IDD_DIALOG1 DIALOGEX 0, 0, 72, 21
 STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | DS_CENTER | WS_POPUP
 EXSTYLE WS_EX_TOOLWINDOW | WS_EX_CLIENTEDGE
-FONT 16, "Times New Roman", 0, 0, 0x1
+FONT 16, "Times New Roman"
 BEGIN
-    CTEXT           "Starting Quake...",IDC_STATIC,4,6,54,8
+    CTEXT           "Starting QuakeForge...",IDC_STATIC,4,6,64,8
 END
 
 IDD_PROGRESS DIALOGEX 0, 0, 333, 45
@@ -79,7 +79,7 @@ BEGIN
                     IDC_STATIC,7,19,319,10
     CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",0x0,7,29,
                     319,11
-    LTEXT           "Starting Quake...",IDC_STATIC,7,4,54,8
+    LTEXT           "Starting QuakeForge...",IDC_STATIC,7,4,72,8
 END
 
 
@@ -94,7 +94,7 @@ BEGIN
     IDD_DIALOG1, DIALOG
     BEGIN
         LEFTMARGIN, 4
-        RIGHTMARGIN, 58
+        RIGHTMARGIN, 68
         TOPMARGIN, 6
         BOTTOMMARGIN, 16
         HORZGUIDE, 6
@@ -111,7 +111,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_STRING1             "WinQuake"
+    IDS_STRING1             "QuakeForge"
 END
 
 #endif    // English (U.S.) resources

@@ -27,6 +27,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "d_local.h"
 #include "resource.h"
 #include <mgraph.h>
+#include <screen.h>
+#include <view.h>
+#include <cmd.h>
+#include <keys.h>
+#include <cdaudio.h>
+#include <lib_replace.h>
+#include <sound.h>
+#include <keys.h>
+#include <cvar.h>
+#include <menu.h>
+#include <sys.h>
+#include <lib_replace.h>
+#include <draw.h>
+#include <console.h>
+#include <client.h>
+#include <screen.h>
+#include "plugin.h"
+
 
 #ifndef CDS_FULLSCREEN
 # define CDS_FULLSCREEN        0x00000004
@@ -2107,6 +2125,10 @@ void	VID_Init (unsigned char *palette)
 	int	i, bestmatchmetric, t, dr, dg, db, bestmatch = 0;
 	int	basenummodes;
 	byte	*ptmp;
+
+	plugin_load("input");
+
+	IN->Init();
 
 	Cvar_RegisterVariable (&vid_mode);
 	Cvar_RegisterVariable (&vid_wait);

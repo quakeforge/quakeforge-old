@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "cvar.h"
 #include "client.h"
 #include "console.h"
+#include "client.h"
 
 cvar_t		baseskin = {"baseskin", "base"};
 cvar_t		noskins = {"noskins", "0"};
@@ -242,8 +243,10 @@ void Skin_NextDownload (void)
 		Skin_Find (sc);
 		if (noskins.value)
 			continue;
+#ifndef UQUAKE
 		if (!CL_CheckOrDownloadFile(va("skins/%s.pcx", sc->skin->name)))
 			return;		// started a download
+#endif
 	}
 
 	cls.downloadtype = dl_none;

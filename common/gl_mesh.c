@@ -297,27 +297,59 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	trivertx_t	*verts;
 	char	cache[MAX_QPATH], fullpath[MAX_OSPATH];
 	QFile	*f;
+	long modelcrc = 0;
+	qboolean fCacheSynced = false;
 
 	aliasmodel = m;
 	paliashdr = hdr;	// (aliashdr_t *)Mod_Extradata (m);
-
+	
+	modelcrc = m->numclipnodes +
+			   m->numedges +
+			   m->numframes +
+			   m->numleafs +
+			   m->nummarksurfaces +
+			   m->nummodelsurfaces +
+			   m->numnodes +
+			   m->numplanes +
+			   m->numsubmodels +
+			   m->numsurfaces +
+			   m->numsurfedges +
+			   m->numtexinfo +
+			   m->numtextures +
+			   m->numvertexes;
 	//
 	// look for a cached version
 	//
 	strcpy (cache, "glquake/");
 	COM_StripExtension (m->name+strlen("progs/"), cache+strlen("glquake/"));
-	strcat (cache, ".ms2");
+	strcat (cache, ".ms3");
 
 	COM_FOpenFile (cache, &f);	
 	if (f)
 	{
-		Qread (f, &numcommands, 4);
-		Qread (f, &numorder, 4);
-		Qread (f, commands, numcommands * sizeof(commands[0]));
-		Qread (f, vertexorder, numorder * sizeof(vertexorder[0]));
-		Qclose (f);
+		byte sig[2];
+		long cachecrc;
+
+		Qread (f, sig, sizeof(sig));
+		Qread (f, &cachecrc, sizeof(cachecrc));
+
+		if ((memcmp(sig, "QF", sizeof("QF")) != 0) ||
+			cachecrc != modelcrc)
+			{
+			Con_Printf ("Mismatched mesh on model %s\n",m->name);			
+			}
+		else
+			{
+			Qread (f, &numcommands, 4);
+			Qread (f, &numorder, 4);
+			Qread (f, commands, numcommands * sizeof(commands[0]));
+			Qread (f, vertexorder, numorder * sizeof(vertexorder[0]));
+			Qclose (f);
+			fCacheSynced = 1;
+			}
 	}
-	else
+	
+	if (!fCacheSynced)
 	{
 		//
 		// build it from scratch
@@ -343,6 +375,10 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 
 		if (f)
 		{
+			byte sig[2];
+			memcpy(sig, "QF", sizeof("QF"));
+			Qwrite(f, sig, sizeof(sig));
+			Qwrite(f, &modelcrc, sizeof(modelcrc));			
 			Qwrite(f, &numcommands, 4);
 			Qwrite(f, &numorder, 4);
 			Qwrite(f, commands, numcommands * sizeof(commands[0]));

@@ -38,6 +38,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #include <string.h>
 
+#if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
+# define snprintf _snprintf
+#endif
+
 cvar_t	*cvar_vars;
 char	*cvar_null_string = "";
 

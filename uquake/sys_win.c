@@ -23,6 +23,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "winquake.h"
 #include "resource.h"
+#include "sys.h"
+#include "screen.h"
+#include "qargs.h"
+#include "console.h"
+#include "lib_replace.h"
+#include "conproc.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -61,6 +68,20 @@ void Sys_PopFPCW (void);
 
 volatile int					sys_checksum;
 
+
+void Sys_DebugLog(char *file, char *fmt, ...)
+{
+    va_list argptr; 
+    static char data[1024];
+    int fd;
+    
+    va_start(argptr, fmt);
+    vsnprintf(data, sizeof(data), fmt, argptr);
+    va_end(argptr);
+    fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+    write(fd, data, strlen(data));
+    close(fd);
+};
 
 /*
 ================
@@ -110,13 +131,12 @@ int		findhandle (void)
 	return -1;
 }
 
-#if 0
 /*
 ================
 filelength
 ================
 */
-int filelength (QFile *f)
+int wfilelength (QFile *f)
 {
 	int		pos;
 	int		end;
@@ -133,7 +153,6 @@ int filelength (QFile *f)
 
 	return end;
 }
-#endif
 
 int Sys_FileOpenRead (char *path, int *hndl)
 {
@@ -156,7 +175,7 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	{
 		sys_handles[i] = f;
 		*hndl = i;
-		retval = filelength(f);
+		retval = wfilelength(f);
 	}
 
 	VID_ForceLockState (t);
@@ -246,11 +265,9 @@ void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 }
 
 
-#ifndef _M_IX86
+#if 0
 
-void Sys_SetFPCW (void)
-{
-}
+
 
 void Sys_PushFPCW_SetHigh (void)
 {
@@ -260,9 +277,6 @@ void Sys_PopFPCW (void)
 {
 }
 
-void MaskExceptions (void)
-{
-}
 
 #endif
 
@@ -601,7 +615,7 @@ void Sys_Sleep (void)
 }
 
 
-void Sys_SendKeyEvents (void)
+void IN_SendKeyEvents (void)
 {
     MSG        msg;
 
@@ -832,12 +846,12 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		else
 		{
 		// yield the CPU for a little while when paused, minimized, or not the focus
-			if ((cl.paused && (!ActiveApp && !DDActive)) || Minimized || block_drawing)
+			/*if ((cl.paused && (!ActiveApp && !DDActive)) || Minimized || block_drawing)
 			{
 				SleepUntilInput (PAUSE_SLEEP);
 				scr_skipupdate = 1;		// no point in bothering to draw
 			}
-			else if (!ActiveApp && !DDActive)
+			else */if (!ActiveApp && !DDActive)
 			{
 				SleepUntilInput (NOT_FOCUS_SLEEP);
 			}

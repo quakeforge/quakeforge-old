@@ -67,6 +67,16 @@ typedef struct
 	char		name[16];				// must be null terminated
 } lumpinfo_t;
 
+typedef struct 
+{
+int			wad_numlumps;
+lumpinfo_t	*wad_lumps;
+byte		*wad_base;
+int			wad_handle;
+}wadfile_t;
+
+wadfile_t *	W_OpenWadFile (char *filename);
+
 extern	int			wad_numlumps;
 extern	lumpinfo_t	*wad_lumps;
 extern	byte		*wad_base;

@@ -26,6 +26,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "winquake.h"
 #include "resource.h"
 #include <commctrl.h>
+#include "sys.h"
+#include "vid.h"
+#include "glquake.h"
+#include "keys.h"
+#include "screen.h"
+#include "plugin.h"
 
 #define MAX_MODE_LIST	30
 #define VID_ROW_SIZE	3
@@ -1574,6 +1580,10 @@ void	VID_Init (unsigned char *palette)
 	char	gldir[MAX_OSPATH];
 	HDC		hdc;
 	DEVMODE	devmode;
+
+	plugin_load("input");
+
+	IN->Init();
 
 	S_Init();
 

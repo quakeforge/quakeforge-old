@@ -6,6 +6,8 @@
 #include "config.h"
 #ifdef HAS_ZLIB
 #include <zlib.h>
+#else
+#include <nozip.h>
 #endif
 
 typedef struct {

@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <strings.h>
 #endif
 
-#if defined(_WIN32) && !defined(WINDED)
+#if defined(_WIN32) && !defined(WINDED) && !defined(GLQUAKE)
 void	VID_LockBuffer (void);
 void	VID_UnlockBuffer (void);
 #else

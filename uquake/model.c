@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <mathlib.h>
 #include <console.h>
+#include <quakefs.h>
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -351,6 +352,48 @@ model_t *Mod_ForName (char *name, qboolean crash)
 
 byte	*mod_base;
 
+int Mod_LoadExternalTexture(int number, char *texturename)
+{
+	int j, pixels;
+	miptex_t	*mt;
+	texture_t	*tx;
+	char   texturepathname[1024];
+	if (texturename[0] == '\0')
+		return (0);
+
+	sprintf(texturepathname, "/id1/gfx/%s", texturename);
+	
+	mt = (miptex_t *)COM_LoadHunkFile(texturepathname);
+
+	if (!mt)
+		{
+		return (0);
+		}
+	mt->width = LittleLong (mt->width);
+	mt->height = LittleLong (mt->height);
+	for (j=0 ; j<MIPLEVELS ; j++)
+		mt->offsets[j] = LittleLong (mt->offsets[j]);
+		
+	if ( (mt->width & 15) || (mt->height & 15) )
+		Sys_Error ("Texture %s is not 16 aligned", mt->name);
+	pixels = mt->width*mt->height/64*85;
+	tx = Hunk_AllocName (sizeof(texture_t) +pixels, loadname );
+	loadmodel->textures[number] = tx;
+
+	memcpy (tx->name, mt->name, sizeof(tx->name));
+
+	tx->width = mt->width;
+	tx->height = mt->height;
+	for (j=0 ; j<MIPLEVELS ; j++)
+		tx->offsets[j] = mt->offsets[j] + sizeof(texture_t) - sizeof(miptex_t);
+	// the pixels immediately follow the structures
+	memcpy ( tx+1, mt+1, pixels);
+		
+	if (!Q_strncmp(mt->name,"sky",3))	
+		R_InitSky (tx);
+	return (1);	
+}
+
 
 /*
 =================
@@ -386,6 +429,12 @@ void Mod_LoadTextures (lump_t *l)
 		mt = (miptex_t *)((byte *)m + m->dataofs[i]);
 		mt->width = LittleLong (mt->width);
 		mt->height = LittleLong (mt->height);
+		if (mt->height == -1 && mt->width == -1)
+			{
+			if (Mod_LoadExternalTexture(i, mt->name));
+			continue;
+			}
+
 		for (j=0 ; j<MIPLEVELS ; j++)
 			mt->offsets[j] = LittleLong (mt->offsets[j]);
 		

@@ -47,11 +47,11 @@
 #include <sound.h>
 #include <cdaudio.h>
 #include <keys.h>
-#include <menu.h>
 #include <draw.h>
 #include <screen.h>
 #include <sbar.h>
 #include <mathlib.h>
+#include <menu.h>
 
 extern int host_hunklevel;
 

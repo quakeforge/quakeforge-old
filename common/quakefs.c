@@ -23,7 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <ctype.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <qtypes.h>
 #include <quakefs.h>
@@ -33,6 +35,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <zone.h>
 #include <common.h>
 #include <draw.h>
+#ifdef WIN32
+#include <io.h>
+#endif
 
 /*
 All of Quake's data access is through a hierchal file system, but the contents of the file system can be transparently merged from several sources.

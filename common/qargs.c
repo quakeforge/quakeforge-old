@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <console.h>
 #include <client.h>
+#include "lib_replace.h"
 
 usercmd_t nullcmd; // guarenteed to be zero
 
@@ -89,7 +90,7 @@ void COM_InitArgv (int argc, char **argv)
 	for (com_argc=0, len=0 ; com_argc < argc ; com_argc++)
 	{
 		largv[com_argc] = argv[com_argc];
-		if (!Q_strcmp ("-safe", argv[com_argc]))
+		if ((argv[com_argc]) && !Q_strcmp ("-safe", argv[com_argc]))
 			safe = true;
 		len += strlen (argv[com_argc]) + 1;
 	}

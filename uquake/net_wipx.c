@@ -24,6 +24,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "winquake.h"
 #include <wsipx.h>
 #include "net_wipx.h"
+#include "net.h"
+#include "console.h"
+#include "lib_replace.h"
+#include "sys.h"
 
 extern cvar_t hostname;
 

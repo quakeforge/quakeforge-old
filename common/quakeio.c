@@ -2,6 +2,10 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include "quakeio.h"
+#ifdef WIN32
+#include <io.h>
+#include <fcntl.h>
+#endif
 
 QFile *Qopen(const char *path, const char *mode)
 {
@@ -53,6 +57,7 @@ QFile *Qdopen(int fd, const char *mode)
 		}
 		*p++=*mode;
 	}
+
 	*p=0;
 
 	file=calloc(sizeof(*file),1);
@@ -74,6 +79,9 @@ QFile *Qdopen(int fd, const char *mode)
 			return 0;
 		}
 	}
+#ifdef WIN32
+	_setmode(_fileno(file->file),_O_BINARY);
+#endif
 	return file;
 }
 
@@ -129,7 +137,7 @@ int Qprintf(QFile *file, const char *fmt, ...)
 #else
 		(void)vsprintf(buf, fmt, args);
 #endif
-		va_end(va);
+		va_end(args);
 		ret = strlen(buf); /* some *sprintf don't return the nb of bytes written */
 		if (ret>0)
 			ret=gzwrite(file, buf, (unsigned)ret);

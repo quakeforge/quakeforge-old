@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
+#include "sys.h"
+
 
 #include <quakedef.h>
 #include <qtypes.h>
@@ -722,7 +724,7 @@ void SVC_DirectConnect (void)
 	if (newcl->spectator)
 		Con_Printf ("Spectator %s connected\n", newcl->name);
 	else
-		Con_DPrintf ("Client %s connected\n", newcl->name);
+		Con_Printf ("Client %s connected\n", newcl->name);
 	newcl->sendinfo = true;
 
 	// QuakeForge stuff.

@@ -21,9 +21,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <sys/types.h>
 #include <sys/timeb.h>
-#include "qwsvdef.h"
+//#include "qwsvdef.h"
 #include <winsock.h>
 #include <conio.h>
+
+#include "quakedef.h"
+#include <qtypes.h>
+#include <sys.h>
+#include <common.h>
+#include <lib_replace.h>
+#include <client.h>
 
 
 extern cvar_t	sys_nostdout;
