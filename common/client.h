@@ -105,6 +105,7 @@ typedef struct player_info_s
 } player_info_t;
 
 
+#ifdef QUAKEWORLD
 typedef struct
 {
 	// generated on client side
@@ -120,7 +121,7 @@ typedef struct
 	packet_entities_t	packet_entities;
 	qboolean	invalid;	// if packet_entities delta is invalid
 } frame_t;
-
+#endif
 
 #define	CSHIFT_CONTENTS		0
 #define	CSHIFT_DAMAGE		1
@@ -166,11 +167,7 @@ typedef struct
 	byte    translations[VID_GRADES*256];
 } scoreboard_t;
 
-#ifdef QUAKEWORLD
-#	define MAX_EFRAGS	512
-#elif UQUAKE
-#	define MAX_EFRAGS	640
-#endif // FIXME: do we NEED two settings here?
+#define MAX_EFRAGS	640	// this was 512 in QW, 640 in UQ
 
 #define MAX_MAPSTRING		2048
 #define	MAX_DEMOS		8

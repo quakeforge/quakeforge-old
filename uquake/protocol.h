@@ -169,20 +169,4 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define TE_RAILTRAIL		15
 #endif
 
-typedef struct usercmd_s
-{
-	byte    msec;
-	vec3_t  angles;
-#ifdef UQUAKE
-	float	forwardmove, sidemove, upmove;
-#elif QUAKEWORLD
-	short   forwardmove, sidemove, upmove;
-#endif
-	byte    buttons;
-	byte    impulse;
-#ifdef QUAKE2
-	byte	lightlevel;
-#endif
-} usercmd_t;
-
 #endif // __PROTOCOL_H

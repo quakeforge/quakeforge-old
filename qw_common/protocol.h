@@ -259,20 +259,4 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 							// must be power of two
 #define	UPDATE_MASK		(UPDATE_BACKUP-1)
 
-#define	MAX_PACKET_ENTITIES	64	// doesn't count nails
-typedef struct
-{
-	int		num_entities;
-	entity_state_t	entities[MAX_PACKET_ENTITIES];
-} packet_entities_t;
-
-typedef struct usercmd_s
-{
-	byte	msec;
-	vec3_t	angles;
-	short	forwardmove, sidemove, upmove;
-	byte	buttons;
-	byte	impulse;
-} usercmd_t;
-
 #endif // _PROTOCOL_H

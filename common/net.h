@@ -28,6 +28,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <qtypes.h>
 #include <common.h>
 #include <cvar.h>
+#include <render.h>
 #include <qstructs.h>
 
 #define	PORT_ANY	-1
@@ -372,5 +373,28 @@ extern	qboolean	slistLocal;
 
 void NET_Slist_f (void);
 #endif // UQUAKE
+
+#define	MAX_PACKET_ENTITIES	64	// doesn't count nails
+typedef struct
+{
+	int		num_entities;
+	entity_state_t	entities[MAX_PACKET_ENTITIES];
+} packet_entities_t;
+
+typedef struct usercmd_s
+{
+	byte    msec;
+	vec3_t  angles;
+#ifdef UQUAKE
+	float	forwardmove, sidemove, upmove;
+#elif QUAKEWORLD
+	short   forwardmove, sidemove, upmove;
+#endif
+	byte    buttons;
+	byte    impulse;
+#ifdef QUAKE2
+	byte	lightlevel;
+#endif
+} usercmd_t;
 
 #endif // __NET_H
