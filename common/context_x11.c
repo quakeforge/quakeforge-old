@@ -146,6 +146,8 @@ x11_open_display( void )
 
 		// for debugging only
 		XSynchronize( x_disp, True );
+
+		x_disp_ref_count=1;
 	} else {
 		x_disp_ref_count++;
 	}
