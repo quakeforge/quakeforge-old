@@ -86,7 +86,7 @@ if test "x$HAS_OGL_INC" = x; then
          AC_MSG_CHECKING(for $x_includes/GL/gl.h)
 	 if test -f "$x_includes"/GL/gl.h; then
 	    HAS_OGL_INC=yes
-	    OGL_CFLAGS=-Wall -I$x_includes
+	    OGL_CFLAGS="-Wall -I$x_includes"
 	    OGL_INC_PATH=$x_includes
 	    AC_MSG_RESULT(yes)
 	 else
@@ -94,7 +94,7 @@ if test "x$HAS_OGL_INC" = x; then
             AC_MSG_CHECKING(for $POSS_OGL_CFLAGS/GL/gl.h)
 	    if test -f "$POSS_OGL_CFLAGS/GL/gl.h"; then
 	       HAS_OGL_INC=yes
-	       OGL_CFLAGS=-Wall -I$POSS_OGL_CFLAGS
+	       OGL_CFLAGS="-Wall -I$POSS_OGL_CFLAGS"
 	       OGL_INC_PATH=$POSS_OGL_CFLAGS
 	       AC_MSG_RESULT(yes)
             else
