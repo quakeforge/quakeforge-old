@@ -41,7 +41,7 @@ unsigned short  d_8to16table[256];
 int    VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes = 0;
 byte    *VGA_pagebase;
 
-int	VID_options_items = 0;
+int	VID_options_items = 1;
 
 static SDL_Surface *screen = NULL;
 
@@ -434,7 +434,7 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse.value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
