@@ -97,7 +97,7 @@ void COM_InitArgv (int argc, char **argv)
 		largv[com_argc] = argv[com_argc];
 		if ((argv[com_argc]) && !Q_strcmp ("-safe", argv[com_argc]))
 			safe = true;
-		len += strlen (argv[com_argc]) + 2;
+		len += strlen (argv[com_argc]) + 1;
 	}
 
 	com_cmdline = (char*)malloc (len); // len is strlen(com_cmdline)+1 already
