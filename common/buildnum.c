@@ -1,29 +1,32 @@
 /*
-Copyright (C) 1996-1997 Id Software, Inc.
+	buildnum.c
+	
+	Build number (actually date) calculator
+	
+	Copyright (C) 1996-1997 Id Software, Inc.
+	Copyright (C) 1999-2000 The QuakeForge Project
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-
-See the included (GNU.txt) GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
 #include <stdlib.h>
 #include <string.h>
 
 #include <quakedef.h>
 
-// char *date = "Oct 24 1996";
-// char *time = "13:22:52";
+//char *date = "Dec 21 1999";
+//char *time = "00:00:00";
 char *date = __DATE__ ;
 char *time = __TIME__ ;
 
@@ -62,7 +65,7 @@ int build_number( void )
 		b += 1;
 	}
 
-	b -= 34995; // Oct 24 1996
+	b -= 36148; // Dec 21 1999
 
 	hr = (time[0] - '0') * 10 + (time[1] - '0');
 	min = (time[3] - '0') * 10 + (time[4] - '0');
@@ -73,4 +76,3 @@ int build_number( void )
 
 	return b;
 }
-
