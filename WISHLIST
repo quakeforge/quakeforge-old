@@ -31,6 +31,11 @@ Ambush
  - ability to play stereo sounds (dedicated channel for that maybe?)
  - positional audio allowing eg rocket flybys
  - allow mp3 sounds to reduce pak sizes [cache them to wav's maybe?]
+ - alpha textures
+
+Attlee; Mathew Thomas <mattlee@ug.cs.su.oz.au>
+ - better setup screen (ie rotating player model)
+ - multiple player profiles
 
 DarkAngel <bhunn@zipworld.com.au>
  - 32 bit texture support
