@@ -54,6 +54,7 @@ qboolean		standard_quake = true, rogue, hipnotic;
 
 char	gamedirfile[MAX_OSPATH];
 
+extern cvar_t developer;
 /*
 
 
@@ -1416,7 +1417,8 @@ int COM_FOpenFile (char *filename, FILE **file)
 			for (i=0 ; i<pak->numfiles ; i++)
 				if (!strcmp (pak->files[i].name, filename))
 				{	// found it!
-					Sys_Printf ("PackFile: %s : %s\n",pak->filename, filename);
+					if(developer.value)
+						Sys_Printf ("PackFile: %s : %s\n",pak->filename, filename);
 				// open a new file on the pakfile
 					*file = fopen (pak->filename, "rb");
 					if (!*file)
@@ -1436,7 +1438,8 @@ int COM_FOpenFile (char *filename, FILE **file)
 			if (findtime == -1)
 				continue;
 				
-			Sys_Printf ("FindFile: %s\n",netpath);
+			if(developer.value)
+				Sys_Printf ("FindFile: %s\n",netpath);
 
 			*file = fopen (netpath, "rb");
 			return COM_filelength (*file);
