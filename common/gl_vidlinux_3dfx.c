@@ -3,6 +3,7 @@ gl_vidlinux_3dfx.c - OpenGL device driver for 3Dfx chipsets running Linux
 	
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
+Copyright (C) 1999,2000  Nelson Rush.
 Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
