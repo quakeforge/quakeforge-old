@@ -370,10 +370,6 @@ void CL_Connect_f (void)
 {
 	char	*server;
 
-	Con_Printf("Cmd_Argc(): %d\n", Cmd_Argc());
-	Con_Printf("Args: ");
-	Cmd_Echo_f();
-
 	if (Cmd_Argc() != 2) {
 		Con_Printf ("usage: connect <server>\n");
 		return;
@@ -512,9 +508,9 @@ void CL_ConnectionlessPacket (void)
 		return;
 	}
 
-#if 0
+#if 1	// Tonik: in qwcl 2.33+, Zoid commented this out. Why?
 	if (c == svc_disconnect) {
-		Con_Printf ("disconnect\n");
+//Tonik		Con_Printf ("disconnect\n");
 
 		Host_EndGame ("Server disconnected");
 		return;
