@@ -22,6 +22,10 @@ distclean:
 	rm -f build_rpm quakeforge-*.tar.gz quakeforge.spec
 	find . -name \*~ | xargs rm -f
 	find . -name \*.bak | xargs rm -f
+	find . -name '.#*' | xargs rm -f
+	find . -name '#*#' | xargs rm -f
+	find . -name core -type f | xargs rm -f
+	rm -rf targets
 	for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
 	done
