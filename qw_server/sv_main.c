@@ -1368,106 +1368,67 @@ void SV_InitLocal (void)
 	SV_InitOperatorCommands	();
 	SV_UserInit ();
 	
-//	Cvar_RegisterVariable (&rcon_password);
 	rcon_password = Cvar_Get ("rcon_password","",CVAR_NONE,
 					"Password for remote server commands");
-//	Cvar_RegisterVariable (&password);
 	password = Cvar_Get ("password","",CVAR_NONE,
 				"Password for entering the game");
-//	Cvar_RegisterVariable (&spectator_password);
 	spectator_password = Cvar_Get ("spectator_password","",CVAR_NONE,
 					"Password for entering as a spectator");
 
-//	Cvar_RegisterVariable (&sv_mintic);
-	sv_mintic = Cvar_Get ("sv_mintic","0.3",0,"None");
-//	Cvar_RegisterVariable (&sv_maxtic);
+	sv_mintic = Cvar_Get ("sv_mintic","0.03",0,"None");
 	sv_maxtic = Cvar_Get ("sv_maxtic","0.1",0,"None");
 
-//	Cvar_RegisterVariable (&fraglimit);
 	fraglimit = Cvar_Get ("fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&timelimit);
 	timelimit = Cvar_Get ("timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&teamplay);
 	teamplay = Cvar_Get ("teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&samelevel);
 	samelevel = Cvar_Get ("samelevel","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&maxclients);
 	maxclients = Cvar_Get ("maxclients","8",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&maxspectators);
 	maxspectators = Cvar_Get ("maxspectators","8",
 					CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&hostname);
 	hostname = Cvar_Get ("hostname","unnamed",
 				CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&deathmatch);
 	deathmatch = Cvar_Get ("deathmatch","1",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&spawn);
 	spawn = Cvar_Get ("spawn","0",CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&watervis);
 	watervis = Cvar_Get ("watervis","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
 
-//	Cvar_RegisterVariable (&sv_maxrate);
 	sv_maxrate = Cvar_Get ("sv_maxrate","0",0,"None");
-//	Cvar_RegisterVariable (&developer);
 	developer = Cvar_Get ("developer","0",0,"None");
 
-//	Cvar_RegisterVariable (&timeout);
 	timeout = Cvar_Get ("timeout","65",0,"None");
-//	Cvar_RegisterVariable (&zombietime);
 	zombietime = Cvar_Get ("zombietime","2",0,"None");
 
-//	Cvar_RegisterVariable (&sv_maxvelocity);
 	sv_maxvelocity = Cvar_Get ("sv_maxvelocity","2000",0,"None");
-//	Cvar_RegisterVariable (&sv_gravity);
 	sv_gravity = Cvar_Get ("sv_gravity","800",0,"None");
-//	Cvar_RegisterVariable (&sv_stopspeed);
 	sv_stopspeed = Cvar_Get ("sv_stopspeed","100",0,"None");
-//	Cvar_RegisterVariable (&sv_maxspeed);
 	sv_maxspeed = Cvar_Get ("sv_maxspeed","320",0,"None");
-//	Cvar_RegisterVariable (&sv_spectatormaxspeed);
 	sv_spectatormaxspeed = Cvar_Get ("sv_spectatormaxspeed","500",0,
 					"None");
-//	Cvar_RegisterVariable (&sv_accelerate);
 	sv_accelerate = Cvar_Get ("sv_accelerate","10",0,"None");
-//	Cvar_RegisterVariable (&sv_airaccelerate);
 	sv_airaccelerate = Cvar_Get ("sv_airaccelerate","0.7",0,"None");
-//	Cvar_RegisterVariable (&sv_wateraccelerate);
 	sv_wateraccelerate = Cvar_Get ("sv_wateraccelerate","10",0,"None");
-//	Cvar_RegisterVariable (&sv_friction);
 	sv_friction = Cvar_Get ("sv_friction","4",0,"None");
-//	Cvar_RegisterVariable (&sv_waterfriction);
 	sv_waterfriction = Cvar_Get ("sv_waterfriction","4",0,"None");
 
-//	Cvar_RegisterVariable (&sv_aim);
 	sv_aim = Cvar_Get ("sv_aim","2",0,"None");
-//	Cvar_RegisterVariable (&filterban);
 	filterban = Cvar_Get ("filterban","1",0,"None");
 	
-//	Cvar_RegisterVariable (&allow_download);
 	allow_download = Cvar_Get ("allow_download","1",0,"None");
-//	Cvar_RegisterVariable (&allow_download_skins);
 	allow_download_skins = Cvar_Get ("allow_download_skins","1",0,"None");
-//	Cvar_RegisterVariable (&allow_download_models);
 	allow_download_models = Cvar_Get ("allow_download_models","1",0,"None");
-//	Cvar_RegisterVariable (&allow_download_sounds);
 	allow_download_sounds = Cvar_Get ("allow_download_sounds","1",0,"None");
-//	Cvar_RegisterVariable (&allow_download_maps);
 	allow_download_maps = Cvar_Get ("allow_download_maps","1",0,"None");
 
-//	Cvar_RegisterVariable (&sv_highchars);
 	sv_highchars = Cvar_Get ("sv_highchars","1",0,"None");
 
-//	Cvar_RegisterVariable (&sv_phs);
 	sv_phs = Cvar_Get ("sv_phs","1",0,"None");
 
-//	Cvar_RegisterVariable (&pausable);
 	pausable = Cvar_Get ("pausable","1",0,"None");
 
 	Cmd_AddCommand ("addip", SV_AddIP_f);
