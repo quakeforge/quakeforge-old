@@ -1064,10 +1064,14 @@ again:
 
 
 #define	SLIDER_RANGE	10
+#define LOCAL_OPTIONS_ITEMS   12
 
 extern int	VID_options_items;
 static int	options_cursor;
-#define options_items	15
+
+// 12 in following is # of local entries
+#define  options_items    (VID_options_items+LOCAL_OPTIONS_ITEMS)
+
 
 void M_Menu_Options_f (void)
 {
