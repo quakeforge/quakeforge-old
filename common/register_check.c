@@ -38,12 +38,9 @@ void register_check ()
 
     COM_FOpenFile("gfx/pop.lmp", &h);
 
-    if (!h) {
-	Con_Printf ("Playing shareware version.\n");
-    } else {
+    if (h) {
 	Cvar_Set ("registered", "1");
 	Con_Printf ("Playing registered version.\n");
+        fclose (h);
     }
-
-    fclose (h);
 }
