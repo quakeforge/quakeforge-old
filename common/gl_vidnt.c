@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "keys.h"
 #include "screen.h"
 #include "plugin.h"
+#include <draw.h>
 
 #define MAX_MODE_LIST	30
 #define VID_ROW_SIZE	3
@@ -1979,3 +1980,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 	}
 }
 
+void VID_InitCvars()
+{
+	// It may not look it, but this is important
+}

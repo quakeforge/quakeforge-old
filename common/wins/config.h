@@ -58,7 +58,7 @@
 #undef HAVE_GL_COLOR_INDEX8_EXT
 
 /* Define this if C symbols are prefixed with an underscore */
-#undef HAVE_SYM_PREFIX_UNDERSCORE
+#define HAVE_SYM_PREFIX_UNDERSCORE
 
 /* Define this if you have a Linux-style CD-ROM API */
 #undef USE_LINUX_CD
