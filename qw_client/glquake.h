@@ -40,7 +40,7 @@ void GL_EndRendering (void);
 #define GLAPIENTRY APIENTRY
 #else
 	/* Error out -- it's pathological and we don't know what to do */
-#error I don't know what data type GLAPIENTRY is on this system.
+#error "I don't know what data type GLAPIENTRY is on this system."
 #endif
 #endif
 
