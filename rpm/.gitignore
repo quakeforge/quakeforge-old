@@ -1,3 +1,8 @@
 quakeforge.spec
 build_rpm
 rpmmacros
+BUILD
+RPMS
+SOURCES
+SPECS
+SRPMS

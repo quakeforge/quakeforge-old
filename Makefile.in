@@ -30,6 +30,7 @@ distclean:
 	rm -f config.cache config.log config.status Makefile
 	rm -f common/config.h
 	rm -f rpm/{rpmmacros,build_rpm,quakeforge-*.tar.gz,quakeforge.spec}
+	rm -rf rpm/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 	find . -name \*~ | xargs rm -f
 	find . -name \*.bak | xargs rm -f
 	find . -name '.#*' | xargs rm -f
