@@ -388,7 +388,8 @@ endif
 # X11 GL target
 
 ifneq ($(GLQUAKE),)
-ALL_GL_SRC  = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(GL_REND_SRC) gl_vidlinuxglx.c
+ALL_GL_SRC  = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(GL_REND_SRC) \
+	gl_vidlinuxglx.c dga_check.c
 ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s)))
 
