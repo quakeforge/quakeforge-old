@@ -1043,7 +1043,7 @@ void CL_Download_f (void)
 	SZ_Print (&cls.netchan.message, va("download %s\n",Cmd_Argv(1)));
 }
 
-#ifdef _WINDOWS
+#ifdef _WIN32
 #include <windows.h>
 /*
 =================
@@ -1189,7 +1189,7 @@ void CL_Init (void)
 //
 //  Windows commands
 //
-#ifdef _WINDOWS
+#ifdef _WIN32
 	Cmd_AddCommand ("windows", CL_Windows_f);
 #endif
 }
