@@ -45,7 +45,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define MAP_FAILED ((void*)-1)
 #endif
 
-static int tryrates[] = { 11025, 22051, 44100, 8000 };
 static int snd_inited;
 
 static snd_pcm_t *pcm_handle;
@@ -54,19 +53,95 @@ static struct snd_pcm_channel_params params;
 static struct snd_pcm_channel_setup setup;
 static snd_pcm_mmap_control_t *mmap_control = NULL;
 static char *mmap_data = NULL;
+static int card=-1,dev=-1;
+
+int check_card(int card)
+{
+	snd_ctl_t *handle;
+	snd_ctl_hw_info_t info;
+	int rc;
+	
+	if ((rc = snd_ctl_open(&handle, card)) < 0) {
+		Con_Printf("Error: control open (%i): %s\n", card, snd_strerror(rc));
+		return rc;
+	}
+	if ((rc = snd_ctl_hw_info(handle, &info)) < 0) {
+		Con_Printf("Error: control hardware info (%i): %s\n", card, 
+				   snd_strerror(rc));
+		snd_ctl_close(handle);
+		return rc;
+	}
+	snd_ctl_close(handle);
+	if (dev==-1) {
+		for (dev = 0; dev < info.pcmdevs; dev++) {
+			if ((rc=snd_pcm_open(&pcm_handle,card,dev,
+								 SND_PCM_OPEN_PLAYBACK
+								 | SND_PCM_OPEN_NONBLOCK))==0) {
+				return 0;
+			}
+		}
+	} else {
+		if (dev>=0 && dev <info.pcmdevs) {
+			if ((rc=snd_pcm_open(&pcm_handle,card,dev,
+								 SND_PCM_OPEN_PLAYBACK
+								 | SND_PCM_OPEN_NONBLOCK))==0) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
 
 qboolean SNDDMA_Init(void)
 {
-	int card=0,dev=0;
-	int rc;
+	int rc=0,i;
 	char *err_msg="";
 	int rate,format,bps,stereo,frag_size;
+	unsigned int mask;
 
-	if ((rc=snd_pcm_open(&pcm_handle,card,dev,SND_PCM_OPEN_PLAYBACK))<0) {
-		Con_Printf( "Error: audio open error: %s\n", snd_strerror(rc));
+	mask = snd_cards_mask();
+	if (!mask) {
+		Con_Printf("No sound cards detected\n");
 		return 0;
 	}
+	if ((i=COM_CheckParm("-sndcard"))!=0) {
+		card=atoi(com_argv[i+1]);
+	}
+	if ((i=COM_CheckParm("-snddev"))!=0) {
+		dev=atoi(com_argv[i+1]);
+	}
+	if (card==-1) {
+		for (card=0; card<SND_CARDS; card++) {
+			if (!(mask & (1<<card)))
+				continue;
+			rc=check_card(card);
+			if (rc<0)
+				return 0;
+			if (!rc)
+				goto dev_openned;
+		}
+	} else {
+		if (dev==-1) {
+			rc=check_card(card);
+			if (rc<0)
+				return 0;
+			if (!rc)
+				goto dev_openned;
+		} else {
+			if ((rc=snd_pcm_open(&pcm_handle,card,dev,
+								 SND_PCM_OPEN_PLAYBACK
+								 | SND_PCM_OPEN_NONBLOCK))<0) {
+				Con_Printf("Error: audio open error: %s\n", snd_strerror(rc));
+				return 0;
+			}
+			goto dev_openned;
+		}
+	}
+	Con_Printf("Error: audio open error: %s\n", snd_strerror(rc));
+	return 0;
 
+ dev_openned:
+	Con_Printf("Using card %d, device %d.\n", card, dev);
 	memset(&cinfo, 0, sizeof(cinfo));
 	cinfo.channel = SND_PCM_CHANNEL_PLAYBACK;
 	snd_pcm_channel_info(pcm_handle, &cinfo);
@@ -81,7 +156,7 @@ qboolean SNDDMA_Init(void)
 		rate=11025;
 		frag_size=128;	/* assuming stereo 8 bit */
 	} else {
-		Con_Printf( "ALSA: desired rates not supported\n");
+		Con_Printf("ALSA: desired rates not supported\n");
 		goto error_2;
 	}
 	if (cinfo.formats & SND_PCM_FMT_S16_LE) {
@@ -92,7 +167,7 @@ qboolean SNDDMA_Init(void)
 		format=SND_PCM_SFMT_U8;
 		bps=8;
 	} else {
-		Con_Printf( "ALSA: desired formats not supported\n");
+		Con_Printf("ALSA: desired formats not supported\n");
 		goto error_2;
 	}
 	if (cinfo.max_voices>=2) {
@@ -164,7 +239,7 @@ qboolean SNDDMA_Init(void)
 	snd_inited=1;
 	return 1;
  error:
-	Con_Printf( "Error: %s: %s\n", err_msg, snd_strerror(rc));
+	Con_Printf("Error: %s: %s\n", err_msg, snd_strerror(rc));
  error_2:
 	snd_pcm_close(pcm_handle);
 	return 0;
@@ -196,7 +271,7 @@ Send sound to device if buffer isn't really the dma buffer
 void SNDDMA_Submit(void)
 {
 	int count=paintedtime-soundtime;
-	int i,s,e,frags;
+	int i,s,e;
 	int rc;
 
 	count+=setup.buf.block.frag_size-1;
