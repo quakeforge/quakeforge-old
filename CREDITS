@@ -118,3 +118,6 @@ Network code fixes/cleanups:
 
 IPv6 support (not complete):
   Pontus Lidman <pontus@lysator.liu.se>
+
+Win32 support:
+  Jason Nelson <jason_nelson@email.msn.com>
