@@ -1375,11 +1375,17 @@ void SV_InitLocal (void)
 	sv_mintic = Cvar_Get ("sv_mintic","0.03",0,"None");
 	sv_maxtic = Cvar_Get ("sv_maxtic","0.1",0,"None");
 
+	coop = Cvar_Get ("coop","0",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+	skill = Cvar_Get ("skill","1",CVAR_USERINFO|CVAR_SERVERINFO,
+				"Current skill setting");
+	deathmatch = Cvar_Get ("deathmatch","1",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+	teamplay = Cvar_Get ("teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
 	fraglimit = Cvar_Get ("fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
 	timelimit = Cvar_Get ("timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-	teamplay = Cvar_Get ("teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
 	samelevel = Cvar_Get ("samelevel","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
@@ -1389,8 +1395,6 @@ void SV_InitLocal (void)
 					CVAR_USERINFO|CVAR_SERVERINFO,"None");
 	hostname = Cvar_Get ("hostname","unnamed",
 				CVAR_USERINFO|CVAR_SERVERINFO,"None");
-	deathmatch = Cvar_Get ("deathmatch","1",CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
 	spawn = Cvar_Get ("spawn","0",CVAR_USERINFO|CVAR_SERVERINFO,"None");
 	watervis = Cvar_Get ("watervis","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
