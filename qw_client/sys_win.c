@@ -1,4 +1,5 @@
 /*
+sys_win.c - Win32 system interface code
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,13 +20,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sys_win.c -- Win32 system interface code
 
-#include "quakedef.h"
-#include "winquake.h"
-#include "resource.h"
-#include "sys.h"
-#include "screen.h"
+#include <quakedef.h>
+#include <winquake.h>
+#include <resource.h>
+#include <sys.h>
+#include <screen.h>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -35,14 +35,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MINIMUM_WIN_MEMORY	0x0c00000
 #define MAXIMUM_WIN_MEMORY	0x1000000
 
-#define PAUSE_SLEEP		50				// sleep time on pause or minimization
-#define NOT_FOCUS_SLEEP	20				// sleep time when not focus
+#define PAUSE_SLEEP		50	// sleep time on pause or minimization
+#define NOT_FOCUS_SLEEP		20	// sleep time when not focus
 
 int		starttime;
 qboolean	ActiveApp, Minimized;
 qboolean	WinNT;
 
-HWND	hwnd_dialog;		// startup dialog box
+HWND		hwnd_dialog;		// startup dialog box
 
 static double		pfreq;
 static double		curtime = 0.0;
@@ -50,9 +50,9 @@ static double		lastcurtime = 0.0;
 static int		lowshift;
 static HANDLE		hinput, houtput;
 
-HANDLE		qwclsemaphore;
+HANDLE			qwclsemaphore;
 
-static HANDLE	tevent;
+static HANDLE		tevent;
 
 void Sys_InitFloatTime (void);
 
@@ -60,18 +60,19 @@ void MaskExceptions (void);
 void Sys_PopFPCW (void);
 void Sys_PushFPCW_SetHigh (void);
 
-void Sys_DebugLog(char *file, char *fmt, ...)
+void
+Sys_DebugLog (char *file, char *fmt, ...)
 {
-    va_list argptr; 
-    static char data[1024];
-    int fd;
-    
-    va_start(argptr, fmt);
-    vsnprintf(data, sizeof(data), fmt, argptr);
-    va_end(argptr);
-    fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
-    write(fd, data, strlen(data));
-    close(fd);
+	va_list argptr; 
+	static char data[1024];
+	int fd;
+
+	va_start(argptr, fmt);
+	vsnprintf(data, sizeof(data), fmt, argptr);
+	va_end(argptr);
+	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	write(fd, data, strlen(data));
+	close(fd);
 };
 
 /*
@@ -83,9 +84,13 @@ FILE IO
 */
 
 #define	MAX_HANDLES		10
-FILE	*sys_handles[MAX_HANDLES];
+FILE		*sys_handles[MAX_HANDLES];
 
-int		findhandle (void)
+/*
+	findhandle
+*/
+int
+findhandle (void)
 {
 	int		i;
 	
@@ -96,12 +101,12 @@ int		findhandle (void)
 	return -1;
 }
 
+
 /*
-================
-filelength
-================
+	filelength
 */
-int wfilelength (FILE *f)
+int
+wfilelength (FILE *f)
 {
 	int		pos;
 	int		end;
@@ -119,7 +124,12 @@ int wfilelength (FILE *f)
 	return end;
 }
 
-int Sys_FileOpenRead (char *path, int *hndl)
+
+/*
+	Sys_FileOpenRead
+*/
+int
+Sys_FileOpenRead (char *path, int *hndl)
 {
 	FILE	*f;
 	int		i, retval;
@@ -148,9 +158,14 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	return retval;
 }
 
-int Sys_FileOpenWrite (char *path)
+
+/*
+	Sys_FileOpenWrite
+*/
+int
+Sys_FileOpenWrite (char *path)
 {
-	FILE	*f;
+	FILE		*f;
 	int		i;
 	int		t;
 
@@ -168,7 +183,12 @@ int Sys_FileOpenWrite (char *path)
 	return i;
 }
 
-void Sys_FileClose (int handle)
+
+/*
+	Sys_FileClose
+*/
+void
+Sys_FileClose (int handle)
 {
 	int		t;
 
@@ -178,7 +198,12 @@ void Sys_FileClose (int handle)
 	VID_ForceLockState (t);
 }
 
-void Sys_FileSeek (int handle, int position)
+
+/*
+	Sys_FileSeek
+*/
+void
+Sys_FileSeek (int handle, int position)
 {
 	int		t;
 
@@ -187,7 +212,12 @@ void Sys_FileSeek (int handle, int position)
 	VID_ForceLockState (t);
 }
 
-int Sys_FileRead (int handle, void *dest, int count)
+
+/*
+	Sys_FileRead
+*/
+int
+Sys_FileRead (int handle, void *dest, int count)
 {
 	int		t, x;
 
@@ -197,7 +227,11 @@ int Sys_FileRead (int handle, void *dest, int count)
 	return x;
 }
 
-int Sys_FileWrite (int handle, void *data, int count)
+/*
+	Sys_FileWrite
+*/
+int
+Sys_FileWrite (int handle, void *data, int count)
 {
 	int		t, x;
 
@@ -208,63 +242,31 @@ int Sys_FileWrite (int handle, void *data, int count)
 }
 
 
-#if 0
-/*
-================
-filelength
-================
-*/
-int filelength (QFile *f)
-{
-	int		pos;
-	int		end;
-
-	pos = ftell (f);
-	fseek (f, 0, SEEK_END);
-	end = ftell (f);
-	fseek (f, pos, SEEK_SET);
-
-	return end;
-}
-#endif
-
-
 /*
 ===============================================================================
-
 SYSTEM IO
-
 ===============================================================================
-*/
-/*void MaskExceptions (void)
-{
-}
-
-void Sys_SetFPCW (void)
-{
-}*/
 
 /*
-================
-Sys_MakeCodeWriteable
-================
+	Sys_MakeCodeWriteable
 */
-void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
+void
+Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 {
 	DWORD  flOldProtect;
 
 //@@@ copy on write or just read-write?
-	if (!VirtualProtect((LPVOID)startaddr, length, PAGE_READWRITE, &flOldProtect))
+	if (!VirtualProtect((LPVOID)startaddr, length, PAGE_READWRITE,
+				&flOldProtect))
    		Sys_Error("Protection change failed\n");
 }
 
 
 /*
-================
-Sys_Init
-================
+	Sys_Init
 */
-void Sys_Init (void)
+void
+Sys_Init (void)
 {
 	LARGE_INTEGER	PerformanceFreq;
 	unsigned int	lowpart, highpart;
@@ -275,19 +277,19 @@ void Sys_Init (void)
 	// front end can tell if it is alive
 
 	// mutex will fail if semephore allready exists
-    qwclsemaphore = CreateMutex(
-        NULL,         /* Security attributes */
-        0,            /* owner       */
-        "qwcl"); /* Semaphore name      */
+	qwclsemaphore = CreateMutex(
+			NULL,		// Security attributes
+			0,		// owner
+			"qwcl");	// Semaphore name
 	if (!qwclsemaphore)
 		Sys_Error ("QWCL is already running on this system");
 	CloseHandle (qwclsemaphore);
 
-    qwclsemaphore = CreateSemaphore(
-        NULL,         /* Security attributes */
-        0,            /* Initial count       */
-        1,            /* Maximum count       */
-        "qwcl"); /* Semaphore name      */
+	qwclsemaphore = CreateSemaphore(
+			NULL,		// Security attributes
+			0,		// Initial count
+			1,		// Maximum count
+			"qwcl");	// Semaphore name
 #endif
 
 	MaskExceptions ();
@@ -328,7 +330,7 @@ void Sys_Init (void)
 	if ((vinfo.dwMajorVersion < 4) ||
 		(vinfo.dwPlatformId == VER_PLATFORM_WIN32s))
 	{
-		Sys_Error ("QuakeWorld requires at least Win95 or NT 4.0");
+		Sys_Error ("This program requires at least Win95 or NT 4.0");
 	}
 	
 	if (vinfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
@@ -470,16 +472,20 @@ void Sys_InitFloatTime (void)
 
 #endif
 
-char *Sys_ConsoleInput (void)
+/*
+	Sys_ConsoleInput
+*/
+char *
+Sys_ConsoleInput (void)
 {
 	static char	text[256];
-	static int		len;
+	static int	len;
 	INPUT_RECORD	recs[1024];
 	int		count;
 	int		i, dummy;
 	int		ch, numread, numevents;
-	HANDLE	th;
-	char	*clipText, *textCopied;
+	HANDLE		th;
+	char		*clipText, *textCopied;
 
 	for ( ;; )
 	{
@@ -504,7 +510,8 @@ char *Sys_ConsoleInput (void)
 				switch (ch)
 				{
 					case '\r':
-						WriteFile(houtput, "\r\n", 2, &dummy, NULL);	
+						WriteFile(houtput, "\r\n", 2, 
+							&dummy, NULL);	
 
 						if (len)
 						{
@@ -515,7 +522,9 @@ char *Sys_ConsoleInput (void)
 						break;
 
 					case '\b':
-						WriteFile(houtput, "\b \b", 3, &dummy, NULL);	
+						WriteFile(houtput, "\b \b", 
+								3, &dummy,
+								NULL);
 						if (len)
 						{
 							len--;
@@ -595,29 +604,23 @@ void IN_SendKeyEvents (void)
 
 /*
 ==============================================================================
-
  WINDOWS CRAP
-
 ==============================================================================
 */
 
 /*
-==================
-WinMain
-==================
+	SleepUntilInput
 */
-void SleepUntilInput (int time)
+void
+SleepUntilInput (int time)
 {
 
 	MsgWaitForMultipleObjects(1, &tevent, FALSE, time, QS_ALLINPUT);
 }
 
 
-
 /*
-==================
-WinMain
-==================
+	WinMain
 */
 HINSTANCE	global_hInstance;
 int			global_nCmdShow;
@@ -626,19 +629,21 @@ static char	*empty_string = "";
 HWND		hwnd_dialog;
 
 
-int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int WINAPI
+WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, 
+		int nCmdShow)
 {
-    MSG				msg;
+	MSG		msg;
 	quakeparms_t	parms;
-	double			time, oldtime, newtime;
+	double		time, oldtime, newtime;
 	MEMORYSTATUS	lpBuffer;
 	static	char	cwd[1024];
-	int				t;
-	RECT			rect;
+	int		t;
+	RECT		rect;
 
-    /* previous instances do not exist in Win32 */
-    if (hPrevInstance)
-        return 0;
+	/* previous instances do not exist in Win32 */
+	if (hPrevInstance)
+		return 0;
 
 	global_hInstance = hInstance;
 	global_nCmdShow = nCmdShow;
@@ -668,7 +673,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			argv[parms.argc] = lpCmdLine;
 			parms.argc++;
 
-			while (*lpCmdLine && ((*lpCmdLine > 32) && (*lpCmdLine <= 126)))
+			while (*lpCmdLine && ((*lpCmdLine > 32)
+						&& (*lpCmdLine <= 126)))
 				lpCmdLine++;
 
 			if (*lpCmdLine)
@@ -687,7 +693,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	parms.argc = com_argc;
 	parms.argv = com_argv;
 
-	hwnd_dialog = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), NULL, NULL);
+	hwnd_dialog = CreateDialog(hInstance, MAKEINTRESOURCE(IDD_DIALOG1),
+			NULL, NULL);
 
 	if (hwnd_dialog)
 	{
@@ -696,7 +703,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			if (rect.left > (rect.top * 2))
 			{
 				SetWindowPos (hwnd_dialog, 0,
-					(rect.left / 2) - ((rect.right - rect.left) / 2),
+					(rect.left / 2) - ((rect.right 
+							    - rect.left) / 2),
 					rect.top, 0, 0,
 					SWP_NOZORDER | SWP_NOSIZE);
 			}
@@ -752,7 +760,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     /* main window message loop */
 	while (1)
 	{
-	// yield the CPU for a little while when paused, minimized, or not the focus
+// yield the CPU for a little while when paused, minimized, or not the focus
 /*		if ((cl.paused && (!ActiveApp && !DDActive)) || Minimized || block_drawing)
 		{
 			SleepUntilInput (PAUSE_SLEEP);
@@ -774,14 +782,13 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 }
 
 /*
-================
-SV_Error
+	SV_Error
 
-Sends a datagram to all the clients informing them of the server crash,
-then exits
-================
+	Sends a datagram to all the clients informing them of the server
+	crash, then exits
 */
-void SV_Error (char *error, ...)
+void
+SV_Error (char *error, ...)
 {
 	va_list		argptr;
 	static	char		string[1024];
