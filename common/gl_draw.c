@@ -832,13 +832,15 @@ void Draw_ConsoleBackground (int lines)
 
 	if (gl_conspin->value)
 	{
-		static float xangle = 0, xfactor = .3f, xstep = .005f;
+		static float xangle = 0;
+		static float xfactor = .3f;
+		static float xstep = .005f;
 
 		glPushMatrix ();
 		glMatrixMode (GL_TEXTURE);
 		glPushMatrix ();
 		glLoadIdentity ();
-		xangle += 1.0f;
+		xangle += gl_conspin->value;
 		xfactor += xstep;
 		if (xfactor > 8 || xfactor < .3f)
 			xstep = -xstep;
