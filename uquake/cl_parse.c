@@ -642,7 +642,6 @@ void CL_ParseServerMessage (void)
 
 		case svc_setview:
 			cl.playernum = MSG_ReadShort ();
-			cl.playernum--;
 			break;
 
 		case svc_lightstyle:

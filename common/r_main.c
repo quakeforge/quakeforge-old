@@ -619,7 +619,7 @@ void R_DrawEntitiesOnList (void)
 	{
 		currententity = &cl_visedicts[i];
 #ifdef UQUAKE
-		if (currententity == &cl_entities[cl.playernum + 1])
+		if (currententity == &cl_entities[cl.playernum])
 			continue;	// don't draw the player
 #endif	// QUAKEWORLD
 

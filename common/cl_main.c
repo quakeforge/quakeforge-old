@@ -1316,7 +1316,7 @@ void CL_RelinkEntities (void)
 
 		ent->forcelink = false;
 
-		if (i == cl.playernum + 1 && !cl_chasecam->value)
+		if (i == cl.playernum && !cl_chasecam->value)
 			continue;
 
 #ifdef QUAKE2
