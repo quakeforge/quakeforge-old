@@ -1,25 +1,31 @@
 /*
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
-Please see the file "AUTHORS" for a list of contributors
+	gl_rmain.c
+	
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
+	
+	Author:
+	Date: 07 Jan 2000
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 
-See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+	
+	Free Software Foundation, Inc.
+	59 Temple Place - Suite 330
+	Boston, MA  02111-1307, USA.
 */
-// r_main.c
 
 #include "quakedef.h"
 
@@ -108,36 +114,35 @@ cvar_t	gl_playermip = {"gl_playermip","0"};
 cvar_t	gl_nocolors = {"gl_nocolors","0"};
 #ifdef QUAKEWORLD
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","1"};
-//cvar_t	gl_reporttjunctions = {"gl_reporttjunctions","0"};
 #else
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","0"};
-cvar_t	gl_doubleeyes = {"gl_doubleeys", "1"};
 #endif
+cvar_t	gl_doubleeyes = {"gl_doubleeyes", "1", true};
 
 extern	cvar_t	gl_ztrick;
 #ifdef QUAKEWORLD
 extern	cvar_t	scr_fov;
 #endif
 /*
-=================
-R_CullBox
+	R_CullBox
 
-Returns true if the box is completely outside the frustom
-=================
+	Returns true if the box is completely outside the frustom
 */
-qboolean R_CullBox (vec3_t mins, vec3_t maxs)
-{
+qboolean
+R_CullBox (vec3_t mins, vec3_t maxs) {
+
 	int		i;
 
-	for (i=0 ; i<4 ; i++)
-		if (BoxOnPlaneSide (mins, maxs, &frustum[i]) == 2)
+	for (i=0 ; i<4 ; i++) {
+		if (BoxOnPlaneSide (mins, maxs, &frustum[i]) == 2) {
 			return true;
+		}
+	}
 	return false;
 }
 
-
-void R_RotateForEntity (entity_t *e)
-{
+void
+R_RotateForEntity (entity_t *e) {
     glTranslatef (e->origin[0],  e->origin[1],  e->origin[2]);
 
     glRotatef (e->angles[1],  0, 0, 1);
@@ -147,20 +152,15 @@ void R_RotateForEntity (entity_t *e)
 }
 
 /*
-=============================================================
-
-  SPRITE MODELS
-
-=============================================================
-*/
+ *	SPRITE MODELS
+ */
 
 /*
-================
-R_GetSpriteFrame
-================
+	R_GetSpriteFrame
 */
-mspriteframe_t *R_GetSpriteFrame (entity_t *currententity)
-{
+mspriteframe_t
+*R_GetSpriteFrame (entity_t *currententity) {
+
 	msprite_t		*psprite;
 	mspritegroup_t	*pspritegroup;
 	mspriteframe_t	*pspriteframe;
@@ -170,18 +170,14 @@ mspriteframe_t *R_GetSpriteFrame (entity_t *currententity)
 	psprite = currententity->model->cache.data;
 	frame = currententity->frame;
 
-	if ((frame >= psprite->numframes) || (frame < 0))
-	{
+	if ((frame >= psprite->numframes) || (frame < 0)) {
 		Con_Printf ("R_DrawSprite: no such frame %d\n", frame);
 		frame = 0;
 	}
 
-	if (psprite->frames[frame].type == SPR_SINGLE)
-	{
+	if (psprite->frames[frame].type == SPR_SINGLE) {
 		pspriteframe = psprite->frames[frame].frameptr;
-	}
-	else
-	{
+	} else {
 		pspritegroup = (mspritegroup_t *)psprite->frames[frame].frameptr;
 		pintervals = pspritegroup->intervals;
 		numframes = pspritegroup->numframes;
@@ -193,27 +189,22 @@ mspriteframe_t *R_GetSpriteFrame (entity_t *currententity)
 	// are positive, so we don't have to worry about division by 0
 		targettime = time - ((int)(time / fullinterval)) * fullinterval;
 
-		for (i=0 ; i<(numframes-1) ; i++)
-		{
+		for (i=0 ; i<(numframes-1) ; i++) {
 			if (pintervals[i] > targettime)
 				break;
 		}
-
 		pspriteframe = pspritegroup->frames[i];
 	}
-
 	return pspriteframe;
 }
 
 
 /*
-=================
-R_DrawSpriteModel
-
-=================
+	R_DrawSpriteModel
 */
-void R_DrawSpriteModel (entity_t *e)
-{
+void
+R_DrawSpriteModel (entity_t *e) {
+
 	vec3_t	point;
 	mspriteframe_t	*frame;
 	float		*up, *right;
@@ -225,14 +216,11 @@ void R_DrawSpriteModel (entity_t *e)
 	frame = R_GetSpriteFrame (e);
 	psprite = currententity->model->cache.data;
 
-	if (psprite->type == SPR_ORIENTED)
-	{	// bullet marks on walls
+	if (psprite->type == SPR_ORIENTED) {	// bullet marks on walls
 		AngleVectors (currententity->angles, v_forward, v_right, v_up);
 		up = v_up;
 		right = v_right;
-	}
-	else
-	{	// normal sprite
+	} else {	// normal sprite
 		up = vup;
 		right = vright;
 	}
@@ -245,11 +233,6 @@ void R_DrawSpriteModel (entity_t *e)
 
 	glEnable (GL_ALPHA_TEST);
 	glBegin (GL_QUADS);
-
-#ifdef QUAKEWORLD
-	glEnable (GL_ALPHA_TEST);
-	glBegin (GL_QUADS);
-#endif
 
 	glTexCoord2f (0, 1);
 	VectorMA (e->origin, frame->down, up, point);
@@ -277,13 +260,8 @@ void R_DrawSpriteModel (entity_t *e)
 }
 
 /*
-=============================================================
-
-  ALIAS MODELS
-
-=============================================================
+	ALIAS MODELS
 */
-
 
 #define NUMVERTEXNORMALS	162
 
@@ -305,40 +283,35 @@ float	*shadedots = r_avertexnormal_dots[0];
 int	lastposenum;
 
 /*
-=============
-GL_DrawAliasFrame
-=============
+	GL_DrawAliasFrame
 */
-void GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
-{
+void
+GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum) {
+
 	float 	l;
 	trivertx_t	*verts;
 	int		*order;
 	int		count;
 
-lastposenum = posenum;
+	lastposenum = posenum;
 
 	verts = (trivertx_t *)((byte *)paliashdr + paliashdr->posedata);
 	verts += posenum * paliashdr->poseverts;
 	order = (int *)((byte *)paliashdr + paliashdr->commands);
 
-	while (1)
-	{
+	while (1) {
 		// get the vertex count and primitive type
 		count = *order++;
 		if (!count)
 			break;		// done
-		if (count < 0)
-		{
+		if (count < 0) {
 			count = -count;
 			glBegin (GL_TRIANGLE_FAN);
-		}
-		else
+		} else {
 			glBegin (GL_TRIANGLE_STRIP);
+		}
 
-		do
-		{
-			// texture coordinates come from the draw list
+		do {	// texture coordinates come from the draw list
 			glTexCoord2f (((float *)order)[0], ((float *)order)[1]);
 			order += 2;
 
@@ -348,21 +321,19 @@ lastposenum = posenum;
 			glVertex3f (verts->v[0], verts->v[1], verts->v[2]);
 			verts++;
 		} while (--count);
-
 		glEnd ();
 	}
 }
 
 
 /*
-=============
-GL_DrawAliasShadow
-=============
+	GL_DrawAliasShadow
 */
 extern	vec3_t			lightspot;
 
-void GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
-{
+void
+GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum) {
+
 	trivertx_t	*verts;
 	int		*order;
 	vec3_t	point;
@@ -378,22 +349,19 @@ void GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
 
 	height = -lheight + 1.0;
 
-	while (1)
-	{
+	while (1) {
 		// get the vertex count and primitive type
 		count = *order++;
 		if (!count)
 			break;		// done
-		if (count < 0)
-		{
+		if (count < 0) {
 			count = -count;
 			glBegin (GL_TRIANGLE_FAN);
-		}
-		else
+		} else {
 			glBegin (GL_TRIANGLE_STRIP);
+		}
 
-		do
-		{
+		do {
 			// texture coordinates come from the draw list
 			// (skipped for shadows) glTexCoord2fv ((float *)order);
 			order += 2;
@@ -411,26 +379,19 @@ void GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
 
 			verts++;
 		} while (--count);
-
 		glEnd ();
 	}	
 }
 
-
-
 /*
-=================
-R_SetupAliasFrame
-
-=================
+	R_SetupAliasFrame
 */
-void R_SetupAliasFrame (int frame, aliashdr_t *paliashdr)
-{
+void R_SetupAliasFrame (int frame, aliashdr_t *paliashdr) {
+
 	int				pose, numposes;
 	float			interval;
 
-	if ((frame >= paliashdr->numframes) || (frame < 0))
-	{
+	if ((frame >= paliashdr->numframes) || (frame < 0)) {
 		Con_DPrintf ("R_AliasSetupFrame: no such frame %d\n", frame);
 		frame = 0;
 	}
@@ -438,25 +399,19 @@ void R_SetupAliasFrame (int frame, aliashdr_t *paliashdr)
 	pose = paliashdr->frames[frame].firstpose;
 	numposes = paliashdr->frames[frame].numposes;
 
-	if (numposes > 1)
-	{
+	if (numposes > 1) {
 		interval = paliashdr->frames[frame].interval;
 		pose += (int)(cl.time / interval) % numposes;
 	}
-
 	GL_DrawAliasFrame (paliashdr, pose);
 }
 
-
-
 /*
-=================
-R_DrawAliasModel
-
-=================
+	R_DrawAliasModel
 */
-void R_DrawAliasModel (entity_t *e)
-{
+void
+R_DrawAliasModel (entity_t *e) {
+
 	int			i;
 	int			lnum;
 	vec3_t		dist;
@@ -475,29 +430,24 @@ void R_DrawAliasModel (entity_t *e)
 	if (R_CullBox (mins, maxs))
 		return;
 
-
 	VectorCopy (currententity->origin, r_entorigin);
 	VectorSubtract (r_origin, r_entorigin, modelorg);
 
-	//
-	// get lighting information
-	//
-
+	/*
+		get lighting information
+	*/
 	ambientlight = shadelight = R_LightPoint (currententity->origin);
 
 	// allways give the gun some light
 	if (e == &cl.viewent && ambientlight < 24)
 		ambientlight = shadelight = 24;
 
-	for (lnum=0 ; lnum<MAX_DLIGHTS ; lnum++)
-	{
-		if (cl_dlights[lnum].die >= cl.time)
-		{
+	for (lnum=0 ; lnum<MAX_DLIGHTS ; lnum++) {
+		if (cl_dlights[lnum].die >= cl.time) {
 			VectorSubtract (currententity->origin,
 							cl_dlights[lnum].origin,
 							dist);
 			add = cl_dlights[lnum].radius - Length(dist);
-
 			if (add > 0) {
 				ambientlight += add;
 				//ZOID models should be affected by dlights as well
@@ -505,7 +455,6 @@ void R_DrawAliasModel (entity_t *e)
 			}
 		}
 	}
-
 	// clamp lighting so it doesn't overbright as much
 	if (ambientlight > 128)
 		ambientlight = 128;
@@ -520,9 +469,9 @@ void R_DrawAliasModel (entity_t *e)
 //	if (i >= 1 && i <= cl.maxclients && !strcmp (currententity->model->name, "progs/player.mdl")) {
 	if (i >= 1 && i <= cl.maxclients) {
 #endif
-		if (ambientlight < 8)
+		if (ambientlight < 8) {
 			ambientlight = shadelight = 8;
-
+		}
 	} else if (!strcmp (clmodel->name, "progs/flame2.mdl")
 		|| !strcmp (clmodel->name, "progs/flame.mdl") )
 		// HACK HACK HACK -- no fullbright colors, so make torches full light
@@ -537,27 +486,22 @@ void R_DrawAliasModel (entity_t *e)
 	shadevector[2] = 1;
 	VectorNormalize (shadevector);
 
-	//
-	// locate the proper data
-	//
+	/*
+		locate the proper data
+	*/
 	paliashdr = (aliashdr_t *)Mod_Extradata (currententity->model);
 
 	c_alias_polys += paliashdr->numtris;
 
-	//
-	// draw all the triangles
-	//
-
+	/*
+		draw all the triangles
+	*/
 	GL_DisableMultitexture();
 
     glPushMatrix ();
 	R_RotateForEntity (e);
 
-#ifdef QUAKEWORLD
-	if (!strcmp (clmodel->name, "progs/eyes.mdl") ) {
-#else
 	if (!strcmp (clmodel->name, "progs/eyes.mdl") && gl_doubleeyes.value) {
-#endif
 		glTranslatef (paliashdr->scale_origin[0], paliashdr->scale_origin[1], paliashdr->scale_origin[2] - (22 + 8));
 		// double size of eyes, since they are really hard to see in gl
 		glScalef (paliashdr->scale[0]*2, paliashdr->scale[1]*2, paliashdr->scale[2]*2);
@@ -572,21 +516,21 @@ void R_DrawAliasModel (entity_t *e)
 	// we can't dynamically colormap textures, so they are cached
 	// seperately for the players.  Heads are just uncolored.
 #ifdef QUAKEWORLD
-	if (currententity->scoreboard && !gl_nocolors.value)
-	{
+	if (currententity->scoreboard && !gl_nocolors.value) {
 		i = currententity->scoreboard - cl.players;
 		if (!currententity->scoreboard->skin) {
 			Skin_Find(currententity->scoreboard);
 			R_TranslatePlayerSkin(i);
 		}
-		if (i >= 0 && i<MAX_CLIENTS)
+		if (i >= 0 && i<MAX_CLIENTS) {
 		    GL_Bind(playertextures + i);
+		}
 	}
 #else
-	if (currententity->colormap != vid.colormap && !gl_nocolors.value)
-	{
+	if (currententity->colormap != vid.colormap && !gl_nocolors.value) {
 		i = currententity - cl_entities;
-		if (i >= 1 && i<=cl.maxclients /* && !strcmp (currententity->model->name, "progs/player.mdl") */)
+		//if (i >= 1 && i<=cl.maxclients && !strcmp (currententity->model->name, "progs/player.mdl"))
+		if (i >= 1 && i<=cl.maxclients)
 		    GL_Bind(playertextures - 1 + i);
 	}
 #endif
@@ -608,8 +552,7 @@ void R_DrawAliasModel (entity_t *e)
 
 	glPopMatrix ();
 
-	if (r_shadows.value)
-	{
+	if (r_shadows.value) {
 		glPushMatrix ();
 		R_RotateForEntity (e);
 		glDisable (GL_TEXTURE_2D);
@@ -624,31 +567,25 @@ void R_DrawAliasModel (entity_t *e)
 
 }
 
-//==================================================================================
-
 /*
-=============
-R_DrawEntitiesOnList
-=============
+	R_DrawEntitiesOnList
 */
-void R_DrawEntitiesOnList (void)
-{
+void
+R_DrawEntitiesOnList ( void ) {
+
 	int		i;
 
 	if (!r_drawentities.value)
 		return;
 
 	// draw sprites seperately, because of alpha blending
-	for (i=0 ; i<cl_numvisedicts ; i++)
-	{
+	for (i=0 ; i<cl_numvisedicts ; i++) {
 #ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
 #else
 		currententity = cl_visedicts[i];
 #endif
-
-		switch (currententity->model->type)
-		{
+		switch (currententity->model->type) {
 		case mod_alias:
 			R_DrawAliasModel (currententity);
 			break;
@@ -662,16 +599,14 @@ void R_DrawEntitiesOnList (void)
 		}
 	}
 
-	for (i=0 ; i<cl_numvisedicts ; i++)
-	{
+	for (i=0 ; i<cl_numvisedicts ; i++) {
 #ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
 #else
 		currententity = cl_visedicts[i];
 #endif
 
-		switch (currententity->model->type)
-		{
+		switch (currententity->model->type) {
 		case mod_sprite:
 			R_DrawSpriteModel (currententity);
 			break;
@@ -683,12 +618,11 @@ void R_DrawEntitiesOnList (void)
 }
 
 /*
-=============
-R_DrawViewModel
-=============
+	R_DrawViewModel
 */
-void R_DrawViewModel (void)
-{
+void
+R_DrawViewModel ( void ) {
+
 	float		ambient[4], diffuse[4];
 	int			j;
 	int			lnum;
@@ -736,8 +670,7 @@ void R_DrawViewModel (void)
 	shadelight = j;
 
 // add dynamic lights		
-	for (lnum=0 ; lnum<MAX_DLIGHTS ; lnum++)
-	{
+	for (lnum=0 ; lnum<MAX_DLIGHTS ; lnum++) {
 		dl = &cl_dlights[lnum];
 		if (!dl->radius)
 			continue;
@@ -763,12 +696,10 @@ void R_DrawViewModel (void)
 
 
 /*
-============
-R_PolyBlend
-============
+	R_PolyBlend
 */
-void R_PolyBlend (void)
-{
+void
+R_PolyBlend ( void ) {
 	if (!gl_polyblend.value)
 		return;
 	if (!v_blend[3])
@@ -802,28 +733,26 @@ void R_PolyBlend (void)
 }
 
 
-int SignbitsForPlane (mplane_t *out)
-{
+int
+SignbitsForPlane ( mplane_t *out ) {
 	int	bits, j;
 
 	// for fast box on planeside test
 
 	bits = 0;
-	for (j=0 ; j<3 ; j++)
-	{
+	for (j=0 ; j<3 ; j++) {
 		if (out->normal[j] < 0)
 			bits |= 1<<j;
 	}
 	return bits;
 }
 
+void
+R_SetFrustum ( void ) {
 
-void R_SetFrustum (void)
-{
 	int		i;
 
-	if (r_refdef.fov_x == 90) 
-	{
+	if (r_refdef.fov_x == 90) {
 		// front side is visible
 
 		VectorAdd (vpn, vright, frustum[0].normal);
@@ -831,9 +760,7 @@ void R_SetFrustum (void)
 
 		VectorAdd (vpn, vup, frustum[2].normal);
 		VectorSubtract (vpn, vup, frustum[3].normal);
-	}
-	else
-	{
+	} else {
 		// rotate VPN right by FOV_X/2 degrees
 		RotatePointAroundVector( frustum[0].normal, vup, vpn, -(90-r_refdef.fov_x / 2 ) );
 		// rotate VPN left by FOV_X/2 degrees
@@ -843,24 +770,18 @@ void R_SetFrustum (void)
 		// rotate VPN down by FOV_X/2 degrees
 		RotatePointAroundVector( frustum[3].normal, vright, vpn, -( 90 - r_refdef.fov_y / 2 ) );
 	}
-
-	for (i=0 ; i<4 ; i++)
-	{
+	for (i=0 ; i<4 ; i++) {
 		frustum[i].type = PLANE_ANYZ;
 		frustum[i].dist = DotProduct (r_origin, frustum[i].normal);
 		frustum[i].signbits = SignbitsForPlane (&frustum[i]);
 	}
 }
 
-
-
 /*
-===============
-R_SetupFrame
-===============
+	R_SetupFrame
 */
-void R_SetupFrame (void)
-{
+void
+R_SetupFrame ( void ) {
 // don't allow cheats in multiplayer
 #ifdef QUAKEWORLD
 	r_fullbright.value = 0;
@@ -873,7 +794,6 @@ void R_SetupFrame (void)
 #endif
 
 	R_AnimateLight ();
-
 	r_framecount++;
 
 // build the transformation matrix for the given view angles
@@ -892,13 +812,11 @@ void R_SetupFrame (void)
 
 	c_brush_polys = 0;
 	c_alias_polys = 0;
-
 }
 
+void
+MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar ) {
 
-void MYgluPerspective( GLdouble fovy, GLdouble aspect,
-		     GLdouble zNear, GLdouble zFar )
-{
    GLdouble xmin, xmax, ymin, ymax;
 
    ymax = zNear * tan( fovy * M_PI / 360.0 );
@@ -912,12 +830,11 @@ void MYgluPerspective( GLdouble fovy, GLdouble aspect,
 
 
 /*
-=============
-R_SetupGL
-=============
+	R_SetupGL
 */
-void R_SetupGL (void)
-{
+void
+R_SetupGL ( void ) {
+
 	float	screenaspect;
 	//float	yfov;
 	extern	int glwidth, glheight;
@@ -946,8 +863,7 @@ void R_SetupGL (void)
 	w = x2 - x;
 	h = y - y2;
 
-	if (envmap)
-	{
+	if (envmap) {
 		x = y2 = 0;
 		w = h = 256;
 	}
@@ -957,19 +873,18 @@ void R_SetupGL (void)
 //	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*180/M_PI;
 //	yfov = (2.0 * tan (scr_fov.value/360*M_PI)) / screenaspect;
 //	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*(scr_fov.value*2)/M_PI;
-//    MYgluPerspective (yfov,  screenaspect,  4,  4096);
+//	MYgluPerspective (yfov,  screenaspect,  4,  4096);
     MYgluPerspective (r_refdef.fov_y,  screenaspect,  4,  4096);
 
-	if (mirror)
-	{
+	if (mirror) {
 		if (mirror_plane->normal[2])
 			glScalef (1, -1, 1);
 		else
 			glScalef (-1, 1, 1);
 		glCullFace(GL_BACK);
-	}
-	else
+	} else {
 		glCullFace(GL_FRONT);
+	}
 
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity ();
@@ -983,9 +898,9 @@ void R_SetupGL (void)
 
 	glGetFloatv (GL_MODELVIEW_MATRIX, r_world_matrix);
 
-	//
-	// set drawing parms
-	//
+	/*
+		set drawing parms
+	*/
 	if (gl_cull.value)
 		glEnable(GL_CULL_FACE);
 	else
@@ -997,32 +912,26 @@ void R_SetupGL (void)
 }
 
 /*
-================
-R_RenderScene
+	R_RenderScene
 
-r_refdef must be set before the first call
-================
+	r_refdef must be set before the first call
 */
-void R_RenderScene (void)
-{
+void
+R_RenderScene ( void ) {
+
 	R_SetupFrame ();
-
 	R_SetFrustum ();
-
+	
 	R_SetupGL ();
 
 	R_MarkLeaves ();	// done here so we know if we're in water
-
 	R_DrawWorld ();		// adds static entities to the list
-
 	S_ExtraUpdate ();	// don't let sound get messed up if going slow
-
 	R_DrawEntitiesOnList ();
 
 	GL_DisableMultitexture();
 
 	R_RenderDlights ();
-
 	R_DrawParticles ();
 
 #ifdef GLTEST
@@ -1033,49 +942,41 @@ void R_RenderScene (void)
 
 
 /*
-=============
-R_Clear
-=============
+	R_Clear
 */
-void R_Clear (void)
-{
-	if (r_mirroralpha.value != 1.0)
-	{
-		if (gl_clear.value)
+void
+R_Clear ( void ) {
+	if (r_mirroralpha.value != 1.0) {
+		if (gl_clear.value) {
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		else
+		} else {
 			glClear (GL_DEPTH_BUFFER_BIT);
+		}
 		gldepthmin = 0;
 		gldepthmax = 0.5;
 		glDepthFunc (GL_LEQUAL);
-	}
-	else if (gl_ztrick.value)
-	{
+	} else if (gl_ztrick.value)	{
 		static int trickframe;
 
 		if (gl_clear.value)
 			glClear (GL_COLOR_BUFFER_BIT);
 
 		trickframe++;
-		if (trickframe & 1)
-		{
+		if (trickframe & 1) {
 			gldepthmin = 0;
 			gldepthmax = 0.49999;
 			glDepthFunc (GL_LEQUAL);
-		}
-		else
-		{
+		} else {
 			gldepthmin = 1;
 			gldepthmax = 0.5;
 			glDepthFunc (GL_GEQUAL);
 		}
-	}
-	else
-	{
-		if (gl_clear.value)
+	} else {
+		if (gl_clear.value) {
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		else
+		} else {
 			glClear (GL_DEPTH_BUFFER_BIT);
+		}
 		gldepthmin = 0;
 		gldepthmax = 1;
 		glDepthFunc (GL_LEQUAL);
@@ -1084,14 +985,13 @@ void R_Clear (void)
 	glDepthRange (gldepthmin, gldepthmax);
 }
 
-#ifndef QUAKEWORLD //!!! FIXME, Zoid, mirror is disabled for now
 /*
-=============
-R_Mirror
-=============
+	R_Mirror
 */
-void R_Mirror (void)
-{
+void
+R_Mirror ( void ) {
+
+#ifndef QUAKEWORLD
 	float		d;
 	msurface_t	*s;
 	entity_t	*ent;
@@ -1150,18 +1050,17 @@ void R_Mirror (void)
 	cl.worldmodel->textures[mirrortexturenum]->texturechain = NULL;
 	glDisable (GL_BLEND);
 	glColor4f (1,1,1,1);
-}
 #endif
+}
 
 /*
-================
-R_RenderView
+	R_RenderView
 
-r_refdef must be set before the first call
-================
+	r_refdef must be set before the first call
 */
-void R_RenderView (void)
-{
+void
+R_RenderView ( void ) {
+
 	double	time1 = 0, time2 = 0;
 	// Fixme: the last argument should be a cvar... r_fog_gamma
 	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.1};
@@ -1188,20 +1087,6 @@ void R_RenderView (void)
 	R_Clear ();
 
 	// render normal view
-
-/***** Experimental silly looking fog ******
-****** Use r_fullbright if you enable ******
-	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogfv(GL_FOG_COLOR, colors);
-	glFogf(GL_FOG_END, 512.0);
-	glEnable(GL_FOG);
-********************************************/
-
-/* 
-Eric Windisch: I basicly rewrote what carmack had here to
-display _much_ prettier. small hack
-*/ 
-
 /*
 	// The volume fog probally will not work yet :)
 	if(r_volfog.value) 
@@ -1230,41 +1115,29 @@ display _much_ prettier. small hack
 		glDisable(GL_DEPTH_TEST);
 	}
 */
-	if(r_fog.value)
-	{
-
-	// fixme: would be nice if the user could select what fogmode... (r_fog_mode)
-	        glFogi (GL_FOG_MODE, GL_EXP2);
-        	glFogfv (GL_FOG_COLOR, colors);
-	// fixme: GL_FOG_DENSITY should have r_fog_density var
-	        glFogf (GL_FOG_DENSITY, .0005); 
-        	glEnable(GL_FOG);
-
+	if (r_fog.value) {	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
+		glFogi (GL_FOG_MODE, GL_EXP2);
+		glFogfv (GL_FOG_COLOR, colors);
+		// fixme: GL_FOG_DENSITY should have r_fog_density var
+		glFogf (GL_FOG_DENSITY, .0005); 
+		glEnable(GL_FOG);
 	}
 
-glEnable(GL_STEREO);
-
+	glEnable(GL_STEREO);
 	R_RenderScene ();
 	R_DrawViewModel ();
 
-if(!r_volfog.value) 
-{
-	R_DrawWaterSurfaces ();
-}
+	if(!r_volfog.value) {
+		R_DrawWaterSurfaces ();
+	}
+	glDisable(GL_FOG);	//  More fog right here :)
 
-//  More fog right here :)
-	glDisable(GL_FOG);
-
-
-#ifndef QUAKEWORLD
 	// render mirror view
 	R_Mirror ();
-#endif
 	R_PolyBlend ();
 
-	if (r_speeds.value)
-	{
-//		glFinish ();
+	if (r_speeds.value) {
+		//glFinish ();
 		time2 = Sys_DoubleTime ();
 		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys); 
 	}
