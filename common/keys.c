@@ -46,6 +46,7 @@ key up events are sent even if in console mode
 char	key_lines[32][MAXCMDLINE];
 int		key_linepos;
 int		shift_down=false;
+int		ctrl_down=false;
 int		key_lastpress;
 
 int		edit_line=0;
@@ -292,6 +293,12 @@ void Key_Console (int key)
 			}
 			return;
 
+		case KP_DEL:
+		case K_DEL:
+			if (key_linepos < strlen(key_lines[edit_line]))
+				strcpy(key_lines[edit_line] + key_linepos, key_lines[edit_line] + key_linepos + 1);
+			return;
+	
 		case KP_RIGHTARROW:
 		case K_RIGHTARROW:
 			if (key_linepos < strlen(key_lines[edit_line]))
@@ -349,12 +356,18 @@ void Key_Console (int key)
 
 	    case KP_HOME:
 	    case K_HOME:
-			con->display = con->current - con_totallines + 10;
+			if (ctrl_down)
+				con->display = con->current - con_totallines + 10;
+			else
+				key_linepos = 1;
 			return;
 
 	    case KP_END:
 	    case K_END:
-			con->display = con->current;
+			if (ctrl_down)
+				con->display = con->current;
+			else
+				key_linepos = strlen(key_lines[edit_line]);
 			return;
 	}
 #ifdef _WIN32
@@ -677,6 +690,7 @@ void Key_Init (void)
 	consolekeys[KP_END] = true;
 	consolekeys[KP_PGUP] = true;
 	consolekeys[KP_PGDN] = true;
+	consolekeys[KP_DEL] = true;
 
 	consolekeys[K_ENTER] = true;
 	consolekeys[K_TAB] = true;
@@ -685,10 +699,12 @@ void Key_Init (void)
 	consolekeys[K_UPARROW] = true;
 	consolekeys[K_DOWNARROW] = true;
 	consolekeys[K_BACKSPACE] = true;
+	consolekeys[K_DEL] = true;
 	consolekeys[K_HOME] = true;
 	consolekeys[K_END] = true;
 	consolekeys[K_PGUP] = true;
 	consolekeys[K_PGDN] = true;
+	consolekeys[K_CTRL] = true;
 	consolekeys[K_SHIFT] = true;
 	consolekeys[K_MWHEELUP] = true;
 	consolekeys[K_MWHEELDOWN] = true;
@@ -766,10 +782,9 @@ void Key_Event (int key, qboolean down)
 	if (down)
 	{
 		key_repeats[key]++;
-		if (key != K_BACKSPACE 
-			&& key != K_PAUSE 
-			&& key != K_PGUP 
-			&& key != K_PGDN
+		if (key != K_BACKSPACE && key != K_DEL
+			&& key != K_LEFTARROW && key != K_RIGHTARROW 
+			&& key != K_PGUP && key != K_PGDN
 			&& key_repeats[key] > 1)
 			return;	// ignore most autorepeats
 			
@@ -779,6 +794,9 @@ void Key_Event (int key, qboolean down)
 
 	if (key == K_SHIFT)
 		shift_down = down;
+
+	if (key == K_CTRL)
+		ctrl_down = down;
 
 //
 // handle escape specialy, so the user can never unbind it
@@ -835,7 +853,8 @@ void Key_Event (int key, qboolean down)
 //
 // during demo playback, most keys bring up the main menu
 //
-	if (cls.demoplayback && down && consolekeys[key] && key_dest == key_game)
+	if (cls.demoplayback && down && consolekeys[key] && key_dest == key_game
+	  && key != K_CTRL && key != K_DEL && key != K_HOME && key != K_END)
 	{
 		M_ToggleMenu_f ();
 		return;
