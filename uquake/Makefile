@@ -138,12 +138,12 @@ SOFT_OBJS = \
 	$(OBJ_DIR)/soft_obj/mathlib.o \
 	$(OBJ_DIR)/soft_obj/menu.o \
 	$(OBJ_DIR)/soft_obj/model.o \
+	$(OBJ_DIR)/soft_obj/net_bsd.o \
 	$(OBJ_DIR)/soft_obj/net_dgrm.o \
 	$(OBJ_DIR)/soft_obj/net_loop.o \
 	$(OBJ_DIR)/soft_obj/net_main.o \
-	$(OBJ_DIR)/soft_obj/net_vcr.o \
 	$(OBJ_DIR)/soft_obj/net_udp.o \
-	$(OBJ_DIR)/soft_obj/net_bsd.o \
+	$(OBJ_DIR)/soft_obj/net_vcr.o \
 	$(OBJ_DIR)/soft_obj/nonintel.o \
 	$(OBJ_DIR)/soft_obj/pr_cmds.o \
 	$(OBJ_DIR)/soft_obj/pr_edict.o \

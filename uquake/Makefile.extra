@@ -1147,24 +1147,27 @@ $(OBJ_DIR)/soft_obj/vid_x.o:	$(COMMON_DIR)/vid_x.c
 
 GL_OBJS = \
 	$(OBJ_DIR)/gl_obj/cl_demo.o \
-	$(OBJ_DIR)/gl_obj/cl_ents.o \
 	$(OBJ_DIR)/gl_obj/cl_input.o \
 	$(OBJ_DIR)/gl_obj/cl_main.o \
 	$(OBJ_DIR)/gl_obj/cl_parse.o \
-	$(OBJ_DIR)/gl_obj/cl_pred.o \
 	$(OBJ_DIR)/gl_obj/cl_tent.o \
-	$(OBJ_DIR)/gl_obj/cl_cam.o \
+	$(OBJ_DIR)/gl_obj/cl_chase.o \
 	$(OBJ_DIR)/gl_obj/cmd.o \
 	$(OBJ_DIR)/gl_obj/common.o \
 	$(OBJ_DIR)/gl_obj/console.o \
 	$(OBJ_DIR)/gl_obj/crc.o \
 	$(OBJ_DIR)/gl_obj/cvar.o \
+	$(OBJ_DIR)/gl_obj/host.o \
+	$(OBJ_DIR)/gl_obj/host_cmd.o \
 	$(OBJ_DIR)/gl_obj/keys.o \
 	$(OBJ_DIR)/gl_obj/mathlib.o \
-	$(OBJ_DIR)/gl_obj/md4.o \
 	$(OBJ_DIR)/gl_obj/menu.o \
-	$(OBJ_DIR)/gl_obj/net_chan.o \
+	$(OBJ_DIR)/gl_obj/net_bsd.o \
+	$(OBJ_DIR)/gl_obj/net_dgrm.o \
+	$(OBJ_DIR)/gl_obj/net_loop.o \
+	$(OBJ_DIR)/gl_obj/net_main.o \
 	$(OBJ_DIR)/gl_obj/net_udp.o \
+	$(OBJ_DIR)/gl_obj/net_vcr.o \
 	$(OBJ_DIR)/gl_obj/nonintel.o \
 	$(OBJ_DIR)/gl_obj/pmove.o \
 	$(OBJ_DIR)/gl_obj/pmovetst.o \
@@ -1349,7 +1352,7 @@ $(OBJ_DIR)/gl_obj/gl_vidlinuxglx.o: $(COMMON_DIR)/gl_vidlinuxglx.c
 
 $(OBJ_DIR)/gl_obj/gl_warp.o:	$(CLIENT_DIR)/gl_warp.c
 	$(DO_GL_CC)
-
+	
 $(OBJ_DIR)/gl_obj/sys_dosa.o:	$(CLIENT_DIR)/sys_dosa.s
 	$(DO_GL_AS)
 
