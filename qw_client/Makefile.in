@@ -192,7 +192,7 @@ CFLAGS += @CFLAGS@ -DQUAKEWORLD -DLIBDIR=\"$(libdir)\" $(OPTFLAGS) $(DEFS) \
 -I. $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
-	   $(QW_CL_SRC) $(QW_NET_SRC) net_chan.c skin.c \
+	   $(QW_CL_SRC) $(QW_NET_SRC) net_chan.c skin.c pcx.c\
 	   $(SYS_SRC) $(QW_GENERAL_SRC)
 
 # FIXME: add dos/win specifc source

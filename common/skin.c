@@ -1,4 +1,5 @@
 /*
+skin.c - player skins
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -104,12 +105,13 @@ Returns a pointer to the skin bitmap, or NULL to use the default
 byte	*Skin_Cache (skin_t *skin)
 {
 	char	name[1024];
-	byte	*raw;
-	byte	*out, *pix;
-	pcx_t	*pcx;
-	int		x, y;
-	int		dataByte;
-	int		runLength;
+//	byte	*raw;
+	byte	*out;//, *pix;
+//	pcx_t	*pcx;
+//	int		x, y;
+//	int		dataByte;
+//	int		runLength;
+	QFile	*f;
 
 	if (cls.downloadtype == dl_skin)
 		return NULL;		// use base until downloaded
@@ -128,19 +130,23 @@ byte	*Skin_Cache (skin_t *skin)
 // load the pic from disk
 //
 	snprintf(name, sizeof(name), "skins/%s.pcx", skin->name);
-	raw = COM_LoadTempFile (name);
-	if (!raw)
+//	raw = COM_LoadTempFile (name);
+	COM_FOpenFile (name, &f);
+	if (f == NULL)
 	{
 		Con_Printf ("Couldn't load skin %s\n", name);
 		snprintf(name, sizeof(name), "skins/%s.pcx", baseskin->string);
-		raw = COM_LoadTempFile (name);
-		if (!raw)
+//		raw = COM_LoadTempFile (name);
+		COM_FOpenFile (name, &f);
+		if (f == NULL)
 		{
 			skin->failedload = true;
 			return NULL;
 		}
 	}
 
+	LoadPCX (f, &out);
+#if 0
 //
 // parse the PCX file
 //
@@ -216,7 +222,7 @@ byte	*Skin_Cache (skin_t *skin)
 	}
 
 	skin->failedload = false;
-
+#endif
 	return out;
 }
 

@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <cvar.h>
 #include <qstructs.h>
+#include <image.h>
 
 typedef struct
 {
@@ -593,24 +594,6 @@ void CL_InitCam(void);
 //
 // skin.c
 //
-
-typedef struct
-{
-    char	manufacturer;
-    char	version;
-    char	encoding;
-    char	bits_per_pixel;
-    unsigned short	xmin,ymin,xmax,ymax;
-    unsigned short	hres,vres;
-    unsigned char	palette[48];
-    char	reserved;
-    char	color_planes;
-    unsigned short	bytes_per_line;
-    unsigned short	palette_type;
-    char	filler[58];
-    unsigned char	data;			// unbounded
-} pcx_t;
-
 
 void	Skin_Find (player_info_t *sc);
 byte	*Skin_Cache (skin_t *skin);

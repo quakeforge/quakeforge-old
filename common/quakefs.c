@@ -298,7 +298,7 @@ QFile *COM_OpenRead(const char *path, int offs, int len)
 
 /*
 ===========
-COM_FindFile
+COM_FOpenFile
 
 Finds the file in the search path.
 Sets com_filesize and one of handle or file

@@ -296,17 +296,6 @@ EmitBothSkyLayers ( msurface_t *fa ) {
 	glDisable (GL_BLEND);
 }
 
-#if 0
-/*
-	R_DrawSkyChain
-*/
-void
-R_DrawSkyChain ( msurface_t *s ) {
-
-	msurface_t	*fa;
-
-}
-#endif
 
 /*
 	Quake 2 sky rendering ("skyboxes")
@@ -314,24 +303,20 @@ R_DrawSkyChain ( msurface_t *s ) {
 
 #define	SKY_TEX		2000
 
-/*
-	PCX Loading
-*/
-
-byte	*pcx_rgb;
-
+#if 0
 /*
 	LoadPCX
 */
 void
-LoadPCX (QFile *f) {
+LoadPCX (QFile *f, byte **pcx_rgb)
+{
 
 	pcx_t	*pcx, pcxbuf;
 	byte	palette[768];
 	byte	*pix;
-	int		x, y;
-	int		dataByte, runLength;
-	int		count;
+	int	x, y;
+	int	dataByte, runLength;
+	int	count;
 
 /*
 	Parse PCX file
@@ -354,10 +339,10 @@ LoadPCX (QFile *f) {
 	Qseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
 
 	count = (pcx->xmax+1) * (pcx->ymax+1);
-	pcx_rgb = malloc( count * 4);
+	*pcx_rgb = malloc( count * 4);
 
 	for (y=0 ; y<=pcx->ymax ; y++) {
-		pix = pcx_rgb + 4*y*(pcx->xmax+1);
+		pix = *pcx_rgb + 4*y*(pcx->xmax+1);
 		for (x=0 ; x<=pcx->ymax ; ) {
 			dataByte = Qgetc(f);
 
@@ -379,6 +364,7 @@ LoadPCX (QFile *f) {
 		}
 	}
 }
+#endif
 
 /*
 	TARGA LOADING
@@ -392,8 +378,6 @@ typedef struct _TargaHeader {
 	unsigned char	pixel_size, attributes;
 } TargaHeader;
 
-TargaHeader		targa_header;
-byte			*targa_rgba;
 
 int
 QgetLittleShort ( QFile *f ) {
@@ -423,11 +407,12 @@ QgetLittleLong (QFile *f) {
 	LoadTGA
 */
 void
-LoadTGA (QFile *fin) {
+LoadTGA (QFile *fin, byte **targa_rgba) {
 
 	int		columns, rows, numPixels;
 	byte		*pixbuf;
 	int		row, column;
+	TargaHeader	targa_header;
 	unsigned char	red = 0, green = 0, blue = 0, alphabyte = 0;
 
 	targa_header.id_length = Qgetc(fin);
@@ -456,14 +441,14 @@ LoadTGA (QFile *fin) {
 	rows = targa_header.height;
 	numPixels = columns * rows;
 
-	targa_rgba = malloc (numPixels*4);
+	*targa_rgba = malloc (numPixels*4);
 	
 	if (targa_header.id_length != 0)
 		Qseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
 	
 	if (targa_header.image_type==2) {  // Uncompressed, RGB images
 		for(row=rows-1; row>=0; row--) {
-			pixbuf = targa_rgba + row*columns*4;
+			pixbuf = *targa_rgba + row*columns*4;
 			for(column=0; column<columns; column++) {
 				switch (targa_header.pixel_size) {
 					case 24:
@@ -493,7 +478,7 @@ LoadTGA (QFile *fin) {
 	else if (targa_header.image_type==10) {   // Runlength encoded RGB images
 		unsigned char packetHeader,packetSize,j;
 		for(row=rows-1; row>=0; row--) {
-			pixbuf = targa_rgba + row*columns*4;
+			pixbuf = *targa_rgba + row*columns*4;
 			for(column=0; column<columns; ) {
 				packetHeader=Qgetc(fin);
 				packetSize = 1 + (packetHeader & 0x7f);
@@ -525,7 +510,7 @@ LoadTGA (QFile *fin) {
 								row--;
 							else
 								goto breakOut;
-							pixbuf = targa_rgba + row*columns*4;
+							pixbuf = *targa_rgba + row*columns*4;
 						}
 					}
 				}
@@ -559,7 +544,7 @@ LoadTGA (QFile *fin) {
 								row--;
 							else
 								goto breakOut;
-							pixbuf = targa_rgba + row*columns*4;
+							pixbuf = *targa_rgba + row*columns*4;
 						}						
 					}
 				}
@@ -581,6 +566,7 @@ R_LoadSkys ( void ) {
 
 	int	i;
 	QFile	*f;
+	byte	*skyimage = NULL;
 	char	name[64];
 
 	for (i=0 ; i<6 ; i++) {
@@ -592,14 +578,14 @@ R_LoadSkys ( void ) {
 			Con_Printf ("Couldn't load %s\n", name);
 			continue;
 		}
-		LoadTGA (f);
-//		LoadPCX (f);
+		LoadTGA (f, &skyimage);
+//		LoadPCX (f, &skyimage);
 
-		glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, targa_rgba);
+		glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, skyimage);
 //		glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, pcx_rgb);
 
-		free (targa_rgba);
-//		free (pcx_rgb);
+//		free (targa_rgba);
+		free (skyimage);
 
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
