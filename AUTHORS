@@ -52,6 +52,10 @@ Documentation:
   Nelson J. Rush <chesterrr@att.net>
   Joseph Carter <knghtbrd@debian.org>
 
+GGI support:
+  Marcus Sundberg <mackan@stacken.kth.se>
+
 SDL Support:
   Sam Lantinga <slouken@devolution.com>
   Maas van den Berg <email@dds.nl>
+

@@ -16,7 +16,7 @@ COMMON_DIR=$(PROJECT_DIR)/common
 QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
 BUILD_DIR = ../targets/qw_server
 
-LDFLAGS = @LDFLAGS@
+LDFLAGS = @LDFLAGS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
@@ -100,7 +100,7 @@ OBJSqw-server = $(patsubst %,$(BUILD_DIR)/srv/%, \
 
 SRV_CFLAGS = -DSRV $(X_CFLAGS)
 # XXX - Don't use X_EXTRA_LIBS below
-SRV_LDFLAGS = @X_EXTRA_LIBS@ -lm
+SRV_LDFLAGS = @X_EXTRA_LIBS@
 
 MAKE_SURE_srv_DIR = @DIR=srv; $(MAKE_SURE_DIR)
 $(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.c
