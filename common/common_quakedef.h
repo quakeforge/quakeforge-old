@@ -69,7 +69,9 @@ void	VID_UnlockBuffer (void);
 #include "keys.h"
 #include "console.h"
 #include "view.h"
-#include "menu.h"
+#ifndef SERVERONLY
+# include "menu.h"
+#endif
 #include "crc.h"
 #include "cdaudio.h"
 
