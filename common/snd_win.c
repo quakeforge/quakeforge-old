@@ -291,8 +291,8 @@ sndinitstat SNDDMA_InitDirect (void)
 	}
 // Changed DSSCL_EXCLUSIVE to DSSCL_NORMAL
 //      -- Robert S. Elsner <sockman@ngfc.com>
-	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_NORMAL))
-//	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_EXCLUSIVE))
+//	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_NORMAL))
+	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_EXCLUSIVE))
 	{
 		Con_SafePrintf ("Set coop level failed\n");
 		FreeSound ();
@@ -369,7 +369,7 @@ sndinitstat SNDDMA_InitDirect (void)
 	{
 // Removed the option for -primarysound
 //     -- Robert S. Elsner <sockman@ngfc.com>
-#if 0
+#if 1
 		if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_WRITEPRIMARY))
 		{
 			Con_SafePrintf ("Set coop level failed\n");
