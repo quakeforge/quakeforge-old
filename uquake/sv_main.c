@@ -164,28 +164,19 @@ void SV_Init (void)
 	extern	cvar_t	*sv_idealpitchscale;
 	extern	cvar_t	*sv_aim;
 
-//	Cvar_RegisterVariable (&sv_maxvelocity);
 	sv_maxvelocity = Cvar_Get ("sv_maxvelocity","2000",0,"None");
-//	Cvar_RegisterVariable (&sv_gravity);
 	sv_gravity = Cvar_Get ("sv_gravity","800",
 				CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&sv_friction);
 	sv_friction = Cvar_Get ("sv_friction","4",
 				CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&sv_edgefriction);
-	sv_edgefriction = Cvar_Get ("sv_edgefriction","2",0,"None");
-//	Cvar_RegisterVariable (&sv_stopspeed);
+	sv_edgefriction = Cvar_Get ("edgefriction","2",0,"None");
+	Cvar_Alias_Get("sv_edgefriction",sv_edgefriction);
 	sv_stopspeed = Cvar_Get ("sv_stopspeed","100",0,"None");
-//	Cvar_RegisterVariable (&sv_maxspeed);
 	sv_maxspeed = Cvar_Get ("sv_maxspeed","320",
 				CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&sv_accelerate);
 	sv_accelerate = Cvar_Get ("sv_accelerate","10",0,"None");
-//	Cvar_RegisterVariable (&sv_idealpitchscale);
 	sv_idealpitchscale = Cvar_Get ("sv_idealpitchscale","0.8",0,"None");
-//	Cvar_RegisterVariable (&sv_aim);
 	sv_aim = Cvar_Get ("sv_aim","0.93",0,"None");
-//	Cvar_RegisterVariable (&sv_nostep);
 	sv_nostep = Cvar_Get ("sv_nostep","0",0,"None");
 
 	for (i=0 ; i<MAX_MODELS ; i++)

@@ -192,6 +192,7 @@ void S_Init (void)
 // Always create sound cvars, even with -nosound
 	nosound = Cvar_Get ("nosound","0",CVAR_NONE,"None");
 	volume = Cvar_Get ("volume","0.7",CVAR_ARCHIVE,"None");
+	Cvar_Alias_Get ("s_volume", volume);
 	precache = Cvar_Get ("precache","1",0,"None");
 	loadas8bit = Cvar_Get ("loadas8bit","0",0,"None");
 	bgmvolume = Cvar_Get ("bgmvolume","1",CVAR_ARCHIVE,"None");

@@ -81,7 +81,7 @@ typedef struct cvar_alias_s
 
 cvar_t	*Cvar_Get (char *name, char *value, int cvarflags, char *description);
 
-cvar_t	*Cvar_Alias_Get (char *name, cvar_t *cvar);
+void	Cvar_Alias_Get (char *name, cvar_t *cvar);
 
 void 	Cvar_Set (cvar_t *var, char *value);
 // equivelant to "<name> <variable>" typed at the console

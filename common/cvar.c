@@ -79,7 +79,7 @@ cvar_t *Cvar_FindAlias (char *alias_name)
 	return NULL;
 }
 
-cvar_t *Cvar_Alias_Get (char *name, cvar_t *cvar)
+void Cvar_Alias_Get (char *name, cvar_t *cvar)
 {
 	cvar_alias_t	*alias;
 	cvar_t		*var;
@@ -87,12 +87,12 @@ cvar_t *Cvar_Alias_Get (char *name, cvar_t *cvar)
 	if (Cmd_Exists (name))
 	{
 		Con_Printf ("CAlias_Get: %s is a command\n", name);
-		return NULL;
+		return;
 	}
 	if (Cvar_FindVar(name))
 	{
 		Con_Printf ("CAlias_Get: tried to alias used cvar name %s\n",name);
-		return NULL;
+		return;
 	}
 	var = Cvar_FindAlias(name);	
 	if (!var)
@@ -102,9 +102,7 @@ cvar_t *Cvar_Alias_Get (char *name, cvar_t *cvar)
 		calias_vars = alias;
 		alias->name = strdup(name);	
 		alias->cvar = cvar;
-		return alias->cvar;
 	}
-	return var;	
 }
 
 /*
