@@ -41,6 +41,11 @@ typedef struct cvar_s
 	int	flags;
 	char 	*description;	// for "help" command
 	float	value;
+// 2000-06-22 Range check for cvars by Maddes  start
+	int	rangecheck;	// 0 = none, 1 = float, 2 = integer, 3 = boolean
+	float	minvalue;	// for range check
+	float	maxvalue;	// for range check
+// 2000-06-22 Range check for cvars by Maddes  end
 	struct cvar_s *next;
 } cvar_t;
 
@@ -69,7 +74,7 @@ typedef struct cvar_alias_s
 #define CVAR_NORESTART		1024	// do not clear when a cvar_restart is issued
 #define CVAR_LATCH		2048	// will only change when C code next does
 					// a Cvar_Get(), so it can't be changed
-#define CVAR_TEMP		4906	// can be set even when cheats are
+#define CVAR_TEMP		4096	// can be set even when cheats are
 					// disabled, but is not archived
 
 // Zoid| A good CVAR_ROM example is basepath.  The code should read "cvar_t

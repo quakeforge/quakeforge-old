@@ -53,6 +53,77 @@ char	*cvar_null_string = "";
 cvar_t	*developer;
 cvar_alias_t *calias_vars;
 
+// 2000-06-22 General cvar display by Maddes  start
+/*
+============
+Cvar_Display
+
+same cvar display for all cvar commands
+============
+*/
+void Cvar_Display (cvar_t *var)
+{
+	char	val[32];
+	int	i;
+
+	Con_Printf ("%c%c%c ",
+			(var->flags & CVAR_ARCHIVE) ? 'A' : ' ',	// archived
+			(var->flags & CVAR_ROM) ? 'R' : ' ',		// read-only
+			(var->flags & CVAR_USER_CREATED) ? 'U' : ' ');	// user-created
+
+	Con_Printf ("\"%s\" is \"%s\"", var->name, var->string);
+
+// 2000-06-22 Range check for cvars by Maddes  start
+	if (var->rangecheck)
+	{
+		if (var->rangecheck == 3)	// boolean
+		{
+			Con_Printf (" (bool: 0/1)");
+		}
+		else if (var->rangecheck == 2)	// integer
+		{
+			Con_Printf (" (int: %d-%d)", (int)var->minvalue, (int)var->maxvalue);
+		}
+		else
+		{
+			char	val[32];
+			int	i;
+
+			if (var->rangecheck == (int)var->minvalue)
+			{
+				sprintf (val, "%d", (int)var->minvalue);
+			}
+			else
+			{
+				sprintf (val, "%1f", var->minvalue);
+				for (i=Q_strlen(val)-1 ; i>0 && val[i]=='0' && val[i-1]!='.' ; i--)
+				{
+					val[i] = 0;
+				}
+			}
+			Con_Printf (" (float: %s-", val);
+
+			if (var->maxvalue == (int)var->maxvalue)
+			{
+				sprintf (val, "%d", (int)var->maxvalue);
+			}
+			else
+			{
+				sprintf (val, "%1f", var->maxvalue);
+				for (i=Q_strlen(val)-1 ; i>0 && val[i]=='0' && val[i-1]!='.' ; i--)
+				{
+					val[i] = 0;
+				}
+			}
+			Con_Printf ("%s)", val);
+		}
+	}
+// 2000-06-22 Range check for cvars by Maddes  end
+
+	Con_Printf ("\n");
+}
+// 2000-06-22 General cvar display by Maddes  end
+
 /*
 ============
 Cvar_FindVar
@@ -226,6 +297,11 @@ void Cvar_Set (cvar_t *var, char *value)
 void Cvar_Set (cvar_t *var, char *value)
 {
 	qboolean changed;
+// 2000-06-22 Range check for cvars by Maddes  start
+	char	val[32];
+	float	newvalue;
+	int	i;
+// 2000-06-22 Range check for cvars by Maddes  end
 
 	if (!var)
 		return;
@@ -233,12 +309,82 @@ void Cvar_Set (cvar_t *var, char *value)
 	// Don't change if this is a CVAR_ROM
 	if(var->flags&CVAR_ROM) return;
 
-	changed = Q_strcmp(var->string, value);
+// 2000-06-22 Range check for cvars by Maddes  start
+	if (var->rangecheck)
+	{
+		newvalue = Q_atof (value);
+
+		if (var->rangecheck == 3)	// boolean
+		{
+			if (newvalue)
+			{
+				newvalue = 1;
+			}
+			else
+			{
+				newvalue = 0;
+			}
+		}
+		else
+		{
+			if (var->rangecheck == 2)	// integer
+			{
+				newvalue = (int)newvalue;
+			}
+
+			// check limits of newvalue
+			if (newvalue < var->minvalue)
+			{
+				newvalue = var->minvalue;
+			}
+			if (newvalue > var->maxvalue)
+			{
+				newvalue = var->maxvalue;
+			}
+		}
+
+		if (newvalue == (int)newvalue)
+		{
+			sprintf (val, "%d", (int)newvalue);
+		}
+		else
+		{
+			sprintf (val, "%1f", newvalue);
+			for (i=Q_strlen(val)-1 ; i>0 && val[i]=='0' && val[i-1]!='.' ; i--)
+			{
+				val[i] = 0;
+			}
+		}
+
+		changed = Q_strcmp(var->string, val);
+	}
+	else
+	{
+// 2000-06-22 Range check for cvars by Maddes  end
+		changed = Q_strcmp(var->string, value);
+	}	// 2000-06-22 Range check for cvars by Maddes
+
+// 2000-06-22 Fix for unnecessary cvar changing/zone usage by Maddes  start
+	if (!changed)	// nothing changed, nothing to do
+	{
+		return;
+	}
+// 2000-06-22 Fix for unnecessary cvar changing/zone usage by Maddes  end
 
 	Z_Free (var->string);	// free the old value string
 
-	var->string = Z_Malloc (Q_strlen(value)+1);
-	Q_strcpy (var->string, value);
+// 2000-06-22 Range check for cvars by Maddes  start
+	if (var->rangecheck)
+	{
+		var->string = Z_Malloc (Q_strlen(val)+1);
+		Q_strcpy (var->string, val);
+	}
+	else
+	{
+// 2000-06-22 Range check for cvars by Maddes  end
+		var->string = Z_Malloc (Q_strlen(value)+1);
+		Q_strcpy (var->string, value);
+	}	// 2000-06-22 Range check for cvars by Maddes
 	var->value = Q_atof (var->string);
 	if (var->flags&CVAR_USERINFO && changed)
 	{
@@ -270,7 +416,7 @@ qboolean	Cvar_Command (void)
 // perform a variable print or set
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf ("\"%s\" is \"%s\"\n", v->name, v->string);
+		Cvar_Display (v);	// 2000-06-22 General cvar display by Maddes
 		return true;
 	}
 
@@ -372,12 +518,45 @@ void Cvar_CvarList_f (void)
 {
 	cvar_t	*var;
 	int i;
+// 2000-06-22 Partial selection for CvarList command by Maddes  start
+	char 		*partial;
+	int		len;
+	int		count;
+
+	if (Cmd_Argc() > 1)
+	{
+		partial = Cmd_Argv (1);
+		len = Q_strlen(partial);
+	}
+	else
+	{
+		partial = NULL;
+		len = 0;
+	}
+
+	count=0;
+// 2000-06-22 Partial selection for CvarList command by Maddes  end
 
 	for (var=cvar_vars, i=0 ; var ; var=var->next, i++)
 	{
-		Con_Printf("%s\n",var->name);
+// 2000-06-22 Partial selection for CvarList command by Maddes  start
+		if (partial && Q_strncmp (partial,var->name, len))
+		{
+			continue;
+		}
+		count++;
+// 2000-06-22 Partial selection for CvarList command by Maddes  end
+		Cvar_Display (var);	// 2000-06-22 General cvar display by Maddes
 	}
-	Con_Printf ("------------\n%d variables\n", i);
+
+// 2000-06-22 Partial selection for CvarList command by Maddes  start
+	Con_Printf ("------------\n");
+	if (partial)
+	{
+		Con_Printf ("%d beginning with \"%s\" out of ", count, partial);
+	}
+	Con_Printf ("%d variables\n", i);
+// 2000-06-22 Partial selection for CvarList command by Maddes  end
 }
 
 void Cvar_Init()
@@ -440,6 +619,11 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 		Q_strcpy (v->string, string);
 		v->flags = cvarflags;
 		v->description = strdup(description);
+// 2000-06-22 Range check for cvars by Maddes  start
+		v->rangecheck = 0;
+		v->minvalue = 0;
+		v->maxvalue = 0;
+// 2000-06-22 Range check for cvars by Maddes  end
 		v->value = Q_atof (v->string);
 		return v;
 	}
