@@ -25,21 +25,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _BSD
 #include <config.h>
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
-#include <sys/time.h>
-#include <sys/types.h>
+#include <string.h>
+#include <errno.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <signal.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
 #include <X11/keysym.h>
 
 #ifdef HAS_DGA
@@ -47,7 +41,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/extensions/xf86dga.h>
 #endif
 
-#include <errno.h>
 
 #include <quakedef.h>
 #include <d_local.h>
@@ -79,8 +72,10 @@ cvar_t	*vid_dga_mouseaccel;
 static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
-static int	p_mouse_x, p_mouse_y;
+static int		p_mouse_x, p_mouse_y;
 static float	old_windowed_mouse;
+static Cursor	nullcursor = None;
+
 
 #define KEY_MASK (KeyPressMask | KeyReleaseMask)
 #define MOUSE_MASK (ButtonPressMask | ButtonReleaseMask | PointerMotionMask)
@@ -88,24 +83,42 @@ static float	old_windowed_mouse;
 
 
 /*
-  Called at shutdown
+======================
+Create an empty cursor
+======================
 */
-void IN_Shutdown(void)
+
+static void
+CreateNullCursor(Display *display, Window root)
 {
-	Con_Printf("IN_Shutdown\n");
-	mouse_avail = 0;
-	XAutoRepeatOn(x_disp);
-	x11_close_display();
+    Pixmap cursormask;
+    XGCValues xgc;
+    GC gc;
+    XColor dummycolour;
+
+	if (nullcursor != None) return;
+
+	cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
+	xgc.function = GXclear;
+	gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
+	XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
+	dummycolour.pixel = 0;
+	dummycolour.red = 0;
+	dummycolour.flags = 04;
+	nullcursor = XCreatePixmapCursor(display, cursormask, cursormask,
+									 &dummycolour,&dummycolour, 0,0);
+	XFreePixmap(display,cursormask);
+	XFreeGC(display,gc);
 }
 
 
-int XLateKey(XKeyEvent *ev)
+static int
+XLateKey(XKeyEvent *ev)
 {
 	int key = 0;
-	char buf[64];
 	KeySym keysym;
 
-	XLookupString(ev, buf, sizeof(buf), &keysym, 0);
+	keysym = XLookupKeysym(ev, 0);
 
 	switch(keysym) {
 		case XK_KP_Page_Up:	key = KP_PGUP; break;
@@ -130,7 +143,7 @@ int XLateKey(XKeyEvent *ev)
 		case XK_Down:		key = K_DOWNARROW; break;
 
 		case XK_KP_Up:		key = KP_UPARROW; break;
-		case XK_Up:		key = K_UPARROW; break;
+		case XK_Up:			key = K_UPARROW; break;
 
 		case XK_Escape:		key = K_ESCAPE; break;
 
@@ -139,15 +152,15 @@ int XLateKey(XKeyEvent *ev)
 
 		case XK_Tab:		key = K_TAB; break;
 
-		case XK_F1:		key = K_F1; break;
-		case XK_F2:		key = K_F2; break;
-		case XK_F3:		key = K_F3; break;
-		case XK_F4:		key = K_F4; break;
-		case XK_F5:		key = K_F5; break;
-		case XK_F6:		key = K_F6; break;
-		case XK_F7:		key = K_F7; break;
-		case XK_F8:		key = K_F8; break;
-		case XK_F9:		key = K_F9; break;
+		case XK_F1:			key = K_F1; break;
+		case XK_F2:			key = K_F2; break;
+		case XK_F3:			key = K_F3; break;
+		case XK_F4:			key = K_F4; break;
+		case XK_F5:			key = K_F5; break;
+		case XK_F6:			key = K_F6; break;
+		case XK_F7:			key = K_F7; break;
+		case XK_F8:			key = K_F8; break;
+		case XK_F9:			key = K_F9; break;
 		case XK_F10:		key = K_F10; break;
 		case XK_F11:		key = K_F11; break;
 		case XK_F12:		key = K_F12; break;
@@ -212,9 +225,12 @@ int XLateKey(XKeyEvent *ev)
 		case 0x03c: key = ',';break;/* [<] */
 #endif
 		default:
-			key = *(unsigned char*)buf;
-			if (key >= 'A' && key <= 'Z') {
-				key = key + ('a' - 'A');
+			if (keysym < 128) {
+				/* ASCII keys */
+				key = keysym;
+				if (key >= 'A' && key <= 'Z') {
+					key = key + ('a' - 'A');
+				}
 			}
 			break;
 	}
@@ -222,12 +238,16 @@ int XLateKey(XKeyEvent *ev)
 	return key;
 }
 
-static void event_key(XEvent *event)
+
+static void
+event_key(XEvent *event)
 {
 	Key_Event(XLateKey(&event->xkey), event->type == KeyPress);
 }
 
-static void event_button(XEvent *event)
+
+static void
+event_button(XEvent *event)
 {
 	int but;
 
@@ -251,7 +271,25 @@ static void event_button(XEvent *event)
 	}
 }
 
-static void event_motion(XEvent *event)
+
+static void
+center_pointer(void)
+{
+	XEvent event;
+
+	event.type = MotionNotify;
+	event.xmotion.display = x_disp;
+	event.xmotion.window = x_win;
+	event.xmotion.x = vid.width / 2;
+	event.xmotion.y = vid.height / 2;
+	XSendEvent(x_disp, x_win, False, PointerMotionMask, &event);
+	XWarpPointer(x_disp, None, x_win, 0, 0, 0, 0,
+				 vid.width / 2, vid.height / 2);
+}
+
+
+static void
+event_motion(XEvent *event)
 {
 #ifdef HAS_DGA
 	if (dgamouse) {
@@ -259,27 +297,30 @@ static void event_motion(XEvent *event)
 		mouse_y += event->xmotion.y_root * vid_dga_mouseaccel->value;
 	} else
 #endif
+	{
 		//printf("_windowed_mouse: %f\n", _windowed_mouse->value);
 		//printf("CurrentTime: %ld\n", CurrentTime);
 		if (_windowed_mouse->value) {
-			mouse_x = (float) ((int) event->xmotion.x - ((int) vid.width / 2));
-			mouse_y = (float) ((int) event->xmotion.y - ((int) vid.height / 2));
-
-			/* move the mouse to the window center again */
-			XGrabPointer(x_disp, x_win, True, MOUSE_MASK & ~PointerMotionMask,
-						GrabModeAsync, GrabModeAsync, x_win, None, CurrentTime);
-			XSelectInput(x_disp, x_win, INPUT_MASK & ~PointerMotionMask);
-			XWarpPointer(x_disp, None, x_win, 0, 0, 0, 0,
-					(vid.width / 2), (vid.height / 2));
-			XSelectInput(x_disp, x_win, INPUT_MASK);
-			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync,
-						 GrabModeAsync, x_win, None, CurrentTime);
+			if (!event->xmotion.send_event) {
+				mouse_x += (event->xmotion.x - p_mouse_x);
+				mouse_y += (event->xmotion.y - p_mouse_y);
+#undef ABS
+#define ABS(a) (((int)(a) < 0) ? -(a) : (a))
+				if (ABS(vid.width/2 - event->xmotion.x)
+				    > vid.width / 4
+				    || ABS(vid.height/2 - event->xmotion.y)
+				    > vid.height / 4) {
+#undef ABS
+					center_pointer();
+				}
+			}
 		} else {
-			mouse_x = (event->xmotion.x - p_mouse_x);
-			mouse_y = (event->xmotion.y - p_mouse_y);
-			p_mouse_x = event->xmotion.x;
-			p_mouse_y = event->xmotion.y;
+			mouse_x += (event->xmotion.x - p_mouse_x);
+			mouse_y += (event->xmotion.y - p_mouse_y);
 		}
+		p_mouse_x = event->xmotion.x;
+		p_mouse_y = event->xmotion.y;
+	}
 }
 
 
@@ -311,7 +352,8 @@ IN_SendKeyEvents(void)
 }
 
 
-void IN_Move(usercmd_t *cmd)
+void
+IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail)
 		return;
@@ -367,7 +409,25 @@ static void IN_ExtraOptionCmd(int option_cursor)
 }
 */
 
-int IN_Init ()
+/*
+  Called at shutdown
+*/
+void
+IN_Shutdown(void)
+{
+	Con_Printf("IN_Shutdown\n");
+	mouse_avail = 0;
+	XAutoRepeatOn(x_disp);
+	if (nullcursor != None) {
+		XFreeCursor(x_disp, nullcursor);
+		nullcursor = None;
+	}
+	x11_close_display();
+}
+
+
+int
+IN_Init(void)
 {
 // open the display
 	if (!x_disp)
@@ -406,6 +466,10 @@ int IN_Init ()
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;
 	mouse_avail = 1;
+
+	/* Invisible cursor */
+	CreateNullCursor(x_disp, x_win);
+	XDefineCursor(x_disp, x_win, nullcursor);
 
 	x11_add_event(KeyPress, &event_key);
 	x11_add_event(KeyRelease, &event_key);
