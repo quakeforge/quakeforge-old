@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <keys.h>
 #include <quakedef.h>
 #include <d_local.h>
-#include <sound.h>
 #include <cvar.h>
 #include <draw.h>
 #include <sys.h>
@@ -93,8 +92,6 @@ void    VID_Init (unsigned char *palette)
     //Uint16 video_w, video_h;
     Uint32 flags;
 
-
-    S_Init();
 
     // Load the SDL library
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_CDROM)<0) //|SDL_INIT_AUDIO|SDL_INIT_CDROM) < 0)

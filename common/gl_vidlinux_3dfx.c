@@ -28,7 +28,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <console.h>
 #include <cvar.h>
-#include <sound.h>
 #include <lib_replace.h>
 
 #include <stdio.h>
@@ -408,8 +407,6 @@ void VID_Init(unsigned char *palette)
 	GLint attribs[32];
 	char	gldir[MAX_OSPATH];
 	int width = 640, height = 480;
-
-	S_Init();
 
 //	Cvar_RegisterVariable (&vid_mode);
 	vid_mode = Cvar_Get ("vid_mode","5",0,"None");

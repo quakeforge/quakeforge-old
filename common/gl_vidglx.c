@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <glquake.h>
 #include <cvar.h>
 #include <console.h>
-#include <sound.h>
 #include <keys.h>
 #include <menu.h>
 #include <sys.h>
@@ -122,7 +121,6 @@ int		texture_extension_number = 1;
 
 float		gldepthmin, gldepthmax;
 
-//cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
 cvar_t	*gl_ztrick;
 
 const char *gl_vendor;
@@ -412,18 +410,11 @@ void VID_Init(unsigned char *palette)
 	Window root;
 	XVisualInfo *visinfo;
 
-	S_Init();
-
-//	Cvar_RegisterVariable(&vid_mode);
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
-//	Cvar_RegisterVariable(&gl_ztrick);
 	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable(&_windowed_mouse);
 	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
-//        Cvar_RegisterVariable(&vid_glx_fullscreen);	
 	vid_glx_fullscreen = Cvar_Get ("vid_glx_fullscreen","0",0,"None");
 #ifdef HAS_DGA
-//	Cvar_RegisterVariable(&vid_dga_mouseaccel);
 	vid_dga_mouseaccel = Cvar_Get("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
 #endif 

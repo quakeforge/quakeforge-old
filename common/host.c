@@ -522,6 +522,15 @@ Host_InitVCR ( quakeparms_t *parms )
 	}
 }
 
+/*
+	Host_InitDisplay
+
+	Video initialization
+*/
+void
+Host_InitDisplay ()
+{
+}
 
 /*
 	Host_Init
@@ -529,7 +538,7 @@ Host_InitVCR ( quakeparms_t *parms )
 	System Startup
 */
 void
-Host_Init ( quakeparms_t *parms)
+Host_Init (quakeparms_t *parms)
 {
 	COM_InitArgv (parms->argc, parms->argv);
 
@@ -599,14 +608,12 @@ Host_Init ( quakeparms_t *parms)
 		if (!host_colormap)
 			Sys_Error ("Couldn't load gfx/colormap.lmp");
 
-//		plugin_load("./in_x11.so");
-//			Not the best place to load the plugin...
-		VID_Init(host_basepal);
-		IN_Init();
-		// DDOI - I made this so host.c wouldn't try to unload a plugin
-		// that it hasn't loaded.  Could be done better I'm sure.
-		vid_initialized = true;
+	VID_Init(host_basepal);
+	IN_Init();
+	vid_initialized = true;
 
+		Host_InitDisplay();
+		S_Init();
 		Draw_Init();
 		SCR_Init();
 		R_Init();

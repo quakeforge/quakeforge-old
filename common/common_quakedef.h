@@ -1,4 +1,5 @@
 /*
+common_quakedef.h - common header
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -21,8 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #ifndef _COMMON_QUAKEDEF_H
 #define _COMMON_QUAKEDEF_H
-
-// quakedef.h -- primary header for client
 
 #define	QUAKE_GAME			// as opposed to utilities
 
@@ -48,43 +47,9 @@ void	VID_UnlockBuffer (void);
 #define	VID_UnlockBuffer()
 #endif
 
-#include "qtypes.h"
-#include "qstructs.h"
+#include <qtypes.h>
+#include <qstructs.h>
 
-/*
-#include "common.h"
-#include "bspfile.h"
-#include "vid.h"
-#include "sys.h"
-#include "zone.h"
-#include "mathlib.h"
-#include "wad.h"
-#include "draw.h"
-#include "cvar.h"
-#include "screen.h"
-#include "net.h"
-#include "protocol.h"
-#include "cmd.h"
-#include "sbar.h"
-#include "sound.h"
-
-#include "model.h"
-#include "d_iface.h"
-#include "render.h"
-#include "client.h"
-
-#include "input.h"
-#include "keys.h"
-#include "console.h"
-#include "view.h"
-#ifndef SERVERONLY
-# include "menu.h"
-#endif
-#include "crc.h"
-#include "cdaudio.h"
-
-#include "cvars.h"
-*/
 
 #ifndef max
 #define max(a,b) ((a) > (b) ? (a) : (b))

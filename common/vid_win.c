@@ -1,4 +1,5 @@
 /*
+vid_win.c - Win32 video driver
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -20,12 +21,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// vid_win.c -- Win32 video driver
 
-#include "quakedef.h"
-#include "winquake.h"
-#include "d_local.h"
-#include "resource.h"
+#include <quakedef.h>
+#include <winquake.h>
+#include <d_local.h>
+#include <resource.h>
 #include <mgraph.h>
 #include <screen.h>
 #include <view.h>
@@ -33,7 +33,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <keys.h>
 #include <cdaudio.h>
 #include <lib_replace.h>
-#include <sound.h>
 #include <keys.h>
 #include <cvar.h>
 #include <menu.h>
@@ -43,7 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <console.h>
 #include <client.h>
 #include <screen.h>
-#include "plugin.h"
+#include <plugin.h>
 
 
 #ifndef CDS_FULLSCREEN
@@ -2244,7 +2243,6 @@ void	VID_Init (unsigned char *palette)
 	hide_window = true;
 	VID_SetMode (MODE_WINDOWED, palette);
 	hide_window = false;
-	S_Init ();
 
 	vid_initialized = true;
 

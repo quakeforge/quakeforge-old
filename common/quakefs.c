@@ -493,10 +493,10 @@ of the list so they override previous pack files.
 */
 pack_t *COM_LoadPackFile (char *packfile)
 {
-	dpackheader_t	header;
-	int				i;
+	dpackheader_t		header;
+	int			i;
 	packfile_t		*newfiles;
-	int				numpackfiles;
+	int			numpackfiles;
 	pack_t			*pack;
 	QFile			*packhandle;
 	dpackfile_t		info[MAX_FILES_IN_PACK];

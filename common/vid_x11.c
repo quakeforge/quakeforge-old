@@ -47,7 +47,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <quakedef.h>
 #include <d_local.h>
-#include <sound.h>
 #include <keys.h>
 #include <cvar.h>
 #include <menu.h>
@@ -485,9 +484,8 @@ void VID_Init (unsigned char *palette)
 	int template_mask;
 
 	//plugin_load("in_x11.so");
-	S_Init();	// sound is initialized here
 
-	Cmd_AddCommand("gamma", VID_Gamma_f);
+//	Cmd_AddCommand("gamma", VID_Gamma_f);
 	for (i=0; i < 256; i++)	vid_gamma[i] = i;
 
 	vid.width = 320;

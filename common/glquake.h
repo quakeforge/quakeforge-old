@@ -36,9 +36,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include "model.h"
-#include "client.h"
-#include "wad.h"
+#include <model.h>
+#include <client.h>
+#include <wad.h>
 
 void GL_BeginRendering (int *x, int *y, int *width, int *height);
 void GL_EndRendering (void);
@@ -186,6 +186,8 @@ extern  cvar_t  *r_fog;
 extern  cvar_t  *r_waterwarp;
 extern  cvar_t  *r_volfog;
 extern  cvar_t  *r_waterripple;
+extern	cvar_t	*r_sky;
+extern	cvar_t	*r_skyname;
 
 extern	cvar_t	*gl_clear;
 extern	cvar_t	*gl_cull;

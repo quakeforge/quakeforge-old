@@ -582,9 +582,7 @@ R_LoadSkys ( void ) {
 	int	i;
 	QFile	*f;
 	char	name[64];
-	cvar_t	*r_skyname;
 
-	r_skyname = Cvar_Get ("r_skyname","sky",CVAR_NONE, "");
 	for (i=0 ; i<6 ; i++) {
 		GL_Bind (SKY_TEX + i);
 		snprintf(name, sizeof(name), "gfx/env/%s%s.tga",
@@ -820,7 +818,7 @@ R_DrawSkyChain (msurface_t *s) {
 	vec3_t	verts[MAX_CLIP_VERTS];
 	glpoly_t	*p;
 
-	if (1)
+	if (r_sky->value)
 	{
 		c_sky = 0;
 		GL_Bind(solidskytexture);
@@ -917,9 +915,7 @@ int	skytexorder[6] = {0,2,1,3,4,5};
 void
 R_DrawSkyBox (void) {
 
-	int		i; //, j, k;
-//	vec3_t	v;
-//	float	s, t;
+	int		i;
 
 #if 0
 	glEnable (GL_BLEND);

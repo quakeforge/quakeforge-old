@@ -1,4 +1,5 @@
 /*
+cmd.h - Command buffer and command execution
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -23,7 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _CMD_H
 #define _CMD_H
 
-// cmd.h -- Command buffer and command execution
 
 //===========================================================================
 

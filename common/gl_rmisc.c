@@ -206,6 +206,8 @@ void R_Init (void)
 	r_volfog = Cvar_Get ("r_volfog","0",0,"None");
 	r_waterripple = Cvar_Get ("r_waterripple","0",0,"None");
 	r_clearcolor = Cvar_Get ("r_clearcolor","2",0,"None");
+	r_sky = Cvar_Get ("r_sky", "0", CVAR_NONE, "None");
+	r_skyname = Cvar_Get ("r_skyname", "sky", CVAR_NONE, "None");
 
 	gl_clear = Cvar_Get ("gl_clear","0",0,"None");
 	gl_texsort = Cvar_Get ("gl_texsort","1",0,"None");

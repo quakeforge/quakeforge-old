@@ -26,7 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <quakedef.h>
 #include <common.h>
 #include <d_local.h>
-#include <sound.h>
 #include <cvar.h>
 #include <lib_replace.h>
 #include <cmd.h>
@@ -496,8 +495,6 @@ VID_Init(unsigned char *palette)
 	int err;
 
 	//plugin_load("in_svgalib.so");
-	/* Sound gets initialized here */
-	S_Init();
 	
 	if (svgalib_inited) return;
 

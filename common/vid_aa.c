@@ -21,8 +21,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "quakedef.h"
-#include "d_local.h"
+#include <quakedef.h>
+#include <d_local.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -378,9 +378,6 @@ VID_Init(unsigned char *palette)
 	int w, h, d;
 	int err;
 
-	/* Sound gets initialized here */
-	S_Init();
-	
 #if 0
 	Cmd_AddCommand ("gamma", VID_Gamma_f);
 #endif

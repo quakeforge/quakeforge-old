@@ -47,21 +47,21 @@ qboolean	r_cache_thrash;		// compatability
 vec3_t		modelorg, r_entorigin;
 entity_t	*currententity;
 
-int			r_visframecount;	// bumped when going to a new PVS
-int			r_framecount;		// used for dlight push checking
+int		r_visframecount;	// bumped when going to a new PVS
+int		r_framecount;		// used for dlight push checking
 
 mplane_t	frustum[4];
 
-int			c_brush_polys, c_alias_polys;
+int		c_brush_polys, c_alias_polys;
 
-qboolean	envmap;				// true during envmap command capture 
+qboolean	envmap;			// true during envmap command capture 
 
-int			currenttexture = -1;		// to avoid unnecessary texture sets
+int		currenttexture = -1;	// to avoid unnecessary texture sets
 
-int			cnttextures[2] = {-1, -1};     // cached
+int		cnttextures[2] = {-1, -1};     // cached
 
-int			particletexture;	// little dot for particles
-int			playertextures;		// up to 16 color translated skins
+int		particletexture;	// little dot for particles
+int		playertextures;		// up to 16 color translated skins
 
 //
 // view origin
@@ -104,9 +104,11 @@ cvar_t	*r_netgraph;
 #endif
 
 cvar_t	*r_fog;
-cvar_t *r_volfog;
+cvar_t	*r_volfog;
 cvar_t	*r_waterwarp;
 cvar_t	*r_waterripple;
+cvar_t	*r_sky;
+cvar_t	*r_skyname;
 
 cvar_t	*gl_finish;
 cvar_t	*gl_clear;

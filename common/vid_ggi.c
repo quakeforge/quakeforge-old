@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <quakedef.h>
 #include <d_local.h>
-#include <sound.h>
 #include <keys.h>
 #include <cvar.h>
 #include <menu.h>
@@ -238,9 +237,6 @@ void ResetFrameBuffer(void)
 void	VID_Init(unsigned char *pal)
 {
 	int pnum;
-
-	/* Initalize sound */
-	S_Init();
 
 	vid.width = GGI_AUTO;
 	vid.height = GGI_AUTO;

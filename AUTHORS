@@ -51,8 +51,12 @@ N: Joseph Carter
 E: knghtbrd@debian.org
 D: QW/Q1 tree merging
 D: Autoconf support and portability
-D: Documentation
-D: Driver module support/design
+D: User documentation
+D: Development design
+D: GL renderer fixes
+D: Driver module support
+D: Skybox implementation
+D: Spinning console implementation
 
 N: Peter Andreasen
 E: pandr@pandr.dk
@@ -183,3 +187,11 @@ E: jukka.sorjonen@asikkala.fi
 D: Bug squasher (see below).
 D: QW network protocol fixes.
 D: Found out why our VERSION was messing things up..
+
+N: Tane Piper
+E: descent@barrysworld.com
+D: GL skybox implementation tutorial
+
+N: Nawfel Tricha
+E: topaz@endorproductions.com
+D: GL spinning console implementation tutorial

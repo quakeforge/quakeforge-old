@@ -38,6 +38,7 @@ extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor;
 cvar_t	*gl_nobind;
 cvar_t	*gl_max_size;
 cvar_t	*gl_picmip;
+cvar_t	*gl_conspin;
 
 byte		*draw_chars;				// 8*8 graphic characters
 qpic_t		*draw_disc;
@@ -390,19 +391,14 @@ void Draw_Init (void)
 {
 	int		i;
 	qpic_t	*cb;
-//	byte	*dest;
-//	int		x;
-//	char	ver[40];
 	glpic_t	*gl;
 	int start;
 	byte    *ncdata;
 
-//	Cvar_RegisterVariable (&gl_nobind);
 	gl_nobind = Cvar_Get ("gl_nobind","0",0,"None");
-//	Cvar_RegisterVariable (&gl_max_size);
 	gl_max_size = Cvar_Get ("gl_max_size","1024",0,"None");
-//	Cvar_RegisterVariable (&gl_picmip);
 	gl_picmip = Cvar_Get ("gl_picmip","0",0,"None");
+	gl_conspin = Cvar_Get ("gl_conspin", "0", CVAR_NONE, "None");
 
 	// 3dfx can only handle 256 wide textures
 	if (!Q_strncasecmp ((char *)gl_renderer, "3dfx",4) ||
@@ -816,6 +812,7 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
 	glEnd ();
 }
 
+#define SPIN_HACK 1
 
 /*
 ================
@@ -833,11 +830,33 @@ void Draw_ConsoleBackground (int lines)
 	int x, i;
 	int y;
 
+	if (gl_conspin->value)
+	{
+		static float xangle = 0, xfactor = .3f, xstep = .005f;
+
+		glPushMatrix ();
+		glMatrixMode (GL_TEXTURE);
+		glPushMatrix ();
+		glLoadIdentity ();
+		xangle += 1.0f;
+		xfactor += xstep;
+		if (xfactor > 8 || xfactor < .3f)
+			xstep = -xstep;
+		glRotatef (xangle, 0, 0, 1);
+		glScalef (xfactor, xfactor, xfactor);
+	}
+
 	y = (vid.height * 3) >> 2;
 	if (lines > y)
 		Draw_Pic(0, lines-vid.height, conback);
 	else
-		Draw_AlphaPic (0, lines - vid.height, conback, (float)(1.2 * lines)/y);
+		Draw_AlphaPic (0, lines - vid.height, conback, 
+				(float)(1.2 * lines)/y);
+	if (gl_conspin->value) {
+		glPopMatrix ();
+		glMatrixMode (GL_MODELVIEW);
+		glPopMatrix ();
+	}
 
 	// hack the version number directly into the pic
 	y = lines-14;
@@ -1407,7 +1426,8 @@ int GL_LoadTexture (char *identifier, int width, int height, byte *data, qboolea
 		{
 			if (!strcmp (identifier, glt->identifier))
 			{
-				if (width != glt->width || height != glt->height)
+				if (width != glt->width 
+						|| height != glt->height)
 					Sys_Error ("GL_LoadTexture: cache mismatch");
 				return gltextures[i].texnum;
 			}
