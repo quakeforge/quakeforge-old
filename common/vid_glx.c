@@ -42,10 +42,6 @@
 #include <draw.h>
 #include <context_x11.h>
 
-//#ifndef _EXPERIMENTAL_
-//# undef HAS_DGA
-//#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -207,9 +203,7 @@ InitSig(void)
 
 void VID_ShiftPalette(unsigned char *p)
 {
-#ifdef _EXPERIMENTAL_
 	VID_SetPalette(p);
-#endif
 }
 
 void	VID_SetPalette (unsigned char *palette)
