@@ -44,8 +44,14 @@
 #define MAX_EDICTS		768
 #define MAX_LIGHTSTYLES	64
 #define MAX_DATAGRAM	1450
-//#define MAX_MSGLEN		1450
+
+// Sorry, Mercury, this is needed (for now). Too many complaints about
+// oversized packets from non-qf qw clients :)
+#ifdef QUAKEWORLD
+#define MAX_MSGLEN		1450
+#else
 #define MAX_MSGLEN		8000
+#endif
 
 #define clc_stringcmd	4
 
