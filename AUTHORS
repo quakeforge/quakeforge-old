@@ -3,7 +3,6 @@ The original Quake, QuakeWorld, and QuakeWorld server:
 
 Merge of the QW/Q1 trees done largely by:
   Jeff Teunissen <deek@dusknet.dhis.net>
-  Zephaniah E. Hull <warp@whitestar.soark.net>
 
 Autoconf support:
   Loring Holden <lsh@cs.brown.edu>
@@ -16,3 +15,8 @@ Autoconf support:
 Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
 
+Maintance of 3Dfx support:
+  Zephaniah E. Hull <warp@whitestar.soark.net>
+
+Maintance of the keyboard stuff:
+  Zephaniah E. Hull <warp@whitestar.soark.net>

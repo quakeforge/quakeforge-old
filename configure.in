@@ -333,13 +333,8 @@ changequote([,])dnl
       QW_CL_SYS_SRC="sys_linux.c"
       QW_SRV_SYS_SRC="sys_unix.c"
       ;;
-   *-solaris*) 
-      SYS_SRC="sys_sun.c"
-      QW_CL_SYS_SRC="sys_linux.c"
-      QW_SRV_SYS_SRC="sys_unix.c"
-      ;;
    *)
-      SYS_SRC="sys_sun.c" 
+      SYS_SRC="sys_unix.c" 
       QW_CL_SYS_SRC="sys_linux.c"
       QW_SRV_SYS_SRC="sys_unix.c"
       DEFAULT_SYS=yes ;;
