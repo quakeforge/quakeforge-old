@@ -132,6 +132,7 @@ cvar_t	*cl_talksound;
 
 extern cvar_t	*sys_nostdout;
 
+extern void COM_Maplist_f (void);
 cvar_t	*localid;
 
 #ifdef QUAKEWORLD
@@ -1636,6 +1637,7 @@ void CL_Init (void)
 //
 // register our commands
 //
+	Cmd_AddCommand ("maplist", COM_Maplist_f);
 	Cmd_AddCommand ("changing", CL_Changing_f);
 #ifdef UQUAKE
 	Cmd_AddCommand ("entities", CL_PrintEntities_f);

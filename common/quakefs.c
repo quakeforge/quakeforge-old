@@ -192,6 +192,33 @@ void COM_Path_f (void)
 	}
 }
 
+void COM_Maplist_f (void)
+{
+	searchpath_t	*search;
+	DIR		*dir_ptr;
+	struct dirent	*dirent;
+	char		buf[MAX_OSPATH];
+
+	for (search = com_searchpaths ; search ; search = search->next)
+	{ 
+		if (!Q_strcmp (search->filename, ""))
+			continue;
+		snprintf (buf, sizeof(buf), "%s/maps", search->filename);
+		dir_ptr = opendir(buf);
+		Con_Printf ("Looking in %s...\n",buf);
+		if (!dir_ptr)
+			continue;
+		while ((dirent = readdir (dir_ptr)))
+		{
+			if (!fnmatch ("*.bsp", dirent->d_name, 0))
+			{
+				Con_Printf ("%s\n", dirent->d_name);
+			}
+		}
+		closedir (dir_ptr);
+	}
+}
+
 /*
 ============
 COM_WriteFile
