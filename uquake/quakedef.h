@@ -203,9 +203,9 @@ extern qboolean		isDedicated;
 
 extern int			minimum_memory;
 
-//
-// chase
-//
+/*
+	Chase camera
+*/
 extern	cvar_t	cl_chasecam;
 
 void Chase_Init (void);

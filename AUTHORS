@@ -5,13 +5,13 @@ Project hosting and server resources:
   VA Linux Systems, Inc  http://www.valinux.com
   AbsoluteK <absolutek@quakeforge.net>
   Chad Fowler <chadfowler@quakeforge.net>
-  Jeff Teunissen <deek@dusknet.dhis.net>
+  Jeff Teunissen <d2deek@pmail.net>
 
 Administration and project management:
   Nelson J. Rush <chesterrr@att.net>
 
 QW/Q1 tree merging:
-  Jeff Teunissen <deek@dusknet.dhis.net>
+  Jeff Teunissen <d2deek@pmail.net>
   Zephaniah E. Hull <warp@whitestar.soark.net>
   Marcus Sundberg <mackan@stacken.kth.se>
   Bill Currie <bill@taniwha.org>
@@ -59,3 +59,5 @@ SDL Support:
   Sam Lantinga <slouken@devolution.com>
   Maas van den Berg <email@dds.nl>
 
+X11 software renderer fixes:
+  "Justin A. McCright" <jam@qIj.damogran.org>

@@ -195,7 +195,7 @@ ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC)
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
-	   $(SYS_SRC) chase.c world.c $(SRV_PR_SRC) \
+	   $(SYS_SRC) chasecam.c world.c $(SRV_PR_SRC) \
 	   $(UQ_NET_SRC) $(UQ_SRV_SRC) \
 	   $(UQ_GENERAL_SRC) $(UQ_SWREND_SRC_PLAT)
 

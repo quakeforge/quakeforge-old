@@ -628,15 +628,16 @@ void VID_SetPalette(unsigned char *palette)
 
 // Called at shutdown
 
-void VID_Shutdown (void)
-{
+void VID_Shutdown (void) {
+
 	Con_Printf("VID_Shutdown\n");
-	XAutoRepeatOn(x_disp);
-	XCloseDisplay(x_disp);
+	if (x_disp) {
+		XAutoRepeatOn(x_disp);
+		XCloseDisplay(x_disp);
+	}
 }
 
-int XLateKey(XKeyEvent *ev)
-{
+int XLateKey(XKeyEvent *ev) {
 
 	int key;
 	char buf[64];
