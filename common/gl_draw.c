@@ -1237,7 +1237,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 	int			i, s;
 	qboolean	noalpha;
 	int			samples;
-    static	unsigned char scaled[1024*512];	// [512*256];
+	static	unsigned char scaled[1024*512];	// [512*256];
 	int			scaled_width, scaled_height;
 
 	s = width*height;

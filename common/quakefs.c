@@ -723,28 +723,57 @@ COM_LoadGameDirectory(char *dir)
 	char			pakfile[MAX_OSPATH];
 	DIR				*dir_ptr;
 	struct dirent	*dirent;
+	char			**pakfiles;
+	int				i = 0, bufsize = 0, count = 0;
 
+	pakfiles = calloc(1, BLOCK_SIZE);
+	bufsize += BLOCK_SIZE;
+	if (!pakfiles)
+		goto COM_LoadGameDirectory_free;
+	
 	dir_ptr = opendir(dir);
 	if (!dir_ptr)
 		return;
 
 	while ((dirent = readdir(dir_ptr))) {
 		if (!fnmatch("*.pak", dirent->d_name, FNMATCH_FLAGS)) {
-			snprintf(pakfile, sizeof(pakfile), "%s/%s", dir, dirent->d_name);
-
-			pak = COM_LoadPackFile(pakfile);
-
-			if (!pak) {
-				Sys_Error(va("Bad pakfile %s!!", pakfile));
-			} else {
-				search = Z_Malloc (sizeof(searchpath_t));
-				search->pack = pak;
-				search->next = com_searchpaths;
-				com_searchpaths = search;
+			if (count >= bufsize) {
+				bufsize += BLOCK_SIZE;
+				pakfiles = realloc(pakfiles, bufsize);
+				if (!pakfiles)
+					goto COM_LoadGameDirectory_free;
+				for (i = count; i < bufsize; i++)
+					pakfiles[i] = NULL;
 			}
+			pakfiles[count] = malloc(FNAME_SIZE);
+			snprintf(pakfiles[count], FNAME_SIZE - 1, "%s/%s", dir,
+					dirent->d_name);
+			pakfiles[count][FNAME_SIZE - 1] = '\0';
+			count++;
 		}
 	}
 	closedir(dir_ptr);
+
+	qsort(pakfiles, count, FNAME_SIZE, 
+			(int (*)(const void *, const void *)) Q_qstrcmp);
+
+	for (i = 0; i < count; i++) {
+		pak = COM_LoadPackFile(pakfiles[i]);
+
+		if (!pak) {
+			Sys_Error(va("Bad pakfile %s!!", pakfiles[i]));
+		} else {
+			search = Z_Malloc (sizeof(searchpath_t));
+			search->pack = pak;
+			search->next = com_searchpaths;
+			com_searchpaths = search;
+		}
+	}
+
+COM_LoadGameDirectory_free:
+	for (i = 0; i < count; i++)
+		free(pakfiles[i]);
+	free(pakfiles);
 
 #ifdef GENERATIONS
 	for (done=false, i=0 ; !done ; i++ ) {
@@ -759,7 +788,7 @@ COM_LoadGameDirectory(char *dir)
 			search->pack = pak;
 			search->next = com_searchpaths;
 			com_searchpaths = search;
-         	}
+		}
 	}
 #endif
 }

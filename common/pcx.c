@@ -88,7 +88,7 @@ byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
 	if (!buf_y)
 		buf_y = pcx->ymax;
 
-	Con_Printf("PCX file %s %dx%d\n", file, buf_x, buf_y);
+	Con_DPrintf("PCX file %s %dx%d\n", file, buf_x, buf_y);
 	out = Cache_Alloc (cache, buf_x * buf_y, file);
 	if (!out)
 		Sys_Error("LoadPCX: couldn't allocate.");

@@ -540,34 +540,35 @@ void R_TranslatePlayerSkin (int playernum)
 
 		GL_Upload8_EXT ((byte *)pixels, scaled_width, scaled_height, false, false);
 		return;
-	}
+	} else {	// This is for 24/32 bit GL displays...
 
-	for (i=0 ; i<256 ; i++)
-		translate32[i] = d_8to24table[translate[i]];
+		for (i=0 ; i<256 ; i++)
+			translate32[i] = d_8to24table[translate[i]];
 
-	out = pixels;
-	fracstep = inwidth*0x10000/scaled_width;
-	for (i=0 ; i<scaled_height ; i++, out += scaled_width)
-	{
-		inrow = original + inwidth*(i*inheight/scaled_height);
-		frac = fracstep >> 1;
-		for (j=0 ; j<scaled_width ; j+=4)
+		out = pixels;
+		fracstep = inwidth*0x10000/scaled_width;
+		for (i=0 ; i<scaled_height ; i++, out += scaled_width)
 		{
-			out[j] = translate32[inrow[frac>>16]];
-			frac += fracstep;
-			out[j+1] = translate32[inrow[frac>>16]];
-			frac += fracstep;
-			out[j+2] = translate32[inrow[frac>>16]];
-			frac += fracstep;
-			out[j+3] = translate32[inrow[frac>>16]];
-			frac += fracstep;
+			inrow = original + inwidth*(i*inheight/scaled_height);
+			frac = fracstep >> 1;
+			for (j=0 ; j<scaled_width ; j+=4)
+			{
+				out[j] = translate32[inrow[frac>>16]];
+				frac += fracstep;
+				out[j+1] = translate32[inrow[frac>>16]];
+				frac += fracstep;
+				out[j+2] = translate32[inrow[frac>>16]];
+				frac += fracstep;
+				out[j+3] = translate32[inrow[frac>>16]];
+				frac += fracstep;
+			}
 		}
-	}
-	glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
 #endif
 
 #endif /* QUAKEWORLD */
