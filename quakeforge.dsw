@@ -3,7 +3,31 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "quakeforge"=.\quakeforge.dsp - Package Owner=<4>
+Project: "quakeforge"=".\quakeforge.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "qw_client"=".\qw_client\qw_client.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "qw_server"=".\qw_server\qw_server.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
