@@ -390,24 +390,23 @@ AC_PATH_XTRA
 # make Makefile.header, Makefile.tail
 #
 
-AC_SUBST_FILE(MAKEFILE_HEADER)
-MAKEFILE_HEADER=pre
+dnl AC_SUBST_FILE(MAKEFILE_HEADER)
+dnl MAKEFILE_HEADER=pre
 
-AC_SUBST_FILE(MAKEFILE_TAIL)
-MAKEFILE_TAIL=post
+dnl AC_SUBST_FILE(MAKEFILE_TAIL)
+dnl MAKEFILE_TAIL=post
 
-AC_SUBST_FILE(CLIENT_TARGETS)
-CLIENT_TARGETS=client
+dnl AC_SUBST_FILE(CLIENT_TARGETS)
+dnl CLIENT_TARGETS=client
 
-AC_SUBST_FILE(SRCFILES)
-SRCFILES=srcfiles
+dnl AC_SUBST_FILE(SRCFILES)
+dnl SRCFILES=srcfiles
 
-AC_SUBST_FILE(COMP_RULES)
-COMP_RULES=rules
+dnl AC_SUBST_FILE(COMP_RULES)
+dnl COMP_RULES=rules
 
 ##########################################################
 #
 # Output files
 #
-AC_OUTPUT(pre post client srcfiles rules
-          qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
+AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)

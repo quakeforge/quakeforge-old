@@ -7,10 +7,7 @@ all:
 	done
 
 distclean:
-	rm -f config.cache config.log config.status \
-	      Makefile.header Makefile.client Makefile.comp_rules \
-	      Makefile.source Makefile.tail Makefile \
-	      client pre post rules srcfiles
+	rm -f config.cache config.log config.status Makefile
 	for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
 	done

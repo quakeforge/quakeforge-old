@@ -3536,19 +3536,9 @@ fi
 #
 
 
-MAKEFILE_HEADER=pre
 
 
-MAKEFILE_TAIL=post
 
-
-CLIENT_TARGETS=client
-
-
-SRCFILES=srcfiles
-
-
-COMP_RULES=rules
 
 ##########################################################
 #
@@ -3666,8 +3656,7 @@ done
 
 ac_given_srcdir=$srcdir
 
-trap 'rm -fr `echo "pre post client srcfiles rules
-          qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -3747,16 +3736,6 @@ s%@QW_SRV_SYS_SRC@%$QW_SRV_SYS_SRC%g
 s%@X11_VID_SRC@%$X11_VID_SRC%g
 s%@EXEEXT@%$EXEEXT%g
 s%@OBJEXT@%$OBJEXT%g
-/@MAKEFILE_HEADER@/r $MAKEFILE_HEADER
-s%@MAKEFILE_HEADER@%%g
-/@MAKEFILE_TAIL@/r $MAKEFILE_TAIL
-s%@MAKEFILE_TAIL@%%g
-/@CLIENT_TARGETS@/r $CLIENT_TARGETS
-s%@CLIENT_TARGETS@%%g
-/@SRCFILES@/r $SRCFILES
-s%@SRCFILES@%%g
-/@COMP_RULES@/r $COMP_RULES
-s%@COMP_RULES@%%g
 
 CEOF
 EOF
@@ -3798,8 +3777,7 @@ EOF
 
 cat >> $CONFIG_STATUS <<EOF
 
-CONFIG_FILES=\${CONFIG_FILES-"pre post client srcfiles rules
-          qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile"}
+CONFIG_FILES=\${CONFIG_FILES-"qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
