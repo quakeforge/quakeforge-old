@@ -1,4 +1,5 @@
 /*
+r_light.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,14 +20,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_light.c
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "glquake.h"
-#include "client.h"
-#include "mathlib.h"
-#include "view.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <glquake.h>
+#include <client.h>
+#include <mathlib.h>
+#include <view.h>
 
 int	r_dlightframecount;
 
@@ -118,13 +118,12 @@ void R_RenderDlight (dlight_t *light)
 	}
 
 	glBegin (GL_TRIANGLE_FAN);
-#if UQUAKE
-	glColor3f (0.2,0.1,0.0);  // uquake had this (taniwha)
-	glColor3f (0.2,0.1,0.05); // changed dimlight effect
-#else
-	glColor4f (light->color[0], light->color[1], light->color[2],
-		light->color[3]);
-#endif
+	if (light->color[0] || light->color[1] || light->color[2] 
+			|| light->color[3])	// is there a color?
+		glColor4f (light->color[0], light->color[1],
+				light->color[2], light->color[3]);
+	else
+		glColor3f (0.2,0.1,0.05);	// nope, use default
 	for (i=0 ; i<3 ; i++)
 		v[i] = light->origin[i] - vpn[i]*rad;
 	glVertex3fv (v);

@@ -38,7 +38,8 @@ int		lightmap_bytes;		// 1, 2, or 4
 
 int		lightmap_textures;
 
-unsigned		blocklights[18*18];
+unsigned	blocklights[18*18];
+unsigned	cblocklights[3][18*18];
 
 #define	BLOCK_WIDTH		128
 #define	BLOCK_HEIGHT	128
@@ -73,14 +74,15 @@ R_AddDynamicLights
 */
 void R_AddDynamicLights (msurface_t *surf)
 {
-	int			lnum;
-	int			sd, td;
+	int		lnum;
+	int		sd, td;
 	float		dist, rad, minlight;
 	vec3_t		impact, local;
-	int			s, t;
-	int			i;
-	int			smax, tmax;
+	int		s, t;
+	int		i;
+	int		smax, tmax;
 	mtexinfo_t	*tex;
+	dlight_t	*dl;
 
 	smax = (surf->extents[0]>>4)+1;
 	tmax = (surf->extents[1]>>4)+1;
@@ -92,8 +94,8 @@ void R_AddDynamicLights (msurface_t *surf)
 			continue;		// not lit by this light
 
 		rad = cl_dlights[lnum].radius;
-		dist = DotProduct (cl_dlights[lnum].origin, surf->plane->normal) -
-				surf->plane->dist;
+		dist = DotProduct (cl_dlights[lnum].origin,
+				surf->plane->normal) - surf->plane->dist;
 		rad -= fabs(dist);
 		minlight = cl_dlights[lnum].minlight;
 		if (rad < minlight)
@@ -126,8 +128,21 @@ void R_AddDynamicLights (msurface_t *surf)
 					dist = sd + (td>>1);
 				else
 					dist = td + (sd>>1);
-				if (dist < minlight)
-					blocklights[t*smax + s] += (rad - dist)*256;
+				if (dist < minlight) {
+					dl = &cl_dlights[lnum];
+					cblocklights[0][t*smax + s] +=
+						(rad - dist)
+						*(dl->color[0]*256);
+					cblocklights[1][t*smax + s] +=
+						(rad - dist)
+						*(dl->color[1]*256);
+					cblocklights[2][t*smax + s] +=
+						(rad - dist)
+						*(dl->color[2]*256);
+					blocklights[t*smax +s] +=
+						(rad - dist)
+						*(dl->color[3]*256);
+				}
 			}
 		}
 	}
@@ -149,7 +164,7 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	byte		*lightmap;
 	unsigned	scale;
 	int		maps;
-	unsigned	*bl;
+	unsigned	*bl, *rbl, *gbl, *bbl;
 
 	surf->cached_dlight = (surf->dlightframe == r_framecount);
 
@@ -159,15 +174,21 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	lightmap = surf->samples;
 
 // set to full bright if no light data
-	if (/* r_fullbright->value || */ !cl.worldmodel->lightdata)
+	if (r_fullbright->value || !cl.worldmodel->lightdata)
 	{
 		for (i=0 ; i<size ; i++)
+			cblocklights[0][i] =
+			cblocklights[1][i] =
+			cblocklights[2][i] =
 			blocklights[i] = 255*256;
 		goto store;
 	}
 
 // clear to no light
 	for (i=0 ; i<size ; i++)
+		cblocklights[0][i] =
+		cblocklights[1][i] =
+		cblocklights[2][i] =
 		blocklights[i] = 0;
 
 // add all the lightmaps
@@ -178,7 +199,12 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 			scale = d_lightstylevalue[surf->styles[maps]];
 			surf->cached_light[maps] = scale;	// 8.8 fraction
 			for (i=0 ; i<size ; i++)
+			{
+				cblocklights[0][i] += lightmap[i] * scale;
+				cblocklights[1][i] += lightmap[i] * scale;
+				cblocklights[2][i] += lightmap[i] * scale;
 				blocklights[i] += lightmap[i] * scale;
+			}
 			lightmap += size;	// skip to next lightmap
 		}
 
@@ -192,16 +218,22 @@ store:
 	{
 	case GL_RGBA:
 		stride -= (smax<<2);
+		rbl = cblocklights[0];
+		gbl = cblocklights[1];
+		bbl = cblocklights[2];
 		bl = blocklights;
 		for (i=0 ; i<tmax ; i++, dest += stride)
 		{
 			for (j=0 ; j<smax ; j++)
 			{
+				t = *rbl++;
+				dest[0] = 255 - min(t >> 7, 255);
+				t = *gbl++;
+				dest[1] = 255 - min(t >> 7, 255);
+				t = *bbl++;
+				dest[2] = 255 - min(t >> 7, 255);
 				t = *bl++;
-				t >>= 7;
-				if (t > 255)
-					t = 255;
-				dest[3] = 255-t;
+				dest[3] = 255 - min(t >> 7, 255);
 				dest += 4;
 			}
 		}
@@ -685,7 +717,9 @@ void R_BlendLightmaps (void)
 
 	glDepthMask (0);		// don't bother writing Z
 
-	if (gl_lightmap_format == GL_LUMINANCE)
+	if (gl_lightmap_format == GL_RGBA)
+		glBlendFunc (GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
+	else if (gl_lightmap_format == GL_LUMINANCE)
 		glBlendFunc (GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
 	else if (gl_lightmap_format == GL_INTENSITY)
 	{
@@ -751,7 +785,9 @@ void R_BlendLightmaps (void)
 	}
 
 	glDisable (GL_BLEND);
-	if (gl_lightmap_format == GL_LUMINANCE)
+	if (gl_lightmap_format == GL_RGBA)
+		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	else if (gl_lightmap_format == GL_LUMINANCE)
 		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	else if (gl_lightmap_format == GL_INTENSITY)
 	{
@@ -1593,7 +1629,7 @@ void GL_BuildLightmaps (void)
 		texture_extension_number += MAX_LIGHTMAPS;
 	}
 
-	gl_lightmap_format = GL_LUMINANCE;
+	gl_lightmap_format = GL_RGBA;
 	if (COM_CheckParm ("-lm_1"))
 		gl_lightmap_format = GL_LUMINANCE;
 	if (COM_CheckParm ("-lm_a"))
