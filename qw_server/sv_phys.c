@@ -74,7 +74,8 @@ void SV_Physics_Toss (edict_t *ent);
 SV_CheckAllEnts
 ================
 */
-void SV_CheckAllEnts (void)
+void
+SV_CheckAllEnts ( void )
 {
 	int			e;
 	edict_t		*check;
@@ -101,9 +102,11 @@ void SV_CheckAllEnts (void)
 SV_CheckVelocity
 ================
 */
-void SV_CheckVelocity (edict_t *ent)
+void
+SV_CheckVelocity ( edict_t *ent )
 {
 	int		i;
+	float	wishspeed;	// 1999-10-18 SV_MAXVELOCITY fix by Maddes
 
 //
 // bound velocity
@@ -120,11 +123,15 @@ void SV_CheckVelocity (edict_t *ent)
 			Con_Printf ("Got a NaN origin on %s\n", PR_GetString(ent->v.classname));
 			ent->v.origin[i] = 0;
 		}
-		if (ent->v.velocity[i] > sv_maxvelocity->value)
-			ent->v.velocity[i] = sv_maxvelocity->value;
-		else if (ent->v.velocity[i] < -sv_maxvelocity->value)
-			ent->v.velocity[i] = -sv_maxvelocity->value;
 	}
+
+// 1999-10-18 SV_MAXVELOCITY fix by Maddes  start
+	wishspeed = Length(ent->v.velocity);
+	if (wishspeed > sv_maxvelocity->value)
+	{
+		VectorScale (ent->v.velocity, sv_maxvelocity->value/wishspeed, ent->v.velocity);
+	}
+// 1999-10-18 SV_MAXVELOCITY fix by Maddes  end
 }
 
 /*
@@ -137,7 +144,8 @@ in a frame.  Not used for pushmove objects, because they must be exact.
 Returns false if the entity removed itself.
 =============
 */
-qboolean SV_RunThink (edict_t *ent)
+qboolean
+SV_RunThink ( edict_t *ent )
 {
 	float	thinktime;
 
@@ -173,7 +181,8 @@ SV_Impact
 Two entities have touched, so run their touch functions
 ==================
 */
-void SV_Impact (edict_t *e1, edict_t *e2)
+void
+SV_Impact ( edict_t *e1, edict_t *e2 )
 {
 	int		old_self, old_other;
 
@@ -210,7 +219,8 @@ returns the blocked flags (1 = floor, 2 = step / wall)
 */
 #define	STOP_EPSILON	0.1
 
-int ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
+int
+ClipVelocity ( vec3_t in, vec3_t normal, vec3_t out, float overbounce )
 {
 	float	backoff;
 	float	change;
@@ -249,7 +259,8 @@ If steptrace is not NULL, the trace of any vertical wall hit will be stored
 ============
 */
 #define	MAX_CLIP_PLANES	5
-int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
+int
+SV_FlyMove ( edict_t *ent, float time, trace_t *steptrace )
 {
 	int			bumpcount, numbumps;
 	vec3_t		dir;
@@ -388,7 +399,8 @@ SV_AddGravity
 
 ============
 */
-void SV_AddGravity (edict_t *ent, float scale)
+void
+SV_AddGravity ( edict_t *ent, float scale )
 {
 	ent->v.velocity[2] -= scale * movevars.gravity * host_frametime;
 }
@@ -408,7 +420,8 @@ SV_PushEntity
 Does not change the entities velocity at all
 ============
 */
-trace_t SV_PushEntity (edict_t *ent, vec3_t push)
+trace_t
+SV_PushEntity ( edict_t *ent, vec3_t push )
 {
 	trace_t	trace;
 	vec3_t	end;
@@ -439,7 +452,8 @@ SV_Push
 
 ============
 */
-qboolean SV_Push (edict_t *pusher, vec3_t move)
+qboolean
+SV_Push ( edict_t *pusher, vec3_t move )
 {
 	int			i, e;
 	edict_t		*check, *block;
@@ -566,7 +580,8 @@ SV_PushMove
 
 ============
 */
-void SV_PushMove (edict_t *pusher, float movetime)
+void
+SV_PushMove ( edict_t *pusher, float movetime )
 {
 	int			i;
 	vec3_t		move;
@@ -591,13 +606,14 @@ SV_Physics_Pusher
 
 ================
 */
-void SV_Physics_Pusher (edict_t *ent)
+void
+SV_Physics_Pusher ( edict_t *ent )
 {
 	float	thinktime;
 	float	oldltime;
 	float	movetime;
-vec3_t oldorg, move;
-float	l;
+	vec3_t	oldorg, move;
+	float	l;
 
 	oldltime = ent->v.ltime;
 
@@ -618,7 +634,7 @@ float	l;
 
 	if (thinktime > oldltime && thinktime <= ent->v.ltime)
 	{
-VectorCopy (ent->v.origin, oldorg);
+		VectorCopy (ent->v.origin, oldorg);
 		ent->v.nextthink = 0;
 		pr_global_struct->time = sv.time;
 		pr_global_struct->self = EDICT_TO_PROG(ent);
@@ -646,7 +662,8 @@ SV_Physics_None
 Non moving objects can only think
 =============
 */
-void SV_Physics_None (edict_t *ent)
+void
+SV_Physics_None ( edict_t *ent )
 {
 // regular thinking
 	SV_RunThink (ent);
@@ -659,7 +676,8 @@ SV_Physics_Noclip
 A moving object that doesn't obey physics
 =============
 */
-void SV_Physics_Noclip (edict_t *ent)
+void
+SV_Physics_Noclip ( edict_t *ent )
 {
 // regular thinking
 	if (!SV_RunThink (ent))
@@ -685,7 +703,8 @@ SV_CheckWaterTransition
 
 =============
 */
-void SV_CheckWaterTransition (edict_t *ent)
+void
+SV_CheckWaterTransition ( edict_t *ent )
 {
 	int		cont;
 
@@ -724,7 +743,8 @@ SV_Physics_Toss
 Toss, bounce, and fly movement.  When onground, do nothing.
 =============
 */
-void SV_Physics_Toss (edict_t *ent)
+void
+SV_Physics_Toss ( edict_t *ent )
 {
 	trace_t	trace;
 	vec3_t	move;
@@ -802,7 +822,8 @@ will fall if the floor is pulled out from under them.
 FIXME: is this true?
 =============
 */
-void SV_Physics_Step (edict_t *ent)
+void
+SV_Physics_Step ( edict_t *ent )
 {
 	qboolean	hitsound;
 
@@ -834,7 +855,8 @@ void SV_Physics_Step (edict_t *ent)
 
 //============================================================================
 
-void SV_ProgStartFrame (void)
+void
+SV_ProgStartFrame ( void )
 {
 // let the progs know that a new frame has started
 	pr_global_struct->self = EDICT_TO_PROG(sv.edicts);
@@ -849,7 +871,8 @@ SV_RunEntity
 
 ================
 */
-void SV_RunEntity (edict_t *ent)
+void
+SV_RunEntity ( edict_t *ent )
 {
 	if (ent->v.lastruntime == (float)realtime)
 		return;
@@ -887,7 +910,8 @@ SV_RunNewmis
 
 ================
 */
-void SV_RunNewmis (void)
+void
+SV_RunNewmis ( void )
 {
 	edict_t	*ent;
 
@@ -906,7 +930,8 @@ SV_Physics
 
 ================
 */
-void SV_Physics (void)
+void
+SV_Physics ( void )
 {
 	int		i;
 	edict_t	*ent;
@@ -948,7 +973,8 @@ void SV_Physics (void)
 		pr_global_struct->force_retouch--;
 }
 
-void SV_SetMoveVars(void)
+void
+SV_SetMoveVars ( void )
 {
 	movevars.gravity			= sv_gravity->value;
 	movevars.stopspeed		    = sv_stopspeed->value;
