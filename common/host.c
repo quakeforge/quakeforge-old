@@ -77,6 +77,9 @@ cvar_t	pausable = {"pausable","1"};
 cvar_t	temp1 = {"temp1","0"};
 /* Should server filter out \n & \r in player names ? */
 cvar_t        sv_filter       = {"sv_filter","1"};
+#ifdef UQUAKE
+client_t	*host_client;			// current client
+#endif
 
 void Host_InitLocal (void);
 void Host_FindMaxClients (void);

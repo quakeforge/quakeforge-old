@@ -85,7 +85,7 @@ cvar_t	config_modem_clear = {"_config_modem_clear", "ATZ", true};
 cvar_t	config_modem_init = {"_config_modem_init", "", true};
 cvar_t	config_modem_hangup = {"_config_modem_hangup", "AT H", true};
 
-int	vcrFile = -1;
+extern int	vcrFile;
 qboolean recording = false;
 
 // these two macros are to make the code more readable
