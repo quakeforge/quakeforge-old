@@ -638,7 +638,7 @@ void COM_LoadGameDirectory(char *dir)
 	int		foundall = 0;
 	
 	// Load all Pak1 files:
-        for (i=0; foundall; i++)
+        for (i=0; !foundall; i++)
         {
              
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
