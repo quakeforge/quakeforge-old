@@ -81,6 +81,9 @@ cvar_t	pausable = {"pausable","1"};
 
 cvar_t	temp1 = {"temp1","0"};
 
+/* PHS 02/01/2000 */
+/* Should server filter out \n & \r in player names ? */
+cvar_t        sv_filter       = {"sv_filter","1"};
 
 /*
 ================
@@ -229,6 +232,7 @@ void Host_InitLocal (void)
 	Cvar_RegisterVariable (&pausable);
 
 	Cvar_RegisterVariable (&temp1);
+	Cvar_RegisterVariable (&sv_filter);
 
 	Host_FindMaxClients ();
 	

@@ -22,6 +22,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern cvar_t	pausable;
 
+/* PHS 02/01/2000 */
+extern cvar_t sv_filter;
+
 int	current_skill;
 
 void Mod_Print (void);
@@ -910,6 +913,7 @@ Host_Name_f
 void Host_Name_f (void)
 {
 	char	*newName;
+	int	Idx;
 
 	if (Cmd_Argc () == 1)
 	{
@@ -932,7 +936,16 @@ void Host_Name_f (void)
 		return;
 	}
 
-	if (host_client->name[0] && strcmp(host_client->name, "unconnected") )
+/* PHS  02/01/2000 */
+/* If cvar sv_filter is 1 */
+/* Check for \n & \r in names and remove, replace with '-' */
+
+       if(sv_filter.value == 1)
+	       for(Idx=0;Idx<strlen(newName);Idx++)
+		       if((newName[Idx]=='\r') || (newName[Idx]=='\n'))
+			       newName[Idx]='-';
+
+       if (host_client->name[0] && strcmp(host_client->name, "unconnected") )
 		if (Q_strcmp(host_client->name, newName) != 0)
 			Con_Printf ("%s renamed to %s\n", host_client->name, newName);
 	Q_strcpy (host_client->name, newName);
