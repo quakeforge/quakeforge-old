@@ -239,7 +239,7 @@ ALL_SVGA_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(SVGA_VID_SRC) model.c
 OBJSquake-svga= $(patsubst %,$(BUILD_DIR)/svga/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_SVGA_SRC) .c .s)))
 
 SVGA_CFLAGS  =
-SVGA_LDFLAGS = -lvga
+SVGA_LDFLAGS = -lvga -lm
 SVGA_VID_SRC = vid_svgalib.c
 
 # This can be thought of as a macro that makes sure that the x11
@@ -329,7 +329,7 @@ ifneq ($(TDFXQUAKE),)
 OBJSquake-3dfx = $(patsubst %,$(BUILD_DIR)/3dfx/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_TDFX_SRC) .c .s)))
 
 TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
-TDFX_LDFLAGS = $(SVGA_LDFLAGS) @GLIDE_LDFLAGS@ @TDFXGL_LDFLAGS@ -ldl
+TDFX_LDFLAGS = $(SVGA_LDFLAGS) @GLIDE_LDFLAGS@ @TDFXGL_LDFLAGS@ -ldl -lGL
 # XXX - this is for 3dfxgl
 TDFX_VID_SRC = gl_vidlinux.c
 
