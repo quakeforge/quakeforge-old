@@ -203,9 +203,7 @@ void R_Init (void)
 #endif /* QUAKEWORLD */
 	r_fog = Cvar_Get ("r_fog","0",0,"None");
 	r_waterwarp = Cvar_Get ("r_waterwarp","0",0,"None");
-#ifdef _EXPERIMENTAL_
 	r_volfog = Cvar_Get ("r_volfog","0",0,"None");
-#endif
 	r_waterripple = Cvar_Get ("r_waterripple","0",0,"None");
 	r_clearcolor = Cvar_Get ("r_clearcolor","2",0,"None");
 

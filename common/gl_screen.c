@@ -386,12 +386,7 @@ void SCR_SizeDown_f (void)
 
 //============================================================================
 
-/*
-==================
-SCR_Init
-==================
-*/
-void SCR_Init (void)
+void SCR_InitCvars (void)
 {
 	scr_fov = Cvar_Get ("fov","90",0,"None");
 	scr_viewsize = Cvar_Get ("viewsize","100",CVAR_ARCHIVE,"None");
@@ -402,7 +397,17 @@ void SCR_Init (void)
 	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
 	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
 	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",0,"None");
+	gl_triplebuffer = Cvar_Get ("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
+}
 
+/*
+==================
+SCR_Init
+==================
+*/
+
+void SCR_Init (void)
+{
 //
 // register our commands
 //

@@ -389,12 +389,7 @@ void SCR_SizeDown_f (void)
 
 //============================================================================
 
-/*
-==================
-SCR_Init
-==================
-*/
-void SCR_Init (void)
+void SCR_InitCvars (void)
 {
 //	Cvar_RegisterVariable (&scr_fov);
 	scr_fov = Cvar_Get ("fov","90",0,"None");
@@ -412,6 +407,15 @@ void SCR_Init (void)
 	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
 //	Cvar_RegisterVariable (&scr_printspeed);
 	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
+}
+
+/*
+==================
+SCR_Init
+==================
+*/
+void SCR_Init (void)
+{
 
 //
 // register our commands
