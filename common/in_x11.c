@@ -232,8 +232,6 @@ static void event_button(XEvent *event)
 		case 1:
 		case 2:
 		case 3:
-		case 4:
-		case 5:
 			Key_Event(K_MOUSE1 + but - 1, event->type == ButtonPress);
 	}
 }
