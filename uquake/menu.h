@@ -1,5 +1,8 @@
 /*
+menu.h - menu interface
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,6 +21,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifndef __MENU_H
+#define __MENU_H
+
 //
 // the net drivers should just set the apropriate bits in m_activenet,
 // instead of having the menu code look through their internal tables
@@ -35,4 +41,5 @@ void M_Keydown (int key);
 void M_Draw (void);
 void M_ToggleMenu_f (void);
 
+#endif // __MENU_H
 

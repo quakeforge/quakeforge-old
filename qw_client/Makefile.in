@@ -24,8 +24,8 @@ BUILD_DIR	:= $(TARGET_DIR)/qw_client
 OBJ_PATTERN	:= $(BUILD_DIR)/common_lib/%.@OBJEXT@ \
                    $(BUILD_DIR)/%.@OBJEXT@
 DEP_PATTERN	:= $(BUILD_DIR)/%.d $(BUILD_DIR)/common_lib/%.d
-GL_OBJ_PATTERN	:= $(BUILD_DIR)/gl/%.@OBJEXT@
-GL_DEP_PATTERN	:= $(BUILD_DIR)/gl/%.d
+#GL_OBJ_PATTERN	:= $(BUILD_DIR)/gl/%.@OBJEXT@
+#GL_DEP_PATTERN	:= $(BUILD_DIR)/gl/%.d
 
 LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
@@ -265,29 +265,29 @@ $(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
 $(OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(GL_OBJ_PATTERN): $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+#$(GL_OBJ_PATTERN): $(SRC_DIR)/%.c
+#	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-$(GL_OBJ_PATTERN): $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+#$(GL_OBJ_PATTERN): $(SRC_DIR)/%.s
+#	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+#$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.c
+#	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+#$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.s
+#	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(GL_OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+#$(GL_OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
+#	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-$(GL_OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+#$(GL_OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
+#	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 client_DIR:
 	@DIR=client; $(MAKE_SURE_DIR)
 
-gl_DIR:
-	@DIR=gl; $(MAKE_SURE_DIR)
+#gl_DIR:
+#	@DIR=gl; $(MAKE_SURE_DIR)
 
 ###########################################################################
 #
@@ -456,8 +456,10 @@ ifneq ($(GLQUAKE),)
 GLX_GL_SRC = gl_vidglx.c dga_check.c in_x11.c context_x11.c
 ALL_GL_SRC = $(GL_REND_SRC) $(GLX_GL_SRC)
 
-GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
+GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
               $(basename $(GL_REND_SRC) .c .s)))
+#GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
+#              $(basename $(GL_REND_SRC) .c .s)))
 
 GLX_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
               $(basename $(GLX_GL_SRC) .c .s)))
@@ -474,7 +476,7 @@ $(BUILD_DIR)/gl_vidglx.@OBJEXT@: $(COMMON_DIR)/gl_vidglx.c
 $(BUILD_DIR)/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
-$(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
+$(GLQUAKE): client_DIR $(BUILD_DIR)/../$(GLQUAKE)
 
 $(BUILD_DIR)/../$(GLQUAKE): $(ALL_GL_OBJS)
 	$(CC) $(CFLAGS) $(ALL_GL_OBJS) $(GL_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -499,7 +501,7 @@ TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
 $(BUILD_DIR)/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
 	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
 
-$(TDFXQUAKE): gl_DIR $(BUILD_DIR)/../$(TDFXQUAKE)
+$(TDFXQUAKE): client_DIR $(BUILD_DIR)/../$(TDFXQUAKE)
 
 $(BUILD_DIR)/../$(TDFXQUAKE): $(ALL_TDFX_OBJS)
 	$(CC) $(CFLAGS) $(ALL_TDFX_OBJS) $(TDFX_LDFLAGS) $(LDFLAGS) $(LIBS) \

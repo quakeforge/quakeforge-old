@@ -1,4 +1,5 @@
 /*
+menu.h - menu interface
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,9 +20,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#ifndef __MENU_H
+#define __MENU_H
 
-#include "qtypes.h"
-#include "draw.h"
+#include <qtypes.h>
+#include <draw.h>
 
 //
 // the net drivers should just set the apropriate bits in m_activenet,
@@ -43,4 +46,5 @@ qpic_t	*M_CachePic (char *path);
 void M_DrawTextBox (int x, int y, int width, int lines);
 void M_Menu_Quit_f (void);
 
+#endif // __MENU_H
 

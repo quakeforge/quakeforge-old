@@ -1,4 +1,5 @@
 /*
+menu.c - menu system
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999-2000  Nelson Rush.
 Copyright (C) 1999-2000  contributors of the QuakeForge project
@@ -21,22 +22,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include "quakedef.h"
-#include "winquake.h"
-#include "qtypes.h"
-#include "draw.h"
-#include "keys.h"
-#include "console.h"
-#include "common.h"
-#include "client.h"
-#include "screen.h"
-#include "cvar.h"
-#include "menu.h"
-#include "view.h"
-#include "sound.h"
+#include <quakedef.h>
+#include <winquake.h>
+#include <qtypes.h>
+#include <draw.h>
+#include <keys.h>
+#include <console.h>
+#include <common.h>
+#include <client.h>
+#include <screen.h>
+#include <cvar.h>
+#include <menu.h>
+#include <view.h>
+#include <sound.h>
 
 
-enum {m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer, m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit, m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions, m_search, m_slist} m_state;
+enum {
+	m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer, 
+	m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit,
+	m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions, 
+	m_search, m_slist
+} m_state;
 
 void M_Menu_Main_f (void);
 	void M_Menu_SinglePlayer_f (void);
@@ -95,20 +101,20 @@ void M_GameOptions_Key (int key);
 void M_Search_Key (int key);
 void M_ServerList_Key (int key);
 
-qboolean	m_entersound;		// play after drawing a frame, so caching
-								// won't disrupt the sound
+qboolean	m_entersound;		// play after drawing a frame, so
+					//  caching won't disrupt the sound
 qboolean	m_recursiveDraw;
 
-int			m_return_state;
+int		m_return_state;
 qboolean	m_return_onerror;
 char		m_return_reason [32];
 
 #define StartingGame	(m_multiplayer_cursor == 1)
-#define JoiningGame		(m_multiplayer_cursor == 0)
+#define JoiningGame	(m_multiplayer_cursor == 0)
 #define SerialConfig	(m_net_cursor == 0)
 #define DirectConfig	(m_net_cursor == 1)
-#define	IPXConfig		(m_net_cursor == 2)
-#define	TCPIPConfig		(m_net_cursor == 3)
+#define	IPXConfig	(m_net_cursor == 2)
+#define	TCPIPConfig	(m_net_cursor == 3)
 
 void M_ConfigureNetSubsystem(void);
 
@@ -162,7 +168,7 @@ byte translationTable[256];
 
 void M_BuildTranslationTable(int top, int bottom)
 {
-	int		j;
+	int	j;
 	byte	*dest, *source;
 
 	for (j = 0; j < 256; j++)
@@ -187,7 +193,8 @@ void M_BuildTranslationTable(int top, int bottom)
 
 void M_DrawTransPicTranslate (int x, int y, qpic_t *pic)
 {
-	Draw_TransPicTranslate (x + ((vid.width - 320)>>1), y, pic, translationTable);
+	Draw_TransPicTranslate (x + ((vid.width - 320)>>1), y, pic,
+			translationTable);
 }
 
 
@@ -304,7 +311,7 @@ void M_Menu_Main_f (void)
 void M_Main_Draw (void)
 {
 	int		f;
-	qpic_t	*p;
+	qpic_t		*p;
 
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
 	p = Draw_CachePic ("gfx/ttl_main.lmp");
@@ -502,12 +509,6 @@ void M_DrawSlider (int x, int y, float range)
 
 void M_DrawCheckbox (int x, int y, int on)
 {
-#if 0
-	if (on)
-		M_DrawCharacter (x, y, 131);
-	else
-		M_DrawCharacter (x, y, 129);
-#endif
 	if (on)
 		M_Print (x, y, "on");
 	else
@@ -855,7 +856,7 @@ void M_Keys_Key (int k)
 static void
 vid_menudraw(void)
 {
-	qpic_t *p;
+	qpic_t		*p;
 
 	p = Draw_CachePic("gfx/vidmodes.lmp");
 	M_DrawPic((320-p->width)/2,4,p);
@@ -1106,7 +1107,7 @@ void M_Quit_Draw (void)
 {
 #define VSTR(x) #x
 #define VSTR2(x) VSTR(x)
-	char *cmsg[] = {
+/*	char *cmsg[] = {
 //	 0123456789012345678901234567890123456789
 	"0            QuakeWorld",
 	"1    version " VERSION " by id Software",
@@ -1132,7 +1133,7 @@ void M_Quit_Draw (void)
 	"0All rights reserved. Press y to exit",
 	NULL };
 	char **p;
-	int y;
+	int y;*/
 
 	if (wasInMenus)
 	{
@@ -1141,7 +1142,7 @@ void M_Quit_Draw (void)
 		M_Draw ();
 		m_state = m_quit;
 	}
-#if 1
+#if 0
 	M_DrawTextBox (0, 0, 38, 23);
 	y = 12;
 	for (p = cmsg; *p; p++, y += 8) {

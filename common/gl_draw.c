@@ -39,6 +39,7 @@ cvar_t	*gl_nobind;
 cvar_t	*gl_max_size;
 cvar_t	*gl_picmip;
 cvar_t	*gl_conspin;
+cvar_t	*gl_conalpha;
 
 byte		*draw_chars;				// 8*8 graphic characters
 qpic_t		*draw_disc;
@@ -49,10 +50,6 @@ int			char_texture;
 int			cs_texture;	// crosshair 2 texture
 int			cs_texture3;	// crosshair 3 texture
 int			bc_texture;	// used for noclip
-
-static byte bc_data[4] = {
-	0xfe, 0xfe, 0xfe, 0xfe
-};
 
 static byte cs_data[64] = {
 	0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xff, 0xff,
@@ -96,8 +93,8 @@ typedef struct
 	float	sl, tl, sh, th;
 } glpic_t;
 
-byte		conback_buffer[sizeof(qpic_t) + sizeof(glpic_t)];
-qpic_t		*conback = (qpic_t *)conback_buffer;
+//byte		conback_buffer[sizeof(qpic_t) + sizeof(glpic_t)];
+//qpic_t		*conback = (qpic_t *)conback_buffer;
 
 int		gl_lightmap_format = 4;
 int		gl_solid_format = 3;
@@ -390,15 +387,16 @@ Draw_Init
 void Draw_Init (void)
 {
 	int		i;
-	qpic_t	*cb;
-	glpic_t	*gl;
-	int start;
-	byte    *ncdata;
+//	qpic_t	*cb;
+//	glpic_t	*gl;
+//	int start;
+//	byte    *ncdata;
 
 	gl_nobind = Cvar_Get ("gl_nobind","0",0,"None");
 	gl_max_size = Cvar_Get ("gl_max_size","1024",0,"None");
 	gl_picmip = Cvar_Get ("gl_picmip","0",0,"None");
 	gl_conspin = Cvar_Get ("gl_conspin", "0", CVAR_NONE, "None");
+	gl_conalpha = Cvar_Get ("gl_conalpha", "0.6", CVAR_NONE, "None");
 
 	// 3dfx can only handle 256 wide textures
 	if (!Q_strncasecmp ((char *)gl_renderer, "3dfx",4) ||
@@ -421,72 +419,15 @@ void Draw_Init (void)
 	cs_texture3 = GL_LoadTexture ("crosshair3", 16, 16, cs_data3,
 			false, true);
 	cs_texture = GL_LoadTexture ("crosshair", 8, 8, cs_data, false, true);
-	bc_texture = GL_LoadTexture ("bctex", 2, 2, bc_data, false, true);
+
 	// For some reason which I cannot claim to fathom, it seems to be
 	//  necessary to call GL_LoadTexture() here in descending (in terms
 	//  of size) order else things don't work right.  No idea why this
 	//  is so.
 	//            - knghtbrd (2 Jan 2000)
 
-	start = Hunk_LowMark ();
-
-	cb = (qpic_t *)COM_LoadHunkFile ("gfx/conback.lmp");	
-	if (!cb)
-		Sys_Error ("Couldn't load gfx/conback.lmp");
-	SwapPic (cb);
-
-#if 0
-	conback->width = vid.conwidth;
-	conback->height = vid.conheight;
-
-	// scale console to vid size
-	dest = ncdata = Hunk_AllocName(vid.conwidth * vid.conheight, "conback");
-
-	for (y=0 ; y<vid.conheight ; y++, dest += vid.conwidth)
-	{
-		src = cb->data + cb->width * (y*cb->height/vid.conheight);
-		if (vid.conwidth == cb->width)
-			memcpy (dest, src, vid.conwidth);
-		else
-		{
-			f = 0;
-			fstep = cb->width*0x10000/vid.conwidth;
-			for (x=0 ; x<vid.conwidth ; x+=4)
-			{
-				dest[x] = src[f>>16];
-				f += fstep;
-				dest[x+1] = src[f>>16];
-				f += fstep;
-				dest[x+2] = src[f>>16];
-				f += fstep;
-				dest[x+3] = src[f>>16];
-				f += fstep;
-			}
-		}
-	}
-#else
-	conback->width = cb->width;
-	conback->height = cb->height;
-	ncdata = cb->data;
-#endif
-	
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	gl = (glpic_t *)conback->data;
-	gl->texnum = GL_LoadTexture ("conback", conback->width, conback->height, ncdata, false, false);
-	gl->sl = 0;
-	gl->sh = 1;
-	gl->tl = 0;
-	gl->th = 1;
-	conback->width = vid.conwidth;
-	conback->height = vid.conheight;
-
-	// free loaded console
-	Hunk_FreeToLowMark (start);
-
-	// save a texture slot for translated picture
-	translate_texture = texture_extension_number++;
 
 	// save slots for scraps
 	scrap_texnum = texture_extension_number;
@@ -498,7 +439,6 @@ void Draw_Init (void)
 	draw_disc = Draw_PicFromWad ("disc");
 	draw_backtile = Draw_PicFromWad ("backtile");
 }
-
 
 
 /*
@@ -812,8 +752,6 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
 	glEnd ();
 }
 
-#define SPIN_HACK 1
-
 /*
 ================
 Draw_ConsoleBackground
@@ -823,12 +761,27 @@ Draw_ConsoleBackground
 void Draw_ConsoleBackground (int lines)
 {
 #ifdef QUAKEWORLD
-	char ver[] = "QuakeForge (GL QW) " QF_VERSION;
+	char		ver[] = "QuakeForge (QW client) " QF_VERSION;
 #else
-	char ver[] = "QuakeForge (GL UQ) " QF_VERSION;
+	char		ver[] = "QuakeForge (UQuake) " QF_VERSION;
 #endif
-	int x, i;
-	int y;
+	int 		x, i;
+	int 		y;
+	qpic_t		*conback;
+	glpic_t		*gl;
+	float		alpha;
+	int		ofs;
+
+	conback = Draw_CachePic ("gfx/conback.lmp");
+	gl = (glpic_t *)conback->data;
+	
+	y = (vid.height * 3) >> 2;
+	if (lines > y)
+		alpha = 1;
+	else
+		alpha = (float)(gl_conalpha->value * 2 * lines)/y;
+
+	ofs = vid.height == lines ? 0: 0-lines;
 
 	if (gl_conspin->value)
 	{
@@ -848,12 +801,36 @@ void Draw_ConsoleBackground (int lines)
 		glScalef (xfactor, xfactor, xfactor);
 	}
 
-	y = (vid.height * 3) >> 2;
-	if (lines > y)
-		Draw_Pic(0, lines-vid.height, conback);
-	else
-		Draw_AlphaPic (0, lines - vid.height, conback, 
-				(float)(1.2 * lines)/y);
+	GL_Bind (gl->texnum);
+	glColor4f (1,1,1,alpha);
+	if (alpha < 1.0)
+	{
+		glDisable(GL_ALPHA_TEST);
+		glEnable (GL_BLEND);
+		glCullFace(GL_FRONT);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	}
+	
+	glBegin (GL_QUADS);
+	glTexCoord2f (gl->sl, gl->tl);
+	glVertex2f (0, ofs);
+	glTexCoord2f (gl->sh, gl->tl);
+	glVertex2f (vid.width, ofs);
+	glTexCoord2f (gl->sh, gl->th);
+	glVertex2f (vid.width, lines);
+	glTexCoord2f (gl->sl, gl->th);
+	glVertex2f (0, lines);
+	glEnd ();
+
+
+	if (alpha < 1.0)
+	{
+		glColor4f (1,1,1,1);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glEnable(GL_ALPHA_TEST);
+		glDisable (GL_BLEND);
+	}
+
 	if (gl_conspin->value) {
 		glPopMatrix ();
 		glMatrixMode (GL_MODELVIEW);

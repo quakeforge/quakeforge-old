@@ -636,9 +636,9 @@ void Draw_ConsoleBackground (int lines)
 	qpic_t			*conback;
 	static			char saveback[320*8];
 #ifdef QUAKEWORLD
-	char ver[] = "QuakeForge (Software QW) " QF_VERSION;
+	char ver[] = "QuakeForge (QW client) " QF_VERSION;
 #else
-	char ver[] = "QuakeForge (Software UQ) " QF_VERSION;
+	char ver[] = "QuakeForge (UQuake) " QF_VERSION;
 #endif
 
 	conback = Draw_CachePic ("gfx/conback.lmp");
