@@ -842,12 +842,13 @@ void VID_ExtraOptionCmd(int option_cursor)
 		} else {
 #endif
 
-#ifdef HAS_DGA                    
+#ifdef HAS_DGA            
+// Currently broken: fixme!        
 			if(vid_glx_mode.value)
 			{
-				install_grabs();
+			//	install_grabs();
 			} else {
-				uninstall_grabs();
+			//	uninstall_grabs();
 			}
 			break;
 #endif
