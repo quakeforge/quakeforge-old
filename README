@@ -153,10 +153,9 @@ issues.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem:  The screen flickers once about every other frame when using GL
-Solution: Not all GL implementations support a performance hack used to
-          which is used by the GL renderer allowing it to avoid clearing
-	  the Z buffer.  The console command "gl_ztrick 0" fixes this
-	  problem.
+Solution: Not all GL implementations support a performance hack which is
+	  used by the GL renderer allowing it to avoid clearing the
+	  Z-buffer.  The console command "gl_ztrick 0" fixes this problem.
 
 Problem:  Zombies can sometimes get "stuck" in the ground.  They can be
           heard but not killed making it impossible to get 100% on the
@@ -244,9 +243,9 @@ Processors tested:
    Intel Pentium
    Intel Pentium II
    Intel Pentium III
+   MIPS R10000
    Sun UltraSPARC
    SGI Indigo 2
-   MIPS R10000
 
 Operating systems tested:
    Linux 2.x
@@ -257,10 +256,15 @@ Operating systems tested:
    Compaq/Digital Tru64 Unix
 
 Video cards tested (On Intel-based systems):
+   3Dfx Voodoo Graphics (Linux)
+   3Dfx Voodoo 2 (Linux)
+   3Dfx Voodoo 3 3000 (Linux)
+   Creative Labs Graphics Blaster RivaTNT (Linux)
    Matrox G200 (Linux)
    Matrox G400 (Linux)
-   Voodoo2 (Linux)
-
+   STB Velocity 4400 RivaTNT (Linux)
+   
+   
 See file "TESTIFY" for user testimonials on what works, where, and why.
 
 Please send user testimonials via e-mail to:
