@@ -30,36 +30,28 @@
 	Boston, MA  02111-1307, USA.
 */
 
-/*
-	Host_EndGame
-
-	On clients and non-dedicated servers, close currently-running game and
-	drop to console. On dedicated servers, exit.
-*/
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <setjmp.h>
 
-#include "net.h"
-#include "console.h"
-#include "quakedef.h"
+#include <net.h>
+#include <console.h>
+#include <quakedef.h>
 #ifdef UQUAKE
-#include "server.h"
+#include <server.h>
 #endif
-#include "client.h"
-#include "view.h"
-#include "wad.h"
-#include "input.h"
-#include "sound.h"
-#include "cdaudio.h"
-#include "keys.h"
-#include "menu.h"
-#include "draw.h"
-#include "screen.h"
-#include "sbar.h"
-#include "mathlib.h"
-#include "client.h"
+#include <client.h>
+#include <view.h>
+#include <wad.h>
+#include <input.h>
+#include <sound.h>
+#include <cdaudio.h>
+#include <keys.h>
+#include <menu.h>
+#include <draw.h>
+#include <screen.h>
+#include <sbar.h>
+#include <mathlib.h>
 
 extern int host_hunklevel;
 
@@ -69,15 +61,16 @@ double		realtime;				// without any filtering or bounding
 double		oldrealtime;			// last frame run
 qboolean	isDedicated;
 int			fps_count;
-int vcrFile = -1;
-cvar_t		serverprofile = {"serverprofile","0"};
-cvar_t	host_framerate = {"host_framerate","0"};	// set for slow motion
-cvar_t	samelevel = {"samelevel","0"};
-cvar_t	noexit = {"noexit","0",false,true};
-cvar_t	pausable = {"pausable","1"};
-cvar_t	temp1 = {"temp1","0"};
-/* Should server filter out \n & \r in player names ? */
-cvar_t        sv_filter       = {"sv_filter","1"};
+int 		vcrFile = -1;
+
+cvar_t	serverprofile	= {"serverprofile", "0"};
+cvar_t	host_framerate	= {"host_framerate", "0"};	// set for slow motion
+cvar_t	samelevel		= {"samelevel", "0"};
+cvar_t	noexit			= {"noexit", "0", false, true};
+cvar_t	pausable		= {"pausable", "1"};
+cvar_t	temp1			= {"temp1", "0"};
+cvar_t	sv_filter		= {"sv_filter", "1"};	// filter \n & \r in names?
+
 #ifdef UQUAKE
 client_t	*host_client;			// current client
 #endif
@@ -85,6 +78,46 @@ client_t	*host_client;			// current client
 void Host_InitLocal (void);
 void Host_FindMaxClients (void);
 
+#ifdef QUAKEWORLD
+#define MAXTIME 0.2
+#define MINTIME 0.0
+#elif UQUAKE
+#define MAXTIME 0.1
+#define MINTIME 0.001
+#endif
+#define MAXFPS	72.0
+
+
+/*
+	Host_ClearMemory
+
+	Clears all the memory used by both the client and server, but do not
+	reinitialize anything.
+*/
+void
+Host_ClearMemory (void)
+{
+	Con_DPrintf ("Clearing memory\n");
+	D_FlushCaches ();
+	Mod_ClearAll ();
+	if (host_hunklevel)
+		Hunk_FreeToLowMark (host_hunklevel);
+
+#ifdef UQUAKE
+	cls.signon = 0;
+	
+	memset (&sv, 0, sizeof(sv));
+#endif
+	memset (&cl, 0, sizeof(cl));
+}
+
+
+/*
+	Host_EndGame
+
+	On clients and non-dedicated servers, close currently-running game and
+	drop to console. On dedicated servers, exit.
+*/
 void
 Host_EndGame ( char *message, ... )
 {
@@ -115,46 +148,80 @@ Host_EndGame ( char *message, ... )
 	else
 		CL_Disconnect ();
 
-	longjmp (host_abortserver, 1);
+	longjmp (host_abort, 1);
 #endif
 }
 
 
 /*
+	Host_FilterTime
+
+	Returns false if the time is too short to run a frame
+*/
+qboolean
+Host_FilterTime ( float time )
+{
+	float	fps;
+
+	realtime += time;
+	if ( oldrealtime > realtime )
+		oldrealtime = 0;
+
+	if (cl_maxfps.value)
+		fps = max(30.0, min(cl_maxfps.value, MAXFPS));
+	else
+#ifdef QUAKEWORLD
+		fps = max(30.0, min(rate.value/80.0, MAXFPS));
+#elif UQUAKE
+		fps = MAXFPS;
+#endif
+
+	if (!cls.timedemo && realtime - oldrealtime < 1.0/fps)
+		return false;		// framerate is too high
+
+	host_frametime = realtime - oldrealtime;
+	oldrealtime = realtime;
+
+	if (host_framerate.value > 0) {
+		host_frametime = host_framerate.value;
+	} else {		// don't allow really long or short frames
+		host_frametime = min(MAXTIME, max(host_frametime, MINTIME));
+	}
+	
+	return true;
+}
+/*
+#ifdef QUAKEWORLD
+int		nopacketcount;		// for Host_FrameMain
+#endif
+*/
+/*
 	Host_FrameMain
 
 	Run everything that happens on a per-frame basis
 */
-int		nopacketcount;
-
 void
-Host_FrameMain (float time)
+Host_FrameMain ( float time )
 {
-	static double		time1 = 0;
-	static double		time2 = 0;
-	static double		time3 = 0;
-	int			pass1, pass2, pass3;
-	float fps;
-	if (setjmp (host_abort) )
+	static double	time1 = 0;
+	static double	time2 = 0;
+	static double	time3 = 0;
+	int				pass1, pass2, pass3;
+
+#ifdef UQUAKE
+	cl_visedicts = cl_visedicts_list[0];
+#endif
+	if ( setjmp(host_abort) )
 		return;			// something bad happened, or the server disconnected
 
+#ifdef UQUAKE
+	// keep the random time dependent
+	rand ();
+#endif
+
 	// decide the simulation time
-	realtime += time;
-	if (oldrealtime > realtime)
-		oldrealtime = 0;
-
-	if (cl_maxfps.value)
-		fps = max(30.0, min(cl_maxfps.value, 72.0));
-	else
-		fps = max(30.0, min(rate.value/80.0, 72.0));
-
-	if (!cls.timedemo && realtime - oldrealtime < 1.0/fps)
-		return;			// framerate is too high
-
-	host_frametime = realtime - oldrealtime;
-	oldrealtime = realtime;
-	if (host_frametime > 0.2)
-		host_frametime = 0.2;
+	if ( !Host_FilterTime(time) )
+		return;
 		
 	// get new key events
 	Sys_SendKeyEvents ();
@@ -165,15 +232,21 @@ Host_FrameMain (float time)
 	// process console commands
 	Cbuf_Execute ();
 
-	// fetch results from server
+	// Poll server for results
+#ifdef QUAKEWORLD
 	CL_ReadPackets ();
+#elif UQUAKE
+	NET_Poll ();
+#endif
 
 	// send intentions now
+#ifdef QUAKEWORLD
 	// resend a connection request if necessary
 	if (cls.state == ca_disconnected) {
 		CL_CheckForResend ();
-	} else
+	} else {
 		CL_SendCmd ();
+	}
 
 	// Set up prediction for other players
 	CL_SetUpPlayerPrediction(false);
@@ -186,6 +259,31 @@ Host_FrameMain (float time)
 
 	// build a refresh entity list
 	CL_EmitEntities ();
+#elif UQUAKE
+	// if running the server locally, make intentions now
+	if (sv.active)
+		CL_SendCmd ();
+	
+	// check for commands typed to the host
+	Host_GetConsoleCommands ();
+	
+	if (sv.active)
+		SV_Frame ();		// Send frame to clients
+
+	/*	
+		if running the server remotely, send intentions now after incoming
+		messages have been read
+	*/
+	if (!sv.active)
+		CL_SendCmd ();
+
+	host_time += host_frametime;
+
+// fetch results from server
+	if (cls.state >= ca_connected) {
+		CL_ReadFromServer ();
+	}
+#endif
 
 	// update video
 	if (host_speeds.value)
@@ -197,8 +295,11 @@ Host_FrameMain (float time)
 		time2 = Sys_DoubleTime ();
 		
 	// update audio
-	if (cls.state == ca_active)
-	{
+#ifdef QUAKEWORLD
+	if (cls.state == ca_active)	{
+#elif UQUAKE
+	if (cls.signon == SIGNONS) {
+#endif
 		S_Update (r_origin, vpn, vright, vup);
 		CL_DecayLights ();
 	}
@@ -207,8 +308,7 @@ Host_FrameMain (float time)
 	
 	CDAudio_Update();
 
-	if (host_speeds.value)
-	{
+	if (host_speeds.value) {
 		pass1 = (time1 - time3)*1000;
 		time3 = Sys_DoubleTime ();
 		pass2 = (time2 - time1)*1000;
@@ -309,7 +409,7 @@ Host_Error ( char *error, ... )
 	Sys_Error ("Host_Error: %s\n",string);
 
 #ifdef UQUAKE
-	longjmp (host_abortserver, 1);
+	longjmp (host_abort, 1);
 #endif
 }
 
@@ -524,23 +624,19 @@ Host_Shutdown( void )
 }
 
 /*
-===============
-Host_WriteConfiguration
+	Host_WriteConfiguration
 
-Writes key bindings and archived cvars to config.cfg
-===============
+	Write key bindings and archived cvars to config.cfg
 */
-void Host_WriteConfiguration (void)
+void
+Host_WriteConfiguration ( void )
 {
 	QFile	*f;
 
-// dedicated servers initialize the host but don't parse and set the
-// config.cfg cvars
-	if (host_initialized & !isDedicated)
-	{
+	// Only write cvars if we are non-dedicated
+	if (host_initialized & !isDedicated) {
 		f = Qopen (va("%s/config.cfg",com_gamedir), "w");
-		if (!f)
-		{
+		if ( !f ) {
 			Con_Printf ("Couldn't write config.cfg.\n");
 			return;
 		}
@@ -552,16 +648,18 @@ void Host_WriteConfiguration (void)
 	}
 }
 
+
 #ifdef UQUAKE
 /*
-=======================
-Host_InitLocal
-======================
+	Host_InitLocal
+	
+	(desc)
 */
-void Host_InitLocal (void)
+void
+Host_InitLocal ( void )
 {
 	Host_InitCommands ();
-	
+       
 	Cvar_RegisterVariable (&host_framerate);
 
 	Cvar_RegisterVariable (&sys_ticrate);
@@ -581,16 +679,16 @@ void Host_InitLocal (void)
 	Cvar_RegisterVariable (&temp1);
 	Cvar_RegisterVariable (&sv_filter);
 
-
 	Host_FindMaxClients ();
 	
 	host_time = 1.0;		// so a think at time 0 won't get called
 }
 
+
 /*
-================
-Host_FindMaxClients
-================
+	Host_FindMaxClients
+	
+	(desc)
 */
 void	Host_FindMaxClients (void)
 {
