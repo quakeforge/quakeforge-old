@@ -3,13 +3,12 @@
 
 	(description)
 
+	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
 	Author: Jeff Teunissen	<deek@quakeforge.net>
 	Date:	09 Feb 2000
-
-	This file is part of the QuakeForge Core system.
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -25,9 +24,11 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to:
 
-	Free Software Foundation, Inc.
-	59 Temple Place - Suite 330
-	Boston, MA  02111-1307, USA.
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
 #include <stdarg.h>
@@ -66,33 +67,19 @@ int			fps_count;
 int 		vcrFile = -1;
 double		host_time;
 
-//cvar_t	sys_ticrate	= {"sys_ticrate","0.05"};
 cvar_t	*sys_ticrate;
-//cvar_t	serverprofile	= {"serverprofile", "0"};
 cvar_t	*serverprofile;
-//cvar_t	host_framerate	= {"host_framerate", "0"};	// set for slow motion
 cvar_t	*host_framerate;
-//cvar_t	samelevel	= {"samelevel", "0"};
 cvar_t	*samelevel;
-//cvar_t	noexit		= {"noexit", "0", CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*noexit;
-//cvar_t	pausable	= {"pausable", "1"};
 cvar_t	*pausable;
-//cvar_t	temp1		= {"temp1", "0"};
 cvar_t *temp1;
-//cvar_t	sv_filter	= {"sv_filter", "1"};	// strip \n, \r in names?
 cvar_t *sv_filter;
-//cvar_t	teamplay	= {"teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*teamplay;
-//cvar_t	deathmatch	= {"deathmatch","0"};		// 0, 1, or 2
 cvar_t	*deathmatch;
-//cvar_t	coop		= {"coop","0"};			// 0 or 1
 cvar_t	*coop;
-//cvar_t	fraglimit	= {"fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*fraglimit;
-//cvar_t	skill		= {"skill","1"};		// 0 - 3
 cvar_t	*skill;
-//cvar_t	timelimit	= {"timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*timelimit;
 
 #ifdef UQUAKE
@@ -730,40 +717,26 @@ Host_InitLocal ( void )
 {
 	Host_InitCommands ();
 
-//	Cvar_RegisterVariable (&host_framerate);
 	host_framerate = Cvar_Get ("host_framerate","0",0,"None");
 
-//	Cvar_RegisterVariable (&sys_ticrate);
 	sys_ticrate = Cvar_Get ("sys_ticrate","0.05",0,"None");
-//	Cvar_RegisterVariable (&serverprofile);
 	serverprofile = Cvar_Get ("serverprofile","0",0,"None");
 
-//	Cvar_RegisterVariable (&fraglimit);
 	fraglimit = Cvar_Get ("fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&timelimit);
 	timelimit = Cvar_Get ("timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&teamplay);
 	teamplay = Cvar_Get ("teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
-//	Cvar_RegisterVariable (&samelevel);
 	samelevel = Cvar_Get ("samelevel","0",0,"None");
-//	Cvar_RegisterVariable (&noexit);
 	noexit = Cvar_Get ("noexit","0",CVAR_USERINFO|CVAR_SERVERINFO,"None");
-//	Cvar_RegisterVariable (&skill);
 	skill = Cvar_Get ("skill","1",0,"None");
-//	Cvar_RegisterVariable (&deathmatch);
 	deathmatch = Cvar_Get ("deathmatch","0",0,"None");
-//	Cvar_RegisterVariable (&coop);
 	coop = Cvar_Get ("coop","0",0,"None");
 
-//	Cvar_RegisterVariable (&pausable);
 	pausable = Cvar_Get ("pausable","1",0,"None");
 
-//	Cvar_RegisterVariable (&temp1);
 	temp1 = Cvar_Get ("temp1","0",0,"None");
-//	Cvar_RegisterVariable (&sv_filter);
 	sv_filter = Cvar_Get ("sv_filter","1",0,"None");
 
 	Host_FindMaxClients ();

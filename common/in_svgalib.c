@@ -1,33 +1,41 @@
 /*
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999-2000  contributors of the QuakeForge project
-Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
+	in_svgalib.c
 
-Please see the file "AUTHORS" for a list of contributors
+	(description)
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-See the GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "keys.h"
-#include "client.h"
-#include "sys.h"
-#include "console.h"
-#include "cvar.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <keys.h>
+#include <client.h>
+#include <sys.h>
+#include <console.h>
+#include <cvar.h>
 #include <cmd.h>
 
 #include <stdio.h>
@@ -56,18 +64,8 @@ static int	mx, my;
 static void IN_init_kb();
 static void IN_init_mouse();
 
-//cvar_t	_windowed_mouse = {"_windowed_mouse", "1", CVAR_ARCHIVE};
 cvar_t	*_windowed_mouse;
-//cvar_t	m_filter = {"m_filter","0"};
 cvar_t	*m_filter;
-/*
-static cvar_t mouse_button_commands[3] =
-{
-    {"mouse1","+attack"},
-    {"mouse2","+strafe"},
-    {"mouse3","+forward"},
-};
-*/
 static cvar_t	*mouse_button_commands[3];
 
 static void keyhandler(int scancode, int state)
@@ -243,13 +241,9 @@ static void IN_init_mouse()
 	char *mousedev;
 	int mouserate = MOUSE_DEFAULTSAMPLERATE;
 
-//	Cvar_RegisterVariable(&mouse_button_commands[0]);
 	mouse_button_commands[0] = Cvar_Get ("mouse1","+attack",0,"None");
-//	Cvar_RegisterVariable(&mouse_button_commands[1]);
 	mouse_button_commands[1] = Cvar_Get ("mouse2","+strafe",0,"None");
-//	Cvar_RegisterVariable(&mouse_button_commands[2]);
 	mouse_button_commands[2] = Cvar_Get ("mouse2","+forward",0,"None");
-//	Cvar_RegisterVariable(&m_filter);
 	m_filter = Cvar_Get ("m_filter","0",0,"None");
 	Cmd_AddCommand("force_centerview", Force_CenterView_f);
 
