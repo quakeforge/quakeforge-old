@@ -532,7 +532,7 @@ void CL_Disconnect (void)
 
 	connect_time = -1;
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined (QUAKEWORLD)
 	SetWindowText (mainwindow, "QuakeWorld: disconnected");
 #endif
 
@@ -587,6 +587,7 @@ void CL_Disconnect (void)
 #ifdef UQUAKE
 	cls.demoplayback = cls.timedemo = false;
 	cls.signon = 0;
+	cl.paused = false;	// Tonik
 #endif
 }
 
