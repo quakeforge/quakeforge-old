@@ -58,9 +58,9 @@
 #define MIN_WIDTH 320
 #define MIN_HEIGHT 200
 
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 cvar_t	*m_filter;
-float old_windowed_mouse;
+float oldin_grab;
 
 // The following X property format is defined in Motif 1.1's
 // Xm/MwmUtils.h, but QUAKE should not depend on that header
@@ -832,7 +832,7 @@ void GetEvent(void)
 
 		case MotionNotify:
 
-			if (_windowed_mouse->value) {
+			if (in_grab->value) {
 				mouse_x = (float) ((int)x_event.xmotion.x - (int)(vid.width/2));
 				mouse_y = (float) ((int)x_event.xmotion.y - (int)(vid.height/2));
 	//printf("m: x=%d,y=%d, mx=%3.2f,my=%3.2f\n",
@@ -900,10 +900,10 @@ void GetEvent(void)
 #endif
 	}
 
-	if (old_windowed_mouse != _windowed_mouse->value) {
-		old_windowed_mouse = _windowed_mouse->value;
+	if (oldin_grab != in_grab->value) {
+		oldin_grab = in_grab->value;
 
-		if (!_windowed_mouse->value) {
+		if (!in_grab->value) {
 			/* ungrab the pointer */
 			XUngrabPointer(x_disp,CurrentTime);
 		} else {
@@ -1195,7 +1195,7 @@ void IN_SendKeyEvents (void)
 
 void IN_Init (void)
 {
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
    if ( COM_CheckParm ("-nomouse") )
      return;
@@ -1270,14 +1270,14 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
 	M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-	M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
+	M_DrawCheckbox (220, options_draw_cursor, in_grab->value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
-	case 1:	// _windowed_mouse
-		_windowed_mouse->value = !_windowed_mouse->value;
+	case 1:	// in_grab
+		in_grab->value = !in_grab->value;
 		break;
 
 	}

@@ -176,7 +176,7 @@ $(BUILD_DIR)/common_lib.a: $(ALL_COMMON_LIB_OBJS)
 ifneq ($(X11QUAKE),)
 
 ALL_X11_SRC  = $(SW_REND_SRC) @X11_VID_SRC@\
-               model.c in_x11.c context_x11.c
+               model.c dga_check.c in_x11.c context_x11.c
 ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                           $(basename $(ALL_X11_SRC) .c .s))) \
 			  $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a

@@ -58,7 +58,7 @@ cvar_t	*_vid_default_mode_win;
 cvar_t	*vid_config_x;
 cvar_t	*vid_config_y;
 cvar_t	*vid_stretch_by_2;
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 cvar_t	*vid_fullscreen_mode;
 cvar_t	*vid_windowed_mode;
 cvar_t	*block_switch;
@@ -114,7 +114,7 @@ void    VID_Init (unsigned char *palette)
 	vid_config_y = Cvar_Get ("vid_config_y","600",CVAR_ARCHIVE,"None");
 	vid_stretch_by_2 = Cvar_Get ("vid_stretch_by_2","1",CVAR_ARCHIVE,
 					"None");
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 	vid_fullscreen_mode = Cvar_Get ("vid_fullscreen_mode","3",CVAR_ARCHIVE,
 					"None");
 	vid_windowed_mode = Cvar_Get ("vid_windowed_mode","0",CVAR_ARCHIVE,

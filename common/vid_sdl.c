@@ -40,10 +40,10 @@
 #include <client.h>
 
 
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 
 
-static float old_windowed_mouse = 0;
+static float oldin_grab = 0;
 
 extern viddef_t    vid;                // global video state
 unsigned short  d_8to16table[256];
@@ -336,7 +336,7 @@ void Sys_SendKeyEvents(void)
                 break;
 
             case SDL_MOUSEMOTION:
-                if (_windowed_mouse->value)
+                if (in_grab->value)
 		{
 		   if ((event.motion.x != (vid.width/2)) ||
 			(event.motion.y != (vid.height/2)) ) {
@@ -360,9 +360,9 @@ void Sys_SendKeyEvents(void)
                 break;
         }
     }
-     if (old_windowed_mouse != _windowed_mouse->value)
-	{ old_windowed_mouse = _windowed_mouse->value;
-	  if (_windowed_mouse->value && !COM_CheckParm("-nomouse"))
+     if (oldin_grab != in_grab->value)
+	{ oldin_grab = in_grab->value;
+	  if (in_grab->value && !COM_CheckParm("-nomouse"))
 	  { mouse_avail = 1;
 	  }
 	  else
@@ -373,9 +373,9 @@ void Sys_SendKeyEvents(void)
 
 void IN_Init (void)
 {
-    _windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+    in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 
-    if ( COM_CheckParm("-nomouse") && !_windowed_mouse->value)
+    if ( COM_CheckParm("-nomouse") && !in_grab->value)
         return;
 
     mouse_x = mouse_y = 0.0;
@@ -457,14 +457,14 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
+        M_DrawCheckbox (220, options_draw_cursor, in_grab->value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
-	case 1:	// _windowed_mouse
-		_windowed_mouse->value = !_windowed_mouse->value;
+	case 1:	// in_grab
+		in_grab->value = !in_grab->value;
 		break;
 
 	}

@@ -107,7 +107,7 @@ cvar_t	*_vid_wait_override;
 cvar_t	*vid_config_x;
 cvar_t	*vid_config_y;
 cvar_t	*vid_stretch_by_2;
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 cvar_t	*vid_fullscreen_mode;
 cvar_t	*vid_windowed_mode;
 cvar_t	*block_switch;
@@ -1682,7 +1682,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 	// Set either the fullscreen or windowed mode
 	if (modelist[modenum].type == MS_WINDOWED)
 	{
-		if (_windowed_mouse->value && key_dest == key_game)
+		if (in_grab->value && key_dest == key_game)
 		{
 			stat = VID_SetWindowedMode(modenum);
 			IN_ActivateMouse ();
@@ -2159,7 +2159,7 @@ void	VID_Init (unsigned char *palette)
 	vid_config_y = Cvar_Get ("vid_config_y","600",CVAR_ARCHIVE,"None");
 	vid_stretch_by_2 = Cvar_Get ("vid_stretch_by_2","1",CVAR_ARCHIVE,
 					"None");
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 	vid_fullscreen_mode = Cvar_Get ("vid_fullscreen_mode","3",CVAR_ARCHIVE,
 					"None");
 	vid_windowed_mode = Cvar_Get ("vid_windowed_mode","0",CVAR_ARCHIVE,
@@ -2471,7 +2471,7 @@ void	VID_Update (vrect_t *rects)
 // handle the mouse state when windowed if that's changed
 	if (modestate == MS_WINDOWED)
 	{
-		if (!_windowed_mouse->value) {
+		if (!in_grab->value) {
 			if (windowed_mouse) {
 				IN_DeactivateMouse ();
 				IN_ShowMouse ();
@@ -2851,7 +2851,7 @@ void AppActivate(BOOL fActive, BOOL minimize)
 				IN_ActivateMouse ();
 				IN_HideMouse ();
 			}
-			else if ((modestate == MS_WINDOWED) && _windowed_mouse->value && key_dest == key_game)
+			else if ((modestate == MS_WINDOWED) && in_grab->value && key_dest == key_game)
 			{
 				IN_ActivateMouse ();
 				IN_HideMouse ();
@@ -2883,7 +2883,7 @@ void AppActivate(BOOL fActive, BOOL minimize)
 				IN_DeactivateMouse ();
 				IN_ShowMouse ();
 			}
-			else if ((modestate == MS_WINDOWED) && _windowed_mouse->value)
+			else if ((modestate == MS_WINDOWED) && in_grab->value)
 			{
 				IN_DeactivateMouse ();
 				IN_ShowMouse ();
@@ -2901,7 +2901,7 @@ VID_HandlePause
 void VID_HandlePause (qboolean pause)
 {		// Why?
 #if 0
-	if ((modestate == MS_WINDOWED) && _windowed_mouse->value)
+	if ((modestate == MS_WINDOWED) && in_grab->value)
 	{
 		if (pause)
 		{
@@ -3470,15 +3470,15 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	if (modestate == MS_WINDOWED) {
 		// Windowed Mouse
         	M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        	M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
+        	M_DrawCheckbox (220, options_draw_cursor, in_grab->value);
 	}
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
-	case 1:	// _windowed_mouse
-		_windowed_mouse->value = !_windowed_mouse->value;
+	case 1:	// in_grab
+		in_grab->value = !in_grab->value;
 		break;
 
 	}

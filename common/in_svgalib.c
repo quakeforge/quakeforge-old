@@ -64,7 +64,7 @@ static int	mx, my;
 static void IN_init_kb();
 static void IN_init_mouse();
 
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 cvar_t	*m_filter;
 static cvar_t	*mouse_button_commands[3];
 

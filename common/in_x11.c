@@ -66,7 +66,7 @@
 #include <strings.h>
 #endif
 
-cvar_t		*_windowed_mouse;
+cvar_t		*in_grab;
 cvar_t		*m_filter;
 #ifdef HAS_DGA
 cvar_t		*in_dgamouse;
@@ -77,7 +77,7 @@ static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
 static int		p_mouse_x, p_mouse_y;
-static float	old_windowed_mouse;
+static float	old_in_grab;
 static Cursor	nullcursor = None;
 
 
@@ -302,9 +302,9 @@ event_motion(XEvent *event)
 	} else
 #endif
 	{
-		//printf("_windowed_mouse: %f\n", _windowed_mouse->value);
+		//printf("in_grab: %f\n", in_grab->value);
 		//printf("CurrentTime: %ld\n", CurrentTime);
-		if (_windowed_mouse->value) {
+		if (in_grab->value) {
 			if (!event->xmotion.send_event) {
 				mouse_x += (event->xmotion.x - p_mouse_x);
 				mouse_y += (event->xmotion.y - p_mouse_y);
@@ -331,10 +331,10 @@ event_motion(XEvent *event)
 void
 IN_Frame(void)
 {
-	if (old_windowed_mouse != _windowed_mouse->value) {
-		old_windowed_mouse = _windowed_mouse->value;
+	if (old_in_grab != in_grab->value) {
+		old_in_grab = in_grab->value;
 
-		if (!_windowed_mouse->value) {
+		if (!in_grab->value) {
 			/* ungrab the pointer */
 			XUngrabPointer(x_disp,CurrentTime);
 		} else {
@@ -400,14 +400,14 @@ static void IN_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
 	M_Print(16, options_draw_cursor+=8, "             Use Mouse");
-	M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse->value);
+	M_DrawCheckbox(220, options_draw_cursor, in_grab->value);
 }
 
 static void IN_ExtraOptionCmd(int option_cursor)
 {
 	switch (option_cursor) {
-	case 1:	// _windowed_mouse
-		_windowed_mouse->value = !_windowed_mouse->value;
+	case 1:	// in_grab
+		in_grab->value = !in_grab->value;
 		break;
 	}
 }
@@ -457,32 +457,34 @@ IN_Init(void)
 		XChangeWindowAttributes(x_disp, x_win, attribmask, &attribs_2);
 	}
 
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
 
 	if (!COM_CheckParm("-nodga")) {
-	// XF86DGASetViewPort, XF86DGASetVidPage, and XF86DGADirectVideo's
-	// XF86DGADirectVideo flag are disabled till someone has a chance to
-	// figure out what's wrong with them (if anything)  --KB
+		// XF86DGASetViewPort, XF86DGASetVidPage, and XF86DGADirectVideo's
+		// XF86DGADirectVideo flag are disabled till someone has a chance to
+		// figure out what's wrong with them (if anything)  --KB
 
-//	XF86DGASetViewPort(x_disp, DefaultScreen(x_disp), 0, 0);
-	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp),
-			/*XF86DGADirectGraphics|*/
-			XF86DGADirectMouse|XF86DGADirectKeyb);
-//	XF86DGASetVidPage(x_disp, DefaultScreen(x_disp), 0);
+		//	XF86DGASetViewPort(x_disp, DefaultScreen(x_disp), 0, 0);
+		XF86DGADirectVideo(x_disp, DefaultScreen(x_disp),
+						   /*XF86DGADirectGraphics|*/
+						   XF86DGADirectMouse|XF86DGADirectKeyb);
+		//	XF86DGASetVidPage(x_disp, DefaultScreen(x_disp), 0);
 
-	XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
-	XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, GrabModeAsync,
-				 x_win, None, CurrentTime);
+		XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync,
+					  CurrentTime);
+		XGrabPointer(x_disp, x_win, True, MOUSE_MASK,
+					 GrabModeAsync, GrabModeAsync,
+					 x_win, None, CurrentTime);
 
-	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
-			"1 if you have DGA mouse support");
+		in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
+								"1 if you have DGA mouse support");
 	} else
 		in_dgamouse = Cvar_Get ("in_dgamouse", "0", CVAR_ROM,
-				"1 if you have DGA mouse support");
+								"1 if you have DGA mouse support");
 
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;

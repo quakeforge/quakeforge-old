@@ -52,7 +52,7 @@
 extern viddef_t        vid; // global video state
 unsigned short	d_8to16table[256];
 
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 cvar_t	*m_filter;
 
 #define NUM_STDBUTTONS	3
@@ -62,7 +62,7 @@ static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
 static int		p_mouse_x, p_mouse_y;
-static float	old_windowed_mouse;
+static float	oldin_grab;
 
 static ggi_visual_t		ggivis = NULL;
 static ggi_mode			mode;
@@ -889,15 +889,15 @@ void IN_Frame(void)
 {
 	/* Only supported by LibGII 0.7 or later. */
 #ifdef GII_CMDCODE_PREFER_RELPTR
-	if (old_windowed_mouse != _windowed_mouse->value) {
+	if (oldin_grab != in_grab->value) {
 		gii_event ev;
 
-		old_windowed_mouse = _windowed_mouse->value;
+		oldin_grab = in_grab->value;
 
 		ev.cmd.size = sizeof(gii_cmd_nodata_event);
 		ev.cmd.type = evCommand;
 		ev.cmd.target = GII_EV_TARGET_ALL;
-		ev.cmd.code = (int)_windowed_mouse->value ? GII_CMDCODE_PREFER_RELPTR
+		ev.cmd.code = (int)in_grab->value ? GII_CMDCODE_PREFER_RELPTR
 			: GII_CMDCODE_PREFER_ABSPTR;
 
 		ggiEventSend(ggivis, &ev);
@@ -909,9 +909,9 @@ void IN_Frame(void)
 void
 IN_Init(void)
 {
-	_windowed_mouse = Cvar_Get("_windowed_mouse", "0", CVAR_ARCHIVE,
+	in_grab = Cvar_Get("in_grab", "0", CVAR_ARCHIVE,
 			"None");
-	old_windowed_mouse = -1; /* Force update */
+	oldin_grab = -1; /* Force update */
 	m_filter = Cvar_Get("m_filter","0",CVAR_ARCHIVE, "None");
 	if (COM_CheckParm ("-nomouse")) return;
 
@@ -971,7 +971,7 @@ VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
+        M_DrawCheckbox (220, options_draw_cursor, in_grab->value);
 }
 
 
@@ -979,8 +979,8 @@ void
 VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
-	case 1:	// _windowed_mouse
-		_windowed_mouse->value = !_windowed_mouse->value;
+	case 1:	// in_grab
+		in_grab->value = !in_grab->value;
 		break;
 
 	}

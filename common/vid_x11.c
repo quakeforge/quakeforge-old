@@ -33,6 +33,7 @@
 #define _BSD
 #include <config.h>
 
+#include <values.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,6 +65,10 @@
 #include <client.h>
 #include <input.h>
 #include <context_x11.h>
+#ifdef HAS_VIDMODE
+# include <X11/extensions/xf86vmode.h>
+#endif
+#include <dga_check.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -78,6 +83,11 @@ static GC			x_gc;
 static Visual		*x_vis;
 static XVisualInfo	*x_visinfo;
 static Atom			aWMDelete = 0;
+
+#ifdef HAS_VIDMODE
+static XF86VidModeModeInfo **vidmodes;
+static int	nummodes, hasvidmode = 0;
+#endif
 
 int 	XShmQueryExtension(Display *);
 int 	XShmGetEventBase(Display *);
@@ -474,6 +484,18 @@ void VID_Init (unsigned char *palette)
 // open the display
 	x11_open_display();
 
+#ifdef HAS_VIDMODE
+	hasvidmode = VID_CheckVMode(x_disp, NULL, NULL);
+	if (hasvidmode) {
+		if (! XF86VidModeGetAllModeLines(x_disp, DefaultScreen(x_disp),
+						 &nummodes, &vidmodes)
+		    || nummodes <= 0) {
+			hasvidmode = 0;
+		}
+	}
+	Con_SafePrintf ("hasvidmode = %i\nnummodes = %i\n", hasvidmode, nummodes);
+#endif
+
 // check for command-line window size
 	if ((pnum=COM_CheckParm("-winsize")))
 	{
@@ -557,6 +579,38 @@ void VID_Init (unsigned char *palette)
 
 		attribs.event_mask = STD_EVENT_MASK;
 		attribs.border_pixel = 0;
+
+#ifdef HAS_VIDMODE
+		if (hasvidmode) {
+			int smallest_mode=0, x=MAXINT, y=MAXINT;
+
+			attribs.override_redirect=1;
+			attribmask|=CWOverrideRedirect;
+
+			// FIXME: does this depend on mode line order in XF86Config?
+			for (i=0; i<nummodes; i++) {
+				if (x>vidmodes[i]->hdisplay || y>vidmodes[i]->vdisplay) {
+					smallest_mode=i;
+					x=vidmodes[i]->hdisplay;
+					y=vidmodes[i]->vdisplay;
+				}
+			}
+			// chose the smallest mode that our window fits into;
+			for (i=smallest_mode;
+				 i!=(smallest_mode+1)%nummodes;
+				 i=(i?i-1:nummodes-1)) {
+				if (vidmodes[i]->hdisplay>=vid.width
+					&& vidmodes[i]->vdisplay>=vid.height) {
+					XF86VidModeSwitchToMode (x_disp, DefaultScreen (x_disp),
+											 vidmodes[i]);
+					break;
+				}
+			}
+			XF86VidModeSetViewPort(x_disp, DefaultScreen (x_disp), 0, 0);
+			in_grab = Cvar_Get ("in_grab","1",CVAR_ARCHIVE|CVAR_ROM,"None");
+		} else
+#endif
+			in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 
 		/* Create the main window */
 		x_win = XCreateWindow(x_disp,
@@ -691,6 +745,18 @@ VID_Shutdown(void)
 {
 	Sys_Printf("VID_Shutdown\n");
 	if (x_disp) {
+#ifdef HAS_VIDMODE
+		if (hasvidmode) {
+			int i;
+
+			XF86VidModeSwitchToMode (x_disp, DefaultScreen (x_disp),
+									 vidmodes[0]);
+			for (i = 0; i < nummodes; i++) {
+				if (vidmodes[i]->private) XFree(vidmodes[i]->private);
+			}
+			XFree(vidmodes);
+		}
+#endif
 		XAutoRepeatOn(x_disp);
 		x11_close_display();
 		x_disp = 0;

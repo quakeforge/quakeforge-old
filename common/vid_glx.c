@@ -30,6 +30,7 @@
 	$Id$
 */
 
+#include <values.h>
 #include <qtypes.h>
 #include <quakedef.h>
 #include <glquake.h>
@@ -165,6 +166,8 @@ VID_Shutdown(void)
 	if (hasvidmode) {
 		int i;
 
+		XF86VidModeSwitchToMode (x_disp, DefaultScreen (x_disp),
+								 vidmodes[0]);
 		for (i = 0; i < nummodes; i++) {
 			if (vidmodes[i]->private) XFree(vidmodes[i]->private);
 		}
@@ -417,7 +420,6 @@ void VID_Init(unsigned char *palette)
 
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
 	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
 	vid_glx_fullscreen = Cvar_Get ("vid_glx_fullscreen","0",0,"None");
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
@@ -508,9 +510,9 @@ void VID_Init(unsigned char *palette)
 		const char *str = getenv("MESA_GLX_FX");
 		if (str != NULL && *str != 'd') {
 			if (tolower(*str) == 'w') {
-				vid_glx_fullscreen->value = 0;
+				Cvar_Set (vid_glx_fullscreen, "0");
 			} else {
-				vid_glx_fullscreen->value = 1;
+				Cvar_Set (vid_glx_fullscreen, "1");
 			}
 		}
 #endif
@@ -526,10 +528,49 @@ void VID_Init(unsigned char *palette)
 	attr.event_mask = X_MASK;
 	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
 
+#ifdef HAS_VIDMODE
+	if (hasvidmode) {
+		int smallest_mode=0, x=MAXINT, y=MAXINT;
+
+		attr.override_redirect=1;
+		mask|=CWOverrideRedirect;
+
+		// FIXME: does this depend on mode line order in XF86Config?
+		for (i=0; i<nummodes; i++) {
+			if (x>vidmodes[i]->hdisplay || y>vidmodes[i]->vdisplay) {
+				smallest_mode=i;
+				x=vidmodes[i]->hdisplay;
+				y=vidmodes[i]->vdisplay;
+			}
+		}
+		// chose the smallest mode that our window fits into;
+		for (i=smallest_mode;
+			 i!=(smallest_mode+1)%nummodes;
+			 i=(i?i-1:nummodes-1)) {
+			if (vidmodes[i]->hdisplay>=width
+				&& vidmodes[i]->vdisplay>=height) {
+				XF86VidModeSwitchToMode (x_disp, DefaultScreen (x_disp),
+										 vidmodes[i]);
+				break;
+			}
+		}
+		XF86VidModeSetViewPort(x_disp, DefaultScreen (x_disp), 0, 0);
+		in_grab = Cvar_Get ("in_grab","1",CVAR_ARCHIVE|CVAR_ROM,"None");
+	} else
+#endif
+		in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
+
 	x_win = XCreateWindow(x_disp, root, 0, 0, width, height,
 						0, visinfo->depth, InputOutput,
 						visinfo->visual, mask, &attr);
 	XMapWindow(x_disp, x_win);
+#ifdef HAS_VIDMODE
+	if (hasvidmode) {
+		XRaiseWindow(x_disp, x_win);
+		XGrabKeyboard(x_disp, x_win, 1, GrabModeAsync, GrabModeAsync,
+					  CurrentTime);
+	}
+#endif
 
 	XSync(x_disp, 0);
 

@@ -69,8 +69,8 @@ extern int			global_dx, global_dy;
 // globals
 //
 
-//cvar_t					_windowed_mouse = {"_windowed_mouse","1", CVAR_ARCHIVE};
-cvar_t	*_windowed_mouse;
+//cvar_t					in_grab = {"in_grab","1", CVAR_ARCHIVE};
+cvar_t	*in_grab;
 int					x_root, y_root;
 int					x_root_old, y_root_old;
 //
@@ -105,7 +105,7 @@ void IN_CenterMouse( void )
 //
 static void CheckMouseState(void)
 {
-	if (x_focus && _windowed_mouse->value && !x_grabbed) {
+	if (x_focus && in_grab->value && !x_grabbed) {
 		x_grabbed = true;
 		printf("fooling with mouse!\n");
 		if (XGetPointerControl( x_disp, &x_mouse_num, &x_mouse_denom, &x_mouse_thresh ))
@@ -127,7 +127,7 @@ static void CheckMouseState(void)
 		// safe initial values
 		x_root = x_root_old = vid.width >> 1;
 		y_root = y_root_old = vid.height >> 1;
-	} else if (x_grabbed && (!_windowed_mouse->value || !x_focus)) {
+	} else if (x_grabbed && (!in_grab->value || !x_focus)) {
 		printf("fooling with mouse!\n");
 		x_grabbed = false;
 		// undo mouse warp
@@ -149,8 +149,8 @@ void IN_Init (void)
 {
     if (!x_disp) Sys_Error( "X display not open!\n" );
 
-//    Cvar_RegisterVariable (&_windowed_mouse);
-	_windowed_mouse = Cvar_Get ("_windowed_mouse","1", CVAR_ARCHIVE);
+//    Cvar_RegisterVariable (&in_grab);
+	in_grab = Cvar_Get ("in_grab","1", CVAR_ARCHIVE);
 
 	// we really really want to clean these up...
     atexit( IN_Shutdown );

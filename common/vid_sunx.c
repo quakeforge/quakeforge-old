@@ -66,7 +66,7 @@
 #include <input.h>
 #include <context_x11.h>
 
-cvar_t	*_windowed_mouse;
+cvar_t	*in_grab;
 cvar_t	*m_filter;
 
 static qboolean	mouse_avail;
@@ -1158,14 +1158,14 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
 	M_Print(16, options_draw_cursor+=8, "             Use Mouse");
-	M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse->value);
+	M_DrawCheckbox(220, options_draw_cursor, in_grab->value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch (option_cursor) {
-	case 1:	// _windowed_mouse
-		_windowed_mouse->value = !_windowed_mouse->value;
+	case 1:	// in_grab
+		in_grab->value = !in_grab->value;
 		break;
 	}
 }
