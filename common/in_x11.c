@@ -382,6 +382,7 @@ int IN_Init ()
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
+#if 0
 	XF86DGASetViewPort(x_disp, x_win, 0, 0);
 	XF86DGADirectVideo(x_disp, x_win, XF86DGADirectGraphics|XF86DGADirectMouse|XF86DGADirectKeyb);
 	XF86DGASetVidPage(x_disp, x_win, 0);
@@ -389,6 +390,7 @@ int IN_Init ()
 	XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 	XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, GrabModeAsync,
 				 x_win, None, CurrentTime);
+#endif
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;
