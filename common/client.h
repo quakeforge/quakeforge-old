@@ -337,7 +337,7 @@ typedef struct
 					// between these
 	vec3_t		mvelocity[2];	// update by server, used for lean+bob
 					// (0 is newest)
-	vec3_t		velocity;	// lerped between mvelocity[0] and [1]
+//	vec3_t		velocity;	// lerped between mvelocity[0] and [1]
 } client_state_t;
 
 extern client_state_t cl;
