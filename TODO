@@ -9,7 +9,7 @@ to quake-devel@lists.sourceforge.net with details.
  * On unix systems ~/.quake should overlay a shared data directory.  Files
    in a user's ~/.quake directory should take precedence over files in the
    shared data dir and all files written should be placed into ~/.quake
- * sed 's/\<sprintf *(\([^,]\+\),/snprintf(\1, sizeof(\1)),/g' to fix some
+ * sed 's/\<sprintf *(\([^,]\+\),/snprintf(\1, sizeof(\1),/g' to fix some
    possible buffer overruns
  * Devise and implement a way to ensure original gameplay compatibility
    while still letting us expand and extend the quake engine
