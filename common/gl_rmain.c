@@ -103,15 +103,9 @@ cvar_t	*r_novis;
 cvar_t	*r_netgraph;
 #endif
 
-// All the fog code was disabled for QuakeWold
-// _reduced_ visability shouldn't be considered cheating :)
 cvar_t	*r_fog;
 cvar_t *r_volfog;
-
-// Waterwarp should be completely disabled for release 
-// since we are too lazy to actually fix it ;)
 cvar_t	*r_waterwarp;
-
 cvar_t	*r_waterripple;
 
 cvar_t	*gl_finish;
@@ -123,6 +117,7 @@ cvar_t	*gl_affinemodels;
 cvar_t	*gl_polyblend;
 cvar_t	*gl_playermip;
 cvar_t	*gl_nocolors;
+
 cvar_t	*gl_keeptjunctions;
 cvar_t	*gl_doubleeyes;
 
@@ -981,7 +976,6 @@ R_Clear ( void ) {
 		gldepthmax = 1;
 		glDepthFunc (GL_LEQUAL);
 	}
-
 	glDepthRange (gldepthmin, gldepthmax);
 }
 
@@ -1051,28 +1045,26 @@ R_RenderView ( void ) {
 
 	// render normal view
 
-#ifdef _EXPERIMENTAL_
-/*	
-	// Fixme!!
-	// The volume fog will not work as is :)
+/*** Render Volumetric Fog ***/
+	
 	if(r_volfog->value) 
 	{
-       
-		gl_Clear(GL_STENCIL_BUFFER_BIT);
-		gl_ColorMask(GL_FALSE);
+		R_RenderScene ();
+		R_DrawViewModel ();
+ 
+		glClear(GL_STENCIL_BUFFER_BIT);
+		//glColorMask(GL_FALSE);
 		glStencilFunc(GL_ALWAYS, 1, 1);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		//glEnable(GL_STENCIL_TEST);
 		glEnable(GL_DEPTH_TEST);
-		gl_DepthFunc(GL_LESS);
+		glDepthFunc(GL_LESS);
 	                glFogi (GL_FOG_MODE, GL_EXP2);
         	        glFogfv (GL_FOG_COLOR, colors);
-        	// fixme: GL_FOG_DENSITY should have r_volfog_density var
-               		 glFogf (GL_FOG_DENSITY, 1);
+// fixme: GL_FOG_DENSITY should have r_volfog_density var
+			glFogf (GL_FOG_DENSITY, 1);
 		
                 glEnable(GL_FOG);
-		//R_RenderScene ();
-
 		R_DrawWaterSurfaces();
 		glDisable(GL_FOG);
 
@@ -1080,23 +1072,31 @@ R_RenderView ( void ) {
 		glStencilMask(GL_FALSE);
 		glDisable(GL_DEPTH_TEST);
 	}
-*/
-#endif
 
-	if (r_fog->value) {	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
+/*** Depth fog code ***/
+
+	else if (r_fog->value) 
+	{	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
 		glFogi (GL_FOG_MODE, GL_EXP2);
 		glFogfv (GL_FOG_COLOR, colors);
 		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog->value); 
 		glEnable(GL_FOG);
-	}
 
-	R_RenderScene ();
-	R_DrawViewModel ();
-
-	if(!r_volfog->value) {
+		R_RenderScene ();
+	        R_DrawViewModel ();
 		R_DrawWaterSurfaces ();
-	}
-	glDisable(GL_FOG);	//  More fog right here :)
+		
+		glDisable(GL_FOG);
+	} 
+
+/*** Regular rendering code ***/
+
+else 
+	{
+		R_RenderScene ();
+		R_DrawViewModel ();
+		R_DrawWaterSurfaces ();
+	}	
 
 	R_PolyBlend ();
 
