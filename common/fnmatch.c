@@ -83,6 +83,10 @@ fnmatch (pattern, string, flags)
 /* Note that this evalutes C many times.  */
 #define FOLD(c)	((flags & FNM_CASEFOLD) && isupper (c) ? tolower (c) : (c))
 
+#ifdef _WIN32
+	flags |= FNM_CASEFOLD;
+#endif
+
   while ((c = *p++) != '\0')
     {
       c = FOLD (c);

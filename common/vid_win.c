@@ -3481,18 +3481,8 @@ void VID_ExtraOptionCmd(int option_cursor)
 	}
 }
 
-void VID_InitCvars()
+void
+VID_InitCvars( void )
 {
 	// It may not look like it, but this is important
 }
-
-void    
-VID_LockBuffer ( void )
-{       
-}       
-
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-

@@ -1954,32 +1954,33 @@ void VID_MenuDraw (void)
 
 
 /*
-================
-VID_MenuKey
-================
-*/
-void VID_MenuKey (int key)
-{
-	switch (key)
-	{
-	case K_ESCAPE:
-		S_LocalSound ("misc/menu1.wav");
-		M_Menu_Options_f ();
-		break;
+	VID_MenuKey
 
-	default:
-		break;
+	Process menu keystrokes
+*/
+void
+VID_MenuKey ( int key )
+{
+	switch (key) {
+		case K_ESCAPE:
+			S_LocalSound ("misc/menu1.wav");
+			M_Menu_Options_f ();
+			break;
+		default:
+			break;
 	}
 }
 
-void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+void
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	// Windowed Mouse
-        M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
+	M_Print (16, options_draw_cursor+=8, "             Use Mouse");
+	M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
 }
 
-void VID_ExtraOptionCmd(int option_cursor)
+void
+VID_ExtraOptionCmd ( int option_cursor )
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
@@ -1989,17 +1990,20 @@ void VID_ExtraOptionCmd(int option_cursor)
 	}
 }
 
-void VID_InitCvars()
+void
+VID_InitCvars( void )
 {
 	// It may not look it, but this is important
 }
 
-void	VID_LockBuffer (void)
+void
+VID_LockBuffer ( void )
 {
-	// need empty function, because the #define method was just silly
+	// Empty function, locking not necessary here.
 }
 
-void	VID_UnlockBuffer (void)
+void
+VID_UnlockBuffer ( void )
 {
-	// need empty function, because the #define method was just silly
+	// Empty function, locking not necessary here.
 }

@@ -191,20 +191,19 @@ void COM_Path_f (void)
 }
 
 /*
-============
-COM_Maplist_f
+	COM_Maplist_f
 
-============
+	List map files in gamepaths.
 */
-
-void COM_Maplist_f (void)
+void
+COM_Maplist_f ( void )
 {
 	searchpath_t	*search;
-	DIR		*dir_ptr;
+	DIR				*dir_ptr;
 	struct dirent	*dirent;
-	char		buf[MAX_OSPATH];
+	char			buf[MAX_OSPATH];
 
-	for (search = com_searchpaths ; search ; search = search->next) {
+	for (search = com_searchpaths ; search != NULL ; search = search->next) {
 		if (search->pack) {
 			int i;
 			pack_t *pak = search->pack;
@@ -222,8 +221,8 @@ void COM_Maplist_f (void)
 			if (!dir_ptr)
 				continue;
 			while ((dirent = readdir (dir_ptr)))
-				if (!fnmatch ("*.bsp", dirent->d_name, FNMATCH_FLAGS)
-					|| !fnmatch ("*.bsp.gz", dirent->d_name, FNMATCH_FLAGS))
+				if (!fnmatch ("*.bsp", dirent->d_name, 0)
+					|| !fnmatch ("*.bsp.gz", dirent->d_name, 0))
 					Con_Printf ("%s\n", dirent->d_name);
 			closedir (dir_ptr);
 		}
@@ -231,13 +230,12 @@ void COM_Maplist_f (void)
 }
 
 /*
-============
-COM_WriteFile
+	COM_WriteFile
 
-The filename will be prefixed by the current game directory
-============
+	The filename will be prefixed by the current game directory
 */
-void COM_WriteFile (char *filename, void *data, int len)
+void
+COM_WriteFile ( char *filename, void *data, int len )
 {
 	QFile	*f;
 	char	name[MAX_OSPATH];
@@ -259,20 +257,17 @@ void COM_WriteFile (char *filename, void *data, int len)
 
 
 /*
-============
-COM_CreatePath
+	COM_CreatePath
 
-Only used for CopyFile and download
-============
+	Only used for CopyFile and download
 */
-void	COM_CreatePath (char *path)
+void
+COM_CreatePath ( char *path )
 {
 	char	*ofs;
 
-	for (ofs = path+1 ; *ofs ; ofs++)
-	{
-		if (*ofs == '/')
-		{	// create the directory
+	for (ofs = path+1 ; *ofs ; ofs++) {
+		if (*ofs == '/') {	// create the directory
 			*ofs = 0;
 			Sys_mkdir (path);
 			*ofs = '/';
@@ -742,7 +737,7 @@ COM_LoadGameDirectory(char *dir)
 		return;
 
 	while ((dirent = readdir(dir_ptr))) {
-		if (!fnmatch("*.pak", dirent->d_name, FNMATCH_FLAGS)) {
+		if (!fnmatch("*.pak", dirent->d_name, 0)) {
 			if (count >= bufsize) {
 				bufsize += FBLOCK_SIZE;
 				pakfiles = realloc(pakfiles, bufsize * sizeof(char *));
