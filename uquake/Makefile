@@ -1,5 +1,5 @@
 #
-# Quake standalone makefile for unified tree
+# UQuake makefile for unified tree
 #
 
 VERSION=0.1.0
@@ -482,7 +482,7 @@ $(OBJ_DIR)/soft_obj/snd_mixa.o:	$(COMMON_DIR)/snd_mixa.s
 $(OBJ_DIR)/soft_obj/sys_dosa.o:	$(UQ_DIR)/sys_dosa.s
 	$(DO_AS)
 
-$(OBJ_DIR)/soft_obj/worlda.o:	$(PROJECT_DIR)/standalone/worlda.s
+$(OBJ_DIR)/soft_obj/worlda.o:	$(UQ_DIR)/worlda.s
 	$(DO_AS)
 
 # specific things
