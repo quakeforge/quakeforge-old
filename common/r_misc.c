@@ -217,6 +217,7 @@ a = graphval;
 	timex = (timex+1)%MAX_TIMINGS;
 }
 
+#ifdef QUAKEWORLD
 /*
 ==============
 R_NetGraph
@@ -250,6 +251,7 @@ void R_NetGraph (void)
 	snprintf(st, sizeof(st), "%3i%% packet loss", lost);
 	Draw_String(8, y2, st);
 }
+#endif
 
 /*
 ==============
