@@ -20,9 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // in_win.c -- windows 95 mouse and joystick code
 // 02/21/97 JCB Added extended DirectInput code to support external controllers.
 
-#include <dinput.h>
 #include "quakedef.h"
 #include "winquake.h"
+#ifdef HAVE_INITGUID_H
+# include <initguid.h>
+#endif
+#include <dinput.h>
 //#include "dosisms.h"
 
 #define DINPUT_BUFFERSIZE           16
@@ -47,6 +50,7 @@ static qboolean	mouseparmsvalid, mouseactivatetoggle;
 static qboolean	mouseshowtoggle = 1;
 static qboolean	dinput_acquired;
 static unsigned int		mstate_di;
+unsigned int uiWheelMessage;
 
 // joystick defines and variables
 // where should defines be moved?
@@ -1042,7 +1046,7 @@ qboolean IN_ReadJoystick (void)
 	else
 	{
 		// read error occurred
-		// turning off the joystick seems too harsh for 1 read error,\
+		// turning off the joystick seems too harsh for 1 read error,
 		// but what should be done?
 		// Con_Printf ("IN_ReadJoystick: no response\n");
 		// joy_avail = false;
