@@ -82,6 +82,7 @@ char trans_table[256] = {
 Sys_Printf
 ================
 */
+#ifndef DJGPP
 void Sys_Printf (char *fmt, ...)
 {
 	va_list	argptr;
@@ -108,6 +109,7 @@ void Sys_Printf (char *fmt, ...)
 	fflush(stdout);
 }
 
+#endif
 
 /*
 ================
@@ -159,8 +161,9 @@ int Sys_FileTime (char *path)
 	return ret;
 }
 
+#ifdef DJGPP
 
-#ifdef _WIN32
+#elif defined(_WIN32)
 double Sys_DoubleTime (void)
 {
 	static DWORD starttime;

@@ -730,6 +730,14 @@ QF_maGiC_VALUE
        SOUND_LIBS="-lwinmm")
 fi
 
+if test -z "$SOUND_STYLE"; then
+    AC_EGREP_CPP([QF_maGiC_VALUE],[
+#ifdef __DJGPP
+QF_maGiC_VALUE
+#endif
+    ], SOUND_STYLE="DJGPP")
+fi
+
 if test "x$SOUND_STYLE" = "x"; then
    AC_MSG_RESULT(no)
    SOUND_STYLE="NULL"

@@ -22,6 +22,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <dos.h>
 #include <dpmi.h>
+#include <string.h>
+
+#include <console.h>
+#include <sys.h>
+#include <keys.h>
+#include <input.h>
+#include <cmd.h>
+#include <screen.h>
 
 #define NUM_COM_PORTS	2
 
@@ -44,14 +52,14 @@ typedef struct
 #define ENQUEUE(q,b)	(q.data[q.head] = b, q.head = (q.head + 1) & QUEUEMASK)
 #define DEQUEUE(q,b)	(b = q.data[q.tail], q.tail = (q.tail + 1) & QUEUEMASK)
 
-extern cvar_t	*config_com_port;
+/*extern cvar_t   *config_com_port;
 extern cvar_t	*config_com_irq;
 extern cvar_t	*config_com_baud;
 extern cvar_t	*config_com_modem;
 extern cvar_t	*config_modem_dialtype;
 extern cvar_t	*config_modem_clear;
 extern cvar_t	*config_modem_init;
-extern cvar_t	*config_modem_hangup;
+extern cvar_t   *config_modem_hangup;*/
 
 extern int m_return_state;
 extern int m_state;
@@ -353,10 +361,10 @@ void TTY_SetComPortConfig (int portNumber, int port, int irq, int baud, qboolean
 	else
 		temp = 0.0;
 
-	Cvar_SetValue (config_com_port, (float)port);
+/*	Cvar_SetValue (config_com_port, (float)port);
 	Cvar_SetValue (config_com_irq, (float)irq);
 	Cvar_SetValue (config_com_baud, (float)baud);
-	Cvar_SetValue (config_com_modem, temp);
+	Cvar_SetValue (config_com_modem, temp);*/
 }
 
 void TTY_GetModemConfig (int portNumber, char *dialType, char *clear, char *init, char *hangup)
@@ -382,10 +390,10 @@ void TTY_SetModemConfig (int portNumber, char *dialType, char *clear, char *init
 
 	p->modemInitialized = false;
 
-	Cvar_Set (config_modem_dialtype, dialType);
+/*	Cvar_Set (config_modem_dialtype, dialType);
 	Cvar_Set (config_modem_clear, clear);
 	Cvar_Set (config_modem_init, init);
-	Cvar_Set (config_modem_hangup, hangup);
+	Cvar_Set (config_modem_hangup, hangup);*/
 }
 
 
@@ -793,7 +801,7 @@ int TTY_Connect(int handle, char *host)
 				break;
 			}
 
-			Sys_SendKeyEvents ();
+			IN_SendKeyEvents ();
 			if (key_count == 0)
 			{
 				if (key_lastpress != K_ESCAPE)

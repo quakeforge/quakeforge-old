@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <go32.h>
 #include "mpdosock.h"
+#include <common_quakedef.h>
 
 //#include "types.h"
 typedef unsigned char BYTE;

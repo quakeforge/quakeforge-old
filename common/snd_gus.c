@@ -34,8 +34,13 @@
 // Author(s): Jayeson Lee-Steere
 //=============================================================================
 
-#include <quakedef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <dosisms.h>
+#include <qtypes.h>
+#include <sound.h>
+#include <console.h>
 
 //=============================================================================
 // Author(s): Jayeson Lee-Steere
@@ -331,7 +336,7 @@ static char *stripped_fgets(char *s, int n, QFile *f)
 {
    int i=0;
 
-   if (fgets(s,n,f)==NULL)
+   if (Qgets(f, s, n)==NULL)
       return(NULL);
 
    while (s[i]!=';' && s[i]!=13 && s[i]!=10 && s[i]!=0)
@@ -347,7 +352,7 @@ static char *stripped_fgets(char *s, int n, QFile *f)
 // Opens an .INI file. Works like fopen
 QFile *ini_fopen(const char *filename, const char *modes)
 {
-   return(fopen(filename,modes));
+   return(Qopen(filename,modes));
 }
 
 // Closes a .INI file. Works like fclose
@@ -355,7 +360,8 @@ int ini_fclose(QFile *f)
 {
    if (f==current_file)
       reset_buffer(NULL);
-   return(fclose(f));
+   Qclose(f);
+   return 0;
 }
 
 // Puts "field" from "section" from .ini file "f" into "s".
@@ -384,29 +390,31 @@ void ini_fgets(QFile *f, const char *section, const char *field, char *s)
       if (i!=current_section)
       {
          current_section=i;
-         fseek(f,section_buffers[i].offset,SEEK_SET);
+         Qseek(f,section_buffers[i].offset,SEEK_SET);
       }
    }
    // else look through .ini file for it.
    else
    {
       // Make sure we are not at eof or this will cause trouble.
-      if (feof(f))
-         rewind(f);
-      start_pos=ftell(f);
+      if (Qeof(f))
+         /*rewind(f);*/
+         Qseek(f, 0, SEEK_SET);
+      start_pos=Qtell(f);
       while (1)
       {
          stripped_fgets(ts,INI_STRING_SIZE*2,f);
          // If it is a section, add it to the section buffer
          if (is_section(ts,"*"))
-            current_section=add_section(ts,ftell(f));
+            current_section=add_section(ts,Qtell(f));
          // If it is the section we are looking for, break.
          if (is_section(ts,section))
             break;
          // If we reach the end of the file, rewind to the start.
-         if (feof(f))
-            rewind(f);
-         if (ftell(f)==start_pos)
+         if (Qeof(f))
+            /*rewind(f);*/
+            Qseek(f, 0, SEEK_SET);
+         if (Qtell(f)==start_pos)
             return;
       }
    }
@@ -420,7 +428,7 @@ void ini_fgets(QFile *f, const char *section, const char *field, char *s)
    // If field is in buffer, seek to it and read it
    if (i<NUM_FIELD_BUFFERS)
    {
-      fseek(f,field_buffers[i].offset,SEEK_SET);
+      Qseek(f,field_buffers[i].offset,SEEK_SET);
       stripped_fgets(ts,INI_STRING_SIZE*2,f);
       get_field_string(s,ts);
    }
@@ -428,12 +436,12 @@ void ini_fgets(QFile *f, const char *section, const char *field, char *s)
    // else search through section for field.
    {
       // Make sure we do not start at eof or this will cause problems.
-      if (feof(f))
-         fseek(f,section_buffers[current_section].offset,SEEK_SET);
-      start_pos=ftell(f);
+      if (Qeof(f))
+         Qseek(f,section_buffers[current_section].offset,SEEK_SET);
+      start_pos=Qtell(f);
       while (1)
       {
-         string_start_pos=ftell(f);
+         string_start_pos=Qtell(f);
          stripped_fgets(ts,INI_STRING_SIZE*2,f);
          // If it is a field, add it to the buffer
          if (is_field(ts,"*"))
@@ -445,9 +453,9 @@ void ini_fgets(QFile *f, const char *section, const char *field, char *s)
             break;
          }
          // If we reach the end of the section, start over
-         if (feof(f) || is_section(ts,"*"))
-            fseek(f,section_buffers[current_section].offset,SEEK_SET);
-         if (ftell(f)==start_pos)
+         if (Qeof(f) || is_section(ts,"*"))
+            Qseek(f,section_buffers[current_section].offset,SEEK_SET);
+         if (Qtell(f)==start_pos)
             return;
       }
    }

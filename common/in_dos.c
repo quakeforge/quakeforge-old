@@ -31,6 +31,13 @@
 #include <quakedef.h>
 #include <dosisms.h>
 
+#include <client.h>
+#include <keys.h>
+#include <console.h>
+#include <input.h>
+#include <screen.h>
+#include <mathlib.h>
+
 #define AUX_FLAG_FREELOOK	0x00000001
 
 typedef struct
@@ -165,14 +172,14 @@ void IN_StartupMouse (void)
 IN_Init
 ===========
 */
-void IN_Init (void)
+int IN_Init (void)
 {
 	int i;
 
-	m_filter = Cvar_Get ("m_filter","1");
-	in_joystick = Cvar_Get ("in_joystick","1");
-	joy_numbuttons = Cvar_Get ("joy_numbuttons","4",CVAR_ARCHIVE);
-	aux_look = Cvar_Get ("auxlook","1",CVAR_ARCHIVE);
+	m_filter = Cvar_Get ("m_filter","1",0,"None");
+	in_joystick = Cvar_Get ("in_joystick","1",0,"None");
+	joy_numbuttons = Cvar_Get ("joy_numbuttons","4",CVAR_ARCHIVE,"None");
+	aux_look = Cvar_Get ("auxlook","1",CVAR_ARCHIVE,"None");
 	Cmd_AddCommand ("toggle_auxlook", Toggle_AuxLook_f);
 	Cmd_AddCommand ("force_centerview", Force_CenterView_f);
 
@@ -185,6 +192,7 @@ void IN_Init (void)
 		extern_control = real2ptr(Q_atoi (com_argv[i+1]));
 		IN_StartupExternal ();
 	}
+	return 0;
 }
 
 /*
@@ -458,7 +466,7 @@ qboolean WaitJoyButton (void)
 	do
 	{
 		key_count = -1;
-		Sys_SendKeyEvents ();
+		IN_SendKeyEvents ();
 		key_count = 0;
 		if (key_lastpress == K_ESCAPE)
 		{
@@ -478,7 +486,7 @@ qboolean WaitJoyButton (void)
 	do
 	{
 		key_count = -1;
-		Sys_SendKeyEvents ();
+		IN_SendKeyEvents ();
 		key_count = 0;
 		if (key_lastpress == K_ESCAPE)
 		{
@@ -572,7 +580,7 @@ void IN_StartupExternal (void)
 		extern_control->numButtons = 32;
 
 	Con_Printf("%s Initialized\n", extern_control->deviceName);
-	Con_Printf("  %u axes  %u buttons\n", extern_control->numAxes, extern_control->numButtons);
+	Con_Printf("  %lu axes  %lu buttons\n", extern_control->numAxes, extern_control->numButtons);
 
 	extern_avail = true;
 	extern_buttons = extern_control->numButtons;

@@ -25,6 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "dosisms.h"
 #include "crc.h"
 
+#include <server.h>
+
 #include "net_comx.c"
 
 // serial protocol
@@ -910,7 +912,7 @@ static qsocket_t *_Serial_CheckNewConnections (SerialLine *p)
 
 		SZ_Clear(&net_message);
 		MSG_WriteByte(&net_message, CCREP_SERVER_INFO);
-		MSG_WriteString(&net_message, hostname.string);
+		MSG_WriteString(&net_message, hostname -> string);
 		MSG_WriteString(&net_message, sv.name);
 		MSG_WriteByte(&net_message, net_activeconnections);
 		MSG_WriteByte(&net_message, svs.maxclients);

@@ -25,9 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/time.h>
 #include <sys/types.h>
 #include <dir.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -39,6 +36,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "dosisms.h"
+
+#include <keys.h>
+#include <sys.h>
+#include <console.h>
+#include <client.h>
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#include <crt0.h>
+int _crt0_startup_flags = _CRT0_FLAG_UNIX_SBRK;
 
 #define MINIMUM_WIN_MEMORY			0x800000
 #define MINIMUM_WIN_MEMORY_LEVELPAK	(MINIMUM_WIN_MEMORY + 0x100000)
@@ -460,7 +469,7 @@ void Sys_Shutdown(void)
 
 #define SC_RSHIFT       0x36
 #define SC_LSHIFT       0x2a
-void Sys_SendKeyEvents (void)
+void IN_SendKeyEvents (void)
 {
 	int k, next;
 	int outkey;
@@ -926,4 +935,26 @@ int main (int c, char **v)
 	}
 }
 
+void Sys_DebugLog(char *file, char *fmt, ...)
+{
+	va_list argptr;
+	static char data[1024];
+	QFile *stream;
+	unsigned char *p;
+	//int fd;
 
+	va_start(argptr, fmt);
+	vsnprintf(data, sizeof(data), fmt, argptr);
+	va_end(argptr);
+//	fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
+	stream = Qopen(file, "a");
+	for (p = (unsigned char *) data; *p; p++) {
+		Qputc(stream, trans_table[*p]);
+	}
+	Qclose(stream);
+	/*
+	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	write(fd, data, strlen(data));
+	close(fd);
+	*/
+}

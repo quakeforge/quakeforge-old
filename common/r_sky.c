@@ -32,7 +32,7 @@
 #include <r_local.h>
 #include <d_local.h>
 #include <mathlib.h>
-
+#include <bothdefs.h>
 
 int		iskyspeed = 8;
 int		iskyspeed2 = 2;
@@ -155,7 +155,6 @@ void R_MakeSky (void)
 		}
 
 #endif
-
 		pnewsky += 128 / sizeof (unsigned);
 	}
 

@@ -27,6 +27,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "dosisms.h"
 
+#include <sys.h>
+#include <console.h>
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
 
 // this section is general Unix stuff that we need
 

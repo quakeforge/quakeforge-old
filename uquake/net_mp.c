@@ -24,6 +24,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "mpdosock.h"
 
+#include <console.h>
+#include <sys.h>
+
 short flat_selector;
 
 int WSAGetLastError(void);
@@ -78,7 +81,7 @@ int MPATH_Init (void)
 		myAddr = *(int *)local->h_addr_list[0];
 
 		// if the quake hostname isn't set, set it to the machine name
-		if (Q_strcmp(hostname.string, "UNNAMED") == 0)
+		if (Q_strcmp(hostname -> string, "UNNAMED") == 0)
 		{
 			// see if it's a text IP address (well, close enough)
 			for (p = buff; *p; p++)

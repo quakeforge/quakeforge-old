@@ -28,6 +28,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "dosisms.h"
 #include "net_ipx.h"
 
+#include <console.h>
+#include <sys.h>
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+
 #define	EIO		 		5	/* I/O error */
 
 #define AF_NETWARE 		64

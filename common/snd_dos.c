@@ -28,8 +28,14 @@
 	$Id$
 */
 
-#include <quakedef.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include <dosisms.h>
+#include <qtypes.h>
+#include <console.h>
+#include <sound.h>
 
 int BLASTER_GetDMAPos(void);
 

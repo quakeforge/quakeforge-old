@@ -32,7 +32,6 @@
 #include <string.h>
 #include <stdio.h>
 #ifndef WIN32
-#include <dlfcn.h>
 #include <sys/param.h>
 #else
 #include <input.h>
@@ -44,6 +43,10 @@
 #include <net.h>
 #include <plugin.h>
 #include <cvar.h>
+
+#ifdef HAVE_DLFCN_H
+#include <dlfcn.h>
+#endif
 
 #ifndef LIBDIR
 #define LIBDIR
@@ -58,7 +61,35 @@ void Plugin_Init ()
 	fs_drvpath = Cvar_Get ("fs_drvpath",".:" LIBDIR "/quakeforge",0,"None");
 }
 
-#ifndef WIN32
+#ifdef DJGPP
+
+#elif defined(WIN32)
+
+input_pi Winput;
+int IN_Init();
+void IN_Move(usercmd_t *);
+void IN_Commands();
+void Sys_SendKeyEvents();
+void IN_Shutdown (void);
+
+int plugin_load(char *filename)
+{
+	IN = &Winput;
+	Winput.description = "Windows Input";
+	Winput.Init = IN_Init;
+	Winput.Move = IN_Move;
+	Winput.Commands = IN_Frame;
+	Winput.SendKeyEvents = IN_SendKeyEvents;
+	Winput.Shutdown = IN_Shutdown;
+	return 1;
+}
+
+void plugin_unload(void *handle)
+{
+
+}
+
+#else
 
 void *_plugin_load(const char *filename)
 {
@@ -122,30 +153,4 @@ void plugin_unload(void *handle)
 	dlclose(handle);
 }
 
-
-#else
-
-input_pi Winput;
-int IN_Init();
-void IN_Move(usercmd_t *);
-void IN_Commands();
-void Sys_SendKeyEvents();
-void IN_Shutdown (void);
-
-int plugin_load(char *filename)
-{
-	IN = &Winput;
-	Winput.description = "Windows Input";
-	Winput.Init = IN_Init;
-	Winput.Move = IN_Move;
-	Winput.Commands = IN_Frame;
-	Winput.SendKeyEvents = IN_SendKeyEvents;
-	Winput.Shutdown = IN_Shutdown;
-	return 1;
-}
-
-void plugin_unload(void *handle)
-{
-
-}
 #endif

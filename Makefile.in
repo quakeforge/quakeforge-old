@@ -1,3 +1,5 @@
+SHELL = @SHELL@
+
 srcdir = @srcdir@
 top_builddir = .
 

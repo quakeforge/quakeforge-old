@@ -3,6 +3,8 @@
 # Quake general stuff
 #
 
+SHELL = @SHELL@
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -28,35 +30,35 @@ include $(top_builddir)/Rules.mk
 COMMON_LIB=common_lib.a
 
 ifeq ($(HAS_OGL),yes)
-GLQUAKE   =$(BIN_PREFIX)-glx
+GLQUAKE   =$(BIN_PREFIX)-glx@EXEEXT@
 endif
 
 ifeq ($(HAS_TDFXGL),yes)
-TDFXQUAKE= $(BIN_PREFIX)-3dfx
+TDFXQUAKE= $(BIN_PREFIX)-3dfx@EXEEXT@
 endif
 
 ifeq ($(HAS_X11),yes)
-X11QUAKE  = $(BIN_PREFIX)-x11
+X11QUAKE  = $(BIN_PREFIX)-x11@EXEEXT@
 endif
 
 ifeq ($(HAS_SVGA),yes)
-SVGAQUAKE = $(BIN_PREFIX)-svga
+SVGAQUAKE = $(BIN_PREFIX)-svga@EXEEXT@
 endif
 
 ifeq ($(HAS_VGA),yes)
-VGAQUAKE = $(BIN_PREFIX)-vga
+VGAQUAKE = $(BIN_PREFIX)-vga@EXEEXT@
 endif
 
 ifeq ($(HAS_MGL),yes)
-MGLQUAKE = $(BIN_PREFIX)-mgl
+MGLQUAKE = $(BIN_PREFIX)-mgl@EXEEXT@
 endif
 
 ifeq ($(HAS_GGI),yes)
-GGIQUAKE = $(BIN_PREFIX)-ggi
+GGIQUAKE = $(BIN_PREFIX)-ggi@EXEEXT@
 endif
 
 ifeq ($(HAS_SDL),yes)
-SDLQUAKE = $(BIN_PREFIX)-sdl
+SDLQUAKE = $(BIN_PREFIX)-sdl@EXEEXT@
 endif
 
 soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(MGLQUAKE) \
@@ -101,7 +103,7 @@ else
 ifeq ($(HAVE_UDP),yes)
 NET_SRC	   = net_bsd.c @NET_SOURCE@
 else
-NET_SRC    = net_dos.c net_bw.c net_ipx.c net_mp.c net_ser.c
+NET_SRC    = net_dos.c net_bw.c net_ipx.c net_mp.c net_ser.c mplib.c mplpc.c
 endif
 endif
 UQ_NET_SRC = net_com.c mdfour.c net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)

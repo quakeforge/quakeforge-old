@@ -72,6 +72,13 @@
 # define vsnprintf _vsnprintf
 #endif
 
+#if ! (defined(HAVE_SNPRINTF) || defined(HAVE__SNPRINTF))
+#define snprintf(s,l,f, a...) sprintf(s,f,##a)
+#endif
+#if ! (defined(HAVE_VSNPRINTF) || defined(HAVE__VSNPRINTF))
+#define vsnprintf(s,l,f,a) vsprintf(s,f,a)
+#endif
+
 #ifndef HAVE_SOCKLEN_T
 # ifdef HAVE_SIZE
 typedef size_t socklen_t;

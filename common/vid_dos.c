@@ -29,9 +29,6 @@
 	$Id$
 */
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -43,6 +40,19 @@
 #include <d_local.h>
 #include <dosisms.h>
 #include <vid_dos.h>
+
+#include <wad.h>
+#include <menu.h>
+#include <keys.h>
+#include <cmd.h>
+#include <console.h>
+#include <sys.h>
+#include <draw.h>
+#include <sound.h>
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 int	vid_modenum;
 vmode_t	*pcurrentmode = NULL;
@@ -100,7 +110,7 @@ VID_Init
 void VID_Init (unsigned char *palette)
 {
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
-	vid_wait = Cvar_Get ("vid_mode","0",0,"None");
+	vid_wait = Cvar_Get ("vid_wait","0",0,"None");
 	vid_nopageflip = Cvar_Get ("vid_nopageflip","0",CVAR_ARCHIVE,"None");
 	_vid_wait_override = Cvar_Get ("_vid_wait_override","0",CVAR_ARCHIVE,
 					"None");
@@ -281,7 +291,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 	(*pcurrentmode->setpalette) (&vid, pcurrentmode, palette);
 
 	vid_modenum = modenum;
-	vid_mode-> = (float)vid_modenum;
+	vid_mode -> value= (float)vid_modenum;
 
 	nomodecheck = true;
 	Con_Printf ("%s\n", VID_ModeInfo (vid_modenum, NULL));
@@ -589,7 +599,7 @@ void VID_MenuDraw (void)
 	char	temp[100];
 
 	p = Draw_CachePic("gfx/vidmodes.lmp");
-	M_Draw((320-p->width)/2,4,p);
+	M_DrawPic((320-p->width)/2,4,p);
 
 	vid_wmodes = 0;
 	nummodes = VID_NumModes ();

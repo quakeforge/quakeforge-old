@@ -38,6 +38,8 @@
 #include <dosisms.h>
 #include <vid_dos.h>
 #include <dpmi.h>
+#include <sys.h>
+#include <console.h>
 
 #define MODE_SUPPORTED_IN_HW	0x0001
 #define COLOR_MODE		0x0008
@@ -321,7 +323,7 @@ void VID_InitExtra (void)
 		return;		// not VESA 2.0 or greater
 
 	Con_Printf ("VESA 2.0 compliant adapter:\n%s\n",
-				VID_ExtraFarToLinear (*(byte **)&pinfoblock->OemStringPtr[0]));
+				(char *) VID_ExtraFarToLinear (*(byte **)&pinfoblock->OemStringPtr[0]));
 
 	totalvidmem = *(unsigned short *)&pinfoblock->TotalMemory[0] << 16;
 
@@ -795,6 +797,7 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 	}
 }
 
+#if 0
 int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	int	drawn;
@@ -835,3 +838,4 @@ void VID_LockBuffer ( void )
 void VID_UnlockBuffer ( void )
 {
 }
+#endif

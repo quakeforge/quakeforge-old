@@ -133,3 +133,5 @@ Driver modules:
   Joseph Carter <knghtbrd@debian.org>
   Dan Olson <theoddone@quakefiles.com>
 
+DJGPP support:
+  Turo Lamminen <turo.lamminen@pp.inet.fi>

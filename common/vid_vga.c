@@ -37,6 +37,7 @@
 #include <dosisms.h>
 #include <vid_dos.h>
 #include <dpmi.h>
+#include <console.h>
 
 extern regs_t regs;
 
@@ -274,7 +275,7 @@ qboolean VGA_FreeAndAllocVidbuffer (viddef_t *lvid, int allocnewbuffer)
 // see if there's enough memory, allowing for the normal mode 0x13 pixel,
 // z, and surface buffers
 	if ((host_parms.memsize - tbuffersize + SURFCACHE_SIZE_AT_320X200 +
-		 0x10000 * 3) < minimum_memory)
+		 0x10000 * 3) < MINIMUM_MEMORY)
 	{
 		Con_Printf ("Not enough memory for video mode\n");
 		VGA_pcurmode = NULL;	// so no further accesses to the buffer are
@@ -331,7 +332,7 @@ qboolean VGA_CheckAdequateMem (int width, int height, int rowbytes, int allocnew
 // see if there's enough memory, allowing for the normal mode 0x13 pixel,
 // z, and surface buffers
 	if ((host_parms.memsize - tbuffersize + SURFCACHE_SIZE_AT_320X200 +
-		 0x10000 * 3) < minimum_memory)
+		 0x10000 * 3) < MINIMUM_MEMORY)
 	{
 		return false;		// not enough memory for mode
 	}
@@ -480,6 +481,7 @@ void VGA_SwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
 	VGA_SwapBuffersCopy (lvid, pcurrentmode, rects);
 }
 
+#if 0
 int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	int	drawn;
@@ -520,3 +522,4 @@ void VID_LockBuffer ( void )
 void VID_UnlockBuffer ( void )
 {
 }
+#endif
