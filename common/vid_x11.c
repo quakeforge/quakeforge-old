@@ -489,7 +489,7 @@ void VID_Init (unsigned char *palette)
 
 #ifdef HAS_VIDMODE
 	hasvidmode = VID_CheckVMode(x_disp, NULL, NULL);
-	if (hasvidmode && vid_fullscreen->value) {
+	if (hasvidmode) {
 		if (! XF86VidModeGetAllModeLines(x_disp, DefaultScreen(x_disp),
 						 &nummodes, &vidmodes)
 		    || nummodes <= 0) {
