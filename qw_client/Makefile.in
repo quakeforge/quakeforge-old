@@ -131,8 +131,8 @@ QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
 #
 # XXX - Should not assume UNIX
 NET_SRC        = net_bsd.c net_udp.c
-QW_NET_SRC     = net_udp.c md4.c
-UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
+QW_NET_SRC     = net_udp.c net_com.c mdfour.c
+UQ_NET_SRC     = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
 #
 # Common source files

@@ -43,7 +43,7 @@ QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
 # Networking source files
 #
 # XXX - Should not assume UNIX
-QW_NET_SRC     = net_udp.c md4.c
+QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 
 
 #
