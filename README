@@ -64,9 +64,9 @@ FIXME: Who are MPath Interactive and Gandalf Tech and what'd they do?
 II. System Requirements
 -----------------------
 
-VGA-compatible display
+Raster capable display. ;-)
 8MB RAM (16MB required under Win32)
-Floating-point processor
+Floating-point processor is not required but a Good Idea (tm).
 30MB free disk space (shareware version, 80MB for registered version)
 
 
@@ -206,6 +206,15 @@ Operating systems tested:
 User testimonies:
    Linux, Athlon, G400 w/ utah-glx
    Linux, PentiumII, G200 w/ utah-glx
+   Linux, RedHat 6.1, dual V2, Mesa 3.1
+   Linux, Debian 2.2, PII 266 CPU, 3Dfx Voodoo3 3000 AGP, Mesa 3.1   
+   Linux, Debian Potato, K6-2, TNT1, ancient nvida glx drivers
+   Linux 2.2, k6-2-350, quake-x11 -bpp 16
+   Linux 2.2, k6-2-350, quake-gl mesa 3.1 glide2x voodoo2 8M
+   Linux 2.0, k6-2-266, quake-x11 -bpp 16
+   FreeBSD 2.2.8 - X11
+   FreeBSD 3.2 - X11
+   FreeBSD 4.0 - X11 and TNT2/GLX
    Solaris 7.0, Ultrasparc, Elite3D
    AIX 4.3.3, Power3, GTX3000p
    Irix 6.5, MIPS R10k, MXI (Octane)
