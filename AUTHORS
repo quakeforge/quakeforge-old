@@ -62,12 +62,16 @@ Svgalib fixes/optimizations:
 GGI support:
   Marcus Sundberg <mackan@stacken.kth.se>
 
-SDL Support:
+SDL support:
   Sam Lantinga <slouken@devolution.com>
   Maas van den Berg <email@dds.nl>
 
 X11 software renderer fixes:
   Justin A. McCright <jam@qIj.damogran.org>
 
-GL Fullbright Support:
+GL fullbright Support:
   Neal White III <nwhite@softblox.com>
+
+Cheat/exploit fixes:
+  Mads Bondo Dydensborg <madsdyd@challenge.dk>
+

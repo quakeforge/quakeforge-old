@@ -1357,7 +1357,7 @@ void SV_PreRunCmd(void)
 {
 	memset(playertouch, 0, sizeof(playertouch));
 }
-
+	
 /*
 ===========
 SV_RunCmd
@@ -1368,6 +1368,18 @@ void SV_RunCmd (usercmd_t *ucmd)
 	edict_t		*ent;
 	int			i, n;
 	int			oldmsec;
+
+	//MBD: The id client limits msec to 100.
+	if (ucmd->msec > 100) {
+		Con_Printf("Speed cheat detected for player %s\n",
+			       	host_client->name);
+		// We want to punish people that tries to do this. Let us 
+		//  set their fps to 1000
+		ucmd->msec = 1;
+		// This has the added benefit that the server eventually will
+		//  KICK the player, calling him a timedemo cheater.
+		//  Neat, huh? :-)
+	}
 
 	cmd = *ucmd;
 
