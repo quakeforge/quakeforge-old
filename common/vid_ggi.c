@@ -692,34 +692,49 @@ static int XLateKey(ggi_key_event *ev)
 		ev->label = GII_KVAL(ev->label);
 	}
 	switch(ev->label) {
-	case GIIK_P9:
+	case GIIK_P9:		key = KP_PGUP; break;
 	case GIIK_PageUp:	key = K_PGUP; break;
 
-	case GIIK_P3:
+	case GIIK_P3:		key = KP_PGDN; break;
 	case GIIK_PageDown:	key = K_PGDN; break;
 
-	case GIIK_P7:
+	case GIIK_P7:		key = KP_HOME; break;
 	case GIIK_Home:		key = K_HOME; break;
 
-	case GIIK_P1:
+	case GIIK_P1:		key = KP_END; break;
 	case GIIK_End:		key = K_END; break;
 
-	case GIIK_P4:
+	case GIIK_P4:		key = KP_LEFTARROW; break;
 	case GIIK_Left:		key = K_LEFTARROW; break;
 
-	case GIIK_P6:
+	case GIIK_P6:		key = KP_RIGHTARROW; break;
 	case GIIK_Right:	key = K_RIGHTARROW; break;
 
-	case GIIK_P2:
+	case GIIK_P2:		key = KP_DOWNARROW; break;
 	case GIIK_Down:		key = K_DOWNARROW; break;
 
-	case GIIK_P8:
+	case GIIK_P8:		key = KP_UPARROW; break;
 	case GIIK_Up:		key = K_UPARROW; break;
 
-	case GIIUC_Escape:	key = K_ESCAPE;	break;
+	case GIIK_P5:		key = KP_5; break;
+	case GIIK_PBegin:	key = K_AUX32; break;
 
-	case GIIK_PEnter:
+	case GIIK_P0:		key = KP_INS; break;
+	case GIIK_Insert:	key = K_INS; break;
+
+	case GIIK_PSeparator:
+	case GIIK_PDecimal:	key = KP_DEL; break;
+	case GIIUC_Delete:	key = K_DEL; break;
+
+	case GIIK_PStar:	key = KP_MULTIPLY; break;
+	case GIIK_PPlus:	key = KP_PLUS; break;
+	case GIIK_PMinus:	key = KP_MINUS; break;
+	case GIIK_PSlash:	key = KP_DIVIDE; break;
+
+	case GIIK_PEnter:	key = KP_ENTER; break;
 	case GIIUC_Return:	key = K_ENTER; break;
+
+	case GIIUC_Escape:	key = K_ESCAPE;	break;
 
 	case GIIUC_Tab:		key = K_TAB; break;
 
@@ -738,36 +753,24 @@ static int XLateKey(ggi_key_event *ev)
 
 	case GIIUC_BackSpace:	key = K_BACKSPACE; break;
 
-	case GIIK_PSeparator:
-	case GIIK_PDecimal:
-	case GIIUC_Delete:	key = K_DEL; break;
-
-	case GIIK_Pause:	key = K_PAUSE; break;
-
 	case GIIK_ShiftL:
 	case GIIK_ShiftR:	key = K_SHIFT; break;
 
-	case GIIK_Execute: 
-	case GIIK_CtrlL: 
+	case GIIK_Execute:
+	case GIIK_CtrlL:
 	case GIIK_CtrlR:	key = K_CTRL; break;
 
-	case GIIK_AltL:	
-	case GIIK_MetaL: 
-	case GIIK_AltR:	
+	case GIIK_AltL:
+	case GIIK_MetaL:
+	case GIIK_AltR:
 	case GIIK_MetaR:
 	case GIIK_AltGr:
 	case GIIK_ModeSwitch:	key = K_ALT; break;
 
-	case GIIK_P5:
-	case GIIK_PBegin:	key = K_AUX32; break;
-
-	case GIIK_Insert:
-	case GIIK_P0:		key = K_INS; break;
-
-	case GIIK_PStar:	key = '*'; break;
-	case GIIK_PPlus:	key = '+'; break;
-	case GIIK_PMinus:	key = '-'; break;
-	case GIIK_PSlash:	key = '/'; break;
+	case GIIK_PrintScreen:	key = K_PRNTSCR; break;
+	case GIIK_ScrollLock:	key = K_SCRLCK; break;
+	case GIIK_Pause:	key = K_PAUSE; break;
+	case GIIK_NumLock:	key = KP_NUMLCK; break;
 
 	case GIIUC_Comma: case GIIUC_Minus: case GIIUC_Period:
 		key = ev->label;
