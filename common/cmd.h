@@ -128,5 +128,6 @@ void	Cmd_ForwardToServer (void);
 
 void Cmd_StuffCmds_f (void);
 void Cmd_Echo_f (void);
+void Cmd_Exec_File (char *path);
 
 #endif // _CMD_H

@@ -201,6 +201,7 @@ Cbuf_Execute (void)
 	while (cmd_text.cursize) {
 		extract_line (line);
 		// execute the command line
+		printf("+%s\n",line),
 		Cmd_ExecuteString (line, src_command);
 
 		if (cmd_wait)
@@ -292,6 +293,35 @@ void Cmd_StuffCmds_f (void)
 	Z_Free (build);
 }
 
+/*
+
+  Cmd_Exec_File
+
+*/
+void
+Cmd_Exec_File (char *path)
+{
+	char	*f;
+	int		mark;
+	int		len;
+	char	base[32];
+	QFile   *file;
+
+	if ((file = Qopen (path, "r")) != NULL) {
+		// extract the filename base name for hunk tag
+		COM_FileBase (path, base);
+		len = COM_filelength (file);
+		mark = Hunk_LowMark ();
+		f = (char *)Hunk_AllocName (len+1, base);
+		if (f) {
+			f[len] = 0;
+			Qread (file, f, len);
+			Qclose (file);
+			Cbuf_InsertText (f);
+		}
+		Hunk_FreeToLowMark (mark);
+	}
+}
 
 /*
 ===============

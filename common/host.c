@@ -532,8 +532,6 @@ extern cvar_t	*fs_basepath;
 void
 Host_Init (quakeparms_t *parms)
 {
-	QFile		*globalcfg;
-
 	COM_InitArgv (parms->argc, parms->argv);
 
 	if ( COM_CheckParm ("-minmemory") )
@@ -560,32 +558,16 @@ Host_Init (quakeparms_t *parms)
 	// probably Not A Good Thing (tm).
 	global_cfg_file = Cvar_Get("global_cfg_file", GLOBAL_CFG_FILE,
 			CVAR_ROM, "global configuration file");
-	if ((globalcfg = Qopen (global_cfg_file->string, "r")) != NULL) {
-		char *f;
-		int mark;
-		int len;
-		char	base[32];
 
-		// extract the filename base name for hunk tag
-		COM_FileBase (global_cfg_file->string, base);
-		len = COM_filelength (globalcfg);
-		mark = Hunk_LowMark ();
-		f = (char *)Hunk_AllocName (len+1, base);
-		if (f) {
-			f[len] = 0;
-			Qread (globalcfg, f, len);
-			Qclose (globalcfg);
-			Cbuf_InsertText (f);
-		}
-		Hunk_FreeToLowMark (mark);
-		if (f)
-			Cbuf_Execute ();
-	}
-
+	Cmd_Exec_File (global_cfg_file->string);
+	Cbuf_Execute_Sets ();
 
 	CL_InitCvars ();
 	SCR_InitCvars ();
 	VID_InitCvars ();
+
+	Cmd_Exec_File (global_cfg_file->string);
+	Cbuf_Execute ();
 
 	// reparse the command line for + commands other than set (sets still done,
 	// but it doesn't matter)
