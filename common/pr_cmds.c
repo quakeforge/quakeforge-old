@@ -340,7 +340,9 @@ void PF_sprint (void)
 	char		*s;
 	client_t	*client;
 	int		entnum;
+#ifdef QUAKEWORLD
 	int		level;
+#endif
 	
 	entnum = G_EDICTNUM(OFS_PARM0);
 
@@ -1517,9 +1519,7 @@ MESSAGE WRITING
 
 sizebuf_t *WriteDest (void)
 {
-	int		entnum;
-	int		dest;
-	edict_t	*ent;
+	int	dest;
 
 	dest = G_FLOAT(OFS_PARM0);
 	switch (dest)
@@ -1527,17 +1527,21 @@ sizebuf_t *WriteDest (void)
 	case MSG_BROADCAST:
 		return &sv.datagram;
 	
-	case MSG_ONE:
+	case MSG_ONE: {
 #ifdef QUAKEWORLD
 		SV_Error("Shouldn't be at MSG_ONE");
-		return &svs.clients[entnum-1].netchan.message;
+		break;
 #else
+		int	entnum;
+		edict_t	*ent;
+
 		ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
 		entnum = NUM_FOR_EDICT(ent);
 		if (entnum < 1 || entnum > svs.maxclients)
 			PR_RunError ("WriteDest: not a client");
 		return &svs.clients[entnum-1].message;
 #endif
+	}
 		
 	case MSG_ALL:
 		return &sv.reliable_datagram;

@@ -333,9 +333,9 @@ A download message has been received from the server
 */
 void CL_ParseDownload (void)
 {
-	int		size, percent;
-	byte	name[1024];
-	int		r;
+	int	size, percent;
+	char	name[1024];
+	int	r;
 
 
 	// read the data
