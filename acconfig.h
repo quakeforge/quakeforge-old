@@ -17,6 +17,9 @@
 /* Define this to something sane if you don't have stricmp */
 #undef stricmp
 
+/* Define if you have the dlopen function.  */
+#undef HAVE_DLOPEN
+
 /* Define this if you are using Mesa */
 #undef XMESA
 
@@ -34,4 +37,3 @@
 
 /* Define this to use experimental code */
 #undef _EXPERIMENTAL_
-
