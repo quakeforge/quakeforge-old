@@ -498,11 +498,10 @@ char *Key_KeynumToString (int keynum);
 // cl_demo.c
 //
 void CL_StopPlayback (void);
+int CL_GetMessage (void);
 #ifdef QUAKEWORLD
-qboolean CL_GetMessage (void);
 void CL_WriteDemoCmd (usercmd_t *pcmd);
 #elif defined(UQUAKE)
-int CL_GetMessage (void);
 void CL_SignonReply (void);
 #endif // QUAKEWORLD else UQUAKE
 

@@ -1,7 +1,9 @@
 /*
-cl_demo.c - demo functions for uquake
+cl_demo.c - demo functions
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,15 +22,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include <qtypes.h>
-#include <client.h>
-#include <quakedef.h>
-#include <net.h>
-#include <sys.h>
-#include <mathlib.h>
-#include <cmd.h>
-#include <console.h>
-#include <protocol.h>
+#include "quakedef.h"
+#include "pmove_simple.h"
+#include "qtypes.h"
+#include "client.h"
+#include "console.h"
+#include "mathlib.h"
 
 void CL_FinishTimeDemo (void);
 
@@ -58,7 +57,7 @@ void CL_StopPlayback (void)
 		return;
 
 	Qclose (cls.demofile);
-	cls.demoplayback = false;
+	cls.demoplayback = 0;
 	cls.demofile = NULL;
 	cls.state = ca_disconnected;
 
@@ -97,9 +96,9 @@ CL_GetMessage
 Handles recording and playback of demos, on top of NET_ code
 ====================
 */
-int CL_GetMessage (void)
+int CL_GetMessage(void)
 {
-	int		r, i;
+	int	r, i;
 	float	f;
 	
 	if	(cls.demoplayback)

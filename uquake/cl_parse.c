@@ -1,6 +1,8 @@
 /*
 cl_parse.c - parse a message received from the server
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,18 +21,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include <qtypes.h>
 #include <quakedef.h>
-#include <protocol.h>
-#include <sound.h>
-#include <net.h>
-#include <sys.h>
+#include <model.h>
+#include <pmove.h>
 #include <console.h>
-#include <sbar.h>
 #include <mathlib.h>
+#include <sound.h>
 #include <cdaudio.h>
+#include <sbar.h>
 #include <screen.h>
-#include <lib_replace.h>
-#include <cmd.h>
+#include <cvars.h>
 #include <client.h>
 #include <server.h>
 
@@ -82,9 +83,9 @@ char *svc_strings[] =
 	"svc_cutscene"
 };
 
-int		cl_spikeindex, cl_playerindex, cl_flagindex;
 int	parsecountmod;
 double	parsecounttime;
+int	cl_spikeindex, cl_playerindex, cl_flagindex;
 
 //=============================================================================
 
@@ -786,4 +787,3 @@ void CL_ParseServerMessage (void)
 		}
 	}
 }
-

@@ -72,9 +72,8 @@ char *svc_strings[] =
 	"svc_foundsecret",
 	"svc_spawnstaticsound",
 	"svc_intermission",
-	"svc_finale",
-
-	"svc_cdtrack",
+	"svc_finale",			// [string] music [string] text
+	"svc_cdtrack",			// [byte] track [byte] looptrack
 	"svc_sellscreen",
 
 	"svc_smallkick",
@@ -118,8 +117,7 @@ char *svc_strings[] =
 int	oldparsecountmod;
 int	parsecountmod;
 double	parsecounttime;
-
-int		cl_spikeindex, cl_playerindex, cl_flagindex;
+int	cl_spikeindex, cl_playerindex, cl_flagindex;
 
 //=============================================================================
 

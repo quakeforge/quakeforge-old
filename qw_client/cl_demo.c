@@ -1,4 +1,5 @@
 /*
+cl_demo.c - demo functions
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -13,7 +14,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 
-See the included (GNU.txt) GNU General Public License for more details.
+See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -55,9 +56,9 @@ void CL_StopPlayback (void)
 		return;
 
 	Qclose (cls.demofile);
+	cls.demoplayback = 0;
 	cls.demofile = NULL;
 	cls.state = ca_disconnected;
-	cls.demoplayback = 0;
 
 	if (cls.timedemo)
 		CL_FinishTimeDemo ();
@@ -263,7 +264,7 @@ CL_GetMessage
 Handles recording and playback of demos, on top of NET_ code
 ====================
 */
-qboolean CL_GetMessage (void)
+int CL_GetMessage(void)
 {
 	if	(cls.demoplayback)
 		return CL_GetDemoMessage ();
