@@ -111,7 +111,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"qwcl_Release/qw_client.exe"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLRelease/qw-client-wgl.exe"
+# ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLRelease/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
@@ -141,7 +141,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/glqw_client.exe"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLDebug/qw-client-wgl.exe"
+# ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLDebug/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
