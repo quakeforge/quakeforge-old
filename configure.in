@@ -129,9 +129,7 @@ if test "x$HAS_OGL_INC" != x; then
                      HAS_GL_COLOR_INDEX8_EXT=no)
       if test "x$HAS_GL_COLOR_INDEX8_EXT" != xno; then
          AC_MSG_RESULT(yes)
-         cat >> confdefs.h <<\EOF
-#define HAS_GL_COLOR_INDEX8_EXT 1
-EOF
+	 AC_DEFINE(HAS_GL_COLOR_INDEX8_EXT, 1)
       fi
  
    else

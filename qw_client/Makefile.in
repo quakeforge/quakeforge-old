@@ -49,7 +49,6 @@ ifneq ($(HAS_OGL),)
 GLQUAKE   =$(BIN_PREFIX)-gl
 endif
 
-# FIX:  Add 3dfxgl targets
 ifneq ($(HAS_TDFXGL),)
 TDFXQUAKE= $(BIN_PREFIX)-3dfx
 endif
