@@ -307,8 +307,8 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	{
 		fread (&numcommands, 4, 1, f);
 		fread (&numorder, 4, 1, f);
-		fread (&commands, numcommands * sizeof(commands[0]), 1, f);
-		fread (&vertexorder, numorder * sizeof(vertexorder[0]), 1, f);
+		fread (commands, numcommands * sizeof(commands[0]), 1, f);
+		fread (vertexorder, numorder * sizeof(vertexorder[0]), 1, f);
 		fclose (f);
 	}
 	else
@@ -339,8 +339,8 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		{
 			fwrite (&numcommands, 4, 1, f);
 			fwrite (&numorder, 4, 1, f);
-			fwrite (&commands, numcommands * sizeof(commands[0]), 1, f);
-			fwrite (&vertexorder, numorder * sizeof(vertexorder[0]), 1, f);
+			fwrite (commands, numcommands * sizeof(commands[0]), 1, f);
+			fwrite (vertexorder, numorder * sizeof(vertexorder[0]), 1, f);
 			fclose (f);
 		}
 	}

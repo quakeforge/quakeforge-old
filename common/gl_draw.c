@@ -84,7 +84,7 @@ typedef struct
 } glpic_t;
 
 byte		conback_buffer[sizeof(qpic_t) + sizeof(glpic_t)];
-qpic_t		*conback = (qpic_t *)&conback_buffer;
+qpic_t		*conback = (qpic_t *)conback_buffer;
 
 int		gl_lightmap_format = 4;
 int		gl_solid_format = 3;

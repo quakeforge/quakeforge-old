@@ -922,7 +922,7 @@ void CL_ConnectionlessPacket (void)
 		data[4] = A2A_ACK;
 		data[5] = 0;
 		
-		NET_SendPacket (6, &data, net_from);
+		NET_SendPacket (6, data, net_from);
 		return;
 	}
 

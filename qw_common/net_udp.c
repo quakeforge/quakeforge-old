@@ -87,13 +87,13 @@ void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
 	memset (s, 0, sizeof(*s));
 	s->sin_family = AF_INET;
 
-	*(int *)&s->sin_addr = *(int *)&a->ip;
+	*(int *)&s->sin_addr = *(int *)a->ip;
 	s->sin_port = a->port;
 }
 
 void SockadrToNetadr (struct sockaddr_in *s, netadr_t *a)
 {
-	*(int *)&a->ip = *(int *)&s->sin_addr;
+	*(int *)a->ip = *(int *)&s->sin_addr;
 	a->port = s->sin_port;
 }
 

@@ -1587,7 +1587,7 @@ pack_t *COM_LoadPackFile (char *packfile)
 	newfiles = Z_Malloc (numpackfiles * sizeof(packfile_t));
 
 	fseek (packhandle, header.dirofs, SEEK_SET);
-	fread (&info, 1, header.dirlen, packhandle);
+	fread (info, 1, header.dirlen, packhandle);
 
 // crc the directory to check for modifications
 	crc = CRC_Block((byte *)info, header.dirlen);
