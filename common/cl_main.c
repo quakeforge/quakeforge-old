@@ -133,6 +133,8 @@ cvar_t	*cl_solid_players;
 cvar_t	*cl_verstring;
 
 cvar_t	*cl_talksound;
+cvar_t	*cl_muzzleflash;
+cvar_t	*cl_rocketlight;
 
 extern cvar_t	*sys_nostdout;
 
@@ -1297,6 +1299,9 @@ void CL_RelinkEntities (void)
 		{
 			vec3_t		fv, rv, uv;
 
+			if (!cl_muzzleflash->value || (cl_muzzleflash->value == 2 && ent == &cl_entities[cl.playernum+1]))
+				return;
+
 			dl = CL_AllocDlight (i);
 			VectorCopy (ent->origin,  dl->origin);
 			dl->origin[2] += 16;
@@ -1351,10 +1356,13 @@ void CL_RelinkEntities (void)
 		else if (ent->model->flags & EF_ROCKET)
 		{
 			R_RocketTrail (oldorg, ent->origin, 0, ent);
-			dl = CL_AllocDlight (i);
-			VectorCopy (ent->origin, dl->origin);
-			dl->radius = 200;
-			dl->die = cl.time + 0.01;
+			if (cl_rocketlight->value)
+			{
+				dl = CL_AllocDlight (i);
+				VectorCopy (ent->origin, dl->origin);
+				dl->radius = 200;
+				dl->die = cl.time + 0.01;
+			}
 		}
 		else if (ent->model->flags & EF_GRENADE)
 			R_RocketTrail (oldorg, ent->origin, 1, ent);
@@ -1852,6 +1860,10 @@ void CL_InitCvars()
 
 	cl_talksound	= Cvar_Get ("cl_talksound", "misc/talk.wav", CVAR_NONE,
 		"Sets the sound used for talk messages");
+	cl_muzzleflash	= Cvar_Get ("cl_muzzleflash", "1", CVAR_NONE,
+		"Muzzleflashes: 0 - off, 1 - none, 2 - own off");
+	cl_rocketlight	= Cvar_Get ("cl_rocketlight", "1", CVAR_NONE,
+		"Toggles dynamic rocket lighting effect");
 
 	localid		= Cvar_Get ("localid","",0,"None");
 

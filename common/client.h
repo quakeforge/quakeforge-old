@@ -385,6 +385,8 @@ extern cvar_t	*cl_pitchdriftspeed;
 extern cvar_t	*cl_verstring;
 
 extern cvar_t	*cl_talksound;
+extern cvar_t	*cl_muzzleflash;
+extern cvar_t	*cl_rocketlight;
 
 extern cvar_t	*lookspring;
 extern cvar_t	*lookstrafe;

@@ -565,10 +565,13 @@ void CL_LinkPacketEntities (void)
 		if (model->flags & EF_ROCKET)
 		{
 			R_RocketTrail (old_origin, ent->origin, 0, ent);
-			dl = CL_AllocDlight (s1->number);
-			VectorCopy (ent->origin, dl->origin);
-			dl->radius = 200;
-			dl->die = cl.time + 0.1;
+			if (cl_rocketlight->value)
+			{
+				dl = CL_AllocDlight (s1->number);
+				VectorCopy (ent->origin, dl->origin);
+				dl->radius = 200;
+				dl->die = cl.time + 0.1;
+			}	
 		}
 		else if (model->flags & EF_GRENADE)
 			R_RocketTrail (old_origin, ent->origin, 1, ent);

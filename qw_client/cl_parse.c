@@ -1039,6 +1039,9 @@ void CL_MuzzleFlash (void)
 	if (i-1 == cl.playernum && gl_flashblend->value)
 		return;
 
+	if (!cl_muzzleflash->value || (cl_muzzleflash->value == 2 && i-1 == cl.playernum))
+		return;
+
 	pl = &cl.frames[parsecountmod].playerstate[i-1];
 
 	dl = CL_AllocDlight (i);
