@@ -52,7 +52,8 @@ configure: configure.in acconfig.h
 	./bootstrap
 
 CONFIG_SRC    = Makefile.in qw_client/Makefile.in qw_server/Makefile.in \
-		uquake/Makefile.in common/Makefile.in
+		uquake/Makefile.in common/Makefile.in \
+		rpm/build_rpm.in rpm/quakeforge.spec.in
 
 $(patsubst %.in,%,$(CONFIG_SRC)): configure $(CONFIG_SRC)
 	$(SHELL) ./config.status --recheck
