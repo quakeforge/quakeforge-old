@@ -489,7 +489,7 @@ ifneq ($(TDFXQUAKE),)
 
 ALL_TDFX_SRC  = $(GL_REND_SRC) \
 		gl_vidlinux_3dfx.c in_svgalib.c
-ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
