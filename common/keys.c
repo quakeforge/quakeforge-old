@@ -41,6 +41,7 @@ key up events are sent even if in console mode
 
 */
 
+cvar_t	*cl_constyle;
 
 #define		MAXCMDLINE	256
 char	key_lines[32][MAXCMDLINE];
@@ -257,18 +258,27 @@ void Key_Console (int key)
 	switch (key) {
 	    case KP_ENTER:
 	    case K_ENTER:
-			// backslash text are commands, else chat
-			if (key_lines[edit_line][1] == '\\' || key_lines[edit_line][1] == '/')
-				Cbuf_AddText (key_lines[edit_line]+2);	// skip the >
-			else if (CheckForCommand())
+			// backslash text are commands
+			if (key_lines[edit_line][1] == '/' && key_lines[edit_line][2] == '/')
+				goto no_lf;
+			else if (key_lines[edit_line][1] == '\\' || key_lines[edit_line][1] == '/')
+				Cbuf_AddText (key_lines[edit_line]+2);	// skip the ]/
+			else if (cl_constyle->value != 2 && CheckForCommand())
 				Cbuf_AddText (key_lines[edit_line]+1);	// valid command
-			else {	// convert to a chat message
-				if (cls.state >= ca_connected)
-					Cbuf_AddText ("say ");
-				Cbuf_AddText (key_lines[edit_line]+1);	// skip the >
+			else if ((cls.state >= ca_connected && cl_constyle->value == 1) || cl_constyle->value == 2)
+			{
+				if (cls.state < ca_connected)	// can happen if cl_constyle == 2
+					goto no_lf;					// drop the whole line
+
+				// convert to a chat message
+				Cbuf_AddText ("say ");
+				Cbuf_AddText (key_lines[edit_line]+1);
 			}
+			else
+				Cbuf_AddText (key_lines[edit_line]+1);	// skip the ]
 
 			Cbuf_AddText ("\n");
+no_lf:			
 			Con_Printf ("%s\n",key_lines[edit_line]);
 			edit_line = (edit_line + 1) & 31;
 			history_line = edit_line;
@@ -382,13 +392,14 @@ void Key_Console (int key)
 					strcpy(textCopied, clipText);
 	/* Substitutes a NULL for every token */strtok(textCopied, "\n\r\b");
 					i = strlen(textCopied);
-					if (i + strlen(key_lines[edit_line]) >= MAXCMDLINE)
-						i = MAXCMDLINE - strlen(key_lines[edit_line]);
-					if (i>0) {
-						textCopied[i]=0;
-						// FIXME: actually INSERT the string, not append!
-						strcat(key_lines[edit_line], textCopied);
-						key_linepos = strlen(key_lines[edit_line]);;
+					if (i + strlen(key_lines[edit_line]) >= MAXCMDLINE-1)
+						i = MAXCMDLINE-1 - strlen(key_lines[edit_line]);
+					if (i > 0)
+					{	// insert the string
+						memcpy (key_lines[edit_line] + key_linepos + i, 
+							key_lines[edit_line] + key_linepos, strlen(key_lines[edit_line]) - key_linepos + 1);
+						memcpy (key_lines[edit_line] + key_linepos, textCopied, i);
+						key_linepos += i;
 					}
 					free(textCopied);
 				}
@@ -750,7 +761,8 @@ void Key_Init (void)
 	Cmd_AddCommand ("unbind",Key_Unbind_f);
 	Cmd_AddCommand ("unbindall",Key_Unbindall_f);
 
-
+	cl_constyle = Cvar_Get ("cl_constyle", "1", 0,
+		"0 - NQ, 1 - QW, 2 - Q3");
 }
 
 /*
