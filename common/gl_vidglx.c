@@ -1,7 +1,7 @@
 /*
 	gl_vidglx.c
 
-	(description)
+	OpenGL GLX video driver
 
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999-2000  Nelson Rush.
@@ -80,6 +80,8 @@
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
 
+static qboolean		vid_initialized = false;
+
 static int		screen;
 Window			x_win;
 static GLXContext	ctx = NULL;
@@ -153,6 +155,9 @@ void D_EndDirectRect (int x, int y, int width, int height)
 void
 VID_Shutdown(void)
 {
+	if (!vid_initialized)
+		return;
+
 	Con_Printf("VID_Shutdown\n");
 
 	glXDestroyContext(x_disp, ctx);
@@ -175,6 +180,7 @@ VID_Shutdown(void)
 #endif
 	x11_close_display();
 }
+
 static void
 signal_handler(int sig)
 {
@@ -557,6 +563,8 @@ void VID_Init(unsigned char *palette)
 
 	Con_SafePrintf ("Video mode %dx%d initialized.\n",
 			width, height);
+
+	vid_initialized = true;
 
 	vid.recalc_refdef = 1;		// force a surface cache flush
 }
