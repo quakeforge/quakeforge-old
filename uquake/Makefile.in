@@ -157,7 +157,7 @@ UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
                  wad.c zone.c cvars.c lib_replace.c qendian.c quakefs.c \
-		 quakeio.c qargs.c
+		 quakeio.c qargs.c plugin.c
 
 # GL renderer source
 
