@@ -22,7 +22,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // cl_main.c  -- client main loop
 
+/* Will have problems with isspace() when comiling w/ gcc on SGI without this */
+#ifdef sgi
+#define _LINT
+#define UNDEFINE_LINT
+#endif
+
 #include <ctype.h>
+
+#ifdef UNDEFINE_LINT
+#undef _LINT
+#endif
 
 #include "quakedef.h"
 #include "winquake.h"
