@@ -1,7 +1,8 @@
 /*
-Copyright (C) 1996-1997 Id Software, Inc.
-Portions Copyright (C) 1999,2000  Nelson Rush.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
+Copyright (C) 1996-1997  Id Software, Inc.
+Copyright (C) 1999-2000  Nelson Rush.
+Copyright (C) 1999-2000  contributors of the QuakeForge project
+Copyright (C) 2000       Marcus Sundberg [mackan@stacken.kth.se]
 Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
@@ -23,8 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "winquake.h"
 
-void (*vid_menudrawfn)(void);
-void (*vid_menukeyfn)(int key);
 
 enum {m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer, m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit, m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions, m_search, m_slist} m_state;
 
@@ -366,11 +365,15 @@ void M_Main_Key (int key)
 //=============================================================================
 /* OPTIONS MENU */
 
-#define	OPTIONS_ITEMS	16
 
 #define	SLIDER_RANGE	10
+#define	L_OPTIONS_ITEMS	15
 
-int		options_cursor;
+extern int	VID_options_items;
+static int	options_cursor;
+
+#define 	options_items (L_OPTIONS_ITEMS+VID_options_items)
+
 
 void M_Menu_Options_f (void)
 {
@@ -463,9 +466,9 @@ void M_AdjustSliders (int dir)
 	case 13:
 		Cvar_SetValue ("cl_hudswap", !cl_hudswap.value);
 
-	case 15:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
-		break;
+	default:
+		VID_ExtraOptionCmd(options_cursor + 2 - L_OPTIONS_ITEMS);
+
 	}
 }
 
@@ -501,69 +504,65 @@ void M_DrawCheckbox (int x, int y, int on)
 
 void M_Options_Draw (void)
 {
+	unsigned int	options_draw_cursor=32;
 	float		r;
-	qpic_t	*p;
-	
+	qpic_t		*p;
+
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
 	p = Draw_CachePic ("gfx/p_option.lmp");
 	M_DrawPic ( (320-p->width)/2, 4, p);
 	
-	M_Print (16, 32, "    Customize controls");
-	M_Print (16, 40, "         Go to console");
-	M_Print (16, 48, "     Reset to defaults");
+	M_Print (16, options_draw_cursor,    "    Customize controls");
+	M_Print (16, options_draw_cursor+=8, "         Go to console");
+	M_Print (16, options_draw_cursor+=8, "     Reset to defaults");
 
-	M_Print (16, 56, "           Screen size");
+	M_Print (16, options_draw_cursor+=8, "           Screen size");
 	r = (scr_viewsize.value - 30) / (120 - 30);
-	M_DrawSlider (220, 56, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 64, "            Brightness");
+	M_Print (16, options_draw_cursor+=8, "            Brightness");
 	r = (1.0 - v_gamma.value) / 0.5;
-	M_DrawSlider (220, 64, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 72, "           Mouse Speed");
+	M_Print (16, options_draw_cursor+=8, "           Mouse Speed");
 	r = (sensitivity.value - 1)/10;
 	M_DrawSlider (220, 72, r);
 
-	M_Print (16, 80, "       CD Music Volume");
+	M_Print (16, options_draw_cursor+=8, "       CD Music Volume");
 	r = bgmvolume.value;
-	M_DrawSlider (220, 80, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 88, "          Sound Volume");
+	M_Print (16, options_draw_cursor+=8, "          Sound Volume");
 	r = volume.value;
-	M_DrawSlider (220, 88, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 96,  "            Always Run");
-	M_DrawCheckbox (220, 96, cl_forwardspeed.value > 200);
+	M_Print (16, options_draw_cursor+=8, "            Always Run");
+	M_DrawCheckbox (220, options_draw_cursor, cl_forwardspeed.value
+> 200);
 
-	M_Print (16, 104, "          Invert Mouse");
-	M_DrawCheckbox (220, 104, m_pitch.value < 0);
+	M_Print (16, options_draw_cursor+=8, "          Invert Mouse");
+	M_DrawCheckbox (220, options_draw_cursor, m_pitch.value < 0);
 
-	M_Print (16, 112, "            Lookspring");
-	M_DrawCheckbox (220, 112, lookspring.value);
+	M_Print (16, options_draw_cursor+=8, "            Lookspring");
+	M_DrawCheckbox (220, options_draw_cursor, lookspring.value);
 
-	M_Print (16, 120, "            Lookstrafe");
-	M_DrawCheckbox (220, 120, lookstrafe.value);
+	M_Print (16, options_draw_cursor+=8, "            Lookstrafe");
+	M_DrawCheckbox (220, options_draw_cursor, lookstrafe.value);
 
-	M_Print (16, 128, "    Use old status bar");
-	M_DrawCheckbox (220, 128, cl_sbar.value);
+	M_Print (16, options_draw_cursor+=8, "    Use old status bar");
+	M_DrawCheckbox (220, options_draw_cursor, cl_sbar.value);
 
-	M_Print (16, 136, "      HUD on left side");
-	M_DrawCheckbox (220, 136, cl_hudswap.value);
+	M_Print (16, options_draw_cursor+=8, "      HUD on left side");
+	M_DrawCheckbox (220, options_draw_cursor, cl_hudswap.value);
 
-	if (vid_menudrawfn)
-		M_Print (16, 144, "         Video Options");
+	VID_ExtraOptionDraw(options_draw_cursor);
+	options_draw_cursor+=VID_options_items*8;
 
-#ifdef _WIN32
-	if (modestate == MS_WINDOWED)
-	{
-#endif
-		M_Print (16, 152, "             Use Mouse");
-		M_DrawCheckbox (220, 152, _windowed_mouse.value);
-#ifdef _WIN32
+	if (vid_menudrawfn) {
+		M_Print (16, options_draw_cursor+=8, "         Video Options");
 	}
-#endif
 
-// cursor
+	/* cursor */
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
 
@@ -591,11 +590,12 @@ void M_Options_Key (int k)
 		case 2:
 			Cbuf_AddText ("exec default.cfg\n");
 			break;
-		case 14:
-			M_Menu_Video_f ();
-			break;
 		default:
-			M_AdjustSliders (1);
+			if (options_cursor == options_items-1) {
+				M_Menu_Video_f();
+			} else {
+				M_AdjustSliders(1);
+			}
 			break;
 		}
 		return;
@@ -605,14 +605,14 @@ void M_Options_Key (int k)
 		S_LocalSound ("misc/menu1.wav");
 		options_cursor--;
 		if (options_cursor < 0)
-			options_cursor = OPTIONS_ITEMS-1;
+			options_cursor = options_items-1;
 		break;
 
 	case KP_DOWNARROW:
 	case K_DOWNARROW:
 		S_LocalSound ("misc/menu1.wav");
 		options_cursor++;
-		if (options_cursor >= OPTIONS_ITEMS)
+		if (options_cursor >= options_items)
 			options_cursor = 0;
 		break;	
 
@@ -625,26 +625,6 @@ void M_Options_Key (int k)
 	case K_RIGHTARROW:
 		M_AdjustSliders (1);
 		break;
-	}
-
-	if (options_cursor == 14 && vid_menudrawfn == NULL)
-	{
-		if (k == K_UPARROW)
-			options_cursor = 13;
-		else
-			options_cursor = 0;
-	}
-
-	if ((options_cursor == 15) 
-#ifdef _WIN32
-	&& (modestate != MS_WINDOWED)
-#endif
-	)
-	{
-		if ((k == K_UPARROW) || (k == KP_UPARROW))
-			options_cursor = 14;
-		else
-			options_cursor = 0;
 	}
 }
 
@@ -852,6 +832,33 @@ void M_Keys_Key (int k)
 //=============================================================================
 /* VIDEO MENU */
 
+/* Default functions */
+#define MAX_COLUMN_SIZE	11
+
+static void
+vid_menudraw(void)
+{
+	qpic_t		*p;
+
+	p = Draw_CachePic("gfx/vidmodes.lmp");
+	M_DrawPic ((320-p->width)/2, 4, p);
+	M_Print(4*8, 36 + MAX_COLUMN_SIZE * 8 + 8,
+		"Video mode switching unavailable");
+	M_Print(9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
+}
+
+static void
+vid_menukey(int key)
+{
+	M_Menu_Options_f();
+}
+
+
+void (*vid_menudrawfn)(void) = vid_menudraw;
+void (*vid_menukeyfn)(int key) = vid_menukey;
+
+
+
 void M_Menu_Video_f (void)
 {
 	key_dest = key_menu;
@@ -860,15 +867,21 @@ void M_Menu_Video_f (void)
 }
 
 
-void M_Video_Draw (void)
+void M_Video_Draw(void)
 {
-	(*vid_menudrawfn) ();
+	if (vid_menudrawfn == NULL) {
+		Sys_Error("M_Video_Draw called wehn vid_menudrawfn == NULL!\n");
+	}
+	vid_menudrawfn();
 }
 
 
-void M_Video_Key (int key)
+void M_Video_Key(int key)
 {
-	(*vid_menukeyfn) (key);
+	if (vid_menukeyfn == NULL) {
+		Sys_Error("M_Video_Key called wehn vid_menukeyfn == NULL!\n");
+	}
+	vid_menukeyfn(key);
 }
 
 //=============================================================================
