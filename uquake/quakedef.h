@@ -22,8 +22,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _UQUAKE_QUAKEDEF_H
 #define _UQUAKE_QUAKEDEF_H
 
-#define	GAMENAME	"id1"		// directory to look in by default
-
 #if defined(_WIN32) && !defined(WINDED)
 #if defined(_M_IX86)
 #define __i386__	1

@@ -5,6 +5,9 @@
 /* Define if you want to use QF-style defaults instead of Id-style */
 #undef NEWSTYLE
 
+/* Define this to the subdirectory name of the default game */
+#undef GAMENAME
+
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA
 
@@ -31,12 +34,4 @@
 
 /* Define this to use experimental code */
 #undef _EXPERIMENTAL_
-
-#if defined(X11)
-#   define OUTPUT_STR	"X11"
-#elif defined(GGI)
-#   define OUTPUT_STR	"GGI"
-#else
-#   define OUTPUT_STR	"Unknown"
-#endif
 

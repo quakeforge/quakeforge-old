@@ -1402,6 +1402,7 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 
 		host_client->msec_pool += idealmsec - oldmsec;
 
+#if 0
 		if (abs(host_client->msec_pool) > POOLMAX)
 		{
 			printf("tmp_t: %f, realt: %f, frame_t: %f, loss: %d, total: %d\n",
@@ -1423,7 +1424,8 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 			printf("oldmsec: %d, msec: %d, pool: %d\n", oldmsec, 
 					idealmsec, host_client->msec_pool);
 		}
-		
+#endif
+
 		if (abs(host_client->msec_pool) > POOLMAX)
 		{
 			/* if our pool exceeds POOLMAX msec, empty it into msec.  This

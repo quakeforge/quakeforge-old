@@ -1711,7 +1711,7 @@ void COM_Gamedir (char *dir)
 	//
 	Cache_Flush ();
 
-	if (!strcmp(dir,"id1") || !strcmp(dir, "qw"))
+	if (!strcmp(dir, GAMENAME) || !strcmp(dir, "qw"))
 		return;
 
 	snprintf(com_gamedir, sizeof(com_gamedir), "%s/%s", com_basedir, dir);
@@ -1751,7 +1751,7 @@ void COM_InitFilesystem (void)
 
 //
 // -basedir <path>
-// Overrides the system supplied base directory (under id1)
+// Overrides the system supplied base directory
 //
 	i = COM_CheckParm ("-basedir");
 	if (i && i < com_argc-1)
@@ -1760,9 +1760,9 @@ void COM_InitFilesystem (void)
 		strcpy (com_basedir, host_parms.basedir);
 
 //
-// start up with id1 by default
+// start up with GAMENAME by default
 //
-	COM_AddGameDirectory (va("%s/id1", com_basedir) );
+	COM_AddGameDirectory (va("%s" GAMENAME, com_basedir) );
 	COM_AddGameDirectory (va("%s/qw", com_basedir) );
 
 	// any set gamedirs will be freed up to here
