@@ -246,9 +246,9 @@ Interactive line editing and console scrollback
 */
 void Key_Console (int key)
 {
+	int		i;
 #ifdef _WIN32
 	char	*cmd, *s;
-	int		i;
 	HANDLE	th;
 	char	*clipText, *textCopied;
 #endif
@@ -272,6 +272,7 @@ void Key_Console (int key)
 			edit_line = (edit_line + 1) & 31;
 			history_line = edit_line;
 			key_lines[edit_line][0] = ']';
+			key_lines[edit_line][1] = 0;
 			key_linepos = 1;
 			if (cls.state == ca_disconnected)
 				SCR_UpdateScreen ();	// force an update, because the command
@@ -284,13 +285,37 @@ void Key_Console (int key)
 			return;
 			break;
 	
-	    case K_BACKSPACE:
-	    case KP_LEFTARROW:
+		case K_BACKSPACE:
+			if (key_linepos > 1)
+			{ 
+				strcpy(key_lines[edit_line] + key_linepos - 1, key_lines[edit_line] + key_linepos);
+				key_linepos--;
+			}
+			return;
+			break;
+
+		case KP_RIGHTARROW:
+		case K_RIGHTARROW:
+			if (strlen(key_lines[edit_line]) == key_linepos)
+			{
+				if (strlen(key_lines[(edit_line + 31) & 31]) <= key_linepos)
+					return;	// no character to get
+				key_lines[edit_line][key_linepos] = key_lines[(edit_line + 31) & 31][key_linepos];
+				key_linepos++;
+				key_lines[edit_line][key_linepos] = 0;
+			}		
+			else
+				key_linepos++;
+			return;	
+			break;
+
+		case KP_LEFTARROW:
 	    case K_LEFTARROW:
 			if (key_linepos > 1)
 				key_linepos--;
 			return;
 			break;
+
 	    case KP_UPARROW:
 	    case K_UPARROW:
 			do {
@@ -382,9 +407,16 @@ void Key_Console (int key)
 		
 	if (key_linepos < MAXCMDLINE-1)
 	{
+// Tonik -->
+		i = strlen(key_lines[edit_line]) - 1;			
+		if (i == MAXCMDLINE-2) i--;
+		for (; i >= key_linepos; i--)
+			key_lines[edit_line][i + 1] = key_lines[edit_line][i];
+// <-- Tonik
 		key_lines[edit_line][key_linepos] = key;
 		key_linepos++;
-		key_lines[edit_line][key_linepos] = 0;
+		if (!i)	// FIXME
+			key_lines[edit_line][key_linepos] = 0;
 	}
 
 }
