@@ -1,5 +1,6 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 2000      Marcus Sundberg [mackan@stacken.kth.se]
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,35 +21,41 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // net_udp.c
 
 #include "quakedef.h"
-#ifdef __sun__
-/* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
-#define model_t sunmodel_t
-#endif
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <sys/param.h>
-#include <sys/ioctl.h>
+#include <stdio.h>
 #include <errno.h>
 
-#ifdef __sun__
-#include <sys/filio.h>
-#undef model_t
+/* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
+#define model_t quakeforgemodel_t
+
+#include <unistd.h>
+#include <sys/types.h>
+
+#ifdef HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+#ifdef HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
+#ifdef HAVE_NETDB_H
+# include <netdb.h>
+#endif
+#ifdef HAVE_ARPA_INET_H
+# include <arpa/inet.h>
 #endif
 
-#if defined(sgi) && defined(sa_family)
-/* Get rid of problematic SGI #def */
-#undef sa_family
-#endif
+#undef model_t
 
 #ifdef NeXT
 #include <libc.h>
 #endif
 
-extern int gethostname (char *, int);
-extern int close (int);
+#ifndef MAXHOSTNAMELEN
+#define MAXHOSTNAMELEN	512
+#endif
 
 extern cvar_t hostname;
 
@@ -139,12 +146,12 @@ int UDP_OpenSocket (int port)
 {
 	int newsocket;
 	struct sockaddr_in address;
-	qboolean _true = true;
+	int _true = 1;
 
 	if ((newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
 		return -1;
 
-	if (ioctl (newsocket, FIONBIO, (char *)&_true) == -1)
+	if (ioctl (newsocket, FIONBIO, &_true) == -1)
 		goto ErrorReturn;
 
 	address.sin_family = AF_INET;
