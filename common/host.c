@@ -674,11 +674,6 @@ Host_Shutdown( void )
 	}
 	isdown = true;
 
-#if UQUAKE
-// keep Con_Printf from trying to update the screen
-	scr_disabled_for_loading = true;
-#endif
-
 	Host_WriteConfiguration ();
 
 	CDAudio_Shutdown ();
