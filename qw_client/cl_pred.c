@@ -234,7 +234,7 @@ CL_PredictMove (void)
 void
 CL_InitPrediction (void)
 {
-	cl_pushlatency = Cvar_Get ("cl_pushlatency","0",CVAR_NONE,"None");
+	cl_pushlatency = Cvar_Get ("pushlatency","0",CVAR_NONE,"None");
 	cl_nopred = Cvar_Get ("cl_nopred","0",CVAR_NONE,"None");
 }
 
