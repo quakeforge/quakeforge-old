@@ -198,8 +198,8 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_waterwarp);
 #ifdef _EXPERIMENTAL_
 	Cvar_RegisterVariable (&r_volfog);
-	Cvar_RegisterVariable (&r_waterripple);
 #endif
+	Cvar_RegisterVariable (&r_waterripple);
 
 	Cvar_RegisterVariable (&gl_clear);
 	Cvar_RegisterVariable (&gl_texsort);
