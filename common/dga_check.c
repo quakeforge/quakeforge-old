@@ -39,7 +39,7 @@
 	Check for the presence of the XFree86-DGA X server extension
 */
 int
-VID_CheckDGA ( Display *dpy, Window *win )
+VID_CheckDGA ( Display *dpy )
 {
 	int event_base, error_base = 0;
 	

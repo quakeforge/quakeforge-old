@@ -42,14 +42,14 @@
 	
 	Check for the presence of the XFree86-DGA support in the X server
 */
-int VID_CheckDGA ( Display *dpy, Window *win );
+int VID_CheckDGA ( Display *dpy );
 
 /*
 	VID_CheckVMode
 	
 	Check for the presence of the XFree86-VMode X server extension
 */
-int VID_CheckVMode ( Display* );
+int VID_CheckVMode ( Display *dpy );
 
 #endif	// HAS_DGA
 
