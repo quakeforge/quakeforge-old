@@ -48,7 +48,7 @@ static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;
 static qboolean is8bit = 0;
 
-int	options_items = 13;
+int	VID_options_items = 0;
 
 /*-----------------------------------------------------------------------*/
 
@@ -266,24 +266,29 @@ void GL_EndRendering (void)
 	fxMesaSwapBuffers();
 }
 
-#define NUM_RESOLUTIONS 3
-
-static int resolutions[NUM_RESOLUTIONS][3]={ 
+static int resolutions[][3]={ 
   { 512, 384, GR_RESOLUTION_512x384 },
   { 640, 400, GR_RESOLUTION_640x400 },
-  { 640, 480, GR_RESOLUTION_640x480 }
+  { 640, 480, GR_RESOLUTION_640x480 },
+  { 800, 600, GR_RESOLUTION_800x600 }
 };
 
-int findres(int *width, int *height)
+#define NUM_RESOLUTIONS		(sizeof(resolutions)/(sizeof(int)*3))
+
+
+static int
+findres(int *width, int *height)
 {
 	int i;
 
-	for(i=0;i<NUM_RESOLUTIONS;i++)
-		if((*width<=resolutions[i][0]) && (*height<=resolutions[i][1])) {
+	for(i=0; i < NUM_RESOLUTIONS; i++) {
+		if((*width <= resolutions[i][0]) &&
+		   (*height <= resolutions[i][1])) {
 			*width = resolutions[i][0];
 			*height = resolutions[i][1];
 			return resolutions[i][2];
 		}
+	}
         
 	*width = 640;
 	*height = 480;
