@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define _BSD
 
+#include <ctype.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -105,27 +106,28 @@ int	d_con_indirect = 0;
 
 int		vid_buffersize;
 
+static Display			*x_disp = NULL;
+static Window			x_win, x_root_win;
+static Colormap			x_cmap;
+static GC			x_gc;
+static Visual			*x_vis;
+static XVisualInfo		*x_visinfo;
+static qboolean			doShm;
+
 #define STD_EVENT_MASK \
 ( KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask | \
 PointerMotionMask | EnterWindowMask | LeaveWindowMask | VisibilityChangeMask | \
 ExposureMask | StructureNotifyMask )
 
-qboolean				x_fullscreen = true;
-Display					*x_disp = NULL;
-int						x_screen, x_screen_width, x_screen_height;
-int				x_center_width, x_center_height;
-int						x_std_event_mask = STD_EVENT_MASK;
-Window					x_win, x_root_win;
-qboolean				mouse_in_window = false;
-int				global_dx, global_dy;
+qboolean		x_fullscreen = true;
+int			x_screen, x_screen_width, x_screen_height;
+int			x_center_width, x_center_height;
+int			x_std_event_mask = STD_EVENT_MASK;
+qboolean		mouse_in_window = false;
+int			global_dx, global_dy;
 
-static qboolean			doShm;
-static Colormap			x_cmap;
-static GC				x_gc;
-static Visual			*x_vis;
-static XVisualInfo		*x_visinfo;
-static Atom				aHints = 0;
-static Atom				aWMDelete = 0;
+static Atom		aHints = 0;
+static Atom		aWMDelete = 0;
 
 static int				x_shmeventtype;
 //static XShmSegmentInfo	x_shminfo;
@@ -296,7 +298,7 @@ D_BeginDirectRect
 */
 void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 {
-// direct drawing of the "accessing disk" icon isn't supported under Nextstep
+// direct drawing of the "accessing disk" icon isn't supported
 }
 
 
@@ -307,7 +309,7 @@ D_EndDirectRect
 */
 void D_EndDirectRect (int x, int y, int width, int height)
 {
-// direct drawing of the "accessing disk" icon isn't supported under Nextstep
+// direct drawing of the "accessing disk" icon isn't supported
 }
 
 
@@ -388,7 +390,6 @@ static Cursor CreateNullCursor(Display *display, Window root)
 
 void ResetFrameBuffer(void)
 {
-
 	int mem;
 	int pwidth;
 
@@ -425,7 +426,6 @@ void ResetFrameBuffer(void)
 
 void ResetSharedFrameBuffers(void)
 {
-
 	int size;
 	int key;
 	int minsize = getpagesize();
@@ -565,7 +565,6 @@ qboolean VID_FullScreen( Window win )
 
 void	VID_Init (unsigned char *palette)
 {
-
 	int pnum, i;
 	XVisualInfo template;
 	int num_visuals;

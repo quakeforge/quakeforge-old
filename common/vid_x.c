@@ -23,8 +23,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define _BSD
 
-typedef unsigned short PIXEL;
-
 #include <ctype.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -57,8 +55,6 @@ float   mouse_x, mouse_y;
 float   old_mouse_x, old_mouse_y;
 int p_mouse_x;
 int p_mouse_y;
-int ignorenext;
-int bits_per_pixel;
 
 typedef struct
 {
@@ -75,14 +71,13 @@ int	d_con_indirect = 0;
 
 int		vid_buffersize;
 
-static qboolean			doShm;
-static Display			*x_disp;
-static Colormap			x_cmap;
+static Display			*x_disp = NULL;
 static Window			x_win;
-static GC				x_gc;
+static Colormap			x_cmap;
+static GC			x_gc;
 static Visual			*x_vis;
 static XVisualInfo		*x_visinfo;
-//static XImage			*x_image;
+static qboolean			doShm;
 
 static int				x_shmeventtype;
 //static XShmSegmentInfo	x_shminfo;
@@ -103,14 +98,9 @@ static byte current_palette[768];
 static long X11_highhunkmark;
 static long X11_buffersize;
 
-int vid_surfcachesize;
-void *vid_surfcache;
-
-void (*vid_menudrawfn)(void);
-void (*vid_menukeyfn)(int key);
-void VID_MenuKey (int key);
-
-static PIXEL st2d_8to16table[256];
+typedef unsigned short PIXEL16;
+typedef unsigned long PIXEL24;
+static PIXEL16 st2d_8to16table[256];
 static int shiftmask_fl=0;
 static long r_shift,g_shift,b_shift;
 static unsigned long r_mask,g_mask,b_mask;
@@ -127,9 +117,9 @@ void shiftmask_init()
     shiftmask_fl=1;
 }
 
-PIXEL xlib_rgb(int r, int g, int b)
+PIXEL16 xlib_rgb16(int r, int g, int b)
 {
-    PIXEL p;
+    PIXEL16 p;
     if(shiftmask_fl==0) shiftmask_init();
     p=0;
 
@@ -158,19 +148,40 @@ void st2_fixup( XImage *framebuf, int x, int y, int width, int height)
 {
 	int xi,yi;
 	unsigned char *src;
-	PIXEL *dest;
+	PIXEL16 *dest;
 
 	if( (x<0)||(y<0) )return;
 
 	for (yi = y; yi < (y+height); yi++) {
 		src = &framebuf->data [yi * framebuf->bytes_per_line];
-		dest = (PIXEL*)src;
+		dest = (PIXEL16*)src;
 		for(xi = (x+width-1); xi >= x; xi--) {
 			dest[xi] = st2d_8to16table[src[xi]];
 		}
 	}
 }
 
+
+/*
+================
+D_BeginDirectRect
+================
+*/
+void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+{
+// direct drawing of the "accessing disk" icon isn't supported
+}
+
+
+/*
+================
+D_EndDirectRect
+================
+*/
+void D_EndDirectRect (int x, int y, int width, int height)
+{
+// direct drawing of the "accessing disk" icon isn't supported
+}
 
 // ========================================================================
 // Tragic death handler
@@ -211,6 +222,8 @@ static Cursor CreateNullCursor(Display *display, Window root)
 
 void ResetFrameBuffer(void)
 {
+	int vid_surfcachesize;
+	void *vid_surfcache;
 	int mem;
 	int pwidth;
 
@@ -268,7 +281,8 @@ void ResetFrameBuffer(void)
 
 void ResetSharedFrameBuffers(void)
 {
-
+	int vid_surfcachesize;
+	void *vid_surfcache;
 	int size;
 	int key;
 	int minsize = getpagesize();
@@ -360,24 +374,22 @@ void ResetSharedFrameBuffers(void)
 
 void	VID_Init (unsigned char *palette)
 {
+	int pnum, i;
+	XVisualInfo template;
+	int num_visuals;
+	int template_mask;
 
-   int pnum, i;
-   XVisualInfo template;
-   int num_visuals;
-   int template_mask;
-	
 	S_Init();	// sound is initialized here
-   
-   ignorenext=0;
-   vid.width = 320;
-   vid.height = 200;
-   vid.maxwarpwidth = WARP_WIDTH;
-   vid.maxwarpheight = WARP_HEIGHT;
-   vid.numpages = 2;
-   vid.colormap = host_colormap;
-   //	vid.cbits = VID_CBITS;
-   //	vid.grades = VID_GRADES;
-   vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
+
+	vid.width = 320;
+	vid.height = 200;
+	vid.maxwarpwidth = WARP_WIDTH;
+	vid.maxwarpheight = WARP_HEIGHT;
+	vid.numpages = 2;
+	vid.colormap = host_colormap;
+	vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
+	//vid.cbits = VID_CBITS;
+	//vid.grades = VID_GRADES;
    
 	srandom(getpid());
 
@@ -605,7 +617,7 @@ void VID_SetPalette(unsigned char *palette)
 	XColor colors[256];
 
 	for(i=0;i<256;i++)
-		st2d_8to16table[i]= xlib_rgb(palette[i*3], palette[i*3+1], palette[i*3+2]);
+		st2d_8to16table[i]= xlib_rgb16(palette[i*3], palette[i*3+1], palette[i*3+2]);
 
 	if (x_visinfo->class == PseudoColor && x_visinfo->depth == 8)
 	{
@@ -1004,16 +1016,6 @@ char *Sys_ConsoleInput (void)
 	
 }
 #endif
-
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
-{
-// direct drawing of the "accessing disk" icon isn't supported under Linux
-}
-
-void D_EndDirectRect (int x, int y, int width, int height)
-{
-// direct drawing of the "accessing disk" icon isn't supported under Linux
-}
 
 void IN_Init (void)
 {
