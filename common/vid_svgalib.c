@@ -40,6 +40,8 @@ unsigned short       d_8to16table[256];
 static byte		*vid_surfcache;
 static int		VID_highhunkmark;
 
+void VGA_UpdatePlanarScreen (void *srcbuffer);
+
 int num_modes;
 vga_modeinfo *modes;
 int current_mode;

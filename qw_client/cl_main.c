@@ -1073,7 +1073,6 @@ void CL_Init (void)
 {
 	extern	cvar_t		baseskin;
 	extern	cvar_t		noskins;
-	char st[80];
 
 	cls.state = ca_disconnected;
 
