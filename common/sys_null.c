@@ -23,19 +23,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "errno.h"
 
 /*
-===============================================================================
-
-FILE IO
-
-===============================================================================
+	File I/O
 */
 
 #define MAX_HANDLES             10
 FILE    *sys_handles[MAX_HANDLES];
 
-int             findhandle (void)
+int findhandle (void)
 {
-	int             i;
+	int	i;
 	
 	for (i=1 ; i<MAX_HANDLES ; i++)
 		if (!sys_handles[i])
@@ -117,7 +113,7 @@ int Sys_FileWrite (int handle, void *data, int count)
 	return fwrite (data, 1, count, sys_handles[handle]);
 }
 
-int     Sys_FileTime (char *path)
+int Sys_FileTime (char *path)
 {
 	FILE    *f;
 	
@@ -137,17 +133,16 @@ void Sys_mkdir (char *path)
 
 
 /*
-===============================================================================
-
-SYSTEM IO
-
-===============================================================================
+	System I/O
 */
 
 void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 {
 }
 
+void Sys_DebugLog(char *file, char *fmt, ...)
+{
+}
 
 void Sys_Error (char *error, ...)
 {
