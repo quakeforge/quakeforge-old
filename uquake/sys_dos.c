@@ -376,12 +376,6 @@ UpdateSbrk:
 }
 
 
-void Sys_mkdir (char *path)
-{
-	mkdir (path, 0777);
-}
-
-
 void Sys_Sleep(void)
 {
 }
