@@ -648,7 +648,9 @@ skipwhite:
 					base+=8;
 					string=data;
 					goto parse_char_number;
-				case '0' ... '7':
+//Tonik		case '0' ... '7':	-- MSVC 6.0 doesn't understand this
+				case '0': case '1': case '2': case '3':
+				case '4': case '5': case '6': case '7':
 					strncpy(buf,data,3);
 				parse_char_number:
 					c=strtol(string,&str,base);
