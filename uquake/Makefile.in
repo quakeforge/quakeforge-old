@@ -86,8 +86,8 @@ else
 OPTFLAGS = -g
 endif
 
-soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE)
-gl_targets    = $(GLQUAKE) $(TDFXQUAKE) $(MGLQUAKE)
+soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(MGLQUAKE)
+gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
 targets       = $(gl_targets) $(soft_targets)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) $(CLEAN_TARGETS) clean-soft clean-gl
@@ -348,42 +348,29 @@ $(BUILD_DIR)/../$(SDLQUAKE): $(ALL_SDL_OBJS)
 
 endif
 
-# mingw32 GL target
-# FIXME: Rewrite this entire section!
+# MGL software target
 
 ifneq ($(MGLQUAKE),)
 
 # Map the list of source files into a list of object files
-ALL_MGL_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) $(MGL_VID_SRC)\
-              model.c
-OBJSquake-mgl = $(patsubst %,$(BUILD_DIR)/mgl/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_MGL_SRC) .c .s)))
+ALL_MGL_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) \
+	vid_win.c in_win.c model.c
+ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+               $(basename $(ALL_MGL_SRC) .c .s)))
 
-MGL_CFLAGS  = -DMGL @MGL_CFLAGS@
-MGL_LDFLAGS = @MGL_LIBS@ -lm
-MGL_VID_SRC = vid_win.c in_win.c conproc.c
+MGL_CFLAGS  = @MGL_CFLAGS@ -DMGL
+MGL_LDFLAGS = @MGL_LIBS@
 
-MAKE_SURE_mgl_DIR = @DIR=mgl; $(MAKE_SURE_DIR)
-
-$(BUILD_DIR)/mgl/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_mgl_DIR)
+$(BUILD_DIR)/soft/vid_win.@OBJEXT@: $(COMMON_DIR)/vid_win.c
 	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/mgl/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_mgl_DIR)
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/mgl/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_mgl_DIR)
+$(BUILD_DIR)/soft/in_win.@OBJEXT@: $(COMMON_DIR)/in_win.c
 	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/mgl/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_mgl_DIR)
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+$(MGLQUAKE): soft_DIR $(BUILD_DIR)/../$(MGLQUAKE)
 
-$(MGLQUAKE): $(BUILD_DIR)/../$(MGLQUAKE)
-
-$(BUILD_DIR)/../$(MGLQUAKE): $(OBJSquake-mgl)
-	$(CC) $(CFLAGS) $(OBJSquake-mgl) $(MGL_LDFLAGS) $(LDFLAGS) $(LIBS) \
+$(BUILD_DIR)/../$(MGLQUAKE): $(ALL_MGL_OBJS)
+	$(CC) $(CFLAGS) $(ALL_MGL_OBJS) $(MGL_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(MGLQUAKE)
 
 endif
