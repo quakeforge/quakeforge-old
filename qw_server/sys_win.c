@@ -32,7 +32,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <lib_replace.h>
 #include <client.h>
 
-
+qboolean	WinNT;
+cvar_t	*sys_sleep;
 extern cvar_t	*sys_nostdout;
 
 /*
@@ -122,6 +123,30 @@ is marked
 */
 void Sys_Init (void)
 {
+	OSVERSIONINFO	vinfo;
+
+	// make sure the timer is high precision, otherwise
+	// NT gets 18ms resolution
+	timeBeginPeriod( 1 );
+
+	vinfo.dwOSVersionInfoSize = sizeof(vinfo);
+
+	if (!GetVersionEx (&vinfo))
+		Sys_Error ("Couldn't get OS info");
+
+	if ((vinfo.dwMajorVersion < 4) ||
+		(vinfo.dwPlatformId == VER_PLATFORM_WIN32s))
+	{
+		Sys_Error ("QuakeWorld requires at least Win95 or NT 4.0");
+	}
+
+	if (vinfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
+		WinNT = true;
+	else
+		WinNT = false;
+
+	sys_sleep = Cvar_Get ("sys_sleep","8",0,"None");
+
 	/* Fix this sometime. */
 	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 }
@@ -142,6 +167,7 @@ int main (int argc, char **argv)
 	struct timeval	timeout;
 	fd_set			fdset;
 	int				t;
+	int				sleep_msec;
 
 	COM_InitArgv (argc, argv);
 	
@@ -168,6 +194,22 @@ int main (int argc, char **argv)
 
 	SV_Init (&parms);
 
+	if (COM_CheckParm ("-nopriority"))
+	{
+		Cvar_Set ("sys_sleep", "0");
+	}
+	else
+	{
+		if ( ! SetPriorityClass (GetCurrentProcess(), HIGH_PRIORITY_CLASS))
+			Con_Printf ("SetPriorityClass() failed\n");
+		else
+			Con_Printf ("Process priority class set to HIGH\n");
+	}
+
+	// Tonik: sys_sleep > 0 causes packet loss on WinNT (why?)
+	if (WinNT)
+		Cvar_Set ("sys_sleep", "0");
+
 // run one frame immediately for first heartbeat
 	SV_Frame (0.1);		
 
@@ -177,6 +219,16 @@ int main (int argc, char **argv)
 	oldtime = Sys_DoubleTime () - 0.1;
 	while (1)
 	{
+	// Now we want to give some processing time to other applications,
+	// such as qw_client, running on this machine.		-- Tonik
+		sleep_msec = sys_sleep->value;
+		if (sleep_msec > 0)
+		{
+			if (sleep_msec > 13)
+				sleep_msec = 13;
+			Sleep (sleep_msec);
+		}
+
 	// select on the net socket and stdin
 	// the only reason we have a timeout at all is so that if the last
 	// connected client times out, the message would not otherwise
