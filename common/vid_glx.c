@@ -159,7 +159,7 @@ VID_Shutdown(void)
 		return;
 
 	Con_Printf("VID_Shutdown\n");
-
+	XDestroyWindow(x_disp, x_win);
 	glXDestroyContext(x_disp, ctx);
 
 #ifdef HAS_VIDMODE
