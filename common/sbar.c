@@ -685,8 +685,10 @@ void Sbar_DrawScoreboard (void)
 	}
 //#endif	// UQUAKE
 
+#ifdef UQUAKE
 	if (cl.gametype == GAME_DEATHMATCH)
 		Sbar_DeathmatchOverlay (0);
+#endif
 }
 
 
@@ -1228,7 +1230,7 @@ void Sbar_Draw (void)
 				Sbar_DrawString (160-7*8,4, "SPECTATOR MODE");
 				Sbar_DrawString(160-14*8+4, 12, "Press [ATTACK] for AutoCamera");
 			} else {
-				if (sb_showscores || cl.stats[STAT_HEALTH] <= 0)
+				if (sb_showscores || sb_showteamscores || cl.stats[STAT_HEALTH] <= 0)
 					Sbar_DrawScoreboard ();
 				else
 					Sbar_DrawNormal ();
@@ -1238,7 +1240,7 @@ void Sbar_Draw (void)
 						cl.players[spec_track].name);
 				Sbar_DrawString(0, -8, st);
 			}
-		} else if (sb_showscores || cl.stats[STAT_HEALTH] <= 0)
+		} else if (sb_showscores || sb_showteamscores || cl.stats[STAT_HEALTH] <= 0)
 			Sbar_DrawScoreboard ();
 		else
 			Sbar_DrawNormal ();
@@ -1808,7 +1810,7 @@ void Sbar_DeathmatchOverlay (int start)
 
 /*
 ==================
-Sbar_DeathmatchOverlay
+Sbar_MiniDeathmatchOverlay
 
 ==================
 */
