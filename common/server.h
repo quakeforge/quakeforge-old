@@ -453,7 +453,7 @@ void SV_DropClient (client_t *drop);
 void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg);
 void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...);
 void SV_BroadcastPrintf (int level, char *fmt, ...);
-void SV_Frame (float time);
+void SV_Frame (double time);
 void SV_Physics_Client (edict_t	*ent);
 void SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
 #else

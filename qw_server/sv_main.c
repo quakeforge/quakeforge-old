@@ -1290,7 +1290,7 @@ SV_Frame
 
 ==================
 */
-void SV_Frame (float time)
+void SV_Frame (double time)
 {
 	static double	start, end;
 	
