@@ -129,17 +129,15 @@ if test "x$HAS_OGL" != xno; then
          AC_MSG_RESULT(yes)
       else
          AC_MSG_RESULT(no)
-      
-         AC_TRY_COMPILE([#include "GL/gl.h"],
-           [ int x = APIENTRY printf("");],
-	   HAS_APIENTRY=1 AC_MSG_RESULT(yes),
-	   HAS_APIENTRY=0 AC_MSG_RESULT(no))
-	if test "x$HAS_APIENTRY" != xno; then
+	 AC_MSG_CHECKING(for APIENTRY in GL/gl.h)
+	 AC_TRY_COMPILE([#include "GL/gl.h"],
+	 [ int x = APIENTRY printf("");],
+	 HAS_APIENTRY=1 AC_MSG_RESULT(yes),
+	 HAS_APIENTRY=0 AC_MSG_RESULT(no))
+	 if test "x$HAS_APIENTRY" != xno; then
 	    AC_DEFINE(GLAPIENTRY_IS_APIENTRY, 1)
-	fi
-
+	 fi
       fi
-
       if test "x$HAS_GLIDE" != xno; then
          CPPFLAGS="$GLIDE_CFLAGS $CPPFLAGS"
          AC_CHECK_HEADER(GL/fxmesa.h, HAS_FXMESA=yes, HAS_FXMESA=no)
