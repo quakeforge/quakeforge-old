@@ -328,8 +328,8 @@ endif
 ifneq ($(TDFXQUAKE),)
 OBJSquake-3dfx = $(patsubst %,$(BUILD_DIR)/3dfx/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_TDFX_SRC) .c .s)))
 
-TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
-TDFX_LDFLAGS = $(SVGA_LDFLAGS) @GLIDE_LDFLAGS@ @TDFXGL_LDFLAGS@ -ldl -lGL
+TDFX_CFLAGS  = -I/usr/include/glide -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
+TDFX_LDFLAGS = $(SVGA_LDFLAGS) @GLIDE_LDFLAGS@ @TDFXGL_LDFLAGS@ -ldl
 # XXX - this is for 3dfxgl
 TDFX_VID_SRC = gl_vidlinux.c
 

@@ -146,9 +146,9 @@ can be done reasonably.
 void GL_SubdivideSurface (msurface_t *fa)
 {
 	vec3_t		verts[64];
-	int		numverts;
-	int		i;
-	int		lindex;
+	int			numverts;
+	int			i;
+	int			lindex;
 	float		*vec;
 
 	warpface = fa;

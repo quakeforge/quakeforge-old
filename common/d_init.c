@@ -88,6 +88,7 @@ D_EnableBackBufferAccess
 */
 void D_EnableBackBufferAccess (void)
 {
+
 	VID_LockBuffer ();
 }
 
