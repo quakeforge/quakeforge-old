@@ -1368,7 +1368,7 @@ void SV_PreRunCmd(void)
 /* maximum msec offset we will allow before penalizing the player */
 #define POOLMAX 150
 
-#define CHECK_TIME 10
+#define CHECK_TIME 30
 /*
 ===========
 SV_RunCmd
@@ -1385,8 +1385,8 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 		host_client->msecs += ucmd->msec;
 
 		if ((tmp_time = realtime - host_client->last_check) >= CHECK_TIME) {
-			tmp_time *= 1025;
-		    if (host_client->msecs > tmp_time) {
+			tmp_time *= 1100;
+		    if (host_client->msecs > (int) (tmp_time + 0.5)) {
 				host_client->msec_cheating++;
 				SV_BroadcastPrintf(PRINT_HIGH, 
 						va("Err, %s may be CHEATING! %d %f %d\n",
