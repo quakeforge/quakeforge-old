@@ -161,6 +161,8 @@ Host_EndGame ( char *message, ... )
 	
 	longjmp (host_abort, 1);
 #elif UQUAKE
+	cl.paused = false;
+
 	if ( sv.active )
 		SV_Shutdown (false);
 
@@ -634,8 +636,8 @@ Host_Init (quakeparms_t *parms)
 
 #ifdef QUAKEWORLD	
 	Cbuf_AddText ("echo Type connect <internet address> or use GameSpy to connect to a game.\n");
-	Cbuf_AddText ("cl_warncmd 1\n");
 #endif
+	Cbuf_AddText ("cl_warncmd 1\n");
 
 	Hunk_AllocName (0, "-HOST_HUNKLEVEL-");
 	host_hunklevel = Hunk_LowMark ();
