@@ -38,6 +38,7 @@
 #include <render.h>
 #include <qstructs.h>
 
+
 #define	PORT_ANY	-1
 
 // Uncomment this line for IPv6 support
@@ -49,6 +50,12 @@ struct qsockaddr
 	unsigned char sa_data[14];
 };
 
+
+#ifdef _WIN32
+#ifdef HAVE_IPV6
+typedef unsigned int    u_int32_t;
+#endif
+#endif
 
 typedef struct
 {

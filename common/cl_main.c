@@ -41,6 +41,17 @@
 #undef _LINT
 #endif
 
+#ifdef _WIN32
+# include <winsock2.h>
+# include <ws2tcpip.h>
+# include <tpipv6.h>
+# define  _WINSOCKAPI_
+# define HAVE_SOCKLEN_T
+#else
+#include <sys/types.h>
+#include <netinet/in.h>
+#endif
+
 #include <quakedef.h>
 #include <winquake.h>
 #ifdef QUAKEWORLD
@@ -77,13 +88,6 @@
 #ifdef __sun
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
 #define model_t sunmodel_t
-#endif
-
-#ifdef _WIN32
-#include <winsock.h>
-#else
-#include <sys/types.h>
-#include <netinet/in.h>
 #endif
 
 #ifdef __sun

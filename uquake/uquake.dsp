@@ -21,6 +21,7 @@ CFG=uquake - Win32 Debug
 !MESSAGE "uquake - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "uquake - Win32 GLRelease" (based on "Win32 (x86) Application")
 !MESSAGE "uquake - Win32 GLDebug" (based on "Win32 (x86) Application")
+!MESSAGE "uquake - Win32 IPv6" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -139,6 +140,33 @@ LINK32=link.exe
 # ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLDebug/uquake-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "uquake___Win32_IPv6"
+# PROP BASE Intermediate_Dir "uquake___Win32_IPv6"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "uquake___Win32_IPv6"
+# PROP Intermediate_Dir "uquake___Win32_IPv6"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /WX /GX /O2 /I "../uquake" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "UQUAKE" /D "id386" /YX /FD /c
+# ADD CPP /nologo /WX /GX /O2 /I "../uquake" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "UQUAKE" /D "id386" /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x419 /d "NDEBUG"
+# ADD RSC /l 0x419 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"Release/uquake-win.exe"
+# ADD LINK32 dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"Release/uquake-win.exe"
+
 !ENDIF 
 
 # Begin Target
@@ -147,6 +175,7 @@ LINK32=link.exe
 # Name "uquake - Win32 Debug"
 # Name "uquake - Win32 GLRelease"
 # Name "uquake - Win32 GLDebug"
+# Name "uquake - Win32 IPv6"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -231,6 +260,8 @@ SOURCE=..\common\d_edge.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -250,6 +281,8 @@ SOURCE=..\common\d_fill.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -271,6 +304,8 @@ SOURCE=..\common\d_init.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -290,6 +325,8 @@ SOURCE=..\common\d_modech.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -311,6 +348,8 @@ SOURCE=..\common\d_part.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -330,6 +369,8 @@ SOURCE=..\common\d_polyse.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -351,6 +392,8 @@ SOURCE=..\common\d_scan.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -370,6 +413,8 @@ SOURCE=..\common\d_sky.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -391,6 +436,8 @@ SOURCE=..\common\d_sprite.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -410,6 +457,8 @@ SOURCE=..\common\d_surf.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -431,6 +480,8 @@ SOURCE=..\common\d_vars.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -450,6 +501,8 @@ SOURCE=..\common\d_zpoint.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -475,6 +528,8 @@ SOURCE=..\common\draw.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -498,6 +553,11 @@ SOURCE=..\common\gl_cl_parse.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -516,6 +576,11 @@ SOURCE=..\common\gl_draw.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -536,6 +601,11 @@ SOURCE=..\common\gl_mesh.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -554,6 +624,11 @@ SOURCE=..\common\gl_model.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -574,6 +649,11 @@ SOURCE=..\common\gl_refrag.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -592,6 +672,11 @@ SOURCE=..\common\gl_rlight.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -612,6 +697,11 @@ SOURCE=..\common\gl_rmain.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -630,6 +720,11 @@ SOURCE=..\common\gl_rmisc.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -650,6 +745,11 @@ SOURCE=..\common\gl_rpart.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -668,6 +768,11 @@ SOURCE=..\common\gl_rsurf.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -688,24 +793,10 @@ SOURCE=..\common\gl_screen.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
-!ENDIF 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
-# End Source File
-# Begin Source File
-
-SOURCE=..\common\vid_wgl.c
-
-!IF  "$(CFG)" == "uquake - Win32 Release"
-
+# PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "uquake - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
-
-!ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
 !ENDIF 
 
@@ -726,6 +817,11 @@ SOURCE=..\common\gl_view.c
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -744,6 +840,11 @@ SOURCE=..\common\gl_warp.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -796,6 +897,8 @@ SOURCE=..\common\model.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -889,6 +992,8 @@ SOURCE=..\common\r_aclip.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -908,6 +1013,8 @@ SOURCE=..\common\r_alias.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -929,6 +1036,8 @@ SOURCE=..\common\r_bsp.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -948,6 +1057,8 @@ SOURCE=..\common\r_draw.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -969,6 +1080,8 @@ SOURCE=..\common\r_edge.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -988,6 +1101,8 @@ SOURCE=..\common\r_efrag.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1009,6 +1124,8 @@ SOURCE=..\common\r_light.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1028,6 +1145,8 @@ SOURCE=..\common\r_main.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1049,6 +1168,8 @@ SOURCE=..\common\r_misc.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1067,6 +1188,8 @@ SOURCE=..\common\r_part.c
 !ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1088,6 +1211,8 @@ SOURCE=..\common\r_sky.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1107,6 +1232,8 @@ SOURCE=..\common\r_sprite.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1128,6 +1255,8 @@ SOURCE=..\common\r_surf.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1147,6 +1276,8 @@ SOURCE=..\common\r_vars.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1175,6 +1306,8 @@ SOURCE=..\common\screen.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1228,6 +1361,8 @@ SOURCE=.\sw_cl_parse.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1248,6 +1383,8 @@ SOURCE=..\common\sw_view.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1258,6 +1395,30 @@ SOURCE=..\common\sys_common.c
 # Begin Source File
 
 SOURCE=.\sys_win.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\vid_wgl.c
+
+!IF  "$(CFG)" == "uquake - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -1275,6 +1436,8 @@ SOURCE=..\common\vid_win.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
 
 !ENDIF 
 
@@ -1350,6 +1513,21 @@ InputName=d_draw
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_draw.s
+InputName=d_draw
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1395,6 +1573,21 @@ InputName=d_draw16
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_draw16.s
+InputName=d_draw16
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1442,6 +1635,21 @@ InputName=d_parta
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_parta.s
+InputName=d_parta
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1487,6 +1695,21 @@ InputName=d_polysa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_polysa.s
+InputName=d_polysa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1534,6 +1757,21 @@ InputName=d_scana
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_scana.s
+InputName=d_scana
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1580,6 +1818,21 @@ InputName=d_spr8
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_spr8.s
+InputName=d_spr8
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1625,6 +1878,21 @@ InputName=d_varsa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\d_varsa.s
+InputName=d_varsa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1693,6 +1961,21 @@ InputName=math
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\math.s
+InputName=math
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1738,6 +2021,21 @@ InputName=r_aclipa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\r_aclipa.s
+InputName=r_aclipa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1785,6 +2083,21 @@ InputName=r_aliasa
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\r_aliasa.s
+InputName=r_aliasa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1830,6 +2143,21 @@ InputName=r_drawa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\r_drawa.s
+InputName=r_drawa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1877,6 +2205,21 @@ InputName=r_edgea
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\r_edgea.s
+InputName=r_edgea
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1922,6 +2265,21 @@ InputName=r_varsa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\r_varsa.s
+InputName=r_varsa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1990,6 +2348,21 @@ InputName=snd_mixa
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\snd_mixa.s
+InputName=snd_mixa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -2036,6 +2409,21 @@ InputName=surf16
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\surf16.s
+InputName=surf16
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -2081,6 +2469,21 @@ InputName=surf8
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\surf8.s
+InputName=surf8
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -2149,6 +2552,21 @@ InputName=sys_dosa
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\sys_dosa.s
+InputName=sys_dosa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -2210,6 +2628,21 @@ InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\uquake___Win32_IPv6
+InputPath=..\common\worlda.s
+InputName=worlda
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 

@@ -19,6 +19,7 @@ CFG=qw_server - Win32 Debug
 !MESSAGE 
 !MESSAGE "qw_server - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "qw_server - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "qw_server - Win32 IPv6" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -76,12 +77,39 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib /nologo /subsystem:console /debug /machine:I386 /out:"Debug/qw-server-win.exe" /pdbtype:sept
 
+!ELSEIF  "$(CFG)" == "qw_server - Win32 IPv6"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "qw_server___Win32_IPv6"
+# PROP BASE Intermediate_Dir "qw_server___Win32_IPv6"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "qw_server___Win32_IPv6"
+# PROP Intermediate_Dir "qw_server___Win32_IPv6"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /WX /GX /O2 /I "../common" /I "../qw_server" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "QUAKEWORLD" /D "SERVERONLY" /YX /FD /c
+# ADD CPP /nologo /WX /GX /O2 /I "../common" /I "../qw_server" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "QUAKEWORLD" /D "SERVERONLY" /D "HAVE_IPV6" /YX /FD /c
+# ADD BASE RSC /l 0x419 /d "NDEBUG"
+# ADD RSC /l 0x419 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib /nologo /subsystem:console /machine:I386 /out:"Release/qw-server-win.exe"
+# ADD LINK32 wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib wship6.lib /nologo /subsystem:console /machine:I386 /out:"Release/qw-server-win.exe"
+# SUBTRACT LINK32 /map
+
 !ENDIF 
 
 # Begin Target
 
 # Name "qw_server - Win32 Release"
 # Name "qw_server - Win32 Debug"
+# Name "qw_server - Win32 IPv6"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -136,6 +164,21 @@ SOURCE=..\common\net_com.c
 # Begin Source File
 
 SOURCE=..\common\net_udp.c
+
+!IF  "$(CFG)" == "qw_server - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_server - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_server - Win32 IPv6"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\net_udp6.c
 # End Source File
 # Begin Source File
 

@@ -30,6 +30,15 @@
 	$Id$
 */
 
+#ifdef _WIN32
+# ifdef HAVE_IPV6
+#  include <winsock2.h>
+#  include <ws2tcpip.h>
+#  include <tpipv6.h>
+#  define  _WINSOCKAPI_
+#  define HAVE_SOCKLEN_T
+# endif
+#endif
 #include <quakedef.h>
 #include <sys.h>
 #include <console.h>
@@ -41,7 +50,15 @@
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
 #define model_t quakeforgemodel_t
 
+#ifdef _WIN32
+# include <winquake.h>
+# undef EWOULDBLOCK
+# define EWOULDBLOCK	WSAEWOULDBLOCK
+#endif
+
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 #include <sys/types.h>
 
 #ifdef HAVE_SYS_IOCTL_H
@@ -65,11 +82,6 @@
 
 #undef model_t
 
-#ifdef _WIN32
-# include <winquake.h>
-# undef EWOULDBLOCK
-# define EWOULDBLOCK	WSAEWOULDBLOCK
-#endif
 
 #ifdef NeXT
 #include <libc.h>
@@ -428,7 +440,11 @@ int UDP_OpenSocket (int port)
 	if ((newsocket = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1)
 		Sys_Error ("UDP_OpenSocket: socket:", strerror(errno));
 	// FIONBIO sets non-blocking IO for this socket
+#ifdef _WIN32
+	if (ioctl (newsocket, FIONBIO, &_true) == -1)
+#else /* _WIN32 */
 	if (ioctl (newsocket, FIONBIO, (char *)&_true) == -1)
+#endif _WIN32
 		Sys_Error ("UDP_OpenSocket: ioctl FIONBIO:", strerror(errno));
 
 #ifdef IPV6_BINDV6ONLY

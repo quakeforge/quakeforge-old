@@ -21,6 +21,7 @@ CFG=qw_client - Win32 Debug
 !MESSAGE "qw_client - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "qw_client - Win32 GLRelease" (based on "Win32 (x86) Application")
 !MESSAGE "qw_client - Win32 GLDebug" (based on "Win32 (x86) Application")
+!MESSAGE "qw_client - Win32 IPv6" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -144,6 +145,35 @@ LINK32=link.exe
 # ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLDebug/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "qw_client___Win32_IPv6"
+# PROP BASE Intermediate_Dir "qw_client___Win32_IPv6"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "qw_client___Win32_IPv6"
+# PROP Intermediate_Dir "qw_client___Win32_IPv6"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /WX /GX /O2 /I "../qw_client" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /YX /FD /c
+# ADD CPP /nologo /WX /GX /O2 /I "../qw_client" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /D "HAVE_IPV6" /YX /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x419 /d "NDEBUG"
+# ADD RSC /l 0x419 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"Release/qw-client-win.exe"
+# SUBTRACT BASE LINK32 /pdb:none
+# ADD LINK32 dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib wship6.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"Release/qw-client-win.exe"
+# SUBTRACT LINK32 /pdb:none
+
 !ENDIF 
 
 # Begin Target
@@ -152,6 +182,7 @@ LINK32=link.exe
 # Name "qw_client - Win32 Debug"
 # Name "qw_client - Win32 GLRelease"
 # Name "qw_client - Win32 GLDebug"
+# Name "qw_client - Win32 IPv6"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -236,6 +267,8 @@ SOURCE=..\common\d_edge.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -255,6 +288,8 @@ SOURCE=..\common\d_fill.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -276,6 +311,8 @@ SOURCE=..\common\d_init.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -295,6 +332,8 @@ SOURCE=..\common\d_modech.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -316,6 +355,8 @@ SOURCE=..\common\d_part.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -335,6 +376,8 @@ SOURCE=..\common\d_polyse.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -356,6 +399,8 @@ SOURCE=..\common\d_scan.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -375,6 +420,8 @@ SOURCE=..\common\d_sky.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -396,6 +443,8 @@ SOURCE=..\common\d_sprite.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -415,6 +464,8 @@ SOURCE=..\common\d_surf.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -436,6 +487,8 @@ SOURCE=..\common\d_vars.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -455,6 +508,8 @@ SOURCE=..\common\d_zpoint.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -480,6 +535,8 @@ SOURCE=..\common\draw.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -503,6 +560,11 @@ SOURCE=..\common\gl_cl_parse.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -523,6 +585,11 @@ SOURCE=..\common\gl_draw.c
 # PROP BASE Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -545,6 +612,11 @@ SOURCE=..\common\gl_mesh.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -564,6 +636,11 @@ SOURCE=..\common\gl_model.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -582,6 +659,11 @@ SOURCE=..\common\gl_ngraph.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -604,6 +686,11 @@ SOURCE=..\common\gl_refrag.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -622,6 +709,11 @@ SOURCE=..\common\gl_rlight.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -644,6 +736,11 @@ SOURCE=..\common\gl_rmain.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -665,6 +762,11 @@ SOURCE=..\common\gl_rmisc.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -683,6 +785,11 @@ SOURCE=..\common\gl_rpart.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -705,6 +812,11 @@ SOURCE=..\common\gl_rsurf.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -723,6 +835,11 @@ SOURCE=..\common\gl_screen.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -745,6 +862,11 @@ SOURCE=..\common\gl_test.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -763,6 +885,11 @@ SOURCE=..\common\gl_view.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -784,6 +911,11 @@ SOURCE=..\common\gl_warp.c
 # PROP BASE Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 
@@ -833,6 +965,8 @@ SOURCE=..\common\model.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -847,6 +981,48 @@ SOURCE=..\common\net_com.c
 # Begin Source File
 
 SOURCE=..\common\net_udp.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\net_udp6.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# ADD CPP /D "HAVE_IPV6"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -864,6 +1040,11 @@ SOURCE=..\common\nonintel.c
 # PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
@@ -920,6 +1101,8 @@ SOURCE=..\common\r_aclip.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -939,6 +1122,8 @@ SOURCE=..\common\r_alias.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -960,6 +1145,8 @@ SOURCE=..\common\r_bsp.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -979,6 +1166,8 @@ SOURCE=..\common\r_draw.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1000,6 +1189,8 @@ SOURCE=..\common\r_edge.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1019,6 +1210,8 @@ SOURCE=..\common\r_efrag.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1040,6 +1233,8 @@ SOURCE=..\common\r_light.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1059,6 +1254,8 @@ SOURCE=..\common\r_main.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1080,6 +1277,8 @@ SOURCE=..\common\r_misc.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1098,6 +1297,8 @@ SOURCE=..\common\r_part.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1119,6 +1320,8 @@ SOURCE=..\common\r_sky.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1138,6 +1341,8 @@ SOURCE=..\common\r_sprite.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1159,6 +1364,8 @@ SOURCE=..\common\r_surf.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1178,6 +1385,8 @@ SOURCE=..\common\r_vars.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1206,6 +1415,8 @@ SOURCE=..\common\screen.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1247,6 +1458,8 @@ SOURCE=.\sw_cl_parse.c
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
 !ENDIF 
 
 # End Source File
@@ -1266,6 +1479,8 @@ SOURCE=..\common\sw_view.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1296,6 +1511,11 @@ SOURCE=..\common\vid_wgl.c
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
 !ENDIF 
 
 # End Source File
@@ -1315,6 +1535,8 @@ SOURCE=..\common\vid_win.c
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
 
 !ENDIF 
 
@@ -1394,6 +1616,21 @@ InputName=d_draw
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_draw.s
+InputName=d_draw
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1439,6 +1676,21 @@ InputName=d_draw16
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_draw16.s
+InputName=d_draw16
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1486,6 +1738,21 @@ InputName=d_parta
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_parta.s
+InputName=d_parta
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1531,6 +1798,21 @@ InputName=d_polysa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_polysa.s
+InputName=d_polysa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1578,6 +1860,21 @@ InputName=d_scana
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_scana.s
+InputName=d_scana
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1624,6 +1921,21 @@ InputName=d_spr8
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_spr8.s
+InputName=d_spr8
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1669,6 +1981,21 @@ InputName=d_varsa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\d_varsa.s
+InputName=d_varsa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1737,6 +2064,21 @@ InputName=math
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\math.s
+InputName=math
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1782,6 +2124,21 @@ InputName=r_aclipa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\r_aclipa.s
+InputName=r_aclipa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1829,6 +2186,21 @@ InputName=r_aliasa
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\r_aliasa.s
+InputName=r_aliasa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1874,6 +2246,21 @@ InputName=r_drawa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\r_drawa.s
+InputName=r_drawa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -1921,6 +2308,21 @@ InputName=r_edgea
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\r_edgea.s
+InputName=r_edgea
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -1966,6 +2368,21 @@ InputName=r_varsa
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\r_varsa.s
+InputName=r_varsa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -2034,6 +2451,21 @@ InputName=snd_mixa
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\snd_mixa.s
+InputName=snd_mixa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -2080,6 +2512,21 @@ InputName=surf16
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\surf16.s
+InputName=surf16
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -2125,6 +2572,21 @@ InputName=surf8
 
 # PROP BASE Exclude_From_Build 1
 # PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\surf8.s
+InputName=surf8
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
 
 !ENDIF 
 
@@ -2193,6 +2655,21 @@ InputName=sys_dosa
 	
 # End Custom Build
 
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\sys_dosa.s
+InputName=sys_dosa
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
 !ENDIF 
 
 # End Source File
@@ -2254,6 +2731,21 @@ InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	del $(OUTDIR)\$(InputName).spp 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 IPv6"
+
+# Begin Custom Build
+OutDir=.\qw_client___Win32_IPv6
+InputPath=..\common\worlda.s
+InputName=worlda
+
+"$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
