@@ -579,8 +579,7 @@ Host_Init (quakeparms_t *parms)
 		}
 		Hunk_FreeToLowMark (mark);
 		if (f)
-			// FIXME: just sets, or other commands as well?
-			Cbuf_Execute_Sets ();
+			Cbuf_Execute ();
 	}
 
 
