@@ -1,38 +1,68 @@
-QuakeForge
+README - release notes for QuakeForge
 Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  The QuakeForge Project.
-Portions Copyright by their individual authors.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
-The QuakeForge Project would like to thank Id Software for the release of
-Quake 1 under the GPL and their support of the open source community.
-We would also like to thank VA Linux for hardware and T-shirts, and 3Dfx
-for contributing hardware.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published
+by the Free Software Foundation; either version 2 of the License,
+or (at your option) any later version.
 
-This file details how to get Quake running on your system and what to do
-if you have problems.  We would like to thank Gandalf Technologies, Inc
-and MPath Interactive for the use of their technology.  We would also like to
-thank Trent Reznor and Nine Inch Nails for their tremendous contributions
-to Quake's entire audio portion.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The NIN logo is a Registered Trademark licensed to Nothing Interactive, Inc.
-All Rights Reserved.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+See file COPYING for license details.
+
+Quake(R) and QuakeWorld(R) are registered trademarks of Id Software, Inc.
+The NIN logo is a registered trademark licensed to Nothing Interactive, Inc.
+All other trademarks are the property of their respective owners
+
 
 Table of Contents
 -----------------
 
-I.	Tested Systems
-II.	Running and Compiling Quake
-III.	Operating System Specific Issues
-IV.	Errata and Known Bugs
-V.	Troubleshooting
-VI.	Technical Support
-VII.	Joystick Notes
-VIII.	Tested Systems
-IX.	License
+I.	Special Thanks
+II.	System Requirements
+III.	Running and Compiling Quake
+IV.	Operating System Specific Issues
+V.	Errata and Known Bugs
+VI.	Troubleshooting
+VII.	Technical Support
+VIII.	Joystick Notes
+IX.	Tested Systems
 
 
-I. System Requirements
-----------------------
+I. Special Thanks
+-----------------
+
+The QuakeForge Project would like to thank Id Software, Inc. for writing
+and releasing Quake under the GNU GPL.  We'd like to thank John Carmack and
+Dave Kirsch in particular for the support they have provided to us and to
+the Free Software community as a whole.
+
+We would also like to thank the following organizations for their
+contributions to QuakeForge:
+
+   VA Linux Systems, Inc.
+   3Dfx Interactive, Inc.
+
+And last but certainly not least, we would like to thank every single
+person who has contributed even one line of code, documentation, or other
+support to the QuakeForge project.
+
+Without all of you, we would not be where we are right now.
+
+FIXME: Who are MPath Interactive and Gandalf Tech and what'd they do?
+
+
+II. System Requirements
+-----------------------
 
 VGA-compatible display
 8MB RAM (16MB required under Win32)
@@ -40,8 +70,8 @@ Floating-point processor
 30MB free disk space (shareware version, 80MB for registered version)
 
 
-II. Running and Compiling Quake
--------------------------------
+III. Running and Compiling Quake
+--------------------------------
 
 Read the INSTALL file for more information on compiling.
 
@@ -50,8 +80,8 @@ version of Quake 1 to play. Insert the proper binaries in the same
 directory as the unpacked shareware files, and run.
 
 
-III. Operating System Specific Issues
--------------------------------------
+IV. Operating System Specific Issues
+------------------------------------
 
 This section should discuss issues that affect only certain operating
 platforms.  Issues to be discussed include:
@@ -62,8 +92,8 @@ platforms.  Issues to be discussed include:
   * Booting "Clean"
 
 
-IV. Errata and Known Bugs
--------------------------
+V. Errata and Known Bugs
+------------------------
 
 Problem:  The screen flickers once about every other frame when using GL
 Solution: Not all GL implementations support a performance hack used to
@@ -89,8 +119,8 @@ Solution: Use of freelook (mouse or keyboard) may solve this problem, as
           will exiting the level or the "kill" console command.
 
 
-V. Troubleshooting
-------------------
+VI. Troubleshooting
+-------------------
 
 If Quake fails to start up, or has problems not addressed elsewhere in the
 documentation, try the -safe command line switch, which disables a number
@@ -121,8 +151,8 @@ knowing it if you have QEMM installed, because it can be installed as part
 of the QEMM installation.
 
 
-VI. Technical Support
----------------------
+VII. Technical Support
+----------------------
 
 Please do *not* call ID Software, Inc regarding technical support issues
 related to QuakeForge.  QuakeForge is heavily modified from the original
@@ -133,8 +163,8 @@ information on technical support at:  http://www.quakeforge.net
 Thank you for your understanding.
 
 
-VII. Joystick notes
--------------------
+VIII. Joystick notes
+--------------------
 
 Your joystick must be plugged in when Quake is launched.
 
@@ -153,8 +183,8 @@ The "mlook" and "sidestep" commands work with a joystick exactly as they
 do for a mouse, as does the "invert mouse up/down" menu option.
 
 
-VIII. Tested Systems
---------------------
+IX. Tested Systems
+------------------
 
 Processors tested:
    Various Intel ia32
@@ -172,28 +202,4 @@ Operating systems tested:
    Windows 98
 
 FIXME: Have we tested dos and NT?
-
-
-IX. License
------------
-
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  The QuakeForge Project.
-Portions Copyright by their individual authors.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published 
-by the Free Software Foundation; either version 2 of the License,
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,  
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
-See file COPYING for license details.
 
