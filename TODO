@@ -20,8 +20,6 @@ to quake-devel@lists.sourceforge.net with details.
  * Remove dependency on GNU make or migrate to automake
  * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
    on systems with XFree86 available
- * Merge SDLQuake (BigM created a patch against an older revision of our
-   main tree)
  * Add currently removed documentation to the README, and also add more
    information to explain things that we've done, or broken
  * Prep Aftershock for a future merge with the main tree
