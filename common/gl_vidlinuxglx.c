@@ -20,22 +20,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <signal.h>
-
-#include <config.h>
 
 #include "quakedef.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
 
 #include <GL/glx.h>
 
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
+#undef HAS_DGA
 #ifdef HAS_DGA
 #include <X11/extensions/xf86dga.h>
 #endif
@@ -69,17 +66,20 @@ cvar_t	vid_mode = {"vid_mode","0",false};
 
 cvar_t  vid_glx_mode = {"vid_mesa_mode", "0"};
  
-static float   mouse_x, mouse_y;
+static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
+#ifdef HAS_DGA
+static int	dgamouse = 0;
+#endif
 
 cvar_t	m_filter = {"m_filter", "0"};
 
 static int scr_width, scr_height;
 
 #ifdef XMESA
-int options_items = 15;
+int VID_options_items = 2;
 #else
-int options_items = 14;
+int VID_options_items = 1;
 #endif
 
 /*-----------------------------------------------------------------------*/
@@ -103,7 +103,6 @@ const char *gl_version;
 const char *gl_extensions;
 
 qboolean is8bit = false;
-qboolean isPermedia = false;
 qboolean gl_mtexable = false;
 
 /*-----------------------------------------------------------------------*/
@@ -247,7 +246,8 @@ static int XLateKey(XKeyEvent *ev)
 	return key;
 }
 
-static void blank_cursor(void)
+static void
+blank_cursor(void)
 {
 	Pixmap blank;
 	XColor dummy;
@@ -262,9 +262,10 @@ static void blank_cursor(void)
 	}
 }
 
-static void install_grabs(void)
+static void
+install_grabs(void)
 {
-	if (cursor == None){
+	if (cursor == None) {
 		blank_cursor();
 	}
 	
@@ -293,7 +294,8 @@ static void install_grabs(void)
 //	XSync(dpy, True);
 }
 
-static void uninstall_grabs(void)
+static void
+uninstall_grabs(void)
 {
 #ifdef HAS_DGA
 	XF86DGADirectVideo(dpy, DefaultScreen(dpy), 0);
@@ -811,9 +813,8 @@ void VID_ExtraOptionDraw(void)
         M_DrawCheckbox (220, 128, _windowed_mouse.value);
 
 
-#if defined(XMESA) && defined(DGA)
+#if defined(XMESA)
 	// Mesa has a fullscreen / windowed glx hack.
-
         M_Print (16, 134, "            Fullscreen");
         M_DrawCheckbox (220, 136, vid_mesa_mode.value);
 #endif
@@ -822,34 +823,18 @@ void VID_ExtraOptionDraw(void)
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
+	switch(option_cursor) {
 	case 12:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
+#ifdef XMESA
 	case 13:
-		Cvar_SetValue ("vid_glx_mode",!vid_glx_mode.value);
-#ifdef XMESA
-		if(XMesaSetFXmode(vid_glx_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW))
-   		{
-			break;
-		} else {
-#endif
-
-#ifdef HAS_DGA                    
-			if(vid_glx_mode.value)
-			{
-				install_grabs();
-			} else {
-				uninstall_grabs();
-			}
-			break;
-#endif
-
-#ifdef XMESA
+		Cvar_SetValue ("vid_glx_mode", !vid_glx_mode.value);
+		if (XMesaSetFXmode(vid_glx_mode.value
+				   ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW)) {
 		}
-#endif XMESA
-
+		break;
+#endif
 	}
 }
