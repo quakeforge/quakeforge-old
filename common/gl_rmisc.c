@@ -212,7 +212,6 @@ void R_Init (void)
 	Cvar_RegisterVariable (&gl_finish);
 
 	Cvar_RegisterVariable (&gl_keeptjunctions);
-//	Cvar_RegisterVariable (&gl_reporttjunctions);
 
 #ifdef QUAKEWORLD
 	R_InitBubble();
