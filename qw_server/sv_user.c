@@ -43,6 +43,7 @@ cvar_t	*cl_rollspeed;
 cvar_t	*cl_rollangle;
 cvar_t	*sv_spectalk;
 cvar_t	*sv_mapcheck;
+cvar_t	*sv_splat_cr;
 
 extern cvar_t	*sv_timekick;
 extern cvar_t	*sv_timekick_fuzz;
@@ -798,6 +799,13 @@ void SV_Say (qboolean team)
 
 	Q_strcat(text, p);
 	Q_strcat(text, "\n");
+
+	if (sv_splat_cr->value) {
+		for (j=0 ; text[j] ; j++) {
+			if (text[j] == '\r')
+				text[j] = '#';
+		}
+	}
 
 	Sys_Printf ("%s", text);
 
@@ -1728,5 +1736,6 @@ void SV_UserInit (void)
 	cl_rollangle = Cvar_Get ("cl_rollangle","2.0",0,"None");
 	sv_spectalk = Cvar_Get ("sv_spectalk","1",0,"None");
 	sv_mapcheck = Cvar_Get ("sv_mapcheck","1",0,"None");
+	sv_splat_cr = Cvar_Get ("sv_splat_cr","0",0,"Supress \\r in say messages");
 }
 
