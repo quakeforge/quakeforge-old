@@ -49,7 +49,7 @@
 #include <console.h>
 #include <client.h>
 
-viddef_t	vid; // global video state
+extern viddef_t        vid; // global video state
 unsigned short	d_8to16table[256];
 
 cvar_t	*_windowed_mouse;

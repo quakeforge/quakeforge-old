@@ -31,7 +31,7 @@
 #include <quakedef.h>
 #include <d_local.h>
 
-viddef_t	vid;				// global video state
+extern viddef_t        vid;                            // global video state
 
 #define	BASEWIDTH	320
 #define	BASEHEIGHT	200

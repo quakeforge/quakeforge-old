@@ -88,7 +88,7 @@ static HICON	hIcon;
 
 extern qboolean mouseactive;	// from in_win.c
 
-viddef_t	vid;				// global video state
+extern viddef_t        vid;                            // global video state
 
 #define MODE_WINDOWED			0
 #define MODE_SETTABLE_WINDOW	2

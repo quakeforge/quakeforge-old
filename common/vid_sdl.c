@@ -45,7 +45,7 @@ cvar_t	*_windowed_mouse;
 
 static float old_windowed_mouse = 0;
 
-viddef_t    vid;                // global video state
+extern viddef_t    vid;                // global video state
 unsigned short  d_8to16table[256];
 
 // The original defaults

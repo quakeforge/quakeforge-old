@@ -69,7 +69,7 @@
 #include <strings.h>
 #endif
 
-viddef_t	vid; // global video state
+extern viddef_t        vid; // global video state
 unsigned short	d_8to16table[256];
 
 Window				x_win;
