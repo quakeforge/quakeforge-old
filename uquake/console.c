@@ -122,12 +122,12 @@ void Con_ClearNotify (void)
 Con_MessageMode_f
 ================
 */
-extern qboolean team_message;
+extern qboolean chat_team;
 
 void Con_MessageMode_f (void)
 {
 	key_dest = key_message;
-	team_message = false;
+	chat_team = false;
 }
 
 						
@@ -139,7 +139,7 @@ Con_MessageMode2_f
 void Con_MessageMode2_f (void)
 {
 	key_dest = key_message;
-	team_message = true;
+	chat_team = true;
 }
 
 						

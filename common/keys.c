@@ -312,28 +312,48 @@ void Key_Console (int key)
 	    case K_MWHEELUP:
 	    case KP_PGUP:
 	    case K_PGUP:
+#ifdef QUAKEWORLD
 		con->display -= 2;
+#else
+		con_backscroll += 2;
+		if (con_backscroll > con_totallines - (vid.height>>3) - 1)
+			con_backscroll = con_totallines - (vid.height>>3) - 1;
+#endif
 		return;
 		break;
 
 	    case K_MWHEELDOWN:
 	    case KP_PGDN:
 	    case K_PGDN:
+#ifdef QUAKEWORLD
 		con->display += 2;
 		if (con->display > con->current)
 			con->display = con->current;
+#else
+		con_backscroll -= 2;
+		if (con_backscroll < 0)
+			con_backscroll = 0;
+#endif
 		return;
 		break;
 
 	    case KP_HOME:
 	    case K_HOME:
+#ifdef QUAKEWORLD
 		con->display = con->current - con_totallines + 10;
+#else
+		con_backscroll = con_totallines - (vid.height>>3) - 1;
+#endif
 		return;
 		break;
 
 	    case KP_END:
 	    case K_END:
+#ifdef QUAKEWORLD
 		con->display = con->current;
+#else
+		con_backscroll = 0;
+#endif
 		return;
 		break;
 
@@ -814,7 +834,13 @@ void Key_Event (int key, qboolean down)
 //
 	if ( (key_dest == key_menu && menubound[key])
 	|| (key_dest == key_console && !consolekeys[key])
-	|| (key_dest == key_game && ( cls.state == ca_active || !consolekeys[key] ) ) )
+	|| (key_dest == key_game && ( 
+#ifdef QUAKEWORLD
+		(cls.state == ca_active)
+#else
+		!con_forcedup
+#endif
+		|| !consolekeys[key] ) ) )
 	{
 		kb = keybindings[key];
 		if (kb)
