@@ -382,7 +382,7 @@ void CL_FinishMove (usercmd_t *cmd)
 	// send milliseconds of time to apply the move
 	ms = host_frametime * 1000;
 	if (ms > 250)
-		ms = 100;		// time was unreasonable
+		ms = 250;		// time was unreasonable
 	cmd->msec = ms;
 
 	VectorCopy (cl.viewangles, cmd->angles);

@@ -31,8 +31,9 @@
 #ifndef _CVARS_H
 #define _CVARS_H
 
-extern cvar_t *gl_flashblend;
+extern cvar_t	*cl_autoexec;
 
+extern cvar_t	*gl_flashblend;
 
 // From r_local.h
 extern cvar_t	*r_draworder;

@@ -590,6 +590,15 @@ void CL_ParseServerData (void)
 			Cbuf_AddText ("exec frontend.cfg\n");
 			Cbuf_AddText ("cl_warncmd 1\n");
 		}
+		if (cl_autoexec->value) {
+			snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "autoexec.cfg");
+			if ((f = Qopen(fn, "r")) != NULL) {
+				Qclose(f);
+				Cbuf_AddText ("cl_warncmd 0\n");
+				Cbuf_AddText ("exec autoexec.cfg\n");
+				Cbuf_AddText ("cl_warncmd 1\n");
+			}
+		}
 	}
 
 	// parse player slot, high bit means spectator

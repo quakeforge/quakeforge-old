@@ -102,6 +102,8 @@ cvar_t	*rcon_password;
 cvar_t	*rcon_address;
 cvar_t	*cl_timeout;
 
+cvar_t	*cl_autoexec;
+
 // these two are not intended to be set directly
 cvar_t	*cl_name;
 cvar_t	*cl_color;
@@ -1730,6 +1732,7 @@ void CL_InitCvars()
 	sys_nostdout	= Cvar_Get ("sys_nostdout","0",0,
 		"Toggles the display of console messages on the stdout stream");
 
+	cl_autoexec = Cvar_Get ("cl_autoexec","0",CVAR_ROM,"exec autoexec.cfg on gamedir change");
 	cl_warncmd	= Cvar_Get ("cl_warncmd","0",0,"None");
 	cl_name		= Cvar_Get ("_cl_name","player",CVAR_ARCHIVE,
 		"Sets the player name");
