@@ -53,6 +53,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <libc.h>
 #endif
 
+#if defined(sgi) && defined(sa_family)
+/* Get rid of problematic SGI #def */
+# undef sa_family
+#endif
+
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN	512
 #endif
