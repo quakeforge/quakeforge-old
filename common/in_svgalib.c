@@ -56,16 +56,19 @@ static int	mx, my;
 static void IN_init_kb();
 static void IN_init_mouse();
 
-cvar_t	_windowed_mouse = {"_windowed_mouse", "1", CVAR_ARCHIVE};
-cvar_t	m_filter = {"m_filter","0"};
-
+//cvar_t	_windowed_mouse = {"_windowed_mouse", "1", CVAR_ARCHIVE};
+cvar_t	*_windowed_mouse;
+//cvar_t	m_filter = {"m_filter","0"};
+cvar_t	*m_filter;
+/*
 static cvar_t mouse_button_commands[3] =
 {
     {"mouse1","+attack"},
     {"mouse2","+strafe"},
     {"mouse3","+forward"},
 };
-
+*/
+static cvar_t	*mouse_button_commands[3];
 
 static void keyhandler(int scancode, int state)
 {
@@ -240,10 +243,14 @@ static void IN_init_mouse()
 	char *mousedev;
 	int mouserate = MOUSE_DEFAULTSAMPLERATE;
 
-	Cvar_RegisterVariable(&mouse_button_commands[0]);
-	Cvar_RegisterVariable(&mouse_button_commands[1]);
-	Cvar_RegisterVariable(&mouse_button_commands[2]);
-	Cvar_RegisterVariable(&m_filter);
+//	Cvar_RegisterVariable(&mouse_button_commands[0]);
+	mouse_button_commands[0] = Cvar_Get ("mouse1","+attack",0,"None");
+//	Cvar_RegisterVariable(&mouse_button_commands[1]);
+	mouse_button_commands[1] = Cvar_Get ("mouse2","+strafe",0,"None");
+//	Cvar_RegisterVariable(&mouse_button_commands[2]);
+	mouse_button_commands[2] = Cvar_Get ("mouse2","+forward",0,"None");
+//	Cvar_RegisterVariable(&m_filter);
+	m_filter = Cvar_Get ("m_filter","0",0,"None");
 	Cmd_AddCommand("force_centerview", Force_CenterView_f);
 
 	mouse_buttons = 3;
@@ -338,7 +345,7 @@ void IN_Move(usercmd_t *cmd)
 	while (mouse_update())
 		;
 
-	if (m_filter.value) {
+	if (m_filter->value) {
 		mouse_x = (mx + old_mouse_x) * 0.5;
 		mouse_y = (my + old_mouse_y) * 0.5;
 	} else {
@@ -350,21 +357,21 @@ void IN_Move(usercmd_t *cmd)
 	/* Clear for next update */
 	mx = my = 0;
 
-	mouse_x *= sensitivity.value;
-	mouse_y *= sensitivity.value;
+	mouse_x *= sensitivity->value;
+	mouse_y *= sensitivity->value;
 
 	/* Add mouse X/Y movement to cmd */
 	if ( (in_strafe.state & 1) ||
-	     (lookstrafe.value && (in_mlook.state & 1) )) {
-		cmd->sidemove += m_side.value * mouse_x;
+	     (lookstrafe->value && (in_mlook.state & 1) )) {
+		cmd->sidemove += m_side->value * mouse_x;
 	} else {
-		cl.viewangles[YAW] -= m_yaw.value * mouse_x;
+		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
 	}
 	
 	if ((in_mlook.state & 1)) V_StopPitchDrift();
 		
 	if ((in_mlook.state & 1) && !(in_strafe.state & 1)) {
-		cl.viewangles[PITCH] += m_pitch.value * mouse_y;
+		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
 		if (cl.viewangles[PITCH] > 80) {
 			cl.viewangles[PITCH] = 80;
 		}
@@ -373,9 +380,9 @@ void IN_Move(usercmd_t *cmd)
 		}
 	} else {
 		if ((in_strafe.state & 1) && noclip_anglehack) {
-			cmd->upmove -= m_forward.value * mouse_y;
+			cmd->upmove -= m_forward->value * mouse_y;
 		} else {
-			cmd->forwardmove -= m_forward.value * mouse_y;
+			cmd->forwardmove -= m_forward->value * mouse_y;
 		}
 	}
 }

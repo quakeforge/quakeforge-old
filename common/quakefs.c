@@ -346,7 +346,7 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 #endif
 				if (fn)
 				{	// found it!
-					if(developer.value)
+					if(developer->value)
 						Sys_Printf ("PackFile: %s : %s\n",pak->filename, fn);
 				// open a new file on the pakfile
 					//*file = fopen (pak->filename, "rb");
@@ -378,7 +378,7 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 					continue;
 			}
 				
-			if(developer.value)
+			if(developer->value)
 				Sys_Printf ("FindFile: %s\n",netpath);
 
 			//*file = fopen (netpath, "rb");

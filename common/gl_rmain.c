@@ -85,54 +85,83 @@ texture_t	*r_notexture_mip;
 
 int		d_lightstylevalue[256];	// 8.8 fraction of base light value
 
-cvar_t		r_clearcolor = {"r_clearcolor", "2"};
+//cvar_t		r_clearcolor = {"r_clearcolor", "2"};
+cvar_t	*r_clearcolor;
 
 void R_MarkLeaves (void);
 
-cvar_t	r_norefresh = {"r_norefresh","0"};
-cvar_t	r_drawentities = {"r_drawentities","1"};
-cvar_t	r_drawviewmodel = {"r_drawviewmodel","1"};
-cvar_t	r_speeds = {"r_speeds","0"};
-cvar_t	r_fullbright = {"r_fullbright","0"};
-cvar_t	r_lightmap = {"r_lightmap","0"};
-cvar_t	r_shadows = {"r_shadows","0"};
-cvar_t	r_wateralpha = {"r_wateralpha","1"};
-cvar_t	r_dynamic = {"r_dynamic","1"};
-cvar_t	r_novis = {"r_novis","0"};
+//cvar_t	r_norefresh = {"r_norefresh","0"};
+cvar_t	*r_norefresh;
+//cvar_t	r_drawentities = {"r_drawentities","1"};
+cvar_t	*r_drawentities;
+//cvar_t	r_drawviewmodel = {"r_drawviewmodel","1"};
+cvar_t	*r_drawviewmodel;
+//cvar_t	r_speeds = {"r_speeds","0"};
+cvar_t	*r_speeds;
+//cvar_t	r_fullbright = {"r_fullbright","0"};
+cvar_t	*r_fullbright;
+//cvar_t	r_lightmap = {"r_lightmap","0"};
+cvar_t	*r_lightmap;
+//cvar_t	r_shadows = {"r_shadows","0"};
+cvar_t	*r_shadows;
+//cvar_t	r_wateralpha = {"r_wateralpha","1"};
+cvar_t	*r_wateralpha;
+//cvar_t	r_dynamic = {"r_dynamic","1"};
+cvar_t	*r_dynamic;
+//cvar_t	r_novis = {"r_novis","0"};
+cvar_t	*r_novis;
 #ifdef QUAKEWORLD
-cvar_t	r_netgraph = {"r_netgraph","0"};
+//cvar_t	r_netgraph = {"r_netgraph","0"};
+cvar_t	*r_netgraph;
 #endif
 
 // All the fog code was disabled for QuakeWold
 // _reduced_ visability shouldn't be considered cheating :)
-cvar_t  r_fog = {"r_fog", "0"};
-cvar_t  r_volfog = {"r_volfog", "0"};
+//cvar_t  r_fog = {"r_fog", "0"};
+cvar_t	*r_fog;
+//cvar_t  r_volfog = {"r_volfog", "0"};
+cvar_t *r_volfog;
 
 // Waterwarp should be completely disabled for release 
 // since we are too lazy to actually fix it ;)
-cvar_t  r_waterwarp = {"r_waterwarp", "0"};
+//cvar_t  r_waterwarp = {"r_waterwarp", "0"};
+cvar_t	*r_waterwarp;
 
-cvar_t  r_waterripple = {"r_waterripple", "0"};
+//cvar_t  r_waterripple = {"r_waterripple", "0"};
+cvar_t	*r_waterripple;
 
-cvar_t	gl_finish = {"gl_finish","0"};
-cvar_t	gl_clear = {"gl_clear","0"};
-cvar_t	gl_cull = {"gl_cull","1"};
-cvar_t	gl_texsort = {"gl_texsort","1"};
-cvar_t	gl_smoothmodels = {"gl_smoothmodels","1"};
-cvar_t	gl_affinemodels = {"gl_affinemodels","0"};
-cvar_t	gl_polyblend = {"gl_polyblend","1"};
-cvar_t	gl_playermip = {"gl_playermip","0"};
-cvar_t	gl_nocolors = {"gl_nocolors","0"};
+//cvar_t	gl_finish = {"gl_finish","0"};
+cvar_t	*gl_finish;
+//cvar_t	gl_clear = {"gl_clear","0"};
+cvar_t	*gl_clear;
+//cvar_t	gl_cull = {"gl_cull","1"};
+cvar_t	*gl_cull;
+//cvar_t	gl_texsort = {"gl_texsort","1"};
+cvar_t	*gl_texsort;
+//cvar_t	gl_smoothmodels = {"gl_smoothmodels","1"};
+cvar_t	*gl_smoothmodels;
+//cvar_t	gl_affinemodels = {"gl_affinemodels","0"};
+cvar_t	*gl_affinemodels;
+//cvar_t	gl_polyblend = {"gl_polyblend","1"};
+cvar_t	*gl_polyblend;
+//cvar_t	gl_playermip = {"gl_playermip","0"};
+cvar_t	*gl_playermip;
+//cvar_t	gl_nocolors = {"gl_nocolors","0"};
+cvar_t	*gl_nocolors;
+/*
 #ifdef QUAKEWORLD
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","1"};
 #else
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","0"};
 #endif
-cvar_t	gl_doubleeyes = {"gl_doubleeyes", "1", CVAR_ARCHIVE};
+*/
+cvar_t	*gl_keeptjunctions;
+//cvar_t	gl_doubleeyes = {"gl_doubleeyes", "1", CVAR_ARCHIVE};
+cvar_t	*gl_doubleeyes;
 
-extern	cvar_t	gl_ztrick;
+extern	cvar_t	*gl_ztrick; 
 #ifdef QUAKEWORLD
-extern	cvar_t	scr_fov;
+extern	cvar_t	*scr_fov;
 #endif
 /*
 	R_CullBox
@@ -512,7 +541,7 @@ R_DrawAliasModel (entity_t *e) {
     glPushMatrix ();
 	R_RotateForEntity (e);
 
-	if (!strcmp (clmodel->name, "progs/eyes.mdl") && gl_doubleeyes.value) {
+	if (!strcmp (clmodel->name, "progs/eyes.mdl") && gl_doubleeyes->value) {
 		glTranslatef (paliashdr->scale_origin[0], paliashdr->scale_origin[1], paliashdr->scale_origin[2] - (22 + 8));
 		// double size of eyes, since they are really hard to see in gl
 		glScalef (paliashdr->scale[0]*2, paliashdr->scale[1]*2, paliashdr->scale[2]*2);
@@ -527,7 +556,7 @@ R_DrawAliasModel (entity_t *e) {
 	// we can't dynamically colormap textures, so they are cached
 	// seperately for the players.  Heads are just uncolored.
 #ifdef QUAKEWORLD
-	if (currententity->scoreboard && !gl_nocolors.value) {
+	if (currententity->scoreboard && !gl_nocolors->value) {
 		i = currententity->scoreboard - cl.players;
 		if (!currententity->scoreboard->skin) {
 			Skin_Find(currententity->scoreboard);
@@ -538,7 +567,7 @@ R_DrawAliasModel (entity_t *e) {
 		}
 	}
 #else
-	if (currententity->colormap != vid.colormap && !gl_nocolors.value) {
+	if (currententity->colormap != vid.colormap && !gl_nocolors->value) {
 		i = currententity - cl_entities;
 		//if (i >= 1 && i<=cl.maxclients && !strcmp (currententity->model->name, "progs/player.mdl"))
 		if (i >= 1 && i<=cl.maxclients)
@@ -546,11 +575,11 @@ R_DrawAliasModel (entity_t *e) {
 	}
 #endif
 
-	if (gl_smoothmodels.value)
+	if (gl_smoothmodels->value)
 		glShadeModel (GL_SMOOTH);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	if (gl_affinemodels.value)
+	if (gl_affinemodels->value)
 		glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
 	R_SetupAliasFrame (currententity->frame, paliashdr);
@@ -558,12 +587,12 @@ R_DrawAliasModel (entity_t *e) {
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
 	glShadeModel (GL_FLAT);
-	if (gl_affinemodels.value)
+	if (gl_affinemodels->value)
 		glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 	glPopMatrix ();
 
-	if (r_shadows.value) {
+	if (r_shadows->value) {
 		glPushMatrix ();
 		R_RotateForEntity (e);
 		glDisable (GL_TEXTURE_2D);
@@ -586,7 +615,7 @@ R_DrawEntitiesOnList ( void ) {
 
 	int		i;
 
-	if (!r_drawentities.value)
+	if (!r_drawentities->value)
 		return;
 
 	// draw sprites seperately, because of alpha blending
@@ -635,20 +664,20 @@ R_DrawViewModel ( void ) {
 	int			ambientlight, shadelight;
 
 #ifdef QUAKEWORLD
-	if (!r_drawviewmodel.value || !Cam_DrawViewModel())
+	if (!r_drawviewmodel->value || !Cam_DrawViewModel())
 		return;
 #else
-	if (!r_drawviewmodel.value)
+	if (!r_drawviewmodel->value)
 		return;
 
-	if (cl_chasecam.value)
+	if (cl_chasecam->value)
 		return;
 #endif
 
 	if (envmap)
 		return;
 
-	if (!r_drawentities.value)
+	if (!r_drawentities->value)
 		return;
 #ifdef QUAKEWORLD
 	if (cl.stats[STAT_ITEMS] & IT_INVISIBILITY)
@@ -703,7 +732,7 @@ R_DrawViewModel ( void ) {
 */
 void
 R_PolyBlend ( void ) {
-	if (!gl_polyblend.value)
+	if (!gl_polyblend->value)
 		return;
 	if (!v_blend[3])
 		return;
@@ -787,10 +816,10 @@ void
 R_SetupFrame ( void ) {
 // don't allow cheats in multiplayer
 #ifdef QUAKEWORLD
-	r_fullbright.value = 0;
-	r_lightmap.value = 0;
+	r_fullbright->value = 0;
+	r_lightmap->value = 0;
 	if (!atoi(Info_ValueForKey(cl.serverinfo, "watervis")))
-		r_wateralpha.value = 1;
+		r_wateralpha->value = 1;
 #else
 	if (cl.maxclients > 1)
 		Cvar_Set ("r_fullbright", "0");
@@ -874,8 +903,8 @@ R_SetupGL ( void ) {
 	glViewport (glx + x, gly + y2, w, h);
     screenaspect = (float)r_refdef.vrect.width/r_refdef.vrect.height;
 //	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*180/M_PI;
-//	yfov = (2.0 * tan (scr_fov.value/360*M_PI)) / screenaspect;
-//	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*(scr_fov.value*2)/M_PI;
+//	yfov = (2.0 * tan (scr_fov->value/360*M_PI)) / screenaspect;
+//	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*(scr_fov->value*2)/M_PI;
 //	MYgluPerspective (yfov,  screenaspect,  4,  4096);
     MYgluPerspective (r_refdef.fov_y,  screenaspect,  4,  4096);
 
@@ -896,7 +925,7 @@ R_SetupGL ( void ) {
 	/*
 		set drawing parms
 	*/
-	if (gl_cull.value)
+	if (gl_cull->value)
 		glEnable(GL_CULL_FACE);
 	else
 		glDisable(GL_CULL_FACE);
@@ -940,19 +969,18 @@ R_RenderScene ( void ) {
 	R_Clear
 */
 void
-R_Clear ( void )
-{
+R_Clear ( void ) {
 	static int l;
 
-	if (gl_ztrick.value)
+	if (gl_ztrick->value)
 	{
 		static int trickframe;
 
-		if (gl_clear.value)
+		if (gl_clear->value)
 		{
-			if (l != (int)r_clearcolor.value)
+			if (l != (int)r_clearcolor->value)
 			{
-					l = (int)r_clearcolor.value;
+					l = (int)r_clearcolor->value;
 				        glClearColor (host_basepal[l*3]/255.0,
 						      host_basepal[l*3+1]/255.0,
 						      host_basepal[l*3+2]/255.0,
@@ -977,7 +1005,7 @@ R_Clear ( void )
 	}
 	else
 	{
-		if (gl_clear.value)
+		if (gl_clear->value)
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		else
 			glClear (GL_DEPTH_BUFFER_BIT);
@@ -991,14 +1019,14 @@ R_Clear ( void )
 }
 
 extern int bc_texture;
-extern cvar_t crosshaircolor;
-
+extern cvar_t *crosshaircolor;
+/*
 void TileBC (int x, int y, int w, int h)
 {
 	unsigned char *pColor;
 
 	glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-	pColor = (unsigned char *) &d_8to24table[(byte) r_clearcolor.value];
+	pColor = (unsigned char *) &d_8to24table[(byte) r_clearcolor->value];
 
 	glColor4ubv ( pColor );
 	GL_Bind (bc_texture);
@@ -1016,7 +1044,7 @@ void TileBC (int x, int y, int w, int h)
 
 	glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 }
-
+*/
 
 /*
 	R_RenderView
@@ -1030,18 +1058,18 @@ R_RenderView ( void ) {
 	// Fixme: the last argument should be a cvar... r_fog_gamma
 	GLfloat colors[4] = {(GLfloat) 1.0, (GLfloat) 1.0, (GLfloat) 1, (GLfloat) 0.1};
 
-	if (r_norefresh.value)
+	if (r_norefresh->value)
 		return;
 
 	if (!r_worldentity.model || !cl.worldmodel)
 		Sys_Error ("R_RenderView: NULL worldmodel");
 
-//	if ((int)cl_sbar.value == 1)
+//	if ((int)cl_sbar->value == 1)
 //		TileBC (0, 0, vid.width, vid.height - sb_lines);
 //	else
 //		TileBC (0, 0, vid.width, vid.height);
 
-	if (r_speeds.value)
+	if (r_speeds->value)
 	{
 		glFinish ();
 		time1 = Sys_DoubleTime ();
@@ -1049,7 +1077,7 @@ R_RenderView ( void ) {
 		c_alias_polys = 0;
 	}
 
-	if (gl_finish.value)
+	if (gl_finish->value)
 		glFinish ();
 
 	R_Clear ();
@@ -1060,7 +1088,7 @@ R_RenderView ( void ) {
 /*	
 	// Fixme!!
 	// The volume fog will not work as is :)
-	if(r_volfog.value) 
+	if(r_volfog->value) 
 	{
        
 		gl_Clear(GL_STENCIL_BUFFER_BIT);
@@ -1088,24 +1116,24 @@ R_RenderView ( void ) {
 */
 #endif
 
-	if (r_fog.value) {	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
+	if (r_fog->value) {	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
 		glFogi (GL_FOG_MODE, GL_EXP2);
 		glFogfv (GL_FOG_COLOR, colors);
-		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog.value); 
+		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog->value); 
 		glEnable(GL_FOG);
 	}
 
 	R_RenderScene ();
 	R_DrawViewModel ();
 
-	if(!r_volfog.value) {
+	if(!r_volfog->value) {
 		R_DrawWaterSurfaces ();
 	}
 	glDisable(GL_FOG);	//  More fog right here :)
 
 	R_PolyBlend ();
 
-	if (r_speeds.value) {
+	if (r_speeds->value) {
 		//glFinish ();
 		time2 = Sys_DoubleTime ();
 		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys); 

@@ -266,7 +266,7 @@ int main (int argc, char **argv)
 	while (1)
 	{
 		time = Sys_DoubleTime();
-		if (time - oldtime < sys_ticrate.value )
+		if (time - oldtime < sys_ticrate->value )
 		{
 			Sleep(1);
 			continue;

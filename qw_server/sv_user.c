@@ -39,17 +39,21 @@ edict_t	*sv_player;
 
 usercmd_t	cmd;
 
-cvar_t	cl_rollspeed = {"cl_rollspeed", "200"};
-cvar_t	cl_rollangle = {"cl_rollangle", "2.0"};
-cvar_t	sv_spectalk = {"sv_spectalk", "1"};
+//cvar_t	cl_rollspeed = {"cl_rollspeed", "200"};
+cvar_t	*cl_rollspeed;
+//cvar_t	cl_rollangle = {"cl_rollangle", "2.0"};
+cvar_t	*cl_rollangle;
+//cvar_t	sv_spectalk = {"sv_spectalk", "1"};
+cvar_t	*sv_spectalk;
 
-cvar_t	sv_mapcheck	= {"sv_mapcheck", "1"};
+//cvar_t	sv_mapcheck	= {"sv_mapcheck", "1"};
+cvar_t	*sv_mapcheck;
 
 extern	vec3_t	player_mins;
 
 extern int fp_messages, fp_persecond, fp_secondsdead;
 extern char fp_msg[];
-extern cvar_t pausable;
+extern cvar_t *pausable;
 static int loss;
 
 /*
@@ -264,7 +268,7 @@ void SV_PreSpawn_f (void)
 
 //		Con_DPrintf("Client check = %d\n", check);
 
-		if (sv_mapcheck.value && check != sv.worldmodel->checksum &&
+		if (sv_mapcheck->value && check != sv.worldmodel->checksum &&
 			check != sv.worldmodel->checksum2) {
 			SV_ClientPrintf (host_client, PRINT_HIGH, 
 				"Map model file does not match (%s), %i != %i/%i.\n"
@@ -372,10 +376,10 @@ void SV_Spawn_f (void)
 	val = GetEdictFieldValue(ent, "gravity");
 	if (val)
 		val->_float = 1.0;
-	host_client->maxspeed = sv_maxspeed.value;
+	host_client->maxspeed = sv_maxspeed->value;
 	val = GetEdictFieldValue(ent, "maxspeed");
 	if (val)
-		val->_float = sv_maxspeed.value;
+		val->_float = sv_maxspeed->value;
 
 //
 // force stats to be updated
@@ -656,29 +660,29 @@ SV_BeginDownload_f
 void SV_BeginDownload_f(void)
 {
 	char	*name;
-	extern	cvar_t	allow_download;
-	extern	cvar_t	allow_download_skins;
-	extern	cvar_t	allow_download_models;
-	extern	cvar_t	allow_download_sounds;
-	extern	cvar_t	allow_download_maps;
+	extern	cvar_t	*allow_download;
+	extern	cvar_t	*allow_download_skins;
+	extern	cvar_t	*allow_download_models;
+	extern	cvar_t	*allow_download_sounds;
+	extern	cvar_t	*allow_download_maps;
 	extern	int		file_from_pak; // ZOID did file come from pak?
 
 	name = Cmd_Argv(1);
 // hacked by zoid to allow more conrol over download
 		// first off, no .. or global allow check
-	if (strstr (name, "..") || !allow_download.value
+	if (strstr (name, "..") || !allow_download->value
 		// leading dot is no good
 		|| *name == '.' 
 		// leading slash bad as well, must be in subdir
 		|| *name == '/'
 		// next up, skin check
-		|| (strncmp(name, "skins/", 6) == 0 && !allow_download_skins.value)
+		|| (strncmp(name, "skins/", 6) == 0 && !allow_download_skins->value)
 		// now models
-		|| (strncmp(name, "progs/", 6) == 0 && !allow_download_models.value)
+		|| (strncmp(name, "progs/", 6) == 0 && !allow_download_models->value)
 		// now sounds
-		|| (strncmp(name, "sound/", 6) == 0 && !allow_download_sounds.value)
+		|| (strncmp(name, "sound/", 6) == 0 && !allow_download_sounds->value)
 		// now maps (note special case for maps, must not be in pak)
-		|| (strncmp(name, "maps/", 6) == 0 && !allow_download_maps.value)
+		|| (strncmp(name, "maps/", 6) == 0 && !allow_download_maps->value)
 		// MUST be in a subdirectory	
 		|| !strstr (name, "/") )	
 	{	// don't allow anything with .. path
@@ -750,7 +754,7 @@ void SV_Say (qboolean team)
 		t1[31] = 0;
 	}
 
-	if (host_client->spectator && (!sv_spectalk.value || team))
+	if (host_client->spectator && (!sv_spectalk->value || team))
 		snprintf(text, sizeof(text), "[SPEC] %s: ", host_client->name);
 	else if (team)
 		snprintf(text, sizeof(text), "(%s): ", host_client->name);
@@ -802,7 +806,7 @@ void SV_Say (qboolean team)
 	{
 		if (client->state != cs_spawned)
 			continue;
-		if (host_client->spectator && !sv_spectalk.value)
+		if (host_client->spectator && !sv_spectalk->value)
 			if (!client->spectator)
 				continue;
 
@@ -928,7 +932,7 @@ void SV_Pause_f (void)
 {
 	char st[sizeof(host_client->name) + 32];
 
-	if (!pausable.value) {
+	if (!pausable->value) {
 		SV_ClientPrintf (host_client, PRINT_HIGH, "Pause not allowed.\n");
 		return;
 	}
@@ -1221,10 +1225,10 @@ float V_CalcRoll (vec3_t angles, vec3_t velocity)
 	sign = side < 0 ? -1 : 1;
 	side = fabs(side);
 	
-	value = cl_rollangle.value;
+	value = cl_rollangle->value;
 
-	if (side < cl_rollspeed.value)
-		side = side * value / cl_rollspeed.value;
+	if (side < cl_rollspeed->value)
+		side = side * value / cl_rollspeed->value;
 	else
 		side = value;
 	
@@ -1736,10 +1740,14 @@ SV_UserInit
 */
 void SV_UserInit (void)
 {
-	Cvar_RegisterVariable (&cl_rollspeed);
-	Cvar_RegisterVariable (&cl_rollangle);
-	Cvar_RegisterVariable (&sv_spectalk);
-	Cvar_RegisterVariable (&sv_mapcheck);
+//	Cvar_RegisterVariable (&cl_rollspeed);
+	cl_rollspeed = Cvar_Get ("cl_rollspeed","200",0,"None");
+//	Cvar_RegisterVariable (&cl_rollangle);
+	cl_rollangle = Cvar_Get ("cl_rollangle","2.0",0,"None");
+//	Cvar_RegisterVariable (&sv_spectalk);
+	sv_spectalk = Cvar_Get ("sv_spectalk","1",0,"None");
+//	Cvar_RegisterVariable (&sv_mapcheck);
+	sv_mapcheck = Cvar_Get ("sv_mapcheck","1",0,"None");
 }
 
 

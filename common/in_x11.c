@@ -61,11 +61,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <strings.h>
 #endif
 
-cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
-cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
+//cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
+cvar_t	*_windowed_mouse;
+//cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
+cvar_t	*m_filter;
 #ifdef HAS_DGA
 qboolean		dgamouse = 0;
-static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", CVAR_ARCHIVE};
+//static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", CVAR_ARCHIVE};
+static cvar_t	*vid_dga_mouseaccel;
 #endif
 
 static qboolean	mouse_avail;
@@ -240,11 +243,11 @@ static void event_motion(XEvent *event)
 {
 #ifdef HAS_DGA
 		if (dgamouse) {
-			mouse_x += event->xmotion.x_root * vid_dga_mouseaccel.value;
-			mouse_y += event->xmotion.y_root * vid_dga_mouseaccel.value;
+			mouse_x += event->xmotion.x_root * vid_dga_mouseaccel->value;
+			mouse_y += event->xmotion.y_root * vid_dga_mouseaccel->value;
 		} else
 #endif
-			if (_windowed_mouse.value) {
+			if (_windowed_mouse->value) {
 				mouse_x = (float) ((int) event->xmotion.x - ((int) vid.width / 2));
 				mouse_y = (float) ((int) event->xmotion.y - ((int) vid.height / 2));
 
@@ -265,10 +268,10 @@ static void event_motion(XEvent *event)
 void
 IN_Frame(void)
 {
-	if (old_windowed_mouse != _windowed_mouse.value) {
-		old_windowed_mouse = _windowed_mouse.value;
+	if (old_windowed_mouse != _windowed_mouse->value) {
+		old_windowed_mouse = _windowed_mouse->value;
 
-		if (!_windowed_mouse.value) {
+		if (!_windowed_mouse->value) {
 			/* ungrab the pointer */
 			XUngrabPointer(x_disp,CurrentTime);
 		} else {
@@ -293,7 +296,7 @@ void IN_Move(usercmd_t *cmd)
 	if (!mouse_avail)
 		return;
    
-	if (m_filter.value) {
+	if (m_filter->value) {
 		mouse_x = (mouse_x + old_mouse_x) * 0.5;
 		mouse_y = (mouse_y + old_mouse_y) * 0.5;
 	}
@@ -301,27 +304,27 @@ void IN_Move(usercmd_t *cmd)
 	old_mouse_x = mouse_x;
 	old_mouse_y = mouse_y;
    
-	mouse_x *= sensitivity.value;
-	mouse_y *= sensitivity.value;
+	mouse_x *= sensitivity->value;
+	mouse_y *= sensitivity->value;
    
-	if ( (in_strafe.state & 1) || (lookstrafe.value && (in_mlook.state & 1) ))
-		cmd->sidemove += m_side.value * mouse_x;
+	if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
+		cmd->sidemove += m_side->value * mouse_x;
 	else
-		cl.viewangles[YAW] -= m_yaw.value * mouse_x;
+		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
 	if (in_mlook.state & 1)
 		V_StopPitchDrift ();
    
 	if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
-		cl.viewangles[PITCH] += m_pitch.value * mouse_y;
+		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
 		if (cl.viewangles[PITCH] > 80)
 			cl.viewangles[PITCH] = 80;
 		if (cl.viewangles[PITCH] < -70)
 			cl.viewangles[PITCH] = -70;
 	} else {
 		if ((in_strafe.state & 1) && noclip_anglehack)
-			cmd->upmove -= m_forward.value * mouse_y;
+			cmd->upmove -= m_forward->value * mouse_y;
 		else
-			cmd->forwardmove -= m_forward.value * mouse_y;
+			cmd->forwardmove -= m_forward->value * mouse_y;
 	}
 	mouse_x = mouse_y = 0.0;
 }
@@ -331,14 +334,14 @@ static void IN_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
 	M_Print(16, options_draw_cursor+=8, "             Use Mouse");
-	M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse.value);
+	M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse->value);
 }
 
 static void IN_ExtraOptionCmd(int option_cursor)
 {
 	switch (option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
 		break;
 	}
 }
@@ -364,10 +367,14 @@ int IN_Init ()
 		XChangeWindowAttributes(x_disp, x_win, attribmask, &attribs_2);
 	}
 
-	Cvar_RegisterVariable(&_windowed_mouse);
-	Cvar_RegisterVariable(&m_filter);
+//	Cvar_RegisterVariable(&_windowed_mouse);
+	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable(&m_filter);
+	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
 #ifdef HAS_DGA
-	Cvar_RegisterVariable(&vid_dga_mouseaccel);
+//	Cvar_RegisterVariable(&vid_dga_mouseaccel);
+	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
+					"None");
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;

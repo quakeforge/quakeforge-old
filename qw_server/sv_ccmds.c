@@ -39,7 +39,7 @@ qboolean	sv_allow_cheats;
 
 int fp_messages=4, fp_persecond=4, fp_secondsdead=10;
 char fp_msg[255] = { 0 };
-extern cvar_t cl_warncmd;
+extern cvar_t *cl_warncmd;
 	extern		redirect_t	sv_redirected;
 
 
@@ -939,5 +939,5 @@ void SV_InitOperatorCommands (void)
 	Cmd_AddCommand ("floodprotmsg", SV_Floodprotmsg_f);
 	Cmd_AddCommand ("fly", SV_Fly_f);
 
-	cl_warncmd.value = 1;
+	cl_warncmd->value = 1;
 }

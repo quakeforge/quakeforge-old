@@ -57,17 +57,28 @@ ddef_t *ED_FieldAtOfs (int ofs);
 qboolean	ED_ParseEpair (void *base, ddef_t *key, char *s);
 
 #ifndef QUAKEWORLD
-cvar_t	nomonsters = {"nomonsters", "0"};
-cvar_t	gamecfg = {"gamecfg", "0"};
-cvar_t	scratch1 = {"scratch1", "0"};
-cvar_t	scratch2 = {"scratch2", "0"};
-cvar_t	scratch3 = {"scratch3", "0"};
-cvar_t	scratch4 = {"scratch4", "0"};
-cvar_t	savedgamecfg = {"savedgamecfg", "0", CVAR_ARCHIVE};
-cvar_t	saved1 = {"saved1", "0", CVAR_ARCHIVE};
-cvar_t	saved2 = {"saved2", "0", CVAR_ARCHIVE};
-cvar_t	saved3 = {"saved3", "0", CVAR_ARCHIVE};
-cvar_t	saved4 = {"saved4", "0", CVAR_ARCHIVE};
+//cvar_t	nomonsters = {"nomonsters", "0"};
+cvar_t	*nomonsters;
+//cvar_t	gamecfg = {"gamecfg", "0"};
+cvar_t	*gamecfg;
+//cvar_t	scratch1 = {"scratch1", "0"};
+cvar_t	*scratch1;
+//cvar_t	scratch2 = {"scratch2", "0"};
+cvar_t	*scratch2;
+//cvar_t	scratch3 = {"scratch3", "0"};
+cvar_t	*scratch3;
+//cvar_t	scratch4 = {"scratch4", "0"};
+cvar_t	*scratch4;
+//cvar_t	savedgamecfg = {"savedgamecfg", "0", CVAR_ARCHIVE};
+cvar_t	*savedgamecfg;
+//cvar_t	saved1 = {"saved1", "0", CVAR_ARCHIVE};
+cvar_t	*saved1;
+//cvar_t	saved2 = {"saved2", "0", CVAR_ARCHIVE};
+cvar_t	*saved2;
+//cvar_t	saved3 = {"saved3", "0", CVAR_ARCHIVE};
+cvar_t	*saved3;
+//cvar_t	saved4 = {"saved4", "0", CVAR_ARCHIVE};
+cvar_t	*saved4;
 #endif
 
 #define	MAX_FIELD_LEN	64
@@ -1017,7 +1028,7 @@ void ED_LoadFromFile (char *data)
 		
 // remove things from different skill levels or deathmatch
 #ifndef QUAKEWORLD
-		if (deathmatch.value)
+		if (deathmatch->value)
 		{
 #endif
 			if (((int)ent->v.spawnflags & SPAWNFLAG_NOT_DEATHMATCH))
@@ -1220,17 +1231,28 @@ void PR_Init (void)
 	Cmd_AddCommand ("edictcount", ED_Count);
 	Cmd_AddCommand ("profile", PR_Profile_f);
 #ifndef QUAKEWORLD
-	Cvar_RegisterVariable (&nomonsters);
-	Cvar_RegisterVariable (&gamecfg);
-	Cvar_RegisterVariable (&scratch1);
-	Cvar_RegisterVariable (&scratch2);
-	Cvar_RegisterVariable (&scratch3);
-	Cvar_RegisterVariable (&scratch4);
-	Cvar_RegisterVariable (&savedgamecfg);
-	Cvar_RegisterVariable (&saved1);
-	Cvar_RegisterVariable (&saved2);
-	Cvar_RegisterVariable (&saved3);
-	Cvar_RegisterVariable (&saved4);
+//	Cvar_RegisterVariable (&nomonsters);
+	nomonsters = Cvar_Get ("nomonsters","0",0,"None");
+//	Cvar_RegisterVariable (&gamecfg);
+	gamecfg = Cvar_Get ("gamecfg","0",0,"None");
+//	Cvar_RegisterVariable (&scratch1);
+	scratch1 = Cvar_Get ("scratch1","0",0,"None");
+//	Cvar_RegisterVariable (&scratch2);
+	scratch2 = Cvar_Get ("scratch2","0",0,"None");
+//	Cvar_RegisterVariable (&scratch3);
+	scratch3 = Cvar_Get ("scratch3","0",0,"None");
+//	Cvar_RegisterVariable (&scratch4);
+	scratch4 = Cvar_Get ("scratch4","0",0,"None");
+//	Cvar_RegisterVariable (&savedgamecfg);
+	savedgamecfg = Cvar_Get ("savedgamecfg","0",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&saved1);
+	saved1 = Cvar_Get ("saved1","0",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&saved2);
+	saved2 = Cvar_Get ("saved2","0",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&saved3);
+	saved3 = Cvar_Get ("saved3","0",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&saved4);
+	saved4 = Cvar_Get ("saved4","0",CVAR_ARCHIVE,"None");
 #endif
 }
 

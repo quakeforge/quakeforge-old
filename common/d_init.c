@@ -27,9 +27,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define NUM_MIPS	4
 
-cvar_t	d_subdiv16 = {"d_subdiv16", "1"};
-cvar_t	d_mipcap = {"d_mipcap", "0"};
-cvar_t	d_mipscale = {"d_mipscale", "1"};
+//cvar_t	d_subdiv16 = {"d_subdiv16", "1"};
+cvar_t	*d_subdiv16;
+//cvar_t	d_mipcap = {"d_mipcap", "0"};
+cvar_t	*d_mipcap;
+//cvar_t	d_mipscale = {"d_mipscale", "1"};
+cvar_t	*d_mipscale;
 
 surfcache_t		*d_initial_rover;
 qboolean		d_roverwrapped;
@@ -53,9 +56,12 @@ void D_Init (void)
 
 	r_skydirect = 1;
 
-	Cvar_RegisterVariable (&d_subdiv16);
-	Cvar_RegisterVariable (&d_mipcap);
-	Cvar_RegisterVariable (&d_mipscale);
+//	Cvar_RegisterVariable (&d_subdiv16);
+	d_subdiv16 = Cvar_Get ("d_subdiv16","1",0,"None");
+//	Cvar_RegisterVariable (&d_mipcap);
+	d_mipcap = Cvar_Get ("d_mipcap","0",0,"None");
+//	Cvar_RegisterVariable (&d_mipscale);
+	d_mipscale = Cvar_Get ("d_mipscale","1",0,"None");
 
 	r_drawpolys = false;
 	r_worldpolysbacktofront = false;
@@ -140,17 +146,17 @@ void D_SetupFrame (void)
 	d_roverwrapped = false;
 	d_initial_rover = sc_rover;
 
-	d_minmip = d_mipcap.value;
+	d_minmip = d_mipcap->value;
 	if (d_minmip > 3)
 		d_minmip = 3;
 	else if (d_minmip < 0)
 		d_minmip = 0;
 
 	for (i=0 ; i<(NUM_MIPS-1) ; i++)
-		d_scalemip[i] = basemip[i] * d_mipscale.value;
+		d_scalemip[i] = basemip[i] * d_mipscale->value;
 
 #if	id386
-				if (d_subdiv16.value)
+				if (d_subdiv16->value)
 					d_drawspans = D_DrawSpans16;
 				else
 					d_drawspans = D_DrawSpans8;

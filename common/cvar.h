@@ -63,8 +63,8 @@ typedef struct cvar_s
 {
 	char    *name;
 	char    *string;
-	unsigned int	type;
-	qboolean first;		// determine if this is the first write
+	int	flags;
+	char 	*description;	// for "help" command 
 //	qboolean archive;	// set to true to cause it to be saved to vars.rc
 //	qboolean info;		// added to serverinfo or userinfo when changed
 //	qboolean server;	// notifies players when changed (UQUAKE)
@@ -89,6 +89,10 @@ typedef struct cvar_s
 #define	CVAR_HEAP			256	// allocated off the heap, safe to free 
 #define CVAR_CHEAT			512	// can not be changed if cheats are disabled
 #define CVAR_NORESTART		1024	// do not clear when a cvar_restart is issued
+#define CVAR_LATCH		2048	// will only change when C code next does
+					// a Cvar_Get(), so it can't be changed
+#define CVAR_TEMP		4906	// can be set even when cheats are 
+					// disabled, but is not archived
 
 // Zoid| A good CVAR_ROM example is basepath.  The code should read "cvar_t
 // *fs_basepath = CvarGet("fs_basepath", ".", CVAR_ROM);  The user can
@@ -97,15 +101,10 @@ typedef struct cvar_s
 // "look, the user made fs_basepath already", uses the users value, but sets
 // CVAR_ROM as per the call.
 
-void 	Cvar_RegisterVariable (cvar_t *variable);
-// registers a cvar that allready has the name, string, and optionally the
-// archive elements set.
+cvar_t	*Cvar_Get (char *name, char *value, int cvarflags, char *description);
 
 void 	Cvar_Set (char *var_name, char *value);
 // equivelant to "<name> <variable>" typed at the console
-
-void	Cvar_SetValue (char *var_name, float value);
-// expands value to a string and calls Cvar_Set
 
 float	Cvar_VariableValue (char *var_name);
 // returns 0 if not defined or non numeric
@@ -130,5 +129,6 @@ cvar_t *Cvar_FindVar (char *var_name);
 
 void Cvar_Init();
 
+void Cvar_Shutdown();
 extern cvar_t	*cvar_vars;
 #endif // _CVAR_H

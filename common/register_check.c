@@ -33,7 +33,8 @@
 #include "quakefs.h"
 #include "quakedef.h"
 
-cvar_t registered = {"registered", "0"};
+//cvar_t registered = {"registered", "0"};
+cvar_t	*registered;
 
 /*
 	register_check
@@ -46,7 +47,8 @@ register_check ( void ) {
 
 	QFile *h;
 
-	Cvar_RegisterVariable (&registered);
+//	Cvar_RegisterVariable (&registered);
+	registered = Cvar_Get ("registered","0",0,"None");
 
 	COM_FOpenFile("gfx/pop.lmp", &h);
 

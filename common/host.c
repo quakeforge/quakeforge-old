@@ -65,20 +65,34 @@ int			fps_count;
 int 		vcrFile = -1;
 double		host_time;
 
-cvar_t	sys_ticrate	= {"sys_ticrate","0.05"};
-cvar_t	serverprofile	= {"serverprofile", "0"};
-cvar_t	host_framerate	= {"host_framerate", "0"};	// set for slow motion
-cvar_t	samelevel	= {"samelevel", "0"};
-cvar_t	noexit		= {"noexit", "0", CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	pausable	= {"pausable", "1"};
-cvar_t	temp1		= {"temp1", "0"};
-cvar_t	sv_filter	= {"sv_filter", "1"};	// strip \n, \r in names?
-cvar_t	teamplay	= {"teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	deathmatch	= {"deathmatch","0"};		// 0, 1, or 2
-cvar_t	coop		= {"coop","0"};			// 0 or 1
-cvar_t	fraglimit	= {"fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	skill		= {"skill","1"};		// 0 - 3
-cvar_t	timelimit	= {"timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
+//cvar_t	sys_ticrate	= {"sys_ticrate","0.05"};
+cvar_t	*sys_ticrate;
+//cvar_t	serverprofile	= {"serverprofile", "0"};
+cvar_t	*serverprofile;
+//cvar_t	host_framerate	= {"host_framerate", "0"};	// set for slow motion
+cvar_t	*host_framerate;
+//cvar_t	samelevel	= {"samelevel", "0"};
+cvar_t	*samelevel;
+//cvar_t	noexit		= {"noexit", "0", CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	*noexit;
+//cvar_t	pausable	= {"pausable", "1"};
+cvar_t	*pausable;
+//cvar_t	temp1		= {"temp1", "0"};
+cvar_t *temp1;
+//cvar_t	sv_filter	= {"sv_filter", "1"};	// strip \n, \r in names?
+cvar_t *sv_filter;
+//cvar_t	teamplay	= {"teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	*teamplay;
+//cvar_t	deathmatch	= {"deathmatch","0"};		// 0, 1, or 2
+cvar_t	*deathmatch;
+//cvar_t	coop		= {"coop","0"};			// 0 or 1
+cvar_t	*coop;
+//cvar_t	fraglimit	= {"fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	*fraglimit;
+//cvar_t	skill		= {"skill","1"};		// 0 - 3
+cvar_t	*skill;
+//cvar_t	timelimit	= {"timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	*timelimit;
 
 #ifdef UQUAKE
 client_t	*host_client;			// current client
@@ -195,11 +209,11 @@ Host_FilterTime ( float time )
 	if ( oldrealtime > realtime )
 		oldrealtime = 0;
 
-	if (cl_maxfps.value)
-		fps = max(30.0, min(cl_maxfps.value, MAXFPS));
+	if (cl_maxfps->value)
+		fps = max(30.0, min(cl_maxfps->value, MAXFPS));
 	else
 #ifdef QUAKEWORLD
-		fps = max(30.0, min(rate.value/80.0, MAXFPS));
+		fps = max(30.0, min(rate->value/80.0, MAXFPS));
 #elif UQUAKE
 		fps = MAXFPS;
 #endif
@@ -210,8 +224,8 @@ Host_FilterTime ( float time )
 	host_frametime = realtime - oldrealtime;
 	oldrealtime = realtime;
 
-	if (host_framerate.value > 0) {
-		host_frametime = host_framerate.value;
+	if (host_framerate->value > 0) {
+		host_frametime = host_framerate->value;
 	} else {		// don't allow really long or short frames
 		host_frametime = min(MAXTIME, max(host_frametime, MINTIME));
 	}
@@ -313,12 +327,12 @@ Host_FrameMain ( float time )
 #endif
 
 	// update video
-	if (host_speeds.value)
+	if (host_speeds->value)
 		time1 = Sys_DoubleTime ();
 
 	SCR_UpdateScreen ();
 
-	if (host_speeds.value)
+	if (host_speeds->value)
 		time2 = Sys_DoubleTime ();
 		
 	// update audio
@@ -335,7 +349,7 @@ Host_FrameMain ( float time )
 	
 	CDAudio_Update();
 
-	if (host_speeds.value) {
+	if (host_speeds->value) {
 		pass1 = (time1 - time3)*1000;
 		time3 = Sys_DoubleTime ();
 		pass2 = (time2 - time1)*1000;
@@ -368,7 +382,7 @@ Host_Frame ( float time )
 	static int		timecount;
 	int				i, c, m;
 
-	if (!serverprofile.value) {
+	if (!serverprofile->value) {
 		Host_FrameMain (time);
 		return;
 	}
@@ -658,6 +672,7 @@ Host_Shutdown( void )
 #endif
 		VID_Shutdown();
 	}
+	Cvar_Shutdown ();
 }
 
 /*
@@ -697,24 +712,41 @@ Host_InitLocal ( void )
 {
 	Host_InitCommands ();
        
-	Cvar_RegisterVariable (&host_framerate);
+//	Cvar_RegisterVariable (&host_framerate);
+	host_framerate = Cvar_Get ("host_framerate","0",0,"None");
 
-	Cvar_RegisterVariable (&sys_ticrate);
-	Cvar_RegisterVariable (&serverprofile);
+//	Cvar_RegisterVariable (&sys_ticrate);
+	sys_ticrate = Cvar_Get ("sys_ticrate","0.05",0,"None");
+//	Cvar_RegisterVariable (&serverprofile);
+	serverprofile = Cvar_Get ("serverprofile","0",0,"None");
 
-	Cvar_RegisterVariable (&fraglimit);
-	Cvar_RegisterVariable (&timelimit);
-	Cvar_RegisterVariable (&teamplay);
-	Cvar_RegisterVariable (&samelevel);
-	Cvar_RegisterVariable (&noexit);
-	Cvar_RegisterVariable (&skill);
-	Cvar_RegisterVariable (&deathmatch);
-	Cvar_RegisterVariable (&coop);
+//	Cvar_RegisterVariable (&fraglimit);
+	fraglimit = Cvar_Get ("fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+//	Cvar_RegisterVariable (&timelimit);
+	timelimit = Cvar_Get ("timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+//	Cvar_RegisterVariable (&teamplay);
+	teamplay = Cvar_Get ("teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+//	Cvar_RegisterVariable (&samelevel);
+	samelevel = Cvar_Get ("samelevel","0",0,"None");
+//	Cvar_RegisterVariable (&noexit);
+	noexit = Cvar_Get ("noexit","0",CVAR_USERINFO|CVAR_SERVERINFO,"None");
+//	Cvar_RegisterVariable (&skill);
+	skill = Cvar_Get ("skill","1",0,"None");
+//	Cvar_RegisterVariable (&deathmatch);
+	deathmatch = Cvar_Get ("deathmatch","0",0,"None");
+//	Cvar_RegisterVariable (&coop);
+	coop = Cvar_Get ("coop","0",0,"None");
 
-	Cvar_RegisterVariable (&pausable);
+//	Cvar_RegisterVariable (&pausable);
+	pausable = Cvar_Get ("pausable","1",0,"None");
 
-	Cvar_RegisterVariable (&temp1);
-	Cvar_RegisterVariable (&sv_filter);
+//	Cvar_RegisterVariable (&temp1);
+	temp1 = Cvar_Get ("temp1","0",0,"None");
+//	Cvar_RegisterVariable (&sv_filter);
+	sv_filter = Cvar_Get ("sv_filter","1",0,"None");
 
 	Host_FindMaxClients ();
 	
@@ -768,9 +800,9 @@ void	Host_FindMaxClients (void)
 	svs.clients = Hunk_AllocName (svs.maxclientslimit*sizeof(client_t), "clients");
 
 	if (svs.maxclients > 1)
-		Cvar_SetValue ("deathmatch", 1.0);
+		deathmatch->value = 1.0;
 	else
-		Cvar_SetValue ("deathmatch", 0.0);
+		deathmatch->value = 0.0;
 }
 
 /*

@@ -47,9 +47,12 @@ static byte vid_current_palette[768];
 
 static int	UseDisplay = 1;
 
-static cvar_t	vid_mode = {"vid_mode","5",CVAR_NONE};
-static cvar_t	vid_redrawfull = {"vid_redrawfull","0",CVAR_NONE};
-static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",CVAR_ARCHIVE};
+//static cvar_t	vid_mode = {"vid_mode","5",CVAR_NONE};
+static cvar_t	*vid_mode;
+//static cvar_t	vid_redrawfull = {"vid_redrawfull","0",CVAR_NONE};
+static cvar_t	*vid_redrawfull;
+//static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",CVAR_ARCHIVE};
+static cvar_t	*vid_waitforrefresh;
  
 static char	*framebuffer_ptr;
 
@@ -387,9 +390,13 @@ VID_Init(unsigned char *palette)
 
 	if (UseDisplay) {
 
-		Cvar_RegisterVariable (&vid_mode);
-		Cvar_RegisterVariable (&vid_redrawfull);
-		Cvar_RegisterVariable (&vid_waitforrefresh);
+//		Cvar_RegisterVariable (&vid_mode);
+		vid_mode = Cvar_Get ("vid_mode","5");
+//		Cvar_RegisterVariable (&vid_redrawfull);
+		vid_redrawfull = Cvar_Get ("vid_redrawfull","0");
+//		Cvar_RegisterVariable (&vid_waitforrefresh);
+		vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",
+						CVAR_ARCHIVE);
 		
 		Cmd_AddCommand("vid_nummodes", VID_NumModes_f);
 		Cmd_AddCommand("vid_describemode", VID_DescribeMode_f);
@@ -464,8 +471,8 @@ VID_Update(vrect_t *rects)
 		}
 	}
 	
-	if (vid_mode.value != current_mode) {
-		VID_SetMode ((int)vid_mode.value, vid_current_palette);
+	if (vid_mode->value != current_mode) {
+		VID_SetMode ((int)vid_mode->value, vid_current_palette);
 	}
 }
 

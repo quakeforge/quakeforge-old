@@ -46,9 +46,9 @@ void R_CheckVariables (void)
 #ifdef UQUAKE
 	static float	oldbright;
 
-	if (r_fullbright.value != oldbright)
+	if (r_fullbright->value != oldbright)
 	{
-		oldbright = r_fullbright.value;
+		oldbright = r_fullbright->value;
 		D_FlushCaches ();	// so all lighting changes
 	}
 #endif
@@ -135,7 +135,7 @@ void R_LineGraph (int x, int y, int h)
 #endif
 	dest = vid.buffer + vid.rowbytes*y + x;
 	
-	s = r_graphheight.value;
+	s = r_graphheight->value;
 
 	if (h == 10000)
 		color = 0x6f;	// yellow
@@ -187,7 +187,7 @@ void R_TimeGraph (void)
 
 	a = (r_time2-r_time1)/0.01;
 //a = fabs(mouse_y * 0.05);
-//a = (int)((r_refdef.vieworg[2] + 1024)/1)%(int)r_graphheight.value;
+//a = (int)((r_refdef.vieworg[2] + 1024)/1)%(int)r_graphheight->value;
 //a = (int)((pmove.velocity[2] + 500)/10);
 //a = fabs(velocity[0])/20;
 //a = ((int)fabs(origin[0])/8)%20;
@@ -235,9 +235,9 @@ void R_NetGraph (void)
 		w = NET_TIMINGS;
 
 	x =	-((vid.width - 320)>>1);
-	y = vid.height - sb_lines - 24 - (int)r_graphheight.value*2 - 2;
+	y = vid.height - sb_lines - 24 - (int)r_graphheight->value*2 - 2;
 
-	M_DrawTextBox (x, y, (w+7)/8, ((int)r_graphheight.value*2+7)/8 + 1);
+	M_DrawTextBox (x, y, (w+7)/8, ((int)r_graphheight->value*2+7)/8 + 1);
 	y2 = y + 8;
 	y = vid.height - sb_lines - 8 - 2;
 
@@ -465,13 +465,13 @@ void R_SetupFrame (void)
 // don't allow cheats in multiplayer
 	if (cl.maxclients > 1)
 	{
-		r_draworder.value = 0;
-		r_fullbright.value = 0;
-		r_ambient.value = 0;
-		r_drawflat.value = 0;
+		r_draworder->value = 0;
+		r_fullbright->value = 0;
+		r_ambient->value = 0;
+		r_drawflat->value = 0;
 	}
 
-	if (r_numsurfs.value)
+	if (r_numsurfs->value)
 	{
 		if ((surface_p - surfaces) > r_maxsurfsseen)
 			r_maxsurfsseen = surface_p - surfaces;
@@ -480,7 +480,7 @@ void R_SetupFrame (void)
 				surf_max - surfaces, r_maxsurfsseen);
 	}
 
-	if (r_numedges.value)
+	if (r_numedges->value)
 	{
 		edgecount = edge_p - r_edges;
 
@@ -491,14 +491,14 @@ void R_SetupFrame (void)
 				r_numallocatededges, r_maxedgesseen);
 	}
 
-	r_refdef.ambientlight = r_ambient.value;
+	r_refdef.ambientlight = r_ambient->value;
 
 	if (r_refdef.ambientlight < 0)
 		r_refdef.ambientlight = 0;
 #ifdef UQUAKE
 	if (!sv.active)
 #endif
-		r_draworder.value = 0;	// don't let cheaters look behind walls
+		r_draworder->value = 0;	// don't let cheaters look behind walls
 		
 	R_CheckVariables ();
 	
@@ -529,11 +529,11 @@ r_refdef.viewangles[2]=    0;
 	r_viewleaf = Mod_PointInLeaf (r_origin, cl.worldmodel);
 
 	r_dowarpold = r_dowarp;
-	r_dowarp = r_waterwarp.value && (r_viewleaf->contents <= CONTENTS_WATER);
+	r_dowarp = r_waterwarp->value && (r_viewleaf->contents <= CONTENTS_WATER);
 
 	if ((r_dowarp != r_dowarpold)
 #ifdef UQUAKE
-		|| lcd_x.value
+		|| lcd_x->value
 #endif
 		|| r_viewchanged)
 	{

@@ -142,16 +142,16 @@ void Cvar_Set (char *var_name, char *value)
 		Con_Printf ("Cvar_Set: variable %s not found\n", var_name);
 		return;
 	}
-	if(var->type&CVAR_ROM && !var->first) return;
+	if(var->flags&CVAR_ROM) return;
 #ifdef SERVERONLY
-	if (var->type&CVAR_SERVERINFO)
+	if (var->flags&CVAR_SERVERINFO)
 	{
 		Info_SetValueForKey (svs.info, var_name, value, MAX_SERVERINFO_STRING);
 		SV_SendServerInfoChange(var_name, value);
 //		SV_BroadcastCommand ("fullserverinfo \"%s\"\n", svs.info);
 	}
 #else
-	if (var->type&CVAR_USERINFO)
+	if (var->flags&CVAR_USERINFO)
 	{
 		Info_SetValueForKey (cls.userinfo, var_name, value, MAX_INFO_STRING);
 		if (cls.state >= ca_connected)
@@ -167,7 +167,6 @@ void Cvar_Set (char *var_name, char *value)
 	var->string = Z_Malloc (Q_strlen(value)+1);
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
-	var->first = false;
 }
 #elif defined(UQUAKE)
 void Cvar_Set (char *var_name, char *value)
@@ -183,7 +182,7 @@ void Cvar_Set (char *var_name, char *value)
 	}
 
 	// Don't change if this is a CVAR_ROM
-	if(var->type&CVAR_ROM && !var->first) return;
+	if(var->flags&CVAR_ROM) return;
 	
 	changed = Q_strcmp(var->string, value);
 	
@@ -192,66 +191,14 @@ void Cvar_Set (char *var_name, char *value)
 	var->string = Z_Malloc (Q_strlen(value)+1);
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
-	if (var->type&CVAR_NOTIFY && changed)
+	if (var->flags&CVAR_USERINFO && changed)
 	{
 		if (sv.active)
 			SV_BroadcastPrintf ("\"%s\" changed to \"%s\"\n", var->name, var->string);
 	}
-	var->first = false;
 }
 #endif
 
-/*
-============
-Cvar_SetValue
-============
-*/
-void Cvar_SetValue (char *var_name, float value)
-{
-	char	val[32];
-	
-	snprintf(val, sizeof(val), "%f",value);
-	Cvar_Set (var_name, val);
-}
-
-
-/*
-============
-Cvar_RegisterVariable
-
-Adds a freestanding variable to the variable list.
-============
-*/
-void Cvar_RegisterVariable (cvar_t *variable)
-{
-	char	value[512];
-
-// first check to see if it has allready been defined
-	if (Cvar_FindVar (variable->name))
-	{
-		Con_Printf ("Can't register variable %s, allready defined\n", variable->name);
-		return;
-	}
-	
-// check for overlap with a command
-	if (Cmd_Exists (variable->name))
-	{
-		Con_Printf ("Cvar_RegisterVariable: %s is a command\n", variable->name);
-		return;
-	}
-		
-// link the variable in
-	variable->next = cvar_vars;
-	cvar_vars = variable;
-
-// copy the value off, because future sets will Z_Free it
-	strcpy (value, variable->string);
-	variable->string = Z_Malloc (1);	
-	
-// set it through the function to be consistant
-	variable->first = true;
-	Cvar_Set (variable->name, value);
-}
 
 /*
 ============
@@ -294,7 +241,7 @@ void Cvar_WriteVariables (QFile *f)
 	cvar_t	*var;
 	
 	for (var = cvar_vars ; var ; var = var->next)
-		if (var->type&CVAR_ARCHIVE)
+		if (var->flags&CVAR_ARCHIVE)
 			Qprintf (f, "%s \"%s\"\n", var->name, var->string);
 }
 
@@ -318,15 +265,58 @@ void Cvar_Set_f(void)
 	} 
 	else 
 	{
-		var = (cvar_t*)calloc(1,sizeof(cvar_t));
-		var->type=CVAR_USER_CREATED|CVAR_HEAP;
-		var->name = strdup (var_name);
-		var->string = value;
-		Cvar_RegisterVariable (var);
-	}
+		var = Cvar_Get (var_name, value, CVAR_USER_CREATED|CVAR_HEAP,
+				"User created cvar");
+	}	
 }
 
 void Cvar_Init()
 {
 	Cmd_AddCommand ("set", Cvar_Set_f);
+}
+
+void Cvar_Shutdown (void)
+{
+	cvar_t	*var,*next;
+	
+	var = cvar_vars;
+	while(var)
+	{
+		next = var->next;
+		free(var->description);
+		free(var->string);
+		free(var->name);
+		free(var);
+		var = next;
+	}
+} 
+
+
+cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
+{
+
+	cvar_t		*v;
+
+	if (Cmd_Exists (name))
+	{
+		Con_Printf ("Cvar_Get: %s is a command\n",name);
+		return NULL;
+	}
+	v = Cvar_FindVar(name);
+	if (!v) 
+	{
+		v = (cvar_t *) malloc(sizeof(cvar_t));
+		// Cvar doesn't exist, so we create it
+		v->next = cvar_vars;
+		cvar_vars = v;
+		v->name = strdup(name);
+		v->string = strdup(string);
+		v->flags = cvarflags;
+		v->description = strdup(description);
+		v->value = Q_atof (v->string); 
+		return v;
+	}
+	// Cvar does exist, so we update the flags and return.
+	v->flags |= cvarflags;
+	return v;
 }

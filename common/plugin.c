@@ -46,9 +46,16 @@
 #include <plugin.h>
 #include <cvar.h>
 
-cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
+
+//cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
+cvar_t	*fs_drvpath;
 
 input_pi *IN;
+
+void Plugin_Init ()
+{
+	fs_drvpath = Cvar_Get ("fs_drvpath",".:" LIBDIR "/quakeforge",0,"None");
+}
 
 #ifndef WIN32
 
@@ -59,7 +66,7 @@ void *_plugin_load(const char *filename)
 	char *path,*end;
 	int len;
 
-	for (path = drv_path.string; *path; path=end) {
+	for (path = fs_drvpath->string; *path; path=end) {
 		end = strchr(path,':');
 		if (!end)
 			end = strchr(path,0);

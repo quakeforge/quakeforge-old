@@ -270,7 +270,7 @@ qboolean Netchan_CanPacket (netchan_t *chan);
 qboolean Netchan_CanReliable (netchan_t *chan);
 #endif
 
-extern	cvar_t	hostname;
+extern	cvar_t	*hostname;
 
 #ifdef UQUAKE
 qsocket_t *NET_NewQSocket (void);

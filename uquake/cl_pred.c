@@ -28,8 +28,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "console.h"
 #include "mathlib.h"
 
-cvar_t	cl_nopred = {"cl_nopred","0"};
-cvar_t	cl_pushlatency = {"pushlatency","-999"};
+//cvar_t	cl_nopred = {"cl_nopred","0"};
+cvar_t	*cl_nopred;
+//cvar_t	cl_pushlatency = {"pushlatency","-999"};
+cvar_t	*cl_pushlatency;
 
 extern	frame_t		*view_frame;
 

@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <client.h>
 
 
-extern cvar_t	sys_nostdout;
+extern cvar_t	*sys_nostdout;
 
 /*
 ================
@@ -122,7 +122,9 @@ is marked
 */
 void Sys_Init (void)
 {
-	Cvar_RegisterVariable (&sys_nostdout);
+//	Cvar_RegisterVariable (&sys_nostdout);
+	/* Fix this sometime. */
+	sys_nostdout = Cvar_Get ("sys_nostdout","0");
 }
 
 /*

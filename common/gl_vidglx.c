@@ -82,13 +82,16 @@ unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
-cvar_t	vid_mode = {"vid_mode", "0", CVAR_NONE};
-cvar_t  vid_glx_fullscreen = {"vid_glx_fullscreen", "0", CVAR_NONE};
+//cvar_t	vid_mode = {"vid_mode", "0", CVAR_NONE};
+cvar_t	*vid_mode;
+//cvar_t  vid_glx_fullscreen = {"vid_glx_fullscreen", "0", CVAR_NONE};
+cvar_t	*vid_glx_fullscreen;
 
 #ifdef HAS_DGA
 static int	nummodes;
 static XF86VidModeModeInfo **vidmodes;
 static int	hasdgavideo = 0, hasvidmode = 0;
+
 #endif
 
 #ifdef HAVE_DLOPEN
@@ -119,7 +122,8 @@ int		texture_extension_number = 1;
 
 float		gldepthmin, gldepthmax;
 
-cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
+//cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
+cvar_t	*gl_ztrick;
 
 const char *gl_vendor;
 const char *gl_renderer;
@@ -410,10 +414,19 @@ void VID_Init(unsigned char *palette)
 
 	S_Init();
 
-	Cvar_RegisterVariable(&vid_mode);
-	Cvar_RegisterVariable(&gl_ztrick); 
-        Cvar_RegisterVariable(&vid_glx_fullscreen);
-
+//	Cvar_RegisterVariable(&vid_mode);
+	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
+//	Cvar_RegisterVariable(&gl_ztrick);
+	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable(&_windowed_mouse);
+	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+//        Cvar_RegisterVariable(&vid_glx_fullscreen);	
+	vid_glx_fullscreen = Cvar_Get ("vid_glx_fullscreen","0",0,"None");
+#ifdef HAS_DGA
+//	Cvar_RegisterVariable(&vid_dga_mouseaccel);
+	vid_dga_mouseaccel = Cvar_Get("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
+					"None");
+#endif 
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
 	vid.colormap = host_colormap;
@@ -499,9 +512,9 @@ void VID_Init(unsigned char *palette)
 		const char *str = getenv("MESA_GLX_FX");
 		if (str != NULL && *str != 'f') {
 			if (tolower(*str) == 'w') {
-				Cvar_SetValue("vid_glx_fullscreen", 0);
+				vid_glx_fullscreen->value = 0;
 			} else {
-				Cvar_SetValue("vid_glx_fullscreen", 1);
+				vid_glx_fullscreen->value = 1;
 			}
 		}
 #endif

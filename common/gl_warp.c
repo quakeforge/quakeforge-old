@@ -43,7 +43,7 @@ float	speedscale;		// for top sky and bottom sky
 
 msurface_t	*warpface;
 
-extern cvar_t gl_subdivide_size;
+extern cvar_t *gl_subdivide_size;
 
 /*
 	BoundPoly (int, float, vec3_t, vec3_t)
@@ -87,7 +87,7 @@ SubdividePolygon ( int numverts, float *verts ) {
 
 	for (i=0 ; i<3 ; i++) {
 		m = (mins[i] + maxs[i]) * 0.5;
-		m = gl_subdivide_size.value * floor (m/gl_subdivide_size.value + 0.5);
+		m = gl_subdivide_size->value * floor (m/gl_subdivide_size->value + 0.5);
 		if (maxs[i] - m < 8)
 			continue;
 		if (m - mins[i] < 8)
@@ -218,10 +218,10 @@ EmitWaterPolys ( msurface_t *fa ) {
 
 			glTexCoord2f (s, t);
 
-			if(r_waterripple.value) {
+			if(r_waterripple->value) {
 				nv[0] = v[0]; //+8*sin(v[1]*0.05+realtime)*sin(v[2]*0.05+realtime);
 				nv[1] = v[1]; //+8*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
-				nv[2] = v[2] + r_waterripple.value*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
+				nv[2] = v[2] + r_waterripple->value*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
 				glVertex3fv (nv);
 			} else {
 				glVertex3fv (v);

@@ -121,19 +121,19 @@ void CDAudio_Resume()
 void CDAudio_Update()
 {
 	if(!cd_id || !enabled) return;
-	if(bgmvolume.value != cdvolume)
+	if(bgmvolume->value != cdvolume)
 	{
 		if(cdvolume)
 		{
-			Cvar_SetValue("bgmvolume",0.0);
+			bgmvolume->value = 0.0;
 			CDAudio_Pause();
 		}
 		else
 		{
-			Cvar_SetValue("bgmvolume",1.0);
+			bgmvolume->value = 1.0;
 			CDAudio_Resume();
 		}
-		cdvolume = bgmvolume.value;
+		cdvolume = bgmvolume->value;
 		return;
 	}
 	if(playLooping && (SDL_CDStatus(cd_id) != CD_PLAYING)

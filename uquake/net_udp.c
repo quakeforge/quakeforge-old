@@ -74,7 +74,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAXHOSTNAMELEN	512
 #endif
 
-extern cvar_t hostname;
+extern cvar_t *hostname;
 
 static int net_acceptsocket = -1;		// socket for fielding new connections
 static int net_controlsocket;
@@ -103,7 +103,7 @@ int UDP_Init (void)
 	myAddr = *(int *)local->h_addr_list[0];
 
 	// if the quake hostname isn't set, set it to the machine name
-	if (Q_strcmp(hostname.string, "UNNAMED") == 0)
+	if (Q_strcmp(hostname->string, "UNNAMED") == 0)
 	{
 		buff[15] = 0;
 		Cvar_Set ("hostname", buff);

@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <bothdefs.h>
 #include <pmove.h>
 
-extern	cvar_t	password;
+extern	cvar_t	*password;
 
 qboolean Host_SimulationTime(float time);
 void Host_ClearMemory (void);
@@ -44,7 +44,7 @@ extern int			minimum_memory;
 /*
 	Chase camera
 */
-extern	cvar_t	cl_chasecam;
+extern	cvar_t	*cl_chasecam;
 
 void Chase_Init (void);
 void Chase_Reset (void);

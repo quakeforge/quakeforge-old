@@ -156,7 +156,7 @@ char *COM_Parse (char *data);
 
 extern	int		com_argc;
 extern	char	**com_argv;
-extern	cvar_t	cmdline;
+extern	cvar_t	*cmdline;
 
 int COM_CheckParm (char *parm);
 void COM_AddParm (char *parm);

@@ -62,9 +62,12 @@ static byte vid_current_palette[768];
 static int	svgalib_inited=0;
 static int	UseDisplay = 1;
 
-static cvar_t	vid_mode = {"vid_mode","5",false};
-static cvar_t	vid_redrawfull = {"vid_redrawfull","0",false};
-static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
+//static cvar_t	vid_mode = {"vid_mode","5",false};
+static cvar_t	*vid_mode;
+// static cvar_t	vid_redrawfull = {"vid_redrawfull","0",false};
+static cvar_t	*vid_redrawfull;
+//static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
+static cvar_t	*vid_waitforrefresh;
  
 static char	*framebuffer_ptr;
 
@@ -400,14 +403,14 @@ VID_SetMode(int modenum, unsigned char *palette)
 	int err;
 
 	if ((modenum >= num_modes) || (modenum < 0) || !modes[modenum].width){
-		Cvar_SetValue ("vid_mode", (float)current_mode);
+		vid_mode->value = (float)current_mode;
 
 		Con_Printf("No such video mode: %d\n",modenum);
 
 		return 0;
 	}
 
-	Cvar_SetValue ("vid_mode", (float)modenum);
+	vid_mode->value = (float)modenum;
 
 	current_mode=modenum;
 
@@ -510,9 +513,13 @@ VID_Init(unsigned char *palette)
 
 		VID_InitModes();
 
-		Cvar_RegisterVariable (&vid_mode);
-		Cvar_RegisterVariable (&vid_redrawfull);
-		Cvar_RegisterVariable (&vid_waitforrefresh);
+//		Cvar_RegisterVariable (&vid_mode);
+		vid_mode = Cvar_Get ("vid_mode","5",0,"None");
+//		Cvar_RegisterVariable (&vid_redrawfull);
+		vid_redrawfull = Cvar_Get ("vid_redrawfull","0",0,"None");
+//		Cvar_RegisterVariable (&vid_waitforrefresh);
+		vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",
+						CVAR_ARCHIVE,"None");
 		
 		Cmd_AddCommand("vid_nummodes", VID_NumModes_f);
 		Cmd_AddCommand("vid_describemode", VID_DescribeMode_f);
@@ -564,13 +571,13 @@ VID_Update(vrect_t *rects)
 		return;
 	}
 
-	if (vid_waitforrefresh.value) {
+	if (vid_waitforrefresh->value) {
 		vga_waitretrace();
 	}
 
 	if (VGA_planar) {
 		VGA_UpdatePlanarScreen(vid.buffer);
-	} else if (vid_redrawfull.value) {
+	} else if (vid_redrawfull->value) {
 		int total = vid.rowbytes * vid.height;
 		int offset;
 
@@ -616,8 +623,8 @@ VID_Update(vrect_t *rects)
 		}
 	}
 	
-	if (vid_mode.value != current_mode) {
-		VID_SetMode ((int)vid_mode.value, vid_current_palette);
+	if (vid_mode->value != current_mode) {
+		VID_SetMode ((int)vid_mode->value, vid_current_palette);
 	}
 }
 

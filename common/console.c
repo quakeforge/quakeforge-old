@@ -46,7 +46,8 @@ int			con_totallines;		// total lines in console scrollback
 float		con_cursorspeed = 4;
 
 
-cvar_t		con_notifytime = {"con_notifytime","3"};		//seconds
+//cvar_t		con_notifytime = {"con_notifytime","3"};		//seconds
+cvar_t	*con_notifytime;
 
 #define	NUM_CON_TIMES 4
 float		con_times[NUM_CON_TIMES];	// realtime time the line was generated
@@ -252,7 +253,8 @@ void Con_Init (void)
 //
 // register our commands
 //
-	Cvar_RegisterVariable (&con_notifytime);
+//	Cvar_RegisterVariable (&con_notifytime);
+	con_notifytime = Cvar_Get ("con_notifytime","3",0,"None");
 
 	Cmd_AddCommand ("toggleconsole", Con_ToggleConsole_f);
 	Cmd_AddCommand ("togglechat", Con_ToggleChat_f);
@@ -412,7 +414,7 @@ void Con_DPrintf (char *fmt, ...)
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
 		
-	if (!developer.value)
+	if (!developer->value)
 		return;			// don't confuse non-developers with techie stuff...
 
 	va_start (argptr,fmt);
@@ -496,7 +498,7 @@ void Con_DrawNotify (void)
 		if (time == 0)
 			continue;
 		time = realtime - time;
-		if (time > con_notifytime.value)
+		if (time > con_notifytime->value)
 			continue;
 		text = con->text + (i % con_totallines)*con_linewidth;
 		

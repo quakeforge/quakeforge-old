@@ -36,7 +36,7 @@ extern int			ramp1[8], ramp2[8], ramp3[8];
 R_DrawParticles
 ===============
 */
-extern	cvar_t	sv_gravity;
+extern	cvar_t	*sv_gravity;
 
 void R_DrawParticles (void)
 {
@@ -73,7 +73,7 @@ void R_DrawParticles (void)
 	time2 = frametime * 10; // 15;
 	time1 = frametime * 5;
 #ifdef UQUAKE
-	grav = frametime * sv_gravity.value * 0.05;
+	grav = frametime * sv_gravity->value * 0.05;
 #else
 	grav = frametime * 800 * 0.05;
 #endif

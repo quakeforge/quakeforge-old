@@ -28,8 +28,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "console.h"
 #include "client.h"
 
-cvar_t		baseskin = {"baseskin", "base"};
-cvar_t		noskins = {"noskins", "0"};
+//cvar_t		baseskin = {"baseskin", "base"};
+cvar_t	*baseskin;
+//cvar_t		noskins = {"noskins", "0"};
+cvar_t	*noskins;
 
 char		allskins[128];
 #define	MAX_CACHED_SKINS		128
@@ -59,7 +61,7 @@ void Skin_Find (player_info_t *sc)
 		if (s && s[0])
 			strcpy (name, s);
 		else
-			strcpy (name, baseskin.string);
+			strcpy (name, baseskin->string);
 	}
 
 	if (strstr (name, "..") || *name == '.')
@@ -112,7 +114,7 @@ byte	*Skin_Cache (skin_t *skin)
 	if (cls.downloadtype == dl_skin)
 		return NULL;		// use base until downloaded
 
-	if (noskins.value==1) // JACK: So NOSKINS > 1 will show skins, but
+	if (noskins->value==1) // JACK: So NOSKINS > 1 will show skins, but
 		return NULL;	  // not download new ones.
 
 	if (skin->failedload)
@@ -130,7 +132,7 @@ byte	*Skin_Cache (skin_t *skin)
 	if (!raw)
 	{
 		Con_Printf ("Couldn't load skin %s\n", name);
-		snprintf(name, sizeof(name), "skins/%s.pcx", baseskin.string);
+		snprintf(name, sizeof(name), "skins/%s.pcx", baseskin->string);
 		raw = COM_LoadTempFile (name);
 		if (!raw)
 		{
@@ -241,7 +243,7 @@ void Skin_NextDownload (void)
 		if (!sc->name[0])
 			continue;
 		Skin_Find (sc);
-		if (noskins.value)
+		if (noskins->value)
 			continue;
 #ifndef UQUAKE
 		if (!CL_CheckOrDownloadFile(va("skins/%s.pcx", sc->skin->name)))

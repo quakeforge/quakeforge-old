@@ -43,7 +43,8 @@
 
 
 int nostdout = 0;
-cvar_t	sys_nostdout = {"sys_nostdout","0"};
+//cvar_t	sys_nostdout = {"sys_nostdout","0"};
+cvar_t	*sys_nostdout;
 
 
 char trans_table[256] = {
@@ -78,7 +79,7 @@ void Sys_Printf (char *fmt, ...)
 	char	text[2048];
 	unsigned char	*p;
 
-	if (nostdout || sys_nostdout.value) return;
+//	if (nostdout || sys_nostdout->value) return;
 
 	va_start(argptr, fmt);
 	vsnprintf(text, sizeof(text), fmt, argptr);

@@ -135,35 +135,59 @@ void R_InitParticles (void);
 void R_DrawParticles (void);
 #endif	// UQUAKE
 
-cvar_t	r_draworder = {"r_draworder","0"};
-cvar_t	r_speeds = {"r_speeds","0"};
-cvar_t	r_timegraph = {"r_timegraph","0"};
-#ifdef QUAKEWORLD
-cvar_t	r_netgraph = {"r_netgraph","0"};
-cvar_t	r_zgraph = {"r_zgraph","0"};
-cvar_t	r_graphheight = {"r_graphheight","15"};
-#else 
-cvar_t	r_graphheight = {"r_graphheight","10"};
-#endif	// QUAKEWORLD
-cvar_t	r_clearcolor = {"r_clearcolor","2"};
-cvar_t	r_waterwarp = {"r_waterwarp","1"};
-cvar_t	r_fullbright = {"r_fullbright","0"};
-cvar_t	r_drawentities = {"r_drawentities","1"};
-cvar_t	r_drawviewmodel = {"r_drawviewmodel","1"};
-cvar_t	r_aliasstats = {"r_polymodelstats","0"};
-cvar_t	r_dspeeds = {"r_dspeeds","0"};
-cvar_t	r_drawflat = {"r_drawflat", "0"};
-cvar_t	r_ambient = {"r_ambient", "0"};
-cvar_t	r_reportsurfout = {"r_reportsurfout", "0"};
-cvar_t	r_maxsurfs = {"r_maxsurfs", "0"};
-cvar_t	r_numsurfs = {"r_numsurfs", "0"};
-cvar_t	r_reportedgeout = {"r_reportedgeout", "0"};
-cvar_t	r_maxedges = {"r_maxedges", "0"};
-cvar_t	r_numedges = {"r_numedges", "0"};
-cvar_t	r_aliastransbase = {"r_aliastransbase", "200"};
-cvar_t	r_aliastransadj = {"r_aliastransadj", "100"};
+//cvar_t	r_draworder = {"r_draworder","0"};
+cvar_t	*r_draworder;
+//cvar_t	r_speeds = {"r_speeds","0"};
+cvar_t	*r_speeds;
+//cvar_t	r_timegraph = {"r_timegraph","0"};
+cvar_t	*r_timegraph;
+//#ifdef QUAKEWORLD
+//cvar_t	r_netgraph = {"r_netgraph","0"};
+cvar_t	*r_netgraph;
+//cvar_t	r_zgraph = {"r_zgraph","0"};
+cvar_t	*r_zgraph;
+//cvar_t	r_graphheight = {"r_graphheight","15"};
+cvar_t	*r_graphheight;
+//#else 
+//cvar_t	r_graphheight = {"r_graphheight","10"};
 
-extern cvar_t	scr_fov;
+//#endif	// QUAKEWORLD
+//cvar_t	r_clearcolor = {"r_clearcolor","2"};
+cvar_t	*r_clearcolor;
+//cvar_t	r_waterwarp = {"r_waterwarp","1"};
+cvar_t	*r_waterwarp;
+//cvar_t	r_fullbright = {"r_fullbright","0"};
+cvar_t	*r_fullbright;
+//cvar_t	r_drawentities = {"r_drawentities","1"};
+cvar_t	*r_drawentities;
+//cvar_t	r_drawviewmodel = {"r_drawviewmodel","1"};
+cvar_t	*r_drawviewmodel;
+//cvar_t	r_aliasstats = {"r_polymodelstats","0"};
+cvar_t	*r_aliasstats;
+//cvar_t	r_dspeeds = {"r_dspeeds","0"};
+cvar_t	*r_dspeeds;
+//cvar_t	r_drawflat = {"r_drawflat", "0"};
+cvar_t	*r_drawflat;
+//cvar_t	r_ambient = {"r_ambient", "0"};
+cvar_t	*r_ambient;
+//cvar_t	r_reportsurfout = {"r_reportsurfout", "0"};
+cvar_t	*r_reportsurfout;
+//cvar_t	r_maxsurfs = {"r_maxsurfs", "0"};
+cvar_t	*r_maxsurfs;
+//cvar_t	r_numsurfs = {"r_numsurfs", "0"};
+cvar_t	*r_numsurfs;
+//cvar_t	r_reportedgeout = {"r_reportedgeout", "0"};
+cvar_t	*r_reportedgeout;
+// cvar_t	r_maxedges = {"r_maxedges", "0"};
+cvar_t	*r_maxedges;
+//cvar_t	r_numedges = {"r_numedges", "0"};
+cvar_t	*r_numedges;
+//cvar_t	r_aliastransbase = {"r_aliastransbase", "200"};
+cvar_t	*r_aliastransbase;
+//cvar_t	r_aliastransadj = {"r_aliastransadj", "100"};
+cvar_t	*r_aliastransadj;
+
+extern cvar_t	*scr_fov;
 
 void CreatePassages (void);
 void SetVisibilityByPassages (void);
@@ -223,34 +247,58 @@ void R_Init (void)
 	Cmd_AddCommand ("timerefresh", R_TimeRefresh_f);	
 	Cmd_AddCommand ("pointfile", R_ReadPointFile_f);	
 
-	Cvar_RegisterVariable (&r_draworder);
-	Cvar_RegisterVariable (&r_speeds);
-	Cvar_RegisterVariable (&r_timegraph);
+//	Cvar_RegisterVariable (&r_draworder);
+	r_draworder = Cvar_Get ("r_draworder","0",0,"None");
+//	Cvar_RegisterVariable (&r_speeds);
+	r_speeds = Cvar_Get ("r_speeds","0",0,"None");
+//	Cvar_RegisterVariable (&r_timegraph);
+	r_timegraph = Cvar_Get ("r_timegraph","0",0,"None");
 #ifdef QUAKEWORLD
-	Cvar_RegisterVariable (&r_netgraph);
-	Cvar_RegisterVariable (&r_zgraph);
+//	Cvar_RegisterVariable (&r_netgraph);
+	r_netgraph = Cvar_Get ("r_netgraph","0",0,"None");
+//	Cvar_RegisterVariable (&r_zgraph);
+	r_zgraph = Cvar_Get ("r_zgraph","0",0,"None");
+	r_graphheight = Cvar_Get ("r_graphheight","15",0,"None");
 #endif	// QUAKEWORLD
-	Cvar_RegisterVariable (&r_graphheight);
-	Cvar_RegisterVariable (&r_drawflat);
-	Cvar_RegisterVariable (&r_ambient);
-	Cvar_RegisterVariable (&r_clearcolor);
-	Cvar_RegisterVariable (&r_waterwarp);
-	Cvar_RegisterVariable (&r_fullbright);
-	Cvar_RegisterVariable (&r_drawentities);
-	Cvar_RegisterVariable (&r_drawviewmodel);
-	Cvar_RegisterVariable (&r_aliasstats);
-	Cvar_RegisterVariable (&r_dspeeds);
-	Cvar_RegisterVariable (&r_reportsurfout);
-	Cvar_RegisterVariable (&r_maxsurfs);
-	Cvar_RegisterVariable (&r_numsurfs);
-	Cvar_RegisterVariable (&r_reportedgeout);
-	Cvar_RegisterVariable (&r_maxedges);
-	Cvar_RegisterVariable (&r_numedges);
-	Cvar_RegisterVariable (&r_aliastransbase);
-	Cvar_RegisterVariable (&r_aliastransadj);
+//	Cvar_RegisterVariable (&r_graphheight);
+	r_graphheight = Cvar_Get ("r_graphheight","10",0,"None");
+//	Cvar_RegisterVariable (&r_drawflat);
+	r_drawflat = Cvar_Get ("r_drawflat","0",0,"None");
+//	Cvar_RegisterVariable (&r_ambient);
+	r_ambient = Cvar_Get ("r_ambient","0",0,"None");
+//	Cvar_RegisterVariable (&r_clearcolor);
+	r_clearcolor = Cvar_Get ("r_clearcolor", "2",0,"None");
+//	Cvar_RegisterVariable (&r_waterwarp);
+	r_waterwarp = Cvar_Get ("r_waterwarp","1",0,"None");
+//	Cvar_RegisterVariable (&r_fullbright);
+	r_fullbright = Cvar_Get ("r_fullbright","0",0,"None");
+//	Cvar_RegisterVariable (&r_drawentities);
+	r_drawentities = Cvar_Get ("r_drawentities","1",0,"None");
+//	Cvar_RegisterVariable (&r_drawviewmodel);
+	r_drawviewmodel = Cvar_Get ("r_drawviewmodel","1",0,"None");
+//	Cvar_RegisterVariable (&r_aliasstats);
+	r_aliasstats = Cvar_Get ("r_polymodelstats","0",0,"None");
+//	Cvar_RegisterVariable (&r_dspeeds);
+	r_dspeeds = Cvar_Get ("r_dspeeds","0",0,"None");
+//	Cvar_RegisterVariable (&r_reportsurfout);
+	r_reportsurfout = Cvar_Get ("r_reportsurfout","0",0,"None");
+//	Cvar_RegisterVariable (&r_maxsurfs);
+	r_maxsurfs = Cvar_Get ("r_maxsurfs","0",0,"None");
+//	Cvar_RegisterVariable (&r_numsurfs);
+	r_numsurfs = Cvar_Get ("r_numsurfs","0",0,"None");
+//	Cvar_RegisterVariable (&r_reportedgeout,"0");
+	r_reportedgeout = Cvar_Get ("r_reportedgeout","0",0,"None");
+//	Cvar_RegisterVariable (&r_maxedges);
+	r_maxedges = Cvar_Get ("r_maxedges","0",0,"None");
+//	Cvar_RegisterVariable (&r_numedges);
+	r_numedges = Cvar_Get ("r_numedges","0",0,"None");
+//	Cvar_RegisterVariable (&r_aliastransbase);
+	r_aliastransbase = Cvar_Get ("r_aliastransbase","200",0,"None");
+//	Cvar_RegisterVariable (&r_aliastransadj);
+	r_aliastransadj = Cvar_Get ("r_aliastransadj","100",0,"None");
 
-	Cvar_SetValue ("r_maxedges", (float)NUMSTACKEDGES);
-	Cvar_SetValue ("r_maxsurfs", (float)NUMSTACKSURFACES);
+	r_maxedges->value = (float)NUMSTACKEDGES;
+	r_maxsurfs->value = (float)NUMSTACKSURFACES;
 
 	view_clipplanes[0].leftedge = true;
 	view_clipplanes[1].rightedge = true;
@@ -294,7 +342,7 @@ void R_NewMap (void)
 	r_viewleaf = NULL;
 	R_ClearParticles ();
 
-	r_cnumsurfs = r_maxsurfs.value;
+	r_cnumsurfs = r_maxsurfs->value;
 
 	if (r_cnumsurfs <= MINSURFACES)
 		r_cnumsurfs = MINSURFACES;
@@ -318,7 +366,7 @@ void R_NewMap (void)
 	r_maxedgesseen = 0;
 	r_maxsurfsseen = 0;
 
-	r_numallocatededges = r_maxedges.value;
+	r_numallocatededges = r_maxedges->value;
 
 	if (r_numallocatededges < MINEDGES)
 		r_numallocatededges = MINEDGES;
@@ -353,11 +401,11 @@ void R_SetVrect (vrect_t *pvrectin, vrect_t *pvrect, int lineadj)
 	float	size;
 	qboolean full = false;
 
-	if (scr_viewsize.value >= 100.0) {
+	if (scr_viewsize->value >= 100.0) {
 		size = 100.0;
 		full = true;
 	} else
-		size = scr_viewsize.value;
+		size = scr_viewsize->value;
 
 	if (cl.intermission)
 	{
@@ -367,12 +415,12 @@ void R_SetVrect (vrect_t *pvrectin, vrect_t *pvrect, int lineadj)
 	}
 	size /= 100.0;
 
-	if (!cl_sbar.value && full)
+	if (!cl_sbar->value && full)
 		h = pvrectin->height;
 	else
 		h = pvrectin->height - lineadj;
 
-//	h = (!cl_sbar.value && size==1.0) ? pvrectin->height : (pvrectin->height - lineadj);
+//	h = (!cl_sbar->value && size==1.0) ? pvrectin->height : (pvrectin->height - lineadj);
 //	h = pvrectin->height - lineadj;
 	if (full)
 		pvrect->width = pvrectin->width;
@@ -385,7 +433,7 @@ void R_SetVrect (vrect_t *pvrectin, vrect_t *pvrect, int lineadj)
 	}
 	pvrect->width &= ~7;
 	pvrect->height = pvrectin->height * size;
-	if (cl_sbar.value || !full) {
+	if (cl_sbar->value || !full) {
 		if (pvrect->height > pvrectin->height - lineadj)
 			pvrect->height = pvrectin->height - lineadj;
 	} else
@@ -399,7 +447,7 @@ void R_SetVrect (vrect_t *pvrectin, vrect_t *pvrect, int lineadj)
 		pvrect->y = 0;
 	else
 		pvrect->y = (h - pvrect->height)/2;
-	if ( lcd_x.value ) {
+	if ( lcd_x->value ) {
 		pvrect->y >>= 1;
 		pvrect->height >>=1;
 	}
@@ -511,10 +559,10 @@ void R_ViewChanged (vrect_t *pvrect, int lineadj, float aspect)
 	res_scale = sqrt ((double)(r_refdef.vrect.width * r_refdef.vrect.height) /
 			          (320.0 * 152.0)) *
 			(2.0 / r_refdef.horizontalFieldOfView);
-	r_aliastransition = r_aliastransbase.value * res_scale;
-	r_resfudge = r_aliastransadj.value * res_scale;
+	r_aliastransition = r_aliastransbase->value * res_scale;
+	r_resfudge = r_aliastransadj->value * res_scale;
 
-	if (scr_fov.value <= 90.0)
+	if (scr_fov->value <= 90.0)
 		r_fov_greater_than_90 = false;
 	else
 		r_fov_greater_than_90 = true;
@@ -592,7 +640,7 @@ void R_DrawEntitiesOnList (void)
 	vec3_t		dist;
 	float		add;
 
-	if (!r_drawentities.value)
+	if (!r_drawentities->value)
 		return;
 
 	for (i=0 ; i<cl_numvisedicts ; i++)
@@ -673,9 +721,9 @@ void R_DrawViewModel (void)
 	dlight_t	*dl;
 
 #ifdef QUAKEWORLD	
-	if (!r_drawviewmodel.value || r_fov_greater_than_90 || !Cam_DrawViewModel())
+	if (!r_drawviewmodel->value || r_fov_greater_than_90 || !Cam_DrawViewModel())
 #else
-	if (!r_drawviewmodel.value || r_fov_greater_than_90)
+	if (!r_drawviewmodel->value || r_fov_greater_than_90)
 #endif	// QUAKEWORLD
 		return;
 
@@ -815,7 +863,7 @@ void R_DrawBEntitiesOnList (void)
 	model_t		*clmodel;
 	float		minmaxs[6];
 
-	if (!r_drawentities.value)
+	if (!r_drawentities->value)
 		return;
 
 	VectorCopy (modelorg, oldorigin);
@@ -970,7 +1018,7 @@ void R_EdgeDrawing (void)
 
 	R_BeginEdgeFrame ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 	{
 		rw_time1 = Sys_DoubleTime ();
 	}
@@ -984,7 +1032,7 @@ void R_EdgeDrawing (void)
 // z writes, so have the driver turn z compares on now
 	D_TurnZOn ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 	{
 		rw_time2 = Sys_DoubleTime ();
 		db_time1 = rw_time2;
@@ -992,13 +1040,13 @@ void R_EdgeDrawing (void)
 
 	R_DrawBEntitiesOnList ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 	{
 		db_time2 = Sys_DoubleTime ();
 		se_time1 = db_time2;
 	}
 
-	if (!r_dspeeds.value)
+	if (!r_dspeeds->value)
 	{
 		VID_UnlockBuffer ();
 		S_ExtraUpdate ();	// don't let sound get messed up if going slow
@@ -1023,7 +1071,7 @@ void R_RenderView_ (void)
 
 	r_warpbuffer = warpbuffer;
 
-	if (r_timegraph.value || r_speeds.value || r_dspeeds.value)
+	if (r_timegraph->value || r_speeds->value || r_dspeeds->value)
 		r_time1 = Sys_DoubleTime ();
 
 	R_SetupFrame ();
@@ -1047,7 +1095,7 @@ SetVisibilityByPassages ();
 #endif	// QUAKEWORLD
 		Sys_Error ("R_RenderView: NULL worldmodel");
 		
-	if (!r_dspeeds.value)
+	if (!r_dspeeds->value)
 	{
 		VID_UnlockBuffer ();
 		S_ExtraUpdate ();	// don't let sound get messed up if going slow
@@ -1056,14 +1104,14 @@ SetVisibilityByPassages ();
 	
 	R_EdgeDrawing ();
 
-	if (!r_dspeeds.value)
+	if (!r_dspeeds->value)
 	{
 		VID_UnlockBuffer ();
 		S_ExtraUpdate ();	// don't let sound get messed up if going slow
 		VID_LockBuffer ();
 	}
 	
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 	{
 		se_time2 = Sys_DoubleTime ();
 		de_time1 = se_time2;
@@ -1071,7 +1119,7 @@ SetVisibilityByPassages ();
 
 	R_DrawEntitiesOnList ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 	{
 		de_time2 = Sys_DoubleTime ();
 		dv_time1 = de_time2;
@@ -1079,7 +1127,7 @@ SetVisibilityByPassages ();
 
 	R_DrawViewModel ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 	{
 		dv_time2 = Sys_DoubleTime ();
 		dp_time1 = Sys_DoubleTime ();
@@ -1087,7 +1135,7 @@ SetVisibilityByPassages ();
 
 	R_DrawParticles ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 		dp_time2 = Sys_DoubleTime ();
 
 	if (r_dowarp)
@@ -1095,30 +1143,30 @@ SetVisibilityByPassages ();
 
 	V_SetContentsColor (r_viewleaf->contents);
 
-	if (r_timegraph.value)
+	if (r_timegraph->value)
 		R_TimeGraph ();
 
 #ifdef QUAKEWORLD
-	if (r_netgraph.value)
+	if (r_netgraph->value)
 		R_NetGraph ();
 
-	if (r_zgraph.value)
+	if (r_zgraph->value)
 		R_ZGraph ();
 #endif	// QUAKEWORLD
 
-	if (r_aliasstats.value)
+	if (r_aliasstats->value)
 		R_PrintAliasStats ();
 		
-	if (r_speeds.value)
+	if (r_speeds->value)
 		R_PrintTimes ();
 
-	if (r_dspeeds.value)
+	if (r_dspeeds->value)
 		R_PrintDSpeeds ();
 
-	if (r_reportsurfout.value && r_outofsurfaces)
+	if (r_reportsurfout->value && r_outofsurfaces)
 		Con_Printf ("Short %d surfaces\n", r_outofsurfaces);
 
-	if (r_reportedgeout.value && r_outofedges)
+	if (r_reportedgeout->value && r_outofedges)
 		Con_Printf ("Short roughly %d edges\n", r_outofedges * 2 / 3);
 
 // back to high floating-point precision

@@ -36,10 +36,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <world.h>
 #include <phys.h>
 
-extern cvar_t	pausable;
+extern cvar_t	*pausable;
 
 /* PHS 02/01/2000 */
-extern cvar_t sv_filter;
+extern cvar_t *sv_filter;
 
 int	current_skill;
 
@@ -672,12 +672,12 @@ void Host_Loadgame_f (void)
 	Qgets(f,buf,sizeof(buf));
 	sscanf (buf, "%f\n", &tfloat);
 	current_skill = (int)(tfloat + 0.1);
-	Cvar_SetValue ("skill", (float)current_skill);
+	skill->value =  (float)current_skill;
 
 #ifdef QUAKE2
-	Cvar_SetValue ("deathmatch", 0);
-	Cvar_SetValue ("coop", 0);
-	Cvar_SetValue ("teamplay", 0);
+	deathmatch->value = 0;
+	coop->value = 0;
+	teamplay->value = 0;
 #endif
 
 	Qgets(f,buf,sizeof(buf));
@@ -795,7 +795,7 @@ void SaveGamestate()
 	fprintf (f, "%s\n", comment);
 //	for (i=0 ; i<NUM_SPAWN_PARMS ; i++)
 //		fprintf (f, "%f\n", svs.clients->spawn_parms[i]);
-	fprintf (f, "%f\n", skill.value);
+	fprintf (f, "%f\n", skill->value);
 	fprintf (f, "%s\n", sv.name);
 	fprintf (f, "%f\n", sv.time);
 
@@ -862,7 +862,7 @@ int LoadGamestate(char *level, char *startspot)
 //	}
 	Qgets(f,buf,sizeof(buf));
 	sscanf (buf, "%f\n", &sk);
-	Cvar_SetValue ("skill", sk);
+	skill->value = sk;
 
 	Qgets(f,buf,sizeof(buf));
 	sscanf (buf, "%s\n",mapname);
@@ -988,7 +988,7 @@ void Host_Name_f (void)
 
 	if (Cmd_Argc () == 1)
 	{
-		Con_Printf ("\"name\" is \"%s\"\n", cl_name.string);
+		Con_Printf ("\"name\" is \"%s\"\n", cl_name->string);
 		return;
 	}
 	if (Cmd_Argc () == 2)
@@ -999,7 +999,7 @@ void Host_Name_f (void)
 
 	if (cmd_source == src_command)
 	{
-		if (Q_strcmp(cl_name.string, newName) == 0)
+		if (Q_strcmp(cl_name->string, newName) == 0)
 			return;
 		Cvar_Set ("_cl_name", newName);
 		if (cls.state >= ca_connected)
@@ -1011,7 +1011,7 @@ void Host_Name_f (void)
 /* If cvar sv_filter is 1 */
 /* Check for \n & \r in names and remove, replace with '-' */
 
-       if(sv_filter.value == 1)
+       if(sv_filter->value == 1)
 	       for(Idx=0;Idx<strlen(newName);Idx++)
 		       if((newName[Idx]=='\r') || (newName[Idx]=='\n'))
 			       newName[Idx]='-';
@@ -1077,7 +1077,7 @@ void Host_Say(qboolean teamonly)
 	if (!fromServer)
 		snprintf(text, sizeof(text), "%c%s: ", 1, save->name);
 	else
-		snprintf(text, sizeof(text), "%c<%s> ", 1, hostname.string);
+		snprintf(text, sizeof(text), "%c<%s> ", 1, hostname->string);
 
 	j = sizeof(text) - 2 - Q_strlen(text);  // -2 for /n and null terminator
 	if (Q_strlen(p) > j)
@@ -1090,7 +1090,7 @@ void Host_Say(qboolean teamonly)
 	{
 		if (!client || !client->active || !client->spawned)
 			continue;
-		if (teamplay.value && teamonly && client->edict->v.team != save->edict->v.team)
+		if (teamplay->value && teamonly && client->edict->v.team != save->edict->v.team)
 			continue;
 		host_client = client;
 		SV_ClientPrintf("%s", text);
@@ -1177,7 +1177,7 @@ void Host_Color_f(void)
 	
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf ("\"color\" is \"%i %i\"\n", ((int)cl_color.value) >> 4, ((int)cl_color.value) & 0x0f);
+		Con_Printf ("\"color\" is \"%i %i\"\n", ((int)cl_color->value) >> 4, ((int)cl_color->value) & 0x0f);
 		Con_Printf ("color <0-13> [0-13]\n");
 		return;
 	}
@@ -1201,7 +1201,7 @@ void Host_Color_f(void)
 
 	if (cmd_source == src_command)
 	{
-		Cvar_SetValue ("_cl_color", playercolor);
+		cl_color->value = playercolor;
 		if (cls.state >= ca_connected)
 			Cmd_ForwardToServer ();
 		return;
@@ -1254,7 +1254,7 @@ void Host_Pause_f (void)
 		Cmd_ForwardToServer ();
 		return;
 	}
-	if (!pausable.value)
+	if (!pausable->value)
 		SV_ClientPrintf ("Pause not allowed.\n");
 	else
 	{
@@ -1501,7 +1501,7 @@ void Host_Kick_f (void)
 			if (cls.state == ca_dedicated)
 				who = "Console";
 			else
-				who = cl_name.string;
+				who = cl_name->string;
 		else
 			who = save->name;
 

@@ -47,10 +47,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 unsigned		d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
-static cvar_t	vid_mode =				{"vid_mode", "5", CVAR_NONE};
-static cvar_t	vid_redrawfull =		{"vid_redrawfull", "0", CVAR_NONE};
-static cvar_t	vid_waitforrefresh =	{"vid_waitforrefresh", "0", CVAR_ARCHIVE};
-cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
+//static cvar_t	vid_mode =				{"vid_mode", "5", CVAR_NONE};
+static cvar_t	*vid_mode;
+//static cvar_t	vid_redrawfull =		{"vid_redrawfull", "0", CVAR_NONE};
+static cvar_t	*vid_redrawfull;
+//static cvar_t	vid_waitforrefresh =	{"vid_waitforrefresh", "0", CVAR_ARCHIVE};
+static cvar_t	*vid_waitforrefresh;
+//cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
+cvar_t	*gl_ztrick;
  
 static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;
@@ -410,10 +414,15 @@ void VID_Init(unsigned char *palette)
 
 	S_Init();
 
-	Cvar_RegisterVariable (&vid_mode);
-	Cvar_RegisterVariable (&vid_redrawfull);
-	Cvar_RegisterVariable (&vid_waitforrefresh);
-	Cvar_RegisterVariable (&gl_ztrick);
+//	Cvar_RegisterVariable (&vid_mode);
+	vid_mode = Cvar_Get ("vid_mode","5",0,"None");
+//	Cvar_RegisterVariable (&vid_redrawfull);
+	vid_redrawfull = Cvar_Get ("vid_redrawfull","0",0,"None");
+//	Cvar_RegisterVariable (&vid_waitforrefresh);
+	vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",CVAR_ARCHIVE,
+					"None");
+//	Cvar_RegisterVariable (&gl_ztrick);
+	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
 	
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;

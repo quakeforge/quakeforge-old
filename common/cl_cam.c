@@ -47,7 +47,8 @@ static qboolean locked = false;
 static int oldbuttons;
 
 // track high fragger
-cvar_t cl_hightrack = {"cl_hightrack", "0" };
+//cvar_t cl_hightrack = {"cl_hightrack", "0" };
+cvar_t *cl_hightrack;
 
 //cvar_t cl_camera_maxpitch = {"cl_camera_maxpitch", "10" };
 //cvar_t cl_camera_maxyaw = {"cl_camera_maxyaw", "30" };
@@ -58,11 +59,17 @@ double cam_lastviewtime;
 
 int spec_track = 0; // player# of who we are tracking
 int autocam = CAM_NONE;
-
+/*
 cvar_t	cl_chasecam 		= {"cl_chasecam", "0", CVAR_ARCHIVE};
 cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16",CVAR_ARCHIVE};
 cvar_t	cl_chasecam_back	= {"cl_chasecam_back", "100", CVAR_ARCHIVE};
 cvar_t	cl_chasecam_right = {"cl_chasecam_right", "0", CVAR_ARCHIVE};
+*/
+
+cvar_t * cl_chasecam;
+cvar_t *cl_chasecam_up;
+cvar_t *cl_chasecam_back;
+cvar_t *cl_chasecam_right;
 
 vec3_t	chase_pos;
 vec3_t	chase_angles;
@@ -71,10 +78,20 @@ vec3_t	chase_dest;
 vec3_t	chase_dest_angles;
 
 void Chase_Init (void) {
+	cl_chasecam = Cvar_Get ("cl_chasecam", "0", CVAR_ARCHIVE,
+				"None");
+	cl_chasecam_up = Cvar_Get ("cl_chasecam_up","16",CVAR_ARCHIVE,
+				   "None");
+	cl_chasecam_back = Cvar_Get ("cl_chasecam_back","100",CVAR_ARCHIVE,
+				     "None");
+	cl_chasecam_right = Cvar_Get ("cl_chasecam_right","0", CVAR_ARCHIVE,
+				      "None");
+/*
 	Cvar_RegisterVariable (&cl_chasecam);
 	Cvar_RegisterVariable (&cl_chasecam_up);
 	Cvar_RegisterVariable (&cl_chasecam_back);
 	Cvar_RegisterVariable (&cl_chasecam_right);
+*/
 }
 
 void Chase_Reset (void) {
@@ -104,9 +121,9 @@ void Chase_Update (void) {
 	// calc exact destination
 	for (i=0 ; i<3 ; i++)
 		chase_dest[i] = r_refdef.vieworg[i]
-			- forward[i] * cl_chasecam_back.value
-			- right[i] * cl_chasecam_right.value;
-	chase_dest[2] = r_refdef.vieworg[2] + cl_chasecam_up.value;
+			- forward[i] * cl_chasecam_back->value
+			- right[i] * cl_chasecam_right->value;
+	chase_dest[2] = r_refdef.vieworg[2] + cl_chasecam_up->value;
 
 	// find the spot the player is looking at
 	VectorMA (r_refdef.vieworg, 4096, forward, dest);
@@ -164,7 +181,7 @@ qboolean Cam_DrawViewModel(void)
 	if (!cl.spectator)
 		return true;
 
-	if (autocam && locked && cl_chasecam.value)
+	if (autocam && locked && cl_chasecam->value)
 		return true;
 	return false;
 }
@@ -172,7 +189,7 @@ qboolean Cam_DrawViewModel(void)
 // returns true if we should draw this player, we don't if we are chase camming
 qboolean Cam_DrawPlayer(int playernum)
 {
-	if (cl.spectator && autocam && locked && cl_chasecam.value && 
+	if (cl.spectator && autocam && locked && cl_chasecam->value && 
 		spec_track == playernum)
 		return false;
 	return true;
@@ -391,7 +408,7 @@ void Cam_Track(usercmd_t *cmd)
 	if (!cl.spectator)
 		return;
 	
-	if (cl_hightrack.value && !locked)
+	if (cl_hightrack->value && !locked)
 		Cam_CheckHighTarget();
 
 	if (!autocam || cls.state != ca_active)
@@ -399,7 +416,7 @@ void Cam_Track(usercmd_t *cmd)
 
 	if (locked && (!cl.players[spec_track].name[0] || cl.players[spec_track].spectator)) {
 		locked = false;
-		if (cl_hightrack.value)
+		if (cl_hightrack->value)
 			Cam_CheckHighTarget();
 		else
 			Cam_Unlock();
@@ -423,7 +440,7 @@ void Cam_Track(usercmd_t *cmd)
 	if (!locked || !autocam)
 		return;
 
-	if (cl_chasecam.value) {
+	if (cl_chasecam->value) {
 		cmd->forwardmove = cmd->sidemove = cmd->upmove = 0;
 
 		VectorCopy(player->viewangles, cl.viewangles);
@@ -523,8 +540,8 @@ void Cam_SetView(void)
 		vectoangles(vec, vec2);
 		vec2[PITCH] = -vec2[PITCH];
 
-		cam_viewangles[PITCH] = adjustang(cam_viewangles[PITCH], vec2[PITCH], cl_camera_maxpitch.value);
-		cam_viewangles[YAW] = adjustang(cam_viewangles[YAW], vec2[YAW], cl_camera_maxyaw.value);
+		cam_viewangles[PITCH] = adjustang(cam_viewangles[PITCH], vec2[PITCH], cl_camera_maxpitch->value);
+		cam_viewangles[YAW] = adjustang(cam_viewangles[YAW], vec2[YAW], cl_camera_maxyaw->value);
 	}
 	VectorCopy(cam_viewangles, cl.viewangles);
 	VectorCopy(cl.viewangles, cl.simangles);
@@ -558,8 +575,8 @@ void Cam_FinishMove(usercmd_t *cmd)
 			vectoangles(vec, vec2);
 			vec2[PITCH] = -vec2[PITCH];
 
-			cam_viewangles[PITCH] = adjustang(cam_viewangles[PITCH], vec2[PITCH], cl_camera_maxpitch.value);
-			cam_viewangles[YAW] = adjustang(cam_viewangles[YAW], vec2[YAW], cl_camera_maxyaw.value);
+			cam_viewangles[PITCH] = adjustang(cam_viewangles[PITCH], vec2[PITCH], cl_camera_maxpitch->value);
+			cam_viewangles[YAW] = adjustang(cam_viewangles[YAW], vec2[YAW], cl_camera_maxyaw->value);
 		}
 		VectorCopy(cam_viewangles, cl.viewangles);
 	}
@@ -584,7 +601,7 @@ void Cam_FinishMove(usercmd_t *cmd)
 			return;
 	}
 
-	if (autocam && cl_hightrack.value) {
+	if (autocam && cl_hightrack->value) {
 		Cam_CheckHighTarget();
 		return;
 	}
@@ -634,10 +651,13 @@ void Cam_Reset(void)
 
 void CL_InitCam(void)
 {
+	cl_hightrack = Cvar_Get ("cl_hightrack","0",0,"None");	
+/*
 	Cvar_RegisterVariable (&cl_hightrack);
 	Cvar_RegisterVariable (&cl_chasecam);
 //	Cvar_RegisterVariable (&cl_camera_maxpitch);
 //	Cvar_RegisterVariable (&cl_camera_maxyaw);
+*/
 }
 
 

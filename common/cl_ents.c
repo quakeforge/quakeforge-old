@@ -31,9 +31,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cvars.h>
 #include <model.h>
 
+/*
 extern	cvar_t	cl_predict_players;
 extern	cvar_t	cl_predict_players2;
 extern	cvar_t	cl_solid_players;
+*/
+extern 	cvar_t 	*cl_predict_players;
+extern 	cvar_t 	*cl_predict_players2;
+extern 	cvar_t 	*cl_solid_players;
 
 static struct predicted_player {
 	int flags;
@@ -828,7 +833,7 @@ void CL_LinkPlayers (void)
 			continue;	// not present this frame
 
 		// spawn light flashes, even ones coming from invisible objects
-		if (!gl_flashblend.value || j != cl.playernum) {
+		if (!gl_flashblend->value || j != cl.playernum) {
 			if ((state->effects & (EF_BLUE | EF_RED)) == (EF_BLUE | EF_RED))
 				CL_NewDlight (j, state->origin[0], state->origin[1], state->origin[2], 200 + (rand()&31), 0.1, 3);
 			else if (state->effects & EF_BLUE)
@@ -877,7 +882,7 @@ void CL_LinkPlayers (void)
 
 		// only predict half the move to minimize overruns
 		msec = 500*(playertime - state->state_time);
-		if (msec <= 0 || (!cl_predict_players.value && !cl_predict_players2.value))
+		if (msec <= 0 || (!cl_predict_players->value && !cl_predict_players2->value))
 		{
 			VectorCopy (state->origin, ent->origin);
 //Con_DPrintf ("nopredict\n");
@@ -998,7 +1003,7 @@ void CL_SetUpPlayerPrediction(qboolean dopred)
 			// only predict half the move to minimize overruns
 			msec = 500*(playertime - state->state_time);
 			if (msec <= 0 ||
-				(!cl_predict_players.value && !cl_predict_players2.value) ||
+				(!cl_predict_players->value && !cl_predict_players2->value) ||
 				!dopred)
 			{
 				VectorCopy (state->origin, pplayer->origin);
@@ -1037,7 +1042,7 @@ void CL_SetSolidPlayers (int playernum)
 	struct predicted_player *pplayer;
 	physent_t *pent;
 
-	if (!cl_solid_players.value)
+	if (!cl_solid_players->value)
 		return;
 
 	pent = pmove.physents + pmove.numphysent;

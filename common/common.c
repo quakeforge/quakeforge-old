@@ -720,7 +720,8 @@ void COM_Init (void)
 	LittleFloat = FloatNoSwap;
 #endif
 
-	Cvar_RegisterVariable (&cmdline);
+//	Cvar_RegisterVariable (&cmdline);
+	cmdline = Cvar_Get ("cmdline","0",CVAR_USERINFO|CVAR_SERVERINFO,"None");
 	Cmd_AddCommand ("path", COM_Path_f);
 
 	COM_InitFilesystem ();
@@ -884,7 +885,7 @@ void Info_SetValueForStarKey (char *s, char *key, char *value, int maxsize)
 	char	new[1024], *v;
 	int		c;
 #ifdef SERVERONLY
-	extern cvar_t sv_highchars;
+	extern cvar_t *sv_highchars;
 #endif
 
 	if (strstr (key, "\\") || strstr (value, "\\") )
@@ -943,7 +944,7 @@ void Info_SetValueForStarKey (char *s, char *key, char *value, int maxsize)
 				c = tolower(c);
 		}
 #else
-		if (!sv_highchars.value) {
+		if (!sv_highchars->value) {
 			c &= 127;
 			if (c < 32 || c > 127)
 				continue;

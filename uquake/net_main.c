@@ -72,18 +72,28 @@ int messagesReceived = 0;
 int unreliableMessagesSent = 0;
 int unreliableMessagesReceived = 0;
 
-cvar_t	net_messagetimeout = {"net_messagetimeout","300"};
-cvar_t	hostname = {"hostname", "UNNAMED"};
+//cvar_t	net_messagetimeout = {"net_messagetimeout","300"};
+cvar_t	*net_messagetimeout;
+//cvar_t	hostname = {"hostname", "UNNAMED"};
+cvar_t	*hostname;
 
 qboolean	configRestored = false;
-cvar_t	config_com_port = {"_config_com_port", "0x3f8", CVAR_ARCHIVE};
-cvar_t	config_com_irq = {"_config_com_irq", "4", CVAR_ARCHIVE};
-cvar_t	config_com_baud = {"_config_com_baud", "57600", CVAR_ARCHIVE};
-cvar_t	config_com_modem = {"_config_com_modem", "1", CVAR_ARCHIVE};
-cvar_t	config_modem_dialtype = {"_config_modem_dialtype", "T", CVAR_ARCHIVE};
-cvar_t	config_modem_clear = {"_config_modem_clear", "ATZ", CVAR_ARCHIVE};
-cvar_t	config_modem_init = {"_config_modem_init", "", CVAR_ARCHIVE};
-cvar_t	config_modem_hangup = {"_config_modem_hangup", "AT H", CVAR_ARCHIVE};
+//cvar_t	config_com_port = {"_config_com_port", "0x3f8", CVAR_ARCHIVE};
+cvar_t	*config_com_port;
+//cvar_t	config_com_irq = {"_config_com_irq", "4", CVAR_ARCHIVE};
+cvar_t	*config_com_irq;
+//cvar_t	config_com_baud = {"_config_com_baud", "57600", CVAR_ARCHIVE};
+cvar_t	*config_com_baud;
+//cvar_t	config_com_modem = {"_config_com_modem", "1", CVAR_ARCHIVE};
+cvar_t	*config_com_modem;
+//cvar_t	config_modem_dialtype = {"_config_modem_dialtype", "T", CVAR_ARCHIVE};
+cvar_t	*config_modem_dialtype;
+//cvar_t	config_modem_clear = {"_config_modem_clear", "ATZ", CVAR_ARCHIVE};
+cvar_t	*config_modem_clear;
+//cvar_t	config_modem_init = {"_config_modem_init", "", CVAR_ARCHIVE};
+cvar_t	*config_modem_init;
+//cvar_t	config_modem_hangup = {"_config_modem_hangup", "AT H", CVAR_ARCHIVE};
+cvar_t	*config_modem_hangup;
 
 extern int	vcrFile;
 qboolean recording = false;
@@ -562,7 +572,7 @@ int	NET_GetMessage (qsocket_t *sock)
 	// see if this connection has timed out
 	if (ret == 0 && sock->driver)
 	{
-		if (net_time - sock->lastMessageTime > net_messagetimeout.value)
+		if (net_time - sock->lastMessageTime > net_messagetimeout->value)
 		{
 			NET_Close(sock);
 			return -1;
@@ -855,16 +865,33 @@ void NET_Init (void)
 	// allocate space for network message buffer
 	SZ_Alloc (&net_message, NET_MAXMESSAGE);
 
-	Cvar_RegisterVariable (&net_messagetimeout);
-	Cvar_RegisterVariable (&hostname);
-	Cvar_RegisterVariable (&config_com_port);
-	Cvar_RegisterVariable (&config_com_irq);
-	Cvar_RegisterVariable (&config_com_baud);
-	Cvar_RegisterVariable (&config_com_modem);
-	Cvar_RegisterVariable (&config_modem_dialtype);
-	Cvar_RegisterVariable (&config_modem_clear);
-	Cvar_RegisterVariable (&config_modem_init);
-	Cvar_RegisterVariable (&config_modem_hangup);
+//	Cvar_RegisterVariable (&net_messagetimeout);
+	net_messagetimeout = Cvar_Get ("net_messagetimeout","300",0,"None");
+//	Cvar_RegisterVariable (&hostname);
+	hostname = Cvar_Get ("hostname","UNNAMED",0,"None");
+//	Cvar_RegisterVariable (&config_com_port);
+	config_com_port = Cvar_Get ("_config_com_port","0x3f8",CVAR_ARCHIVE,
+					"None");
+//	Cvar_RegisterVariable (&config_com_irq);
+	config_com_irq = Cvar_Get ("_config_com_irq","4",CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&config_com_baud);
+	config_com_baud = Cvar_Get ("_config_com_baud","57600",CVAR_ARCHIVE,
+					"None");
+//	Cvar_RegisterVariable (&config_com_modem);
+	config_com_modem = Cvar_Get ("_config_com_modem","1",CVAR_ARCHIVE,
+					"None");
+//	Cvar_RegisterVariable (&config_modem_dialtype);
+	config_modem_dialtype = Cvar_Get ("_config_modem_dialtype","T",
+						CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&config_modem_clear);
+	config_modem_clear = Cvar_Get ("_config_modem_clear","ATZ",
+					CVAR_ARCHIVE,"None");
+//	Cvar_RegisterVariable (&config_modem_init);
+	config_modem_init = Cvar_Get ("_config_modem_init","",CVAR_ARCHIVE,
+					"None");
+//	Cvar_RegisterVariable (&config_modem_hangup);
+	config_modem_hangup = Cvar_Get ("_config_modem_hangup","AT H",
+					CVAR_ARCHIVE,"None");
 
 	Cmd_AddCommand ("slist", NET_Slist_f);
 	Cmd_AddCommand ("listen", NET_Listen_f);
@@ -935,12 +962,12 @@ void NET_Poll(void)
 	{
 		if (serialAvailable)
 		{
-			if (config_com_modem.value == 1.0)
+			if (config_com_modem->value == 1.0)
 				useModem = true;
 			else
 				useModem = false;
-			SetComPortConfig (0, (int)config_com_port.value, (int)config_com_irq.value, (int)config_com_baud.value, useModem);
-			SetModemConfig (0, config_modem_dialtype.string, config_modem_clear.string, config_modem_init.string, config_modem_hangup.string);
+			SetComPortConfig (0, (int)config_com_port->value, (int)config_com_irq->value, (int)config_com_baud->value, useModem);
+			SetModemConfig (0, config_modem_dialtype->string, config_modem_clear->string, config_modem_init->string, config_modem_hangup->string);
 		}
 		configRestored = true;
 	}

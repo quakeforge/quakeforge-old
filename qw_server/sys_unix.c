@@ -65,9 +65,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <server.h>
 #include <sys.h>
 
-extern cvar_t	sys_nostdout;
+extern cvar_t	*sys_nostdout;
 
-cvar_t	sys_extrasleep = {"sys_extrasleep","0"};
+//cvar_t	sys_extrasleep = {"sys_extrasleep","0"};
+cvar_t	*sys_extrasleep;
 qboolean	stdin_ready;
 
 /*
@@ -149,8 +150,13 @@ is marked
 */
 void Sys_Init (void)
 {
-	Cvar_RegisterVariable (&sys_nostdout);
-	Cvar_RegisterVariable (&sys_extrasleep);
+	/* Note, variables declared in common/ and registered in qw_server/ are
+	evil */
+//	Cvar_RegisterVariable (&sys_nostdout);
+	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
+
+//	Cvar_RegisterVariable (&sys_extrasleep);
+	sys_extrasleep = Cvar_Get ("sys_extrasleep","0",0,"None");
 }
 
 /*
@@ -216,8 +222,8 @@ int main(int argc, char *argv[])
 		SV_Frame (time);		
 		
 	// extrasleep is just a way to generate a fucked up connection on purpose
-		if (sys_extrasleep.value)
-			usleep (sys_extrasleep.value);
+		if (sys_extrasleep->value)
+			usleep (sys_extrasleep->value);
 	}	
 	exit(0);
 }

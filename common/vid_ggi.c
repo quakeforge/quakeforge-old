@@ -44,8 +44,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];
 
-cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
-cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
+//cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
+cvar_t	*_windowed_mouse;
+//cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
+cvar_t	*m_filter;
 
 #define NUM_STDBUTTONS	3
 #define NUM_BUTTONS	10
@@ -887,7 +889,8 @@ void IN_Frame(void)
 void
 IN_Init(void)
 {
-	Cvar_RegisterVariable(&m_filter);
+//	Cvar_RegisterVariable(&m_filter);
+	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE);
 	if (COM_CheckParm ("-nomouse")) return;
 
 	mouse_x = mouse_y = 0.0;
@@ -907,7 +910,7 @@ IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail) return;
    
-	if (m_filter.value) {
+	if (m_filter->value) {
 		mouse_x = (mouse_x + old_mouse_x) * 0.5;
 		mouse_y = (mouse_y + old_mouse_y) * 0.5;
 	}
@@ -915,27 +918,27 @@ IN_Move(usercmd_t *cmd)
 	old_mouse_x = mouse_x;
 	old_mouse_y = mouse_y;
    
-	mouse_x *= sensitivity.value;
-	mouse_y *= sensitivity.value;
+	mouse_x *= sensitivity->value;
+	mouse_y *= sensitivity->value;
    
-	if ( (in_strafe.state & 1) || (lookstrafe.value && (in_mlook.state & 1) ))
-		cmd->sidemove += m_side.value * mouse_x;
+	if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
+		cmd->sidemove += m_side->value * mouse_x;
 	else
-		cl.viewangles[YAW] -= m_yaw.value * mouse_x;
+		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
 	if (in_mlook.state & 1)
 		V_StopPitchDrift ();
    
 	if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
-		cl.viewangles[PITCH] += m_pitch.value * mouse_y;
+		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
 		if (cl.viewangles[PITCH] > 80)
 			cl.viewangles[PITCH] = 80;
 		if (cl.viewangles[PITCH] < -70)
 			cl.viewangles[PITCH] = -70;
 	} else {
 		if ((in_strafe.state & 1) && noclip_anglehack)
-			cmd->upmove -= m_forward.value * mouse_y;
+			cmd->upmove -= m_forward->value * mouse_y;
 		else
-			cmd->forwardmove -= m_forward.value * mouse_y;
+			cmd->forwardmove -= m_forward->value * mouse_y;
 	}
 	mouse_x = mouse_y = 0.0;
 }
@@ -946,7 +949,7 @@ VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse.value);
+        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
 }
 
 
@@ -955,7 +958,7 @@ VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse->value);
 		break;
 
 	}

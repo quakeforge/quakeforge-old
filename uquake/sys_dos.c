@@ -915,7 +915,7 @@ int main (int c, char **v)
 		newtime = Sys_DoubleTime ();
 		time = newtime - oldtime;
 
-		if (cls.state == ca_dedicated && (time<sys_ticrate.value))
+		if (cls.state == ca_dedicated && (time<sys_ticrate->value))
 			continue;
 
 		Host_Frame (time);

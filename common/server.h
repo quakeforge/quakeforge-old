@@ -390,12 +390,12 @@ typedef struct
 
 //============================================================================
 
-extern	cvar_t	teamplay;
-extern	cvar_t	skill;
-extern	cvar_t	deathmatch;
-extern	cvar_t	coop;
-extern	cvar_t	fraglimit;
-extern	cvar_t	timelimit;
+extern	cvar_t	*teamplay;
+extern	cvar_t	*skill;
+extern	cvar_t	*deathmatch;
+extern	cvar_t	*coop;
+extern	cvar_t	*fraglimit;
+extern	cvar_t	*timelimit;
 
 extern	server_static_t	svs;				// persistant server info
 extern	server_t		sv;					// local server
@@ -407,8 +407,8 @@ extern	jmp_buf 	host_abortserver;
 extern	double		host_time;
 
 extern	edict_t		*sv_player;
-extern	cvar_t	sv_mintic, sv_maxtic;
-extern	cvar_t	sv_maxspeed;
+extern	cvar_t	*sv_mintic, *sv_maxtic;
+extern	cvar_t	*sv_maxspeed;
 
 #ifdef QUAKEWORLD
 extern	netadr_t	master_adr[MAX_MASTERS];	// address of the master server
@@ -416,11 +416,11 @@ extern	netadr_t	master_adr[MAX_MASTERS];	// address of the master server
 extern	netadr_t	master_adr;	// address of the master server
 #endif
 
-extern	cvar_t	spawn;
-extern	cvar_t	teamplay;
-extern	cvar_t	deathmatch;
-extern	cvar_t	fraglimit;
-extern	cvar_t	timelimit;
+extern	cvar_t	*spawn;
+extern	cvar_t	*teamplay;
+extern	cvar_t	*deathmatch;
+extern	cvar_t	*fraglimit;
+extern	cvar_t	*timelimit;
 
 extern	server_static_t	svs;				// persistant server info
 extern	server_t		sv;					// local server
@@ -545,8 +545,8 @@ void ClientReliableWrite_SZ(client_t *cl, void *data, int len);
 //
 extern	quakeparms_t host_parms;
 
-extern	cvar_t		sys_nostdout;
-extern	cvar_t		developer;
+extern	cvar_t		*sys_nostdout;
+extern	cvar_t		*developer;
 
 extern	qboolean	host_initialized;		// true if into command execution
 extern	double		host_frametime;

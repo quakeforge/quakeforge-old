@@ -169,43 +169,43 @@ extern	int	playertextures;
 
 extern	int	skytexturenum;		// index in cl.loadmodel, not gl texture object
 
-extern	cvar_t	r_norefresh;
-extern	cvar_t	r_drawentities;
-extern	cvar_t	r_drawworld;
-extern	cvar_t	r_drawviewmodel;
-extern	cvar_t	r_speeds;
-extern	cvar_t	r_waterwarp;
-extern	cvar_t	r_fullbright;
-extern	cvar_t	r_lightmap;
-extern	cvar_t	r_shadows;
-extern	cvar_t	r_wateralpha;
-extern	cvar_t	r_dynamic;
-extern	cvar_t	r_novis;
-extern	cvar_t	r_netgraph;
-extern  cvar_t  r_fog;
-extern  cvar_t  r_waterwarp;
-extern  cvar_t  r_volfog;
-extern  cvar_t  r_waterripple;
+extern	cvar_t	*r_norefresh;
+extern	cvar_t	*r_drawentities;
+extern	cvar_t	*r_drawworld;
+extern	cvar_t	*r_drawviewmodel;
+extern	cvar_t	*r_speeds;
+extern	cvar_t	*r_waterwarp;
+extern	cvar_t	*r_fullbright;
+extern	cvar_t	*r_lightmap;
+extern	cvar_t	*r_shadows;
+extern	cvar_t	*r_wateralpha;
+extern	cvar_t	*r_dynamic;
+extern	cvar_t	*r_novis;
+extern	cvar_t	*r_netgraph;
+extern  cvar_t  *r_fog;
+extern  cvar_t  *r_waterwarp;
+extern  cvar_t  *r_volfog;
+extern  cvar_t  *r_waterripple;
 
-extern	cvar_t	gl_clear;
-extern	cvar_t	gl_cull;
-extern	cvar_t	gl_poly;
-extern	cvar_t	gl_texsort;
-extern	cvar_t	gl_smoothmodels;
-extern	cvar_t	gl_affinemodels;
-extern	cvar_t	gl_polyblend;
-extern	cvar_t	gl_keeptjunctions;
-extern	cvar_t	gl_flashblend;
-extern	cvar_t	gl_nocolors;
-extern	cvar_t	gl_finish;
-extern	cvar_t	gl_doubleeyes;
+extern	cvar_t	*gl_clear;
+extern	cvar_t	*gl_cull;
+extern	cvar_t	*gl_poly;
+extern	cvar_t	*gl_texsort;
+extern	cvar_t	*gl_smoothmodels;
+extern	cvar_t	*gl_affinemodels;
+extern	cvar_t	*gl_polyblend;
+extern	cvar_t	*gl_keeptjunctions;
+extern	cvar_t	*gl_flashblend;
+extern	cvar_t	*gl_nocolors;
+extern	cvar_t	*gl_finish;
+extern	cvar_t	*gl_doubleeyes;
 
 extern	int		gl_lightmap_format;
 extern	int		gl_solid_format;
 extern	int		gl_alpha_format;
 
-extern	cvar_t	gl_max_size;
-extern	cvar_t	gl_playermip;
+extern	cvar_t	*gl_max_size;
+extern	cvar_t	*gl_playermip;
 
 extern	float	r_world_matrix[16];
 

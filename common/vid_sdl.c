@@ -33,9 +33,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <client.h>
 
-static float old_windowed_mouse = 0;
 
-cvar_t	_windowed_mouse = {"_windowed_mouse","0",CVAR_ARCHIVE};
+//cvar_t          _windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
+cvar_t	*_windowed_mouse;
+
+
+static float old_windowed_mouse = 0;
 
 viddef_t    vid;                // global video state
 unsigned short  d_8to16table[256];
@@ -90,7 +93,9 @@ void    VID_Init (unsigned char *palette)
     //Uint16 video_w, video_h;
     Uint32 flags;
 
-    S_Init(); 
+
+    S_Init();
+
     // Load the SDL library
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_CDROM)<0) //|SDL_INIT_AUDIO|SDL_INIT_CDROM) < 0)
         Sys_Error("VID: Couldn't load SDL: %s", SDL_GetError());
@@ -327,7 +332,7 @@ void Sys_SendKeyEvents(void)
                 break;
 
             case SDL_MOUSEMOTION:
-                if (_windowed_mouse.value)
+                if (_windowed_mouse->value)
 		{
 		   if ((event.motion.x != (vid.width/2)) ||
 			(event.motion.y != (vid.height/2)) ) {
@@ -351,9 +356,9 @@ void Sys_SendKeyEvents(void)
                 break;
         }
     }
-     if (old_windowed_mouse != _windowed_mouse.value)
-	{ old_windowed_mouse = _windowed_mouse.value;
-	  if (_windowed_mouse.value && !COM_CheckParm("-nomouse"))
+     if (old_windowed_mouse != _windowed_mouse->value)
+	{ old_windowed_mouse = _windowed_mouse->value;
+	  if (_windowed_mouse->value && !COM_CheckParm("-nomouse"))
 	  { mouse_avail = 1;
 	  }
 	  else
@@ -364,11 +369,11 @@ void Sys_SendKeyEvents(void)
 
 void IN_Init (void)
 {
-    fprintf(stderr,"IN_Init started\n");
-    if ( COM_CheckParm("-nomouse") && !_windowed_mouse.value)
+    _windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
+
+    if ( COM_CheckParm("-nomouse") && !_windowed_mouse->value) 
         return;
 
-    Cvar_RegisterVariable(&_windowed_mouse);
     mouse_x = mouse_y = 0.0;
     mouse_avail = 1;
 }
@@ -407,27 +412,27 @@ void IN_Move (usercmd_t *cmd)
     if (!mouse_avail)
         return;
    
-    mouse_x *= sensitivity.value;
-    mouse_y *= sensitivity.value;
+    mouse_x *= sensitivity->value;
+    mouse_y *= sensitivity->value;
    
-    if ( (in_strafe.state & 1) || (lookstrafe.value && (in_mlook.state & 1) ))
-        cmd->sidemove += m_side.value * mouse_x;
+    if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
+        cmd->sidemove += m_side->value * mouse_x;
     else
-        cl.viewangles[YAW] -= m_yaw.value * mouse_x;
+        cl.viewangles[YAW] -= m_yaw->value * mouse_x;
     if (in_mlook.state & 1)
         V_StopPitchDrift ();
    
     if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
-        cl.viewangles[PITCH] += m_pitch.value * mouse_y;
+        cl.viewangles[PITCH] += m_pitch->value * mouse_y;
         if (cl.viewangles[PITCH] > 80)
             cl.viewangles[PITCH] = 80;
         if (cl.viewangles[PITCH] < -70)
             cl.viewangles[PITCH] = -70;
     } else {
         if ((in_strafe.state & 1) && noclip_anglehack)
-            cmd->upmove -= m_forward.value * mouse_y;
+            cmd->upmove -= m_forward->value * mouse_y;
         else
-            cmd->forwardmove -= m_forward.value * mouse_y;
+            cmd->forwardmove -= m_forward->value * mouse_y;
     }
     mouse_x = mouse_y = 0.0;
 }
@@ -448,14 +453,14 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse.value);
+        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse->value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		_windowed_mouse->value = !_windowed_mouse->value;
 		break;
 
 	}

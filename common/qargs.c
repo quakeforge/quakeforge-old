@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <console.h>
 #include <client.h>
+#include <assert.h>
 #include "lib_replace.h"
 
 usercmd_t nullcmd; // guarenteed to be zero
@@ -51,7 +52,8 @@ static char	*safeargvs[] =
 int		com_argc;
 char	**com_argv;
 char	*com_cmdline;
-cvar_t  cmdline = {"cmdline","0", false, true};
+//cvar_t  cmdline = {"cmdline","0", false, true};
+cvar_t	*cmdline;
 
 /*
 ================
@@ -95,7 +97,7 @@ void COM_InitArgv (int argc, char **argv)
 		largv[com_argc] = argv[com_argc];
 		if ((argv[com_argc]) && !Q_strcmp ("-safe", argv[com_argc]))
 			safe = true;
-		len += strlen (argv[com_argc]) + 1;
+		len += strlen (argv[com_argc]) + 2;
 	}
 
 	com_cmdline = (char*)malloc (len); // len is strlen(com_cmdline)+1 already
@@ -103,6 +105,7 @@ void COM_InitArgv (int argc, char **argv)
 	for (i=0; i < argc; i++)
 	{
 		strncat (com_cmdline, argv[i], len);
+		assert(len - strlen(com_cmdline) > 0);
 		strncat (com_cmdline, " ", len);
 	}
 	com_cmdline[len] = 0;

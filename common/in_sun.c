@@ -62,7 +62,8 @@ extern int			global_dx, global_dy;
 // globals
 //
 
-cvar_t					_windowed_mouse = {"_windowed_mouse","1", CVAR_ARCHIVE};
+//cvar_t					_windowed_mouse = {"_windowed_mouse","1", CVAR_ARCHIVE};
+cvar_t	*_windowed_mouse;
 int					x_root, y_root;
 int					x_root_old, y_root_old;
 //
@@ -97,7 +98,7 @@ void IN_CenterMouse( void )
 //
 static void CheckMouseState(void)
 {
-	if (x_focus && _windowed_mouse.value && !x_grabbed) {
+	if (x_focus && _windowed_mouse->value && !x_grabbed) {
 		x_grabbed = true;
 		printf("fooling with mouse!\n");
 		if (XGetPointerControl( x_disp, &x_mouse_num, &x_mouse_denom, &x_mouse_thresh ))
@@ -119,7 +120,7 @@ static void CheckMouseState(void)
 		// safe initial values
 		x_root = x_root_old = vid.width >> 1;
 		y_root = y_root_old = vid.height >> 1;
-	} else if (x_grabbed && (!_windowed_mouse.value || !x_focus)) {
+	} else if (x_grabbed && (!_windowed_mouse->value || !x_focus)) {
 		printf("fooling with mouse!\n");
 		x_grabbed = false;
 		// undo mouse warp
@@ -141,7 +142,8 @@ void IN_Init (void)
 {
     if (!x_disp) Sys_Error( "X display not open!\n" );
 
-    Cvar_RegisterVariable (&_windowed_mouse);
+//    Cvar_RegisterVariable (&_windowed_mouse);
+	_windowed_mouse = Cvar_Get ("_windowed_mouse","1", CVAR_ARCHIVE);
 
 	// we really really want to clean these up...
     atexit( IN_Shutdown );
@@ -203,8 +205,8 @@ IN_Move(usercmd_t *cmd)
 	
 //	printf("GOT: dx %d dy %d\n", dx, dy);
 
-	dx *= sensitivity.value;
-	dy *= sensitivity.value;
+	dx *= sensitivity->value;
+	dy *= sensitivity->value;
 
 //
 //	implement low pass filter to smooth motion a bit
@@ -229,21 +231,21 @@ IN_Move(usercmd_t *cmd)
 	}
 	
 	// add mouse X/Y movement to cmd
-	if ((in_strafe.state & 1) || (lookstrafe.value && (in_mlook.state & 1)))
-		cmd->sidemove += m_side.value * dx;
+	if ((in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1)))
+		cmd->sidemove += m_side->value * dx;
 	else 
-		cl.viewangles[YAW] -= m_yaw.value * dx;
+		cl.viewangles[YAW] -= m_yaw->value * dx;
 
 	if (in_mlook.state & 1) 
 		V_StopPitchDrift ();
 	    
 	if ((in_mlook.state & 1) && !(in_strafe.state & 1)) {
-		cl.viewangles[PITCH] += m_pitch.value * dy;
+		cl.viewangles[PITCH] += m_pitch->value * dy;
 		if (cl.viewangles[PITCH] > 80) cl.viewangles[PITCH] = 80;
 		if (cl.viewangles[PITCH] < -70) cl.viewangles[PITCH] = -70;
 	}
 	else {
-		if ((in_strafe.state & 1) && noclip_anglehack) cmd->upmove -= m_forward.value * dy;
-		else cmd->forwardmove -= m_forward.value * dy;
+		if ((in_strafe.state & 1) && noclip_anglehack) cmd->upmove -= m_forward->value * dy;
+		else cmd->forwardmove -= m_forward->value * dy;
 	}
 }

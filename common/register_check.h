@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _REGISTER_CHECK_H
 #define _REGISTER_CHECK_H
 
-extern struct cvar_s registered;
+extern struct cvar_s *registered;
 void register_check ();
 
 #endif // _REGISTER_CHECK_H

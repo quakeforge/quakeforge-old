@@ -29,7 +29,7 @@ short flat_selector;
 int WSAGetLastError(void);
 void sockets_flush(void);
 
-extern cvar_t hostname;
+extern cvar_t *hostname;
 
 #define MAXHOSTNAMELEN		256
 

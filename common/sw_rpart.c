@@ -35,7 +35,7 @@ extern int	ramp1[8], ramp2[8], ramp3[8];
 R_DrawParticles
 ===============
 */
-extern cvar_t  sv_gravity;
+extern cvar_t  *sv_gravity;
 void R_DrawParticles (void)
 {
 	particle_t		*p, *kill;
@@ -63,7 +63,7 @@ void R_DrawParticles (void)
 #ifdef QUAKEWORLD
 	grav = frametime * 800 * 0.05;
 #else
-	grav = frametime * sv_gravity.value * 0.05;
+	grav = frametime * sv_gravity->value * 0.05;
 #endif
 	dvel = 4*frametime;
 	

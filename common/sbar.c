@@ -341,7 +341,7 @@ Sbar_DrawPic
 void Sbar_DrawPic (int x, int y, qpic_t *pic)
 {
 #ifdef UQUAKE
-	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_Pic (x + ((vid.width - 320)>>1), 
 				y + (vid.height-SBAR_HEIGHT), pic);
@@ -360,7 +360,7 @@ void Sbar_DrawSubPic(int x, int y, qpic_t *pic,
 		int srcx, int srcy, int width, int height) 
 {
 #ifdef UQUAKE
-	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_SubPic (x + ((vid.width - 320)>>1), 
 				y + (vid.height-SBAR_HEIGHT), 
@@ -380,7 +380,7 @@ Sbar_DrawTransPic
 void Sbar_DrawTransPic (int x, int y, qpic_t *pic)
 {
 #ifdef UQUAKE
-	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_TransPic (x + ((vid.width - 320)>>1), 
 				y + (vid.height-SBAR_HEIGHT), pic);
@@ -399,7 +399,7 @@ Draws one solid graphics character
 void Sbar_DrawCharacter (int x, int y, int num)
 {
 #ifdef UQUAKE
-	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_Character (x + ((vid.width - 320)>>1) + 4, 
 				y + (vid.height-SBAR_HEIGHT), num);
@@ -416,7 +416,7 @@ Sbar_DrawString
 void Sbar_DrawString (int x, int y, char *str)
 {
 #ifdef UQUAKE
-	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
 			&& (hipnotic || rogue))
 		Draw_String (x + ((vid.width - 320)>>1), 
 				y + (vid.height-SBAR_HEIGHT), str);
@@ -715,11 +715,11 @@ void Sbar_DrawInventory (void)
 	char		num[6];
 	float		time;
 	int		flashon;
-	qboolean	headsup;
-	qboolean    	hudswap;
+	qboolean	headsup = false;
+	qboolean    	hudswap = false;
 
-	headsup = !(cl_sbar.value || scr_viewsize.value<100);
-	hudswap = cl_hudswap.value; // Get that nasty float out :)
+	headsup = !(cl_sbar->value || (scr_viewsize->value < 100)); 
+	hudswap = cl_hudswap->value; // Get that nasty float out :)
 
 #ifdef UQUAKE
 	if (hipnotic)
@@ -949,7 +949,7 @@ void Sbar_DrawFrags (void)
 	l = scoreboardlines <= 4 ? scoreboardlines : 4;
 
 	x = 23;
-	if (cl.gametype == GAME_DEATHMATCH || cl_sbar.value == 0)
+	if (cl.gametype == GAME_DEATHMATCH || cl_sbar->value == 0)
 		xofs = 0;
 	else
 		xofs = (vid.width - 320)>>1;
@@ -1017,8 +1017,8 @@ void Sbar_DrawFace (void)
 	// PGM 03/02/97 - fixed so color swatch only appears in CTF modes
 	if (rogue &&
 			(cl.maxclients != 1) &&
-			(teamplay.value>3) &&
-			(teamplay.value<7)) {
+			(teamplay->value>3) &&
+			(teamplay->value<7)) {
 		int				top, bottom;
 		int				xofs;
 		char			num[12];
@@ -1107,7 +1107,7 @@ Sbar_DrawNormal
 */
 void Sbar_DrawNormal (void)
 {
-	if (cl_sbar.value || scr_viewsize.value<100)
+	if (cl_sbar->value || scr_viewsize->value<100)
 	Sbar_DrawPic (0, 0, sb_sbar);
 
 #ifdef UQUAKE
@@ -1197,12 +1197,12 @@ Sbar_Draw
 */
 void Sbar_Draw (void)
 {
-	qboolean headsup;
+	qboolean headsup = false;
 #ifdef QUAKEWORLD
 	char st[512];
 #endif
 
-	headsup = !(cl_sbar.value || scr_viewsize.value<100);
+	headsup = !(cl_sbar->value || scr_viewsize->value<100);
 	if ((sb_updates >= vid.numpages) && !headsup)
 		return;
 
