@@ -220,36 +220,31 @@ $(BUILD_DIR)/common_lib/%.@OBJEXT@: $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 # Software targets
-soft_DIR:
-	@DIR=soft; $(MAKE_SURE_DIR)
 
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(SRC_DIR)/%.s
+$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(COMMON_DIR)/%.c
+$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/soft/%.@OBJEXT@: $(COMMON_DIR)/%.s
+$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 # GL targets
 
-gl_DIR:
-	@DIR=gl; $(MAKE_SURE_DIR)
-
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(SRC_DIR)/%.s
+$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(COMMON_DIR)/%.c
+$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/gl/%.@OBJEXT@: $(COMMON_DIR)/%.s
+$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 ###########################################################################
@@ -275,7 +270,7 @@ $(BUILD_DIR)/common_lib.a: $(ALL_COMMON_LIB_OBJS)
 ifneq ($(X11QUAKE),)
 
 ALL_X11_SRC  = $(CD_AUDIO_SRC) $(SW_REND_SRC) @X11_VID_SRC@ model.c
-ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 			  $(basename $(ALL_X11_SRC) .c .s))) \
 			  $(BUILD_DIR)/common_lib.a \
 			  $(TARGET_DIR)/sound_lib.a
@@ -287,11 +282,11 @@ X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@
 #    either merge it into vid_x.c or make a seperate sun target.  In either
 #    case, find the moro^wpeople responsible for this and other stupidities
 #    in Solaris and "educate" them.
-$(BUILD_DIR)/soft/$(addsuffix .@OBJEXT@,$(basename @X11_VID_SRC@ .c)):\
+$(BUILD_DIR)/$(addsuffix .@OBJEXT@,$(basename @X11_VID_SRC@ .c)):\
 $(COMMON_DIR)/@X11_VID_SRC@
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
-$(X11QUAKE): soft_DIR $(BUILD_DIR)/../$(X11QUAKE)
+$(X11QUAKE): $(BUILD_DIR)/../$(X11QUAKE)
 
 $(BUILD_DIR)/../$(X11QUAKE): $(ALL_X11_OBJS)
 	$(CC) $(CFLAGS) $(ALL_X11_OBJS) $(X11_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -304,7 +299,7 @@ endif
 ifneq ($(SVGAQUAKE),)
 ALL_SVGA_SRC  = $(CD_AUDIO_SRC) $(SW_REND_SRC) \
 		vid_svgalib.c in_svgalib.c d_copy.s model.c
-ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_SVGA_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a \
 		$(TARGET_DIR)/sound_lib.a
@@ -313,13 +308,13 @@ SVGA_CFLAGS  = @SVGA_CFLAGS@
 SVGA_LDFLAGS = @SVGA_LIBS@
 
 # Not sure why this -O is needed, but it is...
-$(BUILD_DIR)/soft/vid_svgalib.@OBJEXT@: $(COMMON_DIR)/vid_svgalib.c
+$(BUILD_DIR)/vid_svgalib.@OBJEXT@: $(COMMON_DIR)/vid_svgalib.c
 	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -O -o $@ -c $<
 
-$(BUILD_DIR)/soft/d_copy.@OBJEXT@: $(COMMON_DIR)/d_copy.s
+$(BUILD_DIR)/d_copy.@OBJEXT@: $(COMMON_DIR)/d_copy.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(SVGAQUAKE): soft_DIR $(BUILD_DIR)/../$(SVGAQUAKE)
+$(SVGAQUAKE): $(BUILD_DIR)/../$(SVGAQUAKE)
 
 $(BUILD_DIR)/../$(SVGAQUAKE): $(ALL_SVGA_OBJS)
 	$(CC) $(CFLAGS) $(ALL_SVGA_OBJS) $(SVGA_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -334,7 +329,7 @@ ifneq ($(GGIQUAKE),)
 # Map the list of source files into a list of object files
 ALL_GGI_SRC   = $(CD_AUDIO_SRC) $(SW_REND_SRC) vid_ggi.c\
                 model.c
-ALL_GGI_OBJS  = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+ALL_GGI_OBJS  = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_GGI_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a \
 		$(TARGET_DIR)/sound_lib.a
@@ -343,10 +338,10 @@ GGI_SRC     = vid_ggi.c
 GGI_CFLAGS  = -DGGI @GGI_CFLAGS@
 GGI_LDFLAGS = @GGI_LIBS@
 
-$(BUILD_DIR)/soft/vid_ggi.@OBJEXT@: $(COMMON_DIR)/vid_ggi.c
+$(BUILD_DIR)/vid_ggi.@OBJEXT@: $(COMMON_DIR)/vid_ggi.c
 	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
 
-$(GGIQUAKE): soft_DIR $(BUILD_DIR)/../$(GGIQUAKE)
+$(GGIQUAKE): $(BUILD_DIR)/../$(GGIQUAKE)
 
 $(BUILD_DIR)/../$(GGIQUAKE): $(ALL_GGI_OBJS)
 	$(CC) $(CFLAGS) $(ALL_GGI_OBJS) $(GGI_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -359,7 +354,7 @@ endif
 ifneq ($(SDLQUAKE),)
 ALL_SDL_SRC  = $(SW_REND_SRC) $(SDL_SRC) vid_sdl.c cd_sdl.c\
                model.c
-ALL_SDL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+ALL_SDL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_SDL_SRC) .c .s))) \
 	       $(BUILD_DIR)/common_lib.a \
 	       $(TARGET_DIR)/sound_lib.a
@@ -367,13 +362,13 @@ ALL_SDL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
 SDL_CFLAGS  = @SDL_CFLAGS@ -DSDL
 SDL_LDFLAGS = @SDL_LIBS@
 
-$(BUILD_DIR)/soft/vid_sdl.@OBJEXT@: $(COMMON_DIR)/vid_sdl.c
+$(BUILD_DIR)/vid_sdl.@OBJEXT@: $(COMMON_DIR)/vid_sdl.c
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/soft/cd_sdl.@OBJEXT@: $(COMMON_DIR)/cd_sdl.c
+$(BUILD_DIR)/cd_sdl.@OBJEXT@: $(COMMON_DIR)/cd_sdl.c
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
 
-$(SDLQUAKE): soft_DIR $(BUILD_DIR)/../$(SDLQUAKE)
+$(SDLQUAKE): $(BUILD_DIR)/../$(SDLQUAKE)
 
 $(BUILD_DIR)/../$(SDLQUAKE): $(ALL_SDL_OBJS)
 	$(CC) $(CFLAGS) $(ALL_SDL_OBJS) $(SDL_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -388,7 +383,7 @@ ifneq ($(MGLQUAKE),)
 # Map the list of source files into a list of object files
 ALL_MGL_SRC = $(CD_AUDIO_SRC) $(SW_REND_SRC) \
 	vid_win.c in_win.c conproc.c model.c
-ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_MGL_SRC) .c .s))) \
 	       $(BUILD_DIR)/common_lib.a \
 	       $(TARGET_DIR)/sound_lib.a
@@ -396,13 +391,13 @@ ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
 MGL_CFLAGS  = @MGL_CFLAGS@ -DMGL
 MGL_LDFLAGS = @MGL_LIBS@
 
-$(BUILD_DIR)/soft/vid_win.@OBJEXT@: $(COMMON_DIR)/vid_win.c
+$(BUILD_DIR)/vid_win.@OBJEXT@: $(COMMON_DIR)/vid_win.c
 	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/soft/in_win.@OBJEXT@: $(COMMON_DIR)/in_win.c
+$(BUILD_DIR)/in_win.@OBJEXT@: $(COMMON_DIR)/in_win.c
 	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
 
-$(MGLQUAKE): soft_DIR $(BUILD_DIR)/../$(MGLQUAKE)
+$(MGLQUAKE): $(BUILD_DIR)/../$(MGLQUAKE)
 
 $(BUILD_DIR)/../$(MGLQUAKE): $(ALL_MGL_OBJS)
 	$(CC) $(CFLAGS) $(ALL_MGL_OBJS) $(MGL_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -418,7 +413,7 @@ ifneq ($(VGAQUAKE),)
 ALL_VGA_SRC = $(CD_AUDIO_SRC) $(SW_REND_SRC) $(DOS_NET_SRC) \
 	vid_vga.c vid_ext.c vid_dos.c vregset.c in_dos.c dos_v2.c \
 	d_copy.s model.c
-ALL_VGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+ALL_VGA_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_VGA_SRC) .c .s))) \
 	       $(BUILD_DIR)/common_lib.a \
 	       $(TARGET_DIR)/sound_lib.a
@@ -426,13 +421,13 @@ ALL_VGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
 VGA_CFLAGS  = @VGA_CFLAGS@ -DVGA
 VGA_LDFLAGS = @VGA_LIBS@
 
-$(BUILD_DIR)/soft/vid_win.@OBJEXT@: $(COMMON_DIR)/vid_win.c
+$(BUILD_DIR)/vid_win.@OBJEXT@: $(COMMON_DIR)/vid_win.c
 	$(CC) $(CFLAGS) $(VGA_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/soft/in_win.@OBJEXT@: $(COMMON_DIR)/in_win.c
+$(BUILD_DIR)/in_win.@OBJEXT@: $(COMMON_DIR)/in_win.c
 	$(CC) $(CFLAGS) $(VGA_CFLAGS) -o $@ -c $<
 
-$(VGAQUAKE): soft_DIR $(BUILD_DIR)/../$(VGAQUAKE)
+$(VGAQUAKE): $(BUILD_DIR)/../$(VGAQUAKE)
 
 $(BUILD_DIR)/../$(VGAQUAKE): $(ALL_VGA_OBJS)
 	$(CC) $(CFLAGS) $(ALL_VGA_OBJS) $(VGA_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -445,7 +440,7 @@ endif
 ifneq ($(GLQUAKE),)
 ALL_GL_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
 	gl_vidglx.c dga_check.c
-ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
+ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s))) \
 	      $(BUILD_DIR)/common_lib.a \
 	      $(TARGET_DIR)/sound_lib.a
@@ -453,13 +448,13 @@ ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
 GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
 GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
 
-$(BUILD_DIR)/gl/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
+$(BUILD_DIR)/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/gl/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
+$(BUILD_DIR)/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
-$(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
+$(GLQUAKE): $(BUILD_DIR)/../$(GLQUAKE)
 
 $(BUILD_DIR)/../$(GLQUAKE): $(ALL_GL_OBJS)
 	$(CC) $(CFLAGS) $(ALL_GL_OBJS) $(GL_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -473,7 +468,7 @@ endif
 ifneq ($(TDFXQUAKE),)
 ALL_TDFX_SRC  = $(CD_AUDIO_SRC) $(GL_REND_SRC) \
 		gl_vidlinux_3dfx.c in_svgalib.c
-ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
+ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a \
 		$(TARGET_DIR)/sound_lib.a
@@ -481,10 +476,10 @@ ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
 TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
 
-$(BUILD_DIR)/gl/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
+$(BUILD_DIR)/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
 	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
 
-$(TDFXQUAKE): gl_DIR $(BUILD_DIR)/../$(TDFXQUAKE)
+$(TDFXQUAKE): $(BUILD_DIR)/../$(TDFXQUAKE)
 
 $(BUILD_DIR)/../$(TDFXQUAKE): $(ALL_TDFX_OBJS)
 	$(CC) $(CFLAGS) $(ALL_TDFX_OBJS) $(TDFX_LDFLAGS) $(LDFLAGS) $(LIBS) \

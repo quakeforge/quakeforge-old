@@ -30,8 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sound.h>
 #include <cdaudio.h>
 #include <console.h>
+#include <lib_replace.h>
 
-#include "quakedef.h"
+#include <quakedef.h>
 
 static qboolean cdValid = false;
 static qboolean initialized = false;
