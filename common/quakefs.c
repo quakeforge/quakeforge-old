@@ -47,7 +47,9 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
+#ifndef _WIN32
 #include <pwd.h>
+#endif
 
 #ifdef WIN32
 #include <io.h>
