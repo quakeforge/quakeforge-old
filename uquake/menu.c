@@ -17,15 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#ifdef _AIX
-/* AIX's level_t in sys/types.h conflicts w/ Quake's level_t */
-#define level_t sunlevel_t
-#endif
 #include "quakedef.h"
-
-#ifdef _AIX
-#undef level_t
-#endif
 
 #ifdef _WIN32
 #include "winquake.h"
@@ -2394,9 +2386,9 @@ typedef struct
 {
 	char	*name;
 	char	*description;
-} level_t;
+} quakelevel_t;
 
-level_t		levels[] =
+quakelevel_t	levels[] =
 {
 	{"start", "Entrance"},	// 0
 
@@ -2445,7 +2437,7 @@ level_t		levels[] =
 };
 
 //MED 01/06/97 added hipnotic levels
-level_t     hipnoticlevels[] =
+quakelevel_t	hipnoticlevels[] =
 {
    {"start", "Command HQ"},  // 0
 
@@ -2474,7 +2466,7 @@ level_t     hipnoticlevels[] =
 
 //PGM 01/07/97 added rogue levels
 //PGM 03/02/97 added dmatch level
-level_t		roguelevels[] =
+quakelevel_t	roguelevels[] =
 {
 	{"start",	"Split Decision"},
 	{"r1m1",	"Deviant's Domain"},
