@@ -6,6 +6,9 @@ QuakeForge engine.  Generally problems will find their way here along with
 the person who reported the problem so we can verify it's fixed when we
 do fix it.  Feature requests will usually go into the file WISHLIST.
 
+djsmoke <djsmoke@optonline.net>
+ - SVGALib target does not properly restore keys on exit
+
 Joseph Carter <knghtbrd@debian.org>
  - View in UQuake starts off-map and never changes
  - GLX error on exit:  "XIO:  fatal IO error 9 (Bad file descriptor) on X
@@ -14,3 +17,4 @@ Joseph Carter <knghtbrd@debian.org>
 
 sdennis101@geocities.com
  - make install fails in common/
+
