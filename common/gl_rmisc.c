@@ -197,24 +197,30 @@ void R_Init (void)
 
 	r_norefresh = Cvar_Get ("r_norefresh","0",0,"None");
 	r_lightmap = Cvar_Get ("r_lightmap","0",0,"None");
-	r_fullbright = Cvar_Get ("r_fullbright","0",0,"None");
-	r_drawentities = Cvar_Get ("r_drawentities","1",0,"None");
-	r_drawviewmodel = Cvar_Get ("r_drawviewmodel","1",0,"None");
+	r_fullbright = Cvar_Get ("r_fullbright","0",0,
+			"Toggles whether light shading is in effect");
+	r_drawentities = Cvar_Get ("r_drawentities","1",0,
+				"Toggles drawing of doors, monsters, etc");
+	r_drawviewmodel = Cvar_Get ("r_drawviewmodel","1",0,
+					"Toggles drawing of your weapon");
 	r_shadows = Cvar_Get ("r_shadows","0",0,"None");
 	r_wateralpha = Cvar_Get ("r_wateralpha","1",0,"None");
-	r_dynamic = Cvar_Get ("r_dynamic","1",0,"None");
+	r_dynamic = Cvar_Get ("r_dynamic","1",0,"Toggles dynamic lighting");
 	r_novis = Cvar_Get ("r_novis","0",0,"None");
-	r_speeds = Cvar_Get ("r_speeds","0",0,"None");
+	r_speeds = Cvar_Get ("r_speeds","0",0,
+			"Toggles display of drawing time");
 #ifdef QUAKEWORLD
-	r_netgraph = Cvar_Get ("r_netgraph","0",0,"None");
+	r_netgraph = Cvar_Get ("r_netgraph","0",0,"Toggles the netgraph");
 #endif /* QUAKEWORLD */
 	r_fog = Cvar_Get ("r_fog","0",0,"None");
-	r_waterwarp = Cvar_Get ("r_waterwarp","0",0,"None");
+	r_waterwarp = Cvar_Get ("r_waterwarp","0",0,
+		"Toggles whether surfaces are warped when in a liquid");
 	r_volfog = Cvar_Get ("r_volfog","0",0,"None");
 	r_waterripple = Cvar_Get ("r_waterripple","0",0,"None");
 	r_clearcolor = Cvar_Get ("r_clearcolor","2",0,"None");
-	r_sky = Cvar_Get ("r_sky", "0", CVAR_NONE, "None");
-	r_skyname = Cvar_Get ("r_skyname", "sky", CVAR_NONE, "None");
+	r_sky = Cvar_Get ("r_sky", "0", CVAR_NONE, "Toggles skyboxes");
+	r_skyname = Cvar_Get ("r_skyname", "sky", CVAR_NONE, 
+				"Sets the name of the current skybox");
 
 	gl_clear = Cvar_Get ("gl_clear","0",0,"None");
 	gl_texsort = Cvar_Get ("gl_texsort","1",0,"None");
@@ -234,7 +240,7 @@ void R_Init (void)
 	gl_particles = Cvar_Get ("gl_particles", "1", CVAR_NONE,
 			"Sets the size of particles, default 1");
 	gl_fires = Cvar_Get ("gl_fires", "1", CVAR_NONE,
-			"lavaball and rocket fireballs, set to 0 to disable");
+			"Toggles lavaball and rocket fireballs");
 
 #ifdef QUAKEWORLD
 	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions","1",0,"None");
