@@ -134,7 +134,7 @@ int CL_GetMessage (void)
 		if (net_message.cursize > MAX_MSGLEN)
 			Sys_Error ("Demo message > MAX_MSGLEN");
 		r = gzread (cls.demofile, net_message.data, net_message.cursize);
-		if (r != 1)
+		if (r != net_message.cursize)
 		{
 			CL_StopPlayback ();
 			return 0;

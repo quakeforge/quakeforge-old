@@ -204,7 +204,7 @@ qboolean CL_GetDemoMessage (void)
 		i = cls.netchan.outgoing_sequence & UPDATE_MASK;
 		pcmd = &cl.frames[i].cmd;
 		r = gzread (cls.demofile, pcmd, sizeof(*pcmd));
-		if (r != 1)
+		if (r != sizeof(*pcmd))
 		{
 			CL_StopPlayback ();
 			return 0;
@@ -233,7 +233,7 @@ qboolean CL_GetDemoMessage (void)
 		if (net_message.cursize > MAX_MSGLEN)
 			Sys_Error ("Demo message > MAX_MSGLEN");
 		r = gzread (cls.demofile, net_message.data, net_message.cursize);
-		if (r != 1)
+		if (r != net_message.cursize)
 		{
 			CL_StopPlayback ();
 			return 0;
