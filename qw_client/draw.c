@@ -663,9 +663,10 @@ void Draw_ConsoleBackground (int lines)
 		dest = conback->data + 320 + 320*186 - 11 - 8*strlen(ver);
 	} else {
 #if defined(__linux__)
-		sprintf (ver, "Linux (%4.2f) QuakeWorld %4.2f", LINUX_VERSION, VERSION);
+		//sprintf (ver, "Linux (%4.2f) QuakeWorld %4.2f", LINUX_VERSION, VERSION);
+		sprintf (ver, "QuakeForge (Linux QuakeWorld) Version %4.2f", VERSION);
 #else
-		sprintf (ver, "QuakeWorld %4.2f", VERSION);
+		sprintf (ver, "QuakeForge (QuakeWorld) %4.2f", VERSION);
 #endif
 		dest = conback->data + 320 - (strlen(ver)*8 + 11) + 320*186;
 	}

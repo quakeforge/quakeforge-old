@@ -789,9 +789,9 @@ void Draw_ConsoleBackground (int lines)
 	y = lines-14;
 	if (!cls.download) {
 #ifdef __linux__
-		sprintf (ver, "LinuxGL (%4.2f) QuakeWorld", LINUX_VERSION);
+		sprintf (ver, "QuakeForge (LinuxGL QuakeWorld) %4.2f", VERSION);
 #else
-		sprintf (ver, "GL (%4.2f) QuakeWorld", GLQUAKE_VERSION);
+		sprintf (ver, "QuakeForge (GL QuakeWorld) %4.2f", VERSION);
 #endif
 		x = vid.conwidth - (strlen(ver)*8 + 11) - (vid.conwidth*8/320)*7;
 		for (i=0 ; i<strlen(ver) ; i++)
