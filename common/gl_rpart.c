@@ -39,7 +39,7 @@
 
 #define MAX_PARTICLES			2048	// max particles at once
 #define ABSOLUTE_MIN_PARTICLES		512	// min particle clamp
-#define MAX_FIREBALLS			128	// rocket flames
+#define MAX_FIRES					128	// rocket flames
 
 int		ramp1[8] = {0x6f, 0x6d, 0x6b, 0x69, 0x67, 0x65, 0x63, 0x61};
 int		ramp2[8] = {0x6f, 0x6e, 0x6d, 0x6c, 0x6b, 0x6a, 0x68, 0x66};
@@ -55,7 +55,7 @@ vec3_t			r_pright, r_pup, r_ppn;
 
 extern cvar_t		*gl_particles;
 
-fball_t		r_fireballs[MAX_FIREBALLS];
+fire_t		r_fires[MAX_FIRES];
 
 /*
 ===============
@@ -612,7 +612,7 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 
 		switch (type) {
 			case 0:		// rocket trail
-				R_FireballTrail (start, end);
+				R_AddFire (start, end);
 				p->ramp = (rand()&3);
 				p->color = ramp3[(int)p->ramp];
 				p->type = pt_fire;
@@ -871,10 +871,10 @@ void R_DrawParticles (void)
 	particle engine code.
 */
 void
-R_FireballTrail (vec3_t start, vec3_t end)
+R_AddFire (vec3_t start, vec3_t end)
 {
 	float		len;
-	fball_t		*f;
+	fire_t		*f;
 	vec3_t		vec;
 
 	VectorSubtract (end, start, vec);
@@ -882,7 +882,7 @@ R_FireballTrail (vec3_t start, vec3_t end)
 
 	if (len)
 	{
-		f = R_AllocFireball (0);
+		f = R_AllocFire (0);
 		VectorCopy (end, f->origin);
 		VectorCopy (start, f->owner);
 		f->size = 20;
@@ -900,16 +900,16 @@ R_FireballTrail (vec3_t start, vec3_t end)
 
 	Clears out and returns a new fireball
 */
-fball_t *
-R_AllocFireball (int key)
+fire_t *
+R_AllocFire (int key)
 {
 	int		i;
-	fball_t		*f;
+	fire_t		*f;
 
 	if (key)	// first try to find/reuse a keyed spot
 	{
-		f = r_fireballs;
-		for (i = 0; i < MAX_FIREBALLS; i++, f++)
+		f = r_fires;
+		for (i = 0; i < MAX_FIRES; i++, f++)
 			if (f->key == key)
 			{
 				memset (f, 0, sizeof(*f));
@@ -918,8 +918,8 @@ R_AllocFireball (int key)
 			}
 	}
 
-	f = r_fireballs;	// no match, look for a free spot
-	for (i = 0; i < MAX_FIREBALLS; i++, f++)
+	f = r_fires;	// no match, look for a free spot
+	for (i = 0; i < MAX_FIRES; i++, f++)
 	{
 		if (f->die > cl.time)
 		{
@@ -929,7 +929,7 @@ R_AllocFireball (int key)
 		}
 	}
 
-	f = &r_fireballs[0];
+	f = &r_fires[0];
 	memset (f, 0, sizeof(*f));
 	f->key = key;
 	return f;	
@@ -941,7 +941,7 @@ R_AllocFireball (int key)
 	draws one fireball - probably never need to call this directly
 */
 void
-R_DrawFireball (fball_t *f)
+R_DrawFire (fire_t *f)
 {
 	int		i, j;
 	vec3_t		vec;
@@ -994,12 +994,12 @@ R_DrawFireball (fball_t *f)
 	Draws each fireball in sequence
 */
 void
-R_DrawFireballs (void)
+R_UpdateFires (void)
 {
 	int		i;
-	fball_t		*f;
+	fire_t	*f;
 
-	f = r_fireballs;
+	f = r_fires;
 
 	glDepthMask (0);
 	glDisable (GL_TEXTURE_2D);
@@ -1007,14 +1007,14 @@ R_DrawFireballs (void)
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_ONE, GL_ONE);
 
-	for (i = 0; i < MAX_FIREBALLS; i++)
+	for (i = 0; i < MAX_FIRES; i++)
 	{
 		if (f->die < cl.time || !f->size)
 			continue;
 
 		f->size += f->decay;
 		f->color[3] /= 2.0;
-		R_DrawFireball (f);
+		R_DrawFire (f);
 	}
 
 	glColor3f (1.0, 1.0, 1.0);

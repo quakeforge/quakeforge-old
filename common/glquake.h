@@ -250,12 +250,12 @@ typedef struct {
 	float	die, decay;		// duration settings
 	float	minlight;		// lighting threshold
 	float	color[4];		// RGBA
-} fball_t;
+} fire_t;
 
-void R_FireballTrail (vec3_t, vec3_t);
-fball_t *R_AllocFireball (int);
-void R_DrawFireball (fball_t *);
-void R_DrawFireballs (void);
+void R_AddFire (vec3_t, vec3_t);
+fire_t *R_AllocFire (int);
+void R_DrawFire (fire_t *);
+void R_UpdateFires (void);
 
 
 //
