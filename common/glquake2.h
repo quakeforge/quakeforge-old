@@ -33,15 +33,15 @@ void GL_EndRendering (void);
 
 
 // Function prototypes for the Texture Object Extension routines
-typedef GLboolean (GLAPIENTRY *ARETEXRESFUNCPTR)(GLsizei, const GLuint *,
+typedef GLboolean (APIENTRY *ARETEXRESFUNCPTR)(GLsizei, const GLuint *,
                     const GLboolean *);
-typedef void (GLAPIENTRY *BINDTEXFUNCPTR)(GLenum, GLuint);
-typedef void (GLAPIENTRY *DELTEXFUNCPTR)(GLsizei, const GLuint *);
-typedef void (GLAPIENTRY *GENTEXFUNCPTR)(GLsizei, GLuint *);
-typedef GLboolean (GLAPIENTRY *ISTEXFUNCPTR)(GLuint);
-typedef void (GLAPIENTRY *PRIORTEXFUNCPTR)(GLsizei, const GLuint *,
+typedef void (APIENTRY *BINDTEXFUNCPTR)(GLenum, GLuint);
+typedef void (APIENTRY *DELTEXFUNCPTR)(GLsizei, const GLuint *);
+typedef void (APIENTRY *GENTEXFUNCPTR)(GLsizei, GLuint *);
+typedef GLboolean (APIENTRY *ISTEXFUNCPTR)(GLuint);
+typedef void (APIENTRY *PRIORTEXFUNCPTR)(GLsizei, const GLuint *,
                     const GLclampf *);
-typedef void (GLAPIENTRY *TEXSUBIMAGEPTR)(int, int, int, int, int, int, int, int, void *);
+typedef void (APIENTRY *TEXSUBIMAGEPTR)(int, int, int, int, int, int, int, int, void *);
 
 extern	BINDTEXFUNCPTR bindTexFunc;
 extern	DELTEXFUNCPTR delTexFunc;

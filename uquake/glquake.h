@@ -38,15 +38,15 @@ void GL_EndRendering (void);
 
 #ifdef _WIN32
 // Function prototypes for the Texture Object Extension routines
-typedef GLboolean (GLAPIENTRY *ARETEXRESFUNCPTR)(GLsizei, const GLuint *,
+typedef GLboolean (APIENTRY *ARETEXRESFUNCPTR)(GLsizei, const GLuint *,
                     const GLboolean *);
-typedef void (GLAPIENTRY *BINDTEXFUNCPTR)(GLenum, GLuint);
-typedef void (GLAPIENTRY *DELTEXFUNCPTR)(GLsizei, const GLuint *);
-typedef void (GLAPIENTRY *GENTEXFUNCPTR)(GLsizei, GLuint *);
-typedef GLboolean (GLAPIENTRY *ISTEXFUNCPTR)(GLuint);
-typedef void (GLAPIENTRY *PRIORTEXFUNCPTR)(GLsizei, const GLuint *,
+typedef void (APIENTRY *BINDTEXFUNCPTR)(GLenum, GLuint);
+typedef void (APIENTRY *DELTEXFUNCPTR)(GLsizei, const GLuint *);
+typedef void (APIENTRY *GENTEXFUNCPTR)(GLsizei, GLuint *);
+typedef GLboolean (APIENTRY *ISTEXFUNCPTR)(GLuint);
+typedef void (APIENTRY *PRIORTEXFUNCPTR)(GLsizei, const GLuint *,
                     const GLclampf *);
-typedef void (GLAPIENTRY *TEXSUBIMAGEPTR)(int, int, int, int, int, int, int, int, void *);
+typedef void (APIENTRY *TEXSUBIMAGEPTR)(int, int, int, int, int, int, int, int, void *);
 
 extern	BINDTEXFUNCPTR bindTexFunc;
 extern	DELTEXFUNCPTR delTexFunc;
@@ -239,11 +239,11 @@ void GL_Bind (int texnum);
 #define    TEXTURE1_SGIS				0x835F
 
 #ifndef _WIN32
-#define GLAPIENTRY /* */
+#define APIENTRY /* */
 #endif
 
-typedef void (GLAPIENTRY *lpMTexFUNC) (GLenum, GLfloat, GLfloat);
-typedef void (GLAPIENTRY *lpSelTexFUNC) (GLenum);
+typedef void (APIENTRY *lpMTexFUNC) (GLenum, GLfloat, GLfloat);
+typedef void (APIENTRY *lpSelTexFUNC) (GLenum);
 extern lpMTexFUNC qglMTexCoord2fSGIS;
 extern lpSelTexFUNC qglSelectTextureSGIS;
 
