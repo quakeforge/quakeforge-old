@@ -115,20 +115,6 @@ int Sys_FileWrite (int handle, void *data, int count)
 	return fwrite (data, 1, count, sys_handles[handle]);
 }
 
-int Sys_FileTime (char *path)
-{
-	FILE    *f;
-	
-	f = fopen(path, "rb");
-	if (f)
-	{
-		fclose(f);
-		return 1;
-	}
-	
-	return -1;
-}
-
 void Sys_mkdir (char *path)
 {
 }

@@ -104,22 +104,6 @@ void Sys_Warn (char *warning, ...) {
 	fprintf(stderr, "Warning: %s", string);
 } 
 
-/*
-	Sys_FileTime
-
-		returns -1 if not present
-*/
-
-int	Sys_FileTime (char *path) {
-	struct	stat	buf;
-	
-	if (stat (path,&buf) == -1)
-		return -1;
-	
-	return buf.st_mtime;
-}
-
-
 void Sys_mkdir (char *path) {
     mkdir (path, 0777);
 }

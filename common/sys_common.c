@@ -27,6 +27,12 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+#ifdef HAVE_SYS_STAT_H
+# include <sys/stat.h>
+#endif
 
 
 int nostdout = 0;
@@ -59,4 +65,38 @@ void Sys_Printf (char *fmt, ...)
 
 	/* Make sure output is seen. */
 	fflush(stdout);
+}
+
+
+/*
+============
+Sys_FileTime
+
+returns -1 if not present
+============
+*/
+int Sys_FileTime (char *path)
+{
+	int	ret = -1;
+#ifdef HAVE_STAT
+	struct	stat	buf;
+	
+	if (stat(path, &buf) == 0) ret = buf.st_mtime;
+#else /* HAVE_STAT */
+	FILE	*f;
+#if defined(_WIN32) && !defined(SERVERONLY)
+	int t = VID_ForceUnlockedAndReturnState();
+#endif
+	
+	f = fopen(path, "rb");
+	if (f) {
+		fclose(f);
+		ret = 1;
+	}
+#if defined(_WIN32) && !defined(SERVERONLY)
+	VID_ForceLockState(t);
+#endif
+#endif /* HAVE_STAT */
+
+	return ret;
 }
