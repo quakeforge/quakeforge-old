@@ -303,7 +303,7 @@ qpic_t	*Draw_CachePic (char *path)
 	dat = (qpic_t *)COM_LoadTempFile (path);
 	if (!dat)
 		Sys_Error ("Draw_CachePic: failed to load %s", path);
-	SwapPic (dat);
+	SwapPic (dat);		// endian fixup
 
 	// HACK HACK HACK --- we need to keep the bytes for
 	// the translatable player picture just for the menu
