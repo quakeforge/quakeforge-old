@@ -3,7 +3,6 @@
 
 COMMON_DIR	:= $(PROJECT_DIR)/common
 TARGET_DIR	:= $(top_builddir)/targets
-QW_COMMON_DIR	:= $(PROJECT_DIR)/qw_common
 
 BUILD_DIR	:= $(TARGET_DIR)/$(MODULE)
 OBJ_PATTERN	+= $(BUILD_DIR)/common_lib/%.@OBJEXT@ $(BUILD_DIR)/%.@OBJEXT@
@@ -68,10 +67,3 @@ $(OBJ_PATTERN): $(COMMON_DIR)/%.s
 	@DIR=$(@D); $(MAKE_SURE_DIR)
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
-	@DIR=$(@D); $(MAKE_SURE_DIR)
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
-	@DIR=$(@D); $(MAKE_SURE_DIR)
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
