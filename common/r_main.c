@@ -695,9 +695,9 @@ void R_DrawViewModel (void)
 	dlight_t	*dl;
 
 #ifdef QUAKEWORLD
-	if (!r_drawviewmodel->value || r_fov_greater_than_90 || !Cam_DrawViewModel())
+	if (!r_drawviewmodel->value || !Cam_DrawViewModel())
 #else
-	if (!r_drawviewmodel->value || r_fov_greater_than_90)
+	if (!r_drawviewmodel->value)
 #endif	// QUAKEWORLD
 		return;
 
