@@ -45,8 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /WX /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /I "../winsup" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /YX /FD /c
-# SUBTRACT CPP /Fr
+# ADD CPP /nologo /WX /GX /O2 /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -73,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_common" /I "../qw_client" /I "../winsup" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /FR /YX /FD /I /GZ ../qw_common" /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "_DEBUG"
@@ -101,8 +100,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "QUAKEWORLD" /FR /YX /FD /c
-# ADD CPP /nologo /WX /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /I "../winsup" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
-# SUBTRACT CPP /Fr
+# ADD CPP /nologo /WX /GX /O2 /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -132,8 +130,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
 # SUBTRACT BASE CPP /Fr
-# ADD CPP /nologo /WX /GX /ZI /Od /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /I "../winsup" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
-# SUBTRACT CPP /Fr
+# ADD CPP /nologo /WX /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -1367,7 +1364,7 @@ InputPath=..\common\d_draw.s
 InputName=d_draw
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1382,7 +1379,7 @@ InputPath=..\common\d_draw.s
 InputName=d_draw
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1413,7 +1410,7 @@ InputPath=..\common\d_draw16.s
 InputName=d_draw16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1428,7 +1425,7 @@ InputPath=..\common\d_draw16.s
 InputName=d_draw16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1459,7 +1456,7 @@ InputPath=..\common\d_parta.s
 InputName=d_parta
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1474,7 +1471,7 @@ InputPath=..\common\d_parta.s
 InputName=d_parta
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1505,7 +1502,7 @@ InputPath=..\common\d_polysa.s
 InputName=d_polysa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1520,7 +1517,7 @@ InputPath=..\common\d_polysa.s
 InputName=d_polysa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1551,7 +1548,7 @@ InputPath=..\common\d_scana.s
 InputName=d_scana
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1566,7 +1563,7 @@ InputPath=..\common\d_scana.s
 InputName=d_scana
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1597,7 +1594,7 @@ InputPath=..\common\d_spr8.s
 InputName=d_spr8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1612,7 +1609,7 @@ InputPath=..\common\d_spr8.s
 InputName=d_spr8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1643,7 +1640,7 @@ InputPath=..\common\d_varsa.s
 InputName=d_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1658,7 +1655,7 @@ InputPath=..\common\d_varsa.s
 InputName=d_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1689,7 +1686,7 @@ InputPath=..\common\math.s
 InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1704,7 +1701,7 @@ InputPath=..\common\math.s
 InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1719,7 +1716,7 @@ InputPath=..\common\math.s
 InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1734,7 +1731,7 @@ InputPath=..\common\math.s
 InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1756,7 +1753,7 @@ InputPath=..\common\r_aclipa.s
 InputName=r_aclipa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1771,7 +1768,7 @@ InputPath=..\common\r_aclipa.s
 InputName=r_aclipa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1802,7 +1799,7 @@ InputPath=..\common\r_aliasa.s
 InputName=r_aliasa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1817,7 +1814,7 @@ InputPath=..\common\r_aliasa.s
 InputName=r_aliasa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1848,7 +1845,7 @@ InputPath=..\common\r_drawa.s
 InputName=r_drawa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1863,7 +1860,7 @@ InputPath=..\common\r_drawa.s
 InputName=r_drawa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1894,7 +1891,7 @@ InputPath=..\common\r_edgea.s
 InputName=r_edgea
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1909,7 +1906,7 @@ InputPath=..\common\r_edgea.s
 InputName=r_edgea
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1940,7 +1937,7 @@ InputPath=..\common\r_varsa.s
 InputName=r_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1955,7 +1952,7 @@ InputPath=..\common\r_varsa.s
 InputName=r_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -1986,7 +1983,7 @@ InputPath=..\common\snd_mixa.s
 InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2001,7 +1998,7 @@ InputPath=..\common\snd_mixa.s
 InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2016,7 +2013,7 @@ InputPath=..\common\snd_mixa.s
 InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2031,7 +2028,7 @@ InputPath=..\common\snd_mixa.s
 InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2053,7 +2050,7 @@ InputPath=..\common\surf16.s
 InputName=surf16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2068,7 +2065,7 @@ InputPath=..\common\surf16.s
 InputName=surf16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2099,7 +2096,7 @@ InputPath=..\common\surf8.s
 InputName=surf8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2114,7 +2111,7 @@ InputPath=..\common\surf8.s
 InputName=surf8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2145,7 +2142,7 @@ InputPath=..\common\sys_dosa.s
 InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2160,7 +2157,7 @@ InputPath=..\common\sys_dosa.s
 InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2175,7 +2172,7 @@ InputPath=..\common\sys_dosa.s
 InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2190,7 +2187,7 @@ InputPath=..\common\sys_dosa.s
 InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2212,7 +2209,7 @@ InputPath=..\common\worlda.s
 InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2227,7 +2224,7 @@ InputPath=..\common\worlda.s
 InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2242,7 +2239,7 @@ InputPath=..\common\worlda.s
 InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
@@ -2257,7 +2254,7 @@ InputPath=..\common\worlda.s
 InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /I "..\win32" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
 	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
