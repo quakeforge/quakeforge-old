@@ -20,7 +20,8 @@ ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
 
-HAS_SVGA    = @HAS_SVGA@
+HAS_GGI    = @HAS_GGI@
+HAS_SVGA   = @HAS_SVGA@
 HAS_GLIDE  = @HAS_GLIDE@
 HAS_TDFXGL = @HAS_TDFXGL@
 HAS_OGL    = @HAS_OGL@
@@ -57,6 +58,10 @@ ifeq ($(HAS_SVGA),yes)
 SVGAQUAKE = $(BIN_PREFIX)-svga
 endif
 
+ifeq ($(HAS_GGI),yes)
+GGIQUAKE = $(BIN_PREFIX)-ggi
+endif
+
 RELEASE = @RELEASE@
 ifeq ($(RELEASE),yes)
 OPTFLAGS = @RELEASE_CFLAGS@
@@ -64,7 +69,7 @@ else
 OPTFLAGS = -g
 endif
 
-targets       = $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE)
+targets       = $(GGIQUAKE) $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) ($CLEAN_TARGETS)
 
@@ -303,6 +308,57 @@ $(BUILD_DIR)/../$(SVGAQUAKE): $(OBJSquake-svga)
 clean-$(SVGAQUAKE):
 	rm -f $(OBJSquake-svga)
 endif
+
+###########################################################################
+#
+# qw-client-ggi
+#
+ifneq ($(GGIQUAKE),)
+
+# Map the list of source files into a list of object files
+ALL_GGI_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(GGI_VID_SRC) model.c
+OBJSquake-ggi = $(patsubst %,$(BUILD_DIR)/ggi/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_GGI_SRC) .c .s)))
+
+GGI_CFLAGS  = -DGGI @GGI_CFLAGS@
+GGI_LDFLAGS = @GGI_LIBS@ -lm
+GGI_VID_SRC = vid_ggi.c
+
+# This can be thought of as a macro that makes sure that the ggi
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_ggi_DIR = @DIR=ggi; $(MAKE_SURE_DIR)
+
+$(BUILD_DIR)/ggi/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_ggi_DIR)
+	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/ggi/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_ggi_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/ggi/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_ggi_DIR)
+	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/ggi/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_ggi_DIR)
+	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/ggi/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_ggi_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(GGIQUAKE): $(BUILD_DIR)/../$(GGIQUAKE)
+
+$(BUILD_DIR)/../$(GGIQUAKE): $(OBJSquake-ggi)
+	$(CC) $(CFLAGS) $(OBJSquake-ggi) $(GGI_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(GGIQUAKE)
+# XXX - Can this be automated?
+clean-$(GGIQUAKE):
+	rm -f $(OBJSquake-ggi)
+endif
+
 
 ###########################################################################
 #

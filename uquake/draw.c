@@ -109,8 +109,6 @@ Draw_Init
 */
 void Draw_Init (void)
 {
-	int		i;
-
 	draw_chars = W_GetLumpName ("conchars");
 	draw_disc = W_GetLumpName ("disc");
 	draw_backtile = W_GetLumpName ("backtile");
@@ -553,6 +551,9 @@ void Draw_ConsoleBackground (int lines)
 	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
 #elif defined(X11)
 	sprintf (ver, "QuakeForge (X11 UQuake) v%s" VERSION);
+	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
+#elif defined(GGI)
+	sprintf (ver, "QuakeForge (GGI UQuake) v%s" VERSION);
 	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
 #elif defined(__linux__)
 	sprintf (ver, "QuakeForge (Linux UQuake) v%s" VERSION);

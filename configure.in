@@ -41,6 +41,24 @@ if test "x$HAS_DGA" != xno; then
 fi
 
 
+dnl Checks for GGI support
+GGI_CFLAGS=""
+GGI_LIBS=""
+AC_ARG_WITH(ggi,
+[  --with-ggi=DIR         use LibGGI found in DIR],
+HAS_GGI=$withval, HAS_GGI=auto)
+if test "x$HAS_GGI" != xno; then
+   if test "x$HAS_GGI" != xauto; then
+      GGI_CFLAGS="-I$withval/include"
+      GGI_LIBS="-L$withval/lib"
+   fi
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $GGI_CFLAGS"
+   AC_CHECK_HEADER(ggi/ggi.h, HAS_GGI=yes, HAS_GGI=no)
+   CPPFLAGS="$save_CPPFLAGS"
+fi
+
+
 dnl Checks for SVGALib support
 SVGA_CFLAGS=""
 SVGA_LIBS=""
@@ -159,13 +177,19 @@ if test "x$USE_DGA" != xyes; then
    USE_DGA=no DGA_LIBS=""
 fi
 
+dnl Make sure -lggi works
+if test "x$HAS_GGI" = xyes; then
+   AC_CHECK_LIB(ggi, ggiEventsQueued, GGI_LIBS="$GGI_LIBS -lggi"
+      HAS_GGI=yes, HAS_GGI=no, [$GGI_LIBS])
+fi
+if test "x$HAS_GGI" != xyes; then
+   GGI_CFLAGS="" GGI_LIBS=""
+fi
+     
 dnl Make sure -lvga works
 if test "x$HAS_SVGA" = xyes; then
-   save_LIBS="$LIBS"
-   LIBS="$SVGA_LIBS $LIBS"
    AC_CHECK_LIB(vga, vga_getmousetype, SVGA_LIBS="$SVGA_LIBS -lvga"
-     HAS_VGA=yes, HAS_VGA=no, [$LIBS $SVGA_LIBS])
-   LIBS="$save_LIBS"
+     HAS_VGA=yes, HAS_VGA=no, [$SVGA_LIBS])
 fi 
 if test "x$HAS_SVGA" != xyes; then
    SVGA_CFLAGS="" SVGA_LIBS=""
@@ -247,6 +271,9 @@ if test "x$HAS_DGA" = xyes; then
 fi
 AC_SUBST(HAS_DGA)
 AC_SUBST(DGA_LIBS)
+AC_SUBST(HAS_GGI)
+AC_SUBST(GGI_CFLAGS)
+AC_SUBST(GGI_LIBS)
 AC_SUBST(HAS_SVGA)
 AC_SUBST(SVGA_CFLAGS)
 AC_SUBST(SVGA_LIBS)
