@@ -399,7 +399,7 @@ $(BUILD_DIR)/gl/vid_linuxglx.o: $(COMMON_DIR)/vid_linuxglx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/gl/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
-       $(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
 $(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
 
