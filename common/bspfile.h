@@ -38,10 +38,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	MAX_MAP_LEAFS		32767		// 
 #define	MAX_MAP_VERTS		65535
 #define	MAX_MAP_FACES		65535
-#define	MAX_MAP_MARKSURFACES	65535
+#define	MAX_MAP_MARKSURFACES 65535
 #define	MAX_MAP_TEXINFO		4096
 #define	MAX_MAP_EDGES		256000
 #define	MAX_MAP_SURFEDGES	512000
+#define	MAX_MAP_TEXTURES	512
 #define	MAX_MAP_MIPTEX		0x200000
 #define	MAX_MAP_LIGHTING	0x100000
 #define	MAX_MAP_VISIBILITY	0x100000
@@ -56,6 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 #define BSPVERSION	29
+#define	TOOLVERSION	2
 
 typedef struct
 {
@@ -141,12 +143,15 @@ typedef struct
 #define	CONTENTS_SLIME		-4
 #define	CONTENTS_LAVA		-5
 #define	CONTENTS_SKY		-6
-#define CONTENTS_CURRENT_0	-9
-#define CONTENTS_CURRENT_90	-10
-#define CONTENTS_CURRENT_180	-11
-#define CONTENTS_CURRENT_270	-12
-#define CONTENTS_CURRENT_UP	-13
-#define CONTENTS_CURRENT_DOWN	-14
+#define	CONTENTS_ORIGIN		-7		// removed at csg time
+#define	CONTENTS_CLIP		-8		// changed to contents_solid
+
+#define	CONTENTS_CURRENT_0		-9
+#define	CONTENTS_CURRENT_90		-10
+#define	CONTENTS_CURRENT_180	-11
+#define	CONTENTS_CURRENT_270	-12
+#define	CONTENTS_CURRENT_UP		-13
+#define	CONTENTS_CURRENT_DOWN	-14
 
 
 // !!! if this is changed, it must be changed in asm_i386.h too !!!
