@@ -40,6 +40,8 @@ unsigned short  d_8to16table[256];
 int    VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes = 0;
 byte    *VGA_pagebase;
 
+int	options_items = 14;
+
 static SDL_Surface *screen = NULL;
 
 static qboolean mouse_avail;

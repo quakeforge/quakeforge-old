@@ -69,6 +69,7 @@ static long GGI_highhunkmark, GGI_buffersize;
 static int	vid_surfcachesize;
 static void	*vid_surfcache;
 
+int     options_items = 14;
 
 static void
 do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)

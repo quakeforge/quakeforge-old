@@ -145,6 +145,8 @@ int		aPage;					// Current active display page
 int		vPage;					// Current visible display page
 int		waitVRT = true;			// True to wait for retrace on flip
 
+int     options_items = 14;
+
 static vmode_t	badmode;
 
 static byte	backingbuf[48*24];

@@ -40,10 +40,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef XMESA
 #include <GL/xmesa.h>
-
-#define OPTIONS_ITEMS	15
-#else
-#define OPTIONS_ITEMS   14
 #endif
 
 #define WARP_WIDTH              320
@@ -79,6 +75,12 @@ static float	old_mouse_x, old_mouse_y;
 cvar_t	m_filter = {"m_filter", "0"};
 
 static int scr_width, scr_height;
+
+#ifdef XMESA
+int options_items = 15;
+#else
+int options_items = 14;
+#endif
 
 /*-----------------------------------------------------------------------*/
 

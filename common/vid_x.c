@@ -42,8 +42,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "d_local.h"
 
-#define OPTIONS_ITEMS	14
-
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};
 float old_windowed_mouse;
@@ -94,6 +92,8 @@ static XImage			*x_framebuffer[2] = { 0, 0 };
 static XShmSegmentInfo	x_shminfo[2];
 
 static int verbose=0;
+
+int     options_items = 14;
 
 static byte current_palette[768];
 

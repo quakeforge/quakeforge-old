@@ -58,6 +58,8 @@ cvar_t		block_switch = {"block_switch","0", true};
 cvar_t		vid_window_x = {"vid_window_x", "0", true};
 cvar_t		vid_window_y = {"vid_window_y", "0", true};
 
+int     options_items = 13;
+
 int	d_con_indirect = 0;
 
 int		numvidmodes;

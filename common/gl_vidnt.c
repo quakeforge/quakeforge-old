@@ -40,8 +40,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define NO_MODE					(MODE_WINDOWED - 1)
 #define MODE_FULLSCREEN_DEFAULT	(MODE_WINDOWED + 1)
 
-#define OPTIONS_ITEMS	14
-
 typedef struct {
 	modestate_t	type;
 	int			width;
@@ -102,6 +100,8 @@ unsigned char	vid_curpal[256*3];
 static qboolean fullsbardraw = false;
 
 static float vid_gamma = 1.0;
+
+int 	options_items = 14;
 
 HGLRC	baseRC;
 HDC		maindc;

@@ -26,7 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	MNET_TCP		2
 
 extern	int	m_activenet;
-
+extern  int	options_items;
 //
 // menus
 //

@@ -1065,10 +1065,11 @@ again:
 //=============================================================================
 /* OPTIONS MENU */
 
-#ifndef OPTIONS_ITEMS
-#define OPTIONS_ITEMS   13
-#endif 
-
+/*
+ifndef options_items
+define options_items   13
+endif 
+*/
 
 
 #define	SLIDER_RANGE	10
@@ -1297,14 +1298,14 @@ void M_Options_Key (int k)
 		S_LocalSound ("misc/menu1.wav");
 		options_cursor--;
 		if (options_cursor < 0)
-			options_cursor = OPTIONS_ITEMS-1;
+			options_cursor = options_items-1;
 		break;
 
 	case KP_DOWNARROW:
 	case K_DOWNARROW:
 		S_LocalSound ("misc/menu1.wav");
 		options_cursor++;
-		if (options_cursor >= OPTIONS_ITEMS)
+		if (options_cursor >= options_items)
 			options_cursor = 0;
 		break;
 
@@ -1320,24 +1321,24 @@ void M_Options_Key (int k)
 	}
 
 #ifndef _WIN32
-	if (options_cursor == OPTIONS_ITEMS-1 && vid_menudrawfn == NULL)
+	if (options_cursor == options_items-1 && vid_menudrawfn == NULL)
 	{
 	    switch (k) {
 		case KP_UPARROW:
 		case K_UPARROW:
-		    options_cursor = OPTIONS_ITEMS-2;
+		    options_cursor = options_items-2;
 		    break;
 		default:
 		    options_cursor = 0;
 	    }
 	}
 #else
-	if ((options_cursor == OPTIONS_ITEMS-1) && (modestate != MS_WINDOWED))
+	if ((options_cursor == options_items-1) && (modestate != MS_WINDOWED))
 	{
 	    switch (k) {
 		case KP_UPARROW:
 		case K_UPARROW:
-		    options_cursor = OPTIONS_ITEMS-2;
+		    options_cursor = options_items-2;
 		    break;
 		default:
 		    options_cursor = 0;

@@ -132,6 +132,7 @@ Window				x_win, x_root_win;
 qboolean			x_focus = true;
 int				global_dx, global_dy;
 
+int     options_items = 14;
 
 static Colormap			x_cmap;
 static GC			x_gc;

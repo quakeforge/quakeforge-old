@@ -654,6 +654,12 @@ VID_ExtraOptionDraw(void)
 void
 VID_ExtraOptionCmd(int option_cursor)
 {
-	/* No extra option menu items yet */
+/*
+        switch(option_cursor)
+        {
+        case 12:  // Always start with 12
+        break;
+        }
+*/
 }
 

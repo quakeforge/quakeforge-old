@@ -48,6 +48,8 @@ static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;
 static qboolean is8bit = 0;
 
+int	options_items = 13;
+
 /*-----------------------------------------------------------------------*/
 
 //int	texture_mode = GL_NEAREST;
@@ -436,16 +438,18 @@ void VID_Init(unsigned char *palette)
 	vid.recalc_refdef = 1;				// force a surface cache flush
 }
 
-
-void
-VID_ExtraOptionDraw(void)
+void VID_ExtraOptionDraw(void)
 {
-	/* No extra option menu items yet */
+/* Port specific Options menu entrys */
 }
-
-
-void
-VID_ExtraOptionCmd(int options_cursor)
+ 
+void VID_ExtraOptionCmd(int option_cursor)
 {
-	/* No extra option menu items yet */
+/*
+        switch(option_cursor)
+        {
+        case 12:  // Always start with 12
+        break;
+        }
+*/
 }
