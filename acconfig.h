@@ -26,6 +26,9 @@
 /* Define this if you are using Mesa */
 #undef XMESA
 
+/* Define this if you want IPv6 support */
+#undef HAVE_IPV6
+
 /* Define this if you have GL_COLOR_INDEX8_EXT in GL/gl.h */
 #undef HAVE_GL_COLOR_INDEX8_EXT
 

@@ -137,11 +137,8 @@ CD_AUDIO_SRC   = cd_wrapper.c
 SYS_SRC        = sys_common.c @QW_CL_SYS_SRC@
 
 # Networking source files
-#
-# Uncomment the second line to add IPv6 support
 
-QW_NET_SRC     = net_udp.c net_com.c mdfour.c
-#QW_NET_SRC	= net_udp6.c net_com.c mdfour.c
+QW_NET_SRC     = @NET_SOURCE@ net_com.c mdfour.c
 
 # Common source files
 
