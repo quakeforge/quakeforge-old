@@ -835,14 +835,45 @@ int Cmd_CheckParm (char *parm)
 void Cmd_CmdList_f (void)
 {
 	cmd_function_t	*cmd;
-	int	i;
+	int		i;
+// 2000-07-10 Partial selection for CmdList command by Maddes  start
+	char 		*partial;
+	int		len;
+	int		count;
 
+	if (Cmd_Argc() > 1)
+	{
+		partial = Cmd_Argv (1);
+		len = Q_strlen(partial);
+	}
+	else
+	{
+		partial = NULL;
+		len = 0;
+	}
+
+	count=0;
+// 2000-07-10 Partial selection for CmdList command by Maddes  end
 	for (cmd=cmd_functions, i=0 ; cmd ; cmd=cmd->next, i++)
 	{
+// 2000-07-10 Partial selection for CmdList command by Maddes  start
+		if (partial && Q_strncmp (partial, cmd->name, len))
+		{
+			continue;
+		}
+		count++;
+// 2000-07-10 Partial selection for CmdList command by Maddes  end
 		Con_Printf("%s\n", cmd->name);
 	}
 
-	Con_Printf ("------------\n%d commands\n", i);
+// 2000-07-10 Partial selection for CmdList command by Maddes  start
+	Con_Printf ("------------\n");
+	if (partial)
+	{
+		Con_Printf ("%i beginning with \"%s\" out of ", count, partial);
+	}
+	Con_Printf ("%i commands\n", i);
+// 2000-07-10 Partial selection for CmdList command by Maddes  end
 }
 
 /*
