@@ -44,6 +44,8 @@ typedef struct sizebuf_s
 } sizebuf_t;
 
 #include <net.h>
+void SZ_Alloc (sizebuf_t *buf, int startsize);
+void SZ_Free (sizebuf_t *buf);
 void SZ_Clear (sizebuf_t *buf);
 void *SZ_GetSpace (sizebuf_t *buf, int length);
 void SZ_Write (sizebuf_t *buf, void *data, int length);
@@ -67,6 +69,19 @@ void InsertLinkAfter (link_t *l, link_t *after);
 // FIXME: remove this mess!
 #define	STRUCT_FROM_LINK(l,t,m) ((t *)((byte *)l - (int)&(((t *)0)->m)))
 
+//============================================================================
+// Pak 3 loading support:
+/*
+pack_t *COM_LoadQ3PackFile (char *packfile);
+uint_t COM_pak3_getlen(unzFile *pak);
+int COM_pak3_open(unzFile *pak, const char *path);
+uint_t COM_pak3_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf);
+int COM_pak3_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb);
+int COM_pak3_checkfile(unzFile *pak, const char *path);
+*/
+
+
+// End Pak3 support.
 //============================================================================
 
 #ifndef NULL
@@ -140,9 +155,12 @@ extern	int		com_argc;
 extern	char	**com_argv;
 
 int COM_CheckParm (char *parm);
+#ifdef QUAKEWORLD
 void COM_AddParm (char *parm);
-
 void COM_Init (void);
+#else
+void COM_Init (char *path);
+#endif
 void COM_InitArgv (int argc, char **argv);
 
 char *COM_SkipPath (char *pathname);
@@ -159,6 +177,10 @@ char	*va(char *format, ...);
 #include <quakefs.h>
 
 extern qboolean		standard_quake, rogue, hipnotic;
+byte *COM_LoadStackFile (char *path, void *buffer, int bufsize);
+byte *COM_LoadTempFile (char *path);
+byte *COM_LoadHunkFile (char *path);
+void COM_LoadCacheFile (char *path, struct cache_user_s *cu);
 
 char *Info_ValueForKey (char *s, char *key);
 void Info_RemoveKey (char *s, char *key);
