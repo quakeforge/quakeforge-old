@@ -25,6 +25,7 @@ LDFLAGS = @LDFLAGS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
+GENERATIONS = @GENERATIONS@
 
 ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
@@ -70,6 +71,9 @@ GENERAL_SRC = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c \
         $(SRV_PR_SRC) $(QW_SRV_SYS_SRC) $(QW_GENERAL_SRC) \
 	register_check.c qendian.c qargs.c quakefs.c quakeio.c \
 	lib_replace.c
+ifeq ($(GENERATIONS),yes)
+GENERAL_SRC += unzip.c
+endif
 ALL_QW_SRV_SRC = $(GENERAL_SRC) model.c
 # FIXME: add dos/win specifc source
 

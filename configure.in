@@ -818,6 +818,7 @@ AC_SUBST(NET_SOURCE)
 AC_SUBST(VERSION)
 AC_SUBST(QF_VERSION)
 AC_SUBST(ac_configure_args)
+AC_SUBST(GENERATIONS)
 
 dnl Output files
 AC_CONFIG_HEADER(common/config.h)
