@@ -21,8 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // comndef.h  -- general definitions
 
-#ifndef _COMMON_H
-#define _COMMON_H
+#ifndef _QARGS_H
+#define _QARGS_H
 
 #include "qtypes.h"
 
@@ -35,4 +35,4 @@ void COM_AddParm (char *parm);
 void COM_Init (void);
 void COM_InitArgv (int argc, char **argv);
 
-#endif // _COMMON_H
+#endif // _QARGS_H

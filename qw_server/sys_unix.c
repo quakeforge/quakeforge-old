@@ -20,7 +20,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 #include <sys/types.h>
-#include "qwsvdef.h"
 
 #ifdef NeXT
 #include <libc.h>
@@ -39,6 +38,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
+#include <stdarg.h>
+#include <malloc.h>
+
+#include <cvar.h>
+#include <qstructs.h>
+#include <qargs.h>
+#include <common.h>
+#include <protocol.h>
+#include <server.h>
+#include <sys.h>
 
 extern cvar_t	sys_nostdout;
 

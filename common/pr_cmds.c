@@ -20,23 +20,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#ifdef QUAKEWORLD
-#	include <qwsvdef.h>
-#elif UQUAKE
-#	include <client.h>
-#	include <server.h>
-#	include <world.h>
-#	include <progs.h>
-#	include <quakedef.h>
-#endif
 
+#include <ctype.h>
+#include <quakedef.h>
 #include <qtypes.h>
-#include <mathlib.h>
-#include <cvar.h>
-#include <protocol.h>
+#include <net.h>
 #include <cmd.h>
 #include <sys.h>
 #include <console.h>
+#include <protocol.h>
+#include <server.h>
+#include <phys.h>
+#include <mathlib.h>
+#include <world.h>
 
 
 #define	RETURN_EDICT(e) (((int *)pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))

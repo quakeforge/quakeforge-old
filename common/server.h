@@ -55,6 +55,8 @@ typedef enum {
 // some qc commands are only valid before the server has finished
 // initializing (precache commands, static sounds / objects, etc)
 
+struct qsocket_s;
+
 #ifdef QUAKEWORLD
 typedef struct
 {

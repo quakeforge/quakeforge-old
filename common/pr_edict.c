@@ -22,24 +22,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifdef QUAKEWORLD
-#include <qwsvdef.h>
-#elif UQUAKE
-#	include <client.h>
-#	include <server.h>
-#	include <world.h>
-#	include <progs.h>
-#	include <quakedef.h>
-#endif
-
+#include <ctype.h>
+#include <quakedef.h>
 #include <qtypes.h>
-#include <lib_replace.h>
-#include <mathlib.h>
-#include <sys.h>
+#include <net.h>
 #include <cmd.h>
-#include <crc.h>
-#include <cvar.h>
+#include <sys.h>
 #include <console.h>
+#include <protocol.h>
+#include <server.h>
+#include <phys.h>
+#include <mathlib.h>
+#include <world.h>
+#include <crc.h>
 
 dprograms_t		*progs;
 dfunction_t		*pr_functions;
