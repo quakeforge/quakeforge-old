@@ -826,13 +826,14 @@ R_SetFrustum ( void ) {
 	R_SetupFrame
 */
 void
-R_SetupFrame ( void ) {
-// don't allow cheats in multiplayer
+R_SetupFrame ( void )
+{
+	// don't allow cheats in multiplayer
 #ifdef QUAKEWORLD
-	r_fullbright->value = 0;
-	r_lightmap->value = 0;
+	Cvar_Set (r_fullbright, "0");
+	Cvar_Set (r_lightmap, "0");
 	if (!atoi(Info_ValueForKey(cl.serverinfo, "watervis")))
-		r_wateralpha->value = 1;
+		Cvar_Set (r_wateralpha, "1");
 #else
 	if (cl.maxclients > 1)
 		Cvar_Set (r_fullbright, "0");

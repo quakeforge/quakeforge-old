@@ -516,7 +516,8 @@ void Draw_String (int x, int y, char *str)
 Draw_Alt_String
 ================
 */
-void Draw_Alt_String (int x, int y, char *str)
+void
+Draw_Alt_String (int x, int y, char *str)
 {
 	while (*str)
 	{
@@ -526,7 +527,8 @@ void Draw_Alt_String (int x, int y, char *str)
 	}
 }
 
-void Draw_Crosshair(void)
+void
+Draw_Crosshair(void)
 {
 	int x, y;
 	extern vrect_t		scr_vrect;
@@ -913,6 +915,7 @@ void Draw_FadeScreen (void)
 {
 	glEnable (GL_BLEND);
 	glDisable (GL_TEXTURE_2D);
+	glDisable (GL_ALPHA_TEST);
 	glColor4f (0, 0, 0, 0.8);
 	glBegin (GL_QUADS);
 
@@ -923,6 +926,7 @@ void Draw_FadeScreen (void)
 
 	glEnd ();
 	glColor4f (1,1,1,1);
+	glEnable (GL_ALPHA_TEST);
 	glEnable (GL_TEXTURE_2D);
 	glDisable (GL_BLEND);
 

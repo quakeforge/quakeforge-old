@@ -33,7 +33,7 @@ PLEASE NOTE:  Because the merge is still in progress, we haven't even
 
 Major projects:
 
-* (0.2)    Merge Quake/QuakeWorld [almost everybody]
+* (0.2)    Merge Quake/QuakeWorld (essentially done)
 + (0.3?)   Make one QF bin w/ many shared libs
 +          Integration of Aftershock
 ?          Redesign the entire network protocol to be more extensible and
@@ -48,8 +48,8 @@ Platform support:
 + (0.2)    Seperate pak game and config directory support
 + (0.2)    Global config file [knghtbrd]
 + (0.2?)   Automake support
-+ (0.3)    Revamp the entire menu subsystem
-+          Return of the unix dedicated server
++ (0.3?)   Revamp the entire menu subsystem
++          Return of the unix dedicated uquake server
 +          Add more platform support
 -          Audio support for more platforms
 -          Support for XInput
@@ -61,7 +61,6 @@ Platform support:
 Game engine:
 
 * (0.2)    zip-packed game files (pak3 and similar) [raptor]
-+ (0.2)    Enhanced console (history, cmdline editing)
 * (0.3?)   Add a volumetric fog engine [raptor]
 +          Allow server admin to adjust air control (ie. in low gravity)
 -          Add a wind engine
@@ -78,7 +77,6 @@ Game engine:
 Other engines:
 
 + (0.2?)   Real mouse wheel support
-+ (0.3?)   Colored lighting support [raptor]
 - (0.3?)   Make the damned brightness slider in GL renderers useful
 +          More generalized sound/music APIs [mercury, knghtbrd]
 -          Support overriding the 8x8 console font with one of any size
