@@ -8,7 +8,7 @@ this will copy math.s, d_polysa.s, and d_parta.s into common
 it will also copy any other files in that dir that need to be copied
 (note: make backups of the destinations in case you need them)
 
-3) copy uquake\wins\sys_win.c uquake\
+2) copy uquake\wins\sys_win.c uquake\
 
 Notes:
 
