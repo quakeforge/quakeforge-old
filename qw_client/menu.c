@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <menu.h>
 #include <view.h>
 #include <sound.h>
-
+#include <cl_slist.h>
 
 enum {
 	m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer,
@@ -280,6 +280,8 @@ void M_ToggleMenu_f (void)
 	if (key_dest == key_console)
 	{
 		Con_ToggleConsole_f ();
+		if (cls.state != ca_connected)
+			M_Menu_Main_f ();
 	}
 	else
 	{
@@ -1050,33 +1052,126 @@ void M_SinglePlayer_Key (key) {
 	if (key == K_ESCAPE || key==K_ENTER || key == KP_ENTER)
 		m_state = m_main;
 }
+#define MENU_X 50
+#define MENU_Y 30
+#define STAT_X 50
+#define STAT_Y 122
+
+int m_multip_cursor;
+int m_multip_mins;
+int m_multip_maxs;
+int m_multip_horiz;
 
 void M_Menu_MultiPlayer_f (void) {
+	key_dest = key_menu;
+	m_entersound = true;
 	m_state = m_multiplayer;
+	m_multip_cursor = 0;
+	m_multip_mins = 0;
+	m_multip_maxs = 10;
+	m_multip_horiz = 0;
 }
 
 void M_MultiPlayer_Draw (void) {
-	qpic_t	*p;
+	int serv;
+	int line = 1;
+	qpic_t *p;
+	int f;
 
-	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
-//	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
-	p = Draw_CachePic ("gfx/p_multi.lmp");
-	M_DrawPic ( (320-p->width)/2, 4, p);
-//	M_DrawTransPic (72, 32, Draw_CachePic ("gfx/sp_menu.lmp") );
-
-	M_DrawTextBox (46, 8*8, 27, 9);
-	M_PrintWhite (72, 10*8, "If you want to find QW  ");
-	M_PrintWhite (72, 11*8, "games, head on over to: ");
-	     M_Print (72, 12*8, "   www.quakeworld.net   ");
-	M_PrintWhite (72, 13*8, "          or            ");
-	     M_Print (72, 14*8, "   www.quakespy.com     ");
-	M_PrintWhite (72, 15*8, "For pointers on getting ");
-	M_PrintWhite (72, 16*8, "        started!        ");
+	M_DrawTransPic(16,4,Draw_CachePic("gfx/qplaque.lmp"));
+	p = Draw_CachePic("gfx/p_multi.lmp");
+	M_DrawPic((320-p->width)/2,4,p);
+	
+	if (!(slist[0].server)) {
+		M_DrawTextBox(60,80,23,4);
+		M_PrintWhite(110,12*8,"No server list");
+		M_PrintWhite(140,13*8,"found.");
+		return;
+	}
+	M_DrawTextBox(STAT_X,STAT_Y,23,4);
+	M_DrawTextBox(STAT_X+96,STAT_Y+38,12,3);
+	M_DrawTextBox(MENU_X,MENU_Y,23,(m_multip_maxs - m_multip_mins)+1);
+	for (serv = m_multip_mins; serv <= m_multip_maxs; serv++) {
+		if (slist[serv].server) {
+			M_Print(MENU_X+18,line*8+MENU_Y,
+				va("%1.21s",
+				strlen(slist[serv].description) <= m_multip_horiz ? "" : slist[serv].description+m_multip_horiz));
+			line++;
+		}
+	}
+	M_PrintWhite(STAT_X+18,STAT_Y+16,"IP/Hostname:");
+	M_Print(STAT_X+18,STAT_Y+24,slist[m_multip_cursor].server);
+	M_DrawCharacter(MENU_X+8,(m_multip_cursor - m_multip_mins + 1) * 8+MENU_Y,
+		12+((int)(realtime*4)&1));
+	f = (int)(realtime * 10) % 6;
+	M_PrintWhite(STAT_X+118,STAT_Y+58,"uakeforge!");
+	M_DrawTransPic(STAT_X+105,STAT_Y+48,Draw_CachePic(va("gfx/menudot%i.lmp",f+1)));
 }
 
 void M_MultiPlayer_Key (key) {
-	if (key == K_ESCAPE || key==K_ENTER || key==KP_ENTER)
+//	server_entry_t *pt;
+	if (!(slist[0].server) && key != K_ESCAPE)
+		return;
+	switch(key) {
+	case K_ESCAPE:
+		M_Menu_Main_f();
+		break;
+	case KP_DOWNARROW:
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		if (m_multip_cursor < (MAX_SERVER_LIST-1) && slist[m_multip_cursor+1].server) {
+			m_multip_cursor++;
+		}
+		break;
+	case KP_UPARROW:
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		if (m_multip_cursor > 0) {
+			m_multip_cursor--;
+		}
+		break;
+	case K_PGUP:
+		S_LocalSound("misc/menu1.wav");
+		m_multip_cursor -= (m_multip_maxs - m_multip_mins);
+		if (m_multip_cursor < 0)
+			m_multip_cursor = 0;
+		break;
+	case K_PGDN:
+		S_LocalSound("misc/menu1.wav");
+		m_multip_cursor += (m_multip_maxs - m_multip_mins);
+		if (m_multip_cursor >= MAX_SERVER_LIST)
+			m_multip_cursor = MAX_SERVER_LIST - 1;
+		while (!(slist[m_multip_cursor].server))
+			m_multip_cursor--;
+		break;
+	case K_RIGHTARROW:
+		S_LocalSound("misc/menu1.wav");
+		if (m_multip_horiz < 256)
+			m_multip_horiz++;
+		break;
+	case K_LEFTARROW:
+		S_LocalSound("misc/menu1.wav");
+		if (m_multip_horiz > 0 )
+			m_multip_horiz--;
+		break;
+	case K_ENTER:
 		m_state = m_main;
+		M_ToggleMenu_f();
+		CL_Disconnect();
+		strncpy(cls.servername,slist[m_multip_cursor].server,sizeof(cls.servername)-1);
+		CL_BeginServerConnect();
+		break;
+	default:
+		break;
+	}
+	if (m_multip_cursor < m_multip_mins) {
+		m_multip_maxs -= (m_multip_mins - m_multip_cursor);
+		m_multip_mins = m_multip_cursor;
+	}
+	if (m_multip_cursor > m_multip_maxs) {
+		m_multip_mins += (m_multip_cursor - m_multip_maxs);
+		m_multip_maxs = m_multip_cursor;
+	}
 }
 
 void M_Quit_Draw (void)

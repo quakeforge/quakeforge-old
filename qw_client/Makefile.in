@@ -100,7 +100,7 @@ QW_NET_SRC     = @NET_SOURCE@ net_com.c mdfour.c
 
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
                  wad.c zone.c cvars.c qendian.c lib_replace.c quakefs.c \
-		 quakeio.c qargs.c plugin.c
+		 quakeio.c qargs.c plugin.c cl_slist.c
 ifeq ($(GENERATIONS),yes)
 MISC_SRC += unzip.c
 endif

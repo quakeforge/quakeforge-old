@@ -53,7 +53,9 @@
 #include <sbar.h>
 #include <mathlib.h>
 #include <menu.h>
-
+#ifdef QUAKEWORLD
+#include <cl_slist.h>
+#endif
 
 extern int host_hunklevel;
 
@@ -692,6 +694,10 @@ Host_Shutdown( void )
 		VID_Shutdown();
 	}
 	Cvar_Shutdown ();
+	// New -- Shutdown server list
+#ifdef QUAKEWORLD
+	Server_List_Shutdown();
+#endif
 }
 
 /*

@@ -71,7 +71,9 @@
 #include <sbar.h>
 #include <cdaudio.h>
 #include <input.h>
-
+#ifdef QUAKEWORLD
+#include <cl_slist.h>
+#endif
 #ifdef __sun
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
 #define model_t sunmodel_t
@@ -138,6 +140,10 @@ cvar_t	*localid;
 
 #ifdef QUAKEWORLD
 static qboolean allowremotecmd = true;
+#endif
+// Need this defined here for server list loading
+#ifdef QUAKEWORLD
+cvar_t *fs_basepath;
 #endif
 
 //
@@ -370,6 +376,9 @@ CL_Connect_f
 void CL_Connect_f (void)
 {
 	char	*server;
+#ifdef QUAKEWORLD
+	int snum;
+#endif
 
 	if (Cmd_Argc() != 2) {
 		Con_Printf ("usage: connect <server>\n");
@@ -377,7 +386,16 @@ void CL_Connect_f (void)
 	}
 
 	server = Cmd_Argv (1);
-
+#ifdef QUAKEWORLD
+	if (server[0] == '#') {
+		snum = Q_atoi(server + 1);
+		if (snum >= MAX_SERVER_LIST || !(slist[snum].server)) {
+			Con_Printf("Server not found.\n");
+			return;
+		}
+		server = slist[snum].server;
+	}
+#endif
 	CL_Disconnect ();
 
 	strncpy (cls.servername, server, sizeof(cls.servername)-1);
@@ -1631,7 +1649,25 @@ void SetPal (int i)
 	}
 #endif
 }
-
+/*
+=================
+CL_Slist_f
+Lists servers in
+the server list.
+QW only.
+=================
+*/
+#ifdef QUAKEWORLD
+void CL_Slist_f() {
+	int i;
+	for (i=0;i < MAX_SERVER_LIST;i++) {
+		if (slist[i].server)
+			Con_Printf("[%i] %s - %s\n",i+1,
+			slist[i].description,
+			slist[i].server);
+	}
+}
+#endif
 /*
 =================
 CL_Init
@@ -1639,6 +1675,9 @@ CL_Init
 */
 void CL_Init (void)
 {
+#ifdef QUAKEWORLD
+	QFile *serlist;
+#endif
 #ifdef UQUAKE
 	SZ_Alloc (&cls.netchan.message, 1024);
 #endif
@@ -1718,6 +1757,19 @@ void CL_Init (void)
 //
 #ifdef _WIN32
 	Cmd_AddCommand ("windows", CL_Windows_f);
+#endif
+
+// New -- Load server list
+#ifdef QUAKEWORLD
+	Cmd_AddCommand ("slist", CL_Slist_f);
+	
+	Server_List_Init();
+	printf("CL_Init: Server list initialized.\n");
+	if ((serlist = Qopen(va("%s/servers.txt",fs_basepath->string),"r")) != NULL) {
+		printf("CL_Init: Found servers.txt...\n");
+		Server_List_Load(serlist);
+		Qclose(serlist);
+	}
 #endif
 }
 

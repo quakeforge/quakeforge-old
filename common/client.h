@@ -439,6 +439,7 @@ void CL_Signon4 (void);
 
 void CL_Disconnect (void);
 void CL_Disconnect_f (void);
+void CL_Slist_f (void);
 void CL_NextDemo (void);
 qboolean CL_DemoBehind(void);
 void CL_BeginServerConnect(void);
