@@ -1613,6 +1613,8 @@ pack_t *COM_LoadPackFile (char *packfile)
 	return pack;
 }
 
+// Todo: Make This work! :)
+#if defined _EXPERIMENTAL_ && GENERATIONS 
 int
 COM_pak3_checkfile(unzFile *pak, const char *path)
 {
@@ -1686,8 +1688,6 @@ COM_pak3_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
 }
 
 
-// Todo: Make This work! :)
-#if defined _EXPERIMENTAL_ && GENERATIONS 
 pack_t *COM_LoadQ3PackFile (char *packfile)
 {
 
