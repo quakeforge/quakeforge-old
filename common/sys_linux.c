@@ -293,6 +293,10 @@ int main (int c, char **v) {
 	if (j)
 		parms.memsize = (int) (Q_atof(com_argv[j+1]) * 1024 * 1024);
 	parms.membase = malloc (parms.memsize);
+	if (!parms.membase) {
+		printf ("Can't allocate zone memory!\n");
+		return 1;
+	}
 
 	parms.basedir = basedir;
 // caching is disabled by default, use -cachedir to enable

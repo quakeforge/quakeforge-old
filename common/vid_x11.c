@@ -599,6 +599,7 @@ void VID_Init (unsigned char *palette)
 					x=vidmodes[i]->hdisplay;
 					y=vidmodes[i]->vdisplay;
 				}
+				printf("%dx%d\n",vidmodes[i]->hdisplay,vidmodes[i]->vdisplay);
 			}
 			// chose the smallest mode that our window fits into;
 			for (i=smallest_mode;
