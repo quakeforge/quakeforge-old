@@ -1606,8 +1606,6 @@ void	VID_Init (unsigned char *palette)
 
 	IN->Init();
 
-	S_Init();
-
 	memset(&devmode, 0, sizeof(devmode));
 
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
