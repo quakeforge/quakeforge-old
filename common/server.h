@@ -326,6 +326,7 @@ typedef struct
 	int			time;
 } challenge_t;
 
+#ifdef QUAKEWORLD
 typedef struct
 {
 	int			spawncount;			// number of servers spawned since start,
@@ -348,6 +349,16 @@ typedef struct
 
 	challenge_t	challenges[MAX_CHALLENGES];	// to prevent invalid IPs from connecting
 } server_static_t;
+#else
+typedef struct
+{
+	int			maxclients;
+	int			maxclientslimit;
+	struct client_s	*clients;		// [maxclients]
+	int			serverflags;		// episode completion information
+	qboolean	changelevel_issued;	// cleared when at SV_SpawnServer
+} server_static_t;
+#endif
 
 //=============================================================================
 
@@ -399,7 +410,11 @@ extern	edict_t		*sv_player;
 extern	cvar_t	sv_mintic, sv_maxtic;
 extern	cvar_t	sv_maxspeed;
 
+#ifdef QUAKEWORLD
 extern	netadr_t	master_adr[MAX_MASTERS];	// address of the master server
+#else
+extern	netadr_t	master_adr;	// address of the master server
+#endif
 
 extern	cvar_t	spawn;
 extern	cvar_t	teamplay;
@@ -428,23 +443,28 @@ extern	QFile		*sv_fraglogfile;
 //
 
 #ifdef QUAKEWORLD
+void SV_AddGravity (edict_t *ent, float scale);
 void SV_Shutdown (void);
 void SV_DropClient (client_t *drop);
 void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg);
 void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...);
 void SV_BroadcastPrintf (int level, char *fmt, ...);
 void SV_Frame (float time);
+vvoid SV_Physics_Client (edict_t	*ent);
+oid SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
 #else
+void SV_AddGravity (edict_t *ent);
 void SV_Shutdown (qboolean crash);
 void SV_DropClient (qboolean crash);
 void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg);
 void SV_ClientPrintf (char *fmt, ...);
 void SV_BroadcastPrintf (char *fmt, ...);
 void SV_Frame ( void );
+void SV_Physics_Client (edict_t	*ent, int num);
+void SV_WriteEntitiesToClient (edict_t	*clent, sizebuf_t *msg);
 #endif
 
 void SV_AddClientToServer (struct qsocket_s	*ret);
-void SV_AddGravity (edict_t *ent, float scale);
 void SV_BeginRedirect (redirect_t rd);
 void SV_BroadcastCommand (char *fmt, ...);
 int SV_CalcPing (client_t *cl);
@@ -474,7 +494,6 @@ int SV_ModelIndex (char *name);
 void SV_MoveToGoal (void);
 void SV_Multicast (vec3_t origin, int to);
 void SV_Physics (void);
-void SV_Physics_Client (edict_t	*ent);
 void SV_Physics_Toss (edict_t *ent);
 void SV_ProgStartFrame (void);
 qboolean SV_RunThink (edict_t *ent);
@@ -499,7 +518,6 @@ void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
 void SV_Status_f (void);
 void SV_TogglePause (const char *msg);
 void SV_UserInit (void);
-void SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
 
 qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink);
 qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink);
