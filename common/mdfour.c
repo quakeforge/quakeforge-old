@@ -171,7 +171,7 @@ void mdfour_update(struct mdfour *md, unsigned char *in, int n)
 		m->totalN += 64;
 	}
 
-	if (n) mdfour_tail(in, n);
+	mdfour_tail(in, n);
 }
 
 
