@@ -1058,39 +1058,73 @@ V_Init ( void )
 	lcd_x = Cvar_Get ("lcd_x", "0", CVAR_NONE, "None");
 	lcd_yaw = Cvar_Get ("lcd_yaw", "0", CVAR_NONE, "None");
 
-	v_centermove	= Cvar_Get ("v_centermove", "0.15", CVAR_NONE, "None");
-	v_centerspeed	= Cvar_Get ("v_centerspeed", "500", CVAR_NONE, "None");
+	v_centermove	= Cvar_Get ("v_centermove", "0.15", CVAR_NONE,
+		"Sets how far the player must move forward before the view "
+		"recenters");	
+	v_centerspeed	= Cvar_Get ("v_centerspeed", "500", CVAR_NONE,
+		"Sets how quickly you return to a center view after a "
+		"lookup or lookdown");
+	v_iyaw_cycle	= Cvar_Get ("v_iyaw_cycle", "2", CVAR_NONE,
+		"Sets how quickly you look left and right when v_idlescale is "
+		"active");
+	v_iroll_cycle	= Cvar_Get ("v_iroll_cycle", "0.5", CVAR_NONE,
+		"Sets how quickly you tilt right and left when v_idlescale is "
+		"active");
+	v_ipitch_cycle	= Cvar_Get ("v_ipitch_cycle", "1", CVAR_NONE,
+		"Sets how quickly you lean forwards and backwards when "
+		"v_idlescale is active");
+	v_iyaw_level	= Cvar_Get ("v_iyaw_level", "0.3", CVAR_NONE,
+		"Sets how far you look left and right when v_idlescale is " 
+		"active");
+	v_iroll_level	= Cvar_Get ("v_iroll_level", "0.1", CVAR_NONE,
+		"Sets how far you tilt right and left when v_idlescale is "
+		"active");
+	v_ipitch_level	= Cvar_Get ("v_ipitch_level", "0.3", CVAR_NONE,
+		"Sets how far lean forwards and backwards when v_idlescale is "
+		"active");
+	v_contentblend	= Cvar_Get ("v_contentblend", "1", CVAR_NONE,
+		"Shift color in liquids");
 
-	v_iyaw_cycle	= Cvar_Get ("v_iyaw_cycle", "2", CVAR_NONE, "None");
-	v_iroll_cycle	= Cvar_Get ("v_iroll_cycle", "0.5", CVAR_NONE, "None");
-	v_ipitch_cycle	= Cvar_Get ("v_ipitch_cycle", "1", CVAR_NONE, "None");
-	v_iyaw_level	= Cvar_Get ("v_iyaw_level", "0.3", CVAR_NONE, "None");
-	v_iroll_level	= Cvar_Get ("v_iroll_level", "0.1", CVAR_NONE, "None");
-	v_ipitch_level	= Cvar_Get ("v_ipitch_level", "0.3", CVAR_NONE, "None");
+	v_idlescale 	= Cvar_Get ("v_idlescale", "0", CVAR_NONE, 
+		"Toggles whether the the view remains idle");
+	crosshaircolor	= Cvar_Get ("crosshaircolor", "79", CVAR_ARCHIVE,
+		"Sets the crosshair color");
+	crosshair	= Cvar_Get ("crosshair", "0", CVAR_ARCHIVE,
+		"Sets which crosshair is used");
+	cl_crossx	= Cvar_Get ("cl_crossx", "0", CVAR_ARCHIVE,
+		"Sets the x location of the crosshair");
+	cl_crossy	= Cvar_Get ("cl_crossy", "0", CVAR_ARCHIVE,
+		"Sets the y location of the crosshair");
+	gl_cshiftpercent = Cvar_Get ("gl_cshiftpercent", "100", CVAR_NONE,
+		"Sets the percentage of color shifting");
 
-	v_contentblend	= Cvar_Get ("v_contentblend", "1", CVAR_NONE, "Shift color in liquids");
+	scr_ofsx	= Cvar_Get ("scr_ofsx", "0", CVAR_NONE,
+		"Sets how much to offset the view in the x direction");
+	scr_ofsy	= Cvar_Get ("scr_ofsy", "0", CVAR_NONE,
+		"Sets how much to offset the view in the y direction");
+	scr_ofsz	= Cvar_Get ("scr_ofsz", "0", CVAR_NONE,
+		"Sets how much to offset the view in the z direction");
 
-	v_idlescale 	= Cvar_Get ("v_idlescale", "0", CVAR_NONE, "None");
-	crosshaircolor	= Cvar_Get ("crosshaircolor", "79", CVAR_ARCHIVE, "Crosshair Color");
-	crosshair		= Cvar_Get ("crosshair", "0", CVAR_ARCHIVE, "Crosshair selection");
-	cl_crossx		= Cvar_Get ("cl_crossx", "0", CVAR_ARCHIVE, "Crosshair X location");
-	cl_crossy		= Cvar_Get ("cl_crossy", "0", CVAR_ARCHIVE, "Crosshair Y location");
-	gl_cshiftpercent = Cvar_Get ("gl_cshiftpercent", "100", CVAR_NONE, "Percentage of color shifting");
+	cl_rollspeed	= Cvar_Get ("cl_rollspeed", "200", CVAR_NONE,
+		"Sets how quickly you straighten out after strafing");
+	cl_rollangle	= Cvar_Get ("cl_rollangle", "2.0", CVAR_NONE,
+		"Sets how much your screen tilts when strafing");
+	cl_bob		= Cvar_Get ("cl_bob", "0.02", CVAR_NONE,
+		"Sets how much your weapon moves up and down when walking");
+	cl_bobcycle	= Cvar_Get ("cl_bobcycle", "0.6", CVAR_NONE,
+		"Sets how quickly your weapon moves up and down when walking");
+	cl_bobup	= Cvar_Get ("cl_bobup", "0.5", CVAR_NONE,
+		"Sets how long your weapon stays up before cycling when "
+		"walking");
 
-	scr_ofsx = Cvar_Get ("scr_ofsx", "0", CVAR_NONE, "None");
-	scr_ofsy = Cvar_Get ("scr_ofsy", "0", CVAR_NONE, "None");
-	scr_ofsz = Cvar_Get ("scr_ofsz", "0", CVAR_NONE, "None");
-
-	cl_rollspeed = Cvar_Get ("cl_rollspeed", "200", CVAR_NONE, "None");
-	cl_rollangle = Cvar_Get ("cl_rollangle", "2.0", CVAR_NONE, "None");
-	cl_bob = Cvar_Get ("cl_bob", "0.02", CVAR_NONE, "None");
-	cl_bobcycle = Cvar_Get ("cl_bobcycle", "0.6", CVAR_NONE, "None");
-	cl_bobup = Cvar_Get ("cl_bobup", "0.5", CVAR_NONE, "None");
-
-	v_kicktime = Cvar_Get ("v_kicktime", "0.5", CVAR_NONE, "None");
-	v_kickroll = Cvar_Get ("v_kickroll", "0.6", CVAR_NONE, "None");
-	v_kickpitch = Cvar_Get ("v_kickpitch", "0.6", CVAR_NONE, "None");
-	v_gamma = Cvar_Get ("v_gamma", "1.0", CVAR_ARCHIVE, "Monitor gamma");
+	v_kicktime	= Cvar_Get ("v_kicktime", "0.5", CVAR_NONE,
+		"Sets how long the kick effects last (when you are hit)");
+	v_kickroll	= Cvar_Get ("v_kickroll", "0.6", CVAR_NONE,
+		"Sets how much you lean when hit");
+	v_kickpitch	= Cvar_Get ("v_kickpitch", "0.6", CVAR_NONE,
+		"Sets how much you look up when hit");
+	v_gamma		= Cvar_Get ("v_gamma", "1.0", CVAR_ARCHIVE,
+		"Sets the monitor gamma");
 
 	BuildGammaTable (v_gamma->value);	// no gamma yet
 }
