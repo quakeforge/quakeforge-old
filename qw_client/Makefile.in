@@ -277,7 +277,7 @@ $(COMMON_DIR)/@X11_VID_SRC@
 $(X11QUAKE): soft_DIR $(BUILD_DIR)/../$(X11QUAKE)
 
 $(BUILD_DIR)/../$(X11QUAKE): $(ALL_X11_OBJS)
-	$(CC) $(CFLAGS) $(ALL_X11_OBJS) $(X11_LDFLAGS) $(LDFLAGS) \
+	$(CC) $(CFLAGS) $(ALL_X11_OBJS) $(X11_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(X11QUAKE)
 
 endif
@@ -289,7 +289,7 @@ ALL_SVGA_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) vid_svgalib.c\
                d_copy.s model.c
 ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_SVGA_SRC) .c .s)))
-		
+
 SVGA_CFLAGS  = @SVGA_CFLAGS@
 SVGA_LDFLAGS = @SVGA_LIBS@
 
@@ -303,7 +303,7 @@ $(BUILD_DIR)/soft/d_copy.@OBJEXT@: $(COMMON_DIR)/d_copy.s
 $(SVGAQUAKE): soft_DIR $(BUILD_DIR)/../$(SVGAQUAKE)
 
 $(BUILD_DIR)/../$(SVGAQUAKE): $(ALL_SVGA_OBJS)
-	$(CC) $(CFLAGS) $(ALL_SVGA_OBJS) $(SVGA_LDFLAGS) $(LDFLAGS)\
+	$(CC) $(CFLAGS) $(ALL_SVGA_OBJS) $(SVGA_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(SVGAQUAKE)
 
 endif
@@ -328,7 +328,7 @@ $(BUILD_DIR)/soft/vid_ggi.@OBJEXT@: $(COMMON_DIR)/vid_ggi.c
 $(GGIQUAKE): soft_DIR $(BUILD_DIR)/../$(GGIQUAKE)
 
 $(BUILD_DIR)/../$(GGIQUAKE): $(ALL_GGI_OBJS)
-	$(CC) $(CFLAGS) $(ALL_GGI_OBJS) $(GGI_LDFLAGS) $(LDFLAGS) \
+	$(CC) $(CFLAGS) $(ALL_GGI_OBJS) $(GGI_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(GGIQUAKE)
 
 endif
@@ -353,7 +353,7 @@ $(BUILD_DIR)/soft/cd_sdl.@OBJEXT@: $(COMMON_DIR)/cd_sdl.c
 $(SDLQUAKE): soft_DIR $(BUILD_DIR)/../$(SDLQUAKE)
 
 $(BUILD_DIR)/../$(SDLQUAKE): $(ALL_SDL_OBJS)
-	$(CC) $(CFLAGS) $(ALL_SDL_OBJS) $(SDL_LDFLAGS) $(LDFLAGS) \
+	$(CC) $(CFLAGS) $(ALL_SDL_OBJS) $(SDL_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(SDLQUAKE)
 
 endif
@@ -393,7 +393,8 @@ $(BUILD_DIR)/mgl/%.o: $(COMMON_DIR)/%.s
 $(MGLQUAKE): $(BUILD_DIR)/../$(MGLQUAKE)
 
 $(BUILD_DIR)/../$(MGLQUAKE): $(OBJSquake-mgl)
-	$(CC) $(CFLAGS) $(OBJSquake-mgl) $(MGL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(MGLQUAKE)
+	$(CC) $(CFLAGS) $(OBJSquake-mgl) $(MGL_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(MGLQUAKE)
 
 endif
 
@@ -413,7 +414,7 @@ $(BUILD_DIR)/gl/vid_linuxglx.o: $(COMMON_DIR)/vid_linuxglx.c
 $(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
 
 $(BUILD_DIR)/../$(GLQUAKE): $(ALL_GL_OBJS)
-	$(CC) $(CFLAGS) $(ALL_GL_OBJS) $(GL_LDFLAGS) $(LDFLAGS) \
+	$(CC) $(CFLAGS) $(ALL_GL_OBJS) $(GL_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(GLQUAKE)
 
 endif
@@ -436,7 +437,7 @@ $(BUILD_DIR)/gl/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
 $(TDFXQUAKE): gl_DIR $(BUILD_DIR)/../$(TDFXQUAKE)
 
 $(BUILD_DIR)/../$(TDFXQUAKE): $(ALL_TDFX_OBJS)
-	$(CC) $(CFLAGS) $(ALL_TDFX_OBJS) $(TDFX_LDFLAGS) $(LDFLAGS) \
+	$(CC) $(CFLAGS) $(ALL_TDFX_OBJS) $(TDFX_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(TDFXQUAKE)
 
 endif
@@ -468,4 +469,3 @@ install: $(targets)
 
 check:
 	@echo check not implemented
-
