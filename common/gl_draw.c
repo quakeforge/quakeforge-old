@@ -41,7 +41,7 @@
 #include <lib_replace.h>
 
 extern unsigned char d_15to8table[65536];
-extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor;
+extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor, *crosshairalpha;
 
 cvar_t	*gl_nobind;
 cvar_t	*gl_max_size;
@@ -532,15 +532,21 @@ Draw_Crosshair(void)
 {
 	int x, y;
 	extern vrect_t		scr_vrect;
-	unsigned char *pColor;
+	unsigned uColor;
 
 	if (crosshair->value == 3) {
 		x = scr_vrect.x + scr_vrect.width/2 - 3 + cl_crossx->value;
 		y = scr_vrect.y + scr_vrect.height/2 - 3 + cl_crossy->value;
 
+		glDisable(GL_ALPHA_TEST);
+		glEnable (GL_BLEND);
+
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-		pColor = (unsigned char *) &d_8to24table[(byte) crosshaircolor->value];
-		glColor4ubv ( pColor );
+		
+		uColor = d_8to24table[(byte) crosshaircolor->value] & 0x00ffffff;
+		uColor |= ((unsigned)crosshairalpha->value & 0xff) << 24;
+		glColor4ubv((unsigned char *)&uColor);
+
 		GL_Bind (cs_texture3);
 
 		glBegin (GL_QUADS);
@@ -557,13 +563,22 @@ Draw_Crosshair(void)
 		glEnd ();
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+
+		glEnable(GL_ALPHA_TEST);
+		glDisable (GL_BLEND);
 	} else if (crosshair->value == 2) {
 		x = scr_vrect.x + scr_vrect.width/2 - 3 + cl_crossx->value;
 		y = scr_vrect.y + scr_vrect.height/2 - 3 + cl_crossy->value;
 
+		glDisable(GL_ALPHA_TEST);
+		glEnable (GL_BLEND);
+
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-		pColor = (unsigned char *) &d_8to24table[(byte) crosshaircolor->value];
-		glColor4ubv ( pColor );
+		
+		uColor = d_8to24table[(byte) crosshaircolor->value] & 0x00ffffff;
+		uColor |= ((unsigned)crosshairalpha->value & 0xff) << 24;
+		glColor4ubv((unsigned char *)&uColor);
+
 		GL_Bind (cs_texture);
 
 		glBegin (GL_QUADS);
@@ -580,6 +595,9 @@ Draw_Crosshair(void)
 		glEnd ();
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+
+		glEnable(GL_ALPHA_TEST);
+		glDisable (GL_BLEND);
 	} else if (crosshair->value)
 		Draw_Character (scr_vrect.x + scr_vrect.width/2-4 
 				+ cl_crossx->value, scr_vrect.y
