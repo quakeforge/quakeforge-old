@@ -176,6 +176,7 @@ cvar_t	*r_maxedges;
 cvar_t	*r_numedges;
 cvar_t	*r_aliastransbase;
 cvar_t	*r_aliastransadj;
+cvar_t  *r_dynamic;
 
 extern cvar_t	*scr_fov;
 
@@ -263,6 +264,9 @@ void R_Init (void)
 	r_numedges = Cvar_Get ("r_numedges","0",0,"None");
 	r_aliastransbase = Cvar_Get ("r_aliastransbase","200",0,"None");
 	r_aliastransadj = Cvar_Get ("r_aliastransadj","100",0,"None");
+
+	r_dynamic = Cvar_Get ("r_dynamic","1",0,
+		"Toggles dynamic lighting: 1 - On    0 - Off");
 
 #ifdef GLQUAKE
 	gl_flashblend = Cvar_Get ("gl_flashblend","1",0,"None");
@@ -886,8 +890,9 @@ void R_DrawBEntitiesOnList (void)
 							continue;
 						}
 
-						R_MarkLights (&cl_dlights[k], 1<<k,
-							clmodel->nodes + clmodel->hulls[0].firstclipnode);
+						if (r_dynamic->value)
+							R_MarkLights (&cl_dlights[k], 1<<k,
+								clmodel->nodes + clmodel->hulls[0].firstclipnode);
 					}
 				}
 

@@ -87,6 +87,8 @@ cvar_t	*gl_cshiftpercent;
 
 cvar_t	*v_contentblend;
 
+extern cvar_t *r_dynamic;
+
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
 
 extern	int			in_forward, in_forward2, in_back;
@@ -1001,8 +1003,8 @@ cl.simangles[ROLL] = 0;	// FIXME
 		if (!cl.paused /* && (sv.maxclients > 1 || key_dest == key_game) */ )
 			V_CalcRefdef ();
 	}
-
-	R_PushDlights ();
+	if (r_dynamic->value)
+		R_PushDlights ();
 #if 0
 	if (lcd_x->value) {
 		/*
@@ -1019,8 +1021,8 @@ cl.simangles[ROLL] = 0;	// FIXME
 		R_RenderView ();
 
 		vid.buffer += vid.rowbytes>>1;
-
-		R_PushDlights ();
+		if (r_dynamic->value)
+			R_PushDlights ();
 
 		r_refdef.viewangles[YAW] += lcd_yaw->value*2;
 		for (i=0 ; i<3 ; i++)

@@ -42,6 +42,7 @@
 #include <draw.h>
 #include <server.h>
 
+extern cvar_t *r_dynamic;
 
 /*
 ===============
@@ -511,7 +512,8 @@ void R_SetupFrame (void)
 
 	R_CheckVariables ();
 
-	R_AnimateLight ();
+	if (r_dynamic->value)
+		R_AnimateLight ();
 
 	r_framecount++;
 
