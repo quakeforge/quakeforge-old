@@ -44,6 +44,11 @@
 #include <common.h>
 #include <draw.h>
 #include <cvars.h>
+#include <cmd.h>
+#if defined(QUAKEWORLD) && defined(SERVERONLY)
+#include <common_protocol.h>
+#include <server.h>
+#endif
 
 #include <dirent.h>
 #include <fnmatch.h>
@@ -938,6 +943,45 @@ COM_Gamedir (char *dir)
 }
 
 /*
+================
+SV_Gamedir_f
+
+Sets the gamedir and path to a different directory.
+================
+*/
+char	gamedirfile[MAX_OSPATH];
+void COM_Gamedir_f (void)
+{
+	char			*dir;
+
+	if (Cmd_Argc() == 1)
+	{
+		Con_Printf ("Current gamedir: %s\n", com_gamedir);
+		return;
+	}
+
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("Usage: gamedir <newdir>\n");
+		return;
+	}
+
+	dir = Cmd_Argv(1);
+
+	if (strstr(dir, "..") || strstr(dir, "/")
+		|| strstr(dir, "\\") || strstr(dir, ":") )
+	{
+		Con_Printf ("Gamedir should be a single filename, not a path\n");
+		return;
+	}
+
+	COM_Gamedir (dir);
+#if defined(QUAKEWORLD) && defined(SERVERONLY)
+	Info_SetValueForStarKey (svs.info, "*gamedir", dir, MAX_SERVERINFO_STRING);
+#endif
+}
+
+/*
 	COM_InitFilesystem
 */
 void
@@ -951,6 +995,8 @@ COM_InitFilesystem ( void )
 			"the location of your game directories");
 	fs_sharepath = Cvar_Get ("fs_sharepath", fs_basepath->string,
 			CVAR_ROM, "read-only game directories");
+	Cmd_AddCommand ("gamedir", COM_Gamedir_f);
+
 /*
 	start up with GAMENAME by default
 */

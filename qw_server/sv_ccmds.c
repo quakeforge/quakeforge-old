@@ -785,43 +785,6 @@ void SV_Gamedir (void)
 
 /*
 ================
-SV_Gamedir_f
-
-Sets the gamedir and path to a different directory.
-================
-*/
-char	gamedirfile[MAX_OSPATH];
-void SV_Gamedir_f (void)
-{
-	char			*dir;
-
-	if (Cmd_Argc() == 1)
-	{
-		Con_Printf ("Current gamedir: %s\n", com_gamedir);
-		return;
-	}
-
-	if (Cmd_Argc() != 2)
-	{
-		Con_Printf ("Usage: gamedir <newdir>\n");
-		return;
-	}
-
-	dir = Cmd_Argv(1);
-
-	if (strstr(dir, "..") || strstr(dir, "/")
-		|| strstr(dir, "\\") || strstr(dir, ":") )
-	{
-		Con_Printf ("Gamedir should be a single filename, not a path\n");
-		return;
-	}
-
-	COM_Gamedir (dir);
-	Info_SetValueForStarKey (svs.info, "*gamedir", dir, MAX_SERVERINFO_STRING);
-}
-
-/*
-================
 SV_Snap
 ================
 */
@@ -968,7 +931,6 @@ void SV_InitOperatorCommands (void)
 	Cmd_AddCommand ("serverinfo", SV_Serverinfo_f);
 	Cmd_AddCommand ("localinfo", SV_Localinfo_f);
 	Cmd_AddCommand ("user", SV_User_f);
-	Cmd_AddCommand ("gamedir", SV_Gamedir_f);
 	Cmd_AddCommand ("sv_gamedir", SV_Gamedir);
 	Cmd_AddCommand ("floodprot", SV_Floodprot_f);
 	Cmd_AddCommand ("floodprotmsg", SV_Floodprotmsg_f);

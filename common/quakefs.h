@@ -41,7 +41,8 @@
 extern int com_filesize;
 struct cache_user_s;
 
-extern	char	com_gamedir[MAX_OSPATH];
+extern char	com_gamedir[MAX_OSPATH];
+extern char	gamedirfile[MAX_OSPATH];
 
 void COM_WriteFile (char *filename, void *data, int len);
 int COM_FOpenFile (char *filename, QFile **gzfile);
