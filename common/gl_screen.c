@@ -520,7 +520,7 @@ void SCR_DrawFPS (void)
 
 	snprintf(st, sizeof(st), "%3d FPS", lastfps);
 	x = vid.width - strlen(st) * 8 - 8;
-	y = vid.height - sb_lines - 8;
+	y = vid.height - sb_lines - 0;
 //	Draw_TileClear(x, y, strlen(st) * 8, 8);
 	Draw_String(x, y, st);
 }
