@@ -1399,7 +1399,7 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 		    if (host_client->msecs > (int) (tmp_time + 0.5)) {
 				host_client->msec_cheating++;
 				SV_BroadcastPrintf(PRINT_HIGH, 
-					va("%s thinks %d msecs pass in %f msecs. (Strike %d/%d)\n" 
+					va("%s thinks %d msecs pass in %f msecs. (Strike %d/%d)\n",
 						host_client->name, host_client->msecs, tmp_time,
 						host_client->msec_cheating, CHECK_LIMIT));
 
