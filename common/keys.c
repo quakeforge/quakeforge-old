@@ -106,6 +106,7 @@ keyname_t keynames[] =
 	{"KP_SLASH", KP_DIVIDE},
 	{"KP_STAR", KP_MULTIPLY},
 
+	{"KP_NUMLCK", KP_NUMLCK},
 	{"KP_NUMLOCK", KP_NUMLCK},
 	{"KP_DIVIDE", KP_DIVIDE},
 	{"KP_MULTIPLY", KP_MULTIPLY},
