@@ -98,6 +98,8 @@ typedef struct {
 
 static gefv_cache	gefvCache[GEFV_CACHESIZE] = {{NULL, ""}, {NULL, ""}};
 
+func_t	EndFrame;	// 2000-01-02 EndFrame function by Maddes/FrikaC
+
 #ifdef QUAKEWORLD
 func_t SpectatorConnect;
 func_t SpectatorThink;
@@ -1118,6 +1120,8 @@ void
 PR_LoadProgs ( void )
 {
 	int	i;
+	dfunction_t	*f;	// QuakeWorld Spectator Functions
+			// 2000-01-02 EndFrame function by Maddes/FrikaC
 
 // flush the non-C variable lookup cache
 	for (i=0 ; i<GEFV_CACHESIZE ; i++)
@@ -1231,8 +1235,6 @@ PR_LoadProgs ( void )
 
 #ifdef QUAKEWORLD
 	{
-		dfunction_t *f;
-
 		// Zoid, find the spectator functions
 		SpectatorConnect = SpectatorThink = SpectatorDisconnect = 0;
 
@@ -1244,6 +1246,13 @@ PR_LoadProgs ( void )
 			SpectatorDisconnect = (func_t)(f - pr_functions);
 	}
 #endif
+
+// 2000-01-02 EndFrame function by Maddes/FrikaC  start
+	EndFrame = 0;
+
+	if ((f = ED_FindFunction ("EndFrame")) != NULL)
+		EndFrame = (func_t)(f - pr_functions);
+// 2000-01-02 EndFrame function by Maddes/FrikaC  end
 }
 
 

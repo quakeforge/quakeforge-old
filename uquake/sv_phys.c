@@ -1617,6 +1617,17 @@ SV_Physics ( void )
 	if (pr_global_struct->force_retouch)
 		pr_global_struct->force_retouch--;
 
+// 2000-01-02 EndFrame function by Maddes/FrikaC  start
+	if (EndFrame)
+	{
+		// let the progs know that the frame has ended
+		pr_global_struct->self = EDICT_TO_PROG(sv.edicts);
+		pr_global_struct->other = EDICT_TO_PROG(sv.edicts);
+		pr_global_struct->time = sv.time;
+		PR_ExecuteProgram (EndFrame);
+	}
+// 2000-01-02 EndFrame function by Maddes/FrikaC  end
+
 	sv.time += host_frametime;
 }
 
