@@ -35,6 +35,8 @@
 
 #if defined(HAS_DGA)
 #include <X11/extensions/xf86dga.h>
+#endif
+#if defined(HAS_VIDMODE)
 #include <X11/extensions/xf86vmode.h>
 #endif
 
@@ -83,7 +85,7 @@ VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
 int
 VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 {
-#if defined(HAS_DGA)
+#if defined(HAS_VIDMODE)
 	int event_base, error_base;
 	int dummy;
 

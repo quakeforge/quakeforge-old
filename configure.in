@@ -248,16 +248,31 @@ if test "x$no_x" = x; then
      [HAS_X11="no"], [ $X_LIBS -lX11 $X_EXTRA_LIBS ])
 fi
 
+dnl Check for VIDMODE support
+AC_ARG_ENABLE(VIDMODE,
+[  --enable-DGA            use XFree86 DGA extension, if available],
+HAS_DGA=$enable_VIDMODE, HAS_VIDMODE=auto)
+if test "x$HAS_VIDMODE" != xno; then
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+   AC_CHECK_HEADER(X11/extensions/xf86vmode.h, HAS_VIDMODE=yes, HAS_VIDMODE=no)
+   CPPFLAGS="$save_CPPFLAGS"
+fi
+
 dnl Check for DGA support
 AC_ARG_ENABLE(DGA,
 [  --enable-DGA            use XFree86 DGA extension, if available],
 HAS_DGA=$enable_DGA, HAS_DGA=auto)
-if test "x$HAS_DGA" != xno; then
-   save_CPPFLAGS="$CPPFLAGS"
-   CPPFLAGS="$X_CFLAGS $CPPFLAGS"
-   AC_CHECK_HEADER(X11/extensions/xf86dga.h, HAS_DGA=yes, HAS_DGA=no)
-   AC_CHECK_HEADER(X11/extensions/xf86vmode.h, qwfoo=qwfoo, HAS_DGA=no)
-   CPPFLAGS="$save_CPPFLAGS"
+if test "x$HAS_VIDMODE" = xyes; then
+   if test "x$HAS_DGA" != xno; then
+      save_CPPFLAGS="$CPPFLAGS"
+      CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+      AC_CHECK_HEADER(X11/extensions/xf86dga.h, HAS_DGA=yes, HAS_DGA=no)
+      AC_CHECK_HEADER(X11/extensions/xf86vmode.h, qwfoo=qwfoo, HAS_DGA=no)
+      CPPFLAGS="$save_CPPFLAGS"
+   else
+      HAS_DGA=no
+   fi
 fi
 
 dnl Checks for VGA support
@@ -415,18 +430,28 @@ if test "x$HAS_OGL" = xyes; then
   AC_DEFINE(HAS_OGL)
 fi
 
+dnl Make sure VIDMODE works
+if test "x$HAS_VIDMODE" = xyes; then
+   AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,qwfoo=qwfoo,
+     HAS_VIDMODE=no HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+fi
+if test "x$HAS_VIDMODE" != xyes; then
+   VIDMODE_LIBS=""
+else
+   AC_DEFINE(HAS_VIDMODE)
+   VIDMODE_LIBS="-lXxf86vm"
+fi
+
 dnl Make sure DGA works
 if test "x$HAS_DGA" = xyes; then
    AC_CHECK_LIB(Xxf86dga, XF86DGAQueryVersion,qwfoo=qwfoo,
-     HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
-   AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,qwfoo=qwfoo,
      HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
 fi
 if test "x$HAS_DGA" != xyes; then
    DGA_LIBS=""
 else
    AC_DEFINE(HAS_DGA)
-   DGA_LIBS="-lXxf86dga -lXxf86vm"
+   DGA_LIBS="-lXxf86dga"
 fi
 
 dnl Make sure -lmgllt works
@@ -850,7 +875,9 @@ AC_SUBST(X_LIBS)
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X11_SHM_LIB)
 AC_SUBST(HAS_X11)
+AC_SUBST(HAD_VIDMODE)
 AC_SUBST(HAS_DGA)
+AC_SUBST(VIDMODE_LIBS)
 AC_SUBST(DGA_LIBS)
 AC_SUBST(HAS_VGA)
 AC_SUBST(VGA_CFLAGS)

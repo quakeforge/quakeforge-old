@@ -18,6 +18,9 @@
 /* Define this if you have OGL */
 #undef HAS_OGL
 
+/* Define if you have the XFree86 VIDMODE extension */
+#undef HAS_VIDMODE
+
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA
 

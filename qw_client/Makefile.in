@@ -182,7 +182,8 @@ ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 			  $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 X11_CFLAGS  = -DX11 @X_CFLAGS@
-X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@ @DGA_LIBS@
+X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@ @VIDMODE_LIBS@ \
+	      @DGA_LIBS@
 
 # FIXME: This rule is pathological because of the seperate sunx driver,
 #    either merge it into vid_x11.c or make a seperate sun target.  In either
@@ -327,7 +328,7 @@ ALL_GL_OBJS = $(GLX_GL_OBJS) $(GL_REND_OBJS) \
 	      $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
 GL_CFLAGS  = @OGL_CFLAGS@
-GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @VIDMODE_LIBS@ @DGA_LIBS@
 
 $(BUILD_DIR)/vid_glx.@OBJEXT@: $(COMMON_DIR)/vid_glx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<

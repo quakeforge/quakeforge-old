@@ -63,8 +63,11 @@
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
+#undef HAS_DGA
 #ifdef HAS_DGA
 # include <X11/extensions/xf86dga.h>
+#endif
+#ifdef HAS_VIDMODE
 # include <X11/extensions/xf86vmode.h>
 #endif
 #include <dga_check.h>
@@ -93,18 +96,18 @@ cvar_t	*vid_glx_fullscreen;
 extern cvar_t	*gl_triplebuffer;
 extern cvar_t *vid_dga_mouseaccel;
 
-#ifdef HAS_DGA
-static int	nummodes;
+#ifdef HAS_VIDMODE
 static XF86VidModeModeInfo **vidmodes;
-static int	hasdgavideo = 0, hasvidmode = 0;
-
+static int	nummodes, hasvidmode = 0;
 #endif
+#ifdef HAS_DGA
+static int	hasdgavideo = 0;
+static int	hasdga = 0;
+#endif
+
 
 #ifdef HAVE_DLOPEN
 static void	*dlhand = NULL;
-#endif
-#ifdef HAS_DGA
-static int	hasdga = 0;
 #endif
 static GLboolean (*QF_XMesaSetFXmode)(GLint mode) = NULL;
 
@@ -159,7 +162,7 @@ VID_Shutdown(void)
 
 	glXDestroyContext(x_disp, ctx);
 
-#ifdef HAS_DGA
+#ifdef HAS_VIDMODE
 	if (hasvidmode) {
 		int i;
 
