@@ -173,11 +173,6 @@ int Sys_FileWrite (int handle, void *data, int count)
     return fwrite (data, 1, count, sys_handles[handle].hFile);
 }
 
-void Sys_mkdir (char *path)
-{
-    mkdir( path, 0777 );
-}
-
 /*
 ===============================================================================
 
@@ -223,23 +218,6 @@ void Sys_Quit (void)
 {
     Host_Shutdown();
     exit (0);
-}
-
-double Sys_DoubleTime (void)
-{
-    struct timeval tp;
-    struct timezone tzp; 
-    static int      secbase; 
-    
-    gettimeofday(&tp, &tzp);  
-
-    if (!secbase)
-    {
-        secbase = tp.tv_sec;
-        return tp.tv_usec/1000000.0;
-    }
-
-    return (tp.tv_sec - secbase) + tp.tv_usec/1000000.0;
 }
 
 char *Sys_ConsoleInput (void)

@@ -104,10 +104,6 @@ void Sys_Warn (char *warning, ...) {
 	fprintf(stderr, "Warning: %s", string);
 } 
 
-void Sys_mkdir (char *path) {
-    mkdir (path, 0777);
-}
-
 int Sys_FileOpenRead (char *path, int *handle) {
 
 	int	h;
@@ -188,21 +184,6 @@ void Sys_EditFile(char *filename) {
 		snprintf(cmd, sizeof(cmd), "xterm -e %s %s", editor, filename);
 		system(cmd);
 	}
-}
-
-double Sys_DoubleTime (void) {
-
-	struct timeval tp;
-	struct timezone tzp; 
-	static int      secbase; 
-    
-	gettimeofday(&tp, &tzp);  
-
-	if (!secbase) {
-		secbase = tp.tv_sec;
-		return tp.tv_usec/1000000.0;
-	}
-	return (tp.tv_sec - secbase) + tp.tv_usec/1000000.0;
 }
 
 // =======================================================================

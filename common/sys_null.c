@@ -115,11 +115,6 @@ int Sys_FileWrite (int handle, void *data, int count)
 	return fwrite (data, 1, count, sys_handles[handle]);
 }
 
-void Sys_mkdir (char *path)
-{
-}
-
-
 /*
 	System I/O
 */
@@ -148,15 +143,6 @@ void Sys_Error (char *error, ...)
 void Sys_Quit (void)
 {
 	exit (0);
-}
-
-double Sys_DoubleTime (void)
-{
-	static double t;
-	
-	t += 0.1;
-	
-	return t;
 }
 
 char *Sys_ConsoleInput (void)

@@ -33,6 +33,12 @@
 #ifdef HAVE_SYS_STAT_H
 # include <sys/stat.h>
 #endif
+#ifdef HAVE_SYS_TIME_H
+# include <sys/time.h>
+#endif
+#ifdef HAVE_SYS_TIMEB_H
+# include <sys/timeb.h>
+#endif
 
 
 int nostdout = 0;
@@ -69,6 +75,23 @@ void Sys_Printf (char *fmt, ...)
 
 
 /*
+================
+Sys_mkdir
+================
+*/
+void Sys_mkdir (char *path)
+{
+#if defined(_WIN32)
+	_mkdir(path);
+#elif defined(HAVE_MKDIR)
+	mkdir(path, 0777);
+#else
+# warning No mkdir() - creating directories will not be possible
+#endif
+}
+
+
+/*
 ============
 Sys_FileTime
 
@@ -99,4 +122,42 @@ int Sys_FileTime (char *path)
 #endif /* HAVE_STAT */
 
 	return ret;
+}
+
+
+/*
+================
+Sys_DoubleTime
+================
+*/
+double Sys_DoubleTime(void)
+{
+	static int starttime = 0;
+	long	secs, usecs;
+
+#if defined(HAVE_GETTIMEOFDAY)
+	struct timeval	tp;
+
+	gettimeofday(&tp, NULL);
+	secs = tp.tv_sec;
+	usecs = tp.tv_usec;
+#elif defined(HAVE_FTIME)
+	struct timeb tstruct;
+
+	ftime(&tstruct);
+	secs = tstruct.time;
+	usecs = tstruct.millitm*1000;
+#elif defined(HAVE__FTIME)
+	struct _timeb tstruct;
+
+	_ftime(&tstruct);
+	secs = tstruct.time;
+	usecs = tstruct.millitm*1000;
+#else
+# error You need to implement Sys_DoubleTime()
+#endif
+
+	if (!starttime) starttime = secs;
+	
+	return (secs - starttime) + usecs/1000000.0;
 }

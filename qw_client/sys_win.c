@@ -97,12 +97,6 @@ int filelength (FILE *f)
 #endif
 
 
-void Sys_mkdir (char *path)
-{
-	_mkdir (path);
-}
-
-
 /*
 ===============================================================================
 
@@ -336,30 +330,6 @@ void Sys_InitFloatTime (void)
 }
 
 #endif
-
-double Sys_DoubleTime (void)
-{
-	static DWORD starttime;
-	static qboolean first = true;
-	DWORD now;
-	double t;
-
-	now = timeGetTime();
-
-	if (first) {
-		first = false;
-		starttime = now;
-		return 0.0;
-	}
-	
-	if (now < starttime) // wrapped?
-		return (now / 1000.0) + (LONG_MAX - starttime / 1000.0);
-
-	if (now - starttime == 0)
-		return 0.0;
-
-	return (now - starttime) / 1000.0;
-}
 
 char *Sys_ConsoleInput (void)
 {

@@ -121,11 +121,6 @@ int Sys_FileWrite (int handle, void *data, int count)
 	return fwrite (data, 1, count, sys_handles[handle]);
 }
 
-void Sys_mkdir (char *path)
-{
-}
-
-
 /*
 ===============================================================================
 
@@ -161,21 +156,6 @@ void Sys_Error (char *error, ...)
 void Sys_Quit (void)
 {
 	exit (0);
-}
-
-double Sys_DoubleTime (void)
-{
-	double t;
-    struct _timeb tstruct;
-	static int	starttime;
-
-	_ftime( &tstruct );
- 
-	if (!starttime)
-		starttime = tstruct.time;
-	t = (tstruct.time-starttime) + tstruct.millitm*0.001;
-	
-	return t;
 }
 
 void Sys_Sleep (void)
