@@ -30,33 +30,6 @@
 	$Id$
 */
 
-#include <cvar.h>
-#include <quakefs.h>
-#include <quakedef.h>
-
-cvar_t	*registered;
-
-/*
-	register_check
-
-	Look for gfx/pop.lmp (only found in ID's registered quake pak files),
-	and set the "registered" cvar to 1 if found.
-*/
-void
-register_check ( void )
-{
-	QFile *h;
-
-	registered = Cvar_Get ("registered","0",0,"None");
-
-	COM_FOpenFile("gfx/pop.lmp", &h);
-
-	if (h) {
-		Cvar_Set (registered, "1");
-		Qclose (h);
-	}
-}
-
 #include <stdlib.h>
 #include <cl_slist.h>
 #include <stdio.h>

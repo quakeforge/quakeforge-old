@@ -30,14 +30,6 @@
 	$Id$
 */
 
-#ifndef _REGISTER_CHECK_H
-#define _REGISTER_CHECK_H
-
-extern struct cvar_s *registered;
-void register_check ();
-
-#endif // _REGISTER_CHECK_H
-
 #include <quakeio.h>
 #define MAX_SERVER_LIST 256
 
