@@ -19,6 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#include "config.h"
+#include "qtypes.h"
+#include "sound.h"
+#include "qargs.h"
+#include "console.h"
+
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -32,7 +38,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdio.h>
 #include <sys/audioio.h>
 #include <errno.h>
-#include "quakedef.h"
 
 int audio_fd;
 int snd_inited;

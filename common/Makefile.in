@@ -19,7 +19,7 @@ mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
 BUILD_DIR	:= $(TARGET_DIR)/common
-OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{sound,common}_lib/%.o)
+OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
 
 SOUND_LIB	:= sound_lib.a
 
@@ -155,7 +155,7 @@ $(SOUND_LIB): sound_lib_DIR $(TARGET_DIR)/sound_lib.a
 $(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
 	#gcc -Wall -shared -o $@ $(SOUND_LIB_OBJS)
 	ar cru $@ $(SOUND_LIB_OBJS)
-	ranlib $@
+	@RANLIB@ $@
 
 
 ###########################################################################
