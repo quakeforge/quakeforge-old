@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "quakedef.h"
 
+/* Fake out cd_wrapper.c so it doesn't define CD_f */
+#define CD_f_DEFINED
+
 void CDAudio_Play(byte track, qboolean looping)
 {
 }
