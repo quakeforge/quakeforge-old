@@ -42,8 +42,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 cvar_t	*cvar_vars;
 char	*cvar_null_string = "";
 
-extern void M_Menu_Help_f (void);
-
 /*
 ============
 Cvar_FindVar
@@ -288,11 +286,22 @@ void Cvar_Help_f (void)
 	}
 	Con_Printf ("variable not found\n");
 }
-	
+
+void Cvar_CvarList_f (void)
+{
+	cvar_t	*var;
+
+	for (var = cvar_vars; var ; var = var->next)
+	{
+		Con_Printf("%s\n",var->name);
+	}
+}
+
 void Cvar_Init()
 {
 	Cmd_AddCommand ("set", Cvar_Set_f);
 	Cmd_AddCommand ("help",Cvar_Help_f);
+	Cmd_AddCommand ("cvarlist",Cvar_CvarList_f);
 }
 
 void Cvar_Shutdown (void)
