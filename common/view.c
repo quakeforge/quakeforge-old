@@ -758,7 +758,7 @@ V_CalcRefdef ( void )
 	static float oldz = 0;
 
 #ifdef QUAKEWORLD
-	h = cl.qfserver ? cl.stats[STAT_VIEWHEIGHT] : 22;
+	h = cl.stats[STAT_VIEWHEIGHT] + 22;
 #endif
 	V_DriftPitch ();
 

@@ -805,7 +805,7 @@ void SV_Physics_Step (edict_t *ent)
 {
 	qboolean	hitsound;
 
-// frefall if not onground
+// freefall if not onground
 	if ( ! ((int)ent->v.flags & (FL_ONGROUND | FL_FLY | FL_SWIM) ) )
 	{
 		if (ent->v.velocity[2] < movevars.gravity*-0.1)
@@ -856,6 +856,7 @@ void SV_RunEntity (edict_t *ent)
 
 	switch ( (int)ent->v.movetype)
 	{
+	case MOVETYPE_WALK:
 	case MOVETYPE_PUSH:
 		SV_Physics_Pusher (ent);
 		break;

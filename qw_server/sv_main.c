@@ -50,27 +50,18 @@ netadr_t	master_adr[MAX_MASTERS];	// address of group servers
 
 client_t	*host_client;			// current client
 
-//cvar_t	sv_maxrate = {"sv_maxrate","0"};	// server maximum rate
 cvar_t	*sv_maxrate;
-//cvar_t	sv_mintic = {"sv_mintic","0.03"};	// bound the size of the
 cvar_t	*sv_mintic;
-//cvar_t	sv_maxtic = {"sv_maxtic","0.1"};	// physics time tic
 cvar_t	*sv_maxtic;
 
-//cvar_t	developer = {"developer","0"};		// show extra messages
 cvar_t	*developer;
 
-//cvar_t	timeout = {"timeout","65"};		// seconds without any message
 cvar_t	*timeout;
-//cvar_t	zombietime = {"zombietime", "2"};	// seconds to sink messages
 cvar_t	*zombietime;
 											// after disconnect
 
-//cvar_t	rcon_password = {"rcon_password", ""};	// password for remote server commands
 cvar_t	*rcon_password;
-//cvar_t	password = {"password", ""};	// password for entering the game
 cvar_t	*password;
-//cvar_t	spectator_password = {"spectator_password", ""};	// password for entering as a sepctator
 cvar_t	*spectator_password;
 
 cvar_t	*allow_download;
@@ -104,7 +95,6 @@ cvar_t	*watervis;
 
 int		current_skill;
 
-//cvar_t	hostname = {"hostname","unnamed", CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*hostname;
 extern cvar_t	*cl_warncmd;
 
