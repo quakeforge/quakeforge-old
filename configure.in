@@ -40,9 +40,14 @@ AC_HEADER_TIME
 AC_STRUCT_TM
 AC_C_BIGENDIAN
 AC_MSG_CHECKING(for socklen_t in sys/socket.h)
-AC_TRY_COMPILE([#include "sys/socket.h"],
+AC_TRY_COMPILE([#include <sys/socket.h>],
         [ socklen_t x = 0;],
-        AC_DEFINE(HAS_SOCKLEN_T) AC_MSG_RESULT(yes),
+        AC_DEFINE(HAVE_SOCKLEN_T) AC_MSG_RESULT(yes),
+        AC_MSG_RESULT(no))
+AC_MSG_CHECKING(for size_t in sys/types.h)
+AC_TRY_COMPILE([#include <sys/types.h>],
+        [ size_t x = 0;],
+        AC_DEFINE(HAVE_SIZE_T) AC_MSG_RESULT(yes),
         AC_MSG_RESULT(no))
 
 dnl Check for symbol underscore prefix 
