@@ -36,7 +36,6 @@ int			total_channels;
 volatile dma_t  *shm = 0;
 cvar_t loadas8bit = {"loadas8bit", "0"};
 int    paintedtime;    // sample PAIRS
-snd_t  snd;
 
 
 cvar_t bgmvolume = {"bgmvolume", "1", true};

@@ -1,5 +1,6 @@
 #include <malloc.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include "quakeio.h"
 
 QFile *Qopen(const char *path, const char *mode)

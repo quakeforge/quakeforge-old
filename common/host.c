@@ -59,6 +59,7 @@
 #include "screen.h"
 #include "sbar.h"
 #include "mathlib.h"
+#include "client.h"
 
 extern int host_hunklevel;
 

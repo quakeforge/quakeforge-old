@@ -89,40 +89,29 @@ int filelength (QFile *f)
     int             pos;
     int             end;
 
-    pos = ftell (f);
-    fseek (f, 0, SEEK_END);
-    end = ftell (f);
-    fseek (f, pos, SEEK_SET);
+    pos = Qtell (f);
+    Qseek (f, 0, SEEK_END);
+    end = Qtell (f);
+    Qseek (f, pos, SEEK_SET);
 
     return end;
 }
 
-int Sys_FileOpenRead (char *path, int *hndl)
+/* from sys_linux.c */
+int Sys_FileOpenRead (char *path, int *handle)
 {
-    QFile    *f;
-    int             i;
-    
-    i = findhandle ();
-    
-    f = fopen(path, "rb");
-    if (!f)
-    {
-	*hndl = -1;
-	return -1;
-    }
-    sys_handles[i].hFile = f;
-    sys_handles[i].nLen = filelength(f);
-    sys_handles[i].nPos = 0;
-    sys_handles[i].pMap = mmap(NULL, sys_handles[i].nLen, PROT_READ,
-			       MAP_SHARED, fileno(sys_handles[i].hFile), 0 );
-    if (sys_handles[i].pMap == MAP_FAILED) {
-	printf( "mmap %s failed!", path );
-	sys_handles[i].pMap = NULL;
-    }
+	int	h;
+	struct stat	fileinfo;
 
-    *hndl = i;
-    
-    return( sys_handles[i].nLen );
+	h = open (path, O_RDONLY, 0666);
+	*handle = h;
+	if (h == -1)
+		return -1;
+
+	if (fstat (h,&fileinfo) == -1)
+		Sys_Error ("Error fstating %s", path);
+
+	return fileinfo.st_size;
 }
 
 int Sys_FileOpenWrite (char *path)
@@ -132,7 +121,7 @@ int Sys_FileOpenWrite (char *path)
     
     i = findhandle ();
 
-    f = fopen(path, "wb");
+    f = Qopen(path, "wb");
     if (!f)
 	Sys_Error ("Error opening %s: %s", path,strerror(errno));
     sys_handles[i].hFile = f;
@@ -149,7 +138,7 @@ void Sys_FileClose (int handle)
 	if (munmap( sys_handles[handle].pMap, sys_handles[handle].nLen ) != 0)
 	    printf( "failed to unmap handle %d\n", handle );
 
-    fclose (sys_handles[handle].hFile);
+    Qclose (sys_handles[handle].hFile);
     sys_handles[handle].hFile = NULL;
 }
 
@@ -159,7 +148,7 @@ void Sys_FileSeek (int handle, int position)
     {
 	sys_handles[handle].nPos = position;
     }
-    else fseek (sys_handles[handle].hFile, position, SEEK_SET);
+    else Qseek (sys_handles[handle].hFile, position, SEEK_SET);
 }
 
 int Sys_FileRead (int handle, void *dest, int count)
@@ -174,14 +163,14 @@ int Sys_FileRead (int handle, void *dest, int count)
 	sys_handles[handle].nPos = nPos + count;
 	return( count );
     }
-    else return fread (dest, 1, count, sys_handles[handle].hFile);
+    else return Qread (sys_handles[handle].hFile, dest, count);
 }
 
 int Sys_FileWrite (int handle, void *data, int count)
 {
     if (sys_handles[handle].pMap)
 	Sys_Error( "Attempted to write to read-only file %d!\n", handle );
-    return fwrite (data, 1, count, sys_handles[handle].hFile);
+    return Qwrite (sys_handles[handle].hFile, data, count);
 }
 
 void Sys_DebugLog(char *file, char *fmt, ...) {
@@ -196,11 +185,11 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 	vsnprintf(data, sizeof(data), fmt, argptr);
 	va_end(argptr);
 // fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
-	stream = fopen(file, "a");
+	stream = Qopen(file, "a");
 	for (p = (unsigned char *) data; *p; p++) {
-	    putc(trans_table[*p], stream);
+	    Qputc(stream, trans_table[*p]);
 	}
-	fclose(stream);
+	Qclose(stream);
 	/*
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	write(fd, data, strlen(data));
