@@ -1,0 +1,14 @@
+QuakeForge Errata
+-----------------
+
+This file contains a listing of all major issues and problems found in the
+QuakeForge engine.  Generally problems will find their way here along with
+the person who reported the problem so we can verify it's fixed when we
+do fix it.  Feature requests will usually go into the file WISHLIST.
+
+Joseph Carter <knghtbrd@debian.org>
+ - View in UQuake starts off-map and never changes
+ - GLX error on exit:  "XIO:  fatal IO error 9 (Bad file descriptor) on X
+                              server ":0.0" after 65 requests (64 known
+			      processed) with 0 events remaining."
+

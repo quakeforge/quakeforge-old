@@ -1,0 +1,38 @@
+QuakeForge Wishlist
+-------------------
+
+This file contains a listing of features people would like to see in the
+QuakeForge engine.  These are different than bugs in that not having them
+done will not affect the standard game as was playable before the initial
+source release or subsequent accepted standards.  Those may be found in
+the file ERRATA.
+
+Note however that unline the ERRATA file which contains issues that will
+be addressed as sonn as possible, we make no promises for things listed
+here.  Do keep in mind however that many of these things we want ourselves
+so this file serves as a sort of to-do list.
+
+DarkAngel <hey dark, get your email in here!>
+ - 32 bit texture support
+ - skeletal animations
+ - larger console fonts
+ - lens flares
+ - better muzzle/weapon flashes
+ - weapon model alpha
+ - optimize flashblends if possible, possibly allow them to be made smaller
+ - death anims that vary on how you die [this is a progs issue]
+ - ability to bind modifier+key combos
+ - better rocket/grenade trails
+ - improve the GL particle system
+ - more configurable sounds [progs issue]
+ - model interpolation
+ - landscape distance detail changes
+ - BSP improvements, curves, animated textures, etc
+ - Quake3ish quad/pent effect
+ - Bounce pads
+ - optimize graphics effects currently only doable with slow progs
+ - status bar improvements
+ - fix GL model mesh for "barely legal" models (perquake, old obsidian, etc)
+ - fix "speed jumping" [not sure of cause, very hard to fix]
+ - improve sound engine behavior when too many sounds play at once
+
