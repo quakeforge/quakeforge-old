@@ -75,8 +75,13 @@ GL fullbright Support:
 Cheat/exploit fixes:
   Mads Bondo Dydensborg <madsdyd@challenge.dk>
 
+Win32 support:
+  Marcus Sundberg <mackan@stacken.kth.se>
+
 CD-ROM support/optimizations:
+  Marcus Sundberg <mackan@stacken.kth.se>
   Loring Holden <lsh@cs.brown.edu>
+  Theo van Klaveren <havoc@phoenix.student.utwente.nl>
 
 AIX/IRIX/Sun support:
   Loring Holden <lsh@cs.brown.edu>
