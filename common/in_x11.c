@@ -69,7 +69,7 @@
 cvar_t		*_windowed_mouse;
 cvar_t		*m_filter;
 #ifdef HAS_DGA
-qboolean	dgamouse = 0;
+cvar_t		*in_dgamouse;
 cvar_t		*vid_dga_mouseaccel;
 #endif
 
@@ -296,7 +296,7 @@ static void
 event_motion(XEvent *event)
 {
 #ifdef HAS_DGA
-	if (dgamouse) {
+	if (in_dgamouse->value) {
 		mouse_x += event->xmotion.x_root * vid_dga_mouseaccel->value;
 		mouse_y += event->xmotion.y_root * vid_dga_mouseaccel->value;
 	} else
@@ -426,6 +426,9 @@ IN_Shutdown(void)
 		XFreeCursor(x_disp, nullcursor);
 		nullcursor = None;
 	}
+	
+	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp), 0);
+	
 	x11_close_display();
 }
 
@@ -457,15 +460,20 @@ IN_Init(void)
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
-#if 0
-	XF86DGASetViewPort(x_disp, x_win, 0, 0);
-	XF86DGADirectVideo(x_disp, x_win, XF86DGADirectGraphics|XF86DGADirectMouse|XF86DGADirectKeyb);
-	XF86DGASetVidPage(x_disp, x_win, 0);
+#if 1
+//	XF86DGASetViewPort(x_disp, x_win, 0, 0);
+	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp), XF86DGADirectMouse|XF86DGADirectKeyb);
+//	XF86DGADirectVideo(x_disp, x_win, XF86DGADirectGraphics|XF86DGADirectMouse|XF86DGADirectKeyb);
+//	                        
+//	XF86DGASetVidPage(x_disp, x_win, 0);
 
 	XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 	XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, GrabModeAsync,
 				 x_win, None, CurrentTime);
+	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM, "");
 #endif
+#else
+	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM, "");
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;
