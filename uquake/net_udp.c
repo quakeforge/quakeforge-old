@@ -1,7 +1,7 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
-Copyright (C) 1999,2000  Nelson Rush.
-Copyright (C) 2000      Marcus Sundberg [mackan@stacken.kth.se]
+Portions Copyright (C) 1999,2000  Nelson Rush.
+Portions Copyright (C) 2000      Marcus Sundberg [mackan@stacken.kth.se]
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

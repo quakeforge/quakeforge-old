@@ -1,6 +1,6 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
-Copyright (C) 1999,2000  Nelson Rush.
+Portions Copyright (C) 1999,2000  Nelson Rush.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
