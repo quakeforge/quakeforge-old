@@ -67,11 +67,11 @@ LoadPCX (QFile *f, byte **pcx_rgb) {
 	Qseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
 
 	count = (pcx->xmax+1) * (pcx->ymax+1);
-	*pcx_rgb = malloc( count * 3);
+	*pcx_rgb = malloc( count); // * 3);
 
 	for (y=0 ; y<=pcx->ymax ; y++)
 	{
-		pix = *pcx_rgb + 3*y*(pcx->xmax+1);
+		pix = *pcx_rgb + /*3**/y*(pcx->xmax+1);
 		for (x=0 ; x<=pcx->ymax ; )
 		{
 			dataByte = Qgetc(f);
