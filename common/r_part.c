@@ -106,7 +106,7 @@ void R_DarkFieldParticles (entity_t *ent)
 				p->org[1] = org[1] + j + (rand()&3);
 				p->org[2] = org[2] + k + (rand()&3);
 
-				VectorNormalize (dir);
+				VectorNormalize (dir);						
 				vel = 50 + (rand()&63);
 				VectorScale (dir, vel, p->vel);
 			}
@@ -141,11 +141,11 @@ void R_EntityParticles (entity_t *ent)
 	dist = 64;
 	count = 50;
 
-if (!avelocities[0][0])
-{
-for (i=0 ; i<NUMVERTEXNORMALS*3 ; i++)
-avelocities[0][i] = (rand()&255) * 0.01;
-}
+	if (!avelocities[0][0])
+	{
+		for (i=0 ; i<NUMVERTEXNORMALS*3 ; i++)
+			avelocities[0][i] = (rand()&255) * 0.01;
+	}
 
 
 	for (i=0 ; i<NUMVERTEXNORMALS ; i++)
@@ -175,9 +175,9 @@ avelocities[0][i] = (rand()&255) * 0.01;
 		p->color = 0x6f;
 		p->type = pt_explode;
 
-		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;
-		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;
-		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;
+		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;			
+		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;			
+		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;			
 	}
 }
 
@@ -270,10 +270,10 @@ void R_ParseParticleEffect (void)
 	msgcount = MSG_ReadByte ();
 	color = MSG_ReadByte ();
 
-if (msgcount == 255)
-	count = 1024;
-else
-	count = msgcount;
+	if (msgcount == 255)
+		count = 1024;
+	else
+		count = msgcount;
 
 	R_RunParticleEffect (org, dir, color, count);
 }
@@ -421,9 +421,8 @@ void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 	else
 		scale = 1;
 #endif
-
-	for (i=0 ; i<count ; i++)
-	{
+	
+	for (i=0 ; i<count ; i++) {
 		if (!free_particles)
 			return;
 		p = free_particles;
@@ -435,49 +434,39 @@ void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 		p->die = cl.time + 0.1*(rand()%5);
 		p->color = (color&~7) + (rand()&7);
 		p->type = pt_grav;
-		for (j=0 ; j<3 ; j++)
-#else
-		if (count == 1024)
-		{	// rocket explosion
+		for (j=0 ; j<3 ; j++) {
+			p->org[j] = org[j] + scale*((rand()&15)-8);
+			p->vel[j] = dir[j]*15;// + (rand()%300)-150;
+		}
+#elif UQUAKE
+		if (count == 1024) {
+			// rocket explosion
 			p->die = cl.time + 5;
 			p->color = ramp1[0];
 			p->ramp = rand()&3;
-			if (i & 1)
-			{
+			if (i & 1) {
 				p->type = pt_explode;
-				for (j=0 ; j<3 ; j++)
-				{
+				for (j=0 ; j<3 ; j++) {
 					p->org[j] = org[j] + ((rand()%32)-16);
 					p->vel[j] = (rand()%512)-256;
 				}
-			}
-			else
-			{
+			} else {
 				p->type = pt_explode2;
-				for (j=0 ; j<3 ; j++)
-				{
+				for (j=0 ; j<3 ; j++) {
 					p->org[j] = org[j] + ((rand()%32)-16);
 					p->vel[j] = (rand()%512)-256;
 				}
 			}
-		}
-		else
-#endif
-		{
-#ifdef QUAKEWORLD
-			p->org[j] = org[j] + scale*((rand()&15)-8);
-			p->vel[j] = dir[j]*15;// + (rand()%300)-150;
-#else
+		} else {
 			p->die = cl.time + 0.1*(rand()%5);
 			p->color = (color&~7) + (rand()&7);
 			p->type = pt_slowgrav;
-			for (j=0 ; j<3 ; j++)
-			{
+			for (j=0 ; j<3 ; j++) {
 				p->org[j] = org[j] + ((rand()&15)-8);
 				p->vel[j] = dir[j]*15;// + (rand()%300)-150;
 			}
-#endif
 		}
+#endif
 	}
 }
 

@@ -465,7 +465,7 @@ if test "x$HAS_3dfx" != "xno" -a "x$HAS_SVGA" = "xyes" \
    fi
    if test -z "$TDFXGL_NAME"; then
        dnl Check in reverse order of preference
-       for a in $OGL_NAME 3dfxgl; do
+       for a in 3dfxgl $OGL_NAME; do
 	  AC_CHECK_LIB($a, fxMesaCreateContext, TDFXGL_NAME=$a, qwfoo=qwfoo,
 	  [$GLIDE_LIBS $TDFXGL_LIBS])
        done
