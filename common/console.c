@@ -387,7 +387,6 @@ void Con_Printf (char *fmt, ...)
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
-	static qboolean	inupdate;
 
 	va_start (argptr,fmt);
 	vsnprintf (msg, sizeof(msg), fmt, argptr);
@@ -412,6 +411,7 @@ void Con_Printf (char *fmt, ...)
 	{
 	// protect against infinite loop if something in SCR_UpdateScreen calls
 	// Con_Printd
+		static qboolean	inupdate;
 		if (!inupdate)
 		{
 			inupdate = true;
