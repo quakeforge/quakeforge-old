@@ -39,8 +39,11 @@ QW_SRV_SYS_SRC = sys_common.c @QW_SRV_SYS_SRC@
 
 # Networking source files
 # FIXME: Should not assume UNIX
+#
+# Uncomment the second line for IPv6 support 
 
 QW_NET_SRC     = net_udp.c net_com.c mdfour.c
+#QW_NET_SRC	= net_udp6.c net_com.c mdfour.c
 
 # Server source files
 

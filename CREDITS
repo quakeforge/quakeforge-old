@@ -107,3 +107,7 @@ AIX/IRIX/Sun support:
 Network code fixes/cleanups:
   Roger Sen Montero <rogersm@tau.uab.es>
   Marcus Sundberg <mackan@stacken.kth.se>
+
+IPv6 support (not complete)
+------------
+  Pontus Lidman <pontus@lysator.liu.se>

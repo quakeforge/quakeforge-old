@@ -23,9 +23,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define	PORT_ANY	-1
 
+// Uncomment this line for IPv6 support
+//#define LINUX_IPV6
+
 typedef struct
 {
+#ifdef LINUX_IPV6
+	unsigned int ip[4];
+#else
 	byte	ip[4];
+#endif
 	unsigned short	port;
 	unsigned short	pad;
 } netadr_t;

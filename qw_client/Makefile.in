@@ -148,8 +148,11 @@ SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 SYS_SRC        = sys_common.c @QW_CL_SYS_SRC@
 
 # Networking source files
+#
+# Uncomment the second line to add IPv6 support
 
 QW_NET_SRC     = net_udp.c net_com.c mdfour.c
+#QW_NET_SRC	= net_udp6.c net_com.c mdfour.c
 
 # Common source files
 

@@ -136,3 +136,7 @@ D: CD-ROM support/optimizations
 N: Ricardo Veguilla
 E: r_veguilla_pr@yahoo.com
 D: Fix for SDL _windowed_mouse
+
+N: Pontus Lidman
+E: <pontus@lysator.liu.se>
+D: adding IPv6 support
