@@ -37,10 +37,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 qboolean	sv_allow_cheats;
 
-int fp_messages=4, fp_persecond=4, fp_secondsdead=10;
-char fp_msg[255] = { 0 };
-extern cvar_t *cl_warncmd;
-	extern		redirect_t	sv_redirected;
+int	fp_messages=4, fp_persecond=4, fp_secondsdead=10;
+char	fp_msg[255] = { 0 };
+extern cvar_t	*cl_warncmd;
+extern redirect_t	sv_redirected;
 
 
 /*
@@ -59,7 +59,8 @@ SV_SetMaster_f
 Make a master server current
 ====================
 */
-void SV_SetMaster_f (void)
+void
+SV_SetMaster_f ( void )
 {
 	char	data[2];
 	int		i;
@@ -94,7 +95,8 @@ void SV_SetMaster_f (void)
 SV_Quit_f
 ==================
 */
-void SV_Quit_f (void)
+void
+SV_Quit_f ( void )
 {
 	SV_FinalMessage ("server shutdown\n");
 	Con_Printf ("Shutting down.\n");
@@ -107,7 +109,8 @@ void SV_Quit_f (void)
 SV_Logfile_f
 ============
 */
-void SV_Logfile_f (void)
+void
+SV_Logfile_f ( void )
 {
 	char	name[MAX_OSPATH];
 
@@ -134,7 +137,8 @@ extern cvar_t *sv_fraglogdir;
 SV_Fraglogfile_f
 ============
 */
-void SV_Fraglogfile_f (void)
+void
+SV_Fraglogfile_f ( void )
 {
 	char	name[MAX_OSPATH];
 	char	dir[MAX_OSPATH];
@@ -152,12 +156,12 @@ void SV_Fraglogfile_f (void)
 	if (dir[sizeof(dir)-1] || strstr(dir, ".."))
 		dir[0] = 0;
 
-	if (dir[0] == 0) // empty or invalid fraglogdir - use com_gamedir
+	if (dir[0] == 0)	// empty or invalid fraglogdir - use com_gamedir
 	{
 		i = MAX_OSPATH;
 		strcpy(dir, com_gamedir);
 	}
-	else if (dir[0] == '/' || dir[1] == ':') // e.g. A: (DOS or Win32)
+	else if (dir[0] == '/' || dir[1] == ':')	// e.g. A: (DOS or Win32)
 	{
 		i = 0;
 	}
@@ -212,7 +216,8 @@ SV_SetPlayer
 Sets host_client and sv_player to the player with idnum Cmd_Argv(1)
 ==================
 */
-qboolean SV_SetPlayer (void)
+qboolean
+SV_SetPlayer ( void )
 {
 	client_t	*cl;
 	int			i;
@@ -243,7 +248,8 @@ SV_God_f
 Sets client to godmode
 ==================
 */
-void SV_God_f (void)
+void
+SV_God_f ( void )
 {
 	if (!sv_allow_cheats)
 	{
@@ -262,7 +268,8 @@ void SV_God_f (void)
 }
 
 
-void SV_Noclip_f (void)
+void
+SV_Noclip_f ( void )
 {
 	if (!sv_allow_cheats)
 	{
@@ -291,7 +298,8 @@ void SV_Noclip_f (void)
 SV_Give_f
 ==================
 */
-void SV_Give_f (void)
+void
+SV_Give_f ( void )
 {
 	char	*t;
 	int		v;
@@ -349,7 +357,8 @@ map <mapname>
 command from the console or progs.
 ======================
 */
-void SV_Map_f (void)
+void
+SV_Map_f ( void )
 {
 	char	level[MAX_QPATH];
 	char	expanded[MAX_QPATH];
@@ -396,7 +405,8 @@ SV_Kick_f
 Kick a user off of the server
 ==================
 */
-void SV_Kick_f (void)
+void
+SV_Kick_f ( void )
 {
 	int			i;
 	client_t	*cl;
@@ -428,7 +438,8 @@ void SV_Kick_f (void)
 SV_Status_f
 ================
 */
-void SV_Status_f (void)
+void
+SV_Status_f ( void )
 {
 	int			i, j, l;
 	client_t	*cl;
@@ -452,7 +463,7 @@ void SV_Status_f (void)
 		// most remote clients are 40 columns
 		//           0123456789012345678901234567890123456789
 		Con_Printf ("name               userid frags\n");
-        Con_Printf ("  address          rate ping drop\n");
+		Con_Printf ("  address          rate ping drop\n");
 		Con_Printf ("  ---------------- ---- ---- -----\n");
 		for (i=0,cl=svs.clients ; i<MAX_CLIENTS ; i++,cl++)
 		{
@@ -491,7 +502,7 @@ void SV_Status_f (void)
 		{
 			if (!cl->state)
 				continue;
-			Con_Printf ("%5i %6i ", (int)cl->edict->v.frags,  cl->userid);
+			Con_Printf ("%5i %6i ", (int)cl->edict->v.frags, cl->userid);
 
 			s = NET_BaseAdrToString ( cl->netchan.remote_address);
 			Con_Printf ("%s", s);
@@ -534,7 +545,8 @@ void SV_Status_f (void)
 SV_ConSay_f
 ==================
 */
-void SV_ConSay_f(void)
+void
+SV_ConSay_f ( void )
 {
 	client_t *client;
 	int		j;
@@ -569,12 +581,14 @@ void SV_ConSay_f(void)
 SV_Heartbeat_f
 ==================
 */
-void SV_Heartbeat_f (void)
+void
+SV_Heartbeat_f ( void )
 {
 	svs.last_heartbeat = -9999;
 }
 
-void SV_SendServerInfoChange(char *key, char *value)
+void
+SV_SendServerInfoChange ( char *key, char *value )
 {
 	if (!sv.state)
 		return;
@@ -592,7 +606,8 @@ SV_Serverinfo_f
 ===========
 */
 char *CopyString(char *s);
-void SV_Serverinfo_f (void)
+void
+SV_Serverinfo_f ( void )
 {
 	cvar_t	*var;
 
@@ -637,7 +652,8 @@ SV_Serverinfo_f
 ===========
 */
 char *CopyString(char *s);
-void SV_Localinfo_f (void)
+void
+SV_Localinfo_f ( void )
 {
 	if (Cmd_Argc() == 1)
 	{
@@ -668,7 +684,8 @@ SV_Floodport_f
 ================
 */
 
-void SV_Floodprot_f (void)
+void
+SV_Floodprot_f ( void )
 {
 	int arg1, arg2, arg3;
 
@@ -708,7 +725,8 @@ void SV_Floodprot_f (void)
 	fp_secondsdead = arg3;
 }
 
-void SV_Floodprotmsg_f (void)
+void
+SV_Floodprotmsg_f ( void )
 {
 	if (Cmd_Argc() == 1) {
 		Con_Printf("Current msg: %s\n", fp_msg);
@@ -755,7 +773,8 @@ SV_Gamedir
 Sets the fake *gamedir to a different directory.
 ================
 */
-void SV_Gamedir (void)
+void
+SV_Gamedir ( void )
 {
 	char			*dir;
 
@@ -788,7 +807,8 @@ void SV_Gamedir (void)
 SV_Snap
 ================
 */
-void SV_Snap (int uid)
+void
+SV_Snap ( int uid )
 {
 	client_t *cl;
 	char		pcxname[80];
@@ -844,13 +864,14 @@ void SV_Snap (int uid)
 SV_Snap_f
 ================
 */
-void SV_Snap_f (void)
+void
+SV_Snap_f ( void )
 {
 	int			uid;
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf ("Usage:  snap <userid>\n");
+		Con_Printf ("Usage: snap <userid>\n");
 		return;
 	}
 
@@ -864,7 +885,8 @@ void SV_Snap_f (void)
 SV_Snap
 ================
 */
-void SV_SnapAll_f (void)
+void
+SV_SnapAll_f ( void )
 {
 	client_t *cl;
 	int			i;
@@ -884,7 +906,8 @@ SV_User_f
 Examine a users info strings
 ===========
 */
-void SV_User_f (void)
+void
+SV_User_f ( void )
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -903,7 +926,8 @@ void SV_User_f (void)
 SV_InitOperatorCommands
 ==================
 */
-void SV_InitOperatorCommands (void)
+void
+SV_InitOperatorCommands ( void )
 {
 	if (COM_CheckParm ("-cheats"))
 	{

@@ -584,7 +584,7 @@ Cvar_CvarList_f ( void )
 }
 
 void
-Cvar_Init ( )
+Cvar_Init ( void )
 {
 	developer = Cvar_Get ("developer","0",0,"None");
 

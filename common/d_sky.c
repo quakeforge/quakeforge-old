@@ -42,7 +42,8 @@
 D_Sky_uv_To_st
 =================
 */
-void D_Sky_uv_To_st (int u, int v, fixed16_t *s, fixed16_t *t)
+void
+D_Sky_uv_To_st ( int u, int v, fixed16_t *s, fixed16_t *t )
 {
 	float	wu, wv, temp;
 	vec3_t	end;
@@ -72,7 +73,8 @@ void D_Sky_uv_To_st (int u, int v, fixed16_t *s, fixed16_t *t)
 D_DrawSkyScans8
 =================
 */
-void D_DrawSkyScans8 (espan_t *pspan)
+void
+D_DrawSkyScans8 ( espan_t *pspan )
 {
 	int				count, spancount, u, v;
 	unsigned char	*pdest;
@@ -145,4 +147,3 @@ void D_DrawSkyScans8 (espan_t *pspan)
 
 	} while ((pspan = pspan->pnext) != NULL);
 }
-

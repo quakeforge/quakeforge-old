@@ -32,7 +32,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 CL_NewTranslation
 =====================
 */
-void CL_NewTranslation (int slot)
+void
+CL_NewTranslation ( int slot )
 {
 	int		i, j;
 	int		top, bottom;

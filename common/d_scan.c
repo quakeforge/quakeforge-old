@@ -48,7 +48,8 @@ D_WarpScreen
 // the sine warp, to keep the edges from wrapping
 =============
 */
-void D_WarpScreen (void)
+void
+D_WarpScreen ( void )
 {
 	int		w, h;
 	int		u,v;
@@ -104,7 +105,8 @@ void D_WarpScreen (void)
 D_DrawTurbulent8Span
 =============
 */
-void D_DrawTurbulent8Span (void)
+void
+D_DrawTurbulent8Span ( void )
 {
 	int		sturb, tturb;
 
@@ -126,7 +128,8 @@ void D_DrawTurbulent8Span (void)
 Turbulent8
 =============
 */
-void Turbulent8 (espan_t *pspan)
+void
+Turbulent8 ( espan_t *pspan )
 {
 	int				count;
 	fixed16_t		snext, tnext;
@@ -196,8 +199,8 @@ void Turbulent8 (espan_t *pspan)
 					snext = bbextents;
 				else if (snext < 16)
 					snext = 16;	// prevent round-off error on <0 steps from
-								//  from causing overstepping & running off the
-								//  edge of the texture
+								// from causing overstepping & running off the
+								// edge of the texture
 
 				tnext = (int)(tdivz * z) + tadjust;
 				if (tnext > bbextentt)
@@ -224,8 +227,8 @@ void Turbulent8 (espan_t *pspan)
 					snext = bbextents;
 				else if (snext < 16)
 					snext = 16;	// prevent round-off error on <0 steps from
-								//  from causing overstepping & running off the
-								//  edge of the texture
+								// from causing overstepping & running off the
+								// edge of the texture
 
 				tnext = (int)(tdivz * z) + tadjust;
 				if (tnext > bbextentt)
@@ -261,7 +264,8 @@ void Turbulent8 (espan_t *pspan)
 D_DrawSpans8
 =============
 */
-void D_DrawSpans8 (espan_t *pspan)
+void
+D_DrawSpans8 ( espan_t *pspan )
 {
 	int				count, spancount;
 	unsigned char	*pbase, *pdest;
@@ -330,8 +334,8 @@ void D_DrawSpans8 (espan_t *pspan)
 					snext = bbextents;
 				else if (snext < 8)
 					snext = 8;	// prevent round-off error on <0 steps from
-								//  from causing overstepping & running off the
-								//  edge of the texture
+								// from causing overstepping & running off the
+								// edge of the texture
 
 				tnext = (int)(tdivz * z) + tadjust;
 				if (tnext > bbextentt)
@@ -358,8 +362,8 @@ void D_DrawSpans8 (espan_t *pspan)
 					snext = bbextents;
 				else if (snext < 8)
 					snext = 8;	// prevent round-off error on <0 steps from
-								//  from causing overstepping & running off the
-								//  edge of the texture
+								// from causing overstepping & running off the
+								// edge of the texture
 
 				tnext = (int)(tdivz * z) + tadjust;
 				if (tnext > bbextentt)
@@ -399,7 +403,8 @@ void D_DrawSpans8 (espan_t *pspan)
 D_DrawZSpans
 =============
 */
-void D_DrawZSpans (espan_t *pspan)
+void
+D_DrawZSpans ( espan_t *pspan )
 {
 	int				count, doublecount, izistep;
 	int				izi;
@@ -451,6 +456,4 @@ void D_DrawZSpans (espan_t *pspan)
 
 	} while ((pspan = pspan->pnext) != NULL);
 }
-
 #endif
-

@@ -35,8 +35,8 @@
 #include <console.h>
 
 #define LIGHT_MIN	5		// lowest light value we'll allow, to
-					//  avoid the need for inner-loop
-					//  light clamping
+							// avoid the need for inner-loop
+							// light clamping
 
 mtriangle_t		*ptriangles;
 affinetridesc_t		r_affinetridesc;
@@ -97,7 +97,8 @@ void R_AliasProjectFinalVert (finalvert_t *fv, auxvert_t *av);
 R_AliasCheckBBox
 ================
 */
-qboolean R_AliasCheckBBox (void)
+qboolean
+R_AliasCheckBBox ( void )
 {
 	int					i, flags, frame, numv;
 	aliashdr_t			*pahdr;
@@ -154,7 +155,7 @@ qboolean R_AliasCheckBBox (void)
 	minz = 9999;
 	for (i=0; i<8 ; i++)
 	{
-		R_AliasTransformVector  (&basepts[i][0], &viewaux[i].fv[0]);
+		R_AliasTransformVector (&basepts[i][0], &viewaux[i].fv[0]);
 
 		if (viewaux[i].fv[2] < ALIAS_Z_CLIP_PLANE)
 		{
@@ -195,7 +196,7 @@ qboolean R_AliasCheckBBox (void)
 			if (pv0->flags ^ pv1->flags)
 			{
 				frac = (ALIAS_Z_CLIP_PLANE - pa0->fv[2]) /
-					   (pa1->fv[2] - pa0->fv[2]);
+					(pa1->fv[2] - pa0->fv[2]);
 				viewaux[numv].fv[0] = pa0->fv[0] +
 						(pa1->fv[0] - pa0->fv[0]) * frac;
 				viewaux[numv].fv[1] = pa0->fv[1] +
@@ -261,7 +262,8 @@ qboolean R_AliasCheckBBox (void)
 R_AliasTransformVector
 ================
 */
-void R_AliasTransformVector (vec3_t in, vec3_t out)
+void
+R_AliasTransformVector ( vec3_t in, vec3_t out )
 {
 	out[0] = DotProduct(in, aliastransform[0]) + aliastransform[0][3];
 	out[1] = DotProduct(in, aliastransform[1]) + aliastransform[1][3];
@@ -276,7 +278,8 @@ R_AliasPreparePoints
 General clipped case
 ================
 */
-void R_AliasPreparePoints (void)
+void
+R_AliasPreparePoints ( void )
 {
 	int			i;
 	stvert_t	*pstverts;
@@ -345,7 +348,8 @@ void R_AliasPreparePoints (void)
 R_AliasSetUpTransform
 ================
 */
-void R_AliasSetUpTransform (int trivial_accept)
+void
+R_AliasSetUpTransform ( int trivial_accept )
 {
 	int				i;
 	float			rotationmatrix[3][4], t2matrix[3][4];
@@ -423,8 +427,9 @@ void R_AliasSetUpTransform (int trivial_accept)
 R_AliasTransformFinalVert
 ================
 */
-void R_AliasTransformFinalVert (finalvert_t *fv, auxvert_t *av,
-	trivertx_t *pverts, stvert_t *pstverts)
+void
+R_AliasTransformFinalVert ( finalvert_t *fv, auxvert_t *av,
+	trivertx_t *pverts, stvert_t *pstverts )
 {
 	int		temp;
 	float	lightcos, *plightnormal;
@@ -467,7 +472,8 @@ void R_AliasTransformFinalVert (finalvert_t *fv, auxvert_t *av,
 R_AliasTransformAndProjectFinalVerts
 ================
 */
-void R_AliasTransformAndProjectFinalVerts (finalvert_t *fv, stvert_t *pstverts)
+void
+R_AliasTransformAndProjectFinalVerts ( finalvert_t *fv, stvert_t *pstverts )
 {
 	int			i, temp;
 	float		lightcos, *plightnormal, zi;
@@ -522,7 +528,8 @@ void R_AliasTransformAndProjectFinalVerts (finalvert_t *fv, stvert_t *pstverts)
 R_AliasProjectFinalVert
 ================
 */
-void R_AliasProjectFinalVert (finalvert_t *fv, auxvert_t *av)
+void
+R_AliasProjectFinalVert ( finalvert_t *fv, auxvert_t *av )
 {
 	float	zi;
 
@@ -541,7 +548,8 @@ void R_AliasProjectFinalVert (finalvert_t *fv, auxvert_t *av)
 R_AliasPrepareUnclippedPoints
 ================
 */
-void R_AliasPrepareUnclippedPoints (void)
+void
+R_AliasPrepareUnclippedPoints ( void )
 {
 	stvert_t	*pstverts;
 	finalvert_t	*fv;
@@ -569,7 +577,8 @@ void R_AliasPrepareUnclippedPoints (void)
 R_AliasSetupSkin
 ===============
 */
-void R_AliasSetupSkin (void)
+void
+R_AliasSetupSkin ( void )
 {
 	int					skinnum;
 	int					i, numskins;
@@ -616,7 +625,7 @@ void R_AliasSetupSkin (void)
 	r_affinetridesc.pskindesc = pskindesc;
 	r_affinetridesc.pskin = (void *)((byte *)paliashdr + pskindesc->skin);
 	r_affinetridesc.skinwidth = a_skinwidth;
-	r_affinetridesc.seamfixupX16 =  (a_skinwidth >> 1) << 16;
+	r_affinetridesc.seamfixupX16 = (a_skinwidth >> 1) << 16;
 	r_affinetridesc.skinheight = pmdl->skinheight;
 
 #ifdef QUAKEWORLD
@@ -642,7 +651,8 @@ void R_AliasSetupSkin (void)
 R_AliasSetupLighting
 ================
 */
-void R_AliasSetupLighting (alight_t *plighting)
+void
+R_AliasSetupLighting ( alight_t *plighting )
 {
 
 // guarantee that no vertex will ever be lit below LIGHT_MIN, so we don't have
@@ -677,7 +687,8 @@ R_AliasSetupFrame
 set r_apverts
 =================
 */
-void R_AliasSetupFrame (void)
+void
+R_AliasSetupFrame ( void )
 {
 	int				frame;
 	int				i, numframes;
@@ -728,7 +739,8 @@ void R_AliasSetupFrame (void)
 R_AliasDrawModel
 ================
 */
-void R_AliasDrawModel (alight_t *plighting)
+void
+R_AliasDrawModel ( alight_t *plighting )
 {
 	finalvert_t		finalverts[MAXALIASVERTS +
 						((CACHE_SIZE - 1) / sizeof(finalvert_t)) + 1];
@@ -777,4 +789,3 @@ void R_AliasDrawModel (alight_t *plighting)
 	else
 		R_AliasPreparePoints ();
 }
-

@@ -46,7 +46,8 @@ byte *S_Alloc (int size);
 ResampleSfx
 ================
 */
-void ResampleSfx (sfx_t *sfx, int inrate, int inwidth, byte *data)
+void
+ResampleSfx ( sfx_t *sfx, int inrate, int inwidth, byte *data )
 {
 	int		outcount;
 	int		srcsample;
@@ -110,9 +111,10 @@ void ResampleSfx (sfx_t *sfx, int inrate, int inwidth, byte *data)
 S_LoadSound
 ==============
 */
-sfxcache_t *S_LoadSound (sfx_t *s)
+sfxcache_t *
+S_LoadSound ( sfx_t *s )
 {
-    char	namebuffer[256];
+	char	namebuffer[256];
 	byte	*data;
 	wavinfo_t	info;
 	int		len;
@@ -125,10 +127,10 @@ sfxcache_t *S_LoadSound (sfx_t *s)
 	if (sc)
 		return sc;
 
-//Con_Printf ("S_LoadSound: %x\n", (int)stackbuf);
 // load it in
-    Q_strcpy(namebuffer, "sound/");
-    Q_strcat(namebuffer, s->name);
+//	Con_Printf ("S_LoadSound: %x\n", (int)stackbuf);
+	Q_strcpy(namebuffer, "sound/");
+	Q_strcat(namebuffer, s->name);
 
 //	Con_Printf ("loading %s\n",namebuffer);
 
@@ -168,7 +170,6 @@ sfxcache_t *S_LoadSound (sfx_t *s)
 }
 
 
-
 /*
 ===============================================================================
 
@@ -177,15 +178,14 @@ WAV loading
 ===============================================================================
 */
 
-
 byte	*data_p;
 byte 	*iff_end;
 byte 	*last_chunk;
 byte 	*iff_data;
 int 	iff_chunk_len;
 
-
-short GetLittleShort(void)
+short
+GetLittleShort ( void )
 {
 	short val = 0;
 	val = *data_p;
@@ -194,7 +194,8 @@ short GetLittleShort(void)
 	return val;
 }
 
-int GetLittleLong(void)
+int
+GetLittleLong ( void )
 {
 	int val = 0;
 	val = *data_p;
@@ -205,7 +206,8 @@ int GetLittleLong(void)
 	return val;
 }
 
-void FindNextChunk(char *name)
+void
+FindNextChunk ( char *name )
 {
 	while (1)
 	{
@@ -233,15 +235,17 @@ void FindNextChunk(char *name)
 	}
 }
 
-void FindChunk(char *name)
+void
+FindChunk ( char *name )
 {
 	last_chunk = iff_data;
 	FindNextChunk (name);
 }
 
-		// Why are we doing this?
+// Why are we doing this?
 #if 0
-void DumpChunks(void)
+void
+DumpChunks ( void )
 {
 	char	str[5];
 
@@ -257,17 +261,19 @@ void DumpChunks(void)
 	} while (data_p < iff_end);
 }
 #endif
+
 /*
 ============
 GetWavinfo
 ============
 */
-wavinfo_t GetWavinfo (char *name, byte *wav, int wavlength)
+wavinfo_t
+GetWavinfo ( char *name, byte *wav, int wavlength )
 {
 	wavinfo_t	info;
-	int     i;
-	int     format;
-	int		samples;
+	int			i;
+	int			format;
+	int			samples;
 
 	memset (&info, 0, sizeof(info));
 
@@ -287,7 +293,7 @@ wavinfo_t GetWavinfo (char *name, byte *wav, int wavlength)
 
 // get "fmt " chunk
 	iff_data = data_p + 12;
-// DumpChunks ();
+//	DumpChunks ();
 
 	FindChunk("fmt ");
 	if (!data_p)
@@ -355,4 +361,3 @@ wavinfo_t GetWavinfo (char *name, byte *wav, int wavlength)
 
 	return info;
 }
-

@@ -42,7 +42,7 @@ extern	frame_t		*view_frame;
 	allow for the cut precision of the net coordinates
 */
 void
-CL_NudgePosition (void)
+CL_NudgePosition ( void )
 {
 	vec3_t	base;
 	int		x, y;
@@ -70,8 +70,8 @@ CL_NudgePosition (void)
 	CL_PredictUsercmd
 */
 void
-CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u,
-		qboolean spectator)
+CL_PredictUsercmd ( player_state_t *from, player_state_t *to, usercmd_t *u,
+		qboolean spectator )
 {
 	// split up very long moves
 	if (u->msec > 50)
@@ -119,7 +119,7 @@ CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u,
 	CL_PredictMove
 */
 void
-CL_PredictMove (void)
+CL_PredictMove ( void )
 {
 	int			i;
 	float		f;
@@ -232,9 +232,8 @@ CL_PredictMove (void)
 	CL_InitPrediction
 */
 void
-CL_InitPrediction (void)
+CL_InitPrediction ( void )
 {
 	cl_pushlatency = Cvar_Get ("pushlatency","-999",CVAR_NONE,"None");
 	cl_nopred = Cvar_Get ("cl_nopred","0",CVAR_NONE,"None");
 }
-

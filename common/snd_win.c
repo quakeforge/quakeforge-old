@@ -75,7 +75,7 @@ HPSTR		lpData, lpData2;
 HGLOBAL		hWaveHdr;
 LPWAVEHDR	lpWaveHdr;
 
-HWAVEOUT    hWaveOut;
+HWAVEOUT	hWaveOut;
 
 WAVEOUTCAPS	wavecaps;
 
@@ -102,9 +102,9 @@ qboolean SNDDMA_InitWav (void);
 S_BlockSound
 ==================
 */
-void S_BlockSound (void)
+void
+S_BlockSound ( void )
 {
-
 // DirectSound takes care of blocking itself
 	if (snd_iswave)
 	{
@@ -121,9 +121,9 @@ void S_BlockSound (void)
 S_UnblockSound
 ==================
 */
-void S_UnblockSound (void)
+void
+S_UnblockSound ( void )
 {
-
 // DirectSound takes care of blocking itself
 	if (snd_iswave)
 	{
@@ -137,7 +137,8 @@ void S_UnblockSound (void)
 FreeSound
 ==================
 */
-void FreeSound (void)
+void
+FreeSound ( void )
 {
 	int		i;
 
@@ -210,7 +211,8 @@ Direct-Sound support
 ==================
 */
 #ifdef HAVE_DSOUND
-sndinitstat SNDDMA_InitDirect (void)
+sndinitstat
+SNDDMA_InitDirect ( void )
 {
 	DSBUFFERDESC	dsbuf;
 	DSBCAPS			dsbcaps;
@@ -230,13 +232,13 @@ sndinitstat SNDDMA_InitDirect (void)
 
 	memset (&format, 0, sizeof(format));
 	format.wFormatTag = WAVE_FORMAT_PCM;
-    format.nChannels = shm->channels;
-    format.wBitsPerSample = shm->samplebits;
-    format.nSamplesPerSec = shm->speed;
-    format.nBlockAlign = format.nChannels
+	format.nChannels = shm->channels;
+	format.wBitsPerSample = shm->samplebits;
+	format.nSamplesPerSec = shm->speed;
+	format.nBlockAlign = format.nChannels
 		*format.wBitsPerSample / 8;
-    format.cbSize = 0;
-    format.nAvgBytesPerSec = format.nSamplesPerSec
+	format.cbSize = 0;
+	format.nAvgBytesPerSec = format.nSamplesPerSec
 		*format.nBlockAlign;
 
 	if (!hInstDS)
@@ -268,7 +270,7 @@ sndinitstat SNDDMA_InitDirect (void)
 
 /*		if (MessageBox (NULL,
 						"The sound hardware is in use by another app.\n\n"
-					    "Select Retry to try to start sound again or Cancel to run Quake with no sound.",
+						"Select Retry to try to start sound again or Cancel to run Quake with no sound.",
 						"Sound not available",
 						MB_RETRYCANCEL | MB_SETFOREGROUND | MB_ICONEXCLAMATION) != IDRETRY)
 		{
@@ -394,11 +396,13 @@ sndinitstat SNDDMA_InitDirect (void)
 	// Make sure mixer is active
 	pDSBuf->lpVtbl->Play(pDSBuf, 0, 0, DSBPLAY_LOOPING);
 
-/*	if (snd_firsttime)
+/*
+	if (snd_firsttime)
 		Con_SafePrintf("   %d channel(s)\n"
-		               "   %d bits/sample\n"
-					   "   %d bytes/sec\n",
-					   shm->channels, shm->samplebits, shm->speed);*/
+						"   %d bits/sample\n"
+						"   %d bytes/sec\n",
+						shm->channels, shm->samplebits, shm->speed);
+*/
 
 	gSndBufSize = dsbcaps.dwBufferBytes;
 
@@ -457,9 +461,10 @@ SNDDM_InitWav
 Crappy windows multimedia base
 ==================
 */
-qboolean SNDDMA_InitWav (void)
+qboolean
+SNDDMA_InitWav ( void )
 {
-	WAVEFORMATEX  format;
+	WAVEFORMATEX	format;
 	int				i;
 	HRESULT			hr;
 
@@ -494,9 +499,10 @@ qboolean SNDDMA_InitWav (void)
 			return false;
 		}
 
-/*		if (MessageBox (NULL,
+/*
+		if (MessageBox (NULL,
 						"The sound hardware is in use by another app.\n\n"
-					    "Select Retry to try to start sound again or Cancel to run Quake with no sound.",
+						"Select Retry to try to start sound again or Cancel to run Quake with no sound.",
 						"Sound not available",
 						MB_RETRYCANCEL | MB_SETFOREGROUND | MB_ICONEXCLAMATION) != IDRETRY)
 		{
@@ -593,7 +599,8 @@ Returns false if nothing is found.
 ==================
 */
 
-qboolean SNDDMA_Init(void)
+qboolean
+SNDDMA_Init ( void )
 {
 	sndinitstat	stat;
 
@@ -673,7 +680,8 @@ inside the recirculating dma buffer, so the mixing code will know
 how many sample are required to fill it up.
 ===============
 */
-int SNDDMA_GetDMAPos(void)
+int
+SNDDMA_GetDMAPos ( void )
 {
 	int		s;
 #ifdef HAVE_DSOUND
@@ -706,7 +714,8 @@ SNDDMA_Submit
 Send sound to device if buffer isn't really the dma buffer
 ===============
 */
-void SNDDMA_Submit(void)
+void
+SNDDMA_Submit ( void )
 {
 	LPWAVEHDR	h;
 	int			wResult;
@@ -764,8 +773,8 @@ SNDDMA_Shutdown
 Reset the sound device for exiting
 ===============
 */
-void SNDDMA_Shutdown(void)
+void
+SNDDMA_Shutdown ( void )
 {
 	FreeSound ();
 }
-

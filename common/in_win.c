@@ -1,6 +1,6 @@
 /*
 	in_win.c
-	
+
 	win32 input code
 
 	Copyright (C) 1996-1997  Id Software, Inc.
@@ -44,7 +44,7 @@
 #include <lib_replace.h>
 #include <keys.h>
 
-#define DINPUT_BUFFERSIZE           16
+#define DINPUT_BUFFERSIZE 16
 #define iDirectInputCreate(a,b,c,d)	pDirectInputCreate(a,b,c,d)
 
 HRESULT (WINAPI *pDirectInputCreate)(HINSTANCE hinst, DWORD dwVersion,
@@ -137,13 +137,13 @@ static HINSTANCE hInstDI;
 static qboolean	dinput;
 
 typedef struct MYDATA {
-	LONG  lX;                   // X axis goes here
-	LONG  lY;                   // Y axis goes here
-	LONG  lZ;                   // Z axis goes here
-	BYTE  bButtonA;             // One button goes here
-	BYTE  bButtonB;             // Another button goes here
-	BYTE  bButtonC;             // Another button goes here
-	BYTE  bButtonD;             // Another button goes here
+	long	lX;			// X axis goes here
+	long	lY;			// Y axis goes here
+	long	lZ;			// Z axis goes here
+	BYTE	bButtonA;	// One button goes here
+	BYTE	bButtonB;	// Another button goes here
+	BYTE	bButtonC;	// Another button goes here
+	BYTE	bButtonD;	// Another button goes here
 } MYDATA;
 
 static DIOBJECTDATAFORMAT rgodf[] = {
@@ -159,12 +159,12 @@ static DIOBJECTDATAFORMAT rgodf[] = {
 #define NUM_OBJECTS (sizeof(rgodf) / sizeof(rgodf[0]))
 
 static DIDATAFORMAT	df = {
-	sizeof(DIDATAFORMAT),       // this structure
-	sizeof(DIOBJECTDATAFORMAT), // size of object data format
-	DIDF_RELAXIS,               // absolute axis coordinates
-	sizeof(MYDATA),             // device data size
-	NUM_OBJECTS,                // number of objects
-	rgodf,                      // and here they are
+	sizeof(DIDATAFORMAT),		// this structure
+	sizeof(DIOBJECTDATAFORMAT),	// size of object data format
+	DIDF_RELAXIS,				// absolute axis coordinates
+	sizeof(MYDATA),				// device data size
+	NUM_OBJECTS,				// number of objects
+	rgodf,						// and here they are
 };
 
 // forward-referenced functions
@@ -178,7 +178,8 @@ void IN_JoyMove (usercmd_t *cmd);
 Force_CenterView_f
 ===========
 */
-void Force_CenterView_f (void)
+void
+Force_CenterView_f ( void )
 {
 	cl.viewangles[PITCH] = 0;
 }
@@ -189,9 +190,9 @@ void Force_CenterView_f (void)
 IN_UpdateClipCursor
 ===========
 */
-void IN_UpdateClipCursor (void)
+void
+IN_UpdateClipCursor ( void )
 {
-
 	if (mouseinitialized && mouseactive && !dinput)
 	{
 		ClipCursor (&window_rect);
@@ -204,9 +205,9 @@ void IN_UpdateClipCursor (void)
 IN_ShowMouse
 ===========
 */
-void IN_ShowMouse (void)
+void
+IN_ShowMouse ( void )
 {
-
 	if (!mouseshowtoggle)
 	{
 		ShowCursor (TRUE);
@@ -220,9 +221,9 @@ void IN_ShowMouse (void)
 IN_HideMouse
 ===========
 */
-void IN_HideMouse (void)
+void
+IN_HideMouse ( void )
 {
-
 	if (mouseshowtoggle)
 	{
 		ShowCursor (FALSE);
@@ -236,9 +237,9 @@ void IN_HideMouse (void)
 IN_ActivateMouse
 ===========
 */
-void IN_ActivateMouse (void)
+void
+IN_ActivateMouse ( void )
 {
-
 	mouseactivatetoggle = true;
 
 	if (mouseinitialized)
@@ -278,7 +279,8 @@ void IN_ActivateMouse (void)
 IN_SetQuakeMouseState
 ===========
 */
-void IN_SetQuakeMouseState (void)
+void
+IN_SetQuakeMouseState ( void )
 {
 	if (mouseactivatetoggle)
 		IN_ActivateMouse ();
@@ -290,9 +292,9 @@ void IN_SetQuakeMouseState (void)
 IN_DeactivateMouse
 ===========
 */
-void IN_DeactivateMouse (void)
+void
+IN_DeactivateMouse ( void )
 {
-
 	mouseactivatetoggle = false;
 
 	if (mouseinitialized)
@@ -327,7 +329,8 @@ void IN_DeactivateMouse (void)
 IN_RestoreOriginalMouseState
 ===========
 */
-void IN_RestoreOriginalMouseState (void)
+void
+IN_RestoreOriginalMouseState ( void )
 {
 	if (mouseactivatetoggle)
 	{
@@ -347,17 +350,18 @@ void IN_RestoreOriginalMouseState (void)
 IN_InitDInput
 ===========
 */
-qboolean IN_InitDInput (void)
+qboolean
+IN_InitDInput ( void )
 {
-    HRESULT		hr;
+	HRESULT		hr;
 	DIPROPDWORD	dipdw = {
 		{
-			sizeof(DIPROPDWORD),        // diph.dwSize
-			sizeof(DIPROPHEADER),       // diph.dwHeaderSize
-			0,                          // diph.dwObj
-			DIPH_DEVICE,                // diph.dwHow
+			sizeof(DIPROPDWORD),	// diph.dwSize
+			sizeof(DIPROPHEADER),	// diph.dwHeaderSize
+			0,						// diph.dwObj
+			DIPH_DEVICE,			// diph.dwHow
 		},
-		DINPUT_BUFFERSIZE,              // dwData
+		DINPUT_BUFFERSIZE,			// dwData
 	};
 
 	if (!hInstDI)
@@ -438,7 +442,8 @@ qboolean IN_InitDInput (void)
 IN_StartupMouse
 ===========
 */
-void IN_StartupMouse (void)
+void
+IN_StartupMouse ( void )
 {
 	if ( COM_CheckParm ("-nomouse") )
 		return;
@@ -497,7 +502,8 @@ void IN_StartupMouse (void)
 IN_Init
 ===========
 */
-void IN_Init (void)
+void
+IN_Init ( void )
 {
 	// mouse variables
 	m_filter = Cvar_Get ("m_filter","0",0,"None");
@@ -540,19 +546,19 @@ void IN_Init (void)
 IN_Shutdown
 ===========
 */
-void IN_Shutdown (void)
+void
+IN_Shutdown ( void )
 {
-
 	IN_DeactivateMouse ();
 	IN_ShowMouse ();
 
-    if (g_pMouse)
+	if (g_pMouse)
 	{
 		IDirectInputDevice_Release(g_pMouse);
 		g_pMouse = NULL;
 	}
 
-    if (g_pdi)
+	if (g_pdi)
 	{
 		IDirectInput_Release(g_pdi);
 		g_pdi = NULL;
@@ -565,7 +571,8 @@ void IN_Shutdown (void)
 IN_MouseEvent
 ===========
 */
-void IN_MouseEvent (int mstate)
+void
+IN_MouseEvent ( int mstate )
 {
 	int	i;
 
@@ -597,7 +604,8 @@ void IN_MouseEvent (int mstate)
 IN_MouseMove
 ===========
 */
-void IN_MouseMove (usercmd_t *cmd)
+void
+IN_MouseMove ( usercmd_t *cmd )
 {
 	int	mx, my;
 	int	i;
@@ -750,9 +758,9 @@ void IN_MouseMove (usercmd_t *cmd)
 IN_Move
 ===========
 */
-void IN_Move (usercmd_t *cmd)
+void
+IN_Move ( usercmd_t *cmd )
 {
-
 	if (ActiveApp && !Minimized)
 	{
 		IN_MouseMove (cmd);
@@ -766,7 +774,8 @@ void IN_Move (usercmd_t *cmd)
 IN_Accumulate
 ===========
 */
-void IN_Accumulate (void)
+void
+IN_Accumulate ( void )
 {
 	if (mouseactive)
 	{
@@ -786,9 +795,9 @@ void IN_Accumulate (void)
 IN_ClearStates
 ===================
 */
-void IN_ClearStates (void)
+void
+IN_ClearStates ( void )
 {
-
 	if (mouseactive)
 	{
 		mx_accum = 0;
@@ -803,7 +812,8 @@ void IN_ClearStates (void)
 IN_StartupJoystick
 ===============
 */
-void IN_StartupJoystick (void)
+void
+IN_StartupJoystick ( void )
 {
 	int			numdevs;
 	JOYCAPS		jc;
@@ -872,7 +882,8 @@ void IN_StartupJoystick (void)
 RawValuePointer
 ===========
 */
-PDWORD RawValuePointer (int axis)
+PDWORD
+RawValuePointer ( int axis )
 {
 	switch (axis)
 	{
@@ -899,9 +910,9 @@ PDWORD RawValuePointer (int axis)
 Joy_AdvancedUpdate_f
 ===========
 */
-void Joy_AdvancedUpdate_f (void)
+void
+Joy_AdvancedUpdate_f ( void )
 {
-
 	// called once by IN_ReadJoystick and by user whenever an update is needed
 	// cvars are now available
 	int	i;
@@ -971,9 +982,8 @@ void Joy_AdvancedUpdate_f (void)
 IN_Frame
 ========
 */
-
 void
-IN_Frame(void)
+IN_Frame ( void )
 {
 	int		i, key_index;
 	DWORD	buttonstate, povstate;
@@ -1043,9 +1053,9 @@ IN_Frame(void)
 IN_ReadJoystick
 ===============
 */
-qboolean IN_ReadJoystick (void)
+qboolean
+IN_ReadJoystick ( void )
 {
-
 	memset (&ji, 0, sizeof(ji));
 	ji.dwSize = sizeof(ji);
 	ji.dwFlags = joy_flags;
@@ -1078,7 +1088,8 @@ qboolean IN_ReadJoystick (void)
 IN_JoyMove
 ===========
 */
-void IN_JoyMove (usercmd_t *cmd)
+void
+IN_JoyMove ( usercmd_t *cmd )
 {
 	float	speed, aspeed;
 	float	fAxisValue, fTemp;

@@ -117,7 +117,7 @@ int		r_drawnpolycount;
 int		r_wholepolycount;
 
 #ifdef UQUAKE
-#define VIEWMODNAME_LENGTH      256
+#define VIEWMODNAME_LENGTH 256
 char	viewmodname[VIEWMODNAME_LENGTH+1];
 int 	modcount;
 #endif	// UQUAKE
@@ -176,7 +176,7 @@ cvar_t	*r_maxedges;
 cvar_t	*r_numedges;
 cvar_t	*r_aliastransbase;
 cvar_t	*r_aliastransadj;
-cvar_t  *r_dynamic;
+cvar_t	*r_dynamic;
 
 extern cvar_t	*scr_fov;
 
@@ -193,7 +193,8 @@ void R_ZGraph (void);
 R_InitTextures
 ==================
 */
-void	R_InitTextures (void)
+void
+R_InitTextures ( void )
 {
 	int		x,y, m;
 	byte	*dest;
@@ -213,7 +214,7 @@ void	R_InitTextures (void)
 		for (y=0 ; y< (16>>m) ; y++)
 			for (x=0 ; x< (16>>m) ; x++)
 			{
-				if (  (y< (8>>m) ) ^ (x< (8>>m) ) )
+				if ( (y< (8>>m) ) ^ (x< (8>>m) ) )
 					*dest++ = 0;
 				else
 					*dest++ = 0xff;
@@ -226,7 +227,8 @@ void	R_InitTextures (void)
 R_Init
 ===============
 */
-void R_Init (void)
+void
+R_Init ( void )
 {
 	int		dummy;
 
@@ -293,7 +295,7 @@ void R_Init (void)
 // TODO: collect 386-specific code in one place
 #if	id386
 	Sys_MakeCodeWriteable ((long)R_EdgeCodeStart,
-					     (long)R_EdgeCodeEnd - (long)R_EdgeCodeStart);
+					(long)R_EdgeCodeEnd - (long)R_EdgeCodeStart);
 #endif	// id386
 
 	D_Init ();
@@ -304,7 +306,8 @@ void R_Init (void)
 R_NewMap
 ===============
 */
-void R_NewMap (void)
+void
+R_NewMap ( void )
 {
 	int i;
 
@@ -356,7 +359,7 @@ void R_NewMap (void)
 	else
 	{
 		auxedges = Hunk_AllocName (r_numallocatededges * sizeof(edge_t),
-								   "edges");
+								"edges");
 	}
 
 	r_dowarpold = false;
@@ -373,7 +376,8 @@ void R_NewMap (void)
 R_SetVrect
 ===============
 */
-void R_SetVrect (vrect_t *pvrectin, vrect_t *pvrect, int lineadj)
+void
+R_SetVrect ( vrect_t *pvrectin, vrect_t *pvrect, int lineadj )
 {
 	int		h;
 	float	size;
@@ -439,7 +443,8 @@ Called every time the vid structure or r_refdef changes.
 Guaranteed to be called before the first refresh
 ===============
 */
-void R_ViewChanged (vrect_t *pvrect, int lineadj, float aspect)
+void
+R_ViewChanged ( vrect_t *pvrect, int lineadj, float aspect )
 {
 	int		i;
 	float	res_scale;
@@ -535,8 +540,8 @@ void R_ViewChanged (vrect_t *pvrect, int lineadj, float aspect)
 		VectorNormalize (screenedge[i].normal);
 
 	res_scale = sqrt ((double)(r_refdef.vrect.width * r_refdef.vrect.height) /
-			          (320.0 * 152.0)) *
-			(2.0 / r_refdef.horizontalFieldOfView);
+				(320.0 * 152.0)) *
+				(2.0 / r_refdef.horizontalFieldOfView);
 	r_aliastransition = r_aliastransbase->value * res_scale;
 	r_resfudge = r_aliastransadj->value * res_scale;
 
@@ -550,14 +555,14 @@ void R_ViewChanged (vrect_t *pvrect, int lineadj, float aspect)
 	if (r_pixbytes == 1)
 	{
 		Sys_MakeCodeWriteable ((long)R_Surf8Start,
-						     (long)R_Surf8End - (long)R_Surf8Start);
+						(long)R_Surf8End - (long)R_Surf8Start);
 		colormap = vid.colormap;
 		R_Surf8Patch ();
 	}
 	else
 	{
 		Sys_MakeCodeWriteable ((long)R_Surf16Start,
-						     (long)R_Surf16End - (long)R_Surf16Start);
+						(long)R_Surf16End - (long)R_Surf16Start);
 		colormap = vid.colormap16;
 		R_Surf16Patch ();
 	}
@@ -572,7 +577,8 @@ void R_ViewChanged (vrect_t *pvrect, int lineadj, float aspect)
 R_MarkLeaves
 ===============
 */
-void R_MarkLeaves (void)
+void
+R_MarkLeaves ( void )
 {
 	byte	*vis;
 	mnode_t	*node;
@@ -608,7 +614,8 @@ void R_MarkLeaves (void)
 R_DrawEntitiesOnList
 =============
 */
-void R_DrawEntitiesOnList (void)
+void
+R_DrawEntitiesOnList ( void )
 {
 	int			i, j;
 	int			lnum;
@@ -688,7 +695,8 @@ void R_DrawEntitiesOnList (void)
 R_DrawViewModel
 =============
 */
-void R_DrawViewModel (void)
+void
+R_DrawViewModel ( void )
 {
 // FIXME: remove and do real lighting
 	float		lightvec[3] = {-1, 0, 0};
@@ -766,7 +774,8 @@ void R_DrawViewModel (void)
 R_BmodelCheckBBox
 =============
 */
-int R_BmodelCheckBBox (model_t *clmodel, float *minmaxs)
+int
+R_BmodelCheckBBox ( model_t *clmodel, float *minmaxs )
 {
 	int			i, *pindex, clipflags;
 	vec3_t		acceptpt, rejectpt;
@@ -830,7 +839,8 @@ int R_BmodelCheckBBox (model_t *clmodel, float *minmaxs)
 R_DrawBEntitiesOnList
 =============
 */
-void R_DrawBEntitiesOnList (void)
+void
+R_DrawBEntitiesOnList ( void )
 {
 	int			i, j, k, clipflags;
 	vec3_t		oldorigin;
@@ -963,7 +973,8 @@ void R_DrawBEntitiesOnList (void)
 R_EdgeDrawing
 ================
 */
-void R_EdgeDrawing (void)
+void
+R_EdgeDrawing ( void )
 {
 	edge_t	ledges[NUMSTACKEDGES +
 				((CACHE_SIZE - 1) / sizeof(edge_t)) + 1];
@@ -976,13 +987,13 @@ void R_EdgeDrawing (void)
 	}
 	else
 	{
-		r_edges =  (edge_t *)
+		r_edges = (edge_t *)
 				(((long)&ledges[0] + CACHE_SIZE - 1) & ~(CACHE_SIZE - 1));
 	}
 
 	if (r_surfsonstack)
 	{
-		surfaces =  (surf_t *)
+		surfaces = (surf_t *)
 				(((long)&lsurfs[0] + CACHE_SIZE - 1) & ~(CACHE_SIZE - 1));
 		surf_max = &surfaces[r_cnumsurfs];
 	// surface 0 doesn't really exist; it's just a dummy because index 0
@@ -1040,7 +1051,8 @@ R_RenderView
 r_refdef must be set before the first call
 ================
 */
-void R_RenderView_ (void)
+void
+R_RenderView_ ( void )
 {
 	byte	warpbuffer[WARP_WIDTH * WARP_HEIGHT];
 
@@ -1148,7 +1160,8 @@ SetVisibilityByPassages ();
 	Sys_HighFPPrecision ();
 }
 
-void R_RenderView (void)
+void
+R_RenderView ( void )
 {
 	int		dummy;
 	int		delta;
@@ -1174,7 +1187,8 @@ void R_RenderView (void)
 R_InitTurb
 ================
 */
-void R_InitTurb (void)
+void
+R_InitTurb ( void )
 {
 	int		i;
 
@@ -1184,4 +1198,3 @@ void R_InitTurb (void)
 		intsintable[i] = AMP2 + sin(i*3.14159*2/CYCLE)*AMP2;	// AMP2, not 20
 	}
 }
-

@@ -41,7 +41,8 @@ extern cvar_t	*sys_nostdout;
 Sys_Error
 ================
 */
-void Sys_Error (char *error, ...)
+void
+Sys_Error ( char *error, ... )
 {
 	va_list		argptr;
 	char		text[1024];
@@ -50,7 +51,7 @@ void Sys_Error (char *error, ...)
 	vsnprintf (text, sizeof(text), error, argptr);
 	va_end (argptr);
 
-//    MessageBox(NULL, text, "Error", 0 /* MB_OK */ );
+//	MessageBox(NULL, text, "Error", 0 /* MB_OK */ );
 	printf ("ERROR: %s\n", text);
 
 	exit (1);
@@ -62,7 +63,8 @@ void Sys_Error (char *error, ...)
 Sys_ConsoleInput
 ================
 */
-char *Sys_ConsoleInput (void)
+char *
+Sys_ConsoleInput ( void )
 {
 	static char	text[256];
 	static int		len;
@@ -73,7 +75,7 @@ char *Sys_ConsoleInput (void)
 	while (kbhit())
 #else
 	while (_kbhit())
-#endif   
+#endif
 	{
 		c = _getch();
 		putch (c);
@@ -111,7 +113,8 @@ char *Sys_ConsoleInput (void)
 Sys_Quit
 ================
 */
-void Sys_Quit (void)
+void
+Sys_Quit ( void )
 {
 	exit (0);
 }
@@ -125,7 +128,8 @@ Quake calls this so the system can register variables before host_hunklevel
 is marked
 =============
 */
-void Sys_Init (void)
+void
+Sys_Init ( void )
 {
 	OSVERSIONINFO	vinfo;
 
@@ -163,7 +167,8 @@ main
 */
 char	*newargv[256];
 
-int main (int argc, char **argv)
+int
+main ( int argc, char **argv )
 {
 	quakeparms_t	parms;
 	double			newtime, time, oldtime;
@@ -254,5 +259,3 @@ int main (int argc, char **argv)
 
 	return true;
 }
-
-

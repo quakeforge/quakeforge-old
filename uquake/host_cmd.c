@@ -53,7 +53,8 @@ Host_Quit_f
 
 extern void M_Menu_Quit_f (void);
 
-void Host_Quit_f (void)
+void
+Host_Quit_f ( void )
 {
 	if (key_dest != key_console && cls.state != ca_dedicated)
 	{
@@ -72,7 +73,8 @@ void Host_Quit_f (void)
 Host_Status_f
 ==================
 */
-void Host_Status_f (void)
+void
+Host_Status_f ( void )
 {
 	client_t	*client;
 	int			seconds;
@@ -129,7 +131,8 @@ Host_God_f
 Sets client to godmode
 ==================
 */
-void Host_God_f (void)
+void
+Host_God_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -147,7 +150,8 @@ void Host_God_f (void)
 		SV_ClientPrintf ("godmode ON\n");
 }
 
-void Host_Notarget_f (void)
+void
+Host_Notarget_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -167,7 +171,8 @@ void Host_Notarget_f (void)
 
 qboolean noclip_anglehack;
 
-void Host_Noclip_f (void)
+void
+Host_Noclip_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -199,7 +204,8 @@ Host_Fly_f
 Sets client to flymode
 ==================
 */
-void Host_Fly_f (void)
+void
+Host_Fly_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -229,7 +235,8 @@ Host_Ping_f
 
 ==================
 */
-void Host_Ping_f (void)
+void
+Host_Ping_f ( void )
 {
 	int		i, j;
 	float	total;
@@ -272,7 +279,8 @@ map <servername>
 command from the console.  Active clients are kicked off.
 ======================
 */
-void Host_Map_f (void)
+void
+Host_Map_f ( void )
 {
 	int		i;
 	char	name[MAX_QPATH];
@@ -327,7 +335,8 @@ Host_Changelevel_f
 Goes to a new map, taking all clients along
 ==================
 */
-void Host_Changelevel_f (void)
+void
+Host_Changelevel_f ( void )
 {
 #ifdef QUAKE2
 	char	level[MAX_QPATH];
@@ -382,7 +391,8 @@ Host_Restart_f
 Restarts the current server for a dead player
 ==================
 */
-void Host_Restart_f (void)
+void
+Host_Restart_f ( void )
 {
 	char	mapname[MAX_QPATH];
 #ifdef QUAKE2
@@ -412,7 +422,8 @@ This command causes the client to wait for the signon messages again.
 This is sent just before a server changes levels
 ==================
 */
-void Host_Reconnect_f (void)
+void
+Host_Reconnect_f ( void )
 {
 	SCR_BeginLoadingPlaque ();
 	cls.signon = 0;		// need new connection messages
@@ -425,7 +436,8 @@ Host_Connect_f
 User command to connect to server
 =====================
 */
-void Host_Connect_f (void)
+void
+Host_Connect_f ( void )
 {
 	char	name[MAX_QPATH];
 
@@ -458,7 +470,8 @@ Host_SavegameComment
 Writes a SAVEGAME_COMMENT_LENGTH character comment describing the current
 ===============
 */
-void Host_SavegameComment (char *text)
+void
+Host_SavegameComment ( char *text )
 {
 	int		i;
 	char	kills[20];
@@ -481,7 +494,8 @@ void Host_SavegameComment (char *text)
 Host_Savegame_f
 ===============
 */
-void Host_Savegame_f (void)
+void
+Host_Savegame_f ( void )
 {
 	char	name[256];
 	QFile	*f;
@@ -560,7 +574,6 @@ void Host_Savegame_f (void)
 			Qprintf (f,"m\n");
 	}
 
-
 	ED_WriteGlobals (f);
 	for (i=0 ; i<sv.num_edicts ; i++)
 	{
@@ -577,7 +590,8 @@ void Host_Savegame_f (void)
 Host_Loadgame_f
 ===============
 */
-void Host_Loadgame_f (void)
+void
+Host_Loadgame_f ( void )
 {
 	char	name[MAX_OSPATH];
 	QFile	*f;
@@ -635,7 +649,7 @@ void Host_Loadgame_f (void)
 	Qgets(f,buf,sizeof(buf));
 	sscanf (buf, "%f\n", &tfloat);
 	current_skill = (int)(tfloat + 0.1);
-	skill->value =  (float)current_skill;
+	skill->value = (float)current_skill;
 
 #ifdef QUAKE2
 	deathmatch->value = 0;
@@ -735,7 +749,8 @@ void Host_Loadgame_f (void)
 }
 
 #ifdef QUAKE2
-void SaveGamestate()
+void
+SaveGamestate ( void )
 {
 	char	name[256];
 	QFile	*f;
@@ -786,7 +801,8 @@ void SaveGamestate()
 	Con_Printf ("done.\n");
 }
 
-int LoadGamestate(char *level, char *startspot)
+int
+LoadGamestate ( char *level, char *startspot )
 {
 	char	name[MAX_OSPATH];
 	QFile	*f;
@@ -899,7 +915,8 @@ int LoadGamestate(char *level, char *startspot)
 }
 
 // changing levels within a unit
-void Host_Changelevel2_f (void)
+void
+Host_Changelevel2_f ( void )
 {
 	char	level[MAX_QPATH];
 	char	_startspot[MAX_QPATH];
@@ -944,10 +961,11 @@ void Host_Changelevel2_f (void)
 Host_Name_f
 ======================
 */
-void Host_Name_f (void)
+void
+Host_Name_f ( void )
 {
 	char	*newName;
-	int	Idx;
+	int		Idx;
 
 	if (Cmd_Argc () == 1)
 	{
@@ -974,14 +992,15 @@ void Host_Name_f (void)
 /* If cvar sv_filter is 1 */
 /* Check for \n & \r in names and remove, replace with '-' */
 
-       if(sv_filter->value == 1)
-	       for(Idx=0;Idx<strlen(newName);Idx++)
-		       if((newName[Idx]=='\r') || (newName[Idx]=='\n'))
-			       newName[Idx]='-';
+	if(sv_filter->value == 1)
+		for(Idx=0;Idx<strlen(newName);Idx++)
+			if((newName[Idx]=='\r') || (newName[Idx]=='\n'))
+				newName[Idx]='-';
 
-       if (host_client->name[0] && strcmp(host_client->name, "unconnected") )
+	if (host_client->name[0] && strcmp(host_client->name, "unconnected") )
 		if (Q_strcmp(host_client->name, newName) != 0)
 			Con_Printf ("%s renamed to %s\n", host_client->name, newName);
+
 	Q_strcpy (host_client->name, newName);
 	host_client->edict->v.netname = host_client->name - pr_strings;
 
@@ -993,14 +1012,16 @@ void Host_Name_f (void)
 }
 
 
-void Host_Version_f (void)
+void
+Host_Version_f ( void )
 {
 	Con_Printf ("Version %s\n", QF_VERSION);
 	Con_Printf ("Exe: "__TIME__" "__DATE__"\n");
 }
 
 
-void Host_Say(qboolean teamonly)
+void
+Host_Say ( qboolean teamonly )
 {
 	client_t *client;
 	client_t *save;
@@ -1042,7 +1063,7 @@ void Host_Say(qboolean teamonly)
 	else
 		snprintf(text, sizeof(text), "%c<%s> ", 1, hostname->string);
 
-	j = sizeof(text) - 2 - Q_strlen(text);  // -2 for /n and null terminator
+	j = sizeof(text) - 2 - Q_strlen(text);	// -2 for /n and null terminator
 	if (Q_strlen(p) > j)
 		p[j] = 0;
 
@@ -1064,19 +1085,22 @@ void Host_Say(qboolean teamonly)
 }
 
 
-void Host_Say_f(void)
+void
+Host_Say_f ( void )
 {
 	Host_Say(false);
 }
 
 
-void Host_Say_Team_f(void)
+void
+Host_Say_Team_f ( void )
 {
 	Host_Say(true);
 }
 
 
-void Host_Tell_f(void)
+void
+Host_Tell_f ( void )
 {
 	client_t *client;
 	client_t *save;
@@ -1106,7 +1130,7 @@ void Host_Tell_f(void)
 	}
 
 // check length & truncate if necessary
-	j = sizeof(text) - 2 - Q_strlen(text);  // -2 for /n and null terminator
+	j = sizeof(text) - 2 - Q_strlen(text);	// -2 for /n and null terminator
 	if (Q_strlen(p) > j)
 		p[j] = 0;
 
@@ -1133,7 +1157,8 @@ void Host_Tell_f(void)
 Host_Color_f
 ==================
 */
-void Host_Color_f(void)
+void
+Host_Color_f ( void )
 {
 	int		top, bottom;
 	int		playercolor;
@@ -1184,7 +1209,8 @@ void Host_Color_f(void)
 Host_Kill_f
 ==================
 */
-void Host_Kill_f (void)
+void
+Host_Kill_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -1209,7 +1235,8 @@ void Host_Kill_f (void)
 Host_Pause_f
 ==================
 */
-void Host_Pause_f (void)
+void
+Host_Pause_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -1245,7 +1272,8 @@ void Host_Pause_f (void)
 Host_PreSpawn_f
 ==================
 */
-void Host_PreSpawn_f (void)
+void
+Host_PreSpawn_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -1270,7 +1298,8 @@ void Host_PreSpawn_f (void)
 Host_Spawn_f
 ==================
 */
-void Host_Spawn_f (void)
+void
+Host_Spawn_f ( void )
 {
 	int		i;
 	client_t	*client;
@@ -1394,7 +1423,8 @@ void Host_Spawn_f (void)
 Host_Begin_f
 ==================
 */
-void Host_Begin_f (void)
+void
+Host_Begin_f ( void )
 {
 	if (cmd_source == src_command)
 	{
@@ -1415,7 +1445,8 @@ Host_Kick_f
 Kicks a user off of the server
 ==================
 */
-void Host_Kick_f (void)
+void
+Host_Kick_f ( void )
 {
 	char		*who;
 	char		*message = NULL;
@@ -1508,7 +1539,8 @@ DEBUGGING TOOLS
 Host_Give_f
 ==================
 */
-void Host_Give_f (void)
+void
+Host_Give_f ( void )
 {
 	char	*t;
 	int	v;
@@ -1528,51 +1560,51 @@ void Host_Give_f (void)
 
 	switch (t[0])
 	{
-   case '0':
-   case '1':
-   case '2':
-   case '3':
-   case '4':
-   case '5':
-   case '6':
-   case '7':
-   case '8':
-   case '9':
-      // MED 01/04/97 added hipnotic give stuff
-      if (hipnotic)
-      {
-         if (t[0] == '6')
-         {
-            if (t[1] == 'a')
-               sv_player->v.items = (int)sv_player->v.items | HIT_PROXIMITY_GUN;
-            else
-               sv_player->v.items = (int)sv_player->v.items | IT_GRENADE_LAUNCHER;
-         }
-         else if (t[0] == '9')
-            sv_player->v.items = (int)sv_player->v.items | HIT_LASER_CANNON;
-         else if (t[0] == '0')
-            sv_player->v.items = (int)sv_player->v.items | HIT_MJOLNIR;
-         else if (t[0] >= '2')
-            sv_player->v.items = (int)sv_player->v.items | (IT_SHOTGUN << (t[0] - '2'));
-      }
-      else
-      {
-         if (t[0] >= '2')
-            sv_player->v.items = (int)sv_player->v.items | (IT_SHOTGUN << (t[0] - '2'));
-      }
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	// MED 01/04/97 added hipnotic give stuff
+		if (hipnotic)
+		{
+			if (t[0] == '6')
+			{
+				if (t[1] == 'a')
+					sv_player->v.items = (int)sv_player->v.items | HIT_PROXIMITY_GUN;
+				else
+					sv_player->v.items = (int)sv_player->v.items | IT_GRENADE_LAUNCHER;
+			}
+			else if (t[0] == '9')
+				sv_player->v.items = (int)sv_player->v.items | HIT_LASER_CANNON;
+			else if (t[0] == '0')
+				sv_player->v.items = (int)sv_player->v.items | HIT_MJOLNIR;
+			else if (t[0] >= '2')
+				sv_player->v.items = (int)sv_player->v.items | (IT_SHOTGUN << (t[0] - '2'));
+		}
+		else
+		{
+			if (t[0] >= '2')
+				sv_player->v.items = (int)sv_player->v.items | (IT_SHOTGUN << (t[0] - '2'));
+		}
 		break;
 
-    case 's':
+	 case 's':
 		if (rogue)
 		{
-	        val = GetEdictFieldValue(sv_player, "ammo_shells1");
-		    if (val)
-			    val->_float = v;
+			val = GetEdictFieldValue(sv_player, "ammo_shells1");
+			if (val)
+				val->_float = v;
 		}
 
-        sv_player->v.ammo_shells = v;
-        break;
-    case 'n':
+		sv_player->v.ammo_shells = v;
+		break;
+	 case 'n':
 		if (rogue)
 		{
 			val = GetEdictFieldValue(sv_player, "ammo_nails1");
@@ -1587,8 +1619,8 @@ void Host_Give_f (void)
 		{
 			sv_player->v.ammo_nails = v;
 		}
-        break;
-    case 'l':
+		break;
+	 case 'l':
 		if (rogue)
 		{
 			val = GetEdictFieldValue(sv_player, "ammo_lava_nails");
@@ -1599,8 +1631,8 @@ void Host_Give_f (void)
 					sv_player->v.ammo_nails = v;
 			}
 		}
-        break;
-    case 'r':
+		break;
+	 case 'r':
 		if (rogue)
 		{
 			val = GetEdictFieldValue(sv_player, "ammo_rockets1");
@@ -1615,8 +1647,8 @@ void Host_Give_f (void)
 		{
 			sv_player->v.ammo_rockets = v;
 		}
-        break;
-    case 'm':
+		break;
+	 case 'm':
 		if (rogue)
 		{
 			val = GetEdictFieldValue(sv_player, "ammo_multi_rockets");
@@ -1627,11 +1659,11 @@ void Host_Give_f (void)
 					sv_player->v.ammo_rockets = v;
 			}
 		}
-        break;
-    case 'h':
-        sv_player->v.health = v;
-        break;
-    case 'c':
+		break;
+	 case 'h':
+		sv_player->v.health = v;
+		break;
+	 case 'c':
 		if (rogue)
 		{
 			val = GetEdictFieldValue(sv_player, "ammo_cells1");
@@ -1646,8 +1678,8 @@ void Host_Give_f (void)
 		{
 			sv_player->v.ammo_cells = v;
 		}
-        break;
-    case 'p':
+		break;
+	 case 'p':
 		if (rogue)
 		{
 			val = GetEdictFieldValue(sv_player, "ammo_plasma");
@@ -1658,11 +1690,12 @@ void Host_Give_f (void)
 					sv_player->v.ammo_cells = v;
 			}
 		}
-        break;
-    }
+		break;
+	 }
 }
 
-edict_t	*FindViewthing (void)
+edict_t	*
+FindViewthing ( void )
 {
 	int		i;
 	edict_t	*e;
@@ -1682,7 +1715,8 @@ edict_t	*FindViewthing (void)
 Host_Viewmodel_f
 ==================
 */
-void Host_Viewmodel_f (void)
+void
+Host_Viewmodel_f ( void )
 {
 	edict_t	*e;
 	model_t	*m;
@@ -1707,7 +1741,8 @@ void Host_Viewmodel_f (void)
 Host_Viewframe_f
 ==================
 */
-void Host_Viewframe_f (void)
+void
+Host_Viewframe_f ( void )
 {
 	edict_t	*e;
 	int		f;
@@ -1726,7 +1761,8 @@ void Host_Viewframe_f (void)
 }
 
 
-void PrintFrameName (model_t *m, int frame)
+void
+PrintFrameName ( model_t *m, int frame )
 {
 	aliashdr_t 			*hdr;
 	maliasframedesc_t	*pframedesc;
@@ -1744,7 +1780,8 @@ void PrintFrameName (model_t *m, int frame)
 Host_Viewnext_f
 ==================
 */
-void Host_Viewnext_f (void)
+void
+Host_Viewnext_f ( void )
 {
 	edict_t	*e;
 	model_t	*m;
@@ -1766,7 +1803,8 @@ void Host_Viewnext_f (void)
 Host_Viewprev_f
 ==================
 */
-void Host_Viewprev_f (void)
+void
+Host_Viewprev_f ( void )
 {
 	edict_t	*e;
 	model_t	*m;
@@ -1798,7 +1836,8 @@ DEMO LOOP CONTROL
 Host_Startdemos_f
 ==================
 */
-void Host_Startdemos_f (void)
+void
+Host_Startdemos_f ( void )
 {
 	int		i, c;
 
@@ -1840,7 +1879,8 @@ Host_Demos_f
 Return to looping demos
 ==================
 */
-void Host_Demos_f (void)
+void
+Host_Demos_f ( void )
 {
 	if (cls.state == ca_dedicated)
 		return;
@@ -1857,7 +1897,8 @@ Host_Stopdemo_f
 Return to looping demos
 ==================
 */
-void Host_Stopdemo_f (void)
+void
+Host_Stopdemo_f ( void )
 {
 	if (cls.state == ca_dedicated)
 		return;
@@ -1874,7 +1915,8 @@ void Host_Stopdemo_f (void)
 Host_InitCommands
 ==================
 */
-void Host_InitCommands (void)
+void
+Host_InitCommands ( void )
 {
 	Cmd_AddCommand ("status", Host_Status_f);
 	Cmd_AddCommand ("quit", Host_Quit_f);

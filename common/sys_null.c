@@ -35,10 +35,11 @@
 	File I/O
 */
 
-#define MAX_HANDLES             64	// 1999-12-23 More PAK files support by Maddes
-QFile    *sys_handles[MAX_HANDLES];
+#define MAX_HANDLES 64	// 1999-12-23 More PAK files support by Maddes
+QFile	*sys_handles[MAX_HANDLES];
 
-int findhandle (void)
+int
+findhandle ( void )
 {
 	int	i;
 
@@ -54,10 +55,11 @@ int findhandle (void)
 filelength
 ================
 */
-int filelength (QFile *f)
+int
+filelength ( QFile *f )
 {
-	int             pos;
-	int             end;
+	int		pos;
+	int		end;
 
 	pos = ftell (f);
 	fseek (f, 0, SEEK_END);
@@ -67,10 +69,11 @@ int filelength (QFile *f)
 	return end;
 }
 
-int Sys_FileOpenRead (char *path, int *hndl)
+int
+Sys_FileOpenRead ( char *path, int *hndl )
 {
-	QFile    *f;
-	int             i;
+	QFile	*f;
+	int		i;
 
 	i = findhandle ();
 
@@ -86,10 +89,11 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	return filelength(f);
 }
 
-int Sys_FileOpenWrite (char *path)
+int
+Sys_FileOpenWrite ( char *path )
 {
-	QFile    *f;
-	int             i;
+	QFile	*f;
+	int		i;
 
 	i = findhandle ();
 
@@ -101,23 +105,27 @@ int Sys_FileOpenWrite (char *path)
 	return i;
 }
 
-void Sys_FileClose (int handle)
+void
+Sys_FileClose ( int handle )
 {
 	fclose (sys_handles[handle]);
 	sys_handles[handle] = NULL;
 }
 
-void Sys_FileSeek (int handle, int position)
+void
+Sys_FileSeek ( int handle, int position )
 {
 	fseek (sys_handles[handle], position, SEEK_SET);
 }
 
-int Sys_FileRead (int handle, void *dest, int count)
+int
+Sys_FileRead ( int handle, void *dest, int count )
 {
 	return fread (dest, 1, count, sys_handles[handle]);
 }
 
-int Sys_FileWrite (int handle, void *data, int count)
+int
+Sys_FileWrite ( int handle, void *data, int count )
 {
 	return fwrite (data, 1, count, sys_handles[handle]);
 }
@@ -126,17 +134,20 @@ int Sys_FileWrite (int handle, void *data, int count)
 	System I/O
 */
 
-void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
+void
+Sys_MakeCodeWriteable ( unsigned long startaddr, unsigned long length )
 {
 }
 
-void Sys_DebugLog(char *file, char *fmt, ...)
+void
+Sys_DebugLog ( char *file, char *fmt, ... )
 {
 }
 
-void Sys_Error (char *error, ...)
+void
+Sys_Error ( char *error, ... )
 {
-	va_list         argptr;
+	va_list	argptr;
 
 	printf ("Sys_Error: ");
 	va_start (argptr,error);
@@ -147,37 +158,44 @@ void Sys_Error (char *error, ...)
 	exit (1);
 }
 
-void Sys_Quit (void)
+void
+Sys_Quit ( void )
 {
 	exit (0);
 }
 
-char *Sys_ConsoleInput (void)
+char *
+Sys_ConsoleInput ( void )
 {
 	return NULL;
 }
 
-void Sys_Sleep (void)
+void
+Sys_Sleep ( void )
 {
 }
 
-void Sys_SendKeyEvents (void)
+void
+Sys_SendKeyEvents ( void )
 {
 }
 
-void Sys_HighFPPrecision (void)
+void
+Sys_HighFPPrecision ( void )
 {
 }
 
-void Sys_LowFPPrecision (void)
+void
+Sys_LowFPPrecision ( void )
 {
 }
 
 //=============================================================================
 
-void main (int argc, char **argv)
+void
+main ( int argc, char **argv )
 {
-	static quakeparms_t    parms;
+	static quakeparms_t	parms;
 
 	parms.memsize = 8*1024*1024;
 	parms.membase = malloc (parms.memsize);
@@ -195,4 +213,3 @@ void main (int argc, char **argv)
 		Host_Frame (0.1);
 	}
 }
-

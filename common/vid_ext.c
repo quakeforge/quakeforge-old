@@ -53,7 +53,7 @@
 #define VESA_WAIT_VSYNC		0x80
 
 #define MAX_VESA_MODES		30		// we'll just take the first 30 if there
-						//  are more
+						// are more
 typedef struct {
 	int		pages[3];		// either 2 or 3 is valid
 	int		vesamode;		// LINEAR_MODE set if linear mode
@@ -133,8 +133,9 @@ void VID_ExtraSwapBuffers (viddef_t *vid, vmode_t *pcurrentmode,
 VGA_BankedBeginDirectRect
 ================
 */
-void VGA_BankedBeginDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode,
-	int x, int y, byte *pbitmap, int width, int height)
+void
+VGA_BankedBeginDirectRect ( viddef_t *lvid, struct vmode_s *pcurrentmode,
+	int x, int y, byte *pbitmap, int width, int height )
 {
 	if (!lvid->direct)
 		return;
@@ -158,8 +159,9 @@ void VGA_BankedBeginDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode,
 VGA_BankedEndDirectRect
 ================
 */
-void VGA_BankedEndDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode,
-	int x, int y, int width, int height)
+void
+VGA_BankedEndDirectRect ( viddef_t *lvid, struct vmode_s *pcurrentmode,
+	int x, int y, int width, int height )
 {
 	if (!lvid->direct)
 		return;
@@ -183,8 +185,9 @@ void VGA_BankedEndDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode,
 VID_SetVESAPalette
 ================
 */
-void VID_SetVESAPalette (viddef_t *lvid, vmode_t *pcurrentmode,
-	unsigned char *pal)
+void
+VID_SetVESAPalette ( viddef_t *lvid, vmode_t *pcurrentmode,
+	unsigned char *pal )
 {
 	int	i;
 	byte	*pp;
@@ -221,7 +224,8 @@ void VID_SetVESAPalette (viddef_t *lvid, vmode_t *pcurrentmode,
 VID_ExtraFarToLinear
 ================
 */
-void *VID_ExtraFarToLinear (void *ptr)
+void *
+VID_ExtraFarToLinear ( void *ptr )
 {
 	int	temp;
 
@@ -235,7 +239,8 @@ void *VID_ExtraFarToLinear (void *ptr)
 VID_ExtraWaitDisplayEnable
 ================
 */
-void VID_ExtraWaitDisplayEnable ()
+void
+VID_ExtraWaitDisplayEnable ( void )
 {
 	while ((inportb (0x3DA) & 0x01) == 1)
 		;
@@ -247,7 +252,8 @@ void VID_ExtraWaitDisplayEnable ()
 VID_ExtraVidLookForState
 ================
 */
-qboolean VID_ExtraVidLookForState (unsigned state, unsigned mask)
+qboolean
+VID_ExtraVidLookForState ( unsigned state, unsigned mask )
 {
 	int	i;
 	double	starttime, time;
@@ -274,7 +280,8 @@ qboolean VID_ExtraVidLookForState (unsigned state, unsigned mask)
 VID_ExtraStateFound
 ================
 */
-qboolean VID_ExtraStateFound (unsigned state)
+qboolean
+VID_ExtraStateFound ( unsigned state )
 {
 	int	i, workingstate;
 
@@ -299,7 +306,8 @@ qboolean VID_ExtraStateFound (unsigned state)
 VID_InitExtra
 ================
 */
-void VID_InitExtra (void)
+void
+VID_InitExtra ( void )
 {
 	int		nummodes;
 	short		*pmodenums;
@@ -446,7 +454,8 @@ NextMode:
 VID_ExtraGetModeInfo
 ================
 */
-qboolean VID_ExtraGetModeInfo(int modenum)
+qboolean
+VID_ExtraGetModeInfo ( int modenum )
 {
 	char	*infobuf;
 	int	numimagepages;
@@ -588,7 +597,8 @@ qboolean VID_ExtraGetModeInfo(int modenum)
 VID_ExtraInitMode
 ================
 */
-int VID_ExtraInitMode (viddef_t *lvid, vmode_t *pcurrentmode)
+int
+VID_ExtraInitMode ( viddef_t *lvid, vmode_t *pcurrentmode )
 {
 	vesa_extra_t	*pextra;
 	int		pageoffset;
@@ -717,8 +727,9 @@ int VID_ExtraInitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 VID_ExtraSwapBuffers
 ================
 */
-void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
-	vrect_t *rects)
+void
+VID_ExtraSwapBuffers ( viddef_t *lvid, vmode_t *pcurrentmode,
+	vrect_t *rects )
 {
 	int	pageoffset;
 
@@ -767,7 +778,7 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 		else
 		{
 			lvid->direct = lvid->buffer;	// direct drawing goes to the
-											//  currently displayed page
+											// currently displayed page
 			lvid->buffer = VID_membase + VID_pagelist[VID_currentpage];
 			lvid->conbuffer = lvid->buffer;
 		}
@@ -798,7 +809,8 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 }
 
 #if 0
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -814,7 +826,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -826,16 +839,19 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_InitCvars ()
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }
 #endif

@@ -213,7 +213,8 @@ char soundlist_name[] = "soundlist %i %i";
 
 
 #ifdef QUAKEWORLD
-void CL_BeginServerConnect(void)
+void
+CL_BeginServerConnect ( void )
 {
 	connect_time = 0;
 	CL_CheckForResend();
@@ -228,10 +229,11 @@ Just sent as a hint to the client that they should
 drop to full console
 =================
 */
-void CL_Changing_f (void)
+void
+CL_Changing_f ( void )
 {
 #ifdef QUAKEWORLD
-	if (cls.download)  // don't change when downloading
+	if (cls.download)	// don't change when downloading
 		return;
 #endif
 
@@ -250,7 +252,8 @@ Resend a connect message if the last one has timed out
 
 =================
 */
-void CL_CheckForResend (void)
+void
+CL_CheckForResend ( void )
 {
 	netadr_t	adr;
 	char	data[2048];
@@ -295,7 +298,8 @@ CL_ClearState
 
 =====================
 */
-void CL_ClearState (void)
+void
+CL_ClearState ( void )
 {
 	int			i;
 
@@ -334,7 +338,8 @@ void CL_ClearState (void)
 }
 
 #ifdef QUAKEWORLD
-void CL_Color_f (void)
+void
+CL_Color_f ( void )
 {
 	// just for quake compatability...
 	int		top, bottom;
@@ -376,7 +381,8 @@ CL_Connect_f
 
 ================
 */
-void CL_Connect_f (void)
+void
+CL_Connect_f ( void )
 {
 	char	*server;
 #ifdef QUAKEWORLD
@@ -412,13 +418,14 @@ CL_ConnectionlessPacket
 Responses to broadcasts, etc
 =================
 */
-void CL_ConnectionlessPacket (void)
+void
+CL_ConnectionlessPacket ( void )
 {
 	char	*s;
 	int		c;
 
-    MSG_BeginReading ();
-    MSG_ReadLong ();        // skip the -1
+	MSG_BeginReading ();
+	MSG_ReadLong ();		// skip the -1
 
 	c = MSG_ReadByte ();
 	if (!cls.demoplayback)
@@ -438,7 +445,7 @@ void CL_ConnectionlessPacket (void)
 		MSG_WriteString (&cls.netchan.message, "new");
 		cls.state = ca_connected;
 		Con_Printf ("Connected.\n");
-		allowremotecmd = false; // localid required now for remote cmds
+		allowremotecmd = false;		// localid required now for remote cmds
 		return;
 	}
 	// remote command from gui front end
@@ -551,7 +558,8 @@ Sends a disconnect message to the server
 This is also called on Host_Error, so it shouldn't cause any errors
 =====================
 */
-void CL_Disconnect (void)
+void
+CL_Disconnect ( void )
 {
 #ifdef QUAKEWORLD
 	byte	final[10];
@@ -618,7 +626,8 @@ void CL_Disconnect (void)
 #endif
 }
 
-void CL_Disconnect_f (void)
+void
+CL_Disconnect_f ( void )
 {
 	CL_Disconnect ();
 #ifdef UQUAKE
@@ -633,7 +642,8 @@ void CL_Disconnect_f (void)
 CL_Download_f
 =====================
 */
-void CL_Download_f (void)
+void
+CL_Download_f ( void )
 {
 	char *p, *q;
 
@@ -676,7 +686,8 @@ CL_EstablishConnection
 Host should be either "local" or a net address to be passed on
 =====================
 */
-void CL_EstablishConnection (char *host)
+void
+CL_EstablishConnection ( char *host )
 {
 	if (cls.state == ca_dedicated)
 		return;
@@ -707,7 +718,8 @@ CL_FullInfo_f
 Allow clients to change userinfo
 ==================
 */
-void CL_FullInfo_f (void)
+void
+CL_FullInfo_f ( void )
 {
 	char	key[512];
 	char	value[512];
@@ -762,7 +774,8 @@ CL_FullServerinfo_f
 Sent by server when serverinfo changes
 ==================
 */
-void CL_FullServerinfo_f (void)
+void
+CL_FullServerinfo_f ( void )
 {
 	char *p;
 
@@ -811,7 +824,8 @@ Determines the fraction between the last two messages that the objects
 should be put at.
 ===============
 */
-float	CL_LerpPoint (void)
+float
+CL_LerpPoint ( void )
 {
 	float	f, frac;
 
@@ -828,14 +842,14 @@ float	CL_LerpPoint (void)
 		f = 0.1;
 	}
 	frac = (cl.time - cl.mtime[1]) / f;
-//Con_Printf ("frac: %f\n",frac);
+//	Con_Printf ("frac: %f\n",frac);
 	if (frac < 0)
 	{
 		if (frac < -0.01)
 		{
 SetPal(1);
 			cl.time = cl.mtime[1];
-//				Con_Printf ("low frac\n");
+//			Con_Printf ("low frac\n");
 		}
 		frac = 0;
 	}
@@ -845,7 +859,7 @@ SetPal(1);
 		{
 SetPal(2);
 			cl.time = cl.mtime[0];
-//				Con_Printf ("high frac\n");
+//			Con_Printf ("high frac\n");
 		}
 		frac = 1;
 	}
@@ -863,7 +877,8 @@ CL_NextDemo
 Called to play the next demo in the demo loop
 =====================
 */
-void CL_NextDemo (void)
+void
+CL_NextDemo ( void )
 {
 	char	str[1024];
 
@@ -900,7 +915,8 @@ packet <destination> <contents>
 Contents allows \n escape character
 ====================
 */
-void CL_Packet_f (void)
+void
+CL_Packet_f ( void )
 {
 	char	send[2048];
 	int		i, l;
@@ -946,7 +962,8 @@ void CL_Packet_f (void)
 CL_PrintEntities_f
 ==============
 */
-void CL_PrintEntities_f (void)
+void
+CL_PrintEntities_f ( void )
 {
 	entity_t	*ent;
 	int			i;
@@ -970,7 +987,8 @@ void CL_PrintEntities_f (void)
 CL_Quit_f
 ==================
 */
-void CL_Quit_f (void)
+void
+CL_Quit_f ( void )
 {
 #ifdef QUAKEWORLD
 	if (1 /* key_dest != key_console */ /* && cls.state != ca_dedicated */)
@@ -992,7 +1010,8 @@ CL_Rcon_f
   an unconnected command.
 =====================
 */
-void CL_Rcon_f (void)
+void
+CL_Rcon_f ( void )
 {
 	char	message[1024];
 	int		i;
@@ -1050,7 +1069,8 @@ CL_ReadFromServer
 Read all incoming data from the server
 ===============
 */
-int CL_ReadFromServer (void)
+int
+CL_ReadFromServer ( void )
 {
 	int		ret;
 
@@ -1088,7 +1108,8 @@ int CL_ReadFromServer (void)
 CL_ReadPackets
 =================
 */
-void CL_ReadPackets (void)
+void
+CL_ReadPackets ( void )
 {
 //	while (NET_GetPacket ())
 	while (CL_GetMessage())
@@ -1147,10 +1168,11 @@ CL_Reconnect_f
 The server is changing levels
 =================
 */
-void CL_Reconnect_f (void)
+void
+CL_Reconnect_f ( void )
 {
 #ifdef QUAKEWORLD
-	if (cls.download)  // don't change when downloading
+	if (cls.download)	// don't change when downloading
 		return;
 #endif
 
@@ -1182,7 +1204,8 @@ void CL_Reconnect_f (void)
 CL_RelinkEntities
 ===============
 */
-void CL_RelinkEntities (void)
+void
+CL_RelinkEntities ( void )
 {
 	entity_t	*ent;
 	int			i, j;
@@ -1292,7 +1315,7 @@ void CL_RelinkEntities (void)
 				return;
 
 			dl = CL_AllocDlight (i);
-			VectorCopy (ent->origin,  dl->origin);
+			VectorCopy (ent->origin, dl->origin);
 			dl->origin[2] += 16;
 			AngleVectors (ent->angles, fv, rv, uv);
 
@@ -1304,7 +1327,7 @@ void CL_RelinkEntities (void)
 		if (ent->effects & EF_BRIGHTLIGHT)
 		{
 			dl = CL_AllocDlight (i);
-			VectorCopy (ent->origin,  dl->origin);
+			VectorCopy (ent->origin, dl->origin);
 			dl->origin[2] += 16;
 			dl->radius = 400 + (rand()&31);
 			dl->die = cl.time + 0.001;
@@ -1312,7 +1335,7 @@ void CL_RelinkEntities (void)
 		if (ent->effects & EF_DIMLIGHT)
 		{
 			dl = CL_AllocDlight (i);
-			VectorCopy (ent->origin,  dl->origin);
+			VectorCopy (ent->origin, dl->origin);
 			dl->radius = 200 + (rand()&31);
 			dl->die = cl.time + 0.001;
 		}
@@ -1320,7 +1343,7 @@ void CL_RelinkEntities (void)
 		if (ent->effects & EF_DARKLIGHT)
 		{
 			dl = CL_AllocDlight (i);
-			VectorCopy (ent->origin,  dl->origin);
+			VectorCopy (ent->origin, dl->origin);
 			dl->radius = 200.0 + (rand()&31);
 			dl->die = cl.time + 0.001;
 			dl->dark = true;
@@ -1328,7 +1351,7 @@ void CL_RelinkEntities (void)
 		if (ent->effects & EF_LIGHT)
 		{
 			dl = CL_AllocDlight (i);
-			VectorCopy (ent->origin,  dl->origin);
+			VectorCopy (ent->origin, dl->origin);
 			dl->radius = 200;
 			dl->die = cl.time + 0.001;
 		}
@@ -1385,7 +1408,8 @@ CL_SendConnectPacket
 called by CL_Connect_f and CL_CheckResend
 ======================
 */
-void CL_SendConnectPacket (void)
+void
+CL_SendConnectPacket ( void )
 {
 	netadr_t	adr;
 	char	data[2048];
@@ -1439,7 +1463,8 @@ CL_SetInfo_f
 Allow clients to change userinfo
 ==================
 */
-void CL_SetInfo_f (void)
+void
+CL_SetInfo_f ( void )
 {
 	if (Cmd_Argc() == 1)
 	{
@@ -1468,11 +1493,12 @@ CL_SignonReply
 An svc_signonnum has been received, perform a client side setup
 =====================
 */
-void CL_SignonReply (void)
+void
+CL_SignonReply ( void )
 {
 	char 	str[8192];
 
-Con_DPrintf ("CL_SignonReply: %i\n", cls.signon);
+	Con_DPrintf ("CL_SignonReply: %i\n", cls.signon);
 
 	switch (cls.signon)
 	{
@@ -1518,7 +1544,8 @@ user <name or userid>
 Dump userdata / masterdata for a user
 ====================
 */
-void CL_User_f (void)
+void
+CL_User_f ( void )
 {
 	int		uid;
 	int		i;
@@ -1552,7 +1579,8 @@ CL_Users_f
 Dump userids for all current players
 ====================
 */
-void CL_Users_f (void)
+void
+CL_Users_f ( void )
 {
 	int		i;
 	int		c;
@@ -1578,7 +1606,8 @@ void CL_Users_f (void)
 CL_Version_f
 ======================
 */
-void CL_Version_f (void)
+void
+CL_Version_f ( void )
 {
 	Con_Printf ("Version %s\n", QF_VERSION);
 	Con_Printf ("Exe: "__TIME__" "__DATE__"\n");
@@ -1591,7 +1620,9 @@ void CL_Version_f (void)
 CL_Minimize_f
 =================
 */
-void CL_Windows_f (void) {
+void
+CL_Windows_f ( void )
+{
 //	if (modestate == MS_WINDOWED)
 //		ShowWindow(mainwindow, SW_MINIMIZE);
 //	else
@@ -1606,7 +1637,8 @@ SetPal
 Debugging tool, just flashes the screen
 ===============
 */
-void SetPal (int i)
+void
+SetPal ( int i )
 {
 #if 0
 	static int old;
@@ -1641,6 +1673,7 @@ void SetPal (int i)
 	}
 #endif
 }
+
 /*
 =================
 CL_Slist_f
@@ -1650,7 +1683,9 @@ QW only.
 =================
 */
 #ifdef QUAKEWORLD
-void CL_Slist_f() {
+void
+CL_Slist_f( void )
+{
 	int i;
 	for (i=0;i < MAX_SERVER_LIST;i++) {
 		if (slist[i].server)
@@ -1660,12 +1695,14 @@ void CL_Slist_f() {
 	}
 }
 #endif
+
 /*
 =================
 CL_Init
 =================
 */
-void CL_Init (void)
+void
+CL_Init ( void )
 {
 #ifdef QUAKEWORLD
 	QFile *serlist;
@@ -1754,7 +1791,7 @@ void CL_Init (void)
 // New -- Load server list
 #ifdef QUAKEWORLD
 	Cmd_AddCommand ("slist", CL_Slist_f);
-	
+
 	Server_List_Init();
 	printf("CL_Init: Server list initialized.\n");
 	if ((serlist = Qopen(va("%s/servers.txt",fs_basepath->string),"r")) != NULL) {
@@ -1765,7 +1802,8 @@ void CL_Init (void)
 #endif
 }
 
-void CL_InitCvars()
+void
+CL_InitCvars ( void )
 {
 #ifdef QUAKEWORLD
 	extern	cvar_t	*baseskin;

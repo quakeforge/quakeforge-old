@@ -44,7 +44,8 @@ short	*zspantable[MAXHEIGHT];
 D_Patch
 ================
 */
-void D_Patch (void)
+void
+D_Patch ( void )
 {
 #if id386
 
@@ -53,7 +54,7 @@ void D_Patch (void)
 	if (!protectset8)
 	{
 		Sys_MakeCodeWriteable ((int)D_PolysetAff8Start,
-						     (int)D_PolysetAff8End - (int)D_PolysetAff8Start);
+				(int)D_PolysetAff8End - (int)D_PolysetAff8Start);
 		protectset8 = true;
 	}
 
@@ -66,7 +67,8 @@ void D_Patch (void)
 D_ViewChanged
 ================
 */
-void D_ViewChanged (void)
+void
+D_ViewChanged ( void )
 {
 	int rowbytes;
 
@@ -114,4 +116,3 @@ void D_ViewChanged (void)
 
 	D_Patch ();
 }
-

@@ -66,14 +66,23 @@
 /*
 All of Quake's data access is through a hierchal file system, but the contents of the file system can be transparently merged from several sources.
 
-The "base directory" is the path to the directory holding the quake.exe and all game directories.  The sys_* files pass this to host_init in quakeparms_t->basedir.  This can be overridden with the "-basedir" command line parm to allow code debugging in a different directory.  The base directory is
-only used during filesystem initialization.
+The "base directory" is the path to the directory holding the quake.exe and all
+game directories.  The sys_* files pass this to host_init in quakeparms_t-
+>basedir.  This can be overridden with the "-basedir" command line parm to allow
+code debugging in a different directory.  The base directory is only used during
+filesystem initialization.
 
-The "game directory" is the first tree on the search path and directory that all generated files (savegames, screenshots, demos, config files) will be saved to.  This can be overridden with the "-game" command line parameter.  The game directory can never be changed while quake is executing.  This is a precacution against having a malicious server instruct clients to write files over areas they shouldn't.
+The "game directory" is the first tree on the search path and directory that all
+generated files (savegames, screenshots, demos, config files) will be saved to.
+This can be overridden with the "-game" command line parameter.  The game
+directory can never be changed while quake is executing.  This is a precacution
+against having a malicious server instruct clients to write files over areas
+they shouldn't.
 
-The "cache directory" is only used during development to save network bandwidth, especially over ISDN / T1 lines.  If there is a cache directory
-specified, when a file is found by the normal search path, it will be mirrored
-into the cache directory, then opened there.
+The "cache directory" is only used during development to save network bandwidth,
+especially over ISDN / T1 lines.  If there is a cache directory specified, when
+a file is found by the normal search path, it will be mirrored into the cache
+directory, then opened there.
 */
 
 /*
@@ -84,7 +93,7 @@ QUAKE FILESYSTEM
 =============================================================================
 */
 
-char    gamedirfile[MAX_OSPATH];
+char	gamedirfile[MAX_OSPATH];
 
 cvar_t	*fs_basepath;
 cvar_t	*fs_sharepath;
@@ -154,7 +163,7 @@ searchpath_t	*com_base_searchpaths;	// without gamedirs
 	COM_filelength
 */
 int
-COM_filelength (QFile *f)
+COM_filelength ( QFile *f )
 {
 	int		pos;
 	int		end;
@@ -171,7 +180,7 @@ COM_filelength (QFile *f)
 	COM_FileOpenRead
 */
 int
-COM_FileOpenRead (char *path, QFile **hndl)
+COM_FileOpenRead ( char *path, QFile **hndl )
 {
 	QFile	*f;
 
@@ -190,7 +199,7 @@ COM_FileOpenRead (char *path, QFile **hndl)
 	COM_Path_f
 */
 void
-COM_Path_f (void)
+COM_Path_f ( void )
 {
 	searchpath_t	*s;
 
@@ -304,7 +313,7 @@ COM_CreatePath ( char *path )
 	ISDN from home.
 */
 void
-COM_CopyFile (char *netpath, char *cachepath)
+COM_CopyFile ( char *netpath, char *cachepath )
 {
 	QFile	*in, *out;
 	int		remaining, count;
@@ -335,7 +344,7 @@ COM_CopyFile (char *netpath, char *cachepath)
 	COM_OpenRead
 */
 QFile *
-COM_OpenRead (const char *path, int offs, int len)
+COM_OpenRead ( const char *path, int offs, int len )
 {
 	int fd=open(path,O_RDONLY);
 	unsigned char id[2];
@@ -365,7 +374,7 @@ COM_OpenRead (const char *path, int offs, int len)
 	return 0;
 }
 
-int file_from_pak; // global indicating file came from pack file ZOID
+int file_from_pak;	// global indicating file came from pack file ZOID
 
 /*
 	COM_FOpenFile
@@ -374,7 +383,7 @@ int file_from_pak; // global indicating file came from pack file ZOID
 	Sets com_filesize and one of handle or file
 */
 int
-COM_FOpenFile (char *filename, QFile **gzfile)
+COM_FOpenFile ( char *filename, QFile **gzfile )
 {
 	searchpath_t	*search;
 	char		netpath[MAX_OSPATH];
@@ -471,7 +480,7 @@ int		loadsize;
 	Always appends a 0 byte to the loaded data.
 */
 byte *
-COM_LoadFile (char *path, int usehunk)
+COM_LoadFile ( char *path, int usehunk )
 {
 	QFile	*h;
 	byte	*buf;
@@ -523,19 +532,19 @@ COM_LoadFile (char *path, int usehunk)
 }
 
 byte *
-COM_LoadHunkFile (char *path)
+COM_LoadHunkFile ( char *path )
 {
 	return COM_LoadFile (path, 1);
 }
 
 byte *
-COM_LoadTempFile (char *path)
+COM_LoadTempFile ( char *path )
 {
 	return COM_LoadFile (path, 2);
 }
 
 void
-COM_LoadCacheFile (char *path, struct cache_user_s *cu)
+COM_LoadCacheFile ( char *path, struct cache_user_s *cu )
 {
 	loadcache = cu;
 	COM_LoadFile (path, 3);
@@ -543,7 +552,7 @@ COM_LoadCacheFile (char *path, struct cache_user_s *cu)
 
 // uses temp hunk if larger than bufsize
 byte *
-COM_LoadStackFile (char *path, void *buffer, int bufsize)
+COM_LoadStackFile ( char *path, void *buffer, int bufsize )
 {
 	byte	*buf;
 
@@ -563,7 +572,7 @@ COM_LoadStackFile (char *path, void *buffer, int bufsize)
 	of the list so they override previous pack files.
 */
 pack_t *
-COM_LoadPackFile (char *packfile)
+COM_LoadPackFile ( char *packfile )
 {
 	dpackheader_t		header;
 	int			i;
@@ -614,86 +623,86 @@ COM_LoadPackFile (char *packfile)
 
 #ifdef GENERATIONS
 int
-COM_pakzip_checkfile(unzFile *pak, const char *path)
+COM_pakzip_checkfile ( unzFile *pak, const char *path )
 {
-    int status;
+	int status;
 
-    status = unzLocateFile(pak, path, 2);
-    return (status == UNZ_OK);
+	status = unzLocateFile(pak, path, 2);
+	return (status == UNZ_OK);
 }
 
 void
-COM_pakzip_closepak(unzFile *pak)
+COM_pakzip_closepak ( unzFile *pak )
 {
-    if (pak)
-        unzClose(pak);
-    pak = NULL;
+	if (pak)
+		unzClose(pak);
+	pak = NULL;
 }
 
 void
-COM_pakzip_close(unzFile *pak)
+COM_pakzip_close ( unzFile *pak )
 {
-    unzCloseCurrentFile(pak);
+	unzCloseCurrentFile(pak);
 }
 
 int
-COM_pakzip_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb)
+COM_pakzip_read ( unzFile *pak, void *buf, uint_t size, uint_t nmemb )
 {
-    int len = unzReadCurrentFile(pak, buf, size * nmemb);
-    return len / size;
+	int len = unzReadCurrentFile(pak, buf, size * nmemb);
+	return len / size;
 }
 
 int
-COM_pakzip_open(unzFile *pak, const char *path)
+COM_pakzip_open ( unzFile *pak, const char *path )
 {
-   if (unzLocateFile(pak, path, 2) != UNZ_OK)
-       return 0;
-   if (unzOpenCurrentFile(pak) != UNZ_OK)
-       return 0;
-   return 1;
+	if (unzLocateFile(pak, path, 2) != UNZ_OK)
+		return 0;
+	if (unzOpenCurrentFile(pak) != UNZ_OK)
+		return 0;
+	return 1;
 }
 
 uint_t
-COM_pakzip_getlen(unzFile *pak)
+COM_pakzip_getlen ( unzFile *pak )
 {
-    unz_file_info info;
+	unz_file_info info;
 
-    if (unzGetCurrentFileInfo(pak, &info, NULL, 0, NULL, 0, NULL, 0)
-        != UNZ_OK)
-        return 0;
-    return info.uncompressed_size;
+	if (unzGetCurrentFileInfo(pak, &info, NULL, 0, NULL, 0, NULL, 0)
+		!= UNZ_OK)
+		return 0;
+	return info.uncompressed_size;
 }
 
 uint_t
-COM_pakzip_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
+COM_pakzip_readfile ( unzFile *pak, const char *path, uint_t bufsize, byte_t *buf )
 {
-    uint_t len;
+	uint_t len;
 
-    if (!COM_pakzip_open(pak,path))
-        return 0;
+	if (!COM_pakzip_open(pak,path))
+		return 0;
 
-    if ((len = COM_pakzip_getlen(pak)) != 0)
-    {
-        if (COM_pakzip_read(pak, (void*)buf, 1, len) != len)
-            len = 0;
-    }
-    COM_pakzip_close(pak);
-    return len;
+	if ((len = COM_pakzip_getlen(pak)) != 0)
+	{
+		if (COM_pakzip_read(pak, (void*)buf, 1, len) != len)
+			len = 0;
+	}
+	COM_pakzip_close(pak);
+	return len;
 }
 
 
 pack_t *
-COM_LoadPackZipFile (char *packfile)
+COM_LoadPackZipFile ( char *packfile )
 {
-	int				i=0;
-	packfile_t              	*newfiles;
-	float                  		numpackfiles;
-	unzFile            		*pak;
-	pack_t 				*pack_old;
-	int 				status;
+	int			i=0;
+	packfile_t	*newfiles;
+	float		numpackfiles;
+	unzFile		*pak;
+	pack_t		*pack_old;
+	int			status;
 
 //	This following variable info is unused ATM.
-//	dpackfile_t            		info[MAX_FILES_IN_PACK];
+//	dpackfile_t	info[MAX_FILES_IN_PACK];
 	char szCurrentFileName[UNZ_MAXFILENAMEINZIP+1];
 
 	pak = unzOpen(packfile);
@@ -745,7 +754,7 @@ COM_LoadPackZipFile (char *packfile)
 #define FNAME_SIZE	MAX_OSPATH
 
 void
-COM_LoadGameDirectory(char *dir)
+COM_LoadGameDirectory ( char *dir )
 {
 	searchpath_t	*search;
 	pack_t			*pak;
@@ -764,7 +773,7 @@ COM_LoadGameDirectory(char *dir)
 	for (i = count; i < bufsize; i++) {
 		pakfiles[i] = NULL;
 	}
-	
+
 	dir_ptr = opendir(dir);
 	if (!dir_ptr)
 		return;
@@ -791,7 +800,7 @@ COM_LoadGameDirectory(char *dir)
 
 	// XXX WARNING!!! This is /NOT/ subtable for strcmp!!!!!
 	// This passes 'char **' instead of 'char *' to the cmp function!
-	qsort(pakfiles, count, sizeof(char *), 
+	qsort(pakfiles, count, sizeof(char *),
 			(int (*)(const void *, const void *)) Q_qstrcmp);
 
 	for (i = 0; i < count; i++) {
@@ -837,7 +846,7 @@ COM_LoadGameDirectory_free:
 	then loads and adds pak1.pak pak2.pak ...
 */
 void
-COM_AddDirectory (char *dir)
+COM_AddDirectory ( char *dir )
 {
 	searchpath_t	*search;
 	char			*p;
@@ -878,7 +887,7 @@ COM_AddDirectory (char *dir)
 	merge with COM_AddGameDirectory.
 */
 void
-COM_AddGameDirectory (char *dir)
+COM_AddGameDirectory ( char *dir )
 {
 	Con_DPrintf ("COM_AddGameDirectory (\"%s/%s\")\n",
 			fs_sharepath->string, dir);
@@ -894,7 +903,7 @@ COM_AddGameDirectory (char *dir)
 	Sets the gamedir and path to a different directory.
 */
 void
-COM_Gamedir (char *dir)
+COM_Gamedir ( char *dir )
 {
 	searchpath_t	*next;
 
@@ -948,7 +957,7 @@ Sets the gamedir and path to a different directory.
 ================
 */
 
-void COM_Gamedir_f (void)
+void COM_Gamedir_f ( void )
 {
 	char			*dir;
 
@@ -1018,4 +1027,3 @@ COM_InitFilesystem ( void )
 	// any set gamedirs will be freed up to here
 	com_base_searchpaths = com_searchpaths;
 }
-

@@ -98,7 +98,8 @@ WSADATA		winsockdata;
 
 //=============================================================================
 
-void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
+void
+NetadrToSockadr ( netadr_t *a, struct sockaddr_in *s )
 {
 	memset (s, 0, sizeof(*s));
 	s->sin_family = AF_INET;
@@ -107,18 +108,21 @@ void NetadrToSockadr (netadr_t *a, struct sockaddr_in *s)
 	s->sin_port = a->port;
 }
 
-void SockadrToNetadr (struct sockaddr_in *s, netadr_t *a)
+void
+SockadrToNetadr ( struct sockaddr_in *s, netadr_t *a )
 {
 	*(int *)a->ip = *(int *)&s->sin_addr;
 	a->port = s->sin_port;
 }
 
-qboolean        NET_AdrIsLoopback (netadr_t a)
+qboolean
+NET_AdrIsLoopback ( netadr_t a )
 {
-  return *(unsigned *)a.ip == htonl(INADDR_LOOPBACK);
+	return *(unsigned *)a.ip == htonl(INADDR_LOOPBACK);
 }
 
-qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b)
+qboolean
+NET_CompareBaseAdr ( netadr_t a, netadr_t b )
 {
 	if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3])
 		return true;
@@ -126,14 +130,16 @@ qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b)
 }
 
 
-qboolean	NET_CompareAdr (netadr_t a, netadr_t b)
+qboolean
+NET_CompareAdr ( netadr_t a, netadr_t b )
 {
 	if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3] && a.port == b.port)
 		return true;
 	return false;
 }
 
-char	*NET_AdrToString (netadr_t a)
+char *
+NET_AdrToString ( netadr_t a )
 {
 	static	char	s[64];
 
@@ -142,7 +148,8 @@ char	*NET_AdrToString (netadr_t a)
 	return s;
 }
 
-char	*NET_BaseAdrToString (netadr_t a)
+char *
+NET_BaseAdrToString ( netadr_t a )
 {
 	static	char	s[64];
 
@@ -161,13 +168,13 @@ idnewt:28000
 192.246.40.70:28000
 =============
 */
-qboolean	NET_StringToAdr (char *s, netadr_t *a)
+qboolean
+NET_StringToAdr ( char *s, netadr_t *a )
 {
 	struct hostent	*h;
 	struct sockaddr_in sadr;
 	char	*colon;
 	char	copy[128];
-
 
 	memset (&sadr, 0, sizeof(sadr));
 	sadr.sin_family = AF_INET;
@@ -201,14 +208,15 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 
 // Returns true if we can't bind the address locally--in other words,
 // the IP is NOT one of our interfaces.
-qboolean NET_IsClientLegal(netadr_t *adr)
+qboolean
+NET_IsClientLegal ( netadr_t *adr )
 {
 #if 0
 	struct sockaddr_in sadr;
 	int newsocket;
 
 	if (adr->ip[0] == 127)
-		return false; // no local connections period
+		return false;	// no local connections period
 
 	NetadrToSockadr (adr, &sadr);
 
@@ -233,11 +241,12 @@ qboolean NET_IsClientLegal(netadr_t *adr)
 
 //=============================================================================
 
-qboolean NET_GetPacket (void)
+qboolean
+NET_GetPacket ( void )
 {
-	int 	            ret;
-	struct sockaddr_in  from;
-	socklen_t           fromlen;
+	int					ret;
+	struct sockaddr_in	from;
+	socklen_t			fromlen;
 
 	fromlen = sizeof(from);
 	ret = recvfrom(net_socket, (void*)net_message_buffer, sizeof(net_message_buffer), 0, (struct sockaddr *)&from, &fromlen);
@@ -267,7 +276,7 @@ qboolean NET_GetPacket (void)
 	net_message.cursize = ret;
 	if (ret == sizeof(net_message_buffer))	{
 		Con_Printf ("Oversize packet from %s\n",
-			    NET_AdrToString (net_from));
+			NET_AdrToString (net_from));
 		return false;
 	}
 
@@ -276,7 +285,8 @@ qboolean NET_GetPacket (void)
 
 //=============================================================================
 
-void NET_SendPacket (int length, void *data, netadr_t to)
+void
+NET_SendPacket ( int length, void *data, netadr_t to )
 {
 	int ret;
 	struct sockaddr_in	addr;
@@ -307,7 +317,8 @@ void NET_SendPacket (int length, void *data, netadr_t to)
 
 //=============================================================================
 
-int UDP_OpenSocket (int port)
+int
+UDP_OpenSocket ( int port )
 {
 	int newsocket;
 	struct sockaddr_in address;
@@ -341,14 +352,15 @@ int UDP_OpenSocket (int port)
 	return newsocket;
 }
 
-void NET_GetLocalAddress (void)
+void
+NET_GetLocalAddress ( void )
 {
-	char	buff[MAXHOSTNAMELEN];
+	char				buff[MAXHOSTNAMELEN];
 	struct sockaddr_in	address;
-	socklen_t               namelen;
+	socklen_t			namelen;
 
 	if (gethostname(buff, MAXHOSTNAMELEN) == -1)
-	        Sys_Error ("Net_GetLocalAddress: gethostname: %s", strerror(errno));
+		Sys_Error ("Net_GetLocalAddress: gethostname: %s", strerror(errno));
 	buff[MAXHOSTNAMELEN-1] = 0;
 
 	NET_StringToAdr (buff, &net_local_adr);
@@ -366,7 +378,8 @@ void NET_GetLocalAddress (void)
 NET_Init
 ====================
 */
-void NET_Init (int port)
+void
+NET_Init ( int port )
 {
 #ifdef _WIN32
 	WORD	wVersionRequested;
@@ -403,7 +416,8 @@ void NET_Init (int port)
 NET_Shutdown
 ====================
 */
-void	NET_Shutdown (void)
+void
+NET_Shutdown ( void )
 {
 #ifdef _WIN32
 	closesocket(net_socket);

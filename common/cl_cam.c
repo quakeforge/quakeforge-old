@@ -52,7 +52,7 @@
 #define BUTTON_ATTACK 1
 #define MAX_ANGLE_TURN 10
 
-static vec3_t desired_position; // where the camera wants to be
+static vec3_t desired_position;		// where the camera wants to be
 static qboolean locked = false;
 static int oldbuttons;
 
@@ -63,7 +63,7 @@ qboolean cam_forceview;
 vec3_t cam_viewangles;
 double cam_lastviewtime;
 
-int spec_track = 0; // player# of who we are tracking
+int spec_track = 0;		// player# of who we are tracking
 int autocam = CAM_NONE;
 
 cvar_t * cl_chasecam;
@@ -77,7 +77,9 @@ vec3_t	chase_angles;
 vec3_t	chase_dest;
 vec3_t	chase_dest_angles;
 
-void Chase_Init (void) {
+void
+Chase_Init ( void )
+{
 	cl_chasecam = Cvar_Get ("cl_chasecam", "0", CVAR_ARCHIVE,
 			"Enable the chasecam (boolean)");
 	cl_chasecam_up = Cvar_Get ("cl_chasecam_up","16",CVAR_ARCHIVE,
@@ -89,12 +91,16 @@ void Chase_Init (void) {
 	cl_chasecam_mode = Cvar_Get ("cl_chasecam_mode", "0", CVAR_ARCHIVE, "Determines the mode used for the chasecam.\nRear (normal)=0\nOverhead=1\n----\nSettings recommended:\nIf using overhead set cl_chasecam_back 0, otherwise set to 100\nalso if you use overhead, a cl_chasecam_up of 100 is nice, otherwise use a value between 0 and 20");
 }
 
-void Chase_Reset (void) {
+void
+Chase_Reset ( void )
+{
 	// for respawning and teleporting
 	//	start position 12 units behind head
 }
 
-void TraceLine (vec3_t start, vec3_t end, vec3_t impact) {
+void
+TraceLine ( vec3_t start, vec3_t end, vec3_t impact )
+{
 	trace_t	trace;
 
 	memset (&trace, 0, sizeof(trace));
@@ -103,7 +109,9 @@ void TraceLine (vec3_t start, vec3_t end, vec3_t impact) {
 	VectorCopy (trace.endpos, impact);
 }
 
-void Chase_Update (void) {
+void
+Chase_Update ( void )
+{
 	int i;
 	float	dist;
 	vec3_t	forward, up, right;
@@ -123,7 +131,7 @@ void Chase_Update (void) {
 		dir=-1;
 */
 
-	if(cl_chasecam_mode->value!=0) 
+	if(cl_chasecam_mode->value!=0)
 	{
 		chase_dest[0] = r_refdef.vieworg[0] - cl_chasecam_right->value;
 		chase_dest[1] = r_refdef.vieworg[1] - cl_chasecam_back->value;
@@ -133,8 +141,8 @@ void Chase_Update (void) {
 	{
 		for (i=0 ; i<3 ; i++)
 			chase_dest[i] = r_refdef.vieworg[i]
-        		- forward[i] * cl_chasecam_back->value
-        		- right[i] * cl_chasecam_right->value;
+				- forward[i] * cl_chasecam_back->value
+				- right[i] * cl_chasecam_right->value;
 	}
 
 	// find the spot the player is looking at
@@ -146,7 +154,7 @@ void Chase_Update (void) {
 	dist = DotProduct (stop, forward);
 	if (dist < 1)
 		dist = 1;
-	
+
 	// Yaw stuff here is/was for the side view which i'm still working on.
 
 // This here flipps the direction of the overhead.. might want this later but for yaw
@@ -164,7 +172,8 @@ void Chase_Update (void) {
 
 }
 
-static void vectoangles(vec3_t vec, vec3_t ang)
+static void
+vectoangles ( vec3_t vec, vec3_t ang )
 {
 	float	forward;
 	float	yaw, pitch;
@@ -194,13 +203,15 @@ static void vectoangles(vec3_t vec, vec3_t ang)
 	ang[2] = 0;
 }
 
-static float vlen(vec3_t v)
+static float
+vlen ( vec3_t v )
 {
 	return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 }
 
 // returns true if weapon model should be drawn in camera mode
-qboolean Cam_DrawViewModel(void)
+qboolean
+Cam_DrawViewModel ( void )
 {
 	if (!cl.spectator)
 		return true;
@@ -211,7 +222,8 @@ qboolean Cam_DrawViewModel(void)
 }
 
 // returns true if we should draw this player, we don't if we are chase camming
-qboolean Cam_DrawPlayer(int playernum)
+qboolean
+Cam_DrawPlayer ( int playernum )
 {
 	if (cl.spectator && autocam && locked && cl_chasecam->value &&
 		spec_track == playernum)
@@ -219,7 +231,8 @@ qboolean Cam_DrawPlayer(int playernum)
 	return true;
 }
 
-void Cam_Unlock(void)
+void
+Cam_Unlock ( void )
 {
 	if (autocam) {
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
@@ -230,7 +243,8 @@ void Cam_Unlock(void)
 	}
 }
 
-void Cam_Lock(int playernum)
+void
+Cam_Lock ( int playernum )
 {
 	char st[40];
 
@@ -243,7 +257,8 @@ void Cam_Lock(int playernum)
 	Sbar_Changed();
 }
 
-pmtrace_t Cam_DoTrace(vec3_t vec1, vec3_t vec2)
+pmtrace_t
+Cam_DoTrace ( vec3_t vec1, vec3_t vec2 )
 {
 #if 0
 	memset(&pmove, 0, sizeof(pmove));
@@ -258,7 +273,8 @@ pmtrace_t Cam_DoTrace(vec3_t vec1, vec3_t vec2)
 }
 
 // Returns distance or 9999 if invalid for some reason
-static float Cam_TryFlyby(player_state_t *self, player_state_t *player, vec3_t vec, qboolean checkvis)
+static float
+Cam_TryFlyby ( player_state_t *self, player_state_t *player, vec3_t vec, qboolean checkvis )
 {
 	vec3_t v;
 	pmtrace_t trace;
@@ -291,7 +307,8 @@ static float Cam_TryFlyby(player_state_t *self, player_state_t *player, vec3_t v
 }
 
 // Is player visible?
-static qboolean Cam_IsVisible(player_state_t *player, vec3_t vec)
+static qboolean
+Cam_IsVisible ( player_state_t *player, vec3_t vec )
 {
 	pmtrace_t trace;
 	vec3_t v;
@@ -309,10 +326,11 @@ static qboolean Cam_IsVisible(player_state_t *player, vec3_t vec)
 	return true;
 }
 
-static qboolean InitFlyby(player_state_t *self, player_state_t *player, int checkvis)
+static qboolean
+InitFlyby ( player_state_t *self, player_state_t *player, int checkvis )
 {
-    float f, max;
-    vec3_t vec, vec2;
+	float f, max;
+	vec3_t vec, vec2;
 	vec3_t forward, right, up;
 
 	if(cl_chasecam_mode->value>0)
@@ -324,7 +342,7 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
 //	for (i = 0; i < 3; i++)
 //		forward[i] *= 3;
 
-    max = 1000;
+	max = 1000;
 	VectorAdd(forward, up, vec2);
 	VectorAdd(vec2, right, vec2);
 	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
@@ -336,64 +354,64 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
 	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
 		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorAdd(forward, right, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorSubtract(forward, right, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorAdd(forward, up, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorSubtract(forward, up, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorAdd(up, right, vec2);
 	VectorSubtract(vec2, forward, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorSubtract(up, right, vec2);
 	VectorSubtract(vec2, forward, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	// invert
 	VectorSubtract(vec3_origin, forward, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorCopy(forward, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	// invert
 	VectorSubtract(vec3_origin, right, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 	VectorCopy(right, vec2);
-    if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
-        max = f;
+	if ((f = Cam_TryFlyby(self, player, vec2, checkvis)) < max) {
+		max = f;
 		VectorCopy(vec2, vec);
-    }
+	}
 
 	// ack, can't find him
-    if (max >= 1000) {
+	if (max >= 1000) {
 //		Cam_Unlock();
 		return false;
 	}
@@ -403,7 +421,8 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
 	return true;
 }
 
-static void Cam_CheckHighTarget(void)
+static void
+Cam_CheckHighTarget ( void )
 {
 	int i, j, max;
 	player_info_t	*s;
@@ -427,13 +446,14 @@ static void Cam_CheckHighTarget(void)
 //
 // Take over the user controls and track a player.
 // We find a nice position to watch the player and move there
-void Cam_Track(usercmd_t *cmd)
+void
+Cam_Track ( usercmd_t *cmd )
 {
 	player_state_t *player, *self;
 	frame_t *frame;
 	vec3_t vec;
 	float len;
-	
+
 	if(cl_chasecam->value>0)
 		return;
 
@@ -493,7 +513,7 @@ void Cam_Track(usercmd_t *cmd)
 		VectorSubtract(desired_position, self->origin, vec);
 		len = vlen(vec);
 		cmd->forwardmove = cmd->sidemove = cmd->upmove = 0;
-		if (len > 16) { // close enough?
+		if (len > 16) {		// close enough?
 			MSG_WriteByte (&cls.netchan.message, clc_tmove);
 			MSG_WriteCoord (&cls.netchan.message, desired_position[0]);
 			MSG_WriteCoord (&cls.netchan.message, desired_position[1]);
@@ -510,7 +530,8 @@ void Cam_Track(usercmd_t *cmd)
 }
 
 #if 0
-static float adjustang(float current, float ideal, float speed)
+static float
+adjustang ( float current, float ideal, float speed )
 {
 	float move;
 
@@ -542,13 +563,14 @@ static float adjustang(float current, float ideal, float speed)
 			move = -speed;
 	}
 
-//Con_Printf("c/i: %4.2f/%4.2f move: %4.2f\n", current, ideal, move);
+//	Con_Printf("c/i: %4.2f/%4.2f move: %4.2f\n", current, ideal, move);
 	return anglemod (current + move);
 }
 #endif
 
 #if 0
-void Cam_SetView(void)
+void
+Cam_SetView ( void )
 {
 	return;
 	player_state_t *player, *self;
@@ -580,7 +602,8 @@ void Cam_SetView(void)
 }
 #endif
 
-void Cam_FinishMove(usercmd_t *cmd)
+void
+Cam_FinishMove ( usercmd_t *cmd )
 {
 	int i;
 	player_info_t	*s;
@@ -589,7 +612,7 @@ void Cam_FinishMove(usercmd_t *cmd)
 	if (cls.state != ca_active)
 		return;
 
-	if (!cl.spectator) // only in spectator mode
+	if (!cl.spectator)	// only in spectator mode
 		return;
 
 #if 0
@@ -675,15 +698,15 @@ void Cam_FinishMove(usercmd_t *cmd)
 	autocam = locked = false;
 }
 
-void Cam_Reset(void)
+void
+Cam_Reset ( void )
 {
 	autocam = CAM_NONE;
 	spec_track = 0;
 }
 
-void CL_InitCam(void)
+void
+CL_InitCam ( void )
 {
 	cl_hightrack = Cvar_Get ("cl_hightrack","0",0,"None");
 }
-
-

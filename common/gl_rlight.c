@@ -43,7 +43,8 @@ int	r_dlightframecount;
 R_AnimateLight
 ==================
 */
-void R_AnimateLight (void)
+void
+R_AnimateLight ( void )
 {
 	int			i,j,k;
 
@@ -73,7 +74,8 @@ DYNAMIC LIGHTS BLEND RENDERING
 =============================================================================
 */
 
-void AddLightBlend (float r, float g, float b, float a2)
+void
+AddLightBlend ( float r, float g, float b, float a2 )
 {
 	float	a;
 
@@ -89,7 +91,9 @@ void AddLightBlend (float r, float g, float b, float a2)
 
 float bubble_sintable[17], bubble_costable[17];
 
-void R_InitBubble() {
+void
+R_InitBubble ( void )
+{
 	float a;
 	int i;
 	float *bub_sin, *bub_cos;
@@ -105,7 +109,8 @@ void R_InitBubble() {
 	}
 }
 
-void R_RenderDlight (dlight_t *light)
+void
+R_RenderDlight ( dlight_t *light )
 {
 	int		i, j;
 	float	a;
@@ -158,7 +163,8 @@ void R_RenderDlight (dlight_t *light)
 R_RenderDlights
 =============
 */
-void R_RenderDlights (void)
+void
+R_RenderDlights ( void )
 {
 	int		i;
 	dlight_t	*l;
@@ -171,7 +177,7 @@ void R_RenderDlights (void)
 	if (r_fog->value)
 		glDisable (GL_FOG);
 
-	//  advanced yet for this frame
+	// advanced yet for this frame
 	glDepthMask (0);
 	glDisable (GL_TEXTURE_2D);
 	glShadeModel (GL_SMOOTH);
@@ -209,7 +215,8 @@ DYNAMIC LIGHTS
 R_MarkLights
 =============
 */
-void R_MarkLights (dlight_t *light, int bit, mnode_t *node)
+void
+R_MarkLights ( dlight_t *light, int bit, mnode_t *node )
 {
 	mplane_t	*splitplane;
 	float		dist;
@@ -255,7 +262,8 @@ void R_MarkLights (dlight_t *light, int bit, mnode_t *node)
 R_PushDlights
 =============
 */
-void R_PushDlights (void)
+void
+R_PushDlights ( void )
 {
 	int		i;
 	dlight_t	*l;
@@ -264,7 +272,7 @@ void R_PushDlights (void)
 		return;
 
 	r_dlightframecount = r_framecount + 1;	// because the count hasn't
-											//  advanced yet for this frame
+											// advanced yet for this frame
 	l = cl_dlights;
 
 	for (i=0 ; i<MAX_DLIGHTS ; i++, l++)
@@ -291,7 +299,7 @@ static int		myr[4];
 	RecursiveLightPoint
 */
 int *
-RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
+RecursiveLightPoint ( mnode_t *node, vec3_t start, vec3_t end )
 {
 	int		*r = myr;
 	float		front, back, frac;
@@ -425,7 +433,7 @@ RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
 	R_LightPoint
 */
 int *
-R_LightPoint (vec3_t p)
+R_LightPoint ( vec3_t p )
 {
 	vec3_t		end;
 	int		*r = myr;
@@ -447,4 +455,3 @@ R_LightPoint (vec3_t p)
 
 	return r;
 }
-

@@ -56,4 +56,3 @@ unsigned int	d_zrowbytes;
 unsigned int	d_zwidth;
 
 #endif	// !id386
-

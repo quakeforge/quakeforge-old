@@ -57,7 +57,7 @@ static DWORD		gSndBufSize;
 /* MME Callback function
  */
 static void
-mme_callback(HANDLE h, UINT wMsg, DWORD instance, LPARAM p1, LPARAM p2)
+mme_callback ( HANDLE h, UINT wMsg, DWORD instance, LPARAM p1, LPARAM p2 )
 {
 	if (wMsg == WOM_DONE) {
 		snd_completed++;
@@ -70,7 +70,8 @@ mme_callback(HANDLE h, UINT wMsg, DWORD instance, LPARAM p1, LPARAM p2)
 S_BlockSound
 ==================
 */
-void S_BlockSound (void)
+void
+S_BlockSound ( void )
 {
 	snd_blocked++;
 
@@ -85,7 +86,8 @@ void S_BlockSound (void)
 S_UnblockSound
 ==================
 */
-void S_UnblockSound (void)
+void
+S_UnblockSound ( void )
 {
 	snd_blocked--;
 }
@@ -96,7 +98,8 @@ void S_UnblockSound (void)
 FreeSound
 ==================
 */
-void FreeSound (void)
+void
+FreeSound ( void )
 {
 // only release primary buffer if it's not also the mixing buffer we just released
 	if (hWaveOut) {
@@ -121,7 +124,6 @@ void FreeSound (void)
 }
 
 
-
 /*
 ==================
 SNDDM_InitWav
@@ -129,13 +131,14 @@ SNDDM_InitWav
 Crappy windows multimedia base
 ==================
 */
-qboolean SNDDMA_InitWav (void)
+qboolean
+SNDDMA_InitWav ( void )
 {
 	LPPCMWAVEFORMAT format;
 	int i, hr;
 
 	if ((format = (LPPCMWAVEFORMAT)
-	    mmeAllocMem(sizeof(*format))) == NULL) {
+		mmeAllocMem(sizeof(*format))) == NULL) {
 		Con_SafePrintf("Failed to allocate PCMWAVEFORMAT struct\n");
 		return false;
 	}
@@ -164,7 +167,7 @@ qboolean SNDDMA_InitWav (void)
 				 (LPWAVEFORMAT)format,
 				 (void (*)())mme_callback, 0,
 				 CALLBACK_FUNCTION | WAVE_OPEN_SHAREABLE))
-	       != MMSYSERR_NOERROR)
+			!= MMSYSERR_NOERROR)
 	{
 		if (hr != MMSYSERR_ALLOCATED) {
 			mmeFreeMem(format);
@@ -235,7 +238,8 @@ Returns false if nothing is found.
 ==================
 */
 
-qboolean SNDDMA_Init(void)
+qboolean
+SNDDMA_Init ( void )
 {
 	wav_init = 0;
 
@@ -272,7 +276,8 @@ inside the recirculating dma buffer, so the mixing code will know
 how many sample are required to fill it up.
 ===============
 */
-int SNDDMA_GetDMAPos(void)
+int
+SNDDMA_GetDMAPos ( void )
 {
 	int	s = 0;
 
@@ -294,7 +299,8 @@ SNDDMA_Submit
 Send sound to device if buffer isn't really the dma buffer
 ===============
 */
-void SNDDMA_Submit(void)
+void
+SNDDMA_Submit ( void )
 {
 	LPWAVEHDR	h;
 	int			wResult;
@@ -343,7 +349,8 @@ SNDDMA_Shutdown
 Reset the sound device for exiting
 ===============
 */
-void SNDDMA_Shutdown(void)
+void
+SNDDMA_Shutdown ( void )
 {
 	FreeSound ();
 }

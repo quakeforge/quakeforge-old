@@ -30,7 +30,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //#define outportb	loutportb
 
-void loutportb (int port, int val)
+void
+loutportb ( int port, int val )
 {
 	printf ("port, val: %x %x\n", port, val);
 	getch ();
@@ -41,7 +42,8 @@ void loutportb (int port, int val)
 VideoRegisterSet
 ================
 */
-void VideoRegisterSet (int *pregset)
+void
+VideoRegisterSet ( int *pregset )
 {
 	int		port, temp0, temp1, temp2;
 
@@ -79,4 +81,3 @@ void VideoRegisterSet (int *pregset)
 		}
 	}
 }
-

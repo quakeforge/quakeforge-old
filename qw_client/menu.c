@@ -131,12 +131,14 @@ M_DrawCharacter
 Draws one solid graphics character
 ================
 */
-void M_DrawCharacter (int cx, int line, int num)
+void
+M_DrawCharacter ( int cx, int line, int num )
 {
 	Draw_Character ( cx + ((vid.width - 320)>>1), line, num);
 }
 
-void M_Print (int cx, int cy, char *str)
+void
+M_Print ( int cx, int cy, char *str )
 {
 	while (*str)
 	{
@@ -146,7 +148,8 @@ void M_Print (int cx, int cy, char *str)
 	}
 }
 
-void M_PrintWhite (int cx, int cy, char *str)
+void
+M_PrintWhite ( int cx, int cy, char *str )
 {
 	while (*str)
 	{
@@ -156,12 +159,14 @@ void M_PrintWhite (int cx, int cy, char *str)
 	}
 }
 
-void M_DrawTransPic (int x, int y, qpic_t *pic)
+void
+M_DrawTransPic ( int x, int y, qpic_t *pic )
 {
 	Draw_TransPic (x + ((vid.width - 320)>>1), y, pic);
 }
 
-void M_DrawPic (int x, int y, qpic_t *pic)
+void
+M_DrawPic ( int x, int y, qpic_t *pic )
 {
 	Draw_Pic (x + ((vid.width - 320)>>1), y, pic);
 }
@@ -169,7 +174,8 @@ void M_DrawPic (int x, int y, qpic_t *pic)
 byte identityTable[256];
 byte translationTable[256];
 
-void M_BuildTranslationTable(int top, int bottom)
+void
+M_BuildTranslationTable ( int top, int bottom )
 {
 	int	j;
 	byte	*dest, *source;
@@ -194,13 +200,15 @@ void M_BuildTranslationTable(int top, int bottom)
 }
 
 
-void M_DrawTransPicTranslate (int x, int y, qpic_t *pic)
+void
+M_DrawTransPicTranslate ( int x, int y, qpic_t *pic )
 {
 	Draw_TransPicTranslate (x + ((vid.width - 320)>>1), y, pic, translationTable);
 }
 
 
-void M_DrawTextBox (int x, int y, int width, int lines)
+void
+M_DrawTextBox ( int x, int y, int width, int lines )
 {
 	qpic_t	*p;
 	int		cx, cy;
@@ -264,7 +272,8 @@ int m_save_demonum;
 M_ToggleMenu_f
 ================
 */
-void M_ToggleMenu_f (void)
+void
+M_ToggleMenu_f ( void )
 {
 	m_entersound = true;
 
@@ -299,7 +308,8 @@ int	m_main_cursor;
 #define	MAIN_ITEMS	5
 
 
-void M_Menu_Main_f (void)
+void
+M_Menu_Main_f ( void )
 {
 	if (key_dest != key_menu)
 	{
@@ -312,7 +322,8 @@ void M_Menu_Main_f (void)
 }
 
 
-void M_Main_Draw (void)
+void
+M_Main_Draw ( void )
 {
 	int		f;
 	qpic_t		*p;
@@ -328,7 +339,8 @@ void M_Main_Draw (void)
 }
 
 
-void M_Main_Key (int key)
+void
+M_Main_Key ( int key )
 {
 	switch (key)
 	{
@@ -395,14 +407,16 @@ static int	options_cursor;
 static int	options_items;
 static int	options_video;		// menu item for video options menu (-1 = none)
 
-void M_Menu_Options_f (void)
+void
+M_Menu_Options_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_options;
 	m_entersound = true;
 }
 
-void M_DrawSlider (int x, int y, float range)
+void
+M_DrawSlider ( int x, int y, float range )
 {
 	int	i;
 
@@ -417,7 +431,8 @@ void M_DrawSlider (int x, int y, float range)
 	M_DrawCharacter (x + (SLIDER_RANGE-1)*8 * range, y, 131);
 }
 
-void M_DrawCheckbox (int x, int y, int on)
+void
+M_DrawCheckbox ( int x, int y, int on )
 {
 	if (on)
 		M_Print (x, y, "on");
@@ -425,7 +440,8 @@ void M_DrawCheckbox (int x, int y, int on)
 		M_Print (x, y, "off");
 }
 
-void M_Options_Draw (void)
+void
+M_Options_Draw ( void )
 {
 	unsigned int	options_draw_cursor=32;
 	float		r;
@@ -495,7 +511,8 @@ void M_Options_Draw (void)
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
 
-void M_AdjustSliders ( int dir )
+void
+M_AdjustSliders ( int dir )
 {
 	S_LocalSound ("misc/menu3.wav");
 
@@ -567,7 +584,8 @@ void M_AdjustSliders ( int dir )
 	}
 }
 
-void M_Options_Key (int k)
+void
+M_Options_Key ( int k )
 {
 	switch (k)
 	{
@@ -661,7 +679,8 @@ char *bindnames[][2] =
 int		keys_cursor;
 int		bind_grab;
 
-void M_Menu_Keys_f (void)
+void
+M_Menu_Keys_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_keys;
@@ -669,7 +688,8 @@ void M_Menu_Keys_f (void)
 }
 
 
-void M_FindKeysForCommand (char *command, int *twokeys)
+void
+M_FindKeysForCommand ( char *command, int *twokeys )
 {
 	int		count;
 	int		j;
@@ -695,7 +715,8 @@ void M_FindKeysForCommand (char *command, int *twokeys)
 	}
 }
 
-void M_UnbindCommand (char *command)
+void
+M_UnbindCommand ( char *command )
 {
 	int		j;
 	int		l;
@@ -714,7 +735,8 @@ void M_UnbindCommand (char *command)
 }
 
 
-void M_Keys_Draw (void)
+void
+M_Keys_Draw ( void )
 {
 	int		i, l;
 	int		keys[2];
@@ -765,7 +787,8 @@ void M_Keys_Draw (void)
 }
 
 
-void M_Keys_Key (int k)
+void
+M_Keys_Key ( int k )
 {
 	char	cmd[80];
 	int		keys[2];
@@ -842,7 +865,8 @@ void M_Keys_Key (int k)
 /* Default functions */
 #define MAX_COLUMN_SIZE	11
 
-static void vid_menudraw(void)
+static void
+vid_menudraw ( void )
 {
 	qpic_t		*p;
 
@@ -854,7 +878,8 @@ static void vid_menudraw(void)
 	M_Print(9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
 }
 
-static void vid_menukey(int key)
+static void
+vid_menukey ( int key )
 {
 	M_Menu_Options_f();
 }
@@ -863,9 +888,8 @@ static void vid_menukey(int key)
 void (*vid_menudrawfn)(void) = vid_menudraw;
 void (*vid_menukeyfn)(int key) = vid_menukey;
 
-
-
-void M_Menu_Video_f (void)
+void
+M_Menu_Video_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_video;
@@ -873,7 +897,8 @@ void M_Menu_Video_f (void)
 }
 
 
-void M_Video_Draw(void)
+void
+M_Video_Draw ( void )
 {
 	if (vid_menudrawfn == NULL) {
 		Sys_Error("M_Video_Draw called when vid_menudrawfn == NULL!\n");
@@ -882,7 +907,8 @@ void M_Video_Draw(void)
 }
 
 
-void M_Video_Key(int key)
+void
+M_Video_Key ( int key )
 {
 	if (vid_menukeyfn == NULL) {
 		Sys_Error("M_Video_Key called when vid_menukeyfn == NULL!\n");
@@ -897,7 +923,8 @@ int		help_page;
 #define	NUM_HELP_PAGES	6
 
 
-void M_Menu_Help_f (void)
+void
+M_Menu_Help_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_help;
@@ -905,15 +932,14 @@ void M_Menu_Help_f (void)
 	help_page = 0;
 }
 
-
-
-void M_Help_Draw (void)
+void
+M_Help_Draw ( void )
 {
 	M_DrawPic (0, 0, Draw_CachePic ( va("gfx/help%i.lmp", help_page)) );
 }
 
-
-void M_Help_Key (int key)
+void
+M_Help_Key ( int key )
 {
 	switch (key)
 	{
@@ -993,7 +1019,8 @@ char *quitMessage [] =
   "                        "
 };
 
-void M_Menu_Quit_f (void)
+void
+M_Menu_Quit_f ( void )
 {
 	if (m_state == m_quit)
 		return;
@@ -1006,7 +1033,8 @@ void M_Menu_Quit_f (void)
 }
 
 
-void M_Quit_Key (int key)
+void
+M_Quit_Key ( int key )
 {
 	switch (key)
 	{
@@ -1038,11 +1066,15 @@ void M_Quit_Key (int key)
 
 }
 
-void M_Menu_SinglePlayer_f (void) {
+void
+M_Menu_SinglePlayer_f ( void )
+{
 	m_state = m_singleplayer;
 }
 
-void M_SinglePlayer_Draw (void) {
+void
+M_SinglePlayer_Draw ( void )
+{
 	qpic_t	*p;
 
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
@@ -1057,10 +1089,13 @@ void M_SinglePlayer_Draw (void) {
 
 }
 
-void M_SinglePlayer_Key (key) {
+void
+M_SinglePlayer_Key ( key )
+{
 	if (key == K_ESCAPE || key==K_ENTER || key == KP_ENTER)
 		m_state = m_main;
 }
+
 #define MENU_X 50
 #define MENU_Y 30
 #define STAT_X 50
@@ -1071,14 +1106,18 @@ int m_multip_mins=0;
 int m_multip_maxs=10;
 int m_multip_horiz;
 
-void M_Menu_MultiPlayer_f (void) {
+void
+M_Menu_MultiPlayer_f ( void )
+{
 	key_dest = key_menu;
 	m_entersound = true;
 	m_state = m_multiplayer;
 	m_multip_horiz = 0;
 }
 
-void M_MultiPlayer_Draw (void) {
+void
+M_MultiPlayer_Draw ( void )
+{
 	int serv;
 	int line = 1;
 	qpic_t *p;
@@ -1115,7 +1154,9 @@ void M_MultiPlayer_Draw (void) {
 	//M_DrawTransPic(STAT_X+105,STAT_Y+48,Draw_CachePic(va("gfx/menudot%i.lmp",f+1)));
 }
 
-void M_MultiPlayer_Key (key) {
+void
+M_MultiPlayer_Key ( int key )
+{
 //	server_entry_t *pt;
 	if (!(slist[0].server) && key != K_ESCAPE && key != K_INS)
 		return;
@@ -1228,6 +1269,7 @@ void M_MultiPlayer_Key (key) {
 		m_multip_maxs = m_multip_cursor;
 	}
 }
+
 #define SERV_X 60
 #define SERV_Y 64
 #define DESC_X 60
@@ -1243,7 +1285,9 @@ int desc_max;
 int desc_min;
 int sedit_state;
 
-void M_Menu_SEdit_f (void) {
+void
+M_Menu_SEdit_f ( void )
+{
 	key_dest = key_menu;
 	m_entersound = true;
 	m_state = m_sedit;
@@ -1258,7 +1302,9 @@ void M_Menu_SEdit_f (void) {
 	desc_min = desc_max - (DESC_L);
 }
 
-void M_SEdit_Draw (void) {
+void
+M_SEdit_Draw ( void )
+{
 	qpic_t *p;
 
 	M_DrawTransPic(16,4,Draw_CachePic("gfx/qplaque.lmp"));
@@ -1279,7 +1325,9 @@ void M_SEdit_Draw (void) {
 			DESC_Y+8,10+((int)(realtime*4)&1));
 }
 
-void M_SEdit_Key (int key) {
+void
+M_SEdit_Key ( int key )
+{
 	int	l;
 	switch (key) {
 		case K_ESCAPE:
@@ -1350,7 +1398,8 @@ void M_SEdit_Key (int key) {
 	}
 }
 
-void M_Quit_Draw (void)
+void
+M_Quit_Draw ( void )
 {
 #define VSTR(x) #x
 #define VSTR2(x) VSTR(x)
@@ -1413,7 +1462,8 @@ void M_Quit_Draw (void)
 /* Menu Subsystem */
 
 
-void M_Init (void)
+void
+M_Init ( void )
 {
 	Cmd_AddCommand ("togglemenu", M_ToggleMenu_f);
 
@@ -1426,7 +1476,8 @@ void M_Init (void)
 }
 
 
-void M_Draw (void)
+void
+M_Draw ( void )
 {
 	if (m_state == m_none || key_dest != key_menu)
 		return;
@@ -1544,8 +1595,8 @@ void M_Draw (void)
 	VID_LockBuffer ();
 }
 
-
-void M_Keydown (int key)
+void
+M_Keydown ( int key )
 {
 	switch (m_state)
 	{

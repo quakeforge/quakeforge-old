@@ -34,7 +34,7 @@
 #include <mathlib.h>
 #include <sys.h>
 
-extern int             skytexturenum;
+extern int	skytexturenum;
 
 #ifndef GL_RGBA4
 #define	GL_RGBA4	0
@@ -51,7 +51,7 @@ unsigned	cblocklights[3][18*18];
 #define	BLOCK_WIDTH		128
 #define	BLOCK_HEIGHT	128
 
-#define	MAX_LIGHTMAPS	256  /*64*/
+#define	MAX_LIGHTMAPS	256	/*64*/
 int			active_lightmaps;
 
 typedef struct glRect_s {
@@ -69,8 +69,8 @@ int			allocated[MAX_LIGHTMAPS][BLOCK_WIDTH];
 byte		lightmaps[4*MAX_LIGHTMAPS*BLOCK_WIDTH*BLOCK_HEIGHT];
 
 // For gl_texsort 0
-msurface_t  *skychain = NULL;
-msurface_t  *waterchain = NULL;
+msurface_t	*skychain = NULL;
+msurface_t	*waterchain = NULL;
 
 void R_RenderDynamicLightmaps (msurface_t *fa);
 
@@ -79,7 +79,8 @@ void R_RenderDynamicLightmaps (msurface_t *fa);
 R_AddDynamicLights
 ===============
 */
-void R_AddDynamicLights (msurface_t *surf)
+void
+R_AddDynamicLights ( msurface_t *surf )
 {
 	int		lnum;
 	int		sd, td;
@@ -163,7 +164,8 @@ R_BuildLightMap
 Combine and scale multiple lightmaps into the 8.8 format in blocklights
 ===============
 */
-void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
+void
+R_BuildLightMap ( msurface_t *surf, byte *dest, int stride )
 {
 	int			smax, tmax;
 	int			t;
@@ -215,7 +217,7 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 						lightmap[j++] * scale;
 					cblocklights[2][i] +=
 						lightmap[j++] * scale;
-					blocklights[i] += 
+					blocklights[i] +=
 						lightmap[j++] * scale;
 				}
 				lightmap += (size<<2);
@@ -295,7 +297,8 @@ R_TextureAnimation
 Returns the proper texture for a given time and base texture
 ===============
 */
-texture_t *R_TextureAnimation (texture_t *base)
+texture_t *
+R_TextureAnimation ( texture_t *base )
 {
 	int		reletive;
 	int		count;
@@ -348,7 +351,8 @@ qboolean mtexenabled = false;
 
 void GL_SelectTexture (GLenum target);
 
-void GL_DisableMultitexture(void)
+void
+GL_DisableMultitexture ( void )
 {
 	if (mtexenabled) {
 		glDisable(GL_TEXTURE_2D);
@@ -357,7 +361,8 @@ void GL_DisableMultitexture(void)
 	}
 }
 
-void GL_EnableMultitexture(void)
+void
+GL_EnableMultitexture ( void )
 {
 	if (gl_mtexable) {
 		GL_SelectTexture(TEXTURE1_SGIS);
@@ -375,7 +380,8 @@ Systems that have fast state and texture changes can
 just do everything as it passes with no need to sort
 ================
 */
-void R_DrawSequentialPoly (msurface_t *s)
+void
+R_DrawSequentialPoly ( msurface_t *s )
 {
 	glpoly_t	*p;
 	float		*v;
@@ -476,7 +482,8 @@ Systems that have fast state and texture changes can
 just do everything as it passes with no need to sort
 ================
 */
-void R_DrawSequentialPoly (msurface_t *s)
+void
+R_DrawSequentialPoly ( msurface_t *s )
 {
 	glpoly_t	*p;
 	float		*v;
@@ -501,7 +508,7 @@ void R_DrawSequentialPoly (msurface_t *s)
 			GL_Bind (t->gl_texturenum);
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 			// Binds lightmap to texenv 1
-			GL_EnableMultitexture(); // Same as SelectTexture (TEXTURE1)
+			GL_EnableMultitexture();	// Same as SelectTexture (TEXTURE1)
 			GL_Bind (lightmap_textures + s->lightmaptexturenum);
 			i = s->lightmaptexturenum;
 			if (lightmap_modified[i])
@@ -657,7 +664,8 @@ DrawGLWaterPoly
 Warp the vertex coordinates
 ================
 */
-void DrawGLWaterPoly (glpoly_t *p)
+void
+DrawGLWaterPoly ( glpoly_t *p )
 {
 	int		i;
 	float	*v;
@@ -680,7 +688,8 @@ void DrawGLWaterPoly (glpoly_t *p)
 	glEnd ();
 }
 
-void DrawGLWaterPolyLightmap (glpoly_t *p)
+void
+DrawGLWaterPolyLightmap ( glpoly_t *p )
 {
 	int		i;
 	float	*v;
@@ -708,7 +717,8 @@ void DrawGLWaterPolyLightmap (glpoly_t *p)
 DrawGLPoly
 ================
 */
-void DrawGLPoly (glpoly_t *p)
+void
+DrawGLPoly ( glpoly_t *p )
 {
 	int		i;
 	float	*v;
@@ -729,7 +739,8 @@ void DrawGLPoly (glpoly_t *p)
 R_BlendLightmaps
 ================
 */
-void R_BlendLightmaps (void)
+void
+R_BlendLightmaps ( void )
 {
 	int			i, j;
 	glpoly_t	*p;
@@ -831,12 +842,13 @@ void R_BlendLightmaps (void)
 R_RenderBrushPoly
 ================
 */
-void R_RenderBrushPoly (msurface_t *fa)
+void
+R_RenderBrushPoly ( msurface_t *fa )
 {
 	texture_t	*t;
 	byte		*base;
 	int			maps;
-	glRect_t    *theRect;
+	glRect_t	*theRect;
 	int smax, tmax;
 
 	c_brush_polys++;
@@ -909,11 +921,12 @@ R_RenderDynamicLightmaps
 Multitexture
 ================
 */
-void R_RenderDynamicLightmaps (msurface_t *fa)
+void
+R_RenderDynamicLightmaps ( msurface_t *fa )
 {
 	byte		*base;
 	int			maps;
-	glRect_t    *theRect;
+	glRect_t	*theRect;
 	int smax, tmax;
 
 	c_brush_polys++;
@@ -966,7 +979,8 @@ dynamic:
 R_DrawWaterSurfaces
 ================
 */
-void R_DrawWaterSurfaces (void)
+void
+R_DrawWaterSurfaces ( void )
 {
 	int			i;
 	msurface_t	*s;
@@ -979,7 +993,7 @@ void R_DrawWaterSurfaces (void)
 	// go back to the world matrix
 	//
 
-    glLoadMatrixf (r_world_matrix);
+	glLoadMatrixf (r_world_matrix);
 
 	if (r_wateralpha->value < 1.0) {
 		glEnable (GL_BLEND);
@@ -1036,7 +1050,8 @@ void R_DrawWaterSurfaces (void)
 DrawTextureChains
 ================
 */
-void DrawTextureChains (void)
+void
+DrawTextureChains ( void )
 {
 	int		i;
 	msurface_t	*s;
@@ -1067,7 +1082,7 @@ void DrawTextureChains (void)
 		{
 			if ((s->flags & SURF_DRAWTURB) &&
 					r_wateralpha->value != 1.0)
-				continue;  // draw translucent water later
+				continue;	// draw translucent water later
 			for ( ; s ; s=s->texturechain)
 				R_RenderBrushPoly (s);
 		}
@@ -1081,7 +1096,8 @@ void DrawTextureChains (void)
 R_DrawBrushModel
 =================
 */
-void R_DrawBrushModel (entity_t *e)
+void
+R_DrawBrushModel ( entity_t *e )
 {
 	int			i;
 	int			k;
@@ -1148,10 +1164,10 @@ void R_DrawBrushModel (entity_t *e)
 		}
 	}
 
-    glPushMatrix ();
-e->angles[0] = -e->angles[0];	// stupid quake bug
+	glPushMatrix ();
+	e->angles[0] = -e->angles[0];	// stupid quake bug
 	R_RotateForEntity (e);
-e->angles[0] = -e->angles[0];	// stupid quake bug
+	e->angles[0] = -e->angles[0];	// stupid quake bug
 
 	//
 	// draw texture
@@ -1192,7 +1208,8 @@ e->angles[0] = -e->angles[0];	// stupid quake bug
 R_RecursiveWorldNode
 ================
 */
-void R_RecursiveWorldNode (mnode_t *node)
+void
+R_RecursiveWorldNode ( mnode_t *node )
 {
 	int			c, side;
 	mplane_t	*plane;
@@ -1318,7 +1335,8 @@ void R_RecursiveWorldNode (mnode_t *node)
 R_DrawWorld
 =============
 */
-void R_DrawWorld (void)
+void
+R_DrawWorld ( void )
 {
 	entity_t	ent;
 
@@ -1349,7 +1367,8 @@ void R_DrawWorld (void)
 R_MarkLeaves
 ===============
 */
-void R_MarkLeaves (void)
+void
+R_MarkLeaves ( void )
 {
 	byte	*vis;
 	mnode_t	*node;
@@ -1397,7 +1416,8 @@ void R_MarkLeaves (void)
 */
 
 // returns a texture number and the position inside it
-int AllocBlock (int w, int h, int *x, int *y)
+int
+AllocBlock ( int w, int h, int *x, int *y )
 {
 	int		i, j;
 	int		best, best2;
@@ -1449,7 +1469,8 @@ int	nColinElim;
 BuildSurfaceDisplayList
 ================
 */
-void BuildSurfaceDisplayList (msurface_t *fa)
+void
+BuildSurfaceDisplayList ( msurface_t *fa )
 {
 	int			i, lindex, lnumverts;
 	medge_t		*pedges, *r_pedge;
@@ -1503,13 +1524,13 @@ void BuildSurfaceDisplayList (msurface_t *fa)
 		s -= fa->texturemins[0];
 		s += fa->light_s*16;
 		s += 8;
-		s /= BLOCK_WIDTH*16; //fa->texinfo->texture->width;
+		s /= BLOCK_WIDTH*16;	//fa->texinfo->texture->width;
 
 		t = DotProduct (vec, fa->texinfo->vecs[1]) + fa->texinfo->vecs[1][3];
 		t -= fa->texturemins[1];
 		t += fa->light_t*16;
 		t += 8;
-		t /= BLOCK_HEIGHT*16; //fa->texinfo->texture->height;
+		t /= BLOCK_HEIGHT*16;	//fa->texinfo->texture->height;
 
 		poly->verts[i][5] = s;
 		poly->verts[i][6] = t;
@@ -1563,7 +1584,8 @@ void BuildSurfaceDisplayList (msurface_t *fa)
 GL_CreateSurfaceLightmap
 ========================
 */
-void GL_CreateSurfaceLightmap (msurface_t *surf)
+void
+GL_CreateSurfaceLightmap ( msurface_t *surf )
 {
 	int		smax, tmax;
 	byte	*base;
@@ -1589,7 +1611,8 @@ Builds the lightmap texture
 with all the surfaces from all brush models
 ==================
 */
-void GL_BuildLightmaps (void)
+void
+GL_BuildLightmaps ( void )
 {
 	int		i, j;
 	model_t	*m;
@@ -1676,6 +1699,4 @@ void GL_BuildLightmaps (void)
 
  	if (!gl_texsort->value)
  		GL_SelectTexture(TEXTURE0_SGIS);
-
 }
-

@@ -106,7 +106,8 @@ Netchan_Init
 
 ===============
 */
-void Netchan_Init (void)
+void
+Netchan_Init ( void )
 {
 	int		port;
 
@@ -130,7 +131,8 @@ Netchan_OutOfBand
 Sends an out-of-band datagram
 ================
 */
-void Netchan_OutOfBand (netadr_t adr, int length, byte *data)
+void
+Netchan_OutOfBand ( netadr_t adr, int length, byte *data )
 {
 	sizebuf_t	send;
 	byte		send_buf[MAX_MSGLEN + PACKET_HEADER];
@@ -158,7 +160,8 @@ Netchan_OutOfBandPrint
 Sends a text message in an out-of-band datagram
 ================
 */
-void Netchan_OutOfBandPrint (netadr_t adr, char *format, ...)
+void
+Netchan_OutOfBandPrint ( netadr_t adr, char *format, ... )
 {
 	va_list		argptr;
 	static char		string[8192];		// ??? why static?
@@ -179,7 +182,8 @@ Netchan_Setup
 called to open a channel to a remote system
 ==============
 */
-void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport)
+void
+Netchan_Setup ( netchan_t *chan, netadr_t adr, int qport )
 {
 	memset (chan, 0, sizeof(*chan));
 
@@ -204,7 +208,8 @@ Returns true if the bandwidth choke isn't active
 ================
 */
 #define	MAX_BACKUP	200
-qboolean Netchan_CanPacket (netchan_t *chan)
+qboolean
+Netchan_CanPacket ( netchan_t *chan )
 {
 	if (chan->cleartime < realtime + MAX_BACKUP*chan->rate)
 		return true;
@@ -219,7 +224,8 @@ Netchan_CanReliable
 Returns true if the bandwidth choke isn't
 ================
 */
-qboolean Netchan_CanReliable (netchan_t *chan)
+qboolean
+Netchan_CanReliable ( netchan_t *chan )
 {
 	if (chan->reliable_length)
 		return false;			// waiting for ack
@@ -240,7 +246,8 @@ transmition / retransmition of the reliable messages.
 A 0 length will still generate a packet and deal with the reliable messages.
 ================
 */
-void Netchan_Transmit (netchan_t *chan, int length, byte *data)
+void
+Netchan_Transmit ( netchan_t *chan, int length, byte *data )
 {
 	sizebuf_t	send;
 	byte		send_buf[MAX_MSGLEN + PACKET_HEADER];
@@ -341,7 +348,8 @@ called when the current net_message is from remote_address
 modifies net_message so that it points to the packet payload
 =================
 */
-qboolean Netchan_Process (netchan_t *chan)
+qboolean
+Netchan_Process ( netchan_t *chan )
 {
 	unsigned		sequence, sequence_ack;
 	unsigned		reliable_ack, reliable_message;
@@ -419,7 +427,7 @@ qboolean Netchan_Process (netchan_t *chan)
 		if (showdrop->value)
 			Con_Printf ("%s:Out of order packet %i at %i\n"
 				, NET_AdrToString (chan->remote_address)
-				,  sequence
+				, sequence
 				, chan->incoming_sequence);
 		return false;
 	}
@@ -469,4 +477,3 @@ qboolean Netchan_Process (netchan_t *chan)
 
 	return true;
 }
-

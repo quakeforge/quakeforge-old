@@ -49,14 +49,15 @@ typedef struct
 puff_t	puffs[MAX_PUFFS];
 
 
-void Test_Init (void)
+void
+Test_Init ( void )
 {
 }
 
 
-
 plane_t	junk;
-plane_t	*HitPlane (vec3_t start, vec3_t end)
+plane_t	*
+HitPlane ( vec3_t start, vec3_t end )
 {
 	trace_t		trace;
 
@@ -72,7 +73,8 @@ plane_t	*HitPlane (vec3_t start, vec3_t end)
 	return &junk;
 }
 
-void Test_Spawn (vec3_t origin)
+void
+Test_Spawn ( vec3_t origin )
 {
 	int		i;
 	puff_t	*p;
@@ -109,7 +111,8 @@ void Test_Spawn (vec3_t origin)
 	p->length = 8;
 }
 
-void DrawPuff (puff_t *p)
+void
+DrawPuff ( puff_t *p )
 {
 	vec3_t	pts[2][3];
 	int		i, j;
@@ -178,7 +181,8 @@ void DrawPuff (puff_t *p)
 }
 
 
-void Test_Draw (void)
+void
+Test_Draw ( void )
 {
 	int		i;
 	puff_t	*p;
@@ -189,5 +193,4 @@ void Test_Draw (void)
 			DrawPuff (p);
 	}
 }
-
 #endif

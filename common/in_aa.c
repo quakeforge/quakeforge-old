@@ -55,7 +55,7 @@ static void IN_init_kb();
 
 #if 0
 static void
-vtswitch(int newconsole)
+vtswitch ( int newconsole )
 {
 	int fd;
 	struct vt_stat x;
@@ -71,7 +71,7 @@ vtswitch(int newconsole)
 
 
 static void
-keyhandler(int scancode, int state)
+keyhandler ( int scancode, int state )
 {
 	int sc;
 
@@ -83,18 +83,19 @@ keyhandler(int scancode, int state)
 }
 
 void
-Force_CenterView_f(void)
+Force_CenterView_f ( void )
 {
 	cl.viewangles[PITCH] = 0;
 }
 
 
-void IN_Init(void)
+void IN_Init ( void )
 {
 	IN_init_kb();
 }
 
-static void IN_init_kb()
+static void
+IN_init_kb ( void )
 {
 	int i;
 
@@ -107,7 +108,7 @@ static void IN_init_kb()
 	for (i = 0; i < 128; i++)
 		scantokey[i] = ' ';
 
-	scantokey[59] = AA_UNKNOWN;		/* F1 */ // row 0
+	scantokey[59] = AA_UNKNOWN;		/* F1 */	// row 0
 
 	scantokey[60] = AA_UNKNOWN;
 	scantokey[61] = AA_UNKNOWN;
@@ -167,7 +168,7 @@ static void IN_init_kb()
 	scantokey[40] = '\'';
 	scantokey[41] = '`';
 
-	scantokey[42] = AA_UNKNOWN;	/* shift */ // row 4
+	scantokey[42] = AA_UNKNOWN;	/* shift */		// row 4
 
 	scantokey[43] = '\\';
 	scantokey[44] = 'z';
@@ -227,13 +228,14 @@ static void IN_init_kb()
 
 
 void
-IN_Shutdown(void)
+IN_Shutdown ( void )
 {
 	aa_uninitkbd(context);
 }
 
 
-int keyboard_update()
+int
+keyboard_update ( void )
 {
 	int i,stat=1,scan;
 	if ((i=aa_getevent(context,0))==AA_NONE)
@@ -264,9 +266,7 @@ int keyboard_update()
 
 
 void
-Sys_SendKeyEvents(void)
+Sys_SendKeyEvents ( void )
 {
 	while (keyboard_update());
 }
-
-

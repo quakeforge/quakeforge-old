@@ -72,7 +72,8 @@ kbutton_t	in_up, in_down;
 int			in_impulse;
 
 
-void KeyDown (kbutton_t *b)
+void
+KeyDown ( kbutton_t *b )
 {
 	int		k;
 	char	*c;
@@ -101,7 +102,8 @@ void KeyDown (kbutton_t *b)
 	b->state |= 1 + 2;	// down + impulse down
 }
 
-void KeyUp (kbutton_t *b)
+void
+KeyUp ( kbutton_t *b )
 {
 	int		k;
 	char	*c;
@@ -110,7 +112,7 @@ void KeyUp (kbutton_t *b)
 	if (c[0])
 		k = atoi(c);
 	else
-	{ // typed manually at the console, assume for unsticking, so clear all
+	{	// typed manually at the console, assume for unsticking, so clear all
 		b->down[0] = b->down[1] = 0;
 		b->state = 4;	// impulse up
 		return;
@@ -134,11 +136,15 @@ void KeyUp (kbutton_t *b)
 void IN_KLookDown (void) {KeyDown(&in_klook);}
 void IN_KLookUp (void) {KeyUp(&in_klook);}
 void IN_MLookDown (void) {KeyDown(&in_mlook);}
-void IN_MLookUp (void) {
-KeyUp(&in_mlook);
-if ( !(in_mlook.state&1) &&  lookspring->value)
-	V_StartPitchDrift();
+
+void
+IN_MLookUp ( void )
+{
+	KeyUp(&in_mlook);
+	if ( !(in_mlook.state&1) && lookspring->value)
+		V_StartPitchDrift();
 }
+
 void IN_UpDown(void) {KeyDown(&in_up);}
 void IN_UpUp(void) {KeyUp(&in_up);}
 void IN_DownDown(void) {KeyDown(&in_down);}
@@ -185,7 +191,8 @@ Returns 0.25 if a key was pressed and released during the frame,
 1.0 if held for the entire time
 ===============
 */
-float CL_KeyState (kbutton_t *key)
+float
+CL_KeyState ( kbutton_t *key )
 {
 	float		val;
 	qboolean	impulsedown, impulseup, down;
@@ -252,7 +259,8 @@ CL_AdjustAngles
 Moves the local angle positions
 ================
 */
-void CL_AdjustAngles (void)
+void
+CL_AdjustAngles ( void )
 {
 	float	speed;
 	float	up, down;
@@ -295,7 +303,8 @@ CL_BaseMove
 Send the intended movement message to the server
 ================
 */
-void CL_BaseMove (usercmd_t *cmd)
+void
+CL_BaseMove ( usercmd_t *cmd )
 {
 #ifdef UQUAKE
 	if (cls.signon != SIGNONS)
@@ -342,7 +351,8 @@ void CL_BaseMove (usercmd_t *cmd)
 #endif
 }
 
-int MakeChar (int i)
+int
+MakeChar ( int i )
 {
 	i &= ~3;
 	if (i < -127*4)
@@ -352,12 +362,14 @@ int MakeChar (int i)
 	return i;
 }
 #ifdef QUAKEWORLD
+
 /*
 ==============
 CL_FinishMove
 ==============
 */
-void CL_FinishMove (usercmd_t *cmd)
+void
+CL_FinishMove ( usercmd_t *cmd )
 {
 	int		i;
 	int		ms;
@@ -407,7 +419,8 @@ void CL_FinishMove (usercmd_t *cmd)
 CL_SendCmd
 =================
 */
-void CL_SendCmd (void)
+void
+CL_SendCmd ( void )
 {
 	sizebuf_t	buf;
 	byte		data[128];
@@ -418,7 +431,7 @@ void CL_SendCmd (void)
 	int			seq_hash;
 
 	if (cls.demoplayback)
-		return; // sendcmds come from the demo
+		return;		// sendcmds come from the demo
 
 	// save this command off for prediction
 	i = cls.netchan.outgoing_sequence & UPDATE_MASK;
@@ -426,7 +439,7 @@ void CL_SendCmd (void)
 	cl.frames[i].senttime = realtime;
 	cl.frames[i].receivedtime = -1;		// we haven't gotten a reply yet
 
-//	seq_hash = (cls.netchan.outgoing_sequence & 0xffff) ; // ^ QW_CHECK_HASH;
+//	seq_hash = (cls.netchan.outgoing_sequence & 0xffff);	// ^ QW_CHECK_HASH;
 	seq_hash = cls.netchan.outgoing_sequence;
 
 	// get basic movement from keyboard
@@ -506,7 +519,8 @@ void CL_SendCmd (void)
 CL_SendCmd
 =================
 */
-void CL_SendCmd (void)
+void
+CL_SendCmd ( void )
 {
 	usercmd_t		cmd;
 
@@ -554,7 +568,8 @@ void CL_SendCmd (void)
 CL_SendMove
 ==============
 */
-void CL_SendMove (usercmd_t *cmd)
+void
+CL_SendMove ( usercmd_t *cmd )
 {
 	int		i;
 	int		bits;
@@ -570,16 +585,16 @@ void CL_SendMove (usercmd_t *cmd)
 //
 // send the movement message
 //
-    MSG_WriteByte (&buf, clc_move);
+	MSG_WriteByte (&buf, clc_move);
 
 	MSG_WriteFloat (&buf, cl.mtime[0]);	// so server can get ping times
 
 	for (i=0 ; i<3 ; i++)
 		MSG_WriteAngle (&buf, cl.viewangles[i]);
 
-    MSG_WriteShort (&buf, cmd->forwardmove);
-    MSG_WriteShort (&buf, cmd->sidemove);
-    MSG_WriteShort (&buf, cmd->upmove);
+	MSG_WriteShort (&buf, cmd->forwardmove);
+	MSG_WriteShort (&buf, cmd->sidemove);
+	MSG_WriteShort (&buf, cmd->upmove);
 
 //
 // send button bits
@@ -594,9 +609,9 @@ void CL_SendMove (usercmd_t *cmd)
 		bits |= 2;
 	in_jump.state &= ~2;
 
-    MSG_WriteByte (&buf, bits);
+	MSG_WriteByte (&buf, bits);
 
-    MSG_WriteByte (&buf, in_impulse);
+	MSG_WriteByte (&buf, in_impulse);
 	in_impulse = 0;
 
 #ifdef QUAKE2
@@ -631,7 +646,8 @@ void CL_SendMove (usercmd_t *cmd)
 CL_InitInput
 ============
 */
-void CL_InitInput (void)
+void
+CL_InitInput ( void )
 {
 	Cmd_AddCommand ("+moveup",IN_UpDown);
 	Cmd_AddCommand ("-moveup",IN_UpUp);
@@ -677,7 +693,7 @@ void CL_InitInput (void)
 CL_ClearStates
 ============
 */
-void CL_ClearStates (void)
+void
+CL_ClearStates ( void )
 {
 }
-

@@ -53,7 +53,8 @@ static float cdvolume = 1.0;
 
 static void CD_f();
 
-static void CDAudio_Eject()
+static void
+CDAudio_Eject ( void )
 {
 	if(!cd_id || !enabled) return;
 
@@ -61,10 +62,11 @@ static void CDAudio_Eject()
 		Con_DPrintf("Unable to eject CD-ROM tray.\n");
 }
 
-void CDAudio_Play(byte track, qboolean looping)
+void
+CDAudio_Play ( byte track, qboolean looping )
 {
-        /* Initialize cd_stat to avoid warning */
-        /* XXX - Does this default value make sense? */
+	/* Initialize cd_stat to avoid warning */
+	/* XXX - Does this default value make sense? */
 	CDstatus cd_stat = CD_ERROR;
 	if(!cd_id || !enabled) return;
 
@@ -86,8 +88,7 @@ void CDAudio_Play(byte track, qboolean looping)
 		CDAudio_Stop();
 	}
 
-	if(SDL_CDPlay(cd_id,cd_id->track[track].offset,
-			  cd_id->track[track].length))
+	if(SDL_CDPlay(cd_id,cd_id->track[track].offset,cd_id->track[track].length))
 	{
 		Con_DPrintf("CDAudio_Play: Unable to play track: %d\n",track+1);
 		return;
@@ -96,7 +97,8 @@ void CDAudio_Play(byte track, qboolean looping)
 }
 
 
-void CDAudio_Stop()
+void
+CDAudio_Stop ( void )
 {
 	int cdstate;
 	if(!cd_id || !enabled) return;
@@ -107,7 +109,8 @@ void CDAudio_Stop()
 		Con_DPrintf("CDAudio_Stop: Failed to stop track.\n");
 }
 
-void CDAudio_Pause()
+void
+CDAudio_Pause ( void )
 {
 	if(!cd_id || !enabled) return;
 	if(SDL_CDStatus(cd_id) != CD_PLAYING) return;
@@ -117,7 +120,8 @@ void CDAudio_Pause()
 }
 
 
-void CDAudio_Resume()
+void
+CDAudio_Resume ( void )
 {
 	if(!cd_id || !enabled) return;
 	if(SDL_CDStatus(cd_id) != CD_PAUSED) return;
@@ -126,7 +130,8 @@ void CDAudio_Resume()
 		Con_DPrintf("CDAudio_Resume: Failed tp resume track.\n");
 }
 
-void CDAudio_Update()
+void
+CDAudio_Update ( void )
 {
 	if(!cd_id || !enabled) return;
 	if(bgmvolume->value != cdvolume)
@@ -149,7 +154,8 @@ void CDAudio_Update()
 		CDAudio_Play(cd_id->cur_track+1,true);
 }
 
-int CDAudio_Init()
+int
+CDAudio_Init ( void )
 {
 #ifdef UQUAKE
 	if (cls.state == ca_dedicated)
@@ -187,7 +193,8 @@ int CDAudio_Init()
 }
 
 
-void CDAudio_Shutdown()
+void
+CDAudio_Shutdown ( void )
 {
 	if(!cd_id) return;
 	CDAudio_Stop();
@@ -197,7 +204,8 @@ void CDAudio_Shutdown()
 
 
 #define CD_f_DEFINED
-static void CD_f()
+static void
+CD_f ( void )
 {
 	char *command;
 	int cdstate;
@@ -264,4 +272,3 @@ static void CD_f()
 		return;
 	}
 }
-

@@ -73,7 +73,8 @@ Sends the first message from the server to a connected client.
 This will be sent on the initial connection and upon each server load.
 ================
 */
-void SV_New_f (void)
+void
+SV_New_f ( void )
 {
 	char		*gamedir;
 	int			playernum;
@@ -140,7 +141,8 @@ void SV_New_f (void)
 SV_Soundlist_f
 ==================
 */
-void SV_Soundlist_f (void)
+void
+SV_Soundlist_f ( void )
 {
 	char		**s;
 	int			n;
@@ -190,7 +192,8 @@ void SV_Soundlist_f (void)
 SV_Modellist_f
 ==================
 */
-void SV_Modellist_f (void)
+void
+SV_Modellist_f ( void )
 {
 	char		**s;
 	int			n;
@@ -239,7 +242,8 @@ void SV_Modellist_f (void)
 SV_PreSpawn_f
 ==================
 */
-void SV_PreSpawn_f (void)
+void
+SV_PreSpawn_f ( void )
 {
 	unsigned	buf;
 	unsigned	check;
@@ -311,7 +315,8 @@ void SV_PreSpawn_f (void)
 SV_Spawn_f
 ==================
 */
-void SV_Spawn_f (void)
+void
+SV_Spawn_f ( void )
 {
 	int		i;
 	client_t	*client;
@@ -414,7 +419,8 @@ void SV_Spawn_f (void)
 SV_SpawnSpectator
 ==================
 */
-void SV_SpawnSpectator (void)
+void
+SV_SpawnSpectator ( void )
 {
 	int		i;
 	edict_t	*e;
@@ -441,13 +447,14 @@ void SV_SpawnSpectator (void)
 SV_Begin_f
 ==================
 */
-void SV_Begin_f (void)
+void
+SV_Begin_f ( void )
 {
 	unsigned pmodel = 0, emodel = 0;
 	int		i;
 
 	if (host_client->state == cs_spawned)
-		return; // don't begin again
+		return;	// don't begin again
 
 	host_client->state = cs_spawned;
 
@@ -535,7 +542,8 @@ void SV_Begin_f (void)
 SV_NextDownload_f
 ==================
 */
-void SV_NextDownload_f (void)
+void
+SV_NextDownload_f ( void )
 {
 	byte	buffer[1024];
 	int		r;
@@ -565,10 +573,10 @@ void SV_NextDownload_f (void)
 
 	Qclose (host_client->download);
 	host_client->download = NULL;
-
 }
 
-void OutofBandPrintf(netadr_t where, char *fmt, ...)
+void
+OutofBandPrintf ( netadr_t where, char *fmt, ... )
 {
 	va_list		argptr;
 	char	send[1024];
@@ -590,7 +598,8 @@ void OutofBandPrintf(netadr_t where, char *fmt, ...)
 SV_NextUpload
 ==================
 */
-void SV_NextUpload (void)
+void
+SV_NextUpload ( void )
 {
 	int		percent;
 	int		size;
@@ -627,7 +636,7 @@ void SV_NextUpload (void)
 	Qwrite (host_client->upload, net_message.data + msg_readcount, size);
 	msg_readcount += size;
 
-Con_DPrintf ("UPLOAD: %d received\n", size);
+	Con_DPrintf ("UPLOAD: %d received\n", size);
 
 	if (percent != 100) {
 		ClientReliableWrite_Begin (host_client, svc_stufftext, 8);
@@ -649,7 +658,6 @@ Con_DPrintf ("UPLOAD: %d received\n", size);
 				host_client->uploadfn, p);
 		}
 	}
-
 }
 
 /*
@@ -657,7 +665,8 @@ Con_DPrintf ("UPLOAD: %d received\n", size);
 SV_BeginDownload_f
 ==================
 */
-void SV_BeginDownload_f(void)
+void
+SV_BeginDownload_f ( void )
 {
 	char	*name;
 	extern	cvar_t	*allow_download;
@@ -665,7 +674,7 @@ void SV_BeginDownload_f(void)
 	extern	cvar_t	*allow_download_models;
 	extern	cvar_t	*allow_download_sounds;
 	extern	cvar_t	*allow_download_maps;
-	extern	int		file_from_pak; // ZOID did file come from pak?
+	extern	int		file_from_pak;	// ZOID did file come from pak?
 
 	name = Cmd_Argv(1);
 // hacked by zoid to allow more conrol over download
@@ -737,7 +746,8 @@ void SV_BeginDownload_f(void)
 SV_Say
 ==================
 */
-void SV_Say (qboolean team)
+void
+SV_Say ( qboolean team )
 {
 	client_t *client;
 	int		j, tmp;
@@ -839,16 +849,19 @@ void SV_Say (qboolean team)
 SV_Say_f
 ==================
 */
-void SV_Say_f(void)
+void
+SV_Say_f ( void )
 {
 	SV_Say (false);
 }
+
 /*
 ==================
 SV_Say_Team_f
 ==================
 */
-void SV_Say_Team_f(void)
+void
+SV_Say_Team_f ( void )
 {
 	SV_Say (true);
 }
@@ -865,7 +878,8 @@ The client is showing the scoreboard, so send new ping times for all
 clients
 =================
 */
-void SV_Pings_f (void)
+void
+SV_Pings_f ( void )
 {
 	client_t *client;
 	int		j;
@@ -885,13 +899,13 @@ void SV_Pings_f (void)
 }
 
 
-
 /*
 ==================
 SV_Kill_f
 ==================
 */
-void SV_Kill_f (void)
+void
+SV_Kill_f ( void )
 {
 	if (sv_player->v.health <= 0)
 	{
@@ -909,7 +923,8 @@ void SV_Kill_f (void)
 SV_TogglePause
 ==================
 */
-void SV_TogglePause (const char *msg)
+void
+SV_TogglePause ( const char *msg )
 {
 	int i;
 	client_t *cl;
@@ -935,7 +950,8 @@ void SV_TogglePause (const char *msg)
 SV_Pause_f
 ==================
 */
-void SV_Pause_f (void)
+void
+SV_Pause_f ( void )
 {
 	char st[sizeof(host_client->name) + 32];
 
@@ -965,7 +981,8 @@ SV_Drop_f
 The client is going to disconnect, so remove the connection immediately
 =================
 */
-void SV_Drop_f (void)
+void
+SV_Drop_f ( void )
 {
 	SV_EndRedirect ();
 	if (!host_client->spectator)
@@ -980,7 +997,8 @@ SV_PTrack_f
 Change the bandwidth estimate for a client
 =================
 */
-void SV_PTrack_f (void)
+void
+SV_PTrack_f ( void )
 {
 	int		i;
 	edict_t *ent, *tent;
@@ -1008,7 +1026,7 @@ void SV_PTrack_f (void)
 		ent->v.goalentity = EDICT_TO_PROG(tent);
 		return;
 	}
-	host_client->spec_track = i + 1; // now tracking
+	host_client->spec_track = i + 1;	// now tracking
 
 	ent = EDICT_NUM(host_client - svs.clients + 1);
 	tent = EDICT_NUM(i + 1);
@@ -1023,7 +1041,8 @@ SV_Rate_f
 Change the bandwidth estimate for a client
 =================
 */
-void SV_Rate_f (void)
+void
+SV_Rate_f ( void )
 {
 	int		rate;
 
@@ -1052,7 +1071,8 @@ SV_Msg_f
 Change the message level for a client
 =================
 */
-void SV_Msg_f (void)
+void
+SV_Msg_f ( void )
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1073,7 +1093,8 @@ SV_SetInfo_f
 Allow clients to change userinfo
 ==================
 */
-void SV_SetInfo_f (void)
+void
+SV_SetInfo_f ( void )
 {
 	int i;
 	char oldval[MAX_INFO_STRING];
@@ -1105,7 +1126,7 @@ void SV_SetInfo_f (void)
 //	host_client->sendinfo = true;
 
 	if (!strcmp(Info_ValueForKey(host_client->userinfo, Cmd_Argv(1)), oldval))
-		return; // key hasn't changed
+		return;	// key hasn't changed
 
 	// process any changed values
 	SV_ExtractFromUserinfo (host_client);
@@ -1124,12 +1145,14 @@ SV_ShowServerinfo_f
 Dumps the serverinfo info string
 ==================
 */
-void SV_ShowServerinfo_f (void)
+void
+SV_ShowServerinfo_f ( void )
 {
 	Info_Print (svs.info);
 }
 
-void SV_NoSnap_f(void)
+void
+SV_NoSnap_f ( void )
 {
 	if (*host_client->uploadfn) {
 		*host_client->uploadfn = 0;
@@ -1171,7 +1194,7 @@ ucmd_t ucmds[] =
 	{"download", SV_BeginDownload_f},
 	{"nextdl", SV_NextDownload_f},
 
-	{"ptrack", SV_PTrack_f}, //ZOID - used with autocam
+	{"ptrack", SV_PTrack_f},	//ZOID - used with autocam
 
 	{"snap", SV_NoSnap_f},
 
@@ -1183,7 +1206,8 @@ ucmd_t ucmds[] =
 SV_ExecuteUserCommand
 ==================
 */
-void SV_ExecuteUserCommand (char *s)
+void
+SV_ExecuteUserCommand ( char *s )
 {
 	ucmd_t	*u;
 
@@ -1220,7 +1244,8 @@ V_CalcRoll
 Used by view and sv_user
 ===============
 */
-float V_CalcRoll (vec3_t angles, vec3_t velocity)
+float
+V_CalcRoll ( vec3_t angles, vec3_t velocity )
 {
 	vec3_t	forward, right, up;
 	float	sign;
@@ -1244,8 +1269,6 @@ float V_CalcRoll (vec3_t angles, vec3_t velocity)
 }
 
 
-
-
 //============================================================================
 
 vec3_t	pmove_mins, pmove_maxs;
@@ -1256,7 +1279,8 @@ AddLinksToPmove
 
 ====================
 */
-void AddLinksToPmove ( areanode_t *node )
+void
+AddLinksToPmove ( areanode_t *node )
 {
 	link_t		*l, *next;
 	edict_t		*check;
@@ -1323,7 +1347,8 @@ AddAllEntsToPmove
 For debugging
 ================
 */
-void AddAllEntsToPmove (void)
+void
+AddAllEntsToPmove ( void )
 {
 	int			e;
 	edict_t		*check;
@@ -1379,7 +1404,8 @@ Done before running a player command.  Clears the touch array
 */
 byte playertouch[(MAX_EDICTS+7)/8];
 
-void SV_PreRunCmd(void)
+void
+SV_PreRunCmd ( void )
 {
 	memset(playertouch, 0, sizeof(playertouch));
 }
@@ -1388,7 +1414,7 @@ void SV_PreRunCmd(void)
 	SV_RunCmd
 */
 void
-SV_RunCmd (usercmd_t *ucmd, qboolean inside)
+SV_RunCmd ( usercmd_t *ucmd, qboolean inside )
 {
 	edict_t	*ent;
 	int		i, n, oldmsec;
@@ -1414,10 +1440,10 @@ SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 					SV_BroadcastPrintf(PRINT_HIGH, "Please see http://www.quakeforge.net/speed_cheat.php for infomation on QuakeForge's timecheat protection, and to explain how some may be cheating without knowing it.\n");
 					SV_DropClient(host_client);
 				}
-		    }
+			}
 
-		    host_client->msecs = 0;
-		    host_client->last_check = realtime;
+			host_client->msecs = 0;
+			host_client->last_check = realtime;
 		}
 	}
 
@@ -1455,7 +1481,7 @@ SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 	}
 
 	host_frametime = min(0.1, ucmd->msec * 0.001);
-	
+
 	if (!host_client->spectator) {
 		pr_global_struct->frametime = host_frametime;
 
@@ -1555,7 +1581,7 @@ if (sv_player->v.health > 0 && before && !after )
 	Done after running a player command.
 */
 void
-SV_PostRunCmd(void)
+SV_PostRunCmd ( void )
 {
 	// run post-think
 
@@ -1579,14 +1605,15 @@ SV_ExecuteClientMessage
 The current net_message is parsed for the given client
 ===================
 */
-void SV_ExecuteClientMessage (client_t *cl)
+void
+SV_ExecuteClientMessage ( client_t *cl )
 {
 	int		c;
 	char	*s;
 	usercmd_t	oldest, oldcmd, newcmd;
 	client_frame_t	*frame;
 	vec3_t o;
-	qboolean	move_issued = false; //only allow one move command
+	qboolean	move_issued = false;	//only allow one move command
 	int		checksumIndex;
 	byte	checksum, calculatedChecksum;
 	int		seq_hash;
@@ -1609,7 +1636,7 @@ void SV_ExecuteClientMessage (client_t *cl)
 	host_client = cl;
 	sv_player = host_client->edict;
 
-//	seq_hash = (cl->netchan.incoming_sequence & 0xffff) ; // ^ QW_CHECK_HASH;
+//	seq_hash = (cl->netchan.incoming_sequence & 0xffff);	// ^ QW_CHECK_HASH;
 	seq_hash = cl->netchan.incoming_sequence;
 
 	// mark time so clients will know how much to predict
@@ -1697,7 +1724,7 @@ void SV_ExecuteClientMessage (client_t *cl)
 			}
 
 			cl->lastcmd = newcmd;
-			cl->lastcmd.buttons = 0; // avoid multiple fires on lag
+			cl->lastcmd.buttons = 0;	// avoid multiple fires on lag
 			break;
 
 
@@ -1730,7 +1757,8 @@ void SV_ExecuteClientMessage (client_t *cl)
 SV_UserInit
 ==============
 */
-void SV_UserInit (void)
+void
+SV_UserInit ( void )
 {
 	cl_rollspeed = Cvar_Get ("cl_rollspeed","200",0,"None");
 	cl_rollangle = Cvar_Get ("cl_rollangle","2.0",0,"None");
@@ -1738,4 +1766,3 @@ void SV_UserInit (void)
 	sv_mapcheck = Cvar_Get ("sv_mapcheck","1",0,"None");
 	sv_splat_cr = Cvar_Get ("sv_splat_cr","0",0,"Supress \\r in say messages");
 }
-

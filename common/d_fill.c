@@ -37,7 +37,8 @@
 D_FillRect
 ================
 */
-void D_FillRect (vrect_t *rect, int color)
+void
+D_FillRect ( vrect_t *rect, int color )
 {
 	int				rx, ry, rwidth, rheight;
 	unsigned char	*dest;
@@ -95,4 +96,3 @@ void D_FillRect (vrect_t *rect, int color)
 		}
 	}
 }
-

@@ -53,7 +53,8 @@ R_Alias_clip_z
 pfv0 is the unclipped vertex, pfv1 is the z-clipped vertex
 ================
 */
-void R_Alias_clip_z (finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out)
+void
+R_Alias_clip_z ( finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out )
 {
 	float		scale;
 	auxvert_t	*pav0, *pav1, avout;
@@ -103,7 +104,8 @@ void R_Alias_clip_z (finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out)
 
 #if	!id386
 
-void R_Alias_clip_left (finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out)
+void
+R_Alias_clip_left ( finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out )
 {
 	float		scale;
 	int			i;
@@ -125,8 +127,9 @@ void R_Alias_clip_left (finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out)
 }
 
 
-void R_Alias_clip_right (finalvert_t *pfv0, finalvert_t *pfv1,
-	finalvert_t *out)
+void
+R_Alias_clip_right ( finalvert_t *pfv0, finalvert_t *pfv1,
+	finalvert_t *out )
 {
 	float		scale;
 	int			i;
@@ -148,7 +151,8 @@ void R_Alias_clip_right (finalvert_t *pfv0, finalvert_t *pfv1,
 }
 
 
-void R_Alias_clip_top (finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out)
+void
+R_Alias_clip_top ( finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out )
 {
 	float		scale;
 	int			i;
@@ -170,8 +174,9 @@ void R_Alias_clip_top (finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out)
 }
 
 
-void R_Alias_clip_bottom (finalvert_t *pfv0, finalvert_t *pfv1,
-	finalvert_t *out)
+void
+R_Alias_clip_bottom ( finalvert_t *pfv0, finalvert_t *pfv1,
+	finalvert_t *out )
 {
 	float		scale;
 	int			i;
@@ -197,7 +202,8 @@ void R_Alias_clip_bottom (finalvert_t *pfv0, finalvert_t *pfv1,
 #endif
 
 
-int R_AliasClip (finalvert_t *in, finalvert_t *out, int flag, int count,
+int
+R_AliasClip ( finalvert_t *in, finalvert_t *out, int flag, int count,
 	void(*clip)(finalvert_t *pfv0, finalvert_t *pfv1, finalvert_t *out) )
 {
 	int			i,j,k;
@@ -242,7 +248,8 @@ int R_AliasClip (finalvert_t *in, finalvert_t *out, int flag, int count,
 R_AliasClipTriangle
 ================
 */
-void R_AliasClipTriangle (mtriangle_t *ptri)
+void
+R_AliasClipTriangle ( mtriangle_t *ptri )
 {
 	int				i, k, pingpong;
 	mtriangle_t		mtri;
@@ -356,4 +363,3 @@ void R_AliasClipTriangle (mtriangle_t *ptri)
 		D_PolysetDraw ();
 	}
 }
-

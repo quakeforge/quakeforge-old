@@ -43,7 +43,7 @@
 #include <assert.h>
 #include <lib_replace.h>
 
-usercmd_t nullcmd; // guarenteed to be zero
+usercmd_t nullcmd;	// guarenteed to be zero
 
 static char	**largv;
 static char	*argvdummy = " ";
@@ -66,7 +66,8 @@ Returns the position (1 to argc-1) in the program's argument list
 where the given parameter apears, or 0 if not present
 ================
 */
-int COM_CheckParm (char *parm)
+int
+COM_CheckParm ( char *parm )
 {
 	int		i;
 
@@ -86,7 +87,8 @@ int COM_CheckParm (char *parm)
 COM_InitArgv
 ================
 */
-void COM_InitArgv (int argc, char **argv)
+void
+COM_InitArgv ( int argc, char **argv )
 {
 	qboolean	safe;
 	int			i, len;
@@ -104,7 +106,7 @@ void COM_InitArgv (int argc, char **argv)
 			len += strlen (argv[com_argc]) + 1;
 	}
 
-	com_cmdline = (char*)malloc (len+1); // need strlen(com_cmdline)+2
+	com_cmdline = (char*)malloc (len+1);	// need strlen(com_cmdline)+2
 	com_cmdline[0] = 0;
 	if (len) {
 		for (i=1; i < argc; i++)
@@ -150,7 +152,8 @@ COM_AddParm
 Adds the given string at the end of the current argument list
 ================
 */
-void COM_AddParm (char *parm)
+void
+COM_AddParm ( char *parm )
 {
 	largv[com_argc++] = parm;
 }

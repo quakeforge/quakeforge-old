@@ -123,10 +123,10 @@ struct in_addr
 
 struct sockaddr_in
 {
-    short			sin_family;
-    unsigned short	sin_port;
+	short			sin_family;
+	unsigned short	sin_port;
 	struct in_addr	sin_addr;
-    char			sin_zero[8];
+	char			sin_zero[8];
 };
 
 struct	hostent {
@@ -245,7 +245,8 @@ static int net_controlsocket = 0;
 
 //=============================================================================
 
-static int BW_ioctl(int s, char *msg, int msglen)
+static int
+BW_ioctl ( int s, char *msg, int msglen )
 {
 	Q_memcpy(lowmem_buffer, msg, msglen);
 
@@ -261,7 +262,8 @@ static int BW_ioctl(int s, char *msg, int msglen)
 
 //=============================================================================
 
-static int BW_TranslateError(int error)
+static int
+BW_TranslateError ( int error )
 {
 	switch(error)
 	{
@@ -280,7 +282,8 @@ static int BW_TranslateError(int error)
 
 //=============================================================================
 
-static int GetEthdevinfo(void)
+static int
+GetEthdevinfo ( void )
 {
 	int fd;
 
@@ -315,7 +318,8 @@ static int GetEthdevinfo(void)
 
 //=============================================================================
 
-int BW_Init(void)
+int
+BW_Init ( void )
 {
 	struct qsockaddr addr;
 	char *colon;
@@ -346,7 +350,7 @@ int BW_Init(void)
 	}
 
 	BW_GetSocketAddr (net_controlsocket, &addr);
-	Q_strcpy(my_tcpip_address,  BW_AddrToString (&addr));
+	Q_strcpy(my_tcpip_address, BW_AddrToString (&addr));
 	colon = Q_strrchr (my_tcpip_address, ':');
 	if (colon)
 		*colon = 0;
@@ -359,7 +363,8 @@ int BW_Init(void)
 
 //=============================================================================
 
-void BW_Shutdown(void)
+void
+BW_Shutdown ( void )
 {
 	BW_Listen (false);
 	BW_CloseSocket (net_controlsocket);
@@ -368,7 +373,8 @@ void BW_Shutdown(void)
 
 //=============================================================================
 
-void BW_Listen (qboolean state)
+void
+BW_Listen ( qboolean state )
 {
 	// enable listening
 	if (state)
@@ -396,7 +402,8 @@ set to nonblocking, and bound to <port>.  Additional socket options
 should be set here if they are needed.  -1 is returned on failure.
 */
 
-int BW_OpenSocket(int port)
+int
+BW_OpenSocket ( int port )
 {
 	int s;
 	int ret;
@@ -466,7 +473,8 @@ int BW_OpenSocket(int port)
 
 //=============================================================================
 
-int BW_CloseSocket(int socket)
+int
+BW_CloseSocket ( int socket )
 {
 	regs.h.ah = 0x3e;
 	regs.x.bx = socket;
@@ -480,14 +488,16 @@ int BW_CloseSocket(int socket)
 
 //=============================================================================
 
-int BW_Connect (int socket, struct qsockaddr *hostaddr)
+int
+BW_Connect ( int socket, struct qsockaddr *hostaddr )
 {
 	return 0;
 }
 
 //=============================================================================
 
-int BW_CheckNewConnections(void)
+int
+BW_CheckNewConnections ( void )
 {
 	if (net_acceptsocket == 0)
 		return -1;
@@ -503,7 +513,8 @@ int BW_CheckNewConnections(void)
 
 //=============================================================================
 
-int BW_Read(int s, byte *buf, int len, struct qsockaddr *from)
+int
+BW_Read ( int s, byte *buf, int len, struct qsockaddr *from )
 {
 	BW_UDPreadInfo1_t *info1;
 	BW_UDPreadInfo2_t *info2;
@@ -550,7 +561,8 @@ int BW_Read(int s, byte *buf, int len, struct qsockaddr *from)
 
 //=============================================================================
 
-int BW_Broadcast(int s, byte *msg, int len)
+int
+BW_Broadcast ( int s, byte *msg, int len )
 {
 	BW_writeInfo_t *writeInfo;
 
@@ -586,7 +598,8 @@ int BW_Broadcast(int s, byte *msg, int len)
 
 //=============================================================================
 
-int BW_Write(int s, byte *msg, int len, struct qsockaddr *to)
+int
+BW_Write ( int s, byte *msg, int len, struct qsockaddr *to )
 {
 	BW_writeInfo_t *writeInfo;
 
@@ -623,7 +636,8 @@ int BW_Write(int s, byte *msg, int len, struct qsockaddr *to)
 //=============================================================================
 
 
-char *BW_AddrToString (struct qsockaddr *addr)
+char *
+BW_AddrToString ( struct qsockaddr *addr )
 {
 	static char buffer[22];
 
@@ -639,7 +653,8 @@ char *BW_AddrToString (struct qsockaddr *addr)
 
 //=============================================================================
 
-int BW_StringToAddr (char *string, struct qsockaddr *addr)
+int
+BW_StringToAddr ( char *string, struct qsockaddr *addr )
 {
 	int ha1, ha2, ha3, ha4, hp;
 	int ipaddr;
@@ -655,7 +670,8 @@ int BW_StringToAddr (char *string, struct qsockaddr *addr)
 
 //=============================================================================
 
-int BW_GetSocketAddr (int socket, struct qsockaddr *addr)
+int
+BW_GetSocketAddr ( int socket, struct qsockaddr *addr )
 {
 	regs.x.ax = 0x4402;
 	regs.x.bx = socket;
@@ -673,7 +689,8 @@ int BW_GetSocketAddr (int socket, struct qsockaddr *addr)
 
 //=============================================================================
 
-int BW_GetNameFromAddr (struct qsockaddr *addr, char *name)
+int
+BW_GetNameFromAddr ( struct qsockaddr *addr, char *name )
 {
 	Q_strcpy(name, BW_AddrToString(addr));
 	return 0;
@@ -681,7 +698,8 @@ int BW_GetNameFromAddr (struct qsockaddr *addr, char *name)
 
 ///=============================================================================
 
-int BW_GetAddrFromName (char *name, struct qsockaddr *hostaddr)
+int
+BW_GetAddrFromName ( char *name, struct qsockaddr *hostaddr )
 {
 	char buff[MAXHOSTNAMELEN];
 	char *b;
@@ -709,9 +727,9 @@ int BW_GetAddrFromName (char *name, struct qsockaddr *hostaddr)
 		run = 0;
 		while (!( *b < '0' || *b > '9'))
 		{
-		  num = num*10 + *b++ - '0';
-		  if (++run > 3)
-		  	return -1;
+			num = num*10 + *b++ - '0';
+			if (++run > 3)
+				return -1;
 		}
 		if ((*b < '0' || *b > '9') && *b != '.' && *b != ':' && *b != 0)
 			return -1;
@@ -738,7 +756,8 @@ int BW_GetAddrFromName (char *name, struct qsockaddr *hostaddr)
 
 //=============================================================================
 
-int BW_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
+int
+BW_AddrCompare ( struct qsockaddr *addr1, struct qsockaddr *addr2 )
 {
 	if (addr1->sa_family != addr2->sa_family)
 		return -1;
@@ -754,13 +773,15 @@ int BW_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
 
 //=============================================================================
 
-int BW_GetSocketPort (struct qsockaddr *addr)
+int
+BW_GetSocketPort ( struct qsockaddr *addr )
 {
 	return ntohs(((struct sockaddr_in *)addr)->sin_port);
 }
 
 
-int BW_SetSocketPort (struct qsockaddr *addr, int port)
+int
+BW_SetSocketPort ( struct qsockaddr *addr, int port )
 {
 	((struct sockaddr_in *)addr)->sin_port = htons(port);
 	return 0;

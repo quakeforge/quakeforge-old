@@ -42,18 +42,18 @@
 
 typedef struct
 {
-	long    interruptVector;
-	char    deviceName[16];
-	long    numAxes;
+	long	interruptVector;
+	char	deviceName[16];
+	long	numAxes;
 	long	numButtons;
 	long	flags;
 
-	vec3_t  viewangles;
+	vec3_t	viewangles;
 
 // intended velocities
-	float   forwardmove;
-	float   sidemove;
-	float   upmove;
+	float	forwardmove;
+	float	sidemove;
+	float	upmove;
 
 	long	buttons;
 } externControl_t;
@@ -75,11 +75,11 @@ typedef struct
 
 typedef struct
 {
-	long    interruptVector;
+	long	interruptVector;
 	// r/o
-	char    deviceName[16];
+	char	deviceName[16];
 	// r/o
-	long    numAxes;
+	long	numAxes;
 			// r/o	1-6
 	long	numButtons;			// r/o	0-32
 	long	flags;				// see above
@@ -108,7 +108,7 @@ qboolean	joy_avail;
 int		joy_oldbuttonstate;
 int		joy_buttonstate;
 
-int     joyxl, joyxh, joyyl, joyyh;
+int		joyxl, joyxh, joyyl, joyyh;
 int		joystickx, joysticky;
 
 qboolean		need_center;
@@ -126,7 +126,8 @@ void IN_StartupJoystick (void);
 qboolean IN_ReadJoystick (void);
 
 
-void Toggle_AuxLook_f (void)
+void
+Toggle_AuxLook_f ( void )
 {
 	if (aux_look->value)
 		Cvar_Set (aux_look,"0");
@@ -135,7 +136,8 @@ void Toggle_AuxLook_f (void)
 }
 
 
-void Force_CenterView_f (void)
+void
+Force_CenterView_f ( void )
 {
 	cl.viewangles[PITCH] = 0;
 }
@@ -146,7 +148,8 @@ void Force_CenterView_f (void)
 IN_StartupMouse
 ===========
 */
-void IN_StartupMouse (void)
+void
+IN_StartupMouse ( void )
 {
 	if ( COM_CheckParm ("-nomouse") )
 		return;
@@ -172,7 +175,8 @@ void IN_StartupMouse (void)
 IN_Init
 ===========
 */
-int IN_Init (void)
+int
+IN_Init ( void )
 {
 	int i;
 
@@ -200,9 +204,9 @@ int IN_Init (void)
 IN_Shutdown
 ===========
 */
-void IN_Shutdown (void)
+void
+IN_Shutdown ( void )
 {
-
 }
 
 
@@ -211,7 +215,8 @@ void IN_Shutdown (void)
 IN_Frame
 ========
 */
-void IN_Frame(void)
+void
+IN_Frame ( void )
 {
 	int		i;
 
@@ -290,7 +295,8 @@ void IN_Frame(void)
 IN_Move
 ===========
 */
-void IN_MouseMove (usercmd_t *cmd)
+void
+IN_MouseMove ( usercmd_t *cmd )
 {
 	int		mx, my;
 
@@ -349,7 +355,8 @@ void IN_MouseMove (usercmd_t *cmd)
 IN_JoyMove
 ===========
 */
-void IN_JoyMove (usercmd_t *cmd)
+void
+IN_JoyMove ( usercmd_t *cmd )
 {
 	float	speed, aspeed;
 
@@ -407,7 +414,8 @@ void IN_JoyMove (usercmd_t *cmd)
 IN_Move
 ===========
 */
-void IN_Move (usercmd_t *cmd)
+void
+IN_Move ( usercmd_t *cmd )
 {
 	IN_MouseMove (cmd);
 	IN_JoyMove (cmd);
@@ -423,8 +431,8 @@ void IN_Move (usercmd_t *cmd)
 */
 
 
-
-qboolean IN_ReadJoystick (void)
+qboolean
+IN_ReadJoystick ( void )
 {
 	int		b;
 	int		count;
@@ -458,9 +466,10 @@ qboolean IN_ReadJoystick (void)
 WaitJoyButton
 =============
 */
-qboolean WaitJoyButton (void)
+qboolean
+WaitJoyButton ( void )
 {
-	int             oldbuttons, buttons;
+	int		oldbuttons, buttons;
 
 	oldbuttons = 0;
 	do
@@ -475,7 +484,7 @@ qboolean WaitJoyButton (void)
 		}
 		key_lastpress = 0;
 		SCR_UpdateScreen ();
-		buttons =  ((dos_inportb(0x201) >> 4)&1)^1;
+		buttons = ((dos_inportb(0x201) >> 4)&1)^1;
 		if (buttons != oldbuttons)
 		{
 			oldbuttons = buttons;
@@ -495,7 +504,7 @@ qboolean WaitJoyButton (void)
 		}
 		key_lastpress = 0;
 		SCR_UpdateScreen ();
-		buttons =  ((dos_inportb(0x201) >> 4)&1)^1;
+		buttons = ((dos_inportb(0x201) >> 4)&1)^1;
 		if (buttons != oldbuttons)
 		{
 			oldbuttons = buttons;
@@ -513,9 +522,10 @@ qboolean WaitJoyButton (void)
 IN_StartupJoystick
 ===============
 */
-void IN_StartupJoystick (void)
+void
+IN_StartupJoystick ( void )
 {
-	int     centerx, centery;
+	int		centerx, centery;
 
  	Con_Printf ("\n");
 
@@ -574,7 +584,8 @@ void IN_StartupJoystick (void)
 IN_StartupExternal
 ===============
 */
-void IN_StartupExternal (void)
+void
+IN_StartupExternal ( void )
 {
 	if (extern_control->numButtons > 32)
 		extern_control->numButtons = 32;
@@ -592,7 +603,8 @@ void IN_StartupExternal (void)
 IN_ExternalMove
 ===========
 */
-void IN_ExternalMove (usercmd_t *cmd)
+void
+IN_ExternalMove ( usercmd_t *cmd )
 {
 	qboolean freelook;
 
@@ -606,11 +618,11 @@ void IN_ExternalMove (usercmd_t *cmd)
 	extern_control->sidemove = cmd->sidemove;
 	extern_control->upmove = cmd->upmove;
 
-Con_DPrintf("IN:  y:%f p:%f r:%f f:%f s:%f u:%f\n", extern_control->viewangles[YAW], extern_control->viewangles[PITCH], extern_control->viewangles[ROLL], extern_control->forwardmove, extern_control->sidemove, extern_control->upmove);
+	Con_DPrintf("IN:  y:%f p:%f r:%f f:%f s:%f u:%f\n", extern_control->viewangles[YAW], extern_control->viewangles[PITCH], extern_control->viewangles[ROLL], extern_control->forwardmove, extern_control->sidemove, extern_control->upmove);
 
 	dos_int86(extern_control->interruptVector);
 
-Con_DPrintf("OUT: y:%f p:%f r:%f f:%f s:%f u:%f\n", extern_control->viewangles[YAW], extern_control->viewangles[PITCH], extern_control->viewangles[ROLL], extern_control->forwardmove, extern_control->sidemove, extern_control->upmove);
+	Con_DPrintf("OUT: y:%f p:%f r:%f f:%f s:%f u:%f\n", extern_control->viewangles[YAW], extern_control->viewangles[PITCH], extern_control->viewangles[ROLL], extern_control->forwardmove, extern_control->sidemove, extern_control->upmove);
 
 	cl.viewangles[YAW] = extern_control->viewangles[YAW];
 	cl.viewangles[PITCH] = extern_control->viewangles[PITCH];
@@ -629,4 +641,3 @@ Con_DPrintf("OUT: y:%f p:%f r:%f f:%f s:%f u:%f\n", extern_control->viewangles[Y
 	if (freelook)
 		V_StopPitchDrift ();
 }
-

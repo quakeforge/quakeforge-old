@@ -47,7 +47,8 @@ crosses a waterline.
 int		fatbytes;
 byte	fatpvs[MAX_MAP_LEAFS/8];
 
-void SV_AddToFatPVS (vec3_t org, mnode_t *node)
+void
+SV_AddToFatPVS ( vec3_t org, mnode_t *node )
 {
 	int		i;
 	byte	*pvs;
@@ -90,7 +91,8 @@ Calculates a PVS that is the inclusive or of all leafs within 8 pixels of the
 given point.
 =============
 */
-byte *SV_FatPVS (vec3_t org)
+byte *
+SV_FatPVS ( vec3_t org )
 {
 	fatbytes = (sv.worldmodel->numleafs+31)>>3;
 	Q_memset (fatpvs, 0, fatbytes);
@@ -110,7 +112,8 @@ extern	int	sv_nailmodel, sv_supernailmodel, sv_playermodel;
 
 extern	cvar_t *sv_nailcompression;
 
-qboolean SV_AddNailUpdate (edict_t *ent)
+qboolean
+SV_AddNailUpdate ( edict_t *ent )
 {
 	if (!sv_nailcompression->value)
 		return false;
@@ -124,7 +127,8 @@ qboolean SV_AddNailUpdate (edict_t *ent)
 	return true;
 }
 
-void SV_EmitNailUpdate (sizebuf_t *msg)
+void
+SV_EmitNailUpdate ( sizebuf_t *msg )
 {
 	byte	bits[6];	// [48 bits] xyzpy 12 12 12 4 8
 	int		n, i;
@@ -169,7 +173,8 @@ Writes part of a packetentities message.
 Can delta from either a baseline or a previous packet_entity
 ==================
 */
-void SV_WriteDelta (entity_state_t *from, entity_state_t *to, sizebuf_t *msg, qboolean force)
+void
+SV_WriteDelta ( entity_state_t *from, entity_state_t *to, sizebuf_t *msg, qboolean force )
 {
 	int		bits;
 	int		i;
@@ -264,7 +269,8 @@ Writes a delta update of a packet_entities_t to the message.
 
 =============
 */
-void SV_EmitPacketEntities (client_t *client, packet_entities_t *to, sizebuf_t *msg)
+void
+SV_EmitPacketEntities ( client_t *client, packet_entities_t *to, sizebuf_t *msg )
 {
 	edict_t	*ent;
 	client_frame_t	*fromframe;
@@ -302,7 +308,7 @@ void SV_EmitPacketEntities (client_t *client, packet_entities_t *to, sizebuf_t *
 
 		if (newnum == oldnum)
 		{	// delta update from old position
-//Con_Printf ("delta %i\n", newnum);
+//			Con_Printf ("delta %i\n", newnum);
 			SV_WriteDelta (&from->entities[oldindex], &to->entities[newindex], msg, false);
 			oldindex++;
 			newindex++;
@@ -312,7 +318,7 @@ void SV_EmitPacketEntities (client_t *client, packet_entities_t *to, sizebuf_t *
 		if (newnum < oldnum)
 		{	// this is a new entity, send it from the baseline
 			ent = EDICT_NUM(newnum);
-//Con_Printf ("baseline %i\n", newnum);
+//			Con_Printf ("baseline %i\n", newnum);
 			SV_WriteDelta (&ent->baseline, &to->entities[newindex], msg, true);
 			newindex++;
 			continue;
@@ -320,7 +326,7 @@ void SV_EmitPacketEntities (client_t *client, packet_entities_t *to, sizebuf_t *
 
 		if (newnum > oldnum)
 		{	// the old entity isn't present in the new message
-//Con_Printf ("remove %i\n", oldnum);
+//			Con_Printf ("remove %i\n", oldnum);
 			MSG_WriteShort (msg, oldnum | U_REMOVE);
 			oldindex++;
 			continue;
@@ -336,7 +342,8 @@ SV_WritePlayersToClient
 
 =============
 */
-void SV_WritePlayersToClient (client_t *client, edict_t *clent, byte *pvs, sizebuf_t *msg)
+void
+SV_WritePlayersToClient ( client_t *client, edict_t *clent, byte *pvs, sizebuf_t *msg )
 {
 	int			i, j;
 	client_t	*cl;
@@ -461,7 +468,8 @@ a svc_nails message and
 svc_playerinfo messages
 =============
 */
-void SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg)
+void
+SV_WriteEntitiesToClient ( client_t *client, sizebuf_t *msg )
 {
 	int		e, i;
 	byte	*pvs;

@@ -68,7 +68,8 @@ cvar_t	*in_grab;
 cvar_t	*m_filter;
 static cvar_t	*mouse_button_commands[3];
 
-static void keyhandler(int scancode, int state)
+static void
+keyhandler ( int scancode, int state )
 {
 	int sc;
 
@@ -80,7 +81,8 @@ static void keyhandler(int scancode, int state)
 }
 
 
-static void mousehandler(int buttonstate, int dx, int dy, int dz, int drx, int dry, int drz)
+static void
+mousehandler ( int buttonstate, int dx, int dy, int dz, int drx, int dry, int drz )
 {
 	mouse_buttonstate = buttonstate;
 	mx += dx;
@@ -95,13 +97,15 @@ static void mousehandler(int buttonstate, int dx, int dy, int dz, int drx, int d
 }
 
 
-void Force_CenterView_f(void)
+void
+Force_CenterView_f ( void )
 {
 	cl.viewangles[PITCH] = 0;
 }
 
 
-int IN_Init(void)
+int
+IN_Init ( void )
 {
 	if (COM_CheckParm("-nokbd")) UseKeyboard = 0;
 	if (COM_CheckParm("-nomouse")) UseMouse = 0;
@@ -115,7 +119,8 @@ int IN_Init(void)
 	return 1;
 }
 
-static void IN_init_kb()
+static void
+IN_init_kb ( void )
 {
 	int i;
 
@@ -235,7 +240,8 @@ static void IN_init_kb()
 	keyboard_seteventhandler(keyhandler);
 }
 
-static void IN_init_mouse()
+static void
+IN_init_mouse ( void )
 {
 	int mtype;
 	char *mousedev;
@@ -274,7 +280,8 @@ static void IN_init_mouse()
 	}
 }
 
-void IN_Shutdown(void)
+void
+IN_Shutdown ( void )
 {
 	Con_Printf("IN_Shutdown\n");
 
@@ -284,7 +291,8 @@ void IN_Shutdown(void)
 }
 
 
-void IN_SendKeyEvents(void)
+void
+IN_SendKeyEvents ( void )
 {
 	if (!in_svgalib_inited) return;
 
@@ -294,7 +302,8 @@ void IN_SendKeyEvents(void)
 }
 
 
-void IN_Frame(void)
+void
+IN_Frame ( void )
 {
 #ifdef QUAKEWORLD
 	if (UseMouse)
@@ -333,7 +342,8 @@ void IN_Frame(void)
 }
 
 
-void IN_Move(usercmd_t *cmd)
+void
+IN_Move ( usercmd_t *cmd )
 {
 	if (!UseMouse) return;
 
@@ -358,7 +368,7 @@ void IN_Move(usercmd_t *cmd)
 
 	/* Add mouse X/Y movement to cmd */
 	if ( (in_strafe.state & 1) ||
-	     (lookstrafe->value && (in_mlook.state & 1) )) {
+		(lookstrafe->value && (in_mlook.state & 1) )) {
 		cmd->sidemove += m_side->value * mouse_x;
 	} else {
 		cl.viewangles[YAW] -= m_yaw->value * mouse_x;

@@ -65,7 +65,8 @@ SV_SetIdealPitch
 ===============
 */
 #define	MAX_FORWARD	6
-void SV_SetIdealPitch (void)
+void
+SV_SetIdealPitch ( void )
 {
 	float	angleval, sinval, cosval;
 	trace_t	tr;
@@ -134,7 +135,8 @@ SV_UserFriction
 
 ==================
 */
-void SV_UserFriction (void)
+void
+SV_UserFriction ( void )
 {
 	float	*vel;
 	float	speed, newspeed, control;
@@ -184,7 +186,8 @@ cvar_t	*sv_maxspeed;
 //cvar_t	sv_accelerate = {"sv_accelerate", "10"};
 cvar_t	*sv_accelerate;
 #if 0
-void SV_Accelerate (vec3_t wishvel)
+void
+SV_Accelerate ( vec3_t wishvel )
 {
 	int			i;
 	float		addspeed, accelspeed;
@@ -204,7 +207,8 @@ void SV_Accelerate (vec3_t wishvel)
 		velocity[i] += accelspeed*pushvec[i];
 }
 #endif
-void SV_Accelerate (void)
+void
+SV_Accelerate ( void )
 {
 	int			i;
 	float		addspeed, accelspeed, currentspeed;
@@ -221,7 +225,8 @@ void SV_Accelerate (void)
 		velocity[i] += accelspeed*wishdir[i];
 }
 
-void SV_AirAccelerate (vec3_t wishveloc)
+void
+SV_AirAccelerate ( vec3_t wishveloc )
 {
 	int			i;
 	float		addspeed, wishspd, accelspeed, currentspeed;
@@ -243,7 +248,8 @@ void SV_AirAccelerate (vec3_t wishveloc)
 }
 
 
-void DropPunchAngle (void)
+void
+DropPunchAngle ( void )
 {
 	float	len;
 
@@ -261,7 +267,8 @@ SV_WaterMove
 
 ===================
 */
-void SV_WaterMove (void)
+void
+SV_WaterMove ( void )
 {
 	int		i;
 	vec3_t	wishvel;
@@ -321,7 +328,8 @@ void SV_WaterMove (void)
 		velocity[i] += accelspeed * wishvel[i];
 }
 
-void SV_WaterJump (void)
+void
+SV_WaterJump ( void )
 {
 	if (sv.time > sv_player->v.teleport_time
 	|| !sv_player->v.waterlevel)
@@ -340,7 +348,8 @@ SV_AirMove
 
 ===================
 */
-void SV_AirMove (void)
+void
+SV_AirMove ( void )
 {
 	int			i;
 	vec3_t		wishvel;
@@ -394,7 +403,8 @@ the move fields specify an intended velocity in pix/sec
 the angle fields specify an exact angular motion in degrees
 ===================
 */
-void SV_ClientThink (void)
+void
+SV_ClientThink ( void )
 {
 	vec3_t		v_angle;
 
@@ -452,7 +462,8 @@ void SV_ClientThink (void)
 SV_ReadClientMove
 ===================
 */
-void SV_ReadClientMove (usercmd_t *move)
+void
+SV_ReadClientMove ( usercmd_t *move )
 {
 	int		i;
 	vec3_t	angle;
@@ -496,14 +507,14 @@ SV_ReadClientMessage
 Returns false if the client should be killed
 ===================
 */
-qboolean SV_ReadClientMessage (void)
+qboolean
+SV_ReadClientMessage ( void )
 {
 	int		ret;
 	int		cmd;
-	char		*s;
+	char	*s;
 
-	do
-	{
+	do {
 nextmsg:
 		ret = NET_GetMessage (host_client->netconnection);
 		if (ret == -1)
@@ -614,7 +625,8 @@ nextmsg:
 SV_RunClients
 ==================
 */
-void SV_RunClients (void)
+void
+SV_RunClients ( void )
 {
 	int				i;
 
@@ -643,4 +655,3 @@ void SV_RunClients (void)
 			SV_ClientThink ();
 	}
 }
-

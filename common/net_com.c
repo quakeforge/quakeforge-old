@@ -1,6 +1,6 @@
 /*
 	net_com.c
-	
+
 	MD4-based checksum utility functions
 
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -32,7 +32,8 @@
 
 #include <mdfour.h>
 
-unsigned Com_BlockChecksum (void *buffer, int length)
+unsigned
+Com_BlockChecksum ( void *buffer, int length )
 {
 	int				digest[4];
 	unsigned 		val;
@@ -44,7 +45,8 @@ unsigned Com_BlockChecksum (void *buffer, int length)
 	return val;
 }
 
-void Com_BlockFullChecksum (void *buffer, int len, unsigned char *outbuf)
+void
+Com_BlockFullChecksum ( void *buffer, int len, unsigned char *outbuf )
 {
 	mdfour ( outbuf, (unsigned char *) buffer, len );
 }

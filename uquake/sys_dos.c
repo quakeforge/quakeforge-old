@@ -86,7 +86,8 @@ extern char	start_of_memory __asm__("start");
 #if 0
 extern byte end;
 #define	CHECKBYTE	0xed
-void Sys_InitStackCheck (void)
+void
+Sys_InitStackCheck ( void )
 {
 	int		i;
 
@@ -94,7 +95,8 @@ void Sys_InitStackCheck (void)
 		(&end)[i] = CHECKBYTE;
 }
 
-void Sys_StackCheck (void)
+void
+Sys_StackCheck ( void )
 {
 	int		i;
 
@@ -110,51 +112,52 @@ void Sys_StackCheck (void)
 
 //=============================================================================
 
-byte        scantokey[128] =
-					{
-//  0           1       2       3       4       5       6       7
-//  8           9       A       B       C       D       E       F
-	0  ,    27,     '1',    '2',    '3',    '4',    '5',    '6',
-	'7',    '8',    '9',    '0',    '-',    '=',    K_BACKSPACE, 9, // 0
+byte	scantokey[128] =
+{
+//  0       1       2       3       4       5       6       7
+//  8       9       A       B       C       D       E       F
+	0,	    27,     '1',    '2',    '3',    '4',    '5',    '6',
+	'7',    '8',    '9',    '0',    '-',    '=',    K_BACKSPACE, 9,		// 0
 	'q',    'w',    'e',    'r',    't',    'y',    'u',    'i',
-	'o',    'p',    '[',    ']',    13 ,    K_CTRL,'a',  's',      // 1
+	'o',    'p',    '[',    ']',    13 ,    K_CTRL, 'a',    's',		// 1
 	'd',    'f',    'g',    'h',    'j',    'k',    'l',    ';',
-	'\'' ,    '`',    K_SHIFT,'\\',  'z',    'x',    'c',    'v',      // 2
+	'\'' ,  '`',    K_SHIFT,'\\',  'z',     'x',    'c',    'v',		// 2
 	'b',    'n',    'm',    ',',    '.',    '/',    K_SHIFT,'*',
-	K_ALT,' ',   0  ,    K_F1, K_F2, K_F3, K_F4, K_F5,   // 3
-	K_F6, K_F7, K_F8, K_F9, K_F10,0  ,    0  , K_HOME,
-	K_UPARROW,K_PGUP,'-',K_LEFTARROW,'5',K_RIGHTARROW,'+',K_END, //4
-	K_DOWNARROW,K_PGDN,K_INS,K_DEL,0,0,             0,              K_F11,
-	K_F12,0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,        // 5
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,        // 6
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0         // 7
-					};
+	K_ALT,  ' ',    0  ,    K_F1,   K_F2,   K_F3,   K_F4,   K_F5,		// 3
+	K_F6,   K_F7,   K_F8,   K_F9,   K_F10,  0,      0,      K_HOME,
+	K_UPARROW,K_PGUP,'-',   K_LEFTARROW,'5',K_RIGHTARROW,'+',K_END,		//4
+	K_DOWNARROW,K_PGDN,K_INS,K_DEL, 0,      0,      0,      K_F11,
+	K_F12,  0,      0,      0,      0,      0,      0,      0,			// 5
+	0,      0,      0,      0,      0,      0,      0,      0,
+	0,      0,      0,      0,      0,      0,      0,      0,			// 6
+	0,      0,      0,      0,      0,      0,      0,      0,
+	0,      0,      0,      0,      0,      0,      0,      0			// 7
+};
 
-byte        shiftscantokey[128] =
-					{
-//  0           1       2       3       4       5       6       7
-//  8           9       A       B       C       D       E       F
-	0  ,    27,     '!',    '@',    '#',    '$',    '%',    '^',
-	'&',    '*',    '(',    ')',    '_',    '+',    K_BACKSPACE, 9, // 0
+byte	shiftscantokey[128] =
+{
+//  0       1       2       3       4       5       6       7
+//  8       9       A       B       C       D       E       F
+	0,      27,     '!',    '@',    '#',    '$',    '%',    '^',
+	'&',    '*',    '(',    ')',    '_',    '+',    K_BACKSPACE, 9,		// 0
 	'Q',    'W',    'E',    'R',    'T',    'Y',    'U',    'I',
-	'O',    'P',    '{',    '}',    13 ,    K_CTRL,'A',  'S',      // 1
+	'O',    'P',    '{',    '}',    13 ,    K_CTRL, 'A',    'S',		// 1
 	'D',    'F',    'G',    'H',    'J',    'K',    'L',    ':',
-	'"' ,    '~',    K_SHIFT,'|',  'Z',    'X',    'C',    'V',      // 2
+	'"' ,    '~',   K_SHIFT,'|',    'Z',    'X',    'C',    'V',		// 2
 	'B',    'N',    'M',    '<',    '>',    '?',    K_SHIFT,'*',
-	K_ALT,' ',   0  ,    K_F1, K_F2, K_F3, K_F4, K_F5,   // 3
-	K_F6, K_F7, K_F8, K_F9, K_F10,0  ,    0  , K_HOME,
-	K_UPARROW,K_PGUP,'_',K_LEFTARROW,'%',K_RIGHTARROW,'+',K_END, //4
-	K_DOWNARROW,K_PGDN,K_INS,K_DEL,0,0,             0,              K_F11,
-	K_F12,0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,        // 5
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,        // 6
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0,
-	0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0  ,    0         // 7
-					};
+	K_ALT,  ' ',    0,      K_F1,   K_F2,   K_F3,   K_F4,   K_F5,		// 3
+	K_F6,   K_F7,   K_F8,   K_F9,   K_F10,  0,      0,      K_HOME,
+	K_UPARROW,K_PGUP,'_',   K_LEFTARROW,'%',K_RIGHTARROW,'+',K_END,		//4
+	K_DOWNARROW,K_PGDN,K_INS,K_DEL, 0,      0,      0,      K_F11,
+	K_F12,  0,      0,      0,      0,      0,      0,      0,			// 5
+	0,      0,      0,      0,      0,      0,      0,      0,
+	0,      0,      0,      0,      0,      0,      0,      0,			// 6
+	0,      0,      0,      0,      0,      0,      0,      0,
+	0,      0,      0,      0,      0,      0,      0,      0			// 7
+};
 
-void TrapKey(void)
+void
+TrapKey ( void )
 {
 //	static int ctrl=0;
 	keybuf[keybuf_head] = dos_inportb(0x60);
@@ -168,13 +171,13 @@ void TrapKey(void)
 	keybuf_head = (keybuf_head + 1) & (KEYBUF_SIZE-1);
 }
 
-#define SC_UPARROW              0x48
-#define SC_DOWNARROW    0x50
-#define SC_LEFTARROW            0x4b
-#define SC_RIGHTARROW   0x4d
-#define SC_LEFTSHIFT   0x2a
-#define SC_RIGHTSHIFT   0x36
-#define SC_RIGHTARROW   0x4d
+#define SC_UPARROW		0x48
+#define SC_DOWNARROW	0x50
+#define SC_LEFTARROW	0x4b
+#define SC_RIGHTARROW	0x4d
+#define SC_LEFTSHIFT	0x2a
+#define SC_RIGHTSHIFT	0x36
+#define SC_RIGHTARROW	0x4d
 
 void MaskExceptions (void);
 void Sys_InitFloatTime (void);
@@ -185,7 +188,8 @@ void Sys_PopFPCW (void);
 #define LOCKED_FOR_MALLOC (128*1024)	//FIXME: tune
 
 
-void Sys_DetectWin95 (void)
+void
+Sys_DetectWin95 ( void )
 {
 	__dpmi_regs				r;
 
@@ -214,7 +218,8 @@ void Sys_DetectWin95 (void)
 }
 
 
-void *dos_getmaxlockedmem(int *size)
+void *
+dos_getmaxlockedmem ( int *size )
 {
 	__dpmi_free_mem_info	meminfo;
 	__dpmi_meminfo			info;
@@ -275,7 +280,7 @@ void *dos_getmaxlockedmem(int *size)
 
 	if (!win95)
 	{
-	    info.size = __djgpp_selector_limit + 1 - last_locked;
+		info.size = __djgpp_selector_limit + 1 - last_locked;
 
 		while (info.size > 0 && __dpmi_lock_linear_region(&info))
 		{
@@ -337,14 +342,14 @@ void *dos_getmaxlockedmem(int *size)
 		}
 
 		Sys_Error ("Can't lock memory; %d Mb lockable RAM required. "
-				   "Try shrinking smartdrv.", info.size / 0x100000);
+				"Try shrinking smartdrv.", info.size / 0x100000);
 
 Locked:
 
 UpdateSbrk:
 
 		info.address += info.size;
-		info.address -= __djgpp_base_address + 4; // ending point, malloc align
+		info.address -= __djgpp_base_address + 4;	// ending point, malloc align
 		working_size = info.address - (int)working_memory;
 		sbrk(info.address-(int)sbrk(0));		// negative adjustment
 	}
@@ -387,12 +392,14 @@ UpdateSbrk:
 }
 
 
-void Sys_Sleep(void)
+void
+Sys_Sleep ( void )
 {
 }
 
 
-char *Sys_ConsoleInput(void)
+char *
+Sys_ConsoleInput ( void )
 {
 	static char	text[256];
 	static int	len = 0;
@@ -436,16 +443,17 @@ char *Sys_ConsoleInput(void)
 	return NULL;
 }
 
-void Sys_Init(void)
+void
+Sys_Init ( void )
 {
 
 	MaskExceptions ();
 
 	Sys_SetFPCW ();
 
-    dos_outportb(0x43, 0x34); // set system timer to mode 2
-    dos_outportb(0x40, 0);    // for the Sys_DoubleTime() function
-    dos_outportb(0x40, 0);
+	dos_outportb(0x43, 0x34);	// set system timer to mode 2
+	dos_outportb(0x40, 0);		// for the Sys_DoubleTime() function
+	dos_outportb(0x40, 0);
 
 	Sys_InitFloatTime ();
 
@@ -453,7 +461,8 @@ void Sys_Init(void)
 	_go32_rmcb_stack_size = 4 * 1024;
 }
 
-void Sys_Shutdown(void)
+void
+Sys_Shutdown ( void )
 {
 	if (!isDedicated)
 		dos_restoreintr(9);
@@ -461,15 +470,16 @@ void Sys_Shutdown(void)
 	if (unlockmem)
 	{
 		dos_unlockmem (&start_of_memory,
-					   end_of_memory - (int)&start_of_memory);
+					end_of_memory - (int)&start_of_memory);
 		dos_unlockmem (quakeparms.membase, quakeparms.memsize);
 	}
 }
 
 
-#define SC_RSHIFT       0x36
-#define SC_LSHIFT       0x2a
-void IN_SendKeyEvents (void)
+#define SC_RSHIFT	0x36
+#define SC_LSHIFT	0x2a
+void
+IN_SendKeyEvents ( void )
 {
 	int k, next;
 	int outkey;
@@ -483,10 +493,10 @@ void IN_SendKeyEvents (void)
 		keybuf_tail &= (KEYBUF_SIZE-1);
 
 		if (k==0xe0)
-			continue;               // special / pause keys
+			continue;		// special / pause keys
 		next = keybuf[(keybuf_tail-2)&(KEYBUF_SIZE-1)];
 		if (next == 0xe1)
-			continue;                               // pause key bullshit
+			continue;		// pause key bullshit
 		if (k==0xc5 && next == 0x9d)
 		{
 			Key_Event (K_PAUSE, true);
@@ -503,7 +513,7 @@ void IN_SendKeyEvents (void)
 		}
 
 		if (k==0xc5 && keybuf[(keybuf_tail-2)&(KEYBUF_SIZE-1)] == 0x9d)
-			continue; // more pause bullshit
+			continue;	// more pause bullshit
 
 		outkey = scantokey[k & 0x7f];
 
@@ -527,7 +537,8 @@ Sys_Printf
 ================
 */
 
-void Sys_Printf (char *fmt, ...)
+void
+Sys_Printf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		text[1024];
@@ -540,7 +551,8 @@ void Sys_Printf (char *fmt, ...)
 		fprintf(stderr, "%s", text);
 }
 
-void Sys_AtExit (void)
+void
+Sys_AtExit ( void )
 {
 
 // shutdown only once (so Sys_Error can call this function to shutdown, then
@@ -550,7 +562,8 @@ void Sys_AtExit (void)
 }
 
 
-void Sys_Quit (void)
+void
+Sys_Quit ( void )
 {
 	byte	screen[80*25*2];
 	byte	*d;
@@ -588,14 +601,15 @@ void Sys_Quit (void)
 	exit(0);
 }
 
-void Sys_Error (char *error, ...)
+void
+Sys_Error ( char *error, ... )
 {
-    va_list     argptr;
-    char        string[1024];
+	va_list		argptr;
+	char		string[1024];
 
-    va_start (argptr, error);
-    vsnprintf (string, sizeof(string), error, argptr);
-    va_end (argptr);
+	va_start (argptr, error);
+	vsnprintf (string, sizeof(string), error, argptr);
+	va_end (argptr);
 
 	Host_Shutdown();
 	fprintf(stderr, "Error: %s\n", string);
@@ -604,7 +618,8 @@ void Sys_Error (char *error, ...)
 }
 
 
-int Sys_FileOpenRead (char *path, int *handle)
+int
+Sys_FileOpenRead ( char *path, int *handle )
 {
 	int	h;
 	struct stat	fileinfo;
@@ -620,14 +635,14 @@ int Sys_FileOpenRead (char *path, int *handle)
 	return fileinfo.st_size;
 }
 
-int Sys_FileOpenWrite (char *path)
+int
+Sys_FileOpenWrite ( char *path )
 {
-	int     handle;
+	int		handle;
 
 	umask (0);
 
-	handle = open(path,O_RDWR | O_BINARY | O_CREAT | O_TRUNC
-	, 0666);
+	handle = open(path, O_RDWR | O_BINARY | O_CREAT | O_TRUNC, 0666);
 
 	if (handle == -1)
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
@@ -635,22 +650,26 @@ int Sys_FileOpenWrite (char *path)
 	return handle;
 }
 
-void Sys_FileClose (int handle)
+void
+Sys_FileClose ( int handle )
 {
 	close (handle);
 }
 
-void Sys_FileSeek (int handle, int position)
+void
+Sys_FileSeek ( int handle, int position )
 {
 	lseek (handle, position, SEEK_SET);
 }
 
-int Sys_FileRead (int handle, void *dest, int count)
+int
+Sys_FileRead ( int handle, void *dest, int count )
 {
-   return read (handle, dest, count);
+	return read (handle, dest, count);
 }
 
-int Sys_FileWrite (int handle, void *data, int count)
+int
+Sys_FileWrite ( int handle, void *data, int count )
 {
 	return write (handle, data, count);
 }
@@ -660,7 +679,8 @@ int Sys_FileWrite (int handle, void *data, int count)
 Sys_MakeCodeWriteable
 ================
 */
-void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
+void
+Sys_MakeCodeWriteable ( unsigned long startaddr, unsigned long length )
 {
 	// it's always writeable
 }
@@ -671,10 +691,11 @@ void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 Sys_DoubleTime
 ================
 */
-double Sys_DoubleTime (void)
+double
+Sys_DoubleTime ( void )
 {
-    int				r;
-    unsigned		t, tick;
+	int				r;
+	unsigned		t, tick;
 	double			ft, time;
 	static int		sametimecount;
 
@@ -682,15 +703,15 @@ double Sys_DoubleTime (void)
 
 //{static float t = 0; t=t+0.05; return t;}	// DEBUG
 
-    t = *(unsigned short*)real2ptr(0x46c) * 65536;
+	t = *(unsigned short*)real2ptr(0x46c) * 65536;
 
-    dos_outportb(0x43, 0); // latch time
-    r = dos_inportb(0x40);
-    r |= dos_inportb(0x40) << 8;
-    r = (r-1) & 0xffff;
+	dos_outportb(0x43, 0);	// latch time
+	r = dos_inportb(0x40);
+	r |= dos_inportb(0x40) << 8;
+	r = (r-1) & 0xffff;
 
-    tick = *(unsigned short*)real2ptr(0x46c) * 65536;
-    if ((tick != t) && (r & 0x8000))
+	tick = *(unsigned short*)real2ptr(0x46c) * 65536;
+	if ((tick != t) && (r & 0x8000))
 		t = tick;
 
 	ft = (double) (t+(65536-r)) / 1193200.0;
@@ -726,7 +747,7 @@ double Sys_DoubleTime (void)
 
 	Sys_PopFPCW ();
 
-    return curtime;
+	return curtime;
 }
 
 
@@ -735,7 +756,8 @@ double Sys_DoubleTime (void)
 Sys_InitFloatTime
 ================
 */
-void Sys_InitFloatTime (void)
+void
+Sys_InitFloatTime ( void )
 {
 	int		j;
 
@@ -762,7 +784,8 @@ void Sys_InitFloatTime (void)
 Sys_GetMemory
 ================
 */
-void Sys_GetMemory(void)
+void
+Sys_GetMemory ( void )
 {
 	int		j, tsize;
 
@@ -797,7 +820,8 @@ walks the text, data, and bss to make sure it's all paged in so that the
 actual physical memory detected by Sys_GetMemory is correct.
 ================
 */
-void Sys_PageInProgram(void)
+void
+Sys_PageInProgram ( void )
 {
 	int		i, j;
 
@@ -846,7 +870,8 @@ void Sys_PageInProgram(void)
 Sys_NoFPUExceptionHandler
 ================
 */
-void Sys_NoFPUExceptionHandler(int whatever)
+void
+Sys_NoFPUExceptionHandler ( int whatever )
 {
 	printf ("\nError: Quake requires a floating-point processor\n");
 	exit (0);
@@ -858,7 +883,8 @@ void Sys_NoFPUExceptionHandler(int whatever)
 Sys_DefaultExceptionHandler
 ================
 */
-void Sys_DefaultExceptionHandler(int whatever)
+void
+Sys_DefaultExceptionHandler ( int whatever )
 {
 }
 
@@ -868,11 +894,12 @@ void Sys_DefaultExceptionHandler(int whatever)
 main
 ================
 */
-int main (int c, char **v)
+int
+main ( int c, char **v )
 {
-	double			time, oldtime, newtime;
 	extern void (*dos_error_func)(char *, ...);
-	static	char	cwd[1024];
+	double			time, oldtime, newtime;
+	static char		cwd[1024];
 
 	printf ("Quake v%s\n", VERSION);
 
@@ -902,7 +929,7 @@ int main (int c, char **v)
 
 	getwd (cwd);
 	if (cwd[Q_strlen(cwd)-1] == '/') cwd[Q_strlen(cwd)-1] = 0;
-	quakeparms.basedir = cwd; //"f:/quake";
+	quakeparms.basedir = cwd;	//"f:/quake";
 
 	isDedicated = (COM_CheckParm ("-dedicated") != 0);
 
@@ -911,13 +938,13 @@ int main (int c, char **v)
 	if (!isDedicated)
 		dos_registerintr(9, TrapKey);
 
-//Sys_InitStackCheck ();
+//	Sys_InitStackCheck ();
 
 	Host_Init(&quakeparms);
 
-//Sys_StackCheck ();
+//	Sys_StackCheck ();
 
-//Con_Printf ("Top of stack: 0x%x\n", &time);
+//	Con_Printf ("Top of stack: 0x%x\n", &time);
 	oldtime = Sys_DoubleTime ();
 	while (1)
 	{
@@ -929,7 +956,7 @@ int main (int c, char **v)
 
 		Host_Frame (time);
 
-//Sys_StackCheck ();
+//		Sys_StackCheck ();
 
 		oldtime = newtime;
 	}
@@ -952,9 +979,9 @@ void Sys_DebugLog(char *file, char *fmt, ...)
 		Qputc(stream, trans_table[*p]);
 	}
 	Qclose(stream);
-	/*
+/*
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	write(fd, data, strlen(data));
 	close(fd);
-	*/
+*/
 }

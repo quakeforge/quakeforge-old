@@ -85,7 +85,8 @@ qboolean	stdin_ready;
 Sys_Error
 ================
 */
-void Sys_Error (char *error, ...)
+void
+Sys_Error ( char *error, ... )
 {
 	va_list		argptr;
 	char		string[1024];
@@ -104,7 +105,8 @@ void Sys_Error (char *error, ...)
 Sys_Quit
 ================
 */
-void Sys_Quit (void)
+void
+Sys_Quit ( void )
 {
 	exit (0);		// appkit isn't running
 }
@@ -119,7 +121,8 @@ Checks for a complete line of text typed in at the console, then forwards
 it to the host command processor
 ================
 */
-char *Sys_ConsoleInput (void)
+char *
+Sys_ConsoleInput ( void )
 {
 	static char	text[256];
 	int		len;
@@ -149,7 +152,8 @@ Quake calls this so the system can register variables before host_hunklevel
 is marked
 =============
 */
-void Sys_Init (void)
+void
+Sys_Init ( void )
 {
 	/* Note, variables declared in common/ and registered in qw_server/ are
 	evil */
@@ -165,13 +169,14 @@ void Sys_Init (void)
 main
 =============
 */
-int main(int argc, char *argv[])
+int
+main ( int argc, char *argv[] )
 {
 	double			time, oldtime, newtime;
 	quakeparms_t	parms;
 	fd_set	fdset;
 	extern	int		net_socket;
-    struct timeval timeout;
+	struct timeval timeout;
 	int j;
 
 	memset (&parms, 0, sizeof(parms));
@@ -228,4 +233,3 @@ int main(int argc, char *argv[])
 	}
 	exit(0);
 }
-

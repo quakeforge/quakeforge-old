@@ -45,4 +45,3 @@
 int	r_bmodelactive;
 
 #endif	// !id386
-

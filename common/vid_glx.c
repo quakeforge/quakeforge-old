@@ -138,15 +138,18 @@ qboolean	is8bit = false;
 qboolean	gl_mtexable = false;
 
 /*-----------------------------------------------------------------------*/
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 }
 
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 }
 
-void VID_Shutdown(void)
+void
+VID_Shutdown ( void )
 {
 	if (!vid_initialized)
 		return;
@@ -176,14 +179,16 @@ void VID_Shutdown(void)
 	x11_close_display();
 }
 
-static void signal_handler(int sig)
+static void
+signal_handler ( int sig )
 {
 	printf("Received signal %i, exiting...\n", sig);
 	Sys_Quit();
 	exit(sig);
 }
 
-static void InitSig(void)
+static void
+InitSig ( void )
 {
 	signal(SIGHUP, signal_handler);
 	signal(SIGINT, signal_handler);
@@ -197,12 +202,14 @@ static void InitSig(void)
 	signal(SIGTERM, signal_handler);
 }
 
-void VID_ShiftPalette(unsigned char *p)
+void
+VID_ShiftPalette ( unsigned char *p )
 {
 	VID_SetPalette(p);
 }
 
-void VID_SetPalette (unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 	byte		*pal;
 	unsigned	r,g,b;
@@ -287,7 +294,8 @@ void VID_SetPalette (unsigned char *palette)
 GL_Init
 ===============
 */
-void GL_Init (void)
+void
+GL_Init ( void )
 {
 	gl_vendor = glGetString (GL_VENDOR);
 	Con_Printf ("GL_VENDOR: %s\n", gl_vendor);
@@ -333,7 +341,8 @@ GL_BeginRendering
 
 =================
 */
-void GL_BeginRendering (int *x, int *y, int *width, int *height)
+void
+GL_BeginRendering ( int *x, int *y, int *width, int *height )
 {
 	*x = *y = 0;
 	*width = scr_width;
@@ -346,19 +355,22 @@ void GL_BeginRendering (int *x, int *y, int *width, int *height)
 }
 
 
-void GL_EndRendering (void)
+void
+GL_EndRendering ( void )
 {
 	glFlush();
 	glXSwapBuffers(x_disp, x_win);
 }
 
-qboolean VID_Is8bit(void)
+qboolean
+VID_Is8bit ( void )
 {
 	return is8bit;
 }
 
 #ifdef GL_EXT_SHARED
-void VID_Init8bitPalette()
+void
+VID_Init8bitPalette ( void )
 {
 	// Check for 8bit Extensions and initialize them.
 	int	i;
@@ -384,13 +396,15 @@ void VID_Init8bitPalette()
 
 #else
 
-void VID_Init8bitPalette(void)
+void
+VID_Init8bitPalette ( void )
 {
 }
 
 #endif
 
-void VID_Init(unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	int	i;
 	int	attrib[] = {
@@ -558,7 +572,7 @@ void VID_Init(unsigned char *palette)
 	if (hasvidmode && vid_fullscreen->value) {
 		XRaiseWindow(x_disp, x_win);
 		XGrabKeyboard(x_disp, x_win, 1, GrabModeAsync, GrabModeAsync,
-					  CurrentTime);
+					CurrentTime);
 	}
 #endif
 
@@ -601,7 +615,8 @@ void VID_Init(unsigned char *palette)
 	vid.recalc_refdef = 1;		// force a surface cache flush
 }
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -617,7 +632,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -629,15 +645,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_InitCvars( void )
+void
+VID_InitCvars ( void )
 {
 	gl_triplebuffer = Cvar_Get("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

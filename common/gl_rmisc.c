@@ -48,7 +48,8 @@ extern cvar_t *r_clearcolor;
 R_InitTextures
 ==================
 */
-void	R_InitTextures (void)
+void
+R_InitTextures ( void )
 {
 	int		x,y, m;
 	byte	*dest;
@@ -68,7 +69,7 @@ void	R_InitTextures (void)
 		for (y=0 ; y< (16>>m) ; y++)
 			for (x=0 ; x< (16>>m) ; x++)
 			{
-				if (  (y< (8>>m) ) ^ (x< (8>>m) ) )
+				if ( (y< (8>>m) ) ^ (x< (8>>m) ) )
 					*dest++ = 0;
 				else
 					*dest++ = 0xff;
@@ -87,7 +88,9 @@ byte	dottexture[8][8] =
 	{0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0},
 };
-void R_InitParticleTexture (void)
+
+void
+R_InitParticleTexture ( void )
 {
 	int		x,y;
 	byte	data[8][8][4];
@@ -96,7 +99,7 @@ void R_InitParticleTexture (void)
 	// particle texture
 	//
 	particletexture = texture_extension_number++;
-    GL_Bind(particletexture);
+	GL_Bind(particletexture);
 
 	for (x=0 ; x<8 ; x++)
 	{
@@ -123,12 +126,13 @@ R_Envmap_f
 Grab six views for environment mapping tests
 ===============
 */
-void R_Envmap_f (void)
+void
+R_Envmap_f ( void )
 {
 	byte	buffer[256*256*4];
 
-	glDrawBuffer  (GL_FRONT);
-	glReadBuffer  (GL_FRONT);
+	glDrawBuffer (GL_FRONT);
+	glReadBuffer (GL_FRONT);
 	envmap = true;
 
 	r_refdef.vrect.x = 0;
@@ -177,8 +181,8 @@ void R_Envmap_f (void)
 	COM_WriteFile ("env5.rgb", buffer, sizeof(buffer));
 
 	envmap = false;
-	glDrawBuffer  (GL_BACK);
-	glReadBuffer  (GL_BACK);
+	glDrawBuffer (GL_BACK);
+	glReadBuffer (GL_BACK);
 	GL_EndRendering ();
 }
 
@@ -187,7 +191,8 @@ void R_Envmap_f (void)
 R_Init
 ===============
 */
-void R_Init (void)
+void
+R_Init ( void )
 {
 #ifndef QUAKEWORLD
 	extern cvar_t *gl_finish;
@@ -250,7 +255,7 @@ void R_Init (void)
 			"this is the color of \"void space\"");
 	r_sky = Cvar_Get ("r_sky", "0", CVAR_NONE,
 			"Toggles skyboxes");
-	r_skyname = Cvar_Get ("r_skyname", "sky", CVAR_NONE, 
+	r_skyname = Cvar_Get ("r_skyname", "sky", CVAR_NONE,
 			"Sets the name of the current skybox");
 
 	gl_clear = Cvar_Get ("gl_clear", "0", CVAR_NONE,
@@ -318,7 +323,8 @@ void R_Init (void)
 
 	Translate a skin texture by the per-player color lookup
 */
-void R_TranslatePlayerSkin (int playernum)
+void
+R_TranslatePlayerSkin ( int playernum )
 {
 	int		top, bottom;
 	byte	translate[256];
@@ -331,7 +337,7 @@ void R_TranslatePlayerSkin (int playernum)
 	int			tinwidth, tinheight;
 	byte		*inrow;
 	unsigned	frac, fracstep;
-#ifdef QUAKEWORLD	
+#ifdef QUAKEWORLD
 	player_info_t	*player;
 	extern byte 	player_8bit_texels[320*200];
 	char s[512];
@@ -396,9 +402,9 @@ void R_TranslatePlayerSkin (int playernum)
 
 		if (!player->skin)
 			Skin_Find(player);
-		
+
 		original = Skin_Cache(player->skin);
-		if (original) { // skin data width
+		if (original) {		// skin data width
 			inwidth = 320;
 			inheight = 200;
 		} else {
@@ -440,13 +446,13 @@ void R_TranslatePlayerSkin (int playernum)
 		scaled_width >>= (int)gl_playermip->value;
 		scaled_height >>= (int)gl_playermip->value;
 
-		if ( VID_Is8bit() ) { // 8bit texture upload
+		if ( VID_Is8bit() ) {	// 8bit texture upload
 			byte *out2;
 
 			out2 = (byte *)pixels;
 			memset(pixels, 0, sizeof(pixels));
 			fracstep = tinwidth*0x10000/scaled_width;
-			
+
 			for (i=0 ; i < scaled_height ; i++, out2 += scaled_width) {
 				inrow = original + inwidth*(i*tinheight/scaled_height);
 				frac = fracstep >> 1;
@@ -468,7 +474,7 @@ void R_TranslatePlayerSkin (int playernum)
 				translate32[i] = d_8to24table[translate[i]];
 			out = pixels;
 			memset(pixels, 0, sizeof(pixels));
-			
+
 			fracstep = tinwidth*0x10000/scaled_width;
 			for ( i=0 ; i < scaled_height ; i++, out += scaled_width ) {
 				inrow = original + inwidth*(i*tinheight/scaled_height);
@@ -502,7 +508,8 @@ void R_TranslatePlayerSkin (int playernum)
 R_NewMap
 ===============
 */
-void R_NewMap (void)
+void
+R_NewMap ( void )
 {
 	int		i;
 
@@ -543,12 +550,13 @@ R_TimeRefresh_f
 For program optimization
 ====================
 */
-void R_TimeRefresh_f (void)
+void
+R_TimeRefresh_f ( void )
 {
 	int			i;
 	float		start, stop, time;
 
-	glDrawBuffer  (GL_FRONT);
+	glDrawBuffer (GL_FRONT);
 	glFinish ();
 
 	start = Sys_DoubleTime ();
@@ -563,12 +571,11 @@ void R_TimeRefresh_f (void)
 	time = stop-start;
 	Con_Printf ("%f seconds (%f fps)\n", time, 128/time);
 
-	glDrawBuffer  (GL_BACK);
+	glDrawBuffer (GL_BACK);
 	GL_EndRendering ();
 }
 
-void D_FlushCaches (void)
+void
+D_FlushCaches ( void )
 {
 }
-
-

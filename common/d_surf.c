@@ -35,18 +35,19 @@
 #include <sys.h>
 #include <lib_replace.h>
 
-float           surfscale;
-qboolean        r_cache_thrash;         // set if surface cache is thrashing
+float		surfscale;
+qboolean	r_cache_thrash;		// set if surface cache is thrashing
 
-int                                     sc_size;
-surfcache_t                     *sc_rover, *sc_base;
+int			sc_size;
+surfcache_t	*sc_rover, *sc_base;
 
-#define GUARDSIZE       4
+#define GUARDSIZE 4
 
 
-int     D_SurfaceCacheForRes (int width, int height)
+int
+D_SurfaceCacheForRes ( int width, int height )
 {
-	int             size, pix;
+	int		size, pix;
 
 	if (COM_CheckParm ("-surfcachesize"))
 	{
@@ -60,14 +61,14 @@ int     D_SurfaceCacheForRes (int width, int height)
 	if (pix > 64000)
 		size += (pix-64000)*3;
 
-
 	return size;
 }
 
-void D_CheckCacheGuard (void)
+void
+D_CheckCacheGuard ( void )
 {
-	byte    *s;
-	int             i;
+	byte	*s;
+	int		i;
 
 	s = (byte *)sc_base + sc_size;
 	for (i=0 ; i<GUARDSIZE ; i++)
@@ -75,10 +76,11 @@ void D_CheckCacheGuard (void)
 			Sys_Error ("D_CheckCacheGuard: failed");
 }
 
-void D_ClearCacheGuard (void)
+void
+D_ClearCacheGuard ( void )
 {
-	byte    *s;
-	int             i;
+	byte	*s;
+	int		i;
 
 	s = (byte *)sc_base + sc_size;
 	for (i=0 ; i<GUARDSIZE ; i++)
@@ -92,7 +94,8 @@ D_InitCaches
 
 ================
 */
-void D_InitCaches (void *buffer, int size)
+void
+D_InitCaches ( void *buffer, int size )
 {
 //	if (!msg_suppress_1)
 //		Con_Printf ("%ik surface cache\n", size/1024);
@@ -114,9 +117,10 @@ void D_InitCaches (void *buffer, int size)
 D_FlushCaches
 ==================
 */
-void D_FlushCaches (void)
+void
+D_FlushCaches ( void )
 {
-	surfcache_t     *c;
+	surfcache_t		*c;
 
 	if (!sc_base)
 		return;
@@ -138,10 +142,11 @@ void D_FlushCaches (void)
 D_SCAlloc
 =================
 */
-surfcache_t     *D_SCAlloc (int width, int size)
+surfcache_t *
+D_SCAlloc ( int width, int size )
 {
-	surfcache_t             *new;
-	qboolean                wrapped_this_time;
+	surfcache_t		*new;
+	qboolean		wrapped_this_time;
 
 	if ((width < 0) || (width > 256))
 		Sys_Error ("D_SCAlloc: bad cache width %d\n", width);
@@ -207,7 +212,7 @@ surfcache_t     *D_SCAlloc (int width, int size)
 	if (width > 0)
 		new->height = (size - sizeof(*new) + sizeof(new->data)) / width;
 
-	new->owner = NULL;              // should be set properly after return
+	new->owner = NULL;		// should be set properly after return
 
 	if (d_roverwrapped)
 	{
@@ -219,7 +224,7 @@ surfcache_t     *D_SCAlloc (int width, int size)
 		d_roverwrapped = true;
 	}
 
-D_CheckCacheGuard ();   // DEBUG
+	D_CheckCacheGuard ();	// DEBUG
 	return new;
 }
 
@@ -229,9 +234,10 @@ D_CheckCacheGuard ();   // DEBUG
 D_SCDump
 =================
 */
-void D_SCDump (void)
+void
+D_SCDump ( void )
 {
-	surfcache_t             *test;
+	surfcache_t		*test;
 
 	for (test = sc_base ; test ; test = test->next)
 	{
@@ -245,7 +251,8 @@ void D_SCDump (void)
 
 // if the num is not a power of 2, assume it will not repeat
 
-int     MaskForNum (int num)
+int
+MaskForNum ( int num )
 {
 	if (num==128)
 		return 127;
@@ -258,9 +265,10 @@ int     MaskForNum (int num)
 	return 255;
 }
 
-int D_log2 (int num)
+int
+D_log2 ( int num )
 {
-	int     c;
+	int		c;
 
 	c = 0;
 
@@ -276,9 +284,10 @@ int D_log2 (int num)
 D_CacheSurface
 ================
 */
-surfcache_t *D_CacheSurface (msurface_t *surface, int miplevel)
+surfcache_t *
+D_CacheSurface ( msurface_t *surface, int miplevel )
 {
-	surfcache_t     *cache;
+	surfcache_t		*cache;
 
 //
 // if the surface is animating or flashing, flush the cache
@@ -314,10 +323,10 @@ surfcache_t *D_CacheSurface (msurface_t *surface, int miplevel)
 //
 // allocate memory if needed
 //
-	if (!cache)     // if a texture just animated, don't reallocate it
+	if (!cache)		// if a texture just animated, don't reallocate it
 	{
 		cache = D_SCAlloc (r_drawsurf.surfwidth,
-						   r_drawsurf.surfwidth * r_drawsurf.surfheight);
+					r_drawsurf.surfwidth * r_drawsurf.surfheight);
 		surface->cachespots[miplevel] = cache;
 		cache->owner = &surface->cachespots[miplevel];
 		cache->mipscale = surfscale;
@@ -346,5 +355,3 @@ surfcache_t *D_CacheSurface (msurface_t *surface, int miplevel)
 
 	return surface->cachespots[miplevel];
 }
-
-

@@ -33,36 +33,36 @@
 
 
 void
-IN_Init(void)
+IN_Init ( void )
 {
 }
 
 
 void
-IN_Shutdown(void)
+IN_Shutdown ( void )
 {
 }
 
 
 void
-IN_Frame(void)
+IN_Frame ( void )
 {
 }
 
 
 void
-IN_Move(usercmd_t *cmd)
+IN_Move ( usercmd_t *cmd )
 {
 }
 
 
 void
-IN_ModeChanged(void)
+IN_ModeChanged ( void )
 {
 }
 
 
 void
-IN_ClearStates(void)
+IN_ClearStates ( void )
 {
 }

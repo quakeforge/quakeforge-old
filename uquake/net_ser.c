@@ -109,7 +109,8 @@ int myDriverLevel;
 static void Serial_SendACK (SerialLine *p, byte sequence);
 
 
-static void ResetSerialLineProtocol (SerialLine *p)
+static void
+ResetSerialLineProtocol ( SerialLine *p )
 {
 	p->connected = false;
 	p->connecting = false;
@@ -119,7 +120,8 @@ static void ResetSerialLineProtocol (SerialLine *p)
 }
 
 
-static int ProcessInQueue(SerialLine *p)
+static int
+ProcessInQueue ( SerialLine *p )
 {
 	int	b;
 
@@ -348,9 +350,10 @@ static int ProcessInQueue(SerialLine *p)
 }
 
 
-int Serial_Init (void)
+int
+Serial_Init ( void )
 {
-	int     n;
+	int	n;
 
 // LATER do Win32 serial support
 #ifdef	_WIN32
@@ -380,9 +383,10 @@ int Serial_Init (void)
 }
 
 
-void Serial_Shutdown (void)
+void
+Serial_Shutdown ( void )
 {
-	int     n;
+	int		n;
 
 	for (n = 0; n < NUM_COM_PORTS; n++)
 	{
@@ -394,25 +398,29 @@ void Serial_Shutdown (void)
 }
 
 
-void Serial_Listen (qboolean state)
+void
+Serial_Listen ( qboolean state )
 {
 	listening = state;
 }
 
 
-qboolean Serial_CanSendMessage (qsocket_t *sock)
+qboolean
+Serial_CanSendMessage ( qsocket_t *sock )
 {
 	return sock->canSend;
 }
 
 
-qboolean Serial_CanSendUnreliableMessage (qsocket_t *sock)
+qboolean
+Serial_CanSendUnreliableMessage ( qsocket_t *sock )
 {
 	return TTY_OutputQueueIsEmpty(((SerialLine *)sock->driverdata)->tty);
 }
 
 
-int Serial_SendMessage (qsocket_t *sock, sizebuf_t *message)
+int
+Serial_SendMessage ( qsocket_t *sock, sizebuf_t *message )
 {
 	SerialLine *p;
 	int n;
@@ -484,9 +492,10 @@ int Serial_SendMessage (qsocket_t *sock, sizebuf_t *message)
 }
 
 
-static void ReSendMessage (qsocket_t *sock)
+static void
+ReSendMessage ( qsocket_t *sock )
 {
-	sizebuf_t       temp;
+	sizebuf_t	temp;
 
 	Con_DPrintf("Serial: re-sending reliable\n");
 	temp.data = sock->sendMessage;
@@ -496,7 +505,8 @@ static void ReSendMessage (qsocket_t *sock)
 }
 
 
-int Serial_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *message)
+int
+Serial_SendUnreliableMessage ( qsocket_t *sock, sizebuf_t *message )
 {
 	SerialLine *p;
 	int n;
@@ -570,7 +580,8 @@ int Serial_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *message)
 }
 
 
-static void Serial_SendACK (SerialLine *p, byte sequence)
+static void
+Serial_SendACK ( SerialLine *p, byte sequence )
 {
 	unsigned short crc;
 	byte b;
@@ -609,7 +620,8 @@ static void Serial_SendACK (SerialLine *p, byte sequence)
 }
 
 
-static void Serial_SendControlMessage (SerialLine *p, sizebuf_t *message)
+static void
+Serial_SendControlMessage ( SerialLine *p, sizebuf_t *message )
 {
 	unsigned short crc;
 	int n;
@@ -664,7 +676,8 @@ static void Serial_SendControlMessage (SerialLine *p, sizebuf_t *message)
 }
 
 
-static int _Serial_GetMessage (SerialLine *p)
+static int
+_Serial_GetMessage ( SerialLine *p )
 {
 	byte	ret;
 	short	length;
@@ -692,7 +705,8 @@ static int _Serial_GetMessage (SerialLine *p)
 	return ret;
 }
 
-int Serial_GetMessage (qsocket_t *sock)
+int
+Serial_GetMessage ( qsocket_t *sock )
 {
 	SerialLine *p;
 	int		ret;
@@ -715,7 +729,8 @@ int Serial_GetMessage (qsocket_t *sock)
 }
 
 
-void Serial_Close (qsocket_t *sock)
+void
+Serial_Close ( qsocket_t *sock )
 {
 	SerialLine *p = (SerialLine *)sock->driverdata;
 	TTY_Close(p->tty);
@@ -726,7 +741,8 @@ void Serial_Close (qsocket_t *sock)
 char *com_types[] = {"direct", "modem"};
 unsigned com_bauds[] = {9600, 14400, 19200, 28800, 57600};
 
-void Serial_SearchForHosts (qboolean xmit)
+void
+Serial_SearchForHosts ( qboolean xmit )
 {
 	int		n;
 	SerialLine *p;
@@ -764,7 +780,8 @@ void Serial_SearchForHosts (qboolean xmit)
 }
 
 
-static qsocket_t *_Serial_Connect (char *host, SerialLine *p)
+static qsocket_t *
+_Serial_Connect ( char *host, SerialLine *p )
 {
 	int		ret;
 	double	start_time;
@@ -840,7 +857,8 @@ ErrorReturn:
 	return NULL;
 }
 
-qsocket_t *Serial_Connect (char *host)
+qsocket_t *
+Serial_Connect ( char *host )
 {
 	int			n;
 	qsocket_t	*ret = NULL;
@@ -860,7 +878,8 @@ qsocket_t *Serial_Connect (char *host)
 }
 
 
-static qsocket_t *_Serial_CheckNewConnections (SerialLine *p)
+static qsocket_t *
+_Serial_CheckNewConnections ( SerialLine *p )
 {
 	int	command;
 
@@ -941,7 +960,8 @@ static qsocket_t *_Serial_CheckNewConnections (SerialLine *p)
 	return p->sock;
 }
 
-qsocket_t *Serial_CheckNewConnections (void)
+qsocket_t *
+Serial_CheckNewConnections ( void )
 {
 	int			n;
 	qsocket_t	*ret = NULL;

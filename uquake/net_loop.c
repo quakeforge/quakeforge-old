@@ -31,7 +31,8 @@ qboolean	localconnectpending = false;
 qsocket_t	*loop_client = NULL;
 qsocket_t	*loop_server = NULL;
 
-int Loop_Init (void)
+int
+Loop_Init ( void )
 {
 	if (cls.state == ca_dedicated)
 		return -1;
@@ -39,17 +40,20 @@ int Loop_Init (void)
 }
 
 
-void Loop_Shutdown (void)
+void
+Loop_Shutdown ( void )
 {
 }
 
 
-void Loop_Listen (qboolean state)
+void
+Loop_Listen ( qboolean state )
 {
 }
 
 
-void Loop_SearchForHosts (qboolean xmit)
+void
+Loop_SearchForHosts ( qboolean xmit )
 {
 	if (!sv.active)
 		return;
@@ -67,7 +71,8 @@ void Loop_SearchForHosts (qboolean xmit)
 }
 
 
-qsocket_t *Loop_Connect (char *host)
+qsocket_t *
+Loop_Connect ( char *host )
 {
 	if (Q_strcmp(host,"local") != 0)
 		return NULL;
@@ -107,7 +112,8 @@ qsocket_t *Loop_Connect (char *host)
 }
 
 
-qsocket_t *Loop_CheckNewConnections (void)
+qsocket_t *
+Loop_CheckNewConnections ( void )
 {
 	if (!localconnectpending)
 		return NULL;
@@ -123,13 +129,15 @@ qsocket_t *Loop_CheckNewConnections (void)
 }
 
 
-static int IntAlign(int value)
+static int
+IntAlign ( int value )
 {
 	return (value + (sizeof(int) - 1)) & (~(sizeof(int) - 1));
 }
 
 
-int Loop_GetMessage (qsocket_t *sock)
+int
+Loop_GetMessage ( qsocket_t *sock )
 {
 	int		ret;
 	int		length;
@@ -156,10 +164,11 @@ int Loop_GetMessage (qsocket_t *sock)
 }
 
 
-int Loop_SendMessage (qsocket_t *sock, sizebuf_t *data)
+int
+Loop_SendMessage ( qsocket_t *sock, sizebuf_t *data )
 {
-	byte *buffer;
-	int  *bufferLength;
+	byte	*buffer;
+	int		*bufferLength;
 
 	if (!sock->driverdata)
 		return -1;
@@ -190,10 +199,11 @@ int Loop_SendMessage (qsocket_t *sock, sizebuf_t *data)
 }
 
 
-int Loop_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
+int
+Loop_SendUnreliableMessage ( qsocket_t *sock, sizebuf_t *data )
 {
-	byte *buffer;
-	int  *bufferLength;
+	byte	*buffer;
+	int		*bufferLength;
 
 	if (!sock->driverdata)
 		return -1;
@@ -222,7 +232,8 @@ int Loop_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
 }
 
 
-qboolean Loop_CanSendMessage (qsocket_t *sock)
+qboolean
+Loop_CanSendMessage ( qsocket_t *sock )
 {
 	if (!sock->driverdata)
 		return false;
@@ -230,13 +241,15 @@ qboolean Loop_CanSendMessage (qsocket_t *sock)
 }
 
 
-qboolean Loop_CanSendUnreliableMessage (qsocket_t *sock)
+qboolean
+Loop_CanSendUnreliableMessage ( qsocket_t *sock )
 {
 	return true;
 }
 
 
-void Loop_Close (qsocket_t *sock)
+void
+Loop_Close ( qsocket_t *sock )
 {
 	if (sock->driverdata)
 		((qsocket_t *)sock->driverdata)->driverdata = NULL;

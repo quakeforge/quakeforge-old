@@ -40,7 +40,8 @@ relinked.  Other attributes can change without relinking.
 */
 int	bitcounts[16];
 
-void CL_ParseUpdate (int bits)
+void
+CL_ParseUpdate ( int bits )
 {
 	model_t		*model;
 	qboolean	forcelink;
@@ -66,9 +67,10 @@ void CL_ParseUpdate (int bits)
 
 	ent = CL_EntityNum (num);
 
-for (i=0 ; i<16 ; i++)
-if (bits&(1<<i))
-	bitcounts[i]++;
+	for (i=0 ; i<16 ; i++) {
+		if (bits&(1<<i))
+			bitcounts[i]++;
+	}
 
 	if (ent->msgtime != cl.mtime[1])
 		forcelink = true;	// no previous frame to lerp from
@@ -181,7 +183,8 @@ if (bits&(1<<i))
 CL_NewTranslation
 =====================
 */
-void CL_NewTranslation (int slot)
+void
+CL_NewTranslation ( int slot )
 {
 	int		i, j;
 	int		top, bottom;

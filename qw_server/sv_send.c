@@ -35,11 +35,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <world.h>
 #include <cvars.h>
 
-#define CHAN_AUTO   0
-#define CHAN_WEAPON 1
-#define CHAN_VOICE  2
-#define CHAN_ITEM   3
-#define CHAN_BODY   4
+#define CHAN_AUTO	0
+#define CHAN_WEAPON	1
+#define CHAN_VOICE	2
+#define CHAN_ITEM	3
+#define CHAN_BODY	4
 
 /*
 =============================================================================
@@ -60,7 +60,8 @@ extern cvar_t *sv_phs;
 SV_FlushRedirect
 ==================
 */
-void SV_FlushRedirect (void)
+void
+SV_FlushRedirect ( void )
 {
 	char	send[8000+6];
 
@@ -95,13 +96,15 @@ SV_BeginRedirect
   instead of the console
 ==================
 */
-void SV_BeginRedirect (redirect_t rd)
+void
+SV_BeginRedirect ( redirect_t rd )
 {
 	sv_redirected = rd;
 	outputbuf[0] = 0;
 }
 
-void SV_EndRedirect (void)
+void
+SV_EndRedirect ( void )
 {
 	SV_FlushRedirect ();
 	sv_redirected = RD_NONE;
@@ -117,7 +120,8 @@ Handles cursor positioning, line wrapping, etc
 */
 #define	MAXPRINTMSG	4096
 
-void Con_Printf (char *fmt, ...)
+void
+Con_Printf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
@@ -147,7 +151,8 @@ Con_DPrintf
 A Con_Printf that only shows up if the "developer" cvar is set
 ================
 */
-void Con_DPrintf (char *fmt, ...)
+void
+Con_DPrintf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
@@ -170,7 +175,8 @@ EVENT MESSAGES
 =============================================================================
 */
 
-static void SV_PrintToClient(client_t *cl, int level, char *string)
+static void
+SV_PrintToClient ( client_t *cl, int level, char *string )
 {
 	ClientReliableWrite_Begin (cl, svc_print, strlen(string)+3);
 	ClientReliableWrite_Byte (cl, level);
@@ -185,7 +191,8 @@ SV_ClientPrintf
 Sends text across to be displayed if the level passes
 =================
 */
-void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...)
+void
+SV_ClientPrintf ( client_t *cl, int level, char *fmt, ... )
 {
 	va_list		argptr;
 	char		string[1024];
@@ -207,7 +214,8 @@ SV_BroadcastPrintf
 Sends text to all active clients
 =================
 */
-void SV_BroadcastPrintf (int level, char *fmt, ...)
+void
+SV_BroadcastPrintf ( int level, char *fmt, ... )
 {
 	va_list		argptr;
 	char		string[1024];
@@ -238,7 +246,8 @@ SV_BroadcastCommand
 Sends text to all active clients
 =================
 */
-void SV_BroadcastCommand (char *fmt, ...)
+void
+SV_BroadcastCommand ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		string[1024];
@@ -266,7 +275,8 @@ MULTICAST_PVS	send to clients potentially visible from org
 MULTICAST_PHS	send to clients potentially hearable from org
 =================
 */
-void SV_Multicast (vec3_t origin, int to)
+void
+SV_Multicast ( vec3_t origin, int to )
 {
 	client_t	*client;
 	byte		*mask;
@@ -360,13 +370,14 @@ Larger attenuations will drop off.  (max 4 attenuation)
 
 ==================
 */
-void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
-    float attenuation)
+void
+SV_StartSound ( edict_t *entity, int channel, char *sample, int volume,
+	float attenuation)
 {
-    int         sound_num;
-    int			field_mask;
-    int			i;
-	int			ent;
+	int		sound_num;
+	int		field_mask;
+	int		i;
+	int		ent;
 	vec3_t		origin;
 	qboolean	use_phs;
 	qboolean	reliable = false;
@@ -381,23 +392,23 @@ void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
 		SV_Error ("SV_StartSound: channel = %i", channel);
 
 // find precache number for sound
-    for (sound_num=1 ; sound_num<MAX_SOUNDS
-        && sv.sound_precache[sound_num] ; sound_num++)
-        if (!strcmp(sample, sv.sound_precache[sound_num]))
-            break;
+	for (sound_num=1 ; sound_num<MAX_SOUNDS
+		&& sv.sound_precache[sound_num] ; sound_num++)
+		if (!strcmp(sample, sv.sound_precache[sound_num]))
+			break;
 
-    if ( sound_num == MAX_SOUNDS || !sv.sound_precache[sound_num] )
-    {
-        Con_Printf ("SV_StartSound: %s not precacheed\n", sample);
-        return;
-    }
+	if ( sound_num == MAX_SOUNDS || !sv.sound_precache[sound_num] )
+	{
+		Con_Printf ("SV_StartSound: %s not precacheed\n", sample);
+		return;
+	}
 
 	ent = NUM_FOR_EDICT(entity);
 
 	if ((channel & 8) || !sv_phs->value)	// no PHS flag
 	{
 		if (channel & 8)
-			reliable = true; // sounds that break the phs are reliable
+			reliable = true;	// sounds that break the phs are reliable
 		use_phs = false;
 		channel &= 7;
 	}
@@ -453,7 +464,8 @@ FRAME UPDATES
 
 int		sv_nailmodel, sv_supernailmodel, sv_playermodel;
 
-void SV_FindModelNumbers (void)
+void
+SV_FindModelNumbers ( void )
 {
 	int		i;
 
@@ -481,7 +493,8 @@ SV_WriteClientdataToMessage
 
 ==================
 */
-void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg)
+void
+SV_WriteClientdataToMessage ( client_t *client, sizebuf_t *msg )
 {
 	int		i;
 	edict_t	*other;
@@ -529,7 +542,8 @@ Performs a delta update of the stats array.  This should only be performed
 when a reliable message can be delivered this frame.
 =======================
 */
-void SV_UpdateClientStats (client_t *client)
+void
+SV_UpdateClientStats ( client_t *client )
 {
 	edict_t	*ent;
 	int		stats[MAX_CL_STATS];
@@ -589,7 +603,8 @@ void SV_UpdateClientStats (client_t *client)
 SV_SendClientDatagram
 =======================
 */
-qboolean SV_SendClientDatagram (client_t *client)
+qboolean
+SV_SendClientDatagram ( client_t *client )
 {
 	byte		buf[MAX_DATAGRAM];
 	sizebuf_t	msg;
@@ -637,7 +652,8 @@ qboolean SV_SendClientDatagram (client_t *client)
 SV_UpdateToReliableMessages
 =======================
 */
-void SV_UpdateToReliableMessages (void)
+void
+SV_UpdateToReliableMessages ( void )
 {
 	int			i, j;
 	client_t *client;
@@ -720,7 +736,8 @@ void SV_UpdateToReliableMessages (void)
 SV_SendClientMessages
 =======================
 */
-void SV_SendClientMessages (void)
+void
+SV_SendClientMessages ( void )
 {
 	int			i, j;
 	client_t	*c;
@@ -807,7 +824,6 @@ void SV_SendClientMessages (void)
 #endif
 
 
-
 /*
 =======================
 SV_SendMessagesToAll
@@ -815,7 +831,8 @@ SV_SendMessagesToAll
 FIXME: does this sequence right?
 =======================
 */
-void SV_SendMessagesToAll (void)
+void
+SV_SendMessagesToAll ( void )
 {
 	int			i;
 	client_t	*c;
@@ -826,4 +843,3 @@ void SV_SendMessagesToAll (void)
 
 	SV_SendClientMessages ();
 }
-

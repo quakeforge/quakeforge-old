@@ -40,7 +40,8 @@ extern int	onground;
 V_UpdatePalette
 =============
 */
-void V_UpdatePalette (void)
+void
+V_UpdatePalette ( void )
 {
 	int		i, j;
 	qboolean	new;
@@ -107,4 +108,3 @@ void V_UpdatePalette (void)
 
 	VID_ShiftPalette (pal);
 }
-

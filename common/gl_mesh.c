@@ -71,7 +71,8 @@ int		stripcount;
 StripLength
 ================
 */
-int	StripLength (int starttri, int startv)
+int
+StripLength ( int starttri, int startv )
 {
 	int			m1, m2;
 	int			j;
@@ -140,7 +141,8 @@ done:
 FanLength
 ===========
 */
-int	FanLength (int starttri, int startv)
+int
+FanLength ( int starttri, int startv )
 {
 	int		m1, m2;
 	int		j;
@@ -211,7 +213,8 @@ Generate a list of trifans or strips
 for the model, which holds for all frames
 ================
 */
-void BuildTris (void)
+void
+BuildTris ( void )
 {
 	int		i, j, k;
 	int		startv;
@@ -297,7 +300,8 @@ void BuildTris (void)
 GL_MakeAliasModelDisplayLists
 ================
 */
-void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
+void
+GL_MakeAliasModelDisplayLists ( model_t *m, aliashdr_t *hdr )
 {
 	int		i, j;
 	int			*cmds;
@@ -311,19 +315,19 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	paliashdr = hdr;	// (aliashdr_t *)Mod_Extradata (m);
 
 	modelcrc = m->numclipnodes +
-			   m->numedges +
-			   m->numframes +
-			   m->numleafs +
-			   m->nummarksurfaces +
-			   m->nummodelsurfaces +
-			   m->numnodes +
-			   m->numplanes +
-			   m->numsubmodels +
-			   m->numsurfaces +
-			   m->numsurfedges +
-			   m->numtexinfo +
-			   m->numtextures +
-			   m->numvertexes;
+			m->numedges +
+			m->numframes +
+			m->numleafs +
+			m->nummarksurfaces +
+			m->nummodelsurfaces +
+			m->numnodes +
+			m->numplanes +
+			m->numsubmodels +
+			m->numsurfaces +
+			m->numsurfedges +
+			m->numtexinfo +
+			m->numtextures +
+			m->numvertexes;
 	//
 	// look for a cached version
 	//
@@ -410,4 +414,3 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		for (j=0 ; j<numorder ; j++)
 			*verts++ = poseverts[i][vertexorder[j]];
 }
-

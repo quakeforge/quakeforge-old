@@ -42,7 +42,8 @@
 R_Surf8Patch
 ================
 */
-void R_Surf8Patch ()
+void
+R_Surf8Patch ( void )
 {
 	// we only patch code on Intel
 }
@@ -53,7 +54,8 @@ void R_Surf8Patch ()
 R_Surf16Patch
 ================
 */
-void R_Surf16Patch ()
+void
+R_Surf16Patch ( void )
 {
 	// we only patch code on Intel
 }
@@ -64,11 +66,9 @@ void R_Surf16Patch ()
 R_SurfacePatch
 ================
 */
-void R_SurfacePatch (void)
+void
+R_SurfacePatch ( void )
 {
 	// we only patch code on Intel
 }
-
-
 #endif	// !id386
-

@@ -46,7 +46,8 @@ static int sequence[IPXSOCKETS];
 
 //=============================================================================
 
-int WIPX_Init (void)
+int
+WIPX_Init ( void )
 {
 	int		i;
 	char	buff[MAXHOSTNAMELEN];
@@ -116,7 +117,7 @@ int WIPX_Init (void)
 	((struct sockaddr_ipx *)&broadcastaddr)->sa_socket = htons((unsigned short)net_hostport);
 
 	WIPX_GetSocketAddr (net_controlsocket, &addr);
-	Q_strcpy(my_ipx_address,  WIPX_AddrToString (&addr));
+	Q_strcpy(my_ipx_address, WIPX_AddrToString (&addr));
 	p = Q_strrchr (my_ipx_address, ':');
 	if (p)
 		*p = 0;
@@ -129,7 +130,8 @@ int WIPX_Init (void)
 
 //=============================================================================
 
-void WIPX_Shutdown (void)
+void
+WIPX_Shutdown ( void )
 {
 	WIPX_Listen (false);
 	WIPX_CloseSocket (net_controlsocket);
@@ -139,7 +141,8 @@ void WIPX_Shutdown (void)
 
 //=============================================================================
 
-void WIPX_Listen (qboolean state)
+void
+WIPX_Listen ( qboolean state )
 {
 	// enable listening
 	if (state)
@@ -160,12 +163,13 @@ void WIPX_Listen (qboolean state)
 
 //=============================================================================
 
-int WIPX_OpenSocket (int port)
+int
+WIPX_OpenSocket ( int port )
 {
-	int handle;
-	int newsocket;
-	struct sockaddr_ipx address;
-	u_long _true = 1;
+	int		handle;
+	int		newsocket;
+	struct sockaddr_ipx	address;
+	u_long	_true = 1;
 
 	for (handle = 0; handle < IPXSOCKETS; handle++)
 		if (ipxsocket[handle] == 0)
@@ -201,12 +205,13 @@ ErrorReturn:
 
 //=============================================================================
 
-int WIPX_CloseSocket (int handle)
+int
+WIPX_CloseSocket ( int handle )
 {
 	int socket = ipxsocket[handle];
 	int ret;
 
-	ret =  pclosesocket (socket);
+	ret = pclosesocket (socket);
 	ipxsocket[handle] = 0;
 	return ret;
 }
@@ -214,14 +219,16 @@ int WIPX_CloseSocket (int handle)
 
 //=============================================================================
 
-int WIPX_Connect (int handle, struct qsockaddr *addr)
+int
+WIPX_Connect ( int handle, struct qsockaddr *addr )
 {
 	return 0;
 }
 
 //=============================================================================
 
-int WIPX_CheckNewConnections (void)
+int
+WIPX_CheckNewConnections ( void )
 {
 	unsigned long	available;
 
@@ -239,7 +246,8 @@ int WIPX_CheckNewConnections (void)
 
 static byte packetBuffer[NET_DATAGRAMSIZE + 4];
 
-int WIPX_Read (int handle, byte *buf, int len, struct qsockaddr *addr)
+int
+WIPX_Read ( int handle, byte *buf, int len, struct qsockaddr *addr )
 {
 	int addrlen = sizeof (struct qsockaddr);
 	int socket = ipxsocket[handle];
@@ -267,14 +275,16 @@ int WIPX_Read (int handle, byte *buf, int len, struct qsockaddr *addr)
 
 //=============================================================================
 
-int WIPX_Broadcast (int handle, byte *buf, int len)
+int
+WIPX_Broadcast ( int handle, byte *buf, int len )
 {
 	return WIPX_Write (handle, buf, len, &broadcastaddr);
 }
 
 //=============================================================================
 
-int WIPX_Write (int handle, byte *buf, int len, struct qsockaddr *addr)
+int
+WIPX_Write ( int handle, byte *buf, int len, struct qsockaddr *addr )
 {
 	int socket = ipxsocket[handle];
 	int ret;
@@ -295,7 +305,8 @@ int WIPX_Write (int handle, byte *buf, int len, struct qsockaddr *addr)
 
 //=============================================================================
 
-char *WIPX_AddrToString (struct qsockaddr *addr)
+char *
+WIPX_AddrToString ( struct qsockaddr *addr )
 {
 	static char buf[28];
 
@@ -317,10 +328,11 @@ char *WIPX_AddrToString (struct qsockaddr *addr)
 
 //=============================================================================
 
-int WIPX_StringToAddr (char *string, struct qsockaddr *addr)
+int
+WIPX_StringToAddr ( char *string, struct qsockaddr *addr )
 {
-	int  val;
-	char buf[3];
+	int		val;
+	char	buf[3];
 
 	buf[2] = 0;
 	Q_memset(addr, 0, sizeof(struct qsockaddr));
@@ -353,7 +365,8 @@ int WIPX_StringToAddr (char *string, struct qsockaddr *addr)
 
 //=============================================================================
 
-int WIPX_GetSocketAddr (int handle, struct qsockaddr *addr)
+int
+WIPX_GetSocketAddr ( int handle, struct qsockaddr *addr )
 {
 	int socket = ipxsocket[handle];
 	int addrlen = sizeof(struct qsockaddr);
@@ -370,7 +383,8 @@ int WIPX_GetSocketAddr (int handle, struct qsockaddr *addr)
 
 //=============================================================================
 
-int WIPX_GetNameFromAddr (struct qsockaddr *addr, char *name)
+int
+WIPX_GetNameFromAddr ( struct qsockaddr *addr, char *name )
 {
 	Q_strcpy(name, WIPX_AddrToString(addr));
 	return 0;
@@ -378,7 +392,8 @@ int WIPX_GetNameFromAddr (struct qsockaddr *addr, char *name)
 
 //=============================================================================
 
-int WIPX_GetAddrFromName(char *name, struct qsockaddr *addr)
+int
+WIPX_GetAddrFromName ( char *name, struct qsockaddr *addr )
 {
 	int n;
 	char buf[32];
@@ -403,7 +418,8 @@ int WIPX_GetAddrFromName(char *name, struct qsockaddr *addr)
 
 //=============================================================================
 
-int WIPX_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
+int
+WIPX_AddrCompare ( struct qsockaddr *addr1, struct qsockaddr *addr2 )
 {
 	if (addr1->sa_family != addr2->sa_family)
 		return -1;
@@ -422,13 +438,15 @@ int WIPX_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
 
 //=============================================================================
 
-int WIPX_GetSocketPort (struct qsockaddr *addr)
+int
+WIPX_GetSocketPort ( struct qsockaddr *addr )
 {
 	return ntohs(((struct sockaddr_ipx *)addr)->sa_socket);
 }
 
 
-int WIPX_SetSocketPort (struct qsockaddr *addr, int port)
+int
+WIPX_SetSocketPort ( struct qsockaddr *addr, int port )
 {
 	((struct sockaddr_ipx *)addr)->sa_socket = htons((unsigned short)port);
 	return 0;

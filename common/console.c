@@ -74,7 +74,8 @@ extern	int		key_linepos;
 qboolean	con_initialized;
 
 
-void Key_ClearTyping (void)
+void
+Key_ClearTyping ( void )
 {
 	key_lines[edit_line][1] = 0;	// clear any typing
 	key_linepos = 1;
@@ -85,7 +86,8 @@ void Key_ClearTyping (void)
 Con_ToggleConsole_f
 ================
 */
-void Con_ToggleConsole_f (void)
+void
+Con_ToggleConsole_f ( void )
 {
 	Key_ClearTyping ();
 
@@ -105,7 +107,8 @@ void Con_ToggleConsole_f (void)
 Con_ToggleChat_f
 ================
 */
-void Con_ToggleChat_f (void)
+void
+Con_ToggleChat_f ( void )
 {
 	Key_ClearTyping ();
 
@@ -125,7 +128,8 @@ void Con_ToggleChat_f (void)
 Con_Clear_f
 ================
 */
-void Con_Clear_f (void)
+void
+Con_Clear_f ( void )
 {
 	Q_memset (con_main.text, ' ', CON_TEXTSIZE);
 	Q_memset (con_chat.text, ' ', CON_TEXTSIZE);
@@ -141,7 +145,8 @@ void Con_Clear_f (void)
 Con_ClearNotify
 ================
 */
-void Con_ClearNotify (void)
+void
+Con_ClearNotify ( void )
 {
 	int		i;
 
@@ -155,7 +160,8 @@ void Con_ClearNotify (void)
 Con_MessageMode_f
 ================
 */
-void Con_MessageMode_f (void)
+void
+Con_MessageMode_f ( void )
 {
 	if (cls.state != ca_active)
 		return;
@@ -169,7 +175,8 @@ void Con_MessageMode_f (void)
 Con_MessageMode2_f
 ================
 */
-void Con_MessageMode2_f (void)
+void
+Con_MessageMode2_f ( void )
 {
 	if (cls.state != ca_active)
 		return;
@@ -184,7 +191,8 @@ Con_Resize
 
 ================
 */
-void Con_Resize (console_t *con)
+void
+Con_Resize ( console_t *con )
 {
 	int		i, j, width, oldwidth, oldtotallines, numlines, numchars;
 	char	tbuf[CON_TEXTSIZE];
@@ -226,7 +234,7 @@ void Con_Resize (console_t *con)
 			{
 				con->text[(con_totallines - 1 - i) * con_linewidth + j] =
 						tbuf[((con->current - i + oldtotallines) %
-							  oldtotallines) * oldwidth + j];
+							oldtotallines) * oldwidth + j];
 			}
 		}
 
@@ -245,7 +253,8 @@ Con_CheckResize
 If the line width has changed, reformat the buffer.
 ================
 */
-void Con_CheckResize (void)
+void
+Con_CheckResize ( void )
 {
 	Con_Resize (&con_main);
 	Con_Resize (&con_chat);
@@ -257,7 +266,8 @@ void Con_CheckResize (void)
 Con_Init
 ================
 */
-void Con_Init (void)
+void
+Con_Init ( void )
 {
 	con_debuglog = COM_CheckParm("-condebug");
 
@@ -287,7 +297,8 @@ void Con_Init (void)
 Con_Linefeed
 ===============
 */
-void Con_Linefeed (void)
+void
+Con_Linefeed ( void )
 {
 	con->x = 0;
 	if (con->display == con->current)
@@ -308,7 +319,8 @@ All console printing must go through this in order to be logged to disk
 If no console is visible, the notify window will pop up.
 ================
 */
-void Con_Print (char *txt)
+void
+Con_Print ( char *txt )
 {
 	int		y;
 	int		c, l;
@@ -384,7 +396,8 @@ Handles cursor positioning, line wrapping, etc
 ================
 */
 #define	MAXPRINTMSG	4096
-void Con_Printf (char *fmt, ...)
+void
+Con_Printf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
@@ -428,7 +441,8 @@ Con_DPrintf
 A Con_Printf that only shows up if the "developer" cvar is set
 ================
 */
-void Con_DPrintf (char *fmt, ...)
+void
+Con_DPrintf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
@@ -459,7 +473,8 @@ Con_DrawInput
 The input line scrolls horizontally if typing goes beyond the right edge
 ================
 */
-void Con_DrawInput (void)
+void
+Con_DrawInput ( void )
 {
 	int		y;
 	int		i;
@@ -498,7 +513,8 @@ Con_DrawNotify
 Draws the last few lines of output transparently over the game top
 ================
 */
-void Con_DrawNotify (void)
+void
+Con_DrawNotify ( void )
 {
 	int		x, v;
 	char	*text;
@@ -570,7 +586,8 @@ Con_DrawConsole
 Draws the console with the solid background
 ================
 */
-void Con_DrawConsole (int lines)
+void
+Con_DrawConsole ( int lines )
 {
 	int				i, x, y;
 	int				rows;
@@ -671,7 +688,8 @@ void Con_DrawConsole (int lines)
 Con_NotifyBox
 ==================
 */
-void Con_NotifyBox (char *text)
+void
+Con_NotifyBox ( char *text )
 {
 	double		t1, t2;
 
@@ -708,7 +726,8 @@ Con_SafePrintf
 Okay to call even when the screen can't be updated
 ==================
 */
-void Con_SafePrintf (char *fmt, ...)
+void
+Con_SafePrintf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		msg[1024];
@@ -723,4 +742,3 @@ void Con_SafePrintf (char *fmt, ...)
 	Con_Printf ("%s", msg);
 	scr_disabled_for_loading = temp;
 }
-

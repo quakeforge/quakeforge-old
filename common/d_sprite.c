@@ -43,7 +43,8 @@ static sspan_t	*sprite_spans;
 D_SpriteDrawSpans
 =====================
 */
-void D_SpriteDrawSpans (sspan_t *pspan)
+void
+D_SpriteDrawSpans ( sspan_t *pspan )
 {
 	int			count, spancount, izistep;
 	int			izi;
@@ -123,8 +124,8 @@ void D_SpriteDrawSpans (sspan_t *pspan)
 					snext = bbextents;
 				else if (snext < 8)
 					snext = 8;	// prevent round-off error on <0 steps from
-								//  from causing overstepping & running off the
-								//  edge of the texture
+								// from causing overstepping & running off the
+								// edge of the texture
 
 				tnext = (int)(tdivz * z) + tadjust;
 				if (tnext > bbextentt)
@@ -151,8 +152,8 @@ void D_SpriteDrawSpans (sspan_t *pspan)
 					snext = bbextents;
 				else if (snext < 8)
 					snext = 8;	// prevent round-off error on <0 steps from
-								//  from causing overstepping & running off the
-								//  edge of the texture
+								// from causing overstepping & running off the
+								// edge of the texture
 
 				tnext = (int)(tdivz * z) + tadjust;
 				if (tnext > bbextentt)
@@ -205,7 +206,8 @@ NextSpan:
 D_SpriteScanLeftEdge
 =====================
 */
-void D_SpriteScanLeftEdge (void)
+void
+D_SpriteScanLeftEdge ( void )
 {
 	int			i, v, itop, ibottom, lmaxindex;
 	emitpoint_t	*pvert, *pnext;
@@ -267,7 +269,8 @@ void D_SpriteScanLeftEdge (void)
 D_SpriteScanRightEdge
 =====================
 */
-void D_SpriteScanRightEdge (void)
+void
+D_SpriteScanRightEdge ( void )
 {
 	int			i, v, itop, ibottom;
 	emitpoint_t	*pvert, *pnext;
@@ -349,7 +352,8 @@ void D_SpriteScanRightEdge (void)
 D_SpriteCalculateGradients
 =====================
 */
-void D_SpriteCalculateGradients (void)
+void
+D_SpriteCalculateGradients ( void )
 {
 	vec3_t		p_normal, p_saxis, p_taxis, p_temp1;
 	float		distinv;
@@ -395,7 +399,8 @@ void D_SpriteCalculateGradients (void)
 D_DrawSprite
 =====================
 */
-void D_DrawSprite (void)
+void
+D_DrawSprite ( void )
 {
 	int			i, nump;
 	float		ymin, ymax;
@@ -448,4 +453,3 @@ void D_DrawSprite (void)
 	D_SpriteScanRightEdge ();
 	D_SpriteDrawSpans (sprite_spans);
 }
-

@@ -62,7 +62,7 @@ void Sys_PopFPCW (void);
 void Sys_PushFPCW_SetHigh (void);
 
 void
-Sys_DebugLog (char *file, char *fmt, ...)
+Sys_DebugLog ( char *file, char *fmt, ... )
 {
 	va_list argptr;
 	static char data[1024];
@@ -91,7 +91,7 @@ FILE		*sys_handles[MAX_HANDLES];
 	findhandle
 */
 int
-findhandle (void)
+findhandle ( void )
 {
 	int		i;
 
@@ -107,7 +107,7 @@ findhandle (void)
 	filelength
 */
 int
-wfilelength (FILE *f)
+wfilelength ( FILE *f )
 {
 	int		pos;
 	int		end;
@@ -130,7 +130,7 @@ wfilelength (FILE *f)
 	Sys_FileOpenRead
 */
 int
-Sys_FileOpenRead (char *path, int *hndl)
+Sys_FileOpenRead ( char *path, int *hndl )
 {
 	FILE	*f;
 	int		i, retval;
@@ -164,7 +164,7 @@ Sys_FileOpenRead (char *path, int *hndl)
 	Sys_FileOpenWrite
 */
 int
-Sys_FileOpenWrite (char *path)
+Sys_FileOpenWrite ( char *path )
 {
 	FILE		*f;
 	int		i;
@@ -189,7 +189,7 @@ Sys_FileOpenWrite (char *path)
 	Sys_FileClose
 */
 void
-Sys_FileClose (int handle)
+Sys_FileClose ( int handle )
 {
 	int		t;
 
@@ -204,7 +204,7 @@ Sys_FileClose (int handle)
 	Sys_FileSeek
 */
 void
-Sys_FileSeek (int handle, int position)
+Sys_FileSeek ( int handle, int position )
 {
 	int		t;
 
@@ -218,7 +218,7 @@ Sys_FileSeek (int handle, int position)
 	Sys_FileRead
 */
 int
-Sys_FileRead (int handle, void *dest, int count)
+Sys_FileRead ( int handle, void *dest, int count )
 {
 	int		t, x;
 
@@ -232,7 +232,7 @@ Sys_FileRead (int handle, void *dest, int count)
 	Sys_FileWrite
 */
 int
-Sys_FileWrite (int handle, void *data, int count)
+Sys_FileWrite ( int handle, void *data, int count )
 {
 	int		t, x;
 
@@ -252,14 +252,14 @@ SYSTEM IO
 	Sys_MakeCodeWriteable
 */
 void
-Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
+Sys_MakeCodeWriteable ( unsigned long startaddr, unsigned long length )
 {
-	DWORD  flOldProtect;
+	DWORD	flOldProtect;
 
 //@@@ copy on write or just read-write?
 	if (!VirtualProtect((LPVOID)startaddr, length, PAGE_READWRITE,
 				&flOldProtect))
-   		Sys_Error("Protection change failed\n");
+		Sys_Error("Protection change failed\n");
 }
 
 
@@ -267,7 +267,7 @@ Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
 	Sys_Init
 */
 void
-Sys_Init (void)
+Sys_Init ( void )
 {
 	LARGE_INTEGER	PerformanceFreq;
 	unsigned int	lowpart, highpart;
@@ -340,8 +340,11 @@ Sys_Init (void)
 		WinNT = false;
 }
 
-
-void Sys_Error (char *error, ...)
+/*
+	Sys_Error
+*/
+void
+Sys_Error ( char *error, ... )
 {
 	va_list		argptr;
 	char		text[1024], text2[1024];
@@ -362,7 +365,11 @@ void Sys_Error (char *error, ...)
 	exit (1);
 }
 
-void Sys_Quit (void)
+/*
+	Sys_Quit
+*/
+void 
+Sys_Quit ( void )
 {
 	VID_ForceUnlockedAndReturnState ();
 
@@ -385,7 +392,8 @@ void Sys_Quit (void)
 Sys_DoubleTime
 ================
 */
-double Sys_DoubleTime (void)
+double 
+Sys_DoubleTime ( void )
 {
 	static int			sametimecount;
 	static unsigned int	oldtime;
@@ -398,8 +406,8 @@ double Sys_DoubleTime (void)
 
 	QueryPerformanceCounter (&PerformanceCount);
 
-	temp = ((unsigned int)PerformanceCount.LowPart >> lowshift) |
-		   ((unsigned int)PerformanceCount.HighPart << (32 - lowshift));
+	temp = ((unsigned int)PerformanceCount.LowPart >> lowshift)
+		| ((unsigned int)PerformanceCount.HighPart << (32 - lowshift));
 
 	if (first)
 	{
@@ -443,7 +451,7 @@ double Sys_DoubleTime (void)
 
 	Sys_PopFPCW ();
 
-    return curtime;
+	return curtime;
 }
 
 /*
@@ -451,7 +459,8 @@ double Sys_DoubleTime (void)
 Sys_InitFloatTime
 ================
 */
-void Sys_InitFloatTime (void)
+void 
+Sys_InitFloatTime ( void )
 {
 	int		j;
 
@@ -470,14 +479,13 @@ void Sys_InitFloatTime (void)
 
 	lastcurtime = curtime;
 }
-
 #endif
 
 /*
 	Sys_ConsoleInput
 */
 char *
-Sys_ConsoleInput (void)
+Sys_ConsoleInput ( void )
 {
 	static char	text[256];
 	static int	len;
@@ -580,14 +588,22 @@ Sys_ConsoleInput (void)
 	return NULL;
 }
 
-void Sys_Sleep (void)
+/*
+	Sys_Sleep
+*/
+void 
+Sys_Sleep ( void )
 {
 }
 
 
-void IN_SendKeyEvents (void)
+/*
+	IN_SendKeyEvents
+*/
+void 
+IN_SendKeyEvents ( void )
 {
-    MSG        msg;
+	MSG	msg;
 
 	while (PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE))
 	{
@@ -596,8 +612,8 @@ void IN_SendKeyEvents (void)
 
 		if (!GetMessage (&msg, NULL, 0, 0))
 			Sys_Quit ();
-      	TranslateMessage (&msg);
-      	DispatchMessage (&msg);
+		TranslateMessage (&msg);
+		DispatchMessage (&msg);
 	}
 }
 
@@ -613,7 +629,7 @@ void IN_SendKeyEvents (void)
 	SleepUntilInput
 */
 void
-SleepUntilInput (int time)
+SleepUntilInput ( int time )
 {
 
 	MsgWaitForMultipleObjects(1, &tevent, FALSE, time, QS_ALLINPUT);
@@ -631,8 +647,8 @@ HWND		hwnd_dialog;
 
 
 int WINAPI
-WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
-		int nCmdShow)
+WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
+		int nCmdShow )
 {
 	MSG		msg;
 	quakeparms_t	parms;
@@ -704,8 +720,7 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 			if (rect.left > (rect.top * 2))
 			{
 				SetWindowPos (hwnd_dialog, 0,
-					(rect.left / 2) - ((rect.right
-							    - rect.left) / 2),
+					(rect.left / 2) - ((rect.right - rect.left) / 2),
 					rect.top, 0, 0,
 					SWP_NOZORDER | SWP_NOSIZE);
 			}
@@ -758,7 +773,7 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 
 	oldtime = Sys_DoubleTime ();
 
-    /* main window message loop */
+	/* main window message loop */
 	while (1)
 	{
 // yield the CPU for a little while when paused, minimized, or not the focus
@@ -778,8 +793,8 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 		oldtime = newtime;
 	}
 
-    /* return success of application */
-    return TRUE;
+	/* return success of application */
+	return TRUE;
 }
 
 /*
@@ -789,7 +804,7 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 	crash, then exits
 */
 void
-SV_Error (char *error, ...)
+SV_Error ( char *error, ... )
 {
 	va_list		argptr;
 	static	char		string[1024];
@@ -807,7 +822,6 @@ SV_Error (char *error, ...)
 	Con_Printf ("SV_Error: %s\n",string);
 
 	//SV_FinalMessage (va("server crashed: %s\n", string));
-
 
 	Sys_Error ("SV_Error: %s\n",string);
 }

@@ -50,7 +50,8 @@ CL_StopPlayback
 Called when a demo file runs out, or the user starts a game
 ==============
 */
-void CL_StopPlayback (void)
+void
+CL_StopPlayback ( void )
 {
 	if (!cls.demoplayback)
 		return;
@@ -75,7 +76,8 @@ CL_WriteDemoCmd
 Writes the current user cmd
 ====================
 */
-void CL_WriteDemoCmd (usercmd_t *pcmd)
+void
+CL_WriteDemoCmd ( usercmd_t *pcmd )
 {
 	int		i;
 	float	fl;
@@ -93,8 +95,9 @@ void CL_WriteDemoCmd (usercmd_t *pcmd)
 	// correct for byte order, bytes don't matter
 	cmd = *pcmd;
 
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 3; i++) {
 		cmd.angles[i] = LittleFloat(cmd.angles[i]);
+	}
 	cmd.forwardmove = LittleShort(cmd.forwardmove);
 	cmd.sidemove    = LittleShort(cmd.sidemove);
 	cmd.upmove      = LittleShort(cmd.upmove);
@@ -117,7 +120,8 @@ CL_WriteDemoMessage
 Dumps the current net message, prefixed by the length and view angles
 ====================
 */
-void CL_WriteDemoMessage (sizebuf_t *msg)
+void
+CL_WriteDemoMessage ( sizebuf_t *msg )
 {
 	int		len;
 	float	fl;
@@ -148,7 +152,8 @@ CL_GetDemoMessage
   FIXME...
 ====================
 */
-qboolean CL_GetDemoMessage (void)
+qboolean
+CL_GetDemoMessage ( void )
 {
 	int		r, i, j;
 	float	f;
@@ -175,7 +180,7 @@ qboolean CL_GetDemoMessage (void)
 			cls.td_starttime = Sys_DoubleTime();
 			cls.td_startframe = host_framecount;
 		}
-		realtime = demotime; // warp
+		realtime = demotime;	// warp
 	} else if (!cl.paused && cls.state >= ca_onserver) {	// always grab until fully connected
 		if (realtime + 1.0 < demotime) {
 			// too far back
@@ -191,7 +196,7 @@ qboolean CL_GetDemoMessage (void)
 			return 0;		// don't need another message yet
 		}
 	} else
-		realtime = demotime; // we're warping
+		realtime = demotime;	// we're warping
 
 	if (cls.state < ca_demostart)
 		Host_Error ("CL_GetDemoMessage: cls.state != ca_active");
@@ -211,8 +216,9 @@ qboolean CL_GetDemoMessage (void)
 			return 0;
 		}
 		// byte order stuff
-		for (j = 0; j < 3; j++)
+		for (j = 0; j < 3; j++) {
 			pcmd->angles[j] = LittleFloat(pcmd->angles[j]);
+		}
 		pcmd->forwardmove = LittleShort(pcmd->forwardmove);
 		pcmd->sidemove    = LittleShort(pcmd->sidemove);
 		pcmd->upmove      = LittleShort(pcmd->upmove);
@@ -264,7 +270,8 @@ CL_GetMessage
 Handles recording and playback of demos, on top of NET_ code
 ====================
 */
-int CL_GetMessage(void)
+int
+CL_GetMessage ( void )
 {
 	if	(cls.demoplayback)
 		return CL_GetDemoMessage ();
@@ -285,7 +292,8 @@ CL_Stop_f
 stop recording a demo
 ====================
 */
-void CL_Stop_f (void)
+void
+CL_Stop_f ( void )
 {
 	if (!cls.demorecording)
 	{
@@ -315,7 +323,8 @@ CL_WriteDemoMessage
 Dumps the current net message, prefixed by the length and view angles
 ====================
 */
-void CL_WriteRecordDemoMessage (sizebuf_t *msg, int seq)
+void
+CL_WriteRecordDemoMessage ( sizebuf_t *msg, int seq )
 {
 	int		len;
 	int		i;
@@ -346,7 +355,8 @@ void CL_WriteRecordDemoMessage (sizebuf_t *msg, int seq)
 }
 
 
-void CL_WriteSetDemoMessage (void)
+void
+CL_WriteSetDemoMessage ( void )
 {
 	int		len;
 	float	fl;
@@ -371,9 +381,6 @@ void CL_WriteSetDemoMessage (void)
 	Qflush (cls.demofile);
 }
 
-
-
-
 /*
 ====================
 CL_Record_f
@@ -381,7 +388,8 @@ CL_Record_f
 record <demoname> <server>
 ====================
 */
-void CL_Record_f (void)
+void
+CL_Record_f ( void )
 {
 	int		c;
 	char	name[MAX_OSPATH];
@@ -463,7 +471,7 @@ void CL_Record_f (void)
 
 	// send music
 	MSG_WriteByte (&buf, svc_cdtrack);
-	MSG_WriteByte (&buf, 0); // none in demos
+	MSG_WriteByte (&buf, 0);	// none in demos
 
 	// send server info string
 	MSG_WriteByte (&buf, svc_stufftext);
@@ -676,7 +684,8 @@ CL_ReRecord_f
 record <demoname>
 ====================
 */
-void CL_ReRecord_f (void)
+void
+CL_ReRecord_f ( void )
 {
 	int		c;
 	char	name[MAX_OSPATH];
@@ -725,7 +734,8 @@ CL_PlayDemo_f
 play [demoname]
 ====================
 */
-void CL_PlayDemo_f (void)
+void
+CL_PlayDemo_f ( void )
 {
 	char	name[256];
 
@@ -767,7 +777,8 @@ CL_FinishTimeDemo
 
 ====================
 */
-void CL_FinishTimeDemo (void)
+void
+CL_FinishTimeDemo ( void )
 {
 	int		frames;
 	float	time;
@@ -789,7 +800,8 @@ CL_TimeDemo_f
 timedemo [demoname]
 ====================
 */
-void CL_TimeDemo_f (void)
+void
+CL_TimeDemo_f ( void )
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -810,4 +822,3 @@ void CL_TimeDemo_f (void)
 	cls.td_startframe = host_framecount;
 	cls.td_lastframe = -1;		// get a new message this frame
 }
-

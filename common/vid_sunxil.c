@@ -173,7 +173,8 @@ static int		count_frames = 0;
 D_BeginDirectRect
 ================
 */
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 // direct drawing of the "accessing disk" icon isn't supported under Nextstep
 }
@@ -184,7 +185,8 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 D_EndDirectRect
 ================
 */
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 // direct drawing of the "accessing disk" icon isnt supported under Nextstep
 }
@@ -200,7 +202,8 @@ Keybinding command
 
 byte	vid_gamma[256];
 
-void VID_Gamma_f (void)
+void
+VID_Gamma_f ( void )
 {
 	float	g, f, inf;
 	int	i;
@@ -225,7 +228,8 @@ void VID_Gamma_f (void)
 
 }
 
-qboolean CheckPixelMultiply (void)
+qboolean
+CheckPixelMultiply ( void )
 {
 	int			m;
 	int			w, h;
@@ -276,7 +280,8 @@ qboolean CheckPixelMultiply (void)
 // Tragic death handler
 // ========================================================================
 
-void TragicDeath(int signal_num)
+void
+TragicDeath ( int signal_num )
 {
 	//XAutoRepeatOn(x_disp);
 	XCloseDisplay(x_disp);
@@ -287,7 +292,8 @@ void TragicDeath(int signal_num)
 // makes a null cursor
 // ========================================================================
 
-static Cursor CreateNullCursor(Display *display, Window root)
+static Cursor
+CreateNullCursor ( Display *display, Window root )
 {
 	Pixmap		cursormask;
 	XGCValues	xgc;
@@ -320,7 +326,8 @@ byte	surfcache[1024*1024];
 // VID_SetWindowTitle - set the window and icon titles
 //
 
-void VID_SetWindowTitle( Window win, char *pszName )
+void
+VID_SetWindowTitle ( Window win, char *pszName )
 {
 	XTextProperty	textprop;
 	XWMHints	*wmHints;
@@ -346,7 +353,8 @@ void VID_SetWindowTitle( Window win, char *pszName )
 // VID_FullScreen - open the window in full screen mode
 //
 
-qboolean VID_FullScreen( Window win )
+qboolean
+VID_FullScreen ( Window win )
 {
 	MotifWmHints	hints;
 	XWindowChanges	changes;
@@ -370,7 +378,8 @@ qboolean VID_FullScreen( Window win )
 	return( true );
 }
 
-void VID_Init (unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	int		pnum, i;
 	XVisualInfo	template;
@@ -617,7 +626,8 @@ void VID_Init (unsigned char *palette)
 	D_InitCaches (surfcache, sizeof(surfcache));
 }
 
-void VID_ResetFramebuffer()
+void
+VID_ResetFramebuffer ( void )
 {
 	XilMemoryStorage	storage;
 
@@ -626,7 +636,7 @@ void VID_ResetFramebuffer()
 		return;
 	}
 
-//printf("VID_ResetFramebuffer: vid.width %i, vid.height %i\n", vid.width, vid.height);
+//	printf("VID_ResetFramebuffer: vid.width %i, vid.height %i\n", vid.width, vid.height);
 
 	xil_destroy(display_image);
 
@@ -665,7 +675,8 @@ void VID_ResetFramebuffer()
 
 void *update_thread();
 
-void VID_ResetFramebuffer_MT()
+void
+VID_ResetFramebuffer_MT ( void )
 {
 	XilMemoryStorage	storage;
 	XilImage		drain_renderpipeline();
@@ -691,12 +702,14 @@ void VID_ResetFramebuffer_MT()
 	d_pzbuffer = malloc(PM(vid.width)*PM(vid.height)*sizeof(*d_pzbuffer));
 }
 
-void VID_ShiftPalette(unsigned char *p)
+void
+VID_ShiftPalette ( unsigned char *p )
 {
 	VID_SetPalette(p);
 }
 
-void VID_SetPalette(unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 	int	i;
 	XColor colors[256];
@@ -717,7 +730,8 @@ void VID_SetPalette(unsigned char *palette)
 
 // Called at shutdown
 
-void VID_Shutdown (void)
+void
+VID_Shutdown ( void )
 {
 	X11_active = false;
 	Con_Printf("VID_Shutdown\n");
@@ -729,7 +743,8 @@ void VID_Shutdown (void)
 	XCloseDisplay(x_disp);
 }
 
-int XLateKey(XKeyEvent *ev)
+int
+XLateKey ( XKeyEvent *ev )
 {
 	int	key;
 	char	buf[64];
@@ -807,7 +822,8 @@ int	config_notify=0;
 int	config_notify_width;
 int	config_notify_height;
 
-void GetEvent(void)
+void
+GetEvent ( void )
 {
 	XEvent	x_event;
 	int	b;
@@ -909,7 +925,8 @@ void GetEvent(void)
 
 void VID_Update_MT(vrect_t *);
 
-void VID_Update (vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 	if (count_frames) {
 		static int		count;
@@ -999,7 +1016,8 @@ void VID_Update (vrect_t *rects)
 	}
 }
 
-void VID_Update_MT (vrect_t *rects)
+void
+VID_Update_MT ( vrect_t *rects )
 {
 	XilImage	sched_update();
 
@@ -1050,7 +1068,8 @@ void VID_Update_MT (vrect_t *rects)
 	quake_image = sched_update(quake_image);
 }
 
-XilImage drain_renderpipeline(XilImage old)
+XilImage
+drain_renderpipeline ( XilImage old )
 {
 	XilImage		new;
 	XilMemoryStorage	storage;
@@ -1088,10 +1107,10 @@ XilImage drain_renderpipeline(XilImage old)
 	vid.recalc_refdef = 1;				// force a surface cache flush
 
 	return(new);
-
 }
 
-XilImage sched_update(XilImage image)
+XilImage
+sched_update ( XilImage image )
 {
 	XilImage		new;
 	XilMemoryStorage	storage;
@@ -1113,7 +1132,8 @@ XilImage sched_update(XilImage image)
 	return (new);
 }
 
-void *update_thread()
+void *
+update_thread ( void )
 {
 	XilImage	image;
 
@@ -1141,7 +1161,8 @@ void *update_thread()
 
 static int	dither;
 
-void VID_DitherOn(void)
+void
+VID_DitherOn ( void )
 {
 	if (dither == 0) {
 		vid.recalc_refdef = 1;
@@ -1149,7 +1170,8 @@ void VID_DitherOn(void)
 	}
 }
 
-void VID_DitherOff(void)
+void
+VID_DitherOff ( void )
 {
 	if (dither) {
 		vid.recalc_refdef = 1;
@@ -1157,11 +1179,13 @@ void VID_DitherOff(void)
 	}
 }
 
-void VID_SetDefaultMode( void )
+void
+VID_SetDefaultMode ( void )
 {
 }
 
-void Sys_SendKeyEvents(void)
+void
+Sys_SendKeyEvents ( void )
 {
 	// get events from x server
 	if (x_disp) {
@@ -1173,12 +1197,14 @@ void Sys_SendKeyEvents(void)
 	}
 }
 
-void IN_SendKeyEvents (void)
+void
+IN_SendKeyEvents ( void )
 {
 	Sys_SendKeyEvents ();
 }
 
-void IN_Init (void)
+void
+IN_Init ( void )
 {
 	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
@@ -1189,13 +1215,15 @@ void IN_Init (void)
 }
 
 
-void IN_Shutdown(void)
+void
+IN_Shutdown ( void )
 {
 	mouse_avail = 0;
 }
 
 
-void IN_Frame(void)
+void
+IN_Frame ( void )
 {
 	int	i;
 
@@ -1212,7 +1240,8 @@ void IN_Frame(void)
 	mouse_oldbuttonstate = mouse_buttonstate;
 }
 
-void IN_Move (usercmd_t *cmd)
+void
+IN_Move ( usercmd_t *cmd )
 {
 	if (!mouse_avail)
 		return;
@@ -1250,7 +1279,8 @@ void IN_Move (usercmd_t *cmd)
 	mouse_x = mouse_y = 0.0;
 }
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -1265,7 +1295,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 	switch(option_cursor) {
@@ -1275,15 +1306,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 	}
 }
 
-void VID_InitCvars ( void )
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

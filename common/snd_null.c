@@ -36,83 +36,99 @@
 // Various variables also defined in snd_dma.c
 // FIXME - should be put in one place
 // =======================================================================
-channel_t   channels[MAX_CHANNELS];
+channel_t	channels[MAX_CHANNELS];
 int			total_channels;
-volatile dma_t  *shm = 0;
+volatile dma_t	*shm = 0;
 cvar_t	*loadas8bit;
-int    paintedtime;    // sample PAIRS
+int		paintedtime;		// sample PAIRS
 
 
 cvar_t	*bgmvolume;
 cvar_t	*volume;
 
 
-void S_Init (void)
+void
+S_Init ( void )
 {
 }
 
-void S_AmbientOff (void)
+void
+S_AmbientOff ( void )
 {
 }
 
-void S_AmbientOn (void)
+void
+S_AmbientOn ( void )
 {
 }
 
-void S_Shutdown (void)
+void
+S_Shutdown ( void )
 {
 }
 
-void S_TouchSound (char *sample)
+void
+S_TouchSound ( char *sample )
 {
 }
 
-void S_ClearBuffer (void)
+void
+S_ClearBuffer ( void )
 {
 }
 
-void S_StaticSound (sfx_t *sfx, vec3_t origin, float vol, float attenuation)
+void
+S_StaticSound ( sfx_t *sfx, vec3_t origin, float vol, float attenuation )
 {
 }
 
-void S_StartSound (int entnum, int entchannel, sfx_t *sfx, vec3_t origin, float fvol,  float attenuation)
+void
+S_StartSound ( int entnum, int entchannel, sfx_t *sfx, vec3_t origin, float fvol, float attenuation )
 {
 }
 
-void S_StopSound (int entnum, int entchannel)
+void
+S_StopSound ( int entnum, int entchannel )
 {
 }
 
-sfx_t *S_PrecacheSound (char *sample)
+sfx_t *
+S_PrecacheSound ( char *sample )
 {
 	return NULL;
 }
 
-void S_ClearPrecache (void)
+void
+S_ClearPrecache ( void )
 {
 }
 
-void S_Update (vec3_t origin, vec3_t v_forward, vec3_t v_right, vec3_t v_up)
+void
+S_Update ( vec3_t origin, vec3_t v_forward, vec3_t v_right, vec3_t v_up )
 {
 }
 
-void S_StopAllSounds (qboolean clear)
+void
+S_StopAllSounds ( qboolean clear )
 {
 }
 
-void S_BeginPrecaching (void)
+void
+S_BeginPrecaching ( void )
 {
 }
 
-void S_EndPrecaching (void)
+void
+S_EndPrecaching ( void )
 {
 }
 
-void S_ExtraUpdate (void)
+void
+S_ExtraUpdate ( void )
 {
 }
 
-void S_LocalSound (char *s)
+void
+S_LocalSound ( char *s )
 {
 }
-

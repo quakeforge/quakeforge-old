@@ -40,8 +40,8 @@ extern int	onground;
 V_UpdatePalette
 =============
 */
-
-void V_UpdatePalette (void)
+void
+V_UpdatePalette ( void )
 {
 	int		i, j;
 	qboolean	new;
@@ -86,7 +86,7 @@ void V_UpdatePalette (void)
 
 	V_CalcBlend ();
 
-//Con_Printf("b: %4.2f %4.2f %4.2f %4.6f\n", v_blend[0],	v_blend[1],	v_blend[2],	v_blend[3]);
+//	Con_Printf("b: %4.2f %4.2f %4.2f %4.6f\n", v_blend[0], v_blend[1], v_blend[2], v_blend[3]);
 
 	a = v_blend[3];
 	r = 255*v_blend[0]*a;

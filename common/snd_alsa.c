@@ -70,7 +70,8 @@ static snd_pcm_mmap_control_t *mmap_control = NULL;
 static char *mmap_data = NULL;
 static int card=-1,dev=-1;
 
-int check_card(int card)
+int
+check_card ( int card )
 {
 	snd_ctl_t *handle;
 	snd_ctl_hw_info_t info;
@@ -82,7 +83,7 @@ int check_card(int card)
 	}
 	if ((rc = snd_ctl_hw_info(handle, &info)) < 0) {
 		Con_Printf("Error: control hardware info (%i): %s\n", card,
-				   snd_strerror(rc));
+				snd_strerror(rc));
 		snd_ctl_close(handle);
 		return rc;
 	}
@@ -107,7 +108,8 @@ int check_card(int card)
 	return 1;
 }
 
-qboolean SNDDMA_Init(void)
+qboolean
+SNDDMA_Init ( void )
 {
 	int rc=0,i;
 	char *err_msg="";
@@ -234,7 +236,7 @@ qboolean SNDDMA_Init(void)
 
 	shm=&sn;
 	memset((dma_t*)shm,0,sizeof(*shm));
-    shm->splitbuffer = 0;
+	shm->splitbuffer = 0;
 	shm->channels=setup.format.voices;
 	shm->submission_chunk=128;					// don't mix less than this #
 	shm->samplepos=0;							// in mono samples
@@ -242,13 +244,13 @@ qboolean SNDDMA_Init(void)
 	shm->samples=setup.buf.block.frags*setup.buf.block.frag_size/(shm->samplebits/8);	// mono samples in buffer
 	shm->speed=setup.format.rate;
 	shm->buffer=(unsigned char*)mmap_data;
-    Con_Printf("%5d stereo\n", shm->channels - 1);
-    Con_Printf("%5d samples\n", shm->samples);
-    Con_Printf("%5d samplepos\n", shm->samplepos);
-    Con_Printf("%5d samplebits\n", shm->samplebits);
-    Con_Printf("%5d submission_chunk\n", shm->submission_chunk);
-    Con_Printf("%5d speed\n", shm->speed);
-    Con_Printf("0x%x dma buffer\n", (int)shm->buffer);
+	Con_Printf("%5d stereo\n", shm->channels - 1);
+	Con_Printf("%5d samples\n", shm->samples);
+	Con_Printf("%5d samplepos\n", shm->samplepos);
+	Con_Printf("%5d samplebits\n", shm->samplebits);
+	Con_Printf("%5d submission_chunk\n", shm->submission_chunk);
+	Con_Printf("%5d speed\n", shm->speed);
+	Con_Printf("0x%x dma buffer\n", (int)shm->buffer);
 	Con_Printf("%5d total_channels\n", total_channels);
 
 	snd_inited=1;
@@ -260,14 +262,16 @@ qboolean SNDDMA_Init(void)
 	return 0;
 }
 
-int SNDDMA_GetDMAPos(void)
+int
+SNDDMA_GetDMAPos ( void )
 {
 	if (!snd_inited) return 0;
 	shm->samplepos=(mmap_control->status.frag_io+1)*setup.buf.block.frag_size/(shm->samplebits/8);
 	return shm->samplepos;
 }
 
-void SNDDMA_Shutdown(void)
+void
+SNDDMA_Shutdown ( void )
 {
 	if (snd_inited)
 	{
@@ -283,7 +287,8 @@ SNDDMA_Submit
 Send sound to device if buffer isn't really the dma buffer
 ===============
 */
-void SNDDMA_Submit(void)
+void
+SNDDMA_Submit ( void )
 {
 	int count=paintedtime-soundtime;
 	int i,s,e;
@@ -316,4 +321,3 @@ void SNDDMA_Submit(void)
 		break;
 	}
 }
-

@@ -67,8 +67,9 @@ static byte	backingbuf[48*24];
 VGA_BeginDirectRect
 ================
 */
-void VGA_BeginDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
-	int y, byte *pbitmap, int width, int height)
+void
+VGA_BeginDirectRect ( viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
+	int y, byte *pbitmap, int width, int height )
 {
 	int	i, j, k, plane, reps, repshift;
 
@@ -138,8 +139,9 @@ void VGA_BeginDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
 VGA_EndDirectRect
 ================
 */
-void VGA_EndDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
-	int y, int width, int height)
+void
+VGA_EndDirectRect ( viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
+	int y, int width, int height )
 {
 	int	i, j, k, plane, reps, repshift;
 
@@ -199,7 +201,8 @@ void VGA_EndDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
 VGA_Init
 ================
 */
-void VGA_Init (void)
+void
+VGA_Init ( void )
 {
 	int	i;
 
@@ -222,7 +225,8 @@ void VGA_Init (void)
 VGA_WaitVsync
 ================
 */
-void VGA_WaitVsync (void)
+void
+VGA_WaitVsync ( void )
 {
 	while ((inportb (0x3DA) & 0x08) == 0)
 		;
@@ -234,7 +238,8 @@ void VGA_WaitVsync (void)
 VGA_ClearVideoMem
 ================
 */
-void VGA_ClearVideoMem (int planar)
+void
+VGA_ClearVideoMem ( int planar )
 {
 
 	if (planar)
@@ -252,7 +257,8 @@ void VGA_ClearVideoMem (int planar)
 VGA_FreeAndAllocVidbuffer
 ================
 */
-qboolean VGA_FreeAndAllocVidbuffer (viddef_t *lvid, int allocnewbuffer)
+qboolean
+VGA_FreeAndAllocVidbuffer ( viddef_t *lvid, int allocnewbuffer )
 {
 	int	tsize, tbuffersize;
 
@@ -279,7 +285,7 @@ qboolean VGA_FreeAndAllocVidbuffer (viddef_t *lvid, int allocnewbuffer)
 	{
 		Con_Printf ("Not enough memory for video mode\n");
 		VGA_pcurmode = NULL;	// so no further accesses to the buffer are
-								//  attempted, particularly when clearing
+								// attempted, particularly when clearing
 		return false;		// not enough memory for mode
 	}
 
@@ -315,7 +321,8 @@ qboolean VGA_FreeAndAllocVidbuffer (viddef_t *lvid, int allocnewbuffer)
 VGA_CheckAdequateMem
 ================
 */
-qboolean VGA_CheckAdequateMem (int width, int height, int rowbytes, int allocnewbuffer)
+qboolean
+VGA_CheckAdequateMem ( int width, int height, int rowbytes, int allocnewbuffer )
 {
 	int	tbuffersize;
 
@@ -346,7 +353,8 @@ qboolean VGA_CheckAdequateMem (int width, int height, int rowbytes, int allocnew
 VGA_InitMode
 ================
 */
-int VGA_InitMode (viddef_t *lvid, vmode_t *pcurrentmode)
+int
+VGA_InitMode ( viddef_t *lvid, vmode_t *pcurrentmode )
 {
 	vextra_t	*pextra;
 
@@ -415,7 +423,8 @@ int VGA_InitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 VGA_SetPalette
 ================
 */
-void VGA_SetPalette(viddef_t *lvid, vmode_t *pcurrentmode, unsigned char *pal)
+void
+VGA_SetPalette ( viddef_t *lvid, vmode_t *pcurrentmode, unsigned char *pal )
 {
 	int	shiftcomponents=2;
 	int	i;
@@ -434,7 +443,8 @@ void VGA_SetPalette(viddef_t *lvid, vmode_t *pcurrentmode, unsigned char *pal)
 VGA_SwapBuffersCopy
 ================
 */
-void VGA_SwapBuffersCopy (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
+void
+VGA_SwapBuffersCopy ( viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects )
 {
 	UNUSED(pcurrentmode);
 
@@ -471,7 +481,8 @@ void VGA_SwapBuffersCopy (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
 VGA_SwapBuffers
 ================
 */
-void VGA_SwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
+void
+VGA_SwapBuffers ( viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects )
 {
 	UNUSED(lvid);
 
@@ -482,7 +493,8 @@ void VGA_SwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
 }
 
 #if 0
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -498,7 +510,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -510,16 +523,19 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_InitCvars( void )
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }
 #endif

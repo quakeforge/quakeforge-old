@@ -52,8 +52,8 @@ extern cvar_t *gl_subdivide_size;
 	BoundPoly (int, float, vec3_t, vec3_t)
 */
 void
-BoundPoly (int numverts, float *verts, vec3_t mins, vec3_t maxs) {
-
+BoundPoly ( int numverts, float *verts, vec3_t mins, vec3_t maxs)
+{
 	int		i, j;
 	float	*v;
 
@@ -70,8 +70,8 @@ BoundPoly (int numverts, float *verts, vec3_t mins, vec3_t maxs) {
 }
 
 void
-SubdividePolygon ( int numverts, float *verts ) {
-
+SubdividePolygon ( int numverts, float *verts )
+{
 	int		i, j, k;
 	vec3_t	mins, maxs;
 	float	m;
@@ -154,8 +154,8 @@ SubdividePolygon ( int numverts, float *verts ) {
 	and sky warps can be done reasonably.
 */
 void
-GL_SubdivideSurface (msurface_t *fa) {
-
+GL_SubdivideSurface ( msurface_t *fa )
+{
 	vec3_t		verts[64];
 	int			numverts;
 	int			i;
@@ -199,8 +199,8 @@ float	turbsin[] = {
 	Do a water warp on the pre-fragmented glpoly_t chain
 */
 void
-EmitWaterPolys ( msurface_t *fa ) {
-
+EmitWaterPolys ( msurface_t *fa )
+{
 	glpoly_t	*p;
 	float		*v;
 	int			i;
@@ -222,8 +222,8 @@ EmitWaterPolys ( msurface_t *fa ) {
 			glTexCoord2f (s, t);
 
 			if(r_waterripple->value) {
-				nv[0] = v[0]; //+8*sin(v[1]*0.05+realtime)*sin(v[2]*0.05+realtime);
-				nv[1] = v[1]; //+8*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
+				nv[0] = v[0];	//+8*sin(v[1]*0.05+realtime)*sin(v[2]*0.05+realtime);
+				nv[1] = v[1];	//+8*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
 				nv[2] = v[2] + r_waterripple->value*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
 				glVertex3fv (nv);
 			} else {
@@ -238,8 +238,8 @@ EmitWaterPolys ( msurface_t *fa ) {
 	EmitSkyPolys
 */
 void
-EmitSkyPolys ( msurface_t *fa ) {
-
+EmitSkyPolys ( msurface_t *fa )
+{
 	glpoly_t	*p;
 	float		*v;
 	int			i;
@@ -279,7 +279,8 @@ EmitSkyPolys ( msurface_t *fa ) {
 	called for brushmodels, the world will have them chained together.
 */
 void
-EmitBothSkyLayers ( msurface_t *fa ) {
+EmitBothSkyLayers ( msurface_t *fa )
+{
 	GL_DisableMultitexture();
 
 	GL_Bind (solidskytexture);
@@ -319,8 +320,8 @@ typedef struct _TargaHeader {
 
 
 int
-QgetLittleShort ( QFile *f ) {
-
+QgetLittleShort ( QFile *f )
+{
 	byte	b1, b2;
 
 	b1 = Qgetc(f);
@@ -330,8 +331,8 @@ QgetLittleShort ( QFile *f ) {
 }
 
 int
-QgetLittleLong (QFile *f) {
-
+QgetLittleLong ( QFile *f )
+{
 	byte	b1, b2, b3, b4;
 
 	b1 = Qgetc(f);
@@ -346,8 +347,8 @@ QgetLittleLong (QFile *f) {
 	LoadTGA
 */
 void
-LoadTGA (QFile *fin, byte **targa_rgba) {
-
+LoadTGA ( QFile *fin, byte **targa_rgba )
+{
 	int		columns, rows, numPixels;
 	byte		*pixbuf;
 	int		row, column;
@@ -383,9 +384,9 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 	*targa_rgba = malloc (numPixels*4);
 
 	if (targa_header.id_length != 0)
-		Qseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
+		Qseek(fin, targa_header.id_length, SEEK_CUR);	// skip TARGA image comment
 
-	if (targa_header.image_type==2) {  // Uncompressed, RGB images
+	if (targa_header.image_type==2) {	// Uncompressed, RGB images
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = *targa_rgba + row*columns*4;
 			for(column=0; column<columns; column++) {
@@ -414,14 +415,14 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 			}
 		}
 	}
-	else if (targa_header.image_type==10) {   // Runlength encoded RGB images
+	else if (targa_header.image_type==10) {	// Runlength encoded RGB images
 		unsigned char packetHeader,packetSize,j;
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = *targa_rgba + row*columns*4;
 			for(column=0; column<columns; ) {
 				packetHeader=Qgetc(fin);
 				packetSize = 1 + (packetHeader & 0x7f);
-				if (packetHeader & 0x80) {        // run-length packet
+				if (packetHeader & 0x80) {	// run-length packet
 					switch (targa_header.pixel_size) {
 						case 24:
 								blue = Qgetc(fin);
@@ -443,7 +444,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 						*pixbuf++=blue;
 						*pixbuf++=alphabyte;
 						column++;
-						if (column==columns) { // run spans across rows
+						if (column==columns) {	// run spans across rows
 							column=0;
 							if (row>0)
 								row--;
@@ -452,8 +453,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 							pixbuf = *targa_rgba + row*columns*4;
 						}
 					}
-				}
-				else {                            // non run-length packet
+				} else {						// non run-length packet
 					for(j=0;j<packetSize;j++) {
 						switch (targa_header.pixel_size) {
 							case 24:
@@ -477,7 +477,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 									break;
 						}
 						column++;
-						if (column==columns) { // pixel packet run spans across rows
+						if (column==columns) {	// pixel packet run spans across rows
 							column=0;
 							if (row>0)
 								row--;
@@ -501,8 +501,8 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 char	*suf[6] = {"rt", "bk", "lf", "ft", "up", "dn"};
 
 void
-R_LoadSkys ( void ) {
-
+R_LoadSkys ( void )
+{
 	int	i;
 	QFile	*f;
 	byte	*skyimage = NULL;
@@ -580,8 +580,8 @@ int	vec_to_st[6][3] = {
 float	skymins[2][6], skymaxs[2][6];
 
 void
-DrawSkyPolygon (int nump, vec3_t vecs) {
-
+DrawSkyPolygon ( int nump, vec3_t vecs )
+{
 	int		i,j;
 	vec3_t	v, av;
 	float	s, t, dv;
@@ -643,8 +643,8 @@ DrawSkyPolygon (int nump, vec3_t vecs) {
 
 #define	MAX_CLIP_VERTS	64
 void
-ClipSkyPolygon (int nump, vec3_t vecs, int stage) {
-
+ClipSkyPolygon ( int nump, vec3_t vecs, int stage )
+{
 	float	*norm;
 	float	*v;
 	qboolean	front, back;
@@ -728,8 +728,8 @@ ClipSkyPolygon (int nump, vec3_t vecs, int stage) {
 	R_DrawSkyChain
 */
 void
-R_DrawSkyChain (msurface_t *s) {
-
+R_DrawSkyChain ( msurface_t *s )
+{
 	msurface_t	*fa;
 
 	int		i;
@@ -776,7 +776,8 @@ R_DrawSkyChain (msurface_t *s) {
 	R_ClearSkyBox
 */
 void
-R_ClearSkyBox (void) {
+R_ClearSkyBox ( void )
+{
 	int		i;
 
 	for (i=0 ; i<6 ; i++) {
@@ -786,7 +787,8 @@ R_ClearSkyBox (void) {
 }
 
 void
-MakeSkyVec (float s, float t, int axis) {
+MakeSkyVec ( float s, float t, int axis )
+{
 	vec3_t		v, b;
 	int			j, k;
 
@@ -872,8 +874,8 @@ R_DrawSkyBox ( void )
 	A sky texture is 256*128, with the right side being a masked overlay
 */
 void
-R_InitSky (texture_t *mt) {
-
+R_InitSky ( texture_t *mt )
+{
 	int			i, j, p;
 	byte		*src;
 	unsigned	trans[128*128];
@@ -927,4 +929,3 @@ R_InitSky (texture_t *mt) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
-

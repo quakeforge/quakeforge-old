@@ -86,7 +86,8 @@ static long	GGI_highhunkmark, GGI_buffersize;
 static int	vid_surfcachesize;
 static void	*vid_surfcache;
 
-static void do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void
+do_scale8 ( int xsize, int ysize, uint8 *dest, uint8 *src )
 {
 	int	i, j, destinc = stride*2-xsize*2;
 
@@ -97,12 +98,12 @@ static void do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
 			*((uint32 *) (dest + stride))
 				= *((uint32 *) dest)
 				= (pix1 | (pix1 << 8)
-				   | (pix2 << 16) | (pix2 << 24));
+				| (pix2 << 16) | (pix2 << 24));
 #else
 			*((uint32 *) (dest + stride))
 				= *((uint32 *) dest)
 				= (pix2 | (pix2 << 8)
-				   | (pix1 << 16) | (pix1 << 24));
+				| (pix1 << 16) | (pix1 << 24));
 #endif
 			dest += 4;
 		}
@@ -111,7 +112,8 @@ static void do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
 	}
 }
 
-static void do_scale16(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void
+do_scale16 ( int xsize, int ysize, uint8 *dest, uint8 *src )
 {
 	int	i, j, destinc = stride*2-xsize*4;
 
@@ -129,7 +131,8 @@ static void do_scale16(int xsize, int ysize, uint8 *dest, uint8 *src)
 	}
 }
 
-static void do_scale32(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void
+do_scale32 ( int xsize, int ysize, uint8 *dest, uint8 *src )
 {
 	int	i, j, destinc = stride*2-xsize*8;
 
@@ -150,7 +153,8 @@ static void do_scale32(int xsize, int ysize, uint8 *dest, uint8 *src)
 }
 
 
-static void do_copy8(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void
+do_copy8 ( int xsize, int ysize, uint8 *dest, uint8 *src )
 {
 	int	i, j;
 	uint8	*palptr = palette;
@@ -164,14 +168,15 @@ static void do_copy8(int xsize, int ysize, uint8 *dest, uint8 *src)
 	}
 }
 
-static void do_copy16(int xsize, int ysize, void *destptr, uint8 *src)
+static void
+do_copy16 ( int xsize, int ysize, void *destptr, uint8 *src )
 {
 	int	i, j, destinc = (stride/2 - xsize)/2;
 	uint16	*palptr = palette;
 	uint32	*dest = destptr;
 
 	for (j = 0; j < ysize; j++) {
-		for (i = 0; i < xsize;  /* i is incremented below */) {
+		for (i = 0; i < xsize;	/* i is incremented below */) {
 			register uint32 pixel = palptr[src[i++]];
 #ifdef GGI_LITTLE_ENDIAN
 			*(dest++) = pixel | (palptr[src[i++]] << 16);
@@ -184,7 +189,8 @@ static void do_copy16(int xsize, int ysize, void *destptr, uint8 *src)
 	}
 }
 
-static void do_copy32(int xsize, int ysize, uint32 *dest, uint8 *src)
+static void
+do_copy32 ( int xsize, int ysize, uint32 *dest, uint8 *src )
 {
 	int	i, j, destinc = stride/4;
 	uint32	*palptr = palette;
@@ -203,7 +209,8 @@ static void do_copy32(int xsize, int ysize, uint32 *dest, uint8 *src)
 // Tragic death handler
 // ========================================================================
 
-void ResetFrameBuffer(void)
+void
+ResetFrameBuffer ( void )
 {
 	if (d_pzbuffer)
 	{
@@ -236,7 +243,8 @@ void ResetFrameBuffer(void)
 // the palette data will go away after the call, so it must be copied off if
 // the video driver will need it again
 
-void VID_Init(unsigned char *pal)
+void
+VID_Init ( unsigned char *pal )
 {
 	int	pnum;
 
@@ -335,17 +343,17 @@ void VID_Init(unsigned char *pal)
 			Sys_Error("VID: 24 bits per pixel not supported - try using the palemu target.\n");
 		} else {
 			Sys_Error("VID: %i bits per pixel not supported by GGI Quake.\n",
-				  GT_SIZE(mode.graphtype));
+				GT_SIZE(mode.graphtype));
 		}
 	}
 
-	realwidth  = mode.visible.x;
+	realwidth = mode.visible.x;
 	realheight = mode.visible.y;
 	if (scale) {
-		vid.width  = realwidth / 2;
+		vid.width = realwidth / 2;
 		vid.height = realheight / 2;
 	} else {
-		vid.width  = realwidth;
+		vid.width = realwidth;
 		vid.height = realheight;
 	}
 
@@ -369,8 +377,8 @@ void VID_Init(unsigned char *pal)
 		havedbuf = 1;
 		stride = dbuf1->buffer.plb.stride;
 		if (doublebuffer) {
-			if  ((dbuf2 = ggiDBGetBuffer(ggivis, 1)) == NULL
-			||   !(dbuf2->type & GGI_DB_SIMPLE_PLB)) {
+			if ((dbuf2 = ggiDBGetBuffer(ggivis, 1)) == NULL
+			||  !(dbuf2->type & GGI_DB_SIMPLE_PLB)) {
 				/* Only one DB? No double buffering then */
 				doublebuffer = 0;
 			}
@@ -427,14 +435,15 @@ void VID_Init(unsigned char *pal)
 	vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
 }
 
-void VID_ShiftPalette(unsigned char *pal)
+void
+VID_ShiftPalette ( unsigned char *pal )
 {
 	VID_SetPalette(pal);
 }
 
 
-
-void VID_SetPalette(unsigned char *pal)
+void
+VID_SetPalette ( unsigned char *pal )
 {
 	int		i;
 	ggi_color	colors[256];
@@ -453,7 +462,8 @@ void VID_SetPalette(unsigned char *pal)
 
 // Called at shutdown
 
-void VID_Shutdown (void)
+void
+VID_Shutdown ( void )
 {
 	Con_Printf("VID_Shutdown\n");
 
@@ -479,7 +489,8 @@ void VID_Shutdown (void)
 
 // flushes the given rectangles from the view buffer to the screen
 
-void VID_Update(vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 	int	height = 0;
 
@@ -542,41 +553,41 @@ void VID_Update(vrect_t *rects)
 			switch (pixelsize) {
 			case 1:	if (havedbuf) {
 				do_scale8(vid.width, height,
-					  frameptr[curframe], drawptr);
+					frameptr[curframe], drawptr);
 			} else {
 				uint8 *buf = drawptr;
 				for (i=0; i < height; i++) {
 					do_scale8(vid.width, 1, oneline,buf);
 					ggiPutBox(ggivis, 0, i*2, realwidth,
-						  2, oneline);
+						2, oneline);
 					buf += vid.width;
 				}
 			}
 			break;
 			case 2: if (havedbuf) {
 				do_scale16(vid.width, height,
-					   frameptr[curframe], drawptr);
+					frameptr[curframe], drawptr);
 			} else {
 				uint8 *buf = drawptr;
 				for (i=0; i < height; i++) {
 					do_scale16(vid.width, 1,
-						   oneline, buf);
+						oneline, buf);
 					ggiPutBox(ggivis, 0, i*2, realwidth,
-						  2, oneline);
+						2, oneline);
 					buf += vid.width;
 				}
 			}
 			break;
 			case 4: if (havedbuf) {
 				do_scale32(vid.width, height,
-					   frameptr[curframe], drawptr);
+					frameptr[curframe], drawptr);
 			} else {
 				uint8 *buf = drawptr;
 				for (i=0; i < height; i++) {
 					do_scale32(vid.width, 1,
-						   oneline, buf);
+						oneline, buf);
 					ggiPutBox(ggivis, 0, i*2, realwidth,
-						  2, oneline);
+						2, oneline);
 					buf += vid.width;
 				}
 			}
@@ -592,35 +603,35 @@ void VID_Update(vrect_t *rects)
 				for (i=0; i < height; i++) {
 					do_copy8(vid.width, 1, oneline,buf);
 					ggiPutBox(ggivis, 0, i, realwidth,
-						  1, oneline);
+						1, oneline);
 					buf += vid.width;
 				}
 			}
 			break;
 			case 2: if (havedbuf) {
 				do_copy16(vid.width, height,
-					  frameptr[curframe], drawptr);
+					frameptr[curframe], drawptr);
 			} else {
 				uint8 *buf = drawptr;
 				for (i=0; i < height; i++) {
 					do_copy16(vid.width, 1,
-						  oneline, buf);
+						oneline, buf);
 					ggiPutBox(ggivis, 0, i, realwidth,
-						  1, oneline);
+						1, oneline);
 					buf += vid.width;
 				}
 			}
 			break;
 			case 4: if (havedbuf) {
 				do_copy32(vid.width, height,
-					  frameptr[curframe], drawptr);
+					frameptr[curframe], drawptr);
 			} else {
 				uint8 *buf = drawptr;
 				for (i=0; i < height; i++) {
 					do_copy32(vid.width, 1,
-						  oneline, buf);
+						oneline, buf);
 					ggiPutBox(ggivis, 0, i, realwidth,
-						  1, oneline);
+						1, oneline);
 					buf += vid.width;
 				}
 			}
@@ -628,7 +639,7 @@ void VID_Update(vrect_t *rects)
 			}
 		} else {
 			ggiPutBox(ggivis, 0, 0, vid.width, height,
-				  drawptr);
+				drawptr);
 		}
 		if (havedbuf) {
 			ggiResourceRelease(dbuf1->resource);
@@ -652,22 +663,24 @@ void VID_Update(vrect_t *rects)
 #if 0
 	if (GT_SIZE(mode.graphtype) == 16) {
 		do_copy16(vid.width, height,
-			  (uint16*)frameptr, drawptr);
+			(uint16*)frameptr, drawptr);
 	} else if (GT_SIZE(mode.graphtype) == 32) {
 		do_copy32(vid.width, height,
-			  (uint32*)frameptr, drawptr);
+			(uint32*)frameptr, drawptr);
 	}
 #endif
 
 	ggiFlush(ggivis);
 }
 
-void D_BeginDirectRect(int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 // direct drawing of the "accessing disk" icon isn't supported under Linux
 }
 
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 // direct drawing of the "accessing disk" icon isn't supported under Linux
 }
@@ -679,7 +692,8 @@ void D_EndDirectRect (int x, int y, int width, int height)
 ***************************************************************************
 */
 
-static int XLateKey(ggi_key_event *ev)
+static int
+XLateKey ( ggi_key_event *ev )
 {
 	int	key = 0;
 
@@ -796,7 +810,8 @@ static int XLateKey(ggi_key_event *ev)
 	return key;
 }
 
-static void GetEvent(void)
+static void
+GetEvent ( void )
 {
 	ggi_event	ev;
 	uint32		b;
@@ -861,7 +876,8 @@ static void GetEvent(void)
 }
 
 
-void IN_SendKeyEvents(void)
+void
+IN_SendKeyEvents ( void )
 {
 	/* Get events from LibGGI */
 	if (ggivis) {
@@ -875,7 +891,8 @@ void IN_SendKeyEvents(void)
 }
 
 
-void IN_Frame(void)
+void
+IN_Frame ( void )
 {
 	/* Only supported by LibGII 0.7 or later. */
 #ifdef GII_CMDCODE_PREFER_RELPTR
@@ -896,7 +913,8 @@ void IN_Frame(void)
 }
 
 
-void IN_Init(void)
+void
+IN_Init ( void )
 {
 	in_grab = Cvar_Get("in_grab", "0", CVAR_ARCHIVE, "None");
 	oldin_grab = -1; /* Force update */
@@ -908,13 +926,15 @@ void IN_Init(void)
 }
 
 
-void IN_Shutdown(void)
+void
+IN_Shutdown ( void )
 {
 	mouse_avail = 0;
 }
 
 
-void IN_Move(usercmd_t *cmd)
+void
+IN_Move ( usercmd_t *cmd )
 {
 	if (!mouse_avail) return;
 
@@ -952,7 +972,8 @@ void IN_Move(usercmd_t *cmd)
 }
 
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -968,7 +989,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 }
 
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 	switch(option_cursor) {
@@ -978,15 +1000,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 	}
 }
 
-void VID_InitCvars ( void )
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

@@ -40,7 +40,7 @@ server_t		sv;					// local server
 
 char	localmodels[MAX_MODELS][5];	// inline model names for precache
 
-char localinfo[MAX_LOCALINFO_STRING+1]; // local game info
+char localinfo[MAX_LOCALINFO_STRING+1];	// local game info
 
 /*
 ================
@@ -48,7 +48,8 @@ SV_ModelIndex
 
 ================
 */
-int SV_ModelIndex (char *name)
+int
+SV_ModelIndex ( char *name )
 {
 	int		i;
 
@@ -70,7 +71,8 @@ SV_FlushSignon
 Moves to the next signon buffer if needed
 ================
 */
-void SV_FlushSignon (void)
+void
+SV_FlushSignon ( void )
 {
 	if (sv.signon.cursize < sv.signon.maxsize - 512)
 		return;
@@ -93,11 +95,12 @@ to the clients -- only the fields that differ from the
 baseline will be transmitted
 ================
 */
-void SV_CreateBaseline (void)
+void
+SV_CreateBaseline ( void )
 {
 	int			i;
-	edict_t			*svent;
-	int				entnum;
+	edict_t		*svent;
+	int			entnum;
 
 	for (entnum = 0; entnum < sv.num_edicts ; entnum++)
 	{
@@ -162,7 +165,8 @@ and each client for saving across the
 transition to another level
 ================
 */
-void SV_SaveSpawnparms (void)
+void
+SV_SaveSpawnparms ( void )
 {
 	int		i, j;
 
@@ -196,7 +200,8 @@ Expands the PVS and calculates the PHS
 (Potentially Hearable Set)
 ================
 */
-void SV_CalcPHS (void)
+void
+SV_CalcPHS ( void )
 {
 	int		rowbytes, rowwords;
 	int		i, j, k, l, index, num;
@@ -268,7 +273,8 @@ void SV_CalcPHS (void)
 		, vcount/num, count/num, num);
 }
 
-unsigned SV_CheckModel(char *mdl)
+unsigned
+SV_CheckModel ( char *mdl )
 {
 	byte	stackbuf[1024];		// avoid dirtying the cache heap
 	byte *buf;
@@ -295,7 +301,8 @@ clients along with it.
 This is only called from the SV_Map_f() function.
 ================
 */
-void SV_SpawnServer (char *server)
+void
+SV_SpawnServer ( char *server )
 {
 	edict_t		*ent;
 	int			i;
@@ -437,4 +444,3 @@ void SV_SpawnServer (char *server)
 	Info_SetValueForKey (svs.info, "map", sv.name, MAX_SERVERINFO_STRING);
 	Con_DPrintf ("Server spawned.\n");
 }
-

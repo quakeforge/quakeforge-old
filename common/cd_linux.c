@@ -86,26 +86,29 @@ static char cd_dev[64] = "/dev/cdrom";
 #endif
 
 
-static void CDAudio_Eject(void)
+static void
+CDAudio_Eject ( void )
 {
 	if (cdfile == -1 || !enabled)
-		return; // no cd init'd
+		return;		// no cd init'd
 
 	if ( ioctl(cdfile, CDROMEJECT) == -1 )
 		Con_DPrintf("CD eject ioctl failed\n");
 }
 
 
-static void CDAudio_CloseDoor(void)
+static void
+CDAudio_CloseDoor ( void )
 {
 	if (cdfile == -1 || !enabled)
-		return; // no cd init'd
+		return;		// no cd init'd
 
 	if ( ioctl(cdfile, CDROMCLOSETRAY) == -1 )
 		Con_DPrintf("CD close ioctl failed\n");
 }
 
-static int CDAudio_GetAudioDiskInfo(void)
+static int
+CDAudio_GetAudioDiskInfo ( void )
 {
 #if defined(USE_LINUX_CD)
 	struct cdrom_tochdr tochdr;
@@ -142,7 +145,8 @@ static int CDAudio_GetAudioDiskInfo(void)
 }
 
 
-void CDAudio_Play(byte track, qboolean looping)
+void
+CDAudio_Play ( byte track, qboolean looping )
 {
 #if defined(USE_LINUX_CD)
 	struct cdrom_tocentry entry;
@@ -240,7 +244,8 @@ void CDAudio_Play(byte track, qboolean looping)
 }
 
 
-void CDAudio_Stop(void)
+void
+CDAudio_Stop ( void )
 {
 	if (cdfile == -1 || !enabled)
 		return;
@@ -255,7 +260,8 @@ void CDAudio_Stop(void)
 	playing = false;
 }
 
-void CDAudio_Pause(void)
+void
+CDAudio_Pause ( void )
 {
 	if (cdfile == -1 || !enabled)
 		return;
@@ -271,7 +277,8 @@ void CDAudio_Pause(void)
 }
 
 
-void CDAudio_Resume(void)
+void
+CDAudio_Resume ( void )
 {
 	if (cdfile == -1 || !enabled)
 		return;
@@ -288,7 +295,8 @@ void CDAudio_Resume(void)
 }
 
 
-void CDAudio_Update(void)
+void
+CDAudio_Update ( void )
 {
 #if defined(USE_LINUX_CD)
 	struct cdrom_subchnl subchnl;
@@ -316,7 +324,7 @@ void CDAudio_Update(void)
 	}
 
 	if (playing && lastchk < time(NULL)) {
-		lastchk = time(NULL) + 2; //two seconds between chks
+		lastchk = time(NULL) + 2;	//two seconds between chks
 #if defined(USE_LINUX_CD)
 		subchnl.cdsc_format	= CDROM_MSF;
 #elif defined(USE_BSD_CD)
@@ -336,7 +344,7 @@ void CDAudio_Update(void)
 			subchnl.cdsc_audiostatus != CDROM_AUDIO_PAUSED)
 #elif defined(USE_BSD_CD)
 		if (subchnl.data->header.audio_status != CD_AS_PLAY_IN_PROGRESS
-		    && subchnl.data->header.audio_status != CD_AS_PLAY_PAUSED)
+		&& subchnl.data->header.audio_status != CD_AS_PLAY_PAUSED)
 #endif
 		{
 			playing = false;
@@ -346,7 +354,8 @@ void CDAudio_Update(void)
 	}
 }
 
-int CDAudio_Init(void)
+int
+CDAudio_Init ( void )
 {
 	int i;
 
@@ -388,7 +397,8 @@ int CDAudio_Init(void)
 }
 
 
-void CDAudio_Shutdown(void)
+void
+CDAudio_Shutdown ( void )
 {
 	if (!initialized)
 		return;

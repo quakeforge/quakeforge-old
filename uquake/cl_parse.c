@@ -96,7 +96,8 @@ CL_EntityNum
 This error checks and tracks the total number of entities
 ===============
 */
-entity_t	*CL_EntityNum (int num)
+entity_t *
+CL_EntityNum ( int num )
 {
 	if (num >= cl.num_entities)
 	{
@@ -118,24 +119,25 @@ entity_t	*CL_EntityNum (int num)
 CL_ParseStartSoundPacket
 ==================
 */
-void CL_ParseStartSoundPacket(void)
+void
+CL_ParseStartSoundPacket ( void )
 {
-    vec3_t  pos;
-    int 	channel, ent;
-    int 	sound_num;
-    int 	volume;
-    int 	field_mask;
-    float 	attenuation;
+	vec3_t	pos;
+	int 	channel, ent;
+	int 	sound_num;
+	int 	volume;
+	int 	field_mask;
+	float 	attenuation;
  	int		i;
 
-    field_mask = MSG_ReadByte();
+	field_mask = MSG_ReadByte();
 
-    if (field_mask & SND_VOLUME)
+	if (field_mask & SND_VOLUME)
 		volume = MSG_ReadByte ();
 	else
 		volume = DEFAULT_SOUND_PACKET_VOLUME;
 
-    if (field_mask & SND_ATTENUATION)
+	if (field_mask & SND_ATTENUATION)
 		attenuation = MSG_ReadByte () / 64.0;
 	else
 		attenuation = DEFAULT_SOUND_PACKET_ATTENUATION;
@@ -152,7 +154,7 @@ void CL_ParseStartSoundPacket(void)
 	for (i=0 ; i<3 ; i++)
 		pos[i] = MSG_ReadCoord ();
 
-    S_StartSound (ent, channel, cl.sound_precache[sound_num], pos, volume/255.0, attenuation);
+	S_StartSound (ent, channel, cl.sound_precache[sound_num], pos, volume/255.0, attenuation);
 }
 
 /*
@@ -163,7 +165,8 @@ When the client is taking a long time to load stuff, send keepalive messages
 so the server doesn't disconnect.
 ==================
 */
-void CL_KeepaliveMessage (void)
+void
+CL_KeepaliveMessage ( void )
 {
 	float	time;
 	static float lastmsg;
@@ -221,7 +224,8 @@ void CL_KeepaliveMessage (void)
 CL_ParseServerInfo
 ==================
 */
-void CL_ParseServerInfo (void)
+void
+CL_ParseServerInfo ( void )
 {
 	char	*str;
 	int		i;
@@ -341,7 +345,8 @@ void CL_ParseServerInfo (void)
 CL_ParseBaseline
 ==================
 */
-void CL_ParseBaseline (entity_t *ent)
+void
+CL_ParseBaseline ( entity_t *ent )
 {
 	int			i;
 
@@ -364,7 +369,8 @@ CL_ParseClientdata
 Server information pertaining to this client only
 ==================
 */
-void CL_ParseClientdata (int bits)
+void
+CL_ParseClientdata ( int bits )
 {
 	int		i, j;
 
@@ -483,7 +489,8 @@ void CL_ParseClientdata (int bits)
 CL_ParseStatic
 =====================
 */
-void CL_ParseStatic (void)
+void
+CL_ParseStatic ( void )
 {
 	entity_t *ent;
 	int		i;
@@ -512,7 +519,8 @@ void CL_ParseStatic (void)
 CL_ParseStaticSound
 ===================
 */
-void CL_ParseStaticSound (void)
+void
+CL_ParseStaticSound ( void )
 {
 	vec3_t		org;
 	int			sound_num, vol, atten;
@@ -535,11 +543,12 @@ void CL_ParseStaticSound (void)
 CL_ParseServerMessage
 =====================
 */
-void CL_ParseServerMessage (void)
+void
+CL_ParseServerMessage ( void )
 {
-	int			cmd;
-	int			i;
-	char			ch;
+	int		cmd;
+	int		i;
+	char	ch;
 
 //
 // if recording demos, copy the message out
@@ -649,7 +658,7 @@ void CL_ParseServerMessage (void)
 			i = MSG_ReadByte ();
 			if (i >= MAX_LIGHTSTYLES)
 				Sys_Error ("svc_lightstyle > MAX_LIGHTSTYLES");
-			Q_strcpy (cl_lightstyle[i].map,  MSG_ReadString());
+			Q_strcpy (cl_lightstyle[i].map, MSG_ReadString());
 			cl_lightstyle[i].length = Q_strlen(cl_lightstyle[i].map);
 			break;
 
@@ -753,7 +762,7 @@ void CL_ParseServerMessage (void)
 
 		case svc_cdtrack:
 			cl.cdtrack = MSG_ReadByte ();
-			//cl.looptrack = MSG_ReadByte ();
+//			cl.looptrack = MSG_ReadByte ();
 			MSG_ReadByte ();
 			if ( (cls.demoplayback || cls.demorecording) && (cls.forcetrack != -1) )
 				CDAudio_Play ((byte)cls.forcetrack, true);

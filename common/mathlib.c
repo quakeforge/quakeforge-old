@@ -44,7 +44,8 @@ int nanmask = 255<<23;
 
 #define DEG2RAD( a ) ( a * M_PI ) / 180.0F
 
-static void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal)
+static void
+ProjectPointOnPlane ( vec3_t dst, const vec3_t p, const vec3_t normal )
 {
 	float d;
 	vec3_t n;
@@ -66,7 +67,8 @@ static void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal)
 /*
 ** assumes "src" is normalized
 */
-static void PerpendicularVector( vec3_t dst, const vec3_t src )
+static void
+PerpendicularVector ( vec3_t dst, const vec3_t src )
 {
 	int	pos;
 	int i;
@@ -103,7 +105,8 @@ static void PerpendicularVector( vec3_t dst, const vec3_t src )
 #endif
 
 
-void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees )
+void
+RotatePointAroundVector ( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees )
 {
 	float	m[3][3],
 		im[3][3],
@@ -164,7 +167,8 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 
 /*-----------------------------------------------------------------*/
 
-float	anglemod(float a)
+float
+anglemod ( float a )
 {
 #if 0
 	if (a >= 0)
@@ -183,7 +187,8 @@ BOPS_Error
 Split out like this for ASM to call.
 ==================
 */
-void BOPS_Error (void)
+void
+BOPS_Error ( void )
 {
 	Sys_Error ("BoxOnPlaneSide:  Bad signbits");
 }
@@ -197,7 +202,8 @@ BoxOnPlaneSide
 Returns 1, 2, or 1 + 2
 ==================
 */
-int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, mplane_t *p)
+int
+BoxOnPlaneSide ( vec3_t emins, vec3_t emaxs, mplane_t *p )
 {
 	float	dist1, dist2;
 	int		sides;
@@ -219,36 +225,36 @@ int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, mplane_t *p)
 	switch (p->signbits)
 	{
 	case 0:
-dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
-dist2 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
+		dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
+		dist2 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
 		break;
 	case 1:
-dist1 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
-dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
+		dist1 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
+		dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
 		break;
 	case 2:
-dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
-dist2 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
+		dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
+		dist2 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
 		break;
 	case 3:
-dist1 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
-dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
+		dist1 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
+		dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
 		break;
 	case 4:
-dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
-dist2 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
+		dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
+		dist2 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
 		break;
 	case 5:
-dist1 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
-dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
+		dist1 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emins[2];
+		dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emaxs[2];
 		break;
 	case 6:
-dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
-dist2 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
+		dist1 = p->normal[0]*emaxs[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
+		dist2 = p->normal[0]*emins[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 		break;
 	case 7:
-dist1 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
-dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
+		dist1 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
+		dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 		break;
 	default:
 		dist1 = dist2 = 0;		// shut up compiler

@@ -67,7 +67,8 @@ static int	mouse_oldbuttonstate = 0;
 // void (*vid_menudrawfn)(void) = NULL;
 // void (*vid_menukeyfn)(int key) = NULL;
 
-void VID_SetPalette (unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 	int		i;
 	SDL_Color	colors[256];
@@ -81,12 +82,14 @@ void VID_SetPalette (unsigned char *palette)
 	SDL_SetColors(screen, colors, 0, 256);
 }
 
-void VID_ShiftPalette (unsigned char *palette)
+void
+VID_ShiftPalette ( unsigned char *palette )
 {
 	VID_SetPalette(palette);
 }
 
-void VID_Init (unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	int	pnum, chunk;
 	byte	*cache;
@@ -154,12 +157,14 @@ void VID_Init (unsigned char *palette)
 	SDL_ShowCursor(0);
 }
 
-void VID_Shutdown (void)
+void
+VID_Shutdown ( void )
 {
 	SDL_Quit();
 }
 
-void VID_Update (vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 	SDL_Rect	*sdlrects;
 	int		n, i;
@@ -191,7 +196,8 @@ void VID_Update (vrect_t *rects)
 D_BeginDirectRect
 ================
 */
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 	Uint8	*offset;
 
@@ -214,7 +220,8 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 D_EndDirectRect
 ================
 */
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 	if (!screen)
 		return;
@@ -229,7 +236,8 @@ void D_EndDirectRect (int x, int y, int width, int height)
 Sys_SendKeyEvents
 ================
 */
-void Sys_SendKeyEvents(void)
+void
+Sys_SendKeyEvents ( void )
 {
 	SDL_Event	event;
 	int		sym, state;
@@ -366,7 +374,8 @@ void Sys_SendKeyEvents(void)
 	}
 }
 
-void IN_Init (void)
+void
+IN_Init ( void )
 {
 	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
 
@@ -377,17 +386,20 @@ void IN_Init (void)
 	mouse_avail = 1;
 }
 
-void IN_Shutdown (void)
+void
+IN_Shutdown ( void )
 {
 	mouse_avail = 0;
 }
 
-void IN_SendKeyEvents (void)
+void
+IN_SendKeyEvents ( void )
 {
 	Sys_SendKeyEvents ();
 }
 
-void IN_Frame(void)
+void
+IN_Frame ( void )
 {
 	int	i;
 	int	mouse_buttonstate;
@@ -408,7 +420,8 @@ void IN_Frame(void)
 	mouse_oldbuttonstate = mouse_buttonstate;
 }
 
-void IN_Move (usercmd_t *cmd)
+void
+IN_Move ( usercmd_t *cmd )
 {
 	if (!mouse_avail)
 		return;
@@ -444,13 +457,15 @@ Sys_ConsoleInput
 ================
 */
 /*
-char *Sys_ConsoleInput (void)
+char *
+Sys_ConsoleInput ( void )
 {
 	return 0;
 }
 */
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -465,7 +480,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 	switch(option_cursor) {
@@ -475,15 +491,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 	}
 }
 
-void VID_InitCvars ()
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

@@ -85,7 +85,8 @@ qboolean	r_lastvertvalid;
 R_EmitEdge
 ================
 */
-void R_EmitEdge (mvertex_t *pv0, mvertex_t *pv1)
+void
+R_EmitEdge ( mvertex_t *pv0, mvertex_t *pv1 )
 {
 	edge_t	*edge, *pcheck;
 	int		u_check;
@@ -264,7 +265,8 @@ void R_EmitEdge (mvertex_t *pv0, mvertex_t *pv1)
 R_ClipEdge
 ================
 */
-void R_ClipEdge (mvertex_t *pv0, mvertex_t *pv1, clipplane_t *clip)
+void
+R_ClipEdge ( mvertex_t *pv0, mvertex_t *pv1, clipplane_t *clip )
 {
 	float		d0, d1, f;
 	mvertex_t	clipvert;
@@ -368,7 +370,8 @@ void R_ClipEdge (mvertex_t *pv0, mvertex_t *pv1, clipplane_t *clip)
 R_EmitCachedEdge
 ================
 */
-void R_EmitCachedEdge (void)
+void
+R_EmitCachedEdge ( void )
 {
 	edge_t		*pedge_t;
 
@@ -391,7 +394,8 @@ void R_EmitCachedEdge (void)
 R_RenderFace
 ================
 */
-void R_RenderFace (msurface_t *fa, int clipflags)
+void
+R_RenderFace ( msurface_t *fa, int clipflags )
 {
 	int			i, lindex;
 	unsigned	mask;
@@ -589,7 +593,8 @@ void R_RenderFace (msurface_t *fa, int clipflags)
 R_RenderBmodelFace
 ================
 */
-void R_RenderBmodelFace (bedge_t *pedges, msurface_t *psurf)
+void
+R_RenderBmodelFace ( bedge_t *pedges, msurface_t *psurf )
 {
 	int			i;
 	unsigned	mask;
@@ -704,7 +709,8 @@ void R_RenderBmodelFace (bedge_t *pedges, msurface_t *psurf)
 R_RenderPoly
 ================
 */
-void R_RenderPoly (msurface_t *fa, int clipflags)
+void
+R_RenderPoly ( msurface_t *fa, int clipflags )
 {
 	int			i, lindex, lnumverts, s_axis, t_axis;
 	float		dist, lastdist, lzi, scale, u, v, frac;
@@ -762,7 +768,7 @@ void R_RenderPoly (msurface_t *fa, int clipflags)
 	{
 		lastvert = lnumverts - 1;
 		lastdist = DotProduct (verts[vertpage][lastvert].position,
-							   pclip->normal) - pclip->dist;
+							pclip->normal) - pclip->dist;
 
 		visible = false;
 		newverts = 0;
@@ -779,15 +785,15 @@ void R_RenderPoly (msurface_t *fa, int clipflags)
 				verts[newpage][newverts].position[0] =
 						verts[vertpage][i].position[0] +
 						((verts[vertpage][lastvert].position[0] -
-						  verts[vertpage][i].position[0]) * frac);
+						verts[vertpage][i].position[0]) * frac);
 				verts[newpage][newverts].position[1] =
 						verts[vertpage][i].position[1] +
 						((verts[vertpage][lastvert].position[1] -
-						  verts[vertpage][i].position[1]) * frac);
+						verts[vertpage][i].position[1]) * frac);
 				verts[newpage][newverts].position[2] =
 						verts[vertpage][i].position[2] +
 						((verts[vertpage][lastvert].position[2] -
-						  verts[vertpage][i].position[2]) * frac);
+						verts[vertpage][i].position[2]) * frac);
 				newverts++;
 			}
 
@@ -887,7 +893,8 @@ void R_RenderPoly (msurface_t *fa, int clipflags)
 R_ZDrawSubmodelPolys
 ================
 */
-void R_ZDrawSubmodelPolys (model_t *pmodel)
+void
+R_ZDrawSubmodelPolys ( model_t *pmodel )
 {
 	int			i, numsurfaces;
 	msurface_t	*psurf;
@@ -913,4 +920,3 @@ void R_ZDrawSubmodelPolys (model_t *pmodel)
 		}
 	}
 }
-

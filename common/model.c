@@ -79,7 +79,8 @@ unsigned *model_checksum;
 Mod_Init
 ===============
 */
-void Mod_Init (void)
+void
+Mod_Init ( void )
 {
 	memset (mod_novis, 0xff, sizeof(mod_novis));
 }
@@ -91,7 +92,8 @@ Mod_Extradata
 Caches the data if needed
 ===============
 */
-void *Mod_Extradata (model_t *mod)
+void *
+Mod_Extradata ( model_t *mod )
 {
 	void	*r;
 
@@ -111,7 +113,8 @@ void *Mod_Extradata (model_t *mod)
 Mod_PointInLeaf
 ===============
 */
-mleaf_t *Mod_PointInLeaf (vec3_t p, model_t *model)
+mleaf_t *
+Mod_PointInLeaf ( vec3_t p, model_t *model )
 {
 	mnode_t		*node;
 	float		d;
@@ -142,7 +145,8 @@ mleaf_t *Mod_PointInLeaf (vec3_t p, model_t *model)
 Mod_DecompressVis
 ===================
 */
-byte *Mod_DecompressVis (byte *in, model_t *model)
+byte *
+Mod_DecompressVis ( byte *in, model_t *model )
 {
 	static byte	decompressed[MAX_MAP_LEAFS/8];
 	int		c;
@@ -186,7 +190,8 @@ byte *Mod_DecompressVis (byte *in, model_t *model)
 	return decompressed;
 }
 
-byte *Mod_LeafPVS (mleaf_t *leaf, model_t *model)
+byte *
+Mod_LeafPVS ( mleaf_t *leaf, model_t *model )
 {
 	if (leaf == model->leafs)
 		return mod_novis;
@@ -198,7 +203,8 @@ byte *Mod_LeafPVS (mleaf_t *leaf, model_t *model)
 Mod_ClearAll
 ===================
 */
-void Mod_ClearAll (void)
+void
+Mod_ClearAll ( void )
 {
 	int		i;
 	model_t	*mod;
@@ -214,7 +220,8 @@ Mod_FindName
 
 ==================
 */
-model_t *Mod_FindName (char *name)
+model_t *
+Mod_FindName ( char *name )
 {
 	int		i;
 	model_t	*mod;
@@ -247,7 +254,8 @@ Mod_TouchModel
 
 ==================
 */
-void Mod_TouchModel (char *name)
+void
+Mod_TouchModel ( char *name )
 {
 	model_t	*mod;
 
@@ -267,7 +275,8 @@ Mod_LoadModel
 Loads a model into the cache
 ==================
 */
-model_t *Mod_LoadModel (model_t *mod, qboolean crash)
+model_t *
+Mod_LoadModel ( model_t *mod, qboolean crash )
 {
 	void	*d;
 	unsigned *buf;
@@ -318,7 +327,7 @@ model_t *Mod_LoadModel (model_t *mod, qboolean crash)
 // call the apropriate loader
 	mod->needload = false;
 
-#ifdef SERVERONLY //XXX FIXME WTF (taniwha)
+#ifdef SERVERONLY	//XXX FIXME WTF (taniwha)
 	Mod_LoadBrushModel (mod, buf);
 #else
 	switch (LittleLong(*(unsigned *)buf))
@@ -347,7 +356,8 @@ Mod_ForName
 Loads in a model for the given name
 ==================
 */
-model_t *Mod_ForName (char *name, qboolean crash)
+model_t *
+Mod_ForName ( char *name, qboolean crash )
 {
 	model_t	*mod;
 
@@ -367,12 +377,13 @@ model_t *Mod_ForName (char *name, qboolean crash)
 byte	*mod_base;
 
 #ifndef SERVERONLY
-int Mod_LoadExternalTexture(int number, char *texturename)
+int
+Mod_LoadExternalTexture ( int number, char *texturename )
 {
 	int j, pixels;
 	miptex_t	*mt;
 	texture_t	*tx;
-	char   texturepathname[1024];
+	char	texturepathname[1024];
 	if (texturename[0] == '\0')
 		return (0);
 
@@ -415,7 +426,8 @@ int Mod_LoadExternalTexture(int number, char *texturename)
 Mod_LoadTextures
 =================
 */
-void Mod_LoadTextures (lump_t *l)
+void
+Mod_LoadTextures ( lump_t *l )
 {
 	int		i, j, pixels, num, max, altmax;
 	miptex_t	*mt;
@@ -572,7 +584,8 @@ void Mod_LoadTextures (lump_t *l)
 Mod_LoadLighting
 =================
 */
-void Mod_LoadLighting (lump_t *l)
+void
+Mod_LoadLighting ( lump_t *l )
 {
 	if (!l->filelen)
 	{
@@ -589,7 +602,8 @@ void Mod_LoadLighting (lump_t *l)
 Mod_LoadVisibility
 =================
 */
-void Mod_LoadVisibility (lump_t *l)
+void
+Mod_LoadVisibility ( lump_t *l )
 {
 	if (!l->filelen)
 	{
@@ -606,7 +620,8 @@ void Mod_LoadVisibility (lump_t *l)
 Mod_LoadEntities
 =================
 */
-void Mod_LoadEntities (lump_t *l)
+void
+Mod_LoadEntities ( lump_t *l )
 {
 	if (!l->filelen)
 	{
@@ -623,7 +638,8 @@ void Mod_LoadEntities (lump_t *l)
 Mod_LoadVertexes
 =================
 */
-void Mod_LoadVertexes (lump_t *l)
+void
+Mod_LoadVertexes ( lump_t *l )
 {
 	dvertex_t	*in;
 	mvertex_t	*out;
@@ -651,7 +667,8 @@ void Mod_LoadVertexes (lump_t *l)
 Mod_LoadSubmodels
 =================
 */
-void Mod_LoadSubmodels (lump_t *l)
+void
+Mod_LoadSubmodels ( lump_t *l )
 {
 	dmodel_t	*in;
 	dmodel_t	*out;
@@ -687,7 +704,8 @@ void Mod_LoadSubmodels (lump_t *l)
 Mod_LoadEdges
 =================
 */
-void Mod_LoadEdges (lump_t *l)
+void
+Mod_LoadEdges ( lump_t *l )
 {
 	dedge_t *in;
 	medge_t *out;
@@ -714,7 +732,8 @@ void Mod_LoadEdges (lump_t *l)
 Mod_LoadTexinfo
 =================
 */
-void Mod_LoadTexinfo (lump_t *l)
+void
+Mod_LoadTexinfo ( lump_t *l )
 {
 	texinfo_t *in;
 	mtexinfo_t *out;
@@ -787,9 +806,9 @@ void Mod_LoadTexinfo (lump_t *l)
 			if (!out->texture)
 			{
 #ifdef SERVERONLY
-				out->texture = &sv_r_notexture_mip; // texture not found
+				out->texture = &sv_r_notexture_mip;	// texture not found
 #else
-				out->texture = r_notexture_mip; // texture not found
+				out->texture = r_notexture_mip;		// texture not found
 #endif
 				out->flags = 0;
 			}
@@ -804,7 +823,8 @@ CalcSurfaceExtents
 Fills in s->texturemins[] and s->extents[]
 ================
 */
-void CalcSurfaceExtents (msurface_t *s)
+void
+CalcSurfaceExtents ( msurface_t *s )
 {
 	float	mins[2], maxs[2], val;
 	int		i,j, e;
@@ -856,7 +876,8 @@ void CalcSurfaceExtents (msurface_t *s)
 Mod_LoadFaces
 =================
 */
-void Mod_LoadFaces (lump_t *l)
+void
+Mod_LoadFaces ( lump_t *l )
 {
 	dface_t		*in;
 	msurface_t 	*out;
@@ -926,7 +947,8 @@ void Mod_LoadFaces (lump_t *l)
 Mod_SetParent
 =================
 */
-void Mod_SetParent (mnode_t *node, mnode_t *parent)
+void
+Mod_SetParent ( mnode_t *node, mnode_t *parent )
 {
 	node->parent = parent;
 	if (node->contents < 0)
@@ -940,7 +962,8 @@ void Mod_SetParent (mnode_t *node, mnode_t *parent)
 Mod_LoadNodes
 =================
 */
-void Mod_LoadNodes (lump_t *l)
+void
+Mod_LoadNodes ( lump_t *l )
 {
 	int			i, j, count, p;
 	dnode_t		*in;
@@ -987,7 +1010,8 @@ void Mod_LoadNodes (lump_t *l)
 Mod_LoadLeafs
 =================
 */
-void Mod_LoadLeafs (lump_t *l)
+void
+Mod_LoadLeafs ( lump_t *l )
 {
 	dleaf_t 	*in;
 	mleaf_t 	*out;
@@ -1034,7 +1058,8 @@ void Mod_LoadLeafs (lump_t *l)
 Mod_LoadClipnodes
 =================
 */
-void Mod_LoadClipnodes (lump_t *l)
+void
+Mod_LoadClipnodes ( lump_t *l )
 {
 	dclipnode_t *in, *out;
 	int			i, count;
@@ -1088,7 +1113,8 @@ Mod_MakeHull0
 Deplicate the drawing hull structure as a clipping hull
 =================
 */
-void Mod_MakeHull0 (void)
+void
+Mod_MakeHull0 ( void )
 {
 	mnode_t		*in, *child;
 	dclipnode_t *out;
@@ -1125,7 +1151,8 @@ void Mod_MakeHull0 (void)
 Mod_LoadMarksurfaces
 =================
 */
-void Mod_LoadMarksurfaces (lump_t *l)
+void
+Mod_LoadMarksurfaces ( lump_t *l )
 {
 	int		i, j, count;
 	short		*in;
@@ -1154,7 +1181,8 @@ void Mod_LoadMarksurfaces (lump_t *l)
 Mod_LoadSurfedges
 =================
 */
-void Mod_LoadSurfedges (lump_t *l)
+void
+Mod_LoadSurfedges ( lump_t *l )
 {
 	int		i, count;
 	int		*in, *out;
@@ -1177,7 +1205,8 @@ void Mod_LoadSurfedges (lump_t *l)
 Mod_LoadPlanes
 =================
 */
-void Mod_LoadPlanes (lump_t *l)
+void
+Mod_LoadPlanes ( lump_t *l )
 {
 	int			i, j;
 	mplane_t	*out;
@@ -1215,7 +1244,8 @@ void Mod_LoadPlanes (lump_t *l)
 RadiusFromBounds
 =================
 */
-float RadiusFromBounds (vec3_t mins, vec3_t maxs)
+float
+RadiusFromBounds ( vec3_t mins, vec3_t maxs )
 {
 	int		i;
 	vec3_t	corner;
@@ -1233,7 +1263,8 @@ float RadiusFromBounds (vec3_t mins, vec3_t maxs)
 Mod_LoadBrushModel
 =================
 */
-void Mod_LoadBrushModel (model_t *mod, void *buffer)
+void
+Mod_LoadBrushModel ( model_t *mod, void *buffer )
 {
 	int			i, j;
 	dheader_t	*header;
@@ -1344,8 +1375,9 @@ ALIAS MODELS
 Mod_LoadAliasFrame
 =================
 */
-void * Mod_LoadAliasFrame (void * pin, int *pframeindex, int numv,
-	trivertx_t *pbboxmin, trivertx_t *pbboxmax, aliashdr_t *pheader, char *name)
+void *
+Mod_LoadAliasFrame ( void * pin, int *pframeindex, int numv,
+	trivertx_t *pbboxmin, trivertx_t *pbboxmax, aliashdr_t *pheader, char *name )
 {
 	trivertx_t		*pframe, *pinframe;
 	int				i, j;
@@ -1392,8 +1424,9 @@ void * Mod_LoadAliasFrame (void * pin, int *pframeindex, int numv,
 Mod_LoadAliasGroup
 =================
 */
-void * Mod_LoadAliasGroup (void * pin, int *pframeindex, int numv,
-	trivertx_t *pbboxmin, trivertx_t *pbboxmax, aliashdr_t *pheader, char *name)
+void *
+Mod_LoadAliasGroup ( void * pin, int *pframeindex, int numv,
+	trivertx_t *pbboxmin, trivertx_t *pbboxmax, aliashdr_t *pheader, char *name )
 {
 	daliasgroup_t		*pingroup;
 	maliasgroup_t		*paliasgroup;
@@ -1457,8 +1490,9 @@ void * Mod_LoadAliasGroup (void * pin, int *pframeindex, int numv,
 Mod_LoadAliasSkin
 =================
 */
-void * Mod_LoadAliasSkin (void * pin, int *pskinindex, int skinsize,
-	aliashdr_t *pheader)
+void *
+Mod_LoadAliasSkin ( void * pin, int *pskinindex, int skinsize,
+	aliashdr_t *pheader )
 {
 	int		i;
 	byte	*pskin, *pinskin;
@@ -1495,8 +1529,9 @@ void * Mod_LoadAliasSkin (void * pin, int *pskinindex, int skinsize,
 Mod_LoadAliasSkinGroup
 =================
 */
-void * Mod_LoadAliasSkinGroup (void * pin, int *pskinindex, int skinsize,
-	aliashdr_t *pheader)
+void *
+Mod_LoadAliasSkinGroup ( void * pin, int *pskinindex, int skinsize,
+	aliashdr_t *pheader )
 {
 	daliasskingroup_t		*pinskingroup;
 	maliasskingroup_t		*paliasskingroup;
@@ -1550,7 +1585,8 @@ void * Mod_LoadAliasSkinGroup (void * pin, int *pskinindex, int skinsize,
 Mod_LoadAliasModel
 =================
 */
-void Mod_LoadAliasModel (model_t *mod, void *buffer)
+void
+Mod_LoadAliasModel ( model_t *mod, void *buffer )
 {
 	int					i;
 	mdl_t				*pmodel, *pinmodel;
@@ -1628,7 +1664,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 
 	if (pmodel->skinheight > MAX_LBM_HEIGHT)
 		Sys_Error ("model %s has a skin taller than %d", mod->name,
-				   MAX_LBM_HEIGHT);
+				MAX_LBM_HEIGHT);
 
 	pmodel->numverts = LittleLong (pinmodel->numverts);
 
@@ -1689,8 +1725,8 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 		{
 			pskintype = (daliasskintype_t *)
 					Mod_LoadAliasSkin (pskintype + 1,
-									   &pskindesc[i].skin,
-									   skinsize, pheader);
+									&pskindesc[i].skin,
+									skinsize, pheader);
 		}
 		else
 		{
@@ -1802,7 +1838,8 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 Mod_LoadSpriteFrame
 =================
 */
-void * Mod_LoadSpriteFrame (void * pin, mspriteframe_t **ppframe)
+void *
+Mod_LoadSpriteFrame ( void * pin, mspriteframe_t **ppframe )
 {
 	dspriteframe_t		*pinframe;
 	mspriteframe_t		*pspriteframe;
@@ -1817,7 +1854,7 @@ void * Mod_LoadSpriteFrame (void * pin, mspriteframe_t **ppframe)
 	size = width * height;
 
 	pspriteframe = Hunk_AllocName (sizeof (mspriteframe_t) + size*r_pixbytes,
-								   loadname);
+								loadname);
 
 	Q_memset (pspriteframe, 0, sizeof (mspriteframe_t) + size);
 	*ppframe = pspriteframe;
@@ -1859,7 +1896,8 @@ void * Mod_LoadSpriteFrame (void * pin, mspriteframe_t **ppframe)
 Mod_LoadSpriteGroup
 =================
 */
-void * Mod_LoadSpriteGroup (void * pin, mspriteframe_t **ppframe)
+void *
+Mod_LoadSpriteGroup ( void * pin, mspriteframe_t **ppframe )
 {
 	dspritegroup_t		*pingroup;
 	mspritegroup_t		*pspritegroup;
@@ -1911,7 +1949,8 @@ void * Mod_LoadSpriteGroup (void * pin, mspriteframe_t **ppframe)
 Mod_LoadSpriteModel
 =================
 */
-void Mod_LoadSpriteModel (model_t *mod, void *buffer)
+void
+Mod_LoadSpriteModel ( model_t *mod, void *buffer )
 {
 	int					i;
 	int					version;
@@ -1991,7 +2030,8 @@ void Mod_LoadSpriteModel (model_t *mod, void *buffer)
 Mod_Print
 ================
 */
-void Mod_Print (void)
+void
+Mod_Print ( void )
 {
 	int		i;
 	model_t	*mod;
@@ -2002,5 +2042,3 @@ void Mod_Print (void)
 		Con_Printf ("%8p : %s\n",mod->cache.data, mod->name);
 	}
 }
-
-

@@ -43,15 +43,18 @@ byte	surfcache[256*1024];
 unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
 
-void VID_SetPalette (unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 }
 
-void VID_ShiftPalette (unsigned char *palette)
+void
+VID_ShiftPalette ( unsigned char *palette )
 {
 }
 
-void VID_Init (unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	vid.maxwarpwidth = vid.width = vid.conwidth = BASEWIDTH;
 	vid.maxwarpheight = vid.height = vid.conheight = BASEHEIGHT;
@@ -66,11 +69,13 @@ void VID_Init (unsigned char *palette)
 	D_InitCaches (surfcache, sizeof(surfcache));
 }
 
-void VID_Shutdown (void)
+void
+VID_Shutdown ( void )
 {
 }
 
-void VID_Update (vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 }
 
@@ -79,7 +84,8 @@ void VID_Update (vrect_t *rects)
 D_BeginDirectRect
 ================
 */
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 }
 
@@ -89,11 +95,13 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 D_EndDirectRect
 ================
 */
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 }
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -109,7 +117,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -121,10 +130,12 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

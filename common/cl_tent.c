@@ -77,7 +77,7 @@ sfx_t			*cl_sfx_rail;
     CL_InitTEnts
 */
 void
-CL_InitTEnts (void)
+CL_InitTEnts ( void )
 {
 	cl_sfx_wizhit = S_PrecacheSound ("wizard/hit.wav");
 	cl_sfx_knighthit = S_PrecacheSound ("hknight/hit.wav");
@@ -97,7 +97,7 @@ CL_InitTEnts (void)
     CL_ClearTEnts
 */
 void
-CL_ClearTEnts (void)
+CL_ClearTEnts ( void )
 {
 	memset (cl_beams, 0, sizeof(cl_beams));
 	memset (cl_explosions, 0, sizeof(cl_explosions));
@@ -107,8 +107,8 @@ CL_ClearTEnts (void)
 /*
     CL_AllocExplosion
 */
-explosion_t
-*CL_AllocExplosion (void)
+explosion_t *
+CL_AllocExplosion ( void )
 {
 	int		i;
 	float		time;
@@ -134,7 +134,7 @@ explosion_t
     CL_ParseBeam
 */
 void
-CL_ParseBeam (model_t *m)
+CL_ParseBeam ( model_t *m )
 {
 	int		ent;
 	vec3_t		start, end;
@@ -181,7 +181,7 @@ CL_ParseBeam (model_t *m)
     CL_ParseTEnt
 */
 void
-CL_ParseTEnt (void)
+CL_ParseTEnt ( void )
 {
 	int		type;
 	vec3_t		pos;
@@ -345,7 +345,7 @@ CL_ParseTEnt (void)
 		pos[2] = MSG_ReadCoord ();
 		R_RunParticleEffect (pos, vec3_origin, 225, 50);
 		break;
-#endif // QUAKEWORLD
+#endif	// QUAKEWORLD
 
 #ifdef UQUAKE
 	case TE_GUNSHOT:			// bullet hitting wall
@@ -375,7 +375,7 @@ CL_ParseTEnt (void)
 		dl->decay = 300;
 		S_StartSound (-1, 0, cl_sfx_r_exp3, pos, 1, 1);
 		break;
-#endif // UQUAKE
+#endif	// UQUAKE
 
 #ifdef QUAKE2
 	case TE_IMPLOSION:
@@ -414,7 +414,7 @@ CL_ParseTEnt (void)
     CL_NewTempEntity
 */
 entity_t *
-CL_NewTempEntity (void)
+CL_NewTempEntity ( void )
 {
 	entity_t	*ent;
 
@@ -435,7 +435,7 @@ CL_NewTempEntity (void)
     CL_UpdateBeams
 */
 void
-CL_UpdateBeams (void)
+CL_UpdateBeams ( void )
 {
 	int			i,j;
 	beam_t		*b;
@@ -506,7 +506,7 @@ CL_UpdateBeams (void)
     CL_UpdateExplosions
 */
 void
-CL_UpdateExplosions (void)
+CL_UpdateExplosions ( void )
 {
 	int			i;
 	int			f;
@@ -538,7 +538,7 @@ CL_UpdateExplosions (void)
     CL_UpdateTEnts
 */
 void
-CL_UpdateTEnts (void)
+CL_UpdateTEnts ( void )
 {
 	CL_UpdateBeams ();
 	CL_UpdateExplosions ();

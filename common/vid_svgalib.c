@@ -81,7 +81,8 @@ static byte	backingbuf[48*24];
 int	VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
 byte	*VGA_pagebase;
 
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 	int	i, j, k, plane, reps, repshift, offset, vidpage, off;
 
@@ -114,7 +115,7 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 								(x >> 2) + j];
 						vid.direct[(y + i + k) * VGA_rowbytes + (x>>2) + j] =
 							pbitmap[(i >> repshift) * 24 +
-							       (j << 2) + plane];
+							(j << 2) + plane];
 					}
 				}
 			}
@@ -140,7 +141,8 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 }
 
 
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 	int	i, j, k, plane, reps, repshift, offset, vidpage, off;
 
@@ -193,7 +195,8 @@ void D_EndDirectRect (int x, int y, int width, int height)
 
 
 #if 0
-static void VID_Gamma_f(void)
+static void
+VID_Gamma_f ( void )
 {
 	float		gamma, f, inf;
 	unsigned char	palette[768];
@@ -219,17 +222,18 @@ static void VID_Gamma_f(void)
 #endif
 
 
-static void VID_DescribeMode_f(void)
+static void
+VID_DescribeMode_f ( void )
 {
 	int	modenum;
 
 	modenum = Q_atoi (Cmd_Argv(1));
 	if ((modenum >= num_modes) || (modenum < 0 ) ||
-	    !modes[modenum].width) {
+		!modes[modenum].width) {
 		Con_Printf("Invalid video mode: %i!\n", modenum);
 	}
 	Con_Printf("%i: %i x %i - ", modenum,
-		   modes[modenum].width, modes[modenum].height);
+		modes[modenum].width, modes[modenum].height);
 	if (modes[modenum].bytesperpixel == 0) {
 		Con_Printf("ModeX\n");
 	} else {
@@ -238,7 +242,8 @@ static void VID_DescribeMode_f(void)
 }
 
 
-static void VID_DescribeModes_f(void)
+static void
+VID_DescribeModes_f ( void )
 {
 	int	i;
 
@@ -259,7 +264,8 @@ static void VID_DescribeModes_f(void)
 VID_NumModes
 ================
 */
-static int VID_NumModes(void)
+static int
+VID_NumModes ( void )
 {
 	int	i,i1=0;
 
@@ -270,13 +276,15 @@ static int VID_NumModes(void)
 }
 
 
-static void VID_NumModes_f(void)
+static void
+VID_NumModes_f ( void )
 {
 	Con_Printf("%i modes\n", VID_NumModes());
 }
 
 
-static void VID_Debug_f (void)
+static void
+VID_Debug_f ( void )
 {
 	Con_Printf("mode: %i\n",current_mode);
 	Con_Printf("height x width: %i x %i\n",vid.height,vid.width);
@@ -285,7 +293,8 @@ static void VID_Debug_f (void)
 }
 
 
-static void VID_InitModes(void)
+static void
+VID_InitModes ( void )
 {
 	int	i;
 
@@ -310,7 +319,8 @@ static void VID_InitModes(void)
 }
 
 
-static int get_mode(char *name, int width, int height, int depth)
+static int
+get_mode ( char *name, int width, int height, int depth )
 {
 	int	i, ok, match;
 
@@ -334,7 +344,7 @@ static int get_mode(char *name, int width, int height, int depth)
 		}
 		if (i==num_modes) {
 			Sys_Printf("Mode %ix%i (%i bits) not supported\n",
-				   width, height, depth);
+				width, height, depth);
 			i = G320x200x256;
 		}
 	}
@@ -343,7 +353,8 @@ static int get_mode(char *name, int width, int height, int depth)
 }
 
 
-void VID_Shutdown(void)
+void
+VID_Shutdown ( void )
 {
 	Sys_Printf("VID_Shutdown\n");
 
@@ -356,13 +367,15 @@ void VID_Shutdown(void)
 }
 
 
-void VID_ShiftPalette(unsigned char *p)
+void
+VID_ShiftPalette ( unsigned char *p )
 {
 	VID_SetPalette(p);
 }
 
 
-void VID_SetPalette(byte *palette)
+void
+VID_SetPalette ( byte *palette )
 {
 	static int	tmppal[256*3];
 	int		*tp;
@@ -385,7 +398,8 @@ void VID_SetPalette(byte *palette)
 }
 
 
-int VID_SetMode(int modenum, unsigned char *palette)
+int
+VID_SetMode ( int modenum, unsigned char *palette )
 {
 	int	bsize, zsize, tsize;
 	int	err;
@@ -476,7 +490,8 @@ int VID_SetMode(int modenum, unsigned char *palette)
 }
 
 
-void VID_Init(unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	int	w, h, d;
 	int	err;
@@ -513,7 +528,7 @@ void VID_Init(unsigned char *palette)
 		} else if (COM_CheckParm("-mode")) {
 			current_mode = get_mode(com_argv[COM_CheckParm("-mode")+1], w, h, d);
 		} else if (COM_CheckParm("-w") || COM_CheckParm("-h")
-			   || COM_CheckParm("-d"))  {
+			|| COM_CheckParm("-d")) {
 			if (COM_CheckParm("-w")) {
 				w = Q_atoi(com_argv[COM_CheckParm("-w")+1]);
 			}
@@ -542,7 +557,8 @@ void VID_Init(unsigned char *palette)
 }
 
 
-void VID_Update(vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 	if (!svgalib_inited) return;
 
@@ -564,7 +580,7 @@ void VID_Update(vrect_t *rects)
 		for (offset=0;offset<total;offset+=0x10000) {
 			vga_setpage(offset/0x10000);
 			memcpy(framebuffer_ptr, vid.buffer + offset,
-			       ((total-offset>0x10000)
+				((total-offset>0x10000)
 				? 0x10000 : (total-offset)));
 		}
 	} else {
@@ -594,8 +610,8 @@ void VID_Update(vrect_t *rects)
 							rects->width - 0x10000 + i);
 				} else {
 					memcpy(framebuffer_ptr + i,
-					       vid.buffer + offset,
-					       rects->width);
+						vid.buffer + offset,
+						rects->width);
 				}
 				offset += vid.rowbytes;
 			}
@@ -611,7 +627,8 @@ void VID_Update(vrect_t *rects)
 
 static int	dither = 0;
 
-void VID_DitherOn(void)
+void
+VID_DitherOn ( void )
 {
 	if (dither == 0) {
 #if 0
@@ -622,7 +639,8 @@ void VID_DitherOn(void)
 }
 
 
-void VID_DitherOff(void)
+void
+VID_DitherOff ( void )
 {
 	if (dither) {
 #if 0
@@ -638,7 +656,8 @@ void VID_DitherOff(void)
 VID_ModeInfo
 ================
 */
-char *VID_ModeInfo (int modenum)
+char *
+VID_ModeInfo ( int modenum )
 {
 	static char	*badmodestr = "Bad mode number";
 	static char	modestr[40];
@@ -653,7 +672,8 @@ char *VID_ModeInfo (int modenum)
 }
 
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -669,7 +689,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -681,15 +702,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_InitCvars ( void )
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

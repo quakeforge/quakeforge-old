@@ -49,7 +49,7 @@
   Check for the presence of the XFree86-DGA X server extension
 */
 int
-VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
+VID_CheckDGA ( Display *dpy, int *maj_ver, int *min_ver, int *hasvideo )
 {
 #if defined(HAS_DGA)
 	int event_base, error_base, dgafeat, dummy;
@@ -83,7 +83,7 @@ VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
   Check for the presence of the XFree86-VidMode X server extension
 */
 int
-VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
+VID_CheckVMode ( Display *dpy, int *maj_ver, int *min_ver )
 {
 #if defined(HAS_VIDMODE)
 	int event_base, error_base;

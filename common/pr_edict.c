@@ -112,7 +112,8 @@ ED_ClearEdict
 Sets everything to NULL
 =================
 */
-void ED_ClearEdict (edict_t *e)
+void
+ED_ClearEdict ( edict_t *e )
 {
 	memset (&e->v, 0, progs->entityfields * 4);
 	e->free = false;
@@ -129,7 +130,8 @@ instead of being removed and recreated, which can cause interpolated
 angles and bad trails.
 =================
 */
-edict_t *ED_Alloc (void)
+edict_t *
+ED_Alloc ( void )
 {
 	int			i;
 	edict_t		*e;
@@ -180,7 +182,8 @@ Marks the edict as free
 FIXME: walk all entities and NULL out references to this entity
 =================
 */
-void ED_Free (edict_t *ed)
+void
+ED_Free ( edict_t *ed )
 {
 	SV_UnlinkEdict (ed);		// unlink from world bsp
 
@@ -206,7 +209,8 @@ void ED_Free (edict_t *ed)
 ED_GlobalAtOfs
 ============
 */
-ddef_t *ED_GlobalAtOfs (int ofs)
+ddef_t *
+ED_GlobalAtOfs ( int ofs )
 {
 	ddef_t		*def;
 	int			i;
@@ -225,7 +229,8 @@ ddef_t *ED_GlobalAtOfs (int ofs)
 ED_FieldAtOfs
 ============
 */
-ddef_t *ED_FieldAtOfs (int ofs)
+ddef_t *
+ED_FieldAtOfs ( int ofs )
 {
 	ddef_t		*def;
 	int			i;
@@ -244,7 +249,8 @@ ddef_t *ED_FieldAtOfs (int ofs)
 ED_FindField
 ============
 */
-ddef_t *ED_FindField (char *name)
+ddef_t *
+ED_FindField ( char *name )
 {
 	ddef_t		*def;
 	int			i;
@@ -264,7 +270,8 @@ ddef_t *ED_FindField (char *name)
 ED_FindGlobal
 ============
 */
-ddef_t *ED_FindGlobal (char *name)
+ddef_t *
+ED_FindGlobal ( char *name )
 {
 	ddef_t		*def;
 	int			i;
@@ -284,7 +291,8 @@ ddef_t *ED_FindGlobal (char *name)
 ED_FindFunction
 ============
 */
-dfunction_t *ED_FindFunction (char *name)
+dfunction_t *
+ED_FindFunction ( char *name )
 {
 	dfunction_t		*func;
 	int				i;
@@ -298,7 +306,8 @@ dfunction_t *ED_FindFunction (char *name)
 	return NULL;
 }
 
-eval_t *GetEdictFieldValue(edict_t *ed, char *field)
+eval_t *
+GetEdictFieldValue ( edict_t *ed, char *field )
 {
 	ddef_t			*def = NULL;
 	int				i;
@@ -336,7 +345,8 @@ PR_ValueString
 Returns a string describing *data in a type specific manner
 =============
 */
-char *PR_ValueString (etype_t type, eval_t *val)
+char *
+PR_ValueString ( etype_t type, eval_t *val )
 {
 	static char	line[256];
 	ddef_t		*def;
@@ -388,7 +398,8 @@ Returns a string describing *data in a type specific manner
 Easier to parse than PR_ValueString
 =============
 */
-char *PR_UglyValueString (etype_t type, eval_t *val)
+char *
+PR_UglyValueString ( etype_t type, eval_t *val )
 {
 	static char	line[256];
 	ddef_t		*def;
@@ -437,7 +448,8 @@ Returns a string with a description and the contents of a global,
 padded to 20 field width
 ============
 */
-char *PR_GlobalString (int ofs)
+char *
+PR_GlobalString ( int ofs )
 {
 	char	*s;
 	int		i;
@@ -463,7 +475,8 @@ char *PR_GlobalString (int ofs)
 	return line;
 }
 
-char *PR_GlobalStringNoContents (int ofs)
+char *
+PR_GlobalStringNoContents ( int ofs )
 {
 	int		i;
 	ddef_t	*def;
@@ -491,7 +504,8 @@ ED_Print
 For debugging
 =============
 */
-void ED_Print (edict_t *ed)
+void
+ED_Print ( edict_t *ed )
 {
 	int		l;
 	ddef_t	*d;
@@ -540,7 +554,8 @@ ED_Write
 For savegames
 =============
 */
-void ED_Write (QFile *f, edict_t *ed)
+void
+ED_Write ( QFile *f, edict_t *ed )
 {
 	ddef_t	*d;
 	int		*v;
@@ -580,7 +595,8 @@ void ED_Write (QFile *f, edict_t *ed)
 	Qprintf (f, "}\n");
 }
 
-void ED_PrintNum (int ent)
+void
+ED_PrintNum ( int ent )
 {
 	ED_Print (EDICT_NUM(ent));
 }
@@ -592,7 +608,8 @@ ED_PrintEdicts
 For debugging, prints all the entities in the current server
 =============
 */
-void ED_PrintEdicts (void)
+void
+ED_PrintEdicts ( void )
 {
 	int		i;
 
@@ -611,7 +628,8 @@ ED_PrintEdict_f
 For debugging, prints a single edicy
 =============
 */
-void ED_PrintEdict_f (void)
+void
+ED_PrintEdict_f ( void )
 {
 	int		i;
 
@@ -635,7 +653,8 @@ ED_Count
 For debugging
 =============
 */
-void ED_Count (void)
+void
+ED_Count ( void )
 {
 	int		i;
 	edict_t	*ent;
@@ -661,7 +680,6 @@ void ED_Count (void)
 	Con_Printf ("view      :%3i\n", models);
 	Con_Printf ("touch     :%3i\n", solid);
 	Con_Printf ("step      :%3i\n", step);
-
 }
 
 /*
@@ -678,7 +696,8 @@ FIXME: need to tag constants, doesn't really work
 ED_WriteGlobals
 =============
 */
-void ED_WriteGlobals (QFile *f)
+void
+ED_WriteGlobals ( QFile *f )
 {
 	ddef_t		*def;
 	int			i;
@@ -711,7 +730,8 @@ void ED_WriteGlobals (QFile *f)
 ED_ParseGlobals
 =============
 */
-void ED_ParseGlobals (char *data)
+void
+ED_ParseGlobals ( char *data )
 {
 	char	keyname[64];
 	ddef_t	*key;
@@ -771,7 +791,8 @@ void ED_ParseGlobals (char *data)
 ED_NewString
 =============
 */
-char *ED_NewString (char *string)
+char *
+ED_NewString ( char *string )
 {
 	char	*new, *new_p;
 	int		i,l;
@@ -806,7 +827,8 @@ Can parse either fields or globals
 returns false if error
 =============
 */
-qboolean	ED_ParseEpair (void *base, ddef_t *key, char *s)
+qboolean
+ED_ParseEpair ( void *base, ddef_t *key, char *s )
 {
 	int		i;
 	char	string[128];
@@ -880,7 +902,8 @@ ed should be a properly initialized empty edict.
 Used for initial level load and for savegames.
 ====================
 */
-char *ED_ParseEdict (char *data, edict_t *ent)
+char *
+ED_ParseEdict ( char *data, edict_t *ent )
 {
 	ddef_t		*key;
 	qboolean	anglehack;
@@ -966,12 +989,12 @@ if (!strcmp(com_token, "light"))
 			continue;
 		}
 
-if (anglehack)
-{
-char	temp[32];
-strcpy (temp, com_token);
-snprintf(com_token, sizeof(com_token), "0 %s 0", temp);
-}
+		if (anglehack)
+		{
+			char	temp[32];
+			strcpy (temp, com_token);
+			snprintf(com_token, sizeof(com_token), "0 %s 0", temp);
+		}
 
 		if (!ED_ParseEpair ((void *)&ent->v, key, com_token))
 #ifdef QUAKEWORLD
@@ -1003,7 +1026,8 @@ Used for both fresh maps and savegame loads.  A fresh map would also need
 to call ED_CallSpawnFunctions () to let the objects initialize themselves.
 ================
 */
-void ED_LoadFromFile (char *data)
+void
+ED_LoadFromFile ( char *data )
 {
 	edict_t		*ent;
 	int			inhibit;
@@ -1090,7 +1114,8 @@ void ED_LoadFromFile (char *data)
 PR_LoadProgs
 ===============
 */
-void PR_LoadProgs (void)
+void
+PR_LoadProgs ( void )
 {
 	int	i;
 
@@ -1121,7 +1146,7 @@ void PR_LoadProgs (void)
 
 		// add prog crc to the serverinfo
 		snprintf(num, sizeof(num), "%i", CRC_Block ((byte *)progs,
-							    com_filesize));
+				com_filesize));
 		Info_SetValueForStarKey(svs.info, "*progs", num,
 					MAX_SERVERINFO_STRING);
 	}
@@ -1227,7 +1252,8 @@ void PR_LoadProgs (void)
 PR_Init
 ===============
 */
-void PR_Init (void)
+void
+PR_Init ( void )
 {
 	Cmd_AddCommand ("edict", ED_PrintEdict_f);
 	Cmd_AddCommand ("edicts", ED_PrintEdicts);
@@ -1260,8 +1286,8 @@ void PR_Init (void)
 }
 
 
-
-edict_t *EDICT_NUM(int n)
+edict_t *
+EDICT_NUM ( int n )
 {
 	if (n < 0 || n >= MAX_EDICTS)
 #ifdef QUAKEWORLD
@@ -1272,7 +1298,8 @@ edict_t *EDICT_NUM(int n)
 	return (edict_t *)((byte *)sv.edicts+ (n)*pr_edict_size);
 }
 
-int NUM_FOR_EDICT(edict_t *e)
+int
+NUM_FOR_EDICT ( edict_t *e )
 {
 	int		b;
 
@@ -1287,5 +1314,3 @@ int NUM_FOR_EDICT(edict_t *e)
 #endif
 	return b;
 }
-
-

@@ -37,7 +37,8 @@
 D_EndParticles
 ==============
 */
-void D_EndParticles (void)
+void
+D_EndParticles ( void )
 {
 // not used by software driver
 }
@@ -48,7 +49,8 @@ void D_EndParticles (void)
 D_StartParticles
 ==============
 */
-void D_StartParticles (void)
+void
+D_StartParticles ( void )
 {
 // not used by software driver
 }
@@ -61,7 +63,8 @@ void D_StartParticles (void)
 D_DrawParticle
 ==============
 */
-void D_DrawParticle (particle_t *pparticle)
+void
+D_DrawParticle ( particle_t *pparticle )
 {
 	vec3_t	local, transformed;
 	float	zi;
@@ -213,4 +216,3 @@ void D_DrawParticle (particle_t *pparticle)
 }
 
 #endif	// !id386
-

@@ -36,7 +36,7 @@
 static int	miplevel;
 
 float		scale_for_mip;
-extern int             screenwidth;
+extern int	screenwidth;
 int			ubasestep, errorterm, erroradjustup, erroradjustdown;
 int			vstartscan;
 
@@ -52,7 +52,8 @@ D_DrawPoly
 
 ==============
 */
-void D_DrawPoly (void)
+void
+D_DrawPoly ( void )
 {
 // this driver takes spans, not polygons
 }
@@ -63,7 +64,8 @@ void D_DrawPoly (void)
 D_MipLevelForScale
 =============
 */
-int D_MipLevelForScale (float scale)
+int
+D_MipLevelForScale ( float scale )
 {
 	int		lmiplevel;
 
@@ -91,7 +93,8 @@ D_DrawSolidSurface
 
 // FIXME: clean this up
 
-void D_DrawSolidSurface (surf_t *surf, int color)
+void
+D_DrawSolidSurface ( surf_t *surf, int color )
 {
 	espan_t	*span;
 	byte	*pdest;
@@ -131,7 +134,8 @@ void D_DrawSolidSurface (surf_t *surf, int color)
 D_CalcGradients
 ==============
 */
-void D_CalcGradients (msurface_t *pface)
+void
+D_CalcGradients ( msurface_t *pface )
 {
 	mplane_t	*pplane;
 	float		mipscale;
@@ -182,7 +186,8 @@ void D_CalcGradients (msurface_t *pface)
 D_DrawSurfaces
 ==============
 */
-void D_DrawSurfaces (void)
+void
+D_DrawSurfaces ( void )
 {
 	surf_t			*s;
 	msurface_t		*pface;
@@ -353,4 +358,3 @@ void D_DrawSurfaces (void)
 		}
 	}
 }
-

@@ -112,7 +112,8 @@ void SV_AcceptClient (netadr_t adr, int userid, char *userinfo);
 
 //============================================================================
 
-qboolean ServerPaused(void)
+qboolean
+ServerPaused ( void )
 {
 	return sv.paused;
 }
@@ -124,7 +125,8 @@ SV_Shutdown
 Quake calls this before calling Sys_Quit or Sys_Error
 ================
 */
-void SV_Shutdown (void)
+void
+SV_Shutdown ( void )
 {
 	Shutdown_Master ();
 	if (sv_logfile)
@@ -149,7 +151,8 @@ Sends a datagram to all the clients informing them of the server crash,
 then exits
 ================
 */
-void SV_Error (char *error, ...)
+void
+SV_Error ( char *error, ... )
 {
 	va_list		argptr;
 	static	char		string[1024];
@@ -183,7 +186,8 @@ not just stuck on the outgoing message list, because the server is going
 to totally exit after returning from this function.
 ==================
 */
-void SV_FinalMessage (char *message)
+void
+SV_FinalMessage ( char *message )
 {
 	int			i;
 	client_t	*cl;
@@ -211,7 +215,8 @@ or unwillingly.  This is NOT called if the entire server is quiting
 or crashing.
 =====================
 */
-void SV_DropClient (client_t *drop)
+void
+SV_DropClient ( client_t *drop )
 {
 	// add the disconnect
 	MSG_WriteByte (&drop->netchan.message, svc_disconnect);
@@ -271,7 +276,8 @@ SV_CalcPing
 
 ===================
 */
-int SV_CalcPing (client_t *cl)
+int
+SV_CalcPing ( client_t *cl )
 {
 	float		ping;
 	int			i;
@@ -302,14 +308,15 @@ SV_FullClientUpdate
 Writes all update values to a sizebuf
 ===================
 */
-void SV_FullClientUpdate (client_t *client, sizebuf_t *buf)
+void
+SV_FullClientUpdate ( client_t *client, sizebuf_t *buf )
 {
 	int		i;
 	char	info[MAX_INFO_STRING];
 
 	i = client - svs.clients;
 
-//Sys_Printf("SV_FullClientUpdate:  Updated frags for client %d\n", i);
+//Sys_Printf("SV_FullClientUpdate: Updated frags for client %d\n", i);
 
 	MSG_WriteByte (buf, svc_updatefrags);
 	MSG_WriteByte (buf, i);
@@ -343,7 +350,8 @@ SV_FullClientUpdateToClient
 Writes all update values to a client's reliable stream
 ===================
 */
-void SV_FullClientUpdateToClient (client_t *client, client_t *cl)
+void
+SV_FullClientUpdateToClient ( client_t *client, client_t *cl )
 {
 	ClientReliableCheckBlock(cl, 24 + strlen(client->userinfo));
 	if (cl->num_backbuf) {
@@ -353,7 +361,8 @@ void SV_FullClientUpdateToClient (client_t *client, client_t *cl)
 		SV_FullClientUpdate (client, &cl->netchan.message);
 }
 
-void SV_InitCvars ()
+void
+SV_InitCvars ( void )
 {
 	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 
@@ -376,7 +385,8 @@ Responds with all the info that qplug or qspy can see
 This message can be up to around 5k with worst case string lengths.
 ================
 */
-void SVC_Status (void)
+void
+SVC_Status ( void )
 {
 	int		i;
 	client_t	*cl;
@@ -412,7 +422,8 @@ SV_CheckLog
 */
 #define	LOG_HIGHWATER	4096
 #define	LOG_FLUSH		10*60
-void SV_CheckLog (void)
+void
+SV_CheckLog ( void )
 {
 	sizebuf_t	*sz;
 
@@ -443,7 +454,8 @@ the same as the current sequence, an A2A_NACK will be returned
 instead of the data.
 ================
 */
-void SVC_Log (void)
+void
+SVC_Log ( void )
 {
 	int		seq;
 	char	data[MAX_DATAGRAM+64];
@@ -475,7 +487,8 @@ SVC_Ping
 Just responds with an acknowledgement
 ================
 */
-void SVC_Ping (void)
+void
+SVC_Ping ( void )
 {
 	char	data;
 
@@ -495,7 +508,8 @@ flood the server with invalid connection IPs.  With a
 challenge, they must give a valid IP address.
 =================
 */
-void SVC_GetChallenge (void)
+void
+SVC_GetChallenge ( void )
 {
 	int		i;
 	int		oldest;
@@ -537,7 +551,8 @@ SVC_DirectConnect
 A connection request that did not come from the master
 ==================
 */
-void SVC_DirectConnect (void)
+void
+SVC_DirectConnect ( void )
 {
 	char		userinfo[1024];
 	static		int	userid;
@@ -599,7 +614,7 @@ void SVC_DirectConnect (void)
 			Netchan_OutOfBandPrint (net_from, "%c\nrequires a spectator password\n\n", A2C_PRINT);
 			return;
 		}
-		Info_RemoveKey (userinfo, "spectator"); // remove passwd
+		Info_RemoveKey (userinfo, "spectator");	// remove passwd
 		Info_SetValueForStarKey (userinfo, "*spectator", "1", MAX_INFO_STRING);
 		spectator = true;
 	}
@@ -615,7 +630,7 @@ void SVC_DirectConnect (void)
 			return;
 		}
 		spectator = false;
-		Info_RemoveKey (userinfo, "password"); // remove passwd
+		Info_RemoveKey (userinfo, "password");	// remove passwd
 	}
 
 	adr = net_from;
@@ -752,7 +767,8 @@ void SVC_DirectConnect (void)
 	newcl->last_check = realtime;
 }
 
-int Rcon_Validate (void)
+int
+Rcon_Validate ( void )
 {
 	if (!strlen (rcon_password->string))
 		return 0;
@@ -772,7 +788,8 @@ Shift down the remaining args
 Redirect all printfs
 ===============
 */
-void SVC_RemoteCommand (void)
+void
+SVC_RemoteCommand ( void )
 {
 	int		i;
 	char	remaining[1024];
@@ -819,7 +836,8 @@ Clients that are in the game can still send
 connectionless packets.
 =================
 */
-void SV_ConnectionlessPacket (void)
+void
+SV_ConnectionlessPacket ( void )
 {
 	char	*s;
 	char	*c;
@@ -922,7 +940,8 @@ cvar_t	*filterban;
 StringToFilter
 =================
 */
-qboolean StringToFilter (char *s, ipfilter_t *f)
+qboolean
+StringToFilter ( char *s, ipfilter_t *f )
 {
 	char	num[128];
 	int		i, j;
@@ -969,7 +988,8 @@ qboolean StringToFilter (char *s, ipfilter_t *f)
 SV_AddIP_f
 =================
 */
-void SV_AddIP_f (void)
+void
+SV_AddIP_f ( void )
 {
 	int		i;
 
@@ -995,7 +1015,8 @@ void SV_AddIP_f (void)
 SV_RemoveIP_f
 =================
 */
-void SV_RemoveIP_f (void)
+void
+SV_RemoveIP_f ( void )
 {
 	ipfilter_t	f;
 	int			i, j;
@@ -1020,7 +1041,8 @@ void SV_RemoveIP_f (void)
 SV_ListIP_f
 =================
 */
-void SV_ListIP_f (void)
+void
+SV_ListIP_f ( void )
 {
 	int		i;
 	byte	b[4];
@@ -1038,7 +1060,8 @@ void SV_ListIP_f (void)
 SV_WriteIP_f
 =================
 */
-void SV_WriteIP_f (void)
+void
+SV_WriteIP_f ( void )
 {
 	QFile	*f;
 	char	name[MAX_OSPATH];
@@ -1070,7 +1093,8 @@ void SV_WriteIP_f (void)
 SV_SendBan
 =================
 */
-void SV_SendBan (void)
+void
+SV_SendBan ( void )
 {
 	char		data[128];
 
@@ -1087,7 +1111,8 @@ void SV_SendBan (void)
 SV_FilterPacket
 =================
 */
-qboolean SV_FilterPacket (void)
+qboolean
+SV_FilterPacket ( void )
 {
 	int		i;
 	unsigned	in;
@@ -1108,7 +1133,8 @@ qboolean SV_FilterPacket (void)
 SV_ReadPackets
 =================
 */
-void SV_ReadPackets (void)
+void
+SV_ReadPackets ( void )
 {
 	int			i;
 	client_t	*cl;
@@ -1184,7 +1210,8 @@ for a few seconds to make sure any final reliable message gets resent
 if necessary
 ==================
 */
-void SV_CheckTimeouts (void)
+void
+SV_CheckTimeouts ( void )
 {
 	int		i;
 	client_t	*cl;
@@ -1224,7 +1251,8 @@ SV_GetConsoleCommands
 Add them exactly as if they had been typed at the console
 ===================
 */
-void SV_GetConsoleCommands (void)
+void
+SV_GetConsoleCommands ( void )
 {
 	char	*cmd;
 
@@ -1243,7 +1271,8 @@ SV_CheckVars
 
 ===================
 */
-void SV_CheckVars (void)
+void
+SV_CheckVars ( void )
 {
 	static char *pw, *spw;
 	int			v;
@@ -1272,7 +1301,8 @@ SV_Frame
 
 ==================
 */
-void SV_Frame (double time)
+void
+SV_Frame ( double time )
 {
 	static double	start, end;
 
@@ -1335,7 +1365,8 @@ void SV_Frame (double time)
 SV_InitLocal
 ===============
 */
-void SV_InitLocal (void)
+void
+SV_InitLocal ( void )
 {
 	int		i;
 	extern	cvar_t	*sv_maxvelocity;
@@ -1415,7 +1446,7 @@ void SV_InitLocal (void)
 	sv_phs = Cvar_Get ("sv_phs","1",0,"None");
 
 	pausable = Cvar_Get ("pausable","1",0,"None");
-	
+
 	sv_timekick = Cvar_Get( "sv_timekick", "3", CVAR_SERVERINFO, "Time cheat protection");
 	sv_timekick_fuzz = Cvar_Get( "sv_timekick_fuzz", "10", CVAR_NONE, "Time cheat \"fuzz factor\"");
 	sv_timekick_interval = Cvar_Get( "sv_timekick_interval", "30", CVAR_NONE, "Time cheat check interval");
@@ -1458,8 +1489,8 @@ void SV_InitLocal (void)
 void
 HeartBeat_Check( void )
 {
-	int i;
-	client_t        *cl;
+	int	i;
+	client_t	*cl;
 
 	for (i=0, cl = svs.clients ; i<MAX_CLIENTS ; i++, cl++)	{
 		if (cl->state == cs_connected || cl->state == cs_spawned) {
@@ -1481,11 +1512,12 @@ HeartBeat_Check( void )
 
 // This is the HeartBeat of the server.. center of alot of useful stuff
 // -- Slade
-void HeartBeat (void)
+void
+HeartBeat ( void )
 {
 
 	if (realtime - svs.last_heartbeat < HEARTBEAT_SECONDS)
-		return;         // not time to send yet
+		return;		// not time to send yet
 
 	svs.last_heartbeat = realtime;
 	if(svs.beatcount == MAX_BEATCOUNT)
@@ -1510,7 +1542,8 @@ Send a message to the master every few minutes to
 let it know we are alive, and log information
 ================
 */
-void HeartBeat_Master (void)
+void
+HeartBeat_Master ( void )
 {
 	char		string[2048];
 	int			active;
@@ -1546,7 +1579,8 @@ Shutdown_Master
 Informs all masters that this server is going down
 =================
 */
-void Shutdown_Master (void)
+void
+Shutdown_Master ( void )
 {
 	char		string[2048];
 	int			i;
@@ -1570,7 +1604,8 @@ Pull specific info from a newly changed userinfo string
 into a more C freindly form.
 =================
 */
-void SV_ExtractFromUserinfo (client_t *cl)
+void
+SV_ExtractFromUserinfo ( client_t *cl )
 {
 	char	*val, *p, *q;
 	int		i;
@@ -1622,7 +1657,7 @@ void SV_ExtractFromUserinfo (client_t *cl)
 			if (!stricmp(client->name, val))
 				break;
 		}
-		if (i != MAX_CLIENTS) { // dup name
+		if (i != MAX_CLIENTS) {	// dup name
 			if (strlen(val) > sizeof(cl->name) - 1)
 				val[sizeof(cl->name) - 4] = 0;
 			p = val;
@@ -1690,7 +1725,8 @@ void SV_ExtractFromUserinfo (client_t *cl)
 SV_InitNet
 ====================
 */
-void SV_InitNet (void)
+void
+SV_InitNet ( void )
 {
 	int	port;
 	int	p;
@@ -1717,7 +1753,8 @@ void SV_InitNet (void)
 SV_Init
 ====================
 */
-void SV_Init (quakeparms_t *parms)
+void
+SV_Init ( quakeparms_t *parms )
 {
 	COM_InitArgv (parms->argc, parms->argv);
 //	COM_AddParm ("-game");

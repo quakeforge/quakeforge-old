@@ -123,7 +123,8 @@ int	cl_spikeindex, cl_playerindex, cl_flagindex;
 
 int packet_latency[NET_TIMINGS];
 
-int CL_CalcNet (void)
+int
+CL_CalcNet ( void )
 {
 	int		a, i;
 	frame_t	*frame;
@@ -164,7 +165,8 @@ Returns true if the file exists, otherwise it attempts
 to start a download from the server.
 ===============
 */
-qboolean	CL_CheckOrDownloadFile (char *filename)
+qboolean
+CL_CheckOrDownloadFile ( char *filename )
 {
 	QFile	*f;
 
@@ -212,7 +214,8 @@ qboolean	CL_CheckOrDownloadFile (char *filename)
 Model_NextDownload
 =================
 */
-void Model_NextDownload (void)
+void
+Model_NextDownload ( void )
 {
 	char	*s;
 	int		i;
@@ -270,7 +273,8 @@ void Model_NextDownload (void)
 Sound_NextDownload
 =================
 */
-void Sound_NextDownload (void)
+void
+Sound_NextDownload ( void )
 {
 	char	*s;
 	int		i;
@@ -314,7 +318,8 @@ void Sound_NextDownload (void)
 CL_RequestNextDownload
 ======================
 */
-void CL_RequestNextDownload (void)
+void
+CL_RequestNextDownload ( void )
 {
 	switch (cls.downloadtype)
 	{
@@ -342,7 +347,8 @@ CL_ParseDownload
 A download message has been received from the server
 =====================
 */
-void CL_ParseDownload (void)
+void
+CL_ParseDownload ( void )
 {
 	int	size, percent;
 	char	name[1024];
@@ -356,7 +362,7 @@ void CL_ParseDownload (void)
 	if (cls.demoplayback) {
 		if (size > 0)
 			msg_readcount += size;
-		return; // not in demo playback
+		return;	// not in demo playback
 	}
 
 	if (size == -1)
@@ -449,7 +455,8 @@ static byte *upload_data;
 static int upload_pos;
 static int upload_size;
 
-void CL_NextUpload(void)
+void
+CL_NextUpload ( void )
 {
 	byte	buffer[1024];
 	int		r;
@@ -474,7 +481,7 @@ void CL_NextUpload(void)
 	MSG_WriteByte (&cls.netchan.message, percent);
 	SZ_Write (&cls.netchan.message, buffer, r);
 
-Con_DPrintf ("UPLOAD: %6d: %d written\n", upload_pos - r, r);
+	Con_DPrintf ("UPLOAD: %6d: %d written\n", upload_pos - r, r);
 
 	if (upload_pos != upload_size)
 		return;
@@ -486,16 +493,17 @@ Con_DPrintf ("UPLOAD: %6d: %d written\n", upload_pos - r, r);
 	upload_pos = upload_size = 0;
 }
 
-void CL_StartUpload (byte *data, int size)
+void
+CL_StartUpload ( byte *data, int size )
 {
 	if (cls.state < ca_onserver)
-		return; // gotta be connected
+		return;	// gotta be connected
 
 	// override
 	if (upload_data)
 		free(upload_data);
 
-Con_DPrintf("Upload starting of %d...\n", size);
+	Con_DPrintf("Upload starting of %d...\n", size);
 
 	upload_data = malloc(size);
 	memcpy(upload_data, data, size);
@@ -505,14 +513,16 @@ Con_DPrintf("Upload starting of %d...\n", size);
 	CL_NextUpload();
 }
 
-qboolean CL_IsUploading(void)
+qboolean
+CL_IsUploading ( void )
 {
 	if (upload_data)
 		return true;
 	return false;
 }
 
-void CL_StopUpload(void)
+void
+CL_StopUpload ( void )
 {
 	if (upload_data)
 		free(upload_data);
@@ -532,7 +542,8 @@ void CL_StopUpload(void)
 CL_ParseServerData
 ==================
 */
-void CL_ParseServerData (void)
+void
+CL_ParseServerData ( void )
 {
 	char	*str;
 	QFile	*f;
@@ -644,11 +655,12 @@ void CL_ParseServerData (void)
 CL_ParseSoundlist
 ==================
 */
-void CL_ParseSoundlist (void)
+void
+CL_ParseSoundlist ( void )
 {
 	int	numsounds;
 	char	*str;
-	int n;
+	int	n;
 
 // precache sounds
 //	memset (cl.sound_precache, 0, sizeof(cl.sound_precache));
@@ -684,7 +696,8 @@ void CL_ParseSoundlist (void)
 CL_ParseModellist
 ==================
 */
-void CL_ParseModellist (void)
+void
+CL_ParseModellist ( void )
 {
 	int	nummodels;
 	char	*str;
@@ -730,7 +743,8 @@ void CL_ParseModellist (void)
 CL_ParseBaseline
 ==================
 */
-void CL_ParseBaseline (entity_state_t *es)
+void
+CL_ParseBaseline ( entity_state_t *es )
 {
 	int			i;
 
@@ -746,7 +760,6 @@ void CL_ParseBaseline (entity_state_t *es)
 }
 
 
-
 /*
 =====================
 CL_ParseStatic
@@ -755,7 +768,8 @@ Static entities are non-interactive world objects
 like torches
 =====================
 */
-void CL_ParseStatic (void)
+void
+CL_ParseStatic ( void )
 {
 	entity_t *ent;
 	int		i;
@@ -786,7 +800,8 @@ void CL_ParseStatic (void)
 CL_ParseStaticSound
 ===================
 */
-void CL_ParseStaticSound (void)
+void
+CL_ParseStaticSound ( void )
 {
 	vec3_t		org;
 	int			sound_num, vol, atten;
@@ -802,7 +817,6 @@ void CL_ParseStaticSound (void)
 }
 
 
-
 /*
 =====================================================================
 
@@ -816,23 +830,24 @@ ACTION MESSAGES
 CL_ParseStartSoundPacket
 ==================
 */
-void CL_ParseStartSoundPacket(void)
+void
+CL_ParseStartSoundPacket ( void )
 {
-    vec3_t  pos;
-    int 	channel, ent;
-    int 	sound_num;
-    int 	volume;
-    float 	attenuation;
+	vec3_t	pos;
+	int		channel, ent;
+	int		sound_num;
+	int		volume;
+	float	attenuation;
  	int		i;
 
-    channel = MSG_ReadShort();
+	channel = MSG_ReadShort();
 
-    if (channel & SND_VOLUME)
+	if (channel & SND_VOLUME)
 		volume = MSG_ReadByte ();
 	else
 		volume = DEFAULT_SOUND_PACKET_VOLUME;
 
-    if (channel & SND_ATTENUATION)
+	if (channel & SND_ATTENUATION)
 		attenuation = MSG_ReadByte () / 64.0;
 	else
 		attenuation = DEFAULT_SOUND_PACKET_ATTENUATION;
@@ -848,7 +863,7 @@ void CL_ParseStartSoundPacket(void)
 	if (ent > MAX_EDICTS)
 		Host_EndGame ("CL_ParseStartSoundPacket: ent = %i", ent);
 
-    S_StartSound (ent, channel, cl.sound_precache[sound_num], pos, volume/255.0, attenuation);
+	S_StartSound (ent, channel, cl.sound_precache[sound_num], pos, volume/255.0, attenuation);
 }
 
 
@@ -859,7 +874,8 @@ CL_ParseClientdata
 Server information pertaining to this client only, sent every frame
 ==================
 */
-void CL_ParseClientdata (void)
+void
+CL_ParseClientdata ( void )
 {
 	int				i;
 	float		latency;
@@ -899,7 +915,8 @@ void CL_ParseClientdata (void)
 CL_UpdateUserinfo
 ==============
 */
-void CL_ProcessUserInfo (int slot, player_info_t *player)
+void
+CL_ProcessUserInfo ( int slot, player_info_t *player )
 {
 	strncpy (player->name, Info_ValueForKey (player->userinfo, "name"), sizeof(player->name)-1);
 	player->topcolor = atoi(Info_ValueForKey (player->userinfo, "topcolor"));
@@ -921,7 +938,8 @@ void CL_ProcessUserInfo (int slot, player_info_t *player)
 CL_UpdateUserinfo
 ==============
 */
-void CL_UpdateUserinfo (void)
+void
+CL_UpdateUserinfo ( void )
 {
 	int		slot;
 	player_info_t	*player;
@@ -942,7 +960,8 @@ void CL_UpdateUserinfo (void)
 CL_SetInfo
 ==============
 */
-void CL_SetInfo (void)
+void
+CL_SetInfo ( void )
 {
 	int		slot;
 	player_info_t	*player;
@@ -972,7 +991,8 @@ void CL_SetInfo (void)
 CL_ServerInfo
 ==============
 */
-void CL_ServerInfo (void)
+void
+CL_ServerInfo ( void )
 {
 	char key[MAX_MSGLEN];
 	char value[MAX_MSGLEN];
@@ -999,7 +1019,8 @@ void CL_ServerInfo (void)
 CL_SetStat
 =====================
 */
-void CL_SetStat (int stat, int value)
+void
+CL_SetStat ( int stat, int value )
 {
 	int	j;
 	if (stat < 0 || stat >= MAX_CL_STATS)
@@ -1023,7 +1044,8 @@ void CL_SetStat (int stat, int value)
 CL_MuzzleFlash
 ==============
 */
-void CL_MuzzleFlash (void)
+void
+CL_MuzzleFlash ( void )
 {
 	vec3_t		fv, rv, uv;
 	dlight_t	*dl;
@@ -1045,7 +1067,7 @@ void CL_MuzzleFlash (void)
 	pl = &cl.frames[parsecountmod].playerstate[i-1];
 
 	dl = CL_AllocDlight (i);
-	VectorCopy (pl->origin,  dl->origin);
+	VectorCopy (pl->origin, dl->origin);
 	AngleVectors (pl->viewangles, fv, rv, uv);
 
 	VectorMA (dl->origin, 18, fv, dl->origin);
@@ -1066,7 +1088,8 @@ CL_ParseServerMessage
 =====================
 */
 int	received_framecount;
-void CL_ParseServerMessage (void)
+void
+CL_ParseServerMessage ( void )
 {
 	int			cmd;
 	char		*s;
@@ -1171,7 +1194,7 @@ void CL_ParseServerMessage (void)
 			i = MSG_ReadByte ();
 			if (i >= MAX_LIGHTSTYLES)
 				Sys_Error ("svc_lightstyle > MAX_LIGHTSTYLES");
-			Q_strcpy (cl_lightstyle[i].map,  MSG_ReadString());
+			Q_strcpy (cl_lightstyle[i].map, MSG_ReadString());
 			cl_lightstyle[i].length = Q_strlen(cl_lightstyle[i].map);
 			break;
 
@@ -1353,5 +1376,3 @@ void CL_ParseServerMessage (void)
 
 	CL_SetSolidEntities ();
 }
-
-

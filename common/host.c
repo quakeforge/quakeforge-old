@@ -110,7 +110,7 @@ void Host_FindMaxClients (void);
 	reinitialize anything.
 */
 void
-Host_ClearMemory (void)
+Host_ClearMemory ( void )
 {
 	Con_DPrintf ("Clearing memory\n");
 	D_FlushCaches ();
@@ -176,7 +176,8 @@ Host_GetConsoleCommands
 Add them exactly as if they had been typed at the console
 ===================
 */
-void Host_GetConsoleCommands (void)
+void
+Host_GetConsoleCommands ( void )
 {
 	char	*cmd;
 
@@ -404,7 +405,7 @@ Host_Frame ( double time )
 			c++;
 	}
 
-	Con_Printf ("serverprofile: %2i clients %2i msec\n",  c,  m);
+	Con_Printf ("serverprofile: %2i clients %2i msec\n", c, m);
 #endif
 }
 
@@ -521,7 +522,7 @@ Host_InitVCR ( quakeparms_t *parms )
 	Video initialization
 */
 void
-Host_InitDisplay ()
+Host_InitDisplay ( void )
 {
 }
 
@@ -535,7 +536,7 @@ extern cvar_t	*fs_basegame;
 	System Startup
 */
 void
-Host_Init (quakeparms_t *parms)
+Host_Init ( quakeparms_t *parms )
 {
 	COM_InitArgv (parms->argc, parms->argv);
 
@@ -546,7 +547,7 @@ Host_Init (quakeparms_t *parms)
 
 	if (parms->memsize < MINIMUM_MEMORY)
 		Sys_Error ("Only %4.1fMB of memory reported, can't execute game",
-				   parms->memsize / (float) 0x100000);
+				parms->memsize / (float) 0x100000);
 
 	Memory_Init (parms->membase, parms->memsize);
 	Cbuf_Init ();
@@ -676,7 +677,7 @@ Host_Init (quakeparms_t *parms)
 	through here before the final handoff to the sys code.
 */
 void
-Host_Shutdown( void )
+Host_Shutdown ( void )
 {
 	static qboolean 	isdown = false;
 
@@ -781,7 +782,8 @@ Host_InitLocal ( void )
 
 	(desc)
 */
-void	Host_FindMaxClients (void)
+void
+Host_FindMaxClients ( void )
 {
 	int		i;
 
@@ -834,7 +836,8 @@ Host_ClientCommands
 Send text over to the client to be executed
 =================
 */
-void Host_ClientCommands (char *fmt, ...)
+void
+Host_ClientCommands ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		string[1024];

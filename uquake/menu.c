@@ -139,12 +139,14 @@ M_DrawCharacter
 Draws one solid graphics character
 ================
 */
-void M_DrawCharacter (int cx, int line, int num)
+void
+M_DrawCharacter ( int cx, int line, int num )
 {
 	Draw_Character ( cx + ((vid.width - 320)>>1), line, num);
 }
 
-void M_Print (int cx, int cy, char *str)
+void
+M_Print ( int cx, int cy, char *str )
 {
 	while (*str)
 	{
@@ -154,7 +156,8 @@ void M_Print (int cx, int cy, char *str)
 	}
 }
 
-void M_PrintWhite (int cx, int cy, char *str)
+void
+M_PrintWhite ( int cx, int cy, char *str )
 {
 	while (*str)
 	{
@@ -164,12 +167,14 @@ void M_PrintWhite (int cx, int cy, char *str)
 	}
 }
 
-void M_DrawTransPic (int x, int y, qpic_t *pic)
+void
+M_DrawTransPic ( int x, int y, qpic_t *pic )
 {
 	Draw_TransPic (x + ((vid.width - 320)>>1), y, pic);
 }
 
-void M_DrawPic (int x, int y, qpic_t *pic)
+void
+M_DrawPic ( int x, int y, qpic_t *pic )
 {
 	Draw_Pic (x + ((vid.width - 320)>>1), y, pic);
 }
@@ -177,7 +182,8 @@ void M_DrawPic (int x, int y, qpic_t *pic)
 byte identityTable[256];
 byte translationTable[256];
 
-void M_BuildTranslationTable(int top, int bottom)
+void
+M_BuildTranslationTable ( int top, int bottom )
 {
 	int		j;
 	byte	*dest, *source;
@@ -202,13 +208,15 @@ void M_BuildTranslationTable(int top, int bottom)
 }
 
 
-void M_DrawTransPicTranslate (int x, int y, qpic_t *pic)
+void
+M_DrawTransPicTranslate ( int x, int y, qpic_t *pic )
 {
 	Draw_TransPicTranslate (x + ((vid.width - 320)>>1), y, pic, translationTable);
 }
 
 
-void M_DrawTextBox (int x, int y, int width, int lines)
+void
+M_DrawTextBox ( int x, int y, int width, int lines )
 {
 	qpic_t	*p;
 	int		cx, cy;
@@ -272,7 +280,8 @@ int m_save_demonum;
 M_ToggleMenu_f
 ================
 */
-void M_ToggleMenu_f (void)
+void
+M_ToggleMenu_f ( void )
 {
 	m_entersound = true;
 
@@ -307,7 +316,8 @@ int	m_main_cursor;
 #define	MAIN_ITEMS	5
 
 
-void M_Menu_Main_f (void)
+void
+M_Menu_Main_f ( void )
 {
 	if (key_dest != key_menu)
 	{
@@ -320,7 +330,8 @@ void M_Menu_Main_f (void)
 }
 
 
-void M_Main_Draw (void)
+void
+M_Main_Draw ( void )
 {
 	int		f;
 	qpic_t	*p;
@@ -336,7 +347,8 @@ void M_Main_Draw (void)
 }
 
 
-void M_Main_Key (int key)
+void
+M_Main_Key ( int key )
 {
 	switch (key)
 	{
@@ -398,7 +410,8 @@ int	m_singleplayer_cursor;
 #define	SINGLEPLAYER_ITEMS	3
 
 
-void M_Menu_SinglePlayer_f (void)
+void
+M_Menu_SinglePlayer_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_singleplayer;
@@ -406,7 +419,8 @@ void M_Menu_SinglePlayer_f (void)
 }
 
 
-void M_SinglePlayer_Draw (void)
+void
+M_SinglePlayer_Draw ( void )
 {
 	int		f;
 	qpic_t	*p;
@@ -422,7 +436,8 @@ void M_SinglePlayer_Draw (void)
 }
 
 
-void M_SinglePlayer_Key (int key)
+void
+M_SinglePlayer_Key ( int key )
 {
 	switch (key)
 	{
@@ -481,7 +496,8 @@ int	load_cursor;		// 0 < load_cursor < MAX_SAVEGAMES
 char	m_filenames[MAX_SAVEGAMES][SAVEGAME_COMMENT_LENGTH+1];
 int	loadable[MAX_SAVEGAMES];
 
-void M_ScanSaves (void)
+void
+M_ScanSaves ( void )
 {
 	int		i, j;
 	char	name[MAX_OSPATH];
@@ -512,7 +528,8 @@ void M_ScanSaves (void)
 	}
 }
 
-void M_Menu_Load_f (void)
+void
+M_Menu_Load_f ( void )
 {
 	m_entersound = true;
 	m_state = m_load;
@@ -521,7 +538,8 @@ void M_Menu_Load_f (void)
 }
 
 
-void M_Menu_Save_f (void)
+void
+M_Menu_Save_f ( void )
 {
 	if (!sv.active)
 		return;
@@ -536,7 +554,8 @@ void M_Menu_Save_f (void)
 }
 
 
-void M_Load_Draw (void)
+void
+M_Load_Draw ( void )
 {
 	int		i;
 	qpic_t	*p;
@@ -552,7 +571,8 @@ void M_Load_Draw (void)
 }
 
 
-void M_Save_Draw (void)
+void
+M_Save_Draw ( void )
 {
 	int		i;
 	qpic_t	*p;
@@ -568,7 +588,8 @@ void M_Save_Draw (void)
 }
 
 
-void M_Load_Key (int k)
+void
+M_Load_Key ( int k )
 {
 	switch (k)
 	{
@@ -615,7 +636,8 @@ void M_Load_Key (int k)
 }
 
 
-void M_Save_Key (int k)
+void
+M_Save_Key ( int k )
 {
 	switch (k)
 	{
@@ -659,7 +681,8 @@ int	m_multiplayer_cursor;
 #define	MULTIPLAYER_ITEMS	3
 
 
-void M_Menu_MultiPlayer_f (void)
+void
+M_Menu_MultiPlayer_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_multiplayer;
@@ -667,7 +690,8 @@ void M_Menu_MultiPlayer_f (void)
 }
 
 
-void M_MultiPlayer_Draw (void)
+void
+M_MultiPlayer_Draw ( void )
 {
 	int		f;
 	qpic_t	*p;
@@ -687,7 +711,8 @@ void M_MultiPlayer_Draw (void)
 }
 
 
-void M_MultiPlayer_Key (int key)
+void
+M_MultiPlayer_Key ( int key )
 {
 	switch (key)
 	{
@@ -746,7 +771,8 @@ int	setup_bottom;
 
 #define	NUM_SETUP_CMDS	5
 
-void M_Menu_Setup_f (void)
+void
+M_Menu_Setup_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_setup;
@@ -758,7 +784,8 @@ void M_Menu_Setup_f (void)
 }
 
 
-void M_Setup_Draw (void)
+void
+M_Setup_Draw ( void )
 {
 	qpic_t	*p;
 
@@ -796,7 +823,8 @@ void M_Setup_Draw (void)
 }
 
 
-void M_Setup_Key (int k)
+void
+M_Setup_Key ( int k )
 {
 	int			l;
 
@@ -941,7 +969,8 @@ char	*net_helpMessage [] =
   " Area Network.          "
 };
 
-void M_Menu_Net_f (void)
+void
+M_Menu_Net_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_net;
@@ -955,7 +984,8 @@ void M_Menu_Net_f (void)
 }
 
 
-void M_Net_Draw (void)
+void
+M_Net_Draw ( void )
 {
 	int		f;
 	qpic_t	*p;
@@ -1034,7 +1064,8 @@ void M_Net_Draw (void)
 }
 
 
-void M_Net_Key (int k)
+void
+M_Net_Key ( int k )
 {
 again:
 	switch (k)
@@ -1105,14 +1136,16 @@ static int	options_cursor;
 static int	options_items;
 static int	options_video;		// menu item for video options menu (-1 = none)
 
-void M_Menu_Options_f (void)
+void
+M_Menu_Options_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_options;
 	m_entersound = true;
 }
 
-void M_DrawSlider (int x, int y, float range)
+void
+M_DrawSlider ( int x, int y, float range )
 {
 	int	i;
 
@@ -1127,7 +1160,8 @@ void M_DrawSlider (int x, int y, float range)
 	M_DrawCharacter (x + (SLIDER_RANGE-1)*8 * range, y, 131);
 }
 
-void M_DrawCheckbox (int x, int y, int on)
+void
+M_DrawCheckbox ( int x, int y, int on )
 {
 	if (on)
 		M_Print (x, y, "on");
@@ -1135,7 +1169,8 @@ void M_DrawCheckbox (int x, int y, int on)
 		M_Print (x, y, "off");
 }
 
-void M_Options_Draw (void)
+void
+M_Options_Draw ( void )
 {
 	unsigned int	options_draw_cursor=32;
 	float		r;
@@ -1205,7 +1240,8 @@ void M_Options_Draw (void)
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
 
-void M_AdjustSliders (int dir)
+void
+M_AdjustSliders ( int dir )
 {
 	S_LocalSound ("misc/menu3.wav");
 
@@ -1277,7 +1313,8 @@ void M_AdjustSliders (int dir)
 	}
 }
 
-void M_Options_Key (int k)
+void
+M_Options_Key ( int k )
 {
 	switch (k)
 	{
@@ -1371,7 +1408,8 @@ char *bindnames[][2] =
 int	keys_cursor;
 int	bind_grab;
 
-void M_Menu_Keys_f (void)
+void
+M_Menu_Keys_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_keys;
@@ -1379,7 +1417,8 @@ void M_Menu_Keys_f (void)
 }
 
 
-void M_FindKeysForCommand (char *command, int *twokeys)
+void
+M_FindKeysForCommand ( char *command, int *twokeys )
 {
 	int	count;
 	int	j;
@@ -1405,7 +1444,8 @@ void M_FindKeysForCommand (char *command, int *twokeys)
 	}
 }
 
-void M_UnbindCommand (char *command)
+void
+M_UnbindCommand ( char *command )
 {
 	int	j;
 	int	l;
@@ -1424,7 +1464,8 @@ void M_UnbindCommand (char *command)
 }
 
 
-void M_Keys_Draw (void)
+void
+M_Keys_Draw ( void )
 {
 	int	i, l;
 	int	keys[2];
@@ -1475,7 +1516,8 @@ void M_Keys_Draw (void)
 }
 
 
-void M_Keys_Key (int k)
+void
+M_Keys_Key ( int k )
 {
 	char	cmd[80];
 	int	keys[2];
@@ -1552,7 +1594,8 @@ void M_Keys_Key (int k)
 /* Default functions */
 #define MAX_COLUMN_SIZE	11
 
-static void vid_menudraw(void)
+static void
+vid_menudraw ( void )
 {
 	qpic_t	*p;
 
@@ -1563,7 +1606,8 @@ static void vid_menudraw(void)
 	M_Print(9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
 }
 
-static void vid_menukey(int key)
+static void
+vid_menukey ( int key )
 {
 	M_Menu_Options_f();
 }
@@ -1573,7 +1617,8 @@ void (*vid_menudrawfn)(void) = vid_menudraw;
 void (*vid_menukeyfn)(int key) = vid_menukey;
 
 
-void M_Menu_Video_f (void)
+void
+M_Menu_Video_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_video;
@@ -1581,7 +1626,8 @@ void M_Menu_Video_f (void)
 }
 
 
-void M_Video_Draw(void)
+void
+M_Video_Draw ( void )
 {
 	if (vid_menudrawfn == NULL) {
 		Sys_Error("M_Video_Draw called when vid_menudrawfn == NULL!\n");
@@ -1590,7 +1636,8 @@ void M_Video_Draw(void)
 }
 
 
-void M_Video_Key(int key)
+void
+M_Video_Key ( int key )
 {
 	if (vid_menukeyfn == NULL) {
 		Sys_Error("M_Video_Key called when vid_menukeyfn == NULL!\n");
@@ -1605,7 +1652,8 @@ int	help_page;
 #define	NUM_HELP_PAGES	6
 
 
-void M_Menu_Help_f (void)
+void
+M_Menu_Help_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_help;
@@ -1615,13 +1663,15 @@ void M_Menu_Help_f (void)
 
 
 
-void M_Help_Draw (void)
+void
+M_Help_Draw ( void )
 {
 	M_DrawPic (0, 0, Draw_CachePic ( va("gfx/help%i.lmp", help_page)) );
 }
 
 
-void M_Help_Key (int key)
+void
+M_Help_Key ( int key )
 {
 	switch (key)
 	{
@@ -1703,7 +1753,8 @@ char *quitMessage [] =
 };
 #endif
 
-void M_Menu_Quit_f (void)
+void
+M_Menu_Quit_f ( void )
 {
 	if (m_state == m_quit)
 		return;
@@ -1716,7 +1767,8 @@ void M_Menu_Quit_f (void)
 }
 
 
-void M_Quit_Key (int key)
+void
+M_Quit_Key ( int key )
 {
 	switch (key)
 	{
@@ -1748,7 +1800,8 @@ void M_Quit_Key (int key)
 }
 
 
-void M_Quit_Draw (void)
+void
+M_Quit_Draw ( void )
 {
 	if (wasInMenus)
 	{
@@ -1807,7 +1860,8 @@ int	serialConfig_irq ;
 int	serialConfig_baud;
 char	serialConfig_phone[16];
 
-void M_Menu_SerialConfig_f (void)
+void
+M_Menu_SerialConfig_f ( void )
 {
 	int		n;
 	int		port;
@@ -1848,7 +1902,8 @@ void M_Menu_SerialConfig_f (void)
 }
 
 
-void M_SerialConfig_Draw (void)
+void
+M_SerialConfig_Draw ( void )
 {
 	qpic_t	*p;
 	int	basex;
@@ -1915,7 +1970,8 @@ void M_SerialConfig_Draw (void)
 }
 
 
-void M_SerialConfig_Key (int key)
+void
+M_SerialConfig_Key ( int key )
 {
 	int	l;
 
@@ -2098,7 +2154,8 @@ char	modemConfig_clear [16];
 char	modemConfig_init [32];
 char	modemConfig_hangup [16];
 
-void M_Menu_ModemConfig_f (void)
+void
+M_Menu_ModemConfig_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_modemconfig;
@@ -2107,7 +2164,8 @@ void M_Menu_ModemConfig_f (void)
 }
 
 
-void M_ModemConfig_Draw (void)
+void
+M_ModemConfig_Draw ( void )
 {
 	qpic_t	*p;
 	int	basex;
@@ -2148,7 +2206,8 @@ void M_ModemConfig_Draw (void)
 }
 
 
-void M_ModemConfig_Key (int key)
+void
+M_ModemConfig_Key ( int key )
 {
 	int	l;
 
@@ -2274,7 +2333,8 @@ int 	lanConfig_port;
 char	lanConfig_portname[6];
 char	lanConfig_joinname[22];
 
-void M_Menu_LanConfig_f (void)
+void
+M_Menu_LanConfig_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_lanconfig;
@@ -2296,7 +2356,8 @@ void M_Menu_LanConfig_f (void)
 }
 
 
-void M_LanConfig_Draw (void)
+void
+M_LanConfig_Draw ( void )
 {
 	qpic_t	*p;
 	int	basex;
@@ -2355,7 +2416,8 @@ void M_LanConfig_Draw (void)
 }
 
 
-void M_LanConfig_Key (int key)
+void
+M_LanConfig_Key ( int key )
 {
 	int	l;
 
@@ -2461,7 +2523,7 @@ void M_LanConfig_Key (int key)
 			lanConfig_cursor = 0;
 	}
 
-	l =  Q_atoi(lanConfig_portname);
+	l = Q_atoi(lanConfig_portname);
 	if (l > 65535)
 		l = lanConfig_port;
 	else
@@ -2625,7 +2687,8 @@ int		maxplayers;
 qboolean	m_serverInfoMessage = false;
 double		m_serverInfoMessageTime;
 
-void M_Menu_GameOptions_f (void)
+void
+M_Menu_GameOptions_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_gameoptions;
@@ -2641,7 +2704,8 @@ int gameoptions_cursor_table[] = {40, 56, 64, 72, 80, 88, 96, 112, 120};
 #define	NUM_GAMEOPTIONS	9
 int		gameoptions_cursor;
 
-void M_GameOptions_Draw (void)
+void
+M_GameOptions_Draw ( void )
 {
 	qpic_t	*p;
 	int	x;
@@ -2766,7 +2830,8 @@ void M_GameOptions_Draw (void)
 }
 
 
-void M_NetStart_Change (int dir)
+void
+M_NetStart_Change ( int dir )
 {
 	int count;
 
@@ -2866,7 +2931,8 @@ void M_NetStart_Change (int dir)
 	}
 }
 
-void M_GameOptions_Key (int key)
+void
+M_GameOptions_Key ( int key )
 {
 	switch (key)
 	{
@@ -2938,7 +3004,8 @@ void M_GameOptions_Key (int key)
 qboolean	searchComplete = false;
 double		searchCompleteTime;
 
-void M_Menu_Search_f (void)
+void
+M_Menu_Search_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_search;
@@ -2951,7 +3018,8 @@ void M_Menu_Search_f (void)
 }
 
 
-void M_Search_Draw (void)
+void
+M_Search_Draw ( void )
 {
 	qpic_t	*p;
 	int	x;
@@ -2988,7 +3056,8 @@ void M_Search_Draw (void)
 }
 
 
-void M_Search_Key (int key)
+void
+M_Search_Key ( int key )
 {
 }
 
@@ -2998,7 +3067,8 @@ void M_Search_Key (int key)
 int		slist_cursor;
 qboolean	slist_sorted;
 
-void M_Menu_ServerList_f (void)
+void
+M_Menu_ServerList_f ( void )
 {
 	key_dest = key_menu;
 	m_state = m_slist;
@@ -3010,7 +3080,8 @@ void M_Menu_ServerList_f (void)
 }
 
 
-void M_ServerList_Draw (void)
+void
+M_ServerList_Draw ( void )
 {
 	int	n;
 	char	string [64];
@@ -3051,7 +3122,8 @@ void M_ServerList_Draw (void)
 }
 
 
-void M_ServerList_Key (int k)
+void
+M_ServerList_Key ( int k )
 {
 	switch (k)
 	{
@@ -3104,7 +3176,8 @@ void M_ServerList_Key (int k)
 /* Menu Subsystem */
 
 
-void M_Init (void)
+void
+M_Init ( void )
 {
 	Cmd_AddCommand ("togglemenu", M_ToggleMenu_f);
 
@@ -3123,7 +3196,8 @@ void M_Init (void)
 }
 
 
-void M_Draw (void)
+void
+M_Draw ( void )
 {
 	if (m_state == m_none || key_dest != key_menu)
 		return;
@@ -3239,7 +3313,8 @@ void M_Draw (void)
 }
 
 
-void M_Keydown (int key)
+void
+M_Keydown ( int key )
 {
 	switch (m_state)
 	{
@@ -3321,7 +3396,8 @@ void M_Keydown (int key)
 }
 
 
-void M_ConfigureNetSubsystem(void)
+void
+M_ConfigureNetSubsystem ( void )
 {
 // enable/disable net systems to match desired config
 

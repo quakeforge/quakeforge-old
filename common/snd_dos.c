@@ -76,7 +76,8 @@ int dsp_minor_version;
 int timeconstant=-1;
 
 
-void PrintBits (byte b)
+void
+PrintBits ( byte b )
 {
 	int	i;
 	char	str[9];
@@ -88,7 +89,8 @@ void PrintBits (byte b)
 	Con_Printf ("%s (%i)", str, b);
 }
 
-void SB_Info_f(void)
+void
+SB_Info_f ( void )
 {
 	Con_Printf ("BLASTER=%s\n", getenv("BLASTER"));
 	Con_Printf("dsp version=%d.%d\n", dsp_version, dsp_minor_version);
@@ -102,7 +104,8 @@ void SB_Info_f(void)
 // Interprets BLASTER variable
 // =======================================================================
 
-int GetBLASTER(void)
+int
+GetBLASTER ( void )
 {
 	char *BLASTER;
 	char *param;
@@ -160,7 +163,8 @@ int GetBLASTER(void)
 // Resets DSP.  Returns 0 on success.
 // ==================================================================
 
-int ResetDSP(void)
+int
+ResetDSP ( void )
 {
 	volatile int i;
 
@@ -177,31 +181,35 @@ int ResetDSP(void)
 
 }
 
-int ReadDSP(void)
+int
+ReadDSP ( void )
 {
 	while (!(dos_inportb(dsp_port+0xe)&0x80)) ;
 	return dos_inportb(dsp_port+0xa);
 }
 
-void WriteDSP(int val)
+void
+WriteDSP ( int val )
 {
 	while ((dos_inportb(dsp_port+0xc)&0x80)) ;
 	dos_outportb(dsp_port+0xc, val);
 }
 
-int ReadMixer(int addr)
+int
+ReadMixer ( int addr )
 {
 	dos_outportb(mixer_port+4, addr);
 	return dos_inportb(mixer_port+5);
 }
 
-void WriteMixer(int addr, int val)
+void
+WriteMixer ( int addr, int val )
 {
 	dos_outportb(mixer_port+4, addr);
 	dos_outportb(mixer_port+5, val);
 }
 
-int		oldmixervalue;
+int	oldmixervalue;
 
 /*
 ================
@@ -209,7 +217,8 @@ StartSB
 
 ================
 */
-void StartSB(void)
+void
+StartSB ( void )
 {
 	int		i;
 
@@ -217,7 +226,7 @@ void StartSB(void)
 	if (dsp_version >= 4)
 	{
 		Con_Printf("Version 4 SB startup\n");
-		WriteDSP(0xd1); // turn on speaker
+		WriteDSP(0xd1);	// turn on speaker
 
 		WriteDSP(0x41);
 
@@ -233,7 +242,7 @@ void StartSB(void)
 	else if (dsp_version == 3)
 	{
 		Con_Printf("Version 3 SB startup\n");
-		WriteDSP(0xd1); // turn on speaker
+		WriteDSP(0xd1);	// turn on speaker
 
 		oldmixervalue = ReadMixer (0xe);
 		WriteMixer (0xe, oldmixervalue | 0x2);// turn on stereo
@@ -255,13 +264,13 @@ void StartSB(void)
 		WriteDSP((shm->samples-1) & 0xff);	// # of samples - 1
 		WriteDSP((shm->samples-1) >> 8);
 
-		WriteDSP(0x90); // high speed 8 bit stereo
+		WriteDSP(0x90);	// high speed 8 bit stereo
 	}
 // normal speed mono
 	else
 	{
 		Con_Printf("Version 2 SB startup\n");
-		WriteDSP(0xd1); // turn on speaker
+		WriteDSP(0xd1);	// turn on speaker
 
 		timeconstant = 65536-(256000000/(shm->channels*shm->speed));
 		WriteDSP(0x40);
@@ -271,7 +280,7 @@ void StartSB(void)
 		WriteDSP((shm->samples-1) & 0xff);	// # of samples - 1
 		WriteDSP((shm->samples-1) >> 8);
 
-		WriteDSP(0x1c); // normal speed 8 bit mono
+		WriteDSP(0x1c);// normal speed 8 bit mono
 	}
 }
 
@@ -290,7 +299,8 @@ StartDMA
 
 ================
 */
-void StartDMA(void)
+void
+StartDMA ( void )
 {
 	int mode;
 	int realaddr;
@@ -366,7 +376,8 @@ BLASTER_Init
 Returns false if nothing is found.
 ==================
 */
-qboolean BLASTER_Init(void)
+qboolean
+BLASTER_Init ( void )
 {
 	int 	size;
 	int 	realaddr;
@@ -493,7 +504,8 @@ inside the recirculating dma buffer, so the mixing code will know
 how many sample are required to fill it up.
 ===============
 */
-int BLASTER_GetDMAPos(void)
+int
+BLASTER_GetDMAPos ( void )
 {
 	int count;
 
@@ -529,7 +541,6 @@ int BLASTER_GetDMAPos(void)
 
 	shm->samplepos = count & (shm->samples-1);
 	return shm->samplepos;
-
 }
 
 /*
@@ -539,7 +550,8 @@ BLASTER_Shutdown
 Reset the sound device for exiting
 ===============
 */
-void BLASTER_Shutdown(void)
+void
+BLASTER_Shutdown ( void )
 {
 	if (dsp_version >= 4)
 	{
@@ -547,19 +559,18 @@ void BLASTER_Shutdown(void)
 	else if (dsp_version == 3)
 	{
 		ResetDSP ();			// stop high speed mode
-		WriteMixer (0xe, oldmixervalue); // turn stereo off and filter on
+		WriteMixer (0xe, oldmixervalue);	// turn stereo off and filter on
 	}
 	else
 	{
 
 	}
 
-	WriteDSP(0xd3); // turn off speaker
+	WriteDSP(0xd3);	// turn off speaker
 	ResetDSP ();
 
 	dos_outportb(disable_reg, dma|4);	// disable dma channel
 }
-
 
 
 /*
@@ -588,7 +599,8 @@ Returns false if nothing is found.
 Returns true and fills in the "shm" structure with information for the mixer.
 ==================
 */
-qboolean SNDDMA_Init(void)
+qboolean
+SNDDMA_Init ( void )
 {
 	if (GUS_Init ())
 	{
@@ -616,7 +628,8 @@ inside the recirculating dma buffer, so the mixing code will know
 how many sample are required to fill it up.
 ===============
 */
-int SNDDMA_GetDMAPos(void)
+int
+SNDDMA_GetDMAPos ( void )
 {
 	switch (dmacard)
 	{
@@ -638,7 +651,8 @@ SNDDMA_Shutdown
 Reset the sound device for exiting
 ===============
 */
-void SNDDMA_Shutdown(void)
+void
+SNDDMA_Shutdown ( void )
 {
 	switch (dmacard)
 	{
@@ -663,7 +677,7 @@ SNDDMA_Submit
 Send sound to device if buffer isn't really the dma buffer
 ===============
 */
-void SNDDMA_Submit(void)
+void
+SNDDMA_Submit ( void )
 {
 }
-

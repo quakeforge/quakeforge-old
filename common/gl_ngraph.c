@@ -45,7 +45,8 @@ int	netgraphtexture;	// netgraph texture
 
 static	byte ngraph_texels[NET_GRAPHHEIGHT][NET_TIMINGS];
 
-static void R_LineGraph (int x, int h)
+static void
+R_LineGraph ( int x, int h )
 {
 	int		i;
 	int		s;
@@ -75,7 +76,8 @@ static void R_LineGraph (int x, int h)
 		ngraph_texels[NET_GRAPHHEIGHT - i - 1][x] = (byte)0xff;
 }
 
-void Draw_CharToNetGraph (int x, int y, int num)
+void
+Draw_CharToNetGraph ( int x, int y, int num )
 {
 	int		row, col;
 	byte	*source;
@@ -101,7 +103,8 @@ void Draw_CharToNetGraph (int x, int y, int num)
 R_NetGraph
 ==============
 */
-void R_NetGraph (void)
+void
+R_NetGraph ( void )
 {
 	int		a, x, i, y;
 	int lost;
@@ -131,7 +134,7 @@ void R_NetGraph (void)
 	Draw_String(8, y, st);
 	y += 8;
 
-    GL_Bind(netgraphtexture);
+	GL_Bind(netgraphtexture);
 
 	glTexImage2D (GL_TEXTURE_2D, 0, gl_alpha_format,
 		NET_TIMINGS, NET_GRAPHHEIGHT, 0, GL_RGBA,
@@ -154,4 +157,3 @@ void R_NetGraph (void)
 	glVertex2f (x, y+NET_GRAPHHEIGHT);
 	glEnd ();
 }
-

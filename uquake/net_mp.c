@@ -49,7 +49,8 @@ static unsigned long myAddr;
 
 //=============================================================================
 
-int MPATH_Init (void)
+int
+MPATH_Init ( void )
 {
 	int		i;
 	struct hostent *local = NULL;
@@ -60,19 +61,19 @@ int MPATH_Init (void)
 	if (COM_CheckParm ("-mpath") == 0)
 		return -1;
 
-   flat_selector = __dpmi_allocate_ldt_descriptors(1);
-   if (flat_selector == -1) {
-      Con_Printf("MPATH_Init: Can't get flat selector\n");
-      return -1;
-   }
-   if (__dpmi_set_segment_base_address(flat_selector, 0) == -1) {
-      Con_Printf("MPATH_Init: Can't seg flat base!\n");
-      return -1;
-   }
-   if (__dpmi_set_segment_limit(flat_selector, 0xffffffff) == -1) {
-      Con_Printf("MPATH_Init: Can't set segment limit\n");
-      return -1;
-   }
+	flat_selector = __dpmi_allocate_ldt_descriptors(1);
+	if (flat_selector == -1) {
+		Con_Printf("MPATH_Init: Can't get flat selector\n");
+		return -1;
+	}
+	if (__dpmi_set_segment_base_address(flat_selector, 0) == -1) {
+		Con_Printf("MPATH_Init: Can't seg flat base!\n");
+		return -1;
+	}
+	if (__dpmi_set_segment_limit(flat_selector, 0xffffffff) == -1) {
+		Con_Printf("MPATH_Init: Can't set segment limit\n");
+		return -1;
+	}
 	// determine my name & address
 	if (gethostname(buff, MAXHOSTNAMELEN) == 0)
 		local = gethostbyname(buff);
@@ -108,7 +109,7 @@ int MPATH_Init (void)
 	((struct sockaddr_in *)&broadcastaddr)->sin_port = htons(net_hostport);
 
 	MPATH_GetSocketAddr (net_controlsocket, &addr);
-	Q_strcpy(my_tcpip_address,  MPATH_AddrToString (&addr));
+	Q_strcpy(my_tcpip_address, MPATH_AddrToString (&addr));
 	p = Q_strrchr (my_tcpip_address, ':');
 	if (p)
 		*p = 0;
@@ -121,7 +122,8 @@ int MPATH_Init (void)
 
 //=============================================================================
 
-void MPATH_Shutdown (void)
+void
+MPATH_Shutdown ( void )
 {
 	MPATH_Listen (false);
 	MPATH_CloseSocket (net_controlsocket);
@@ -129,7 +131,8 @@ void MPATH_Shutdown (void)
 
 //=============================================================================
 
-void MPATH_Listen (qboolean state)
+void
+MPATH_Listen ( qboolean state )
 {
 	// enable listening
 	if (state)
@@ -150,7 +153,8 @@ void MPATH_Listen (qboolean state)
 
 //=============================================================================
 
-int MPATH_OpenSocket (int port)
+int
+MPATH_OpenSocket ( int port )
 {
 	int newsocket;
 	struct sockaddr_in address;
@@ -177,7 +181,8 @@ ErrorReturn:
 
 //=============================================================================
 
-int MPATH_CloseSocket (int socket)
+int
+MPATH_CloseSocket ( int socket )
 {
 	if (socket == net_broadcastsocket)
 		net_broadcastsocket = 0;
@@ -194,7 +199,8 @@ this lets you type only as much of the net address as required, using
 the local network components to fill in the rest
 ============
 */
-static int PartialIPAddress (char *in, struct qsockaddr *hostaddr)
+static int
+PartialIPAddress ( char *in, struct qsockaddr *hostaddr )
 {
 	char buff[256];
 	char *b;
@@ -219,9 +225,9 @@ static int PartialIPAddress (char *in, struct qsockaddr *hostaddr)
 		run = 0;
 		while (!( *b < '0' || *b > '9'))
 		{
-		  num = num*10 + *b++ - '0';
-		  if (++run > 3)
-		  	return -1;
+			num = num*10 + *b++ - '0';
+			if (++run > 3)
+				return -1;
 		}
 		if ((*b < '0' || *b > '9') && *b != '.' && *b != ':' && *b != 0)
 			return -1;
@@ -244,14 +250,16 @@ static int PartialIPAddress (char *in, struct qsockaddr *hostaddr)
 }
 //=============================================================================
 
-int MPATH_Connect (int socket, struct qsockaddr *addr)
+int
+MPATH_Connect ( int socket, struct qsockaddr *addr )
 {
 	return 0;
 }
 
 //=============================================================================
 
-int MPATH_CheckNewConnections (void)
+int
+MPATH_CheckNewConnections ( void )
 {
 	char buf[4];
 
@@ -265,7 +273,8 @@ int MPATH_CheckNewConnections (void)
 
 //=============================================================================
 
-int MPATH_Read (int socket, byte *buf, int len, struct qsockaddr *addr)
+int
+MPATH_Read ( int socket, byte *buf, int len, struct qsockaddr *addr )
 {
 	int addrlen = sizeof (struct qsockaddr);
 	int ret;
@@ -284,7 +293,8 @@ int MPATH_Read (int socket, byte *buf, int len, struct qsockaddr *addr)
 
 //=============================================================================
 
-int MPATH_MakeSocketBroadcastCapable (int socket)
+int
+MPATH_MakeSocketBroadcastCapable ( int socket )
 {
 	int	i = 1;
 
@@ -298,7 +308,8 @@ int MPATH_MakeSocketBroadcastCapable (int socket)
 
 //=============================================================================
 
-int MPATH_Broadcast (int socket, byte *buf, int len)
+int
+MPATH_Broadcast ( int socket, byte *buf, int len )
 {
 	int ret;
 
@@ -319,7 +330,8 @@ int MPATH_Broadcast (int socket, byte *buf, int len)
 
 //=============================================================================
 
-int MPATH_Write (int socket, byte *buf, int len, struct qsockaddr *addr)
+int
+MPATH_Write ( int socket, byte *buf, int len, struct qsockaddr *addr )
 {
 	int ret;
 
@@ -335,7 +347,8 @@ int MPATH_Write (int socket, byte *buf, int len, struct qsockaddr *addr)
 
 //=============================================================================
 
-char *MPATH_AddrToString (struct qsockaddr *addr)
+char *
+MPATH_AddrToString ( struct qsockaddr *addr )
 {
 	static char buffer[22];
 	int haddr;
@@ -347,7 +360,8 @@ char *MPATH_AddrToString (struct qsockaddr *addr)
 
 //=============================================================================
 
-int MPATH_StringToAddr (char *string, struct qsockaddr *addr)
+int
+MPATH_StringToAddr ( char *string, struct qsockaddr *addr )
 {
 	int ha1, ha2, ha3, ha4, hp;
 	int ipaddr;
@@ -363,7 +377,8 @@ int MPATH_StringToAddr (char *string, struct qsockaddr *addr)
 
 //=============================================================================
 
-int MPATH_GetSocketAddr (int socket, struct qsockaddr *addr)
+int
+MPATH_GetSocketAddr ( int socket, struct qsockaddr *addr )
 {
 	int addrlen = sizeof(struct qsockaddr);
 	unsigned int a;
@@ -379,7 +394,8 @@ int MPATH_GetSocketAddr (int socket, struct qsockaddr *addr)
 
 //=============================================================================
 
-int MPATH_GetNameFromAddr (struct qsockaddr *addr, char *name)
+int
+MPATH_GetNameFromAddr ( struct qsockaddr *addr, char *name )
 {
 	struct hostent *hostentry;
 
@@ -396,7 +412,8 @@ int MPATH_GetNameFromAddr (struct qsockaddr *addr, char *name)
 
 //=============================================================================
 
-int MPATH_GetAddrFromName(char *name, struct qsockaddr *addr)
+int
+MPATH_GetAddrFromName ( char *name, struct qsockaddr *addr )
 {
 	struct hostent *hostentry;
 
@@ -416,7 +433,8 @@ int MPATH_GetAddrFromName(char *name, struct qsockaddr *addr)
 
 //=============================================================================
 
-int MPATH_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
+int
+MPATH_AddrCompare ( struct qsockaddr *addr1, struct qsockaddr *addr2 )
 {
 	if (addr1->sa_family != addr2->sa_family)
 		return -1;
@@ -432,13 +450,15 @@ int MPATH_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
 
 //=============================================================================
 
-int MPATH_GetSocketPort (struct qsockaddr *addr)
+int
+MPATH_GetSocketPort ( struct qsockaddr *addr )
 {
 	return ntohs(((struct sockaddr_in *)addr)->sin_port);
 }
 
 
-int MPATH_SetSocketPort (struct qsockaddr *addr, int port)
+int
+MPATH_SetSocketPort ( struct qsockaddr *addr, int port )
 {
 	((struct sockaddr_in *)addr)->sin_port = htons(port);
 	return 0;

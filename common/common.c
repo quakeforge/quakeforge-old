@@ -54,25 +54,29 @@ qboolean		standard_quake = true, rogue, hipnotic;
 qboolean		msg_suppress_1 = 0;
 
 // ClearLink is used for new headnodes
-void ClearLink (link_t *l)
+void
+ClearLink ( link_t *l )
 {
 	l->prev = l->next = l;
 }
 
-void RemoveLink (link_t *l)
+void
+RemoveLink ( link_t *l )
 {
 	l->next->prev = l->prev;
 	l->prev->next = l->next;
 }
 
-void InsertLinkBefore (link_t *l, link_t *before)
+void
+InsertLinkBefore ( link_t *l, link_t *before )
 {
 	l->next = before;
 	l->prev = before->prev;
 	l->prev->next = l;
 	l->next->prev = l;
 }
-void InsertLinkAfter (link_t *l, link_t *after)
+void
+InsertLinkAfter ( link_t *l, link_t *after )
 {
 	l->next = after->next;
 	l->prev = after;
@@ -93,7 +97,8 @@ Handles byte ordering and avoids alignment errors
 // writing functions
 //
 
-void MSG_WriteChar (sizebuf_t *sb, int c)
+void
+MSG_WriteChar ( sizebuf_t *sb, int c )
 {
 	byte	*buf;
 
@@ -106,7 +111,8 @@ void MSG_WriteChar (sizebuf_t *sb, int c)
 	buf[0] = c;
 }
 
-void MSG_WriteByte (sizebuf_t *sb, int c)
+void
+MSG_WriteByte ( sizebuf_t *sb, int c )
 {
 	byte	*buf;
 
@@ -119,7 +125,8 @@ void MSG_WriteByte (sizebuf_t *sb, int c)
 	buf[0] = c;
 }
 
-void MSG_WriteShort (sizebuf_t *sb, int c)
+void
+MSG_WriteShort ( sizebuf_t *sb, int c )
 {
 	byte	*buf;
 
@@ -133,7 +140,8 @@ void MSG_WriteShort (sizebuf_t *sb, int c)
 	buf[1] = c>>8;
 }
 
-void MSG_WriteLong (sizebuf_t *sb, int c)
+void
+MSG_WriteLong ( sizebuf_t *sb, int c )
 {
 	byte	*buf;
 
@@ -144,7 +152,8 @@ void MSG_WriteLong (sizebuf_t *sb, int c)
 	buf[3] = c>>24;
 }
 
-void MSG_WriteFloat (sizebuf_t *sb, float f)
+void
+MSG_WriteFloat ( sizebuf_t *sb, float f )
 {
 	union
 	{
@@ -159,7 +168,8 @@ void MSG_WriteFloat (sizebuf_t *sb, float f)
 	SZ_Write (sb, &dat.l, 4);
 }
 
-void MSG_WriteString (sizebuf_t *sb, char *s)
+void
+MSG_WriteString ( sizebuf_t *sb, char *s )
 {
 	if (!s)
 		SZ_Write (sb, "", 1);
@@ -167,22 +177,26 @@ void MSG_WriteString (sizebuf_t *sb, char *s)
 		SZ_Write (sb, s, Q_strlen(s)+1);
 }
 
-void MSG_WriteCoord (sizebuf_t *sb, float f)
+void
+MSG_WriteCoord ( sizebuf_t *sb, float f )
 {
 	MSG_WriteShort (sb, (int)(f*8));
 }
 
-void MSG_WriteAngle (sizebuf_t *sb, float f)
+void
+MSG_WriteAngle ( sizebuf_t *sb, float f )
 {
 	MSG_WriteByte (sb, (int)(f*256/360) & 255);
 }
 
-void MSG_WriteAngle16 (sizebuf_t *sb, float f)
+void
+MSG_WriteAngle16 ( sizebuf_t *sb, float f )
 {
 	MSG_WriteShort (sb, (int)(f*65536/360) & 65535);
 }
 
-void MSG_WriteDeltaUsercmd (sizebuf_t *buf, usercmd_t *from, usercmd_t *cmd)
+void
+MSG_WriteDeltaUsercmd ( sizebuf_t *buf, usercmd_t *from, usercmd_t *cmd )
 {
 	int		bits;
 
@@ -207,7 +221,7 @@ void MSG_WriteDeltaUsercmd (sizebuf_t *buf, usercmd_t *from, usercmd_t *cmd)
 	if (cmd->impulse != from->impulse)
 		bits |= CM_IMPULSE;
 
-    MSG_WriteByte (buf, bits);
+	MSG_WriteByte (buf, bits);
 
 	if (bits & CM_ANGLE1)
 		MSG_WriteAngle16 (buf, cmd->angles[0]);
@@ -219,14 +233,14 @@ void MSG_WriteDeltaUsercmd (sizebuf_t *buf, usercmd_t *from, usercmd_t *cmd)
 	if (bits & CM_FORWARD)
 		MSG_WriteShort (buf, cmd->forwardmove);
 	if (bits & CM_SIDE)
-	  	MSG_WriteShort (buf, cmd->sidemove);
+		MSG_WriteShort (buf, cmd->sidemove);
 	if (bits & CM_UP)
 		MSG_WriteShort (buf, cmd->upmove);
 
  	if (bits & CM_BUTTONS)
-	  	MSG_WriteByte (buf, cmd->buttons);
+		MSG_WriteByte (buf, cmd->buttons);
  	if (bits & CM_IMPULSE)
-	    MSG_WriteByte (buf, cmd->impulse);
+		MSG_WriteByte (buf, cmd->impulse);
 	MSG_WriteByte (buf, cmd->msec);
 }
 //
@@ -235,19 +249,22 @@ void MSG_WriteDeltaUsercmd (sizebuf_t *buf, usercmd_t *from, usercmd_t *cmd)
 int			msg_readcount;
 qboolean	msg_badread;
 
-void MSG_BeginReading (void)
+void
+MSG_BeginReading ( void )
 {
 	msg_readcount = 0;
 	msg_badread = false;
 }
 
-int MSG_GetReadCount(void)
+int
+MSG_GetReadCount ( void )
 {
 	return msg_readcount;
 }
 
 // returns -1 and sets msg_badread if no more characters are available
-int MSG_ReadChar (void)
+int
+MSG_ReadChar ( void )
 {
 	int	c;
 
@@ -263,7 +280,8 @@ int MSG_ReadChar (void)
 	return c;
 }
 
-int MSG_ReadByte (void)
+int
+MSG_ReadByte ( void )
 {
 	int	c;
 
@@ -279,7 +297,8 @@ int MSG_ReadByte (void)
 	return c;
 }
 
-int MSG_ReadShort (void)
+int
+MSG_ReadShort ( void )
 {
 	int	c;
 
@@ -297,7 +316,8 @@ int MSG_ReadShort (void)
 	return c;
 }
 
-int MSG_ReadLong (void)
+int
+MSG_ReadLong ( void )
 {
 	int	c;
 
@@ -317,7 +337,8 @@ int MSG_ReadLong (void)
 	return c;
 }
 
-float MSG_ReadFloat (void)
+float
+MSG_ReadFloat ( void )
 {
 	union
 	{
@@ -337,7 +358,8 @@ float MSG_ReadFloat (void)
 	return dat.f;
 }
 
-char *MSG_ReadString (void)
+char *
+MSG_ReadString ( void )
 {
 	static char	string[2048];
 	int		l,c;
@@ -357,7 +379,8 @@ char *MSG_ReadString (void)
 	return string;
 }
 
-char *MSG_ReadStringLine (void)
+char *
+MSG_ReadStringLine ( void )
 {
 	static char	string[2048];
 	int		l,c;
@@ -377,22 +400,26 @@ char *MSG_ReadStringLine (void)
 	return string;
 }
 
-float MSG_ReadCoord (void)
+float
+MSG_ReadCoord ( void )
 {
 	return MSG_ReadShort() * (1.0/8);
 }
 
-float MSG_ReadAngle (void)
+float
+MSG_ReadAngle ( void )
 {
 	return MSG_ReadChar() * (360.0/256);
 }
 
-float MSG_ReadAngle16 (void)
+float
+MSG_ReadAngle16 ( void )
 {
 	return MSG_ReadShort() * (360.0/65536);
 }
 
-void MSG_ReadDeltaUsercmd (usercmd_t *from, usercmd_t *move)
+void
+MSG_ReadDeltaUsercmd ( usercmd_t *from, usercmd_t *move )
 {
 	int bits;
 
@@ -429,7 +456,8 @@ void MSG_ReadDeltaUsercmd (usercmd_t *from, usercmd_t *move)
 
 //===========================================================================
 
-void SZ_Alloc (sizebuf_t *buf, int startsize)
+void
+SZ_Alloc ( sizebuf_t *buf, int startsize )
 {
 	if (startsize < 256)
 		startsize = 256;
@@ -439,21 +467,24 @@ void SZ_Alloc (sizebuf_t *buf, int startsize)
 }
 
 
-void SZ_Free (sizebuf_t *buf)
+void
+SZ_Free ( sizebuf_t *buf )
 {
-//      Z_Free (buf->data);
-//      buf->data = NULL;
-//      buf->maxsize = 0;
+//	Z_Free (buf->data);
+//	buf->data = NULL;
+//	buf->maxsize = 0;
 	buf->cursize = 0;
 }
 
-void SZ_Clear (sizebuf_t *buf)
+void
+SZ_Clear ( sizebuf_t *buf )
 {
 	buf->cursize = 0;
 	buf->overflowed = false;
 }
 
-void *SZ_GetSpace (sizebuf_t *buf, int length)
+void *
+SZ_GetSpace ( sizebuf_t *buf, int length )
 {
 	void	*data;
 
@@ -476,21 +507,23 @@ void *SZ_GetSpace (sizebuf_t *buf, int length)
 	return data;
 }
 
-void SZ_Write (sizebuf_t *buf, void *data, int length)
+void
+SZ_Write ( sizebuf_t *buf, void *data, int length )
 {
 	Q_memcpy (SZ_GetSpace(buf,length),data,length);
 }
 
-void SZ_Print (sizebuf_t *buf, char *data)
+void
+SZ_Print ( sizebuf_t *buf, char *data )
 {
 	int		len;
 
 	len = Q_strlen(data)+1;
 
 	if (!buf->cursize || buf->data[buf->cursize-1])
-		Q_memcpy ((byte *)SZ_GetSpace(buf, len),data,len); // no trailing 0
+		Q_memcpy ((byte *)SZ_GetSpace(buf, len),data,len);	// no trailing 0
 	else
-		Q_memcpy ((byte *)SZ_GetSpace(buf, len-1)-1,data,len); // write over trailing 0
+		Q_memcpy ((byte *)SZ_GetSpace(buf, len-1)-1,data,len);	// write over trailing 0
 }
 //============================================================================
 
@@ -499,9 +532,10 @@ void SZ_Print (sizebuf_t *buf, char *data)
 COM_SkipPath
 ============
 */
-char *COM_SkipPath (char *pathname)
+char *
+COM_SkipPath ( char *pathname )
 {
-	char    *last;
+	char	*last;
 
 	last = pathname;
 	while (*pathname)
@@ -518,7 +552,8 @@ char *COM_SkipPath (char *pathname)
 COM_StripExtension
 ============
 */
-void COM_StripExtension (char *in, char *out)
+void
+COM_StripExtension ( char *in, char *out )
 {
 	while (*in && *in != '.')
 		*out++ = *in++;
@@ -530,10 +565,11 @@ void COM_StripExtension (char *in, char *out)
 COM_FileExtension
 ============
 */
-char *COM_FileExtension (char *in)
+char *
+COM_FileExtension ( char *in )
 {
-	static char exten[8];
-	int             i;
+	static char	exten[8];
+	int			i;
 
 	while (*in && *in != '.')
 		in++;
@@ -551,7 +587,8 @@ char *COM_FileExtension (char *in)
 COM_FileBase
 ============
 */
-void COM_FileBase (char *in, char *out)
+void
+COM_FileBase ( char *in, char *out )
 {
 	char *s, *s2;
 
@@ -579,9 +616,10 @@ void COM_FileBase (char *in, char *out)
 COM_DefaultExtension
 ==================
 */
-void COM_DefaultExtension (char *path, char *extension)
+void
+COM_DefaultExtension ( char *path, char *extension )
 {
-	char    *src;
+	char	*src;
 //
 // if path doesn't have a .EXT, append extension
 // (extension should include the .)
@@ -591,7 +629,7 @@ void COM_DefaultExtension (char *path, char *extension)
 	while (*src != '/' && src != path)
 	{
 		if (*src == '.')
-			return;                 // it has an extension
+			return;			// it has an extension
 		src--;
 	}
 
@@ -604,10 +642,11 @@ COM_Parse
 Parse a token out of a string
 ==============
 */
-char *COM_Parse (char *data)
+char *
+COM_Parse ( char *data )
 {
-	int             c;
-	int             len;
+	int		c;
+	int		len;
 
 	len = 0;
 	com_token[0] = 0;
@@ -620,11 +659,11 @@ skipwhite:
 	while ( (c = *data) <= ' ')
 	{
 		if (c == 0)
-			return NULL;                    // end of file;
+			return NULL;			// end of file;
 		data++;
 	}
 
-// skip // comments
+// skip comments
 	if (c=='/' && data[1] == '/')
 	{
 		while (*data && *data != '\n')
@@ -647,12 +686,12 @@ skipwhite:
 
 				c = *data++;
 				switch (c) {
-				case 'a':c='\a';break;
-				case 'b':c='\b';break;
-				case 'e':c=27  ;break;
-				case 'f':c='\f';break;
-				case 'n':c='\n';break;
-				case 'r':c='\r';break;
+				case 'a': c='\a'; break;
+				case 'b': c='\b'; break;
+				case 'e': c=27; break;
+				case 'f': c='\f'; break;
+				case 'n': c='\n'; break;
+				case 'r': c='\r'; break;
 				case 'x':
 					base+=8;
 					string=data;
@@ -703,7 +742,7 @@ skipwhite:
 }
 
 char *
-COM_EscapeEscapes(char *str)
+COM_EscapeEscapes ( char *str )
 {
 	static char buf[4096];
 	int i;
@@ -725,10 +764,11 @@ varargs versions of all text functions.
 FIXME: make this buffer size safe someday
 ============
 */
-char    *va(char *format, ...)
+char *
+va ( char *format, ... )
 {
-	va_list         argptr;
-	static char             string[1024];
+	va_list		argptr;
+	static char	string[1024];
 
 	va_start (argptr, format);
 	vsnprintf (string, sizeof(string), format, argptr);
@@ -738,9 +778,10 @@ char    *va(char *format, ...)
 }
 
 /// just for debugging
-int     memsearch (byte *start, int count, int search)
+int
+memsearch ( byte *start, int count, int search )
 {
-	int             i;
+	int	i;
 
 	for (i=0 ; i<count ; i++)
 		if (start[i] == search)
@@ -753,7 +794,8 @@ int     memsearch (byte *start, int count, int search)
 COM_Init
 ================
 */
-void COM_Init (void)
+void
+COM_Init ( void )
 {
 #ifdef WORDS_BIGENDIAN
 	BigShort = ShortNoSwap;
@@ -795,7 +837,8 @@ Searches the string for the given
 key and returns the associated value, or an empty string.
 ===============
 */
-char *Info_ValueForKey (char *s, char *key)
+char *
+Info_ValueForKey ( char *s, char *key )
 {
 	char	pkey[512];
 	static	char value[4][512];	// use two buffers so compares
@@ -837,7 +880,8 @@ char *Info_ValueForKey (char *s, char *key)
 	}
 }
 
-void Info_RemoveKey (char *s, char *key)
+void
+Info_RemoveKey ( char *s, char *key )
 {
 	char	*start;
 	char	pkey[512];
@@ -886,7 +930,8 @@ void Info_RemoveKey (char *s, char *key)
 
 }
 
-void Info_RemovePrefixedKeys (char *start, char prefix)
+void
+Info_RemovePrefixedKeys ( char *start, char prefix )
 {
 	char	*s;
 	char	pkey[512];
@@ -931,7 +976,8 @@ void Info_RemovePrefixedKeys (char *start, char prefix)
 }
 
 
-void Info_SetValueForStarKey (char *s, char *key, char *value, int maxsize)
+void
+Info_SetValueForStarKey ( char *s, char *key, char *value, int maxsize )
 {
 	char	new[1024], *v;
 	int		c;
@@ -1002,13 +1048,14 @@ void Info_SetValueForStarKey (char *s, char *key, char *value, int maxsize)
 		}
 #endif
 //		c &= 127;		// strip high bits
-		if (c > 13) // && c < 127)
+		if (c > 13)		// && c < 127)
 			*s++ = c;
 	}
 	*s = 0;
 }
 
-void Info_SetValueForKey (char *s, char *key, char *value, int maxsize)
+void
+Info_SetValueForKey ( char *s, char *key, char *value, int maxsize )
 {
 	if (key[0] == '*')
 	{
@@ -1019,7 +1066,8 @@ void Info_SetValueForKey (char *s, char *key, char *value, int maxsize)
 	Info_SetValueForStarKey (s, key, value, maxsize);
 }
 
-void Info_Print (char *s)
+void
+Info_Print ( char *s )
 {
 	char	key[512];
 	char	value[512];
@@ -1112,7 +1160,8 @@ COM_BlockSequenceCheckByte
 For proxy protecting
 ====================
 */
-byte	COM_BlockSequenceCheckByte (byte *base, int length, int sequence, unsigned mapchecksum)
+byte
+COM_BlockSequenceCheckByte ( byte *base, int length, int sequence, unsigned mapchecksum )
 {
 	int		checksum;
 	byte	*p;
@@ -1157,7 +1206,8 @@ COM_BlockSequenceCRCByte
 For proxy protecting
 ====================
 */
-byte	COM_BlockSequenceCRCByte (byte *base, int length, int sequence)
+byte
+COM_BlockSequenceCRCByte ( byte *base, int length, int sequence )
 {
 	unsigned short crc;
 	byte	*p;

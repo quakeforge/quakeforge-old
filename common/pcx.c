@@ -45,8 +45,9 @@
 /*
 	LoadPCX
 */
-byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
-
+byte *
+LoadPCX ( char *file, cache_user_t *cache, int buf_x, int buf_y)
+{
 	pcx_t	*pcx;
 	byte	*pix;
 	byte	*raw, *out;
@@ -134,4 +135,3 @@ byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
 
 	return out;
 }
-

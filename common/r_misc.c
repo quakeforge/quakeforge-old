@@ -49,7 +49,8 @@ extern cvar_t *r_dynamic;
 R_CheckVariables
 ===============
 */
-void R_CheckVariables (void)
+void
+R_CheckVariables ( void )
 {
 #ifdef UQUAKE
 	static float	oldbright;
@@ -70,7 +71,8 @@ Show
 Debugging use
 ============
 */
-void Show (void)
+void
+Show ( void )
 {
 	vrect_t	vr;
 
@@ -88,7 +90,8 @@ R_TimeRefresh_f
 For program optimization
 ====================
 */
-void R_TimeRefresh_f (void)
+void
+R_TimeRefresh_f ( void )
 {
 	int			i;
 	float		start, stop, time;
@@ -129,7 +132,8 @@ R_LineGraph
 Only called by R_DisplayTime
 ================
 */
-void R_LineGraph (int x, int y, int h)
+void
+R_LineGraph ( int x, int y, int h )
 {
 	int		i;
 	byte	*dest;
@@ -183,7 +187,8 @@ Performance monitoring tool
 #define	MAX_TIMINGS		100
 extern float mouse_x, mouse_y;
 int		graphval;
-void R_TimeGraph (void)
+void
+R_TimeGraph ( void )
 {
 	static	int		timex;
 	int		a;
@@ -231,7 +236,8 @@ a = graphval;
 R_NetGraph
 ==============
 */
-void R_NetGraph (void)
+void
+R_NetGraph ( void )
 {
 	int		a, x, y, y2, w, i;
 	int lost;
@@ -266,7 +272,8 @@ void R_NetGraph (void)
 R_ZGraph
 ==============
 */
-void R_ZGraph (void)
+void
+R_ZGraph ( void )
 {
 	int		a, x, w, i;
 	static	int	height[256];
@@ -291,7 +298,8 @@ void R_ZGraph (void)
 R_PrintTimes
 =============
 */
-void R_PrintTimes (void)
+void
+R_PrintTimes ( void )
 {
 	float	r_time2;
 	float		ms;
@@ -311,7 +319,8 @@ void R_PrintTimes (void)
 R_PrintDSpeeds
 =============
 */
-void R_PrintDSpeeds (void)
+void
+R_PrintDSpeeds ( void )
 {
 	float	ms, dp_time, r_time2, rw_time, db_time, se_time, de_time, dv_time;
 
@@ -336,13 +345,15 @@ void R_PrintDSpeeds (void)
 R_PrintAliasStats
 =============
 */
-void R_PrintAliasStats (void)
+void
+R_PrintAliasStats ( void )
 {
 	Con_Printf ("%3i polygon model drawn\n", r_amodels_drawn);
 }
 
 
-void WarpPalette (void)
+void
+WarpPalette ( void )
 {
 	int		i,j;
 	byte	newpalette[768];
@@ -370,7 +381,8 @@ void WarpPalette (void)
 R_TransformFrustum
 ===================
 */
-void R_TransformFrustum (void)
+void
+R_TransformFrustum ( void )
 {
 	int		i;
 	vec3_t	v, v2;
@@ -399,7 +411,8 @@ void R_TransformFrustum (void)
 TransformVector
 ================
 */
-void TransformVector (vec3_t in, vec3_t out)
+void
+TransformVector ( vec3_t in, vec3_t out )
 {
 	out[0] = DotProduct(in,vright);
 	out[1] = DotProduct(in,vup);
@@ -414,7 +427,8 @@ void TransformVector (vec3_t in, vec3_t out)
 R_TransformPlane
 ================
 */
-void R_TransformPlane (mplane_t *p, float *normal, float *dist)
+void
+R_TransformPlane ( mplane_t *p, float *normal, float *dist )
 {
 	float	d;
 
@@ -430,7 +444,8 @@ void R_TransformPlane (mplane_t *p, float *normal, float *dist)
 R_SetUpFrustumIndexes
 ===============
 */
-void R_SetUpFrustumIndexes (void)
+void
+R_SetUpFrustumIndexes ( void )
 {
 	int		i, j, *pindex;
 
@@ -464,7 +479,8 @@ void R_SetUpFrustumIndexes (void)
 R_SetupFrame
 ===============
 */
-void R_SetupFrame (void)
+void
+R_SetupFrame ( void )
 {
 	int				edgecount;
 	vrect_t			vrect;
@@ -485,9 +501,9 @@ void R_SetupFrame (void)
 			r_maxsurfsseen = surface_p - surfaces;
 
 		Con_Printf ("Used %d of %d surfs; %d max\n",
-                                (int) (surface_p - surfaces),
-				(int) (surf_max - surfaces),
-                                r_maxsurfsseen);
+			(int) (surface_p - surfaces),
+			(int) (surf_max - surfaces),
+			r_maxsurfsseen);
 	}
 
 	if (r_numedges->value)
@@ -521,12 +537,12 @@ void R_SetupFrame (void)
 
 // debugging
 #if 0
-r_refdef.vieworg[0]=  80;
-r_refdef.vieworg[1]=      64;
-r_refdef.vieworg[2]=      40;
-r_refdef.viewangles[0]=    0;
-r_refdef.viewangles[1]=    46.763641357;
-r_refdef.viewangles[2]=    0;
+r_refdef.vieworg[0]= 80;
+r_refdef.vieworg[1]= 64;
+r_refdef.vieworg[2]= 40;
+r_refdef.viewangles[0]= 0;
+r_refdef.viewangles[1]= 46.763641357;
+r_refdef.viewangles[2]= 0;
 #endif
 
 // build the transformation matrix for the given view angles
@@ -583,9 +599,9 @@ r_refdef.viewangles[2]=    0;
 				vrect.height = (int)h;
 
 				R_ViewChanged (&vrect,
-							   (int)((float)sb_lines * (h/(float)vid.height)),
-							   vid.aspect * (h / w) *
-								 ((float)vid.width / (float)vid.height));
+							(int)((float)sb_lines * (h/(float)vid.height)),
+							vid.aspect * (h / w) *
+							((float)vid.width / (float)vid.height));
 			}
 		}
 		else
@@ -628,4 +644,3 @@ r_refdef.viewangles[2]=    0;
 
 	D_SetupFrame ();
 }
-

@@ -56,7 +56,8 @@ cvar_t	*fs_drvpath;
 
 input_pi *IN;
 
-void Plugin_Init ()
+void
+Plugin_Init ( void )
 {
 	fs_drvpath = Cvar_Get ("fs_drvpath",".:" LIBDIR "/quakeforge",0,"None");
 }
@@ -72,7 +73,8 @@ void IN_Commands();
 void Sys_SendKeyEvents();
 void IN_Shutdown (void);
 
-int plugin_load(char *filename)
+int
+plugin_load ( char *filename )
 {
 	IN = &Winput;
 	Winput.description = "Windows Input";
@@ -84,14 +86,15 @@ int plugin_load(char *filename)
 	return 1;
 }
 
-void plugin_unload(void *handle)
+void
+plugin_unload ( void *handle )
 {
-
 }
 
 #else
 
-void *_plugin_load(const char *filename)
+void *
+_plugin_load ( const char *filename )
 {
 	void *h;
 	char path_buf[MAXPATHLEN*2+1+1];
@@ -115,14 +118,15 @@ void *_plugin_load(const char *filename)
 	return 0;
 }
 
-int plugin_load(char *filename)
+int
+plugin_load ( char *filename )
 {
 	void *(*gpi) (void);
 	void *h;
 
 	if ((h=_plugin_load(filename))) {
 		if ((gpi = dlsym(h, "get_input_plugin_info"))) {
-			/*
+/*
 			input_pi *p;
 
 			p = (input_pi *) gpi();
@@ -131,12 +135,12 @@ int plugin_load(char *filename)
 
 			IN = p;
 		} else if (gpi = dlsym(h, "get_sound_plugin_info")) {
-			  sound_pi *p;
+			sound_pi *p;
 
 			p = (sound_pi *) gpi();
 			p->handle = h;
 			p->filename = filename;
-			*/
+*/
 		} else {
 			dlclose(h);
 			return 0;
@@ -148,9 +152,9 @@ int plugin_load(char *filename)
 	return 1;
 }
 
-void plugin_unload(void *handle)
+void
+plugin_unload ( void *handle )
 {
 	dlclose(handle);
 }
-
 #endif

@@ -76,7 +76,7 @@ int					x_root_old, y_root_old;
 // locals
 //
 
-static int				x_mouse_num, x_mouse_denom, x_mouse_thresh;
+static int			x_mouse_num, x_mouse_denom, x_mouse_thresh;
 
 
 static qboolean x_grabbed = false;
@@ -85,7 +85,8 @@ static qboolean x_grabbed = false;
 // IN_CenterMouse - center the mouse in the screen
 //
 
-void IN_CenterMouse( void )
+void
+IN_CenterMouse ( void )
 {
 	CheckMouseState();
 
@@ -94,7 +95,7 @@ void IN_CenterMouse( void )
 
 	XSelectInput( x_disp, x_win, x_std_event_mask & ~PointerMotionMask );
 	XWarpPointer( x_disp, None, x_root_win, 0, 0, 0, 0, x_center_width,
-		      x_center_height );
+			x_center_height );
 	XSelectInput( x_disp, x_win, x_std_event_mask );
 }
 
@@ -102,7 +103,8 @@ void IN_CenterMouse( void )
 // Check to see if we have grabbed the mouse or not and deal with it
 // appropriately
 //
-static void CheckMouseState(void)
+static void
+CheckMouseState ( void )
 {
 	if (x_focus && in_grab->value && !x_grabbed) {
 		x_grabbed = true;
@@ -115,8 +117,8 @@ static void CheckMouseState(void)
 		XAutoRepeatOff(x_disp);
 		XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 		XGrabPointer(x_disp, x_win, True,
-			     PointerMotionMask | ButtonPressMask | ButtonReleaseMask,
-			     GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
+			PointerMotionMask | ButtonPressMask | ButtonReleaseMask,
+			GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
 
 //		if (XChangePointerControl( x_disp, True, True, 1, MOUSE_SCALE, x_mouse_thresh ))
 //			printf( "XChangePointerControl failed!\n" );
@@ -144,24 +146,26 @@ static void CheckMouseState(void)
 // IN_Init - setup mouse input
 //
 
-void IN_Init (void)
+void
+IN_Init ( void )
 {
-    if (!x_disp) Sys_Error( "X display not open!\n" );
+	if (!x_disp) Sys_Error( "X display not open!\n" );
 
-//    Cvar_RegisterVariable (&in_grab);
+//	Cvar_RegisterVariable (&in_grab);
 	in_grab = Cvar_Get ("in_grab","1", CVAR_ARCHIVE);
 
 	// we really really want to clean these up...
-    atexit( IN_Shutdown );
+	atexit( IN_Shutdown );
 }
 
 //
 // IN_Shutdown - clean up mouse settings (must be done from signal handler too!)
 //
 
-void IN_Shutdown (void)
+void
+IN_Shutdown ( void )
 {
-    if (!x_disp) return;
+	if (!x_disp) return;
 
 	// undo mouse warp
 	if (XChangePointerControl( x_disp, True, True, x_mouse_num, x_mouse_denom, x_mouse_thresh ))
@@ -176,7 +180,8 @@ void IN_Shutdown (void)
   IN_Frame
 */
 
-void IN_Frame(void)
+void
+IN_Frame ( void )
 {
 	// done in X event handler
 }
@@ -186,7 +191,7 @@ void IN_Frame(void)
 //
 
 void
-IN_Move(usercmd_t *cmd)
+IN_Move ( usercmd_t *cmd )
 {
 	static int last_dx, last_dy;
 	static long long last_movement;
@@ -198,7 +203,7 @@ IN_Move(usercmd_t *cmd)
 
 
 	if (!x_grabbed)
-		return; // no mouse movement
+		return;		// no mouse movement
 
 
 	now = gethrtime();

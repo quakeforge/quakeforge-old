@@ -48,7 +48,8 @@ Set up the planes and clipnodes so that the six floats of a bounding box
 can just be stored out and get a proper hull_t structure.
 ===================
 */
-void PM_InitBoxHull (void)
+void
+PM_InitBoxHull ( void )
 {
 	int		i;
 	int		side;
@@ -85,7 +86,8 @@ To keep everything totally uniform, bounding boxes are turned into small
 BSP trees instead of being compared directly.
 ===================
 */
-hull_t	*PM_HullForBox (vec3_t mins, vec3_t maxs)
+hull_t *
+PM_HullForBox ( vec3_t mins, vec3_t maxs )
 {
 	box_planes[0].dist = maxs[0];
 	box_planes[1].dist = mins[0];
@@ -104,7 +106,8 @@ PM_HullPointContents
 
 ==================
 */
-int PM_HullPointContents (hull_t *hull, int num, vec3_t p)
+int
+PM_HullPointContents ( hull_t *hull, int num, vec3_t p )
 {
 	float		d;
 	dclipnode_t	*node;
@@ -137,7 +140,8 @@ PM_PointContents
 
 ==================
 */
-int PM_PointContents (vec3_t p)
+int
+PM_PointContents ( vec3_t p )
 {
 	float		d;
 	dclipnode_t	*node;
@@ -187,7 +191,8 @@ PM_RecursiveHullCheck
 
 ==================
 */
-qboolean PM_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t p1, vec3_t p2, pmtrace_t *trace)
+qboolean
+PM_RecursiveHullCheck ( hull_t *hull, int num, float p1f, float p2f, vec3_t p1, vec3_t p2, pmtrace_t *trace )
 {
 	dclipnode_t	*node;
 	mplane_t	*plane;
@@ -298,7 +303,7 @@ qboolean PM_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 
 	while (PM_HullPointContents (hull, hull->firstclipnode, mid)
 	== CONTENTS_SOLID)
-	{ // shouldn't really happen, but does occasionally
+	{	// shouldn't really happen, but does occasionally
 		frac -= 0.1;
 		if (frac < 0)
 		{
@@ -326,7 +331,8 @@ PM_TestPlayerPosition
 Returns false if the given player position is not valid (in solid)
 ================
 */
-qboolean PM_TestPlayerPosition (vec3_t pos)
+qboolean
+PM_TestPlayerPosition ( vec3_t pos )
 {
 	int			i;
 	physent_t	*pe;
@@ -360,7 +366,8 @@ qboolean PM_TestPlayerPosition (vec3_t pos)
 PM_PlayerMove
 ================
 */
-pmtrace_t PM_PlayerMove (vec3_t start, vec3_t end)
+pmtrace_t
+PM_PlayerMove ( vec3_t start, vec3_t end )
 {
 	pmtrace_t		trace, total;
 	vec3_t		offset;
@@ -423,5 +430,3 @@ pmtrace_t PM_PlayerMove (vec3_t start, vec3_t end)
 
 	return total;
 }
-
-

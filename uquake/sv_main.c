@@ -51,7 +51,8 @@ SV_Shutdown
 This only happens at the end of a game, not between levels
 ==================
 */
-void SV_Shutdown(qboolean crash)
+void
+SV_Shutdown ( qboolean crash )
 {
 	int		i;
 	int		count;
@@ -113,6 +114,7 @@ void SV_Shutdown(qboolean crash)
 	memset (&sv, 0, sizeof(sv));
 	memset (svs.clients, 0, svs.maxclientslimit*sizeof(client_t));
 }
+
 /*
 ================
 SV_Error
@@ -121,7 +123,8 @@ Sends a datagram to all the clients informing them of the server crash,
 then exits
 ================
 */
-void SV_Error (char *error, ...)
+void
+SV_Error ( char *error, ... )
 {
 	va_list		argptr;
 	static	char		string[1024];
@@ -138,9 +141,9 @@ void SV_Error (char *error, ...)
 
 	Con_Printf ("SV_Error: %s\n",string);
 
-	//SV_FinalMessage (va("server crashed: %s\n", string));
+//	SV_FinalMessage (va("server crashed: %s\n", string));
 
-	SV_Shutdown (false);//XXX
+	SV_Shutdown (false);	//XXX
 
 	Sys_Error ("SV_Error: %s\n",string);
 }
@@ -150,7 +153,8 @@ void SV_Error (char *error, ...)
 SV_Init
 ===============
 */
-void SV_Init (void)
+void
+SV_Init ( void )
 {
 	int		i;
 	extern	cvar_t	*sv_maxvelocity;
@@ -198,7 +202,8 @@ SV_StartParticle
 Make sure the event gets sent to all clients
 ==================
 */
-void SV_StartParticle (vec3_t org, vec3_t dir, int color, int count)
+void
+SV_StartParticle ( vec3_t org, vec3_t dir, int color, int count )
 {
 	int		i, v;
 
@@ -236,13 +241,14 @@ Larger attenuations will drop off.  (max 4 attenuation)
 
 ==================
 */
-void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
-    float attenuation)
+void
+SV_StartSound ( edict_t *entity, int channel, char *sample, int volume,
+	float attenuation )
 {
-    int         sound_num;
-    int field_mask;
-    int			i;
-	int			ent;
+	int		sound_num;
+	int		field_mask;
+	int		i;
+	int		ent;
 
 	if (volume < 0 || volume > 255)
 		Sys_Error ("SV_StartSound: volume = %i", volume);
@@ -257,16 +263,17 @@ void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
 		return;
 
 // find precache number for sound
-    for (sound_num=1 ; sound_num<MAX_SOUNDS
-        && sv.sound_precache[sound_num] ; sound_num++)
-        if (!strcmp(sample, sv.sound_precache[sound_num]))
-            break;
+	for (sound_num=1 ; sound_num<MAX_SOUNDS
+		&& sv.sound_precache[sound_num] ; sound_num++) {
+		if (!strcmp(sample, sv.sound_precache[sound_num]))
+			break;
+	}
 
-    if ( sound_num == MAX_SOUNDS || !sv.sound_precache[sound_num] )
-    {
-        Con_Printf ("SV_StartSound: %s not precacheed\n", sample);
-        return;
-    }
+	if ( sound_num == MAX_SOUNDS || !sv.sound_precache[sound_num] )
+	{
+		Con_Printf ("SV_StartSound: %s not precacheed\n", sample);
+		return;
+	}
 
 	ent = NUM_FOR_EDICT(entity);
 
@@ -307,10 +314,11 @@ Sends the first message from the server to a connected client.
 This will be sent on the initial connection and upon each server load.
 ================
 */
-void SV_SendServerinfo (client_t *client)
+void
+SV_SendServerinfo ( client_t *client )
 {
-	char			**s;
-	char			message[2048];
+	char	**s;
+	char	message[2048];
 
 	MSG_WriteByte (&client->message, svc_print);
 	snprintf(message, sizeof(message), "%c\nVERSION %s SERVER (%i CRC)", 2, VERSION, pr_crc);
@@ -361,7 +369,8 @@ Initializes a client_t for a new net connection.  This will only be called
 once for a player each game, not once for each level change.
 ================
 */
-void SV_ConnectClient (int clientnum)
+void
+SV_ConnectClient ( int clientnum )
 {
 	edict_t			*ent;
 	client_t		*client;
@@ -416,7 +425,8 @@ SV_CheckForNewClients
 
 ===================
 */
-void SV_CheckForNewClients (void)
+void
+SV_CheckForNewClients ( void )
 {
 	struct qsocket_s	*ret;
 	int				i;
@@ -462,7 +472,8 @@ SV_ClearDatagram
 
 ==================
 */
-void SV_ClearDatagram (void)
+void
+SV_ClearDatagram ( void )
 {
 	SZ_Clear (&sv.datagram);
 }
@@ -481,7 +492,8 @@ crosses a waterline.
 int		fatbytes;
 byte	fatpvs[MAX_MAP_LEAFS/8];
 
-void SV_AddToFatPVS (vec3_t org, mnode_t *node)
+void
+SV_AddToFatPVS ( vec3_t org, mnode_t *node )
 {
 	int		i;
 	byte	*pvs;
@@ -524,7 +536,8 @@ Calculates a PVS that is the inclusive or of all leafs within 8 pixels of the
 given point.
 =============
 */
-byte *SV_FatPVS (vec3_t org)
+byte *
+SV_FatPVS ( vec3_t org )
 {
 	fatbytes = (sv.worldmodel->numleafs+31)>>3;
 	Q_memset (fatpvs, 0, fatbytes);
@@ -541,7 +554,8 @@ SV_WriteEntitiesToClient
 
 =============
 */
-void SV_WriteEntitiesToClient (edict_t	*clent, sizebuf_t *msg)
+void
+SV_WriteEntitiesToClient ( edict_t *clent, sizebuf_t *msg )
 {
 	int		e, i;
 	int		bits;
@@ -671,7 +685,8 @@ SV_CleanupEnts
 
 =============
 */
-void SV_CleanupEnts (void)
+void
+SV_CleanupEnts ( void )
 {
 	int		e;
 	edict_t	*ent;
@@ -690,7 +705,8 @@ SV_WriteClientdataToMessage
 
 ==================
 */
-void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
+void
+SV_WriteClientdataToMessage ( edict_t *ent, sizebuf_t *msg )
 {
 	int		bits;
 	int		i;
@@ -834,7 +850,8 @@ void SV_WriteClientdataToMessage (edict_t *ent, sizebuf_t *msg)
 SV_SendClientDatagram
 =======================
 */
-qboolean SV_SendClientDatagram (client_t *client)
+qboolean
+SV_SendClientDatagram ( client_t *client )
 {
 	byte		buf[MAX_DATAGRAM];
 	sizebuf_t	msg;
@@ -858,7 +875,7 @@ qboolean SV_SendClientDatagram (client_t *client)
 // send the datagram
 	if (NET_SendUnreliableMessage (client->netconnection, &msg) == -1)
 	{
-		SV_DropClient (true);// if the message couldn't send, kick off
+		SV_DropClient (true);	// if the message couldn't send, kick off
 		return false;
 	}
 
@@ -870,7 +887,8 @@ qboolean SV_SendClientDatagram (client_t *client)
 SV_UpdateToReliableMessages
 =======================
 */
-void SV_UpdateToReliableMessages (void)
+void
+SV_UpdateToReliableMessages ( void )
 {
 	int			i, j;
 	client_t *client;
@@ -912,7 +930,8 @@ Send a nop message without trashing or sending the accumulated client
 message buffer
 =======================
 */
-void SV_SendNop (client_t *client)
+void
+SV_SendNop ( client_t *client )
 {
 	sizebuf_t	msg;
 	byte		buf[4];
@@ -933,7 +952,8 @@ void SV_SendNop (client_t *client)
 SV_SendClientMessages
 =======================
 */
-void SV_SendClientMessages (void)
+void
+SV_SendClientMessages ( void )
 {
 	int			i;
 
@@ -1018,7 +1038,8 @@ SV_ModelIndex
 
 ================
 */
-int SV_ModelIndex (char *name)
+int
+SV_ModelIndex ( char *name )
 {
 	int		i;
 
@@ -1039,7 +1060,8 @@ SV_CreateBaseline
 
 ================
 */
-void SV_CreateBaseline (void)
+void
+SV_CreateBaseline ( void )
 {
 	int			i;
 	edict_t			*svent;
@@ -1099,7 +1121,8 @@ SV_SendReconnect
 Tell all the clients that the server is changing levels
 ================
 */
-void SV_SendReconnect (void)
+void
+SV_SendReconnect ( void )
 {
 	char	data[128];
 	sizebuf_t	msg;
@@ -1129,7 +1152,8 @@ Grabs the current state of each client for saving across the
 transition to another level
 ================
 */
-void SV_SaveSpawnparms (void)
+void
+SV_SaveSpawnparms ( void )
 {
 	int		i, j;
 
@@ -1159,9 +1183,11 @@ This is called at the start of each level
 extern float		scr_centertime_off;
 
 #ifdef QUAKE2
-void SV_SpawnServer (char *server, char *startspot)
+void
+SV_SpawnServer ( char *server, char *startspot )
 #else
-void SV_SpawnServer (char *server)
+void
+SV_SpawnServer ( char *server )
 #endif
 {
 	edict_t		*ent;
@@ -1323,7 +1349,8 @@ Sends text across to be displayed
 FIXME: make this just a stuffed echo?
 =================
 */
-void SV_ClientPrintf (char *fmt, ...)
+void
+SV_ClientPrintf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		string[1024];
@@ -1343,7 +1370,8 @@ SV_BroadcastPrintf
 Sends text to all active clients
 =================
 */
-void SV_BroadcastPrintf (char *fmt, ...)
+void
+SV_BroadcastPrintf ( char *fmt, ... )
 {
 	va_list		argptr;
 	char		string[1024];
@@ -1369,7 +1397,8 @@ Called when the player is getting totally kicked off the host
 if (crash = true), don't bother sending signofs
 =====================
 */
-void SV_DropClient (qboolean crash)
+void
+SV_DropClient ( qboolean crash )
 {
 	int		saveSelf;
 	int		i;
@@ -1432,7 +1461,8 @@ Host_ServerFrame
 */
 #ifdef FPS_20
 
-void SV_FrameMain (void)
+void
+SV_FrameMain ( void )
 {
 // run the world state
 	pr_global_struct->frametime = host_frametime;
@@ -1446,7 +1476,8 @@ void SV_FrameMain (void)
 		SV_Physics ();
 }
 
-void SV_Frame (void)
+void
+SV_Frame ( void )
 {
 	float	save_host_frametime;
 	float	temp_host_frametime;
@@ -1478,7 +1509,8 @@ void SV_Frame (void)
 
 #else
 
-void SV_Frame (void)
+void
+SV_Frame ( void )
 {
 // run the world state
 	pr_global_struct->frametime = host_frametime;

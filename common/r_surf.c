@@ -70,7 +70,8 @@ unsigned		blocklights[18*18];
 R_AddDynamicLights
 ===============
 */
-void R_AddDynamicLights (void)
+void
+R_AddDynamicLights ( void )
 {
 	msurface_t *surf;
 	int		lnum;
@@ -158,7 +159,8 @@ R_BuildLightMap
 Combine and scale multiple lightmaps into the 8.8 format in blocklights
 ===============
 */
-void R_BuildLightMap (void)
+void
+R_BuildLightMap ( void )
 {
 	int			smax, tmax;
 	int			t;
@@ -193,12 +195,12 @@ void R_BuildLightMap (void)
 			(maps < MAXLIGHTMAPS) && (surf->styles[maps] != 255);
 			maps++)
 		{
-			scale = r_drawsurf.lightadj[maps];  // 8.8 fraction
+			scale = r_drawsurf.lightadj[maps];	// 8.8 fraction
 			for (i=0 ; i<size ; i++)
 				if (bspver == CBSPVERSION)
 				{
 					// no color, so we'll just add the
-					//  color values together
+					// color values together
 					for (j=0 ; j<3 ; j++)
 						blocklights[i] +=
 							lightmap[j] * scale;
@@ -232,7 +234,8 @@ R_TextureAnimation
 Returns the proper texture for a given time and base texture
 ===============
 */
-texture_t *R_TextureAnimation (texture_t *base)
+texture_t *
+R_TextureAnimation ( texture_t *base )
 {
 	int		reletive;
 	int		count;
@@ -267,7 +270,8 @@ texture_t *R_TextureAnimation (texture_t *base)
 R_DrawSurface
 ===============
 */
-void R_DrawSurface (void)
+void
+R_DrawSurface ( void )
 {
 	unsigned char	*basetptr;
 	int				smax, tmax, twidth;
@@ -362,7 +366,8 @@ void R_DrawSurface (void)
 R_DrawSurfaceBlock8_mip0
 ================
 */
-void R_DrawSurfaceBlock8_mip0 (void)
+void
+R_DrawSurfaceBlock8_mip0 ( void )
 {
 	int				v, i, b, lightstep, lighttemp, light;
 	unsigned char	pix, *psource, *prowdest;
@@ -412,7 +417,8 @@ void R_DrawSurfaceBlock8_mip0 (void)
 R_DrawSurfaceBlock8_mip1
 ================
 */
-void R_DrawSurfaceBlock8_mip1 (void)
+void
+R_DrawSurfaceBlock8_mip1 ( void )
 {
 	int				v, i, b, lightstep, lighttemp, light;
 	unsigned char	pix, *psource, *prowdest;
@@ -462,7 +468,8 @@ void R_DrawSurfaceBlock8_mip1 (void)
 R_DrawSurfaceBlock8_mip2
 ================
 */
-void R_DrawSurfaceBlock8_mip2 (void)
+void
+R_DrawSurfaceBlock8_mip2 ( void )
 {
 	int				v, i, b, lightstep, lighttemp, light;
 	unsigned char	pix, *psource, *prowdest;
@@ -512,7 +519,8 @@ void R_DrawSurfaceBlock8_mip2 (void)
 R_DrawSurfaceBlock8_mip3
 ================
 */
-void R_DrawSurfaceBlock8_mip3 (void)
+void
+R_DrawSurfaceBlock8_mip3 ( void )
 {
 	int				v, i, b, lightstep, lighttemp, light;
 	unsigned char	pix, *psource, *prowdest;
@@ -564,7 +572,8 @@ R_DrawSurfaceBlock16
 FIXME: make this work
 ================
 */
-void R_DrawSurfaceBlock16 (void)
+void
+R_DrawSurfaceBlock16 ( void )
 {
 	int				k;
 	unsigned char	*psource;
@@ -603,7 +612,4 @@ void R_DrawSurfaceBlock16 (void)
 
 	prowdestbase = prowdest;
 }
-
 #endif
-
-

@@ -64,7 +64,8 @@ void PM_InitBoxHull (void);
 void PM_CategorizePosition (void);
 void PM_Accelerate (vec3_t, float, float);
 
-void Pmove_Init (void)
+void
+Pmove_Init ( void )
 {
 	pm_slidefix = Cvar_Get ("pm_slidefix", "0", 0, "Enable NetQuake-like sliding down the slope");
 	PM_InitBoxHull ();
@@ -72,9 +73,7 @@ void Pmove_Init (void)
 
 #define	STEPSIZE	18
 
-
 #define	BUTTON_JUMP	2
-
 
 /*
 ==================
@@ -86,7 +85,8 @@ returns the blocked flags (1 = floor, 2 = step / wall)
 */
 #define	STOP_EPSILON	0.1
 
-int PM_ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
+int
+PM_ClipVelocity ( vec3_t in, vec3_t normal, vec3_t out, float overbounce )
 {
 	float	backoff;
 	float	change;
@@ -121,7 +121,8 @@ The basic solid body movement clip that slides along multiple planes
 */
 #define	MAX_CLIP_PLANES	5
 
-int PM_FlyMove (void)
+int
+PM_FlyMove ( void )
 {
 	int			bumpcount, numbumps;
 	vec3_t		dir;
@@ -298,7 +299,8 @@ PM_GroundMove
 Player is on ground, with no upwards velocity
 =============
 */
-void PM_GroundMove (void)
+void
+PM_GroundMove ( void )
 {
 	vec3_t	start, dest;
 	pmtrace_t	trace;
@@ -377,13 +379,11 @@ void PM_GroundMove (void)
 usedown:
 		VectorCopy (down, pmove.origin);
 		VectorCopy (downvel, pmove.velocity);
-	} else // copy z value from slide move
+	} else	// copy z value from slide move
 		pmove.velocity[2] = downvel[2];
 
 // if at a dead stop, retry the move with nudges to get around lips
-
 }
-
 
 
 /*
@@ -393,10 +393,11 @@ PM_Friction
 Handles both ground friction and water friction
 ==================
 */
-void PM_Friction (void)
+void
+PM_Friction ( void )
 {
 	float	*vel;
-	float	speed, newspeed; //, control;
+	float	speed, newspeed;	//, control;
 	float	friction;
 	float	drop;
 	vec3_t	start, stop;
@@ -433,11 +434,11 @@ void PM_Friction (void)
 
 	drop = 0;
 
-	if (waterlevel >= 2) // apply water friction
+	if (waterlevel >= 2)		// apply water friction
 		drop += speed*movevars.waterfriction*waterlevel*frametime;
 	else if (pmove.flying)
 		drop += max(movevars.stopspeed, speed) * friction * frametime;
-	else if (onground != -1) // apply ground friction
+	else if (onground != -1)	// apply ground friction
 		drop += max(movevars.stopspeed, speed) * friction * frametime;
 
 
@@ -458,7 +459,8 @@ void PM_Friction (void)
 PM_Accelerate
 ==============
 */
-void PM_Accelerate (vec3_t wishdir, float wishspeed, float accel)
+void
+PM_Accelerate ( vec3_t wishdir, float wishspeed, float accel )
 {
 	int			i;
 	float		addspeed, accelspeed, currentspeed;
@@ -480,7 +482,8 @@ void PM_Accelerate (vec3_t wishdir, float wishspeed, float accel)
 		pmove.velocity[i] += accelspeed*wishdir[i];
 }
 
-void PM_AirAccelerate (vec3_t wishdir, float wishspeed, float accel)
+void
+PM_AirAccelerate ( vec3_t wishdir, float wishspeed, float accel )
 {
 	int			i;
 	float		addspeed, accelspeed, currentspeed, wishspd = wishspeed;
@@ -505,14 +508,14 @@ void PM_AirAccelerate (vec3_t wishdir, float wishspeed, float accel)
 }
 
 
-
 /*
 ===================
 PM_WaterMove
 
 ===================
 */
-void PM_WaterMove (void)
+void
+PM_WaterMove ( void )
 {
 	int		i;
 	vec3_t	wishvel;
@@ -572,7 +575,8 @@ PM_AirMove
 
 ===================
 */
-void PM_AirMove (void)
+void
+PM_AirMove ( void )
 {
 	int			i;
 	vec3_t		wishvel;
@@ -626,7 +630,7 @@ void PM_AirMove (void)
 		// add gravity
 		pmove.velocity[2] -= movevars.entgravity * movevars.gravity * frametime;
 
-		if ( ! PM_FlyMove() )	
+		if ( ! PM_FlyMove() )
 		{
 			// the move didn't block
 			PM_CategorizePosition ();
@@ -635,14 +639,14 @@ void PM_AirMove (void)
 				//Con_DPrintf ("Jumping bug!\n");
 				VectorCopy (pmove.origin, original);
 				// Calculate correct velocity
-				PM_FlyMove();	
+				PM_FlyMove();
 				// Restore position
 				VectorCopy (original, pmove.origin);
 			}
 		}
 	}
 
-//Con_Printf("airmove:vec: %4.2f %4.2f %4.2f\n",
+//	Con_Printf("airmove:vec: %4.2f %4.2f %4.2f\n",
 //			pmove.velocity[0],
 //			pmove.velocity[1],
 //			pmove.velocity[2]);
@@ -653,13 +657,13 @@ void PM_AirMove (void)
 }
 
 
-
 /*
 =============
 PM_CategorizePosition
 =============
 */
-void PM_CategorizePosition (void)
+void
+PM_CategorizePosition ( void )
 {
 	vec3_t		point;
 	int			cont;
@@ -730,7 +734,8 @@ void PM_CategorizePosition (void)
 JumpButton
 =============
 */
-void JumpButton (void)
+void
+JumpButton ( void )
 {
 	if (pmove.dead)
 	{
@@ -776,7 +781,8 @@ void JumpButton (void)
 CheckWaterJump
 =============
 */
-void CheckWaterJump (void)
+void
+CheckWaterJump ( void )
 {
 	vec3_t	spot;
 	int		cont;
@@ -787,7 +793,7 @@ void CheckWaterJump (void)
 
 	// ZOID, don't hop out if we just jumped in
 	if (pmove.velocity[2] < -180)
-		return; // only hop out if we are moving up
+		return;		// only hop out if we are moving up
 
 	// see if near an edge
 	flatforward[0] = forward[0];
@@ -820,7 +826,8 @@ try nudging slightly on all axis to
 allow for the cut precision of the net coordinates
 =================
 */
-void NudgePosition (void)
+void
+NudgePosition ( void )
 {
 	vec3_t	base;
 	int		x, y, z;
@@ -861,7 +868,8 @@ void NudgePosition (void)
 SpectatorMove
 ===============
 */
-void SpectatorMove (void)
+void
+SpectatorMove ( void )
 {
 	float	speed, drop, friction, control, newspeed;
 	float	currentspeed, addspeed, accelspeed;
@@ -944,7 +952,8 @@ Numtouch and touchindex[] will be set if any of the physents
 were contacted during the move.
 =============
 */
-void PlayerMove (void)
+void
+PlayerMove ( void )
 {
 	frametime = pmove.cmd.msec * 0.001;
 	pmove.numtouch = 0;
@@ -988,4 +997,3 @@ void PlayerMove (void)
 	// set onground, watertype, and waterlevel for final spot
 	PM_CategorizePosition ();
 }
-

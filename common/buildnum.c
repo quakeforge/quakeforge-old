@@ -44,7 +44,8 @@ char mond[12] =
 { 31,    28,    31,    30,    31,    30,    31,    31,    30,    31,    30,    31 };
 
 // returns days since Oct 24 1996
-int build_number( void )
+int
+build_number ( void )
 {
 	int m = 0;
 	int d = 0;

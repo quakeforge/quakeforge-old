@@ -42,9 +42,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 typedef struct
 {
-	volatile int  head;
-	volatile int  tail;
-	volatile byte data[QUEUESIZE];
+	volatile int	head;
+	volatile int	tail;
+	volatile byte	data[QUEUESIZE];
 } queue;
 
 #define FULL(q)			(q.head == ((q.tail-1) & QUEUEMASK))
@@ -52,14 +52,16 @@ typedef struct
 #define ENQUEUE(q,b)	(q.data[q.head] = b, q.head = (q.head + 1) & QUEUEMASK)
 #define DEQUEUE(q,b)	(b = q.data[q.tail], q.tail = (q.tail + 1) & QUEUEMASK)
 
-/*extern cvar_t   *config_com_port;
+/*
+extern cvar_t	*config_com_port;
 extern cvar_t	*config_com_irq;
 extern cvar_t	*config_com_baud;
 extern cvar_t	*config_com_modem;
 extern cvar_t	*config_modem_dialtype;
 extern cvar_t	*config_modem_clear;
 extern cvar_t	*config_modem_init;
-extern cvar_t   *config_modem_hangup;*/
+extern cvar_t	*config_modem_hangup;
+*/
 
 extern int m_return_state;
 extern int m_state;
@@ -193,7 +195,8 @@ qboolean TTY_IsEnabled(int serialPortNumber);
 qboolean TTY_IsModem(int serialPortNumber);
 qboolean TTY_OutputQueueIsEmpty(int handle);
 
-static void ISR_8250 (ComPort *p)
+static void
+ISR_8250 ( ComPort *p )
 {
 	byte	source = 0;
 	byte	b;
@@ -240,19 +243,21 @@ static void ISR_8250 (ComPort *p)
 	outportb (0x20, 0x20);
 }
 
-static void COM1_ISR_8250 (void)
+static void
+COM1_ISR_8250 ( void )
 {
 	ISR_8250 (handleToPort[0]);
 }
 
-static void COM2_ISR_8250 (void)
+static void
+COM2_ISR_8250 ( void )
 {
 	ISR_8250 (handleToPort[1]);
 }
 
 
-
-static void ISR_16550 (ComPort *p)
+static void
+ISR_16550 ( ComPort *p )
 {
 	int		count;
 	byte	source;
@@ -315,18 +320,21 @@ static void ISR_16550 (ComPort *p)
 	outportb (0x20, 0x20);
 }
 
-static void COM1_ISR_16550 (void)
+static void
+COM1_ISR_16550 ( void )
 {
 	ISR_16550 (handleToPort[0]);
 }
 
-static void COM2_ISR_16550 (void)
+static void
+COM2_ISR_16550 ( void )
 {
 	ISR_16550 (handleToPort[1]);
 }
 
 
-void TTY_GetComPortConfig (int portNumber, int *port, int *irq, int *baud, qboolean *useModem)
+void
+TTY_GetComPortConfig ( int portNumber, int *port, int *irq, int *baud, qboolean *useModem )
 {
 	ComPort	*p;
 
@@ -337,7 +345,8 @@ void TTY_GetComPortConfig (int portNumber, int *port, int *irq, int *baud, qbool
 	*useModem = p->useModem;
 }
 
-void TTY_SetComPortConfig (int portNumber, int port, int irq, int baud, qboolean useModem)
+void
+TTY_SetComPortConfig ( int portNumber, int port, int irq, int baud, qboolean useModem )
 {
 	ComPort	*p;
 	float	temp;
@@ -361,13 +370,16 @@ void TTY_SetComPortConfig (int portNumber, int port, int irq, int baud, qboolean
 	else
 		temp = 0.0;
 
-/*	Cvar_SetValue (config_com_port, (float)port);
+/*
+	Cvar_SetValue (config_com_port, (float)port);
 	Cvar_SetValue (config_com_irq, (float)irq);
 	Cvar_SetValue (config_com_baud, (float)baud);
-	Cvar_SetValue (config_com_modem, temp);*/
+	Cvar_SetValue (config_com_modem, temp);
+*/
 }
 
-void TTY_GetModemConfig (int portNumber, char *dialType, char *clear, char *init, char *hangup)
+void
+TTY_GetModemConfig ( int portNumber, char *dialType, char *clear, char *init, char *hangup )
 {
 	ComPort	*p;
 
@@ -378,7 +390,8 @@ void TTY_GetModemConfig (int portNumber, char *dialType, char *clear, char *init
 	Q_strcpy(hangup, p->shutdown);
 }
 
-void TTY_SetModemConfig (int portNumber, char *dialType, char *clear, char *init, char *hangup)
+void
+TTY_SetModemConfig ( int portNumber, char *dialType, char *clear, char *init, char *hangup )
 {
 	ComPort	*p;
 
@@ -390,14 +403,17 @@ void TTY_SetModemConfig (int portNumber, char *dialType, char *clear, char *init
 
 	p->modemInitialized = false;
 
-/*	Cvar_Set (config_modem_dialtype, dialType);
+/*
+	Cvar_Set (config_modem_dialtype, dialType);
 	Cvar_Set (config_modem_clear, clear);
 	Cvar_Set (config_modem_init, init);
-	Cvar_Set (config_modem_hangup, hangup);*/
+	Cvar_Set (config_modem_hangup, hangup);
+*/
 }
 
 
-static void ResetComPortConfig (ComPort *p)
+static void
+ResetComPortConfig ( ComPort *p )
 {
 	p->useModem = false;
 	p->uartType = UART_AUTO;
@@ -417,7 +433,8 @@ static void ResetComPortConfig (ComPort *p)
 }
 
 
-static void ComPort_Enable(ComPort *p)
+static void
+ComPort_Enable ( ComPort *p )
 {
 	void	(*isr)(void);
 	int		n;
@@ -518,7 +535,8 @@ static void ComPort_Enable(ComPort *p)
 }
 
 
-static void ComPort_Disable(ComPort *p)
+static void
+ComPort_Disable ( ComPort *p )
 {
 	if (!p->enabled)
 	{
@@ -546,7 +564,8 @@ static void ComPort_Disable(ComPort *p)
 }
 
 
-static int CheckStatus (ComPort *p)
+static int
+CheckStatus ( ComPort *p )
 {
 	int		ret = 0;
 
@@ -583,7 +602,8 @@ static int CheckStatus (ComPort *p)
 }
 
 
-static void Modem_Init(ComPort *p)
+static void
+Modem_Init ( ComPort *p )
 {
 	double	start;
 	char	*response;
@@ -666,7 +686,8 @@ failed:
 }
 
 
-void TTY_Enable(int handle)
+void
+TTY_Enable ( int handle )
 {
 	ComPort	*p;
 
@@ -681,13 +702,15 @@ void TTY_Enable(int handle)
 }
 
 
-int TTY_Open(int serialPortNumber)
+int
+TTY_Open ( int serialPortNumber )
 {
 	return serialPortNumber;
 }
 
 
-void TTY_Close(int handle)
+void
+TTY_Close ( int handle )
 {
 	ComPort	*p;
 	double		startTime;
@@ -707,7 +730,8 @@ void TTY_Close(int handle)
 }
 
 
-int TTY_ReadByte(int handle)
+int
+TTY_ReadByte ( int handle )
 {
 	int		ret;
 	ComPort	*p;
@@ -725,7 +749,8 @@ int TTY_ReadByte(int handle)
 }
 
 
-int TTY_WriteByte(int handle, byte data)
+int
+TTY_WriteByte ( int handle, byte data )
 {
 	ComPort	*p;
 
@@ -738,7 +763,8 @@ int TTY_WriteByte(int handle, byte data)
 }
 
 
-void TTY_Flush(int handle)
+void
+TTY_Flush ( int handle )
 {
 	byte b;
 	ComPort	*p;
@@ -753,7 +779,8 @@ void TTY_Flush(int handle)
 }
 
 
-int TTY_Connect(int handle, char *host)
+int
+TTY_Connect ( int handle, char *host )
 {
 	double	start;
 	ComPort	*p;
@@ -870,7 +897,8 @@ int TTY_Connect(int handle, char *host)
 }
 
 
-void TTY_Disconnect(int handle)
+void
+TTY_Disconnect ( int handle )
 {
 	ComPort *p;
 
@@ -881,7 +909,8 @@ void TTY_Disconnect(int handle)
 }
 
 
-qboolean TTY_CheckForConnection(int handle)
+qboolean
+TTY_CheckForConnection ( int handle )
 {
 	ComPort	*p;
 
@@ -937,25 +966,29 @@ qboolean TTY_CheckForConnection(int handle)
 }
 
 
-qboolean TTY_IsEnabled(int serialPortNumber)
+qboolean
+TTY_IsEnabled ( int serialPortNumber )
 {
 	return handleToPort[serialPortNumber]->enabled;
 }
 
 
-qboolean TTY_IsModem(int serialPortNumber)
+qboolean
+TTY_IsModem ( int serialPortNumber )
 {
 	return handleToPort[serialPortNumber]->useModem;
 }
 
 
-qboolean TTY_OutputQueueIsEmpty(int handle)
+qboolean
+TTY_OutputQueueIsEmpty ( int handle )
 {
 	return EMPTY(handleToPort[handle]->outputQueue);
 }
 
 
-void Com_f (void)
+void
+Com_f ( void )
 {
 	ComPort	*p;
 	int		portNumber;
@@ -1148,7 +1181,8 @@ void Com_f (void)
 }
 
 
-int TTY_Init(void)
+int
+TTY_Init ( void )
 {
 	int		n;
 	ComPort *p;
@@ -1177,7 +1211,8 @@ int TTY_Init(void)
 }
 
 
-void TTY_Shutdown(void)
+void
+TTY_Shutdown ( void )
 {
 	int		n;
 	ComPort *p;
@@ -1195,7 +1230,8 @@ void TTY_Shutdown(void)
 }
 
 
-static int Modem_Command(ComPort *p, char *commandString)
+static int
+Modem_Command ( ComPort *p, char *commandString )
 {
 	byte	b;
 
@@ -1220,7 +1256,8 @@ static int Modem_Command(ComPort *p, char *commandString)
 }
 
 
-static char *Modem_Response(ComPort *p)
+static char *
+Modem_Response ( ComPort *p )
 {
 	byte	b;
 
@@ -1257,7 +1294,8 @@ static void Modem_Hangup2(ComPort *p);
 static void Modem_Hangup3(ComPort *p);
 static void Modem_Hangup4(ComPort *p);
 
-static void Modem_Hangup(ComPort *p)
+static void
+Modem_Hangup ( ComPort *p )
 {
 	Con_Printf("Hanging up modem...\n");
 	disable();
@@ -1271,7 +1309,8 @@ static void Modem_Hangup(ComPort *p)
 	SchedulePollProcedure(&p->poll, 1.5);
 }
 
-static void Modem_Hangup2(ComPort *p)
+static void
+Modem_Hangup2 ( ComPort *p )
 {
 	outportb(p->uart + MODEM_CONTROL_REGISTER, inportb(p->uart + MODEM_CONTROL_REGISTER) | MCR_DTR);
 	Modem_Command(p, "+++");
@@ -1279,14 +1318,16 @@ static void Modem_Hangup2(ComPort *p)
 	SchedulePollProcedure(&p->poll, 1.5);
 }
 
-static void Modem_Hangup3(ComPort *p)
+static void
+Modem_Hangup3 ( ComPort *p )
 {
 	Modem_Command(p, p->shutdown);
 	p->poll.procedure = Modem_Hangup4;
 	SchedulePollProcedure(&p->poll, 1.5);
 }
 
-static void Modem_Hangup4(ComPort *p)
+static void
+Modem_Hangup4 ( ComPort *p )
 {
 	Modem_Response(p);
 	Con_Printf("Hangup complete\n");

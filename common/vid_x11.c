@@ -120,7 +120,8 @@ int			scr_width, scr_height;
 			( VisibilityChangeMask | ExposureMask | StructureNotifyMask)
 
 
-static void shiftmask_init( void )
+static void
+shiftmask_init ( void )
 {
 	unsigned int	x;
 
@@ -134,7 +135,8 @@ static void shiftmask_init( void )
 }
 
 
-static PIXEL16 xlib_rgb16(int r, int g, int b)
+static PIXEL16
+xlib_rgb16 ( int r, int g, int b )
 {
 	PIXEL16	p = 0;
 
@@ -162,7 +164,8 @@ static PIXEL16 xlib_rgb16(int r, int g, int b)
 }
 
 
-static PIXEL24 xlib_rgb24(int r,int g,int b)
+static PIXEL24
+xlib_rgb24 ( int r,int g,int b )
 {
 	PIXEL24	p = 0;
 
@@ -190,7 +193,8 @@ static PIXEL24 xlib_rgb24(int r,int g,int b)
 }
 
 
-static void st2_fixup(XImage *framebuf, int x, int y, int width, int height)
+static void
+st2_fixup ( XImage *framebuf, int x, int y, int width, int height )
 {
 	int		xi,yi;
 	unsigned char	*src;
@@ -208,7 +212,8 @@ static void st2_fixup(XImage *framebuf, int x, int y, int width, int height)
 }
 
 
-static void st3_fixup(XImage *framebuf, int x, int y, int width, int height)
+static void
+st3_fixup ( XImage *framebuf, int x, int y, int width, int height )
 {
 	int		yi;
 	unsigned char	*src;
@@ -249,7 +254,8 @@ static void st3_fixup(XImage *framebuf, int x, int y, int width, int height)
 D_BeginDirectRect
 ================
 */
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 // direct drawing of the "accessing disk" icon isn't supported
 }
@@ -260,7 +266,8 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 D_EndDirectRect
 ================
 */
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 // direct drawing of the "accessing disk" icon isn't supported
 }
@@ -276,7 +283,8 @@ Keybinding command
 
 byte	vid_gamma[256];
 
-void VID_Gamma_f (void)
+void
+VID_Gamma_f ( void )
 {
 	float	g, f, inf;
 	int	i;
@@ -299,7 +307,8 @@ void VID_Gamma_f (void)
 }
 
 
-static void ResetFrameBuffer(void)
+static void
+ResetFrameBuffer ( void )
 {
 	int	vid_surfcachesize, buffersize;
 	void	*vid_surfcache;
@@ -349,7 +358,8 @@ static void ResetFrameBuffer(void)
 }
 
 
-static void ResetSharedFrameBuffers(void)
+static void
+ResetSharedFrameBuffers ( void )
 {
 	int	vid_surfcachesize, buffersize;
 	void	*vid_surfcache;
@@ -438,7 +448,8 @@ static void ResetSharedFrameBuffers(void)
 
 }
 
-static void event_shm(XEvent *event)
+static void
+event_shm ( XEvent *event )
 {
 	if (doShm)
 		oktodraw = true;
@@ -448,7 +459,8 @@ static void event_shm(XEvent *event)
 // the palette data will go away after the call, so it must be copied off if
 // the video driver will need it again
 
-void VID_Init (unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	int		pnum, i;
 	XVisualInfo	template;
@@ -703,13 +715,15 @@ void VID_Init (unsigned char *palette)
 }
 
 
-void VID_ShiftPalette(unsigned char *p)
+void
+VID_ShiftPalette ( unsigned char *p )
 {
 	VID_SetPalette(p);
 }
 
 
-void VID_SetPalette(unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 	int	i;
 	XColor	colors[256];
@@ -740,7 +754,8 @@ void VID_SetPalette(unsigned char *palette)
 /*
   Called at shutdown
 */
-void VID_Shutdown(void)
+void
+VID_Shutdown ( void )
 {
 	Sys_Printf("VID_Shutdown\n");
 	if (x_disp) {
@@ -769,7 +784,8 @@ static int	config_notify_height;
 /*
   Flushes the given rectangles from the view buffer to the screen.
 */
-void VID_Update(vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 	/* If the window changes dimension, skip this frame. */
 	if (config_notify) {
@@ -841,7 +857,8 @@ void VID_Update(vrect_t *rects)
 
 static int	dither;
 
-void VID_DitherOn( void )
+void
+VID_DitherOn ( void )
 {
 	if (dither == 0) {
 		vid.recalc_refdef = 1;
@@ -850,7 +867,8 @@ void VID_DitherOn( void )
 }
 
 
-void VID_DitherOff( void )
+void
+VID_DitherOff ( void )
 {
 	if (dither) {
 		vid.recalc_refdef = 1;
@@ -858,7 +876,8 @@ void VID_DitherOff( void )
 	}
 }
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -874,7 +893,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -886,15 +906,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_InitCvars ()
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

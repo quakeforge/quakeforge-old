@@ -63,7 +63,8 @@ R_RemoveEfrags
 Call when removing an object from the world or moving it to another position
 ================
 */
-void R_RemoveEfrags (entity_t *ent)
+void
+R_RemoveEfrags ( entity_t *ent )
 {
 	efrag_t		*ef, *old, *walk, **prev;
 
@@ -102,7 +103,8 @@ void R_RemoveEfrags (entity_t *ent)
 R_SplitEntityOnNode
 ===================
 */
-void R_SplitEntityOnNode (mnode_t *node)
+void
+R_SplitEntityOnNode ( mnode_t *node )
 {
 	efrag_t		*ef;
 	mplane_t	*splitplane;
@@ -175,7 +177,8 @@ void R_SplitEntityOnNode (mnode_t *node)
 R_AddEfrags
 ===========
 */
-void R_AddEfrags (entity_t *ent)
+void
+R_AddEfrags ( entity_t *ent )
 {
 	model_t		*entmodel;
 	int			i;
@@ -209,7 +212,8 @@ R_StoreEfrags
 // FIXME: a lot of this goes away with edge-based
 ================
 */
-void R_StoreEfrags (efrag_t **ppefrag)
+void
+R_StoreEfrags ( efrag_t **ppefrag )
 {
 	entity_t	*pent;
 	model_t		*clmodel;
@@ -245,5 +249,3 @@ void R_StoreEfrags (efrag_t **ppefrag)
 		}
 	}
 }
-
-

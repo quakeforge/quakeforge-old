@@ -250,7 +250,8 @@ static byte		playTrack;
 static byte		cdvolume;
 
 
-static int RedBookToSector(int rb)
+static int
+RedBookToSector ( int rb )
 {
 	byte	minute;
 	byte	second;
@@ -263,7 +264,8 @@ static int RedBookToSector(int rb)
 }
 
 
-static void CDAudio_Reset(void)
+static void
+CDAudio_Reset ( void )
 {
 	cdRequest->headerLength = 13;
 	cdRequest->unit = 0;
@@ -287,7 +289,8 @@ static void CDAudio_Reset(void)
 }
 
 
-static void CDAudio_Eject(void)
+static void
+CDAudio_Eject ( void )
 {
 	cdRequest->headerLength = 13;
 	cdRequest->unit = 0;
@@ -311,7 +314,8 @@ static void CDAudio_Eject(void)
 }
 
 
-static int CDAudio_GetAudioTrackInfo(byte track, int *start)
+static int
+CDAudio_GetAudioTrackInfo ( byte track, int *start )
 {
 	byte	control;
 
@@ -348,7 +352,8 @@ static int CDAudio_GetAudioTrackInfo(byte track, int *start)
 }
 
 
-static int CDAudio_GetAudioDiskInfo(void)
+static int
+CDAudio_GetAudioDiskInfo ( void )
 {
 	int n;
 
@@ -398,7 +403,8 @@ static int CDAudio_GetAudioDiskInfo(void)
 }
 
 
-static int CDAudio_GetAudioStatus(void)
+static int
+CDAudio_GetAudioStatus ( void )
 {
 	cdRequest->headerLength = 13;
 	cdRequest->unit = 0;
@@ -426,7 +432,8 @@ static int CDAudio_GetAudioStatus(void)
 }
 
 
-static int CDAudio_MediaChange(void)
+static int
+CDAudio_MediaChange ( void )
 {
 	cdRequest->headerLength = 13;
 	cdRequest->unit = 0;
@@ -454,7 +461,8 @@ static int CDAudio_MediaChange(void)
 
 // we set the volume to 0 first and then to the desired volume
 // some cd-rom drivers seem to need it done this way
-void CDAudio_SetVolume (byte volume)
+void
+CDAudio_SetVolume ( byte volume )
 {
 	if (!initialized || !enabled)
 		return;
@@ -500,7 +508,8 @@ void CDAudio_SetVolume (byte volume)
 }
 
 
-void CDAudio_Play(byte track, qboolean looping)
+void
+CDAudio_Play ( byte track, qboolean looping )
 {
 	int		volume;
 
@@ -575,7 +584,8 @@ void CDAudio_Play(byte track, qboolean looping)
 }
 
 
-void CDAudio_Stop(void)
+void
+CDAudio_Stop ( void )
 {
 	if (!initialized || !enabled)
 		return;
@@ -596,13 +606,15 @@ void CDAudio_Stop(void)
 }
 
 
-void CDAudio_Pause(void)
+void
+CDAudio_Pause ( void )
 {
 	CDAudio_Stop();
 }
 
 
-void CDAudio_Resume(void)
+void
+CDAudio_Resume ( void )
 {
 	if (!initialized || !enabled)
 		return;
@@ -629,7 +641,8 @@ void CDAudio_Resume(void)
 
 
 #define CD_f_DEFINED
-static void CD_f (void)
+static void
+CD_f ( void )
 {
 	char	*command;
 	int		ret;
@@ -745,7 +758,8 @@ static void CD_f (void)
 }
 
 
-void CDAudio_Update(void)
+void
+CDAudio_Update ( void )
 {
 	int		ret;
 	int		newVolume;
@@ -807,7 +821,8 @@ void CDAudio_Update(void)
 }
 
 
-int CDAudio_Init(void)
+int
+CDAudio_Init ( void )
 {
 	char	*memory;
 	int		n;
@@ -852,8 +867,7 @@ int CDAudio_Init(void)
 		return -1;
 	}
 
-	memory = dos_getmemory(sizeof(struct cd_request
-) + sizeof(union readInfo_u));
+	memory = dos_getmemory(sizeof(struct cd_request) + sizeof(union readInfo_u));
 	if (memory == NULL)
 	{
 		Con_DPrintf("CDAudio_Init: Unable to allocate low memory.\n");
@@ -887,7 +901,8 @@ int CDAudio_Init(void)
 }
 
 
-void CDAudio_Shutdown(void)
+void
+CDAudio_Shutdown ( void )
 {
 	if (!initialized)
 		return;

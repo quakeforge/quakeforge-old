@@ -92,7 +92,8 @@ void R_TrailingEdge (surf_t *surf, edge_t *edge);
 R_DrawCulledPolys
 ==============
 */
-void R_DrawCulledPolys (void)
+void
+R_DrawCulledPolys ( void )
 {
 	surf_t			*s;
 	msurface_t		*pface;
@@ -139,7 +140,8 @@ void R_DrawCulledPolys (void)
 R_BeginEdgeFrame
 ==============
 */
-void R_BeginEdgeFrame (void)
+void
+R_BeginEdgeFrame ( void )
 {
 	int		v;
 
@@ -147,7 +149,7 @@ void R_BeginEdgeFrame (void)
 	edge_max = &r_edges[r_numallocatededges];
 
 	surface_p = &surfaces[2];	// background is surface 1,
-								//  surface 0 is a dummy
+								// surface 0 is a dummy
 	surfaces[1].spans = NULL;	// no background spans yet
 	surfaces[1].flags = SURF_DRAWBACKGROUND;
 
@@ -185,7 +187,8 @@ sentinel at the end (actually, this is the active edge table starting at
 edge_head.next).
 ==============
 */
-void R_InsertNewEdges (edge_t *edgestoadd, edge_t *edgelist)
+void
+R_InsertNewEdges ( edge_t *edgestoadd, edge_t *edgelist )
 {
 	edge_t	*next_edge;
 
@@ -226,7 +229,8 @@ addedge:
 R_RemoveEdges
 ==============
 */
-void R_RemoveEdges (edge_t *pedge)
+void
+R_RemoveEdges ( edge_t *pedge )
 {
 
 	do
@@ -246,7 +250,8 @@ void R_RemoveEdges (edge_t *pedge)
 R_StepActiveU
 ==============
 */
-void R_StepActiveU (edge_t *pedge)
+void
+R_StepActiveU ( edge_t *pedge )
 {
 	edge_t		*pnext_edge, *pwedge;
 
@@ -314,7 +319,8 @@ pushback:
 R_CleanupSpan
 ==============
 */
-void R_CleanupSpan ()
+void
+R_CleanupSpan ( void )
 {
 	surf_t	*surf;
 	int		iu;
@@ -348,7 +354,8 @@ void R_CleanupSpan ()
 R_LeadingEdgeBackwards
 ==============
 */
-void R_LeadingEdgeBackwards (edge_t *edge)
+void
+R_LeadingEdgeBackwards ( edge_t *edge )
 {
 	espan_t			*span;
 	surf_t			*surf, *surf2;
@@ -428,7 +435,8 @@ gotposition:
 R_TrailingEdge
 ==============
 */
-void R_TrailingEdge (surf_t *surf, edge_t *edge)
+void
+R_TrailingEdge ( surf_t *surf, edge_t *edge )
 {
 	espan_t			*span;
 	int				iu;
@@ -472,7 +480,8 @@ void R_TrailingEdge (surf_t *surf, edge_t *edge)
 R_LeadingEdge
 ==============
 */
-void R_LeadingEdge (edge_t *edge)
+void
+R_LeadingEdge ( edge_t *edge )
 {
 	espan_t			*span;
 	surf_t			*surf, *surf2;
@@ -600,7 +609,8 @@ gotposition:
 R_GenerateSpans
 ==============
 */
-void R_GenerateSpans (void)
+void
+R_GenerateSpans ( void )
 {
 	edge_t			*edge;
 	surf_t			*surf;
@@ -639,7 +649,8 @@ void R_GenerateSpans (void)
 R_GenerateSpansBackward
 ==============
 */
-void R_GenerateSpansBackward (void)
+void
+R_GenerateSpansBackward ( void )
 {
 	edge_t			*edge;
 
@@ -675,7 +686,8 @@ Output:
 Each surface has a linked list of its visible spans
 ==============
 */
-void R_ScanEdges (void)
+void
+R_ScanEdges ( void )
 {
 	int		iv, bottom;
 	byte	basespans[MAXSPANS*sizeof(espan_t)+CACHE_SIZE];
@@ -781,5 +793,3 @@ void R_ScanEdges (void)
 	else
 		D_DrawSurfaces ();
 }
-
-

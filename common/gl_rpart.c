@@ -62,7 +62,8 @@ fire_t		r_fires[MAX_FIRES];
 R_InitParticles
 ===============
 */
-void R_InitParticles (void)
+void
+R_InitParticles ( void )
 {
 	int		i;
 
@@ -84,7 +85,8 @@ void R_InitParticles (void)
 }
 
 #ifdef QUAKE2
-void R_DarkFieldParticles (entity_t *ent)
+void
+R_DarkFieldParticles ( entity_t *ent )
 {
 	int			i, j, k;
 	particle_t	*p;
@@ -118,7 +120,7 @@ void R_DarkFieldParticles (entity_t *ent)
 				p->org[1] = org[1] + j + (rand()&3);
 				p->org[2] = org[2] + k + (rand()&3);
 
-				VectorNormalize (dir);						
+				VectorNormalize (dir);
 				vel = 50 + (rand()&63);
 				VectorScale (dir, vel, p->vel);
 			}
@@ -140,7 +142,8 @@ vec3_t	avelocity = {23, 7, 3};
 float	partstep = 0.01;
 float	timescale = 0.01;
 
-void R_EntityParticles (entity_t *ent)
+void
+R_EntityParticles ( entity_t *ent )
 {
 	int			count;
 	int			i;
@@ -187,9 +190,9 @@ void R_EntityParticles (entity_t *ent)
 		p->color = 0x6f;
 		p->type = pt_explode;
 
-		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;			
-		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;			
-		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;			
+		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;
+		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;
+		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;
 	}
 }
 
@@ -199,7 +202,8 @@ void R_EntityParticles (entity_t *ent)
 R_ClearParticles
 ===============
 */
-void R_ClearParticles (void)
+void
+R_ClearParticles ( void )
 {
 	int		i;
 
@@ -212,7 +216,8 @@ void R_ClearParticles (void)
 }
 
 
-void R_ReadPointFile_f (void)
+void
+R_ReadPointFile_f ( void )
 {
 	QFile	*f;
 	vec3_t	org;
@@ -270,7 +275,8 @@ R_ParseParticleEffect
 Parse an effect out of the server message
 ===============
 */
-void R_ParseParticleEffect (void)
+void
+R_ParseParticleEffect ( void )
 {
 	vec3_t		org, dir;
 	int			i, count, msgcount, color;
@@ -296,7 +302,8 @@ R_ParticleExplosion
 
 ===============
 */
-void R_ParticleExplosion (vec3_t org)
+void
+R_ParticleExplosion ( vec3_t org )
 {
 	int			i, j;
 	particle_t	*p;
@@ -340,7 +347,8 @@ R_ParticleExplosion2
 
 ===============
 */
-void R_ParticleExplosion2 (vec3_t org, int colorStart, int colorLength)
+void
+R_ParticleExplosion2 ( vec3_t org, int colorStart, int colorLength )
 {
 	int			i, j;
 	particle_t	*p;
@@ -374,7 +382,8 @@ R_BlobExplosion
 
 ===============
 */
-void R_BlobExplosion (vec3_t org)
+void
+R_BlobExplosion ( vec3_t org )
 {
 	int			i, j;
 	particle_t	*p;
@@ -419,7 +428,8 @@ R_RunParticleEffect
 
 ===============
 */
-void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
+void
+R_RunParticleEffect ( vec3_t org, vec3_t dir, int color, int count )
 {
 	int			i, j;
 	particle_t	*p;
@@ -433,7 +443,7 @@ void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 	else
 		scale = 1;
 #endif
-	
+
 	for (i=0 ; i<count ; i++) {
 		if (!free_particles)
 			return;
@@ -489,7 +499,8 @@ R_LavaSplash
 
 ===============
 */
-void R_LavaSplash (vec3_t org)
+void
+R_LavaSplash ( vec3_t org )
 {
 	int			i, j, k;
 	particle_t	*p;
@@ -535,7 +546,8 @@ R_TeleportSplash
 
 ===============
 */
-void R_TeleportSplash (vec3_t org)
+void
+R_TeleportSplash ( vec3_t org )
 {
 	int			i, j, k;
 	particle_t	*p;
@@ -579,7 +591,7 @@ void R_TeleportSplash (vec3_t org)
 	R_RocketTrail
 */
 void
-R_RocketTrail (vec3_t start, vec3_t end, int type, entity_t *ent)
+R_RocketTrail ( vec3_t start, vec3_t end, int type, entity_t *ent )
 {
 	vec3_t		vec;
 	float		len;
@@ -690,7 +702,8 @@ R_DrawParticles
 ===============
 */
 
-void R_DrawParticles (void)
+void
+R_DrawParticles ( void )
 {
 	particle_t		*p, *kill;
 	float			grav;
@@ -709,13 +722,13 @@ void R_DrawParticles (void)
 	{
 		GL_Bind(particletexture);
 		alphaTestEnabled = glIsEnabled(GL_ALPHA_TEST);
-	
+
 		if (alphaTestEnabled)
 			glDisable(GL_ALPHA_TEST);
 		glEnable (GL_BLEND);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glBegin (GL_TRIANGLES);
-	
+
 		VectorScale (vup, 1.5, up);
 		VectorScale (vright, 1.5, right);
 #ifdef 	UQUAKE
@@ -724,7 +737,7 @@ void R_DrawParticles (void)
 		frametime = host_frametime;
 #endif
 		time3 = frametime * 15;
-		time2 = frametime * 10; // 15;
+		time2 = frametime * 10;		// 15;
 		time1 = frametime * 5;
 #ifdef UQUAKE
 		grav = frametime * sv_gravity->value * 0.05;
@@ -745,7 +758,7 @@ void R_DrawParticles (void)
 			}
 			break;
 		}
-	
+
 		for (p=active_particles ; p ; p=p->next)
 		{
 			for ( ;; )
@@ -760,7 +773,7 @@ void R_DrawParticles (void)
 				}
 				break;
 			}
-	
+
 			// hack a scale up to keep particles from disapearing
 			scale = (p->org[0] - r_origin[0])*vpn[0]
 				+ (p->org[1] - r_origin[1])*vpn[1]
@@ -769,7 +782,7 @@ void R_DrawParticles (void)
 				scale = gl_particles->value;
 			else
 				scale = gl_particles->value + scale * 0.004;
-#if 0 // was in uquake, but give it a go
+#if 0	// was in uquake, but give it a go
 			glColor3ubv ((byte *)&d_8to24table[(int)p->color]);
 #else
 			at = (byte *)&d_8to24table[(int)p->color];
@@ -807,7 +820,7 @@ void R_DrawParticles (void)
 					p->color = ramp3[(int)p->ramp];
 				p->vel[2] += grav;
 				break;
-	
+
 			case pt_explode:
 				p->ramp += time2;
 				if (p->ramp >=8)
@@ -818,7 +831,7 @@ void R_DrawParticles (void)
 					p->vel[i] += p->vel[i]*dvel;
 				p->vel[2] -= grav;
 				break;
-	
+
 			case pt_explode2:
 				p->ramp += time3;
 				if (p->ramp >=8)
@@ -829,13 +842,13 @@ void R_DrawParticles (void)
 					p->vel[i] -= p->vel[i]*frametime;
 				p->vel[2] -= grav;
 				break;
-	
+
 			case pt_blob:
 				for (i=0 ; i<3 ; i++)
 					p->vel[i] += p->vel[i]*dvel;
 				p->vel[2] -= grav;
 				break;
-	
+
 			case pt_blob2:
 				for (i=0 ; i<2 ; i++)
 					p->vel[i] -= p->vel[i]*dvel;
@@ -860,7 +873,7 @@ void R_DrawParticles (void)
 		if (alphaTestEnabled)
 			glEnable(GL_ALPHA_TEST);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	} // if (gl_particles->value)
+	}	// if (gl_particles->value)
 }
 
 
@@ -874,7 +887,7 @@ float r_firecolor_flame[4]={0.9,0.7,0.3,1.0};
 float r_firecolor_light[4]={0.9,0.7,0.3,0.66};
 
 void
-R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
+R_AddFire ( vec3_t start, vec3_t end, entity_t *ent )
 {
 	float		len;
 	fire_t		*f;
@@ -913,7 +926,7 @@ R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 	Clears out and returns a new fireball
 */
 fire_t *
-R_AllocFire (int key)
+R_AllocFire ( int key )
 {
 	int		i;
 	fire_t		*f;
@@ -946,7 +959,7 @@ R_AllocFire (int key)
 	memset (f, 0, sizeof(*f));
 	f->key = key;
 	f->color = f->_color;
-	return f;	
+	return f;
 }
 
 /*
@@ -955,7 +968,7 @@ R_AllocFire (int key)
 	draws one fireball - probably never need to call this directly
 */
 void
-R_DrawFire (fire_t *f)
+R_DrawFire ( fire_t *f )
 {
 	int		i, j;
 	vec3_t		vec,vec2;
@@ -1007,7 +1020,7 @@ R_DrawFire (fire_t *f)
 	Draws each fireball in sequence
 */
 void
-R_UpdateFires (void)
+R_UpdateFires ( void )
 {
 	int		i;
 	fire_t	*f;
@@ -1039,7 +1052,7 @@ R_UpdateFires (void)
 }
 
 void
-R_FireColor_f(void)
+R_FireColor_f ( void )
 {
 	int i;
 

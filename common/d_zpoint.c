@@ -37,7 +37,8 @@
 D_DrawZPoint
 =====================
 */
-void D_DrawZPoint (void)
+void
+D_DrawZPoint ( void )
 {
 	byte	*pdest;
 	short	*pz;
@@ -53,4 +54,3 @@ void D_DrawZPoint (void)
 		*pdest = r_zpointdesc.color;
 	}
 }
-

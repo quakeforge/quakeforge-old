@@ -128,7 +128,8 @@ typedef struct
 gltexture_t	gltextures[MAX_GLTEXTURES];
 int			numgltextures;
 
-void GL_Bind (int texnum)
+void
+GL_Bind ( int texnum )
 {
 	if (gl_nobind->value)
 		texnum = char_texture;
@@ -164,7 +165,8 @@ qboolean	scrap_dirty;
 int			scrap_texnum;
 
 // returns a texture number and the position inside it
-int Scrap_AllocBlock (int w, int h, int *x, int *y)
+int
+Scrap_AllocBlock ( int w, int h, int *x, int *y )
 {
 	int		i, j;
 	int		best, best2;
@@ -207,7 +209,8 @@ int Scrap_AllocBlock (int w, int h, int *x, int *y)
 
 int	scrap_uploads;
 
-void Scrap_Upload (void)
+void
+Scrap_Upload ( void )
 {
 	scrap_uploads++;
 	GL_Bind(scrap_texnum);
@@ -234,7 +237,8 @@ byte		menuplyr_pixels[4096];
 int		pic_texels;
 int		pic_count;
 
-qpic_t *Draw_PicFromWad (char *name)
+qpic_t *
+Draw_PicFromWad ( char *name )
 {
 	qpic_t	*p;
 	glpic_t	*gl;
@@ -282,7 +286,8 @@ qpic_t *Draw_PicFromWad (char *name)
 Draw_CachePic
 ================
 */
-qpic_t	*Draw_CachePic (char *path)
+qpic_t *
+Draw_CachePic ( char *path )
 {
 	cachepic_t	*pic;
 	int			i;
@@ -346,7 +351,8 @@ glmode_t modes[] = {
 Draw_TextureMode_f
 ===============
 */
-void Draw_TextureMode_f (void)
+void
+Draw_TextureMode_f ( void )
 {
 	int		i;
 	gltexture_t	*glt;
@@ -394,7 +400,8 @@ void Draw_TextureMode_f (void)
 Draw_Init
 ===============
 */
-void Draw_Init (void)
+void
+Draw_Init ( void )
 {
 	int		i;
 
@@ -469,7 +476,8 @@ It can be clipped to the top of the screen to allow the console to be
 smoothly scrolled off.
 ================
 */
-void Draw_Character (int x, int y, int num)
+void
+Draw_Character ( int x, int y, int num )
 {
 	int				row, col;
 	float			frow, fcol, size;
@@ -508,7 +516,8 @@ void Draw_Character (int x, int y, int num)
 Draw_String
 ================
 */
-void Draw_String (int x, int y, char *str)
+void
+Draw_String ( int x, int y, char *str )
 {
 	while (*str)
 	{
@@ -524,7 +533,7 @@ Draw_Alt_String
 ================
 */
 void
-Draw_Alt_String (int x, int y, char *str)
+Draw_Alt_String ( int x, int y, char *str )
 {
 	while (*str)
 	{
@@ -535,7 +544,7 @@ Draw_Alt_String (int x, int y, char *str)
 }
 
 void
-Draw_Crosshair(void)
+Draw_Crosshair ( void )
 {
 	int x, y;
 	extern vrect_t		scr_vrect;
@@ -549,7 +558,7 @@ Draw_Crosshair(void)
 		glEnable (GL_BLEND);
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-		
+
 		uColor = d_8to24table[(byte) crosshaircolor->value] & 0x00ffffff;
 		uColor |= ((unsigned)(gl_crosshairalpha->value*255.0) & 0xff) << 24;
 		glColor4ubv((unsigned char *)&uColor);
@@ -581,7 +590,7 @@ Draw_Crosshair(void)
 		glEnable (GL_BLEND);
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-		
+
 		uColor = d_8to24table[(byte) crosshaircolor->value] & 0x00ffffff;
 		uColor |= ((unsigned)(gl_crosshairalpha->value*255.0) & 0xff) << 24;
 		glColor4ubv((unsigned char *)&uColor);
@@ -606,7 +615,7 @@ Draw_Crosshair(void)
 		glEnable(GL_ALPHA_TEST);
 		glDisable (GL_BLEND);
 	} else if (crosshair->value)
-		Draw_Character (scr_vrect.x + scr_vrect.width/2-4 
+		Draw_Character (scr_vrect.x + scr_vrect.width/2-4
 				+ cl_crossx->value, scr_vrect.y
 				+ scr_vrect.height/2-4 + cl_crossy->value,
 				'+');
@@ -622,7 +631,8 @@ This is for debugging lockups by drawing different chars in different parts
 of the code.
 ================
 */
-void Draw_DebugChar (char num)
+void
+Draw_DebugChar ( char num )
 {
 }
 
@@ -631,7 +641,8 @@ void Draw_DebugChar (char num)
 Draw_Pic
 =============
 */
-void Draw_Pic (int x, int y, qpic_t *pic)
+void
+Draw_Pic ( int x, int y, qpic_t *pic )
 {
 	glpic_t			*gl;
 
@@ -657,7 +668,8 @@ void Draw_Pic (int x, int y, qpic_t *pic)
 Draw_AlphaPic
 =============
 */
-void Draw_AlphaPic (int x, int y, qpic_t *pic, float alpha)
+void
+Draw_AlphaPic ( int x, int y, qpic_t *pic, float alpha )
 {
 	glpic_t			*gl;
 
@@ -685,7 +697,8 @@ void Draw_AlphaPic (int x, int y, qpic_t *pic, float alpha)
 	glDisable (GL_BLEND);
 }
 
-void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int height)
+void
+Draw_SubPic ( int x, int y, qpic_t *pic, int srcx, int srcy, int width, int height )
 {
 	glpic_t			*gl;
 	float newsl, newtl, newsh, newth;
@@ -723,7 +736,8 @@ void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int h
 Draw_TransPic
 =============
 */
-void Draw_TransPic (int x, int y, qpic_t *pic)
+void
+Draw_TransPic ( int x, int y, qpic_t *pic )
 {
 
 	if (x < 0 || (unsigned)(x + pic->width) > vid.width || y < 0 ||
@@ -743,7 +757,8 @@ Draw_TransPicTranslate
 Only used for the player color selection menu
 =============
 */
-void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
+void
+Draw_TransPicTranslate ( int x, int y, qpic_t *pic, byte *translation )
 {
 	int				v, u, c;
 	unsigned		trans[64*64], *dest;
@@ -764,17 +779,17 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
 			if (p == 255)
 				dest[u] = p;
 			else
-				dest[u] =  d_8to24table[translation[p]];
+				dest[u] = d_8to24table[translation[p]];
 		}
 	}
 
 	glTexImage2D (GL_TEXTURE_2D, 0, gl_alpha_format, 64, 64, 0,
 #ifdef WORDS_BIGENDIAN
-                      GL_ABGR_EXT,
+					GL_ABGR_EXT,
 #else
-                      GL_RGBA,
+					GL_RGBA,
 #endif
-                      GL_UNSIGNED_BYTE, trans);
+					GL_UNSIGNED_BYTE, trans);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -798,7 +813,8 @@ Draw_ConsoleBackground
 
 ================
 */
-void Draw_ConsoleBackground (int lines)
+void
+Draw_ConsoleBackground ( int lines )
 {
 	int 		y;
 	qpic_t		*conback;
@@ -887,7 +903,8 @@ This repeats a 64*64 tile graphic to fill the screen around a sized down
 refresh window.
 =============
 */
-void Draw_TileClear (int x, int y, int w, int h)
+void
+Draw_TileClear ( int x, int y, int w, int h )
 {
 	glColor3f (1,1,1);
 	GL_Bind (*(int *)draw_backtile->data);
@@ -911,7 +928,8 @@ Draw_Fill
 Fills a box of pixels with a single color
 =============
 */
-void Draw_Fill (int x, int y, int w, int h, int c)
+void
+Draw_Fill ( int x, int y, int w, int h, int c )
 {
 	glDisable (GL_TEXTURE_2D);
 	glColor3f (host_basepal[c*3]/255.0,
@@ -937,7 +955,8 @@ Draw_FadeScreen
 
 ================
 */
-void Draw_FadeScreen (void)
+void
+Draw_FadeScreen ( void )
 {
 	glEnable (GL_BLEND);
 	glDisable (GL_TEXTURE_2D);
@@ -969,13 +988,14 @@ Draws the little blue disc in the corner of the screen.
 Call before beginning any disc IO.
 ================
 */
-void Draw_BeginDisc (void)
+void
+Draw_BeginDisc ( void )
 {
 	if (!draw_disc)
 		return;
-	glDrawBuffer  (GL_FRONT);
+	glDrawBuffer (GL_FRONT);
 	Draw_Pic (vid.width - 24, 0, draw_disc);
-	glDrawBuffer  (GL_BACK);
+	glDrawBuffer (GL_BACK);
 }
 
 
@@ -987,7 +1007,8 @@ Erases the disc icon.
 Call after completing any disc IO
 ================
 */
-void Draw_EndDisc (void)
+void
+Draw_EndDisc ( void )
 {
 }
 
@@ -998,16 +1019,17 @@ GL_Set2D
 Setup as if the screen was 320*200
 ================
 */
-void GL_Set2D (void)
+void
+GL_Set2D ( void )
 {
 	glViewport (glx, gly, glwidth, glheight);
 
 	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity ();
-	glOrtho  (0, vid.width, vid.height, 0, -99999, 99999);
+	glLoadIdentity ();
+	glOrtho (0, vid.width, vid.height, 0, -99999, 99999);
 
 	glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity ();
+	glLoadIdentity ();
 
 	glDisable (GL_DEPTH_TEST);
 	glDisable (GL_CULL_FACE);
@@ -1025,7 +1047,8 @@ void GL_Set2D (void)
 GL_FindTexture
 ================
 */
-int GL_FindTexture (char *identifier)
+int
+GL_FindTexture ( char *identifier )
 {
 	int		i;
 	gltexture_t	*glt;
@@ -1044,7 +1067,8 @@ int GL_FindTexture (char *identifier)
 GL_ResampleTexture
 ================
 */
-void GL_ResampleTexture (unsigned *in, int inwidth, int inheight, unsigned *out,  int outwidth, int outheight)
+void
+GL_ResampleTexture ( unsigned *in, int inwidth, int inheight, unsigned *out, int outwidth, int outheight )
 {
 	int		i, j;
 	unsigned	*inrow;
@@ -1074,7 +1098,8 @@ void GL_ResampleTexture (unsigned *in, int inwidth, int inheight, unsigned *out,
 GL_Resample8BitTexture -- JACK
 ================
 */
-void GL_Resample8BitTexture (unsigned char *in, int inwidth, int inheight, unsigned char *out,  int outwidth, int outheight)
+void
+GL_Resample8BitTexture ( unsigned char *in, int inwidth, int inheight, unsigned char *out, int outwidth, int outheight )
 {
 	int		i, j;
 	unsigned	char *inrow;
@@ -1106,7 +1131,8 @@ GL_MipMap
 Operates in place, quartering the size of the texture
 ================
 */
-void GL_MipMap (byte *in, int width, int height)
+void
+GL_MipMap ( byte *in, int width, int height )
 {
 	int		i, j;
 	byte	*out;
@@ -1133,11 +1159,12 @@ GL_MipMap8Bit
 Mipping for 8 bit textures
 ================
 */
-void GL_MipMap8Bit (byte *in, int width, int height)
+void
+GL_MipMap8Bit ( byte *in, int width, int height )
 {
 	int		i, j;
 	byte	*out;
-	unsigned short     r,g,b;
+	unsigned short	r,g,b;
 	byte	*at1, *at2, *at3, *at4;
 
 	height >>= 1;
@@ -1163,10 +1190,11 @@ void GL_MipMap8Bit (byte *in, int width, int height)
 GL_Upload32
 ===============
 */
-void GL_Upload32 (unsigned *data, int width, int height,  qboolean mipmap, qboolean alpha)
+void
+GL_Upload32 ( unsigned *data, int width, int height, qboolean mipmap, qboolean alpha )
 {
 	int			samples;
-static	unsigned	scaled[1024*512];	// [512*256];
+	static unsigned	scaled[1024*512];	// [512*256];
 	int			scaled_width, scaled_height;
 
 	for (scaled_width = 1 ; scaled_width < width ; scaled_width<<=1)
@@ -1197,20 +1225,20 @@ static	unsigned	scaled[1024*512];	// [512*256];
 		glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
 	}
 #else
-texels += scaled_width * scaled_height;
+	texels += scaled_width * scaled_height;
 
 	if (scaled_width == width && scaled_height == height)
 	{
 		if (!mipmap)
 		{
 			glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width,
-                                      scaled_height, 0,
+							scaled_height, 0,
 #ifdef WORDS_BIGENDIAN
-                                      GL_ABGR_EXT,
+							GL_ABGR_EXT,
 #else
-                                      GL_RGBA,
+							GL_RGBA,
 #endif
-                                      GL_UNSIGNED_BYTE, data);
+							GL_UNSIGNED_BYTE, data);
 			goto done;
 		}
 		memcpy (scaled, data, width*height*4);
@@ -1218,14 +1246,13 @@ texels += scaled_width * scaled_height;
 	else
 		GL_ResampleTexture (data, width, height, scaled, scaled_width, scaled_height);
 
-	glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width, scaled_height,
-                      0,
+	glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width, scaled_height, 0,
 #ifdef WORDS_BIGENDIAN
-                      GL_ABGR_EXT,
+					GL_ABGR_EXT,
 #else
-                      GL_RGBA,
+					GL_RGBA,
 #endif
-                      GL_UNSIGNED_BYTE, scaled);
+					GL_UNSIGNED_BYTE, scaled);
 	if (mipmap)
 	{
 		int		miplevel;
@@ -1242,18 +1269,17 @@ texels += scaled_width * scaled_height;
 				scaled_height = 1;
 			miplevel++;
 			glTexImage2D (GL_TEXTURE_2D, miplevel, samples,
-                                      scaled_width, scaled_height, 0,
+							scaled_width, scaled_height, 0,
 #ifdef WORDS_BIGENDIAN
-                                      GL_ABGR_EXT,
+							GL_ABGR_EXT,
 #else
-                                      GL_RGBA,
+							GL_RGBA,
 #endif
-                                      GL_UNSIGNED_BYTE, scaled);
+							GL_UNSIGNED_BYTE, scaled);
 		}
 	}
 done: ;
 #endif
-
 
 	if (mipmap)
 	{
@@ -1267,7 +1293,8 @@ done: ;
 	}
 }
 
-void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboolean alpha)
+void
+GL_Upload8_EXT ( byte *data, int width, int height, qboolean mipmap, qboolean alpha )
 {
 	int			i, s;
 	qboolean	noalpha;
@@ -1306,7 +1333,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 	if (scaled_width * scaled_height > sizeof(scaled))
 		Sys_Error ("GL_LoadTexture: too big");
 
-	samples = 1; // alpha ? gl_alpha_format : gl_solid_format;
+	samples = 1;	// alpha ? gl_alpha_format : gl_solid_format;
 
 	texels += scaled_width * scaled_height;
 
@@ -1318,7 +1345,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 #ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX , GL_UNSIGNED_BYTE, data);
 #else
-                        /* FIXME - should warn that this isn't available */
+			/* FIXME - should warn that this isn't available */
 #endif
 			goto done;
 		}
@@ -1331,7 +1358,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 #ifdef HAVE_GL_COLOR_INDEX8_EXT
 	glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
 #else
-                        /* FIXME - should warn that this isn't available */
+	/* FIXME - should warn that this isn't available */
 #endif
 	if (mipmap)
 	{
@@ -1352,7 +1379,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 #ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, miplevel, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
 #else
-                        /* FIXME - should warn that this isn't available */
+			/* FIXME - should warn that this isn't available */
 #endif
 		}
 	}
@@ -1377,9 +1404,10 @@ extern qboolean VID_Is8bit();
 GL_Upload8
 ===============
 */
-void GL_Upload8 (byte *data, int width, int height,  qboolean mipmap, qboolean alpha)
+void
+GL_Upload8 ( byte *data, int width, int height, qboolean mipmap, qboolean alpha )
 {
-static	unsigned	trans[640*480];		// FIXME, temporary
+	static unsigned		trans[640*480];		// FIXME, temporary
 	int			i, s;
 	qboolean	noalpha;
 	int			p;
@@ -1427,7 +1455,8 @@ static	unsigned	trans[640*480];		// FIXME, temporary
 GL_LoadTexture
 ================
 */
-int GL_LoadTexture (char *identifier, int width, int height, byte *data, qboolean mipmap, qboolean alpha)
+int
+GL_LoadTexture ( char *identifier, int width, int height, byte *data, qboolean mipmap, qboolean alpha )
 {
 	int			i;
 	gltexture_t	*glt;
@@ -1479,7 +1508,8 @@ int GL_LoadTexture (char *identifier, int width, int height, byte *data, qboolea
 GL_LoadPicTexture
 ================
 */
-int GL_LoadPicTexture (qpic_t *pic)
+int
+GL_LoadPicTexture ( qpic_t *pic )
 {
 	return GL_LoadTexture ("", pic->width, pic->height, pic->data, false, true);
 }
@@ -1488,7 +1518,8 @@ int GL_LoadPicTexture (qpic_t *pic)
 
 static GLenum oldtarget = TEXTURE0_SGIS;
 
-void GL_SelectTexture (GLenum target)
+void
+GL_SelectTexture ( GLenum target )
 {
 	if (!gl_mtexable)
 		return;

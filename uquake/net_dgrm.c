@@ -43,10 +43,10 @@ struct in_addr
 #define	s_addr	S_un.S_addr	/* can be used for most tcp & ip code */
 struct sockaddr_in
 {
-    short			sin_family;
-    unsigned short	sin_port;
+	short			sin_family;
+	unsigned short	sin_port;
 	struct in_addr	sin_addr;
-    char			sin_zero[8];
+	char			sin_zero[8];
 };
 char *inet_ntoa(struct in_addr in);
 unsigned long inet_addr(const char *cp);
@@ -100,7 +100,8 @@ extern char m_return_reason[32];
 
 
 #ifdef DEBUG
-char *StrAddr (struct qsockaddr *addr)
+char *
+StrAddr ( struct qsockaddr *addr )
 {
 	static char buf[34];
 	byte *p = (byte *)addr;
@@ -115,9 +116,10 @@ char *StrAddr (struct qsockaddr *addr)
 
 #ifdef BAN_TEST
 unsigned long banAddr = ~0x0;
-unsigned long banMask =  0x0;
+unsigned long banMask = 0x0;
 
-void NET_Ban_f (void)
+void
+NET_Ban_f ( void )
 {
 	char	addrStr [32];
 	char	maskStr [32];
@@ -174,7 +176,8 @@ void NET_Ban_f (void)
 #endif
 
 
-int Datagram_SendMessage (qsocket_t *sock, sizebuf_t *data)
+int
+Datagram_SendMessage ( qsocket_t *sock, sizebuf_t *data )
 {
 	unsigned int	packetLen;
 	unsigned int	dataLen;
@@ -221,7 +224,8 @@ int Datagram_SendMessage (qsocket_t *sock, sizebuf_t *data)
 }
 
 
-int SendMessageNext (qsocket_t *sock)
+int
+SendMessageNext ( qsocket_t *sock )
 {
 	unsigned int	packetLen;
 	unsigned int	dataLen;
@@ -254,7 +258,8 @@ int SendMessageNext (qsocket_t *sock)
 }
 
 
-int ReSendMessage (qsocket_t *sock)
+int
+ReSendMessage ( qsocket_t *sock )
 {
 	unsigned int	packetLen;
 	unsigned int	dataLen;
@@ -287,7 +292,8 @@ int ReSendMessage (qsocket_t *sock)
 }
 
 
-qboolean Datagram_CanSendMessage (qsocket_t *sock)
+qboolean
+Datagram_CanSendMessage ( qsocket_t *sock )
 {
 	if (sock->sendNext)
 		SendMessageNext (sock);
@@ -296,13 +302,15 @@ qboolean Datagram_CanSendMessage (qsocket_t *sock)
 }
 
 
-qboolean Datagram_CanSendUnreliableMessage (qsocket_t *sock)
+qboolean
+Datagram_CanSendUnreliableMessage ( qsocket_t *sock )
 {
 	return true;
 }
 
 
-int Datagram_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
+int
+Datagram_SendUnreliableMessage ( qsocket_t *sock, sizebuf_t *data )
 {
 	int 	packetLen;
 
@@ -328,7 +336,8 @@ int Datagram_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
 }
 
 
-int	Datagram_GetMessage (qsocket_t *sock)
+int
+Datagram_GetMessage ( qsocket_t *sock )
 {
 	unsigned int	length;
 	unsigned int	flags;
@@ -479,7 +488,8 @@ int	Datagram_GetMessage (qsocket_t *sock)
 }
 
 
-void PrintStats(qsocket_t *s)
+void
+PrintStats ( qsocket_t *s )
 {
 	Con_Printf("canSend = %4u   \n", s->canSend);
 	Con_Printf("sendSeq = %4u   ", s->sendSequence);
@@ -487,7 +497,8 @@ void PrintStats(qsocket_t *s)
 	Con_Printf("\n");
 }
 
-void NET_Stats_f (void)
+void
+NET_Stats_f ( void )
 {
 	qsocket_t	*s;
 
@@ -535,7 +546,8 @@ static int		testSocket;
 static void Test_Poll(void);
 PollProcedure	testPollProcedure = {NULL, 0.0, Test_Poll};
 
-static void Test_Poll(void)
+static void
+Test_Poll ( void )
 {
 	struct qsockaddr clientaddr;
 	int		control;
@@ -562,7 +574,7 @@ static void Test_Poll(void)
 		MSG_ReadLong();
 		if (control == -1)
 			break;
-		if ((control & (~NETFLAG_LENGTH_MASK)) !=  NETFLAG_CTL)
+		if ((control & (~NETFLAG_LENGTH_MASK)) != NETFLAG_CTL)
 			break;
 		if ((control & NETFLAG_LENGTH_MASK) != len)
 			break;
@@ -592,7 +604,8 @@ static void Test_Poll(void)
 	}
 }
 
-static void Test_f (void)
+static void
+Test_f ( void )
 {
 	char	*host;
 	int		n;
@@ -663,7 +676,8 @@ static int		test2Socket;
 static void Test2_Poll(void);
 PollProcedure	test2PollProcedure = {NULL, 0.0, Test2_Poll};
 
-static void Test2_Poll(void)
+static void
+Test2_Poll ( void )
 {
 	struct qsockaddr clientaddr;
 	int		control;
@@ -685,7 +699,7 @@ static void Test2_Poll(void)
 	MSG_ReadLong();
 	if (control == -1)
 		goto Error;
-	if ((control & (~NETFLAG_LENGTH_MASK)) !=  NETFLAG_CTL)
+	if ((control & (~NETFLAG_LENGTH_MASK)) != NETFLAG_CTL)
 		goto Error;
 	if ((control & NETFLAG_LENGTH_MASK) != len)
 		goto Error;
@@ -721,7 +735,8 @@ Done:
 	return;
 }
 
-static void Test2_f (void)
+static void
+Test2_f ( void )
 {
 	char	*host;
 	int		n;
@@ -779,7 +794,8 @@ JustDoIt:
 }
 
 
-int Datagram_Init (void)
+int
+Datagram_Init ( void )
 {
 	int i;
 	int csock;
@@ -809,7 +825,8 @@ int Datagram_Init (void)
 }
 
 
-void Datagram_Shutdown (void)
+void
+Datagram_Shutdown ( void )
 {
 	int i;
 
@@ -827,13 +844,15 @@ void Datagram_Shutdown (void)
 }
 
 
-void Datagram_Close (qsocket_t *sock)
+void
+Datagram_Close ( qsocket_t *sock )
 {
 	sfunc.CloseSocket(sock->socket);
 }
 
 
-void Datagram_Listen (qboolean state)
+void
+Datagram_Listen ( qboolean state )
 {
 	int i;
 
@@ -843,7 +862,8 @@ void Datagram_Listen (qboolean state)
 }
 
 
-static qsocket_t *_Datagram_CheckNewConnections (void)
+static qsocket_t *
+_Datagram_CheckNewConnections ( void )
 {
 	struct qsockaddr clientaddr;
 	struct qsockaddr newaddr;
@@ -872,7 +892,7 @@ static qsocket_t *_Datagram_CheckNewConnections (void)
 	MSG_ReadLong();
 	if (control == -1)
 		return NULL;
-	if ((control & (~NETFLAG_LENGTH_MASK)) !=  NETFLAG_CTL)
+	if ((control & (~NETFLAG_LENGTH_MASK)) != NETFLAG_CTL)
 		return NULL;
 	if ((control & NETFLAG_LENGTH_MASK) != len)
 		return NULL;
@@ -1104,7 +1124,8 @@ static qsocket_t *_Datagram_CheckNewConnections (void)
 	return sock;
 }
 
-qsocket_t *Datagram_CheckNewConnections (void)
+qsocket_t *
+Datagram_CheckNewConnections ( void )
 {
 	qsocket_t *ret = NULL;
 
@@ -1116,7 +1137,8 @@ qsocket_t *Datagram_CheckNewConnections (void)
 }
 
 
-static void _Datagram_SearchForHosts (qboolean xmit)
+static void
+_Datagram_SearchForHosts ( qboolean xmit )
 {
 	int		ret;
 	int		n;
@@ -1158,7 +1180,7 @@ static void _Datagram_SearchForHosts (qboolean xmit)
 		MSG_ReadLong();
 		if (control == -1)
 			continue;
-		if ((control & (~NETFLAG_LENGTH_MASK)) !=  NETFLAG_CTL)
+		if ((control & (~NETFLAG_LENGTH_MASK)) != NETFLAG_CTL)
 			continue;
 		if ((control & NETFLAG_LENGTH_MASK) != ret)
 			continue;
@@ -1215,7 +1237,8 @@ static void _Datagram_SearchForHosts (qboolean xmit)
 	}
 }
 
-void Datagram_SearchForHosts (qboolean xmit)
+void
+Datagram_SearchForHosts ( qboolean xmit )
 {
 	for (net_landriverlevel = 0; net_landriverlevel < net_numlandrivers; net_landriverlevel++)
 	{
@@ -1227,7 +1250,8 @@ void Datagram_SearchForHosts (qboolean xmit)
 }
 
 
-static qsocket_t *_Datagram_Connect (char *host)
+static qsocket_t *
+_Datagram_Connect ( char *host )
 {
 	struct qsockaddr sendaddr;
 	struct qsockaddr readaddr;
@@ -1307,7 +1331,7 @@ static qsocket_t *_Datagram_Connect (char *host)
 					ret = 0;
 					continue;
 				}
-				if ((control & (~NETFLAG_LENGTH_MASK)) !=  NETFLAG_CTL)
+				if ((control & (~NETFLAG_LENGTH_MASK)) != NETFLAG_CTL)
 				{
 					ret = 0;
 					continue;
@@ -1394,7 +1418,8 @@ ErrorReturn2:
 	return NULL;
 }
 
-qsocket_t *Datagram_Connect (char *host)
+qsocket_t *
+Datagram_Connect ( char *host )
 {
 	qsocket_t *ret = NULL;
 

@@ -91,8 +91,8 @@
 #define MAXHOSTNAMELEN	512
 #endif
 
-#ifdef __GLIBC__ // glibc macro
-#define s6_addr32       in6_u.u6_addr32
+#ifdef __GLIBC__	// glibc macro
+#define s6_addr32 in6_u.u6_addr32
 #define ss_family __ss_family
 #endif
 
@@ -111,7 +111,8 @@ WSADATA		winsockdata;
 
 //=============================================================================
 
-void NetadrToSockadr (netadr_t *a, struct sockaddr_in6 *s)
+void
+NetadrToSockadr ( netadr_t *a, struct sockaddr_in6 *s )
 {
 	memset (s, 0, sizeof(*s));
 
@@ -123,40 +124,45 @@ void NetadrToSockadr (netadr_t *a, struct sockaddr_in6 *s)
 #endif
 }
 
-void SockadrToNetadr (struct sockaddr_in6 *s, netadr_t *a)
+void
+SockadrToNetadr ( struct sockaddr_in6 *s, netadr_t *a )
 {
 	memcpy(a->ip, &s->sin6_addr, sizeof(s->sin6_addr));
 	a->port = s->sin6_port;
  	a->family = s->sin6_family;
 }
 
-qboolean        NET_AdrIsLoopback (netadr_t a)
+qboolean
+NET_AdrIsLoopback ( netadr_t a )
 {
 	if (IN6_IS_ADDR_LOOPBACK((struct in6_addr *)&a.ip))
 		return true;
-	else if (IN6_IS_ADDR_V4MAPPED((struct in6_addr *)&a.ip) && 
+	else if (IN6_IS_ADDR_V4MAPPED((struct in6_addr *)&a.ip) &&
 		 ((struct in_addr *)&a.ip[3])->s_addr == htonl(INADDR_LOOPBACK))
 		return true;
-	
+
 	return false;
 }
 
-qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b)
+qboolean
+NET_CompareBaseAdr ( netadr_t a, netadr_t b )
 {
-        if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3])
+	if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3])
 		return true;
 	return false;
 }
 
 
-qboolean	NET_CompareAdr (netadr_t a, netadr_t b)
+qboolean
+NET_CompareAdr ( netadr_t a, netadr_t b )
 {
 	if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3] && a.port == b.port)
 		return true;
 	return false;
 }
 
-char	*NET_AdrToString (netadr_t a)
+char *
+NET_AdrToString ( netadr_t a )
 {
 	static	char	s[64];
 	char *base;
@@ -166,7 +172,8 @@ char	*NET_AdrToString (netadr_t a)
 	return s;
 }
 
-char	*NET_BaseAdrToString (netadr_t a)
+char *
+NET_BaseAdrToString ( netadr_t a )
 {
 	static	char	s[64];
 	struct sockaddr_storage ss;
@@ -175,30 +182,30 @@ char	*NET_BaseAdrToString (netadr_t a)
 
 	memset(&ss, 0, sizeof(ss));
 	if (IN6_IS_ADDR_V4MAPPED((struct in6_addr *)a.ip)) {
-#ifdef HAVE_SS_LEN	  
+#ifdef HAVE_SS_LEN
 		ss.ss_len = sizeof(struct sockaddr_in);
 #endif
 		ss.ss_family = AF_INET;
 		memcpy(&((struct sockaddr_in *)&ss)->sin_addr,
-		    &((struct in6_addr *)a.ip)->s6_addr[12], sizeof(struct in_addr));
+			&((struct in6_addr *)a.ip)->s6_addr[12], sizeof(struct in_addr));
 	} else {
 #ifdef HAVE_SS_LEN
 		ss.ss_len = sizeof(struct sockaddr_in6);
 #endif
 		ss.ss_family = AF_INET6;
 		memcpy(&((struct sockaddr_in6 *)&ss)->sin6_addr,
-		    a.ip, sizeof(struct in6_addr));
+			a.ip, sizeof(struct in6_addr));
  	}
 #ifdef HAVE_SS_LEN
 	if (getnameinfo((struct sockaddr *)&ss, ss.ss_len, s, sizeof(s),
-	    NULL, 0, NI_NUMERICHOST))
+		NULL, 0, NI_NUMERICHOST))
 	  strcpy(s, "<invalid>");
 #else
 	// maybe needs switch for AF_INET6 or AF_INET?
 	if (getnameinfo((struct sockaddr *)&ss, sizeof(ss), s, sizeof(s),
-	    NULL, 0, NI_NUMERICHOST))
+		NULL, 0, NI_NUMERICHOST))
 	  strcpy(s, "<invalid>");
-#endif	
+#endif
 	return s;
 }
 
@@ -212,7 +219,8 @@ idnewt:28000
 192.246.40.70:28000
 =============
 */
-qboolean	NET_StringToAdr (char *s, netadr_t *a)
+qboolean
+NET_StringToAdr ( char *s, netadr_t *a )
 {
 
 	struct addrinfo hints;
@@ -233,52 +241,52 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 	strcpy(copy,s);
 	addrs=space=copy;
 	if (*addrs=='[') {
-	    addrs++;
-	    for (; *space && *space!=']'; space++);
-	    if (!*space) {
-	      Con_Printf ("NET_StringToAdr: invalid IPv6 address %s\n",s);
-	      return 0;
-	    }
-	    *space++='\0';
+		addrs++;
+		for (; *space && *space!=']'; space++);
+		if (!*space) {
+			Con_Printf ("NET_StringToAdr: invalid IPv6 address %s\n",s);
+			return 0;
+		}
+		*space++='\0';
 	}
 
 	for (; *space; space++) {
-	  if (*space==':')
-	    {
-	      *space='\0';
-	      ports=space+1;
-	    }
+		if (*space==':')
+		{
+			*space='\0';
+			ports=space+1;
+		}
 	}
 
 	// Con_Printf ("NET_StringToAdr: addrs %s ports %s\n",addrs, ports);
 
 	if ((err=getaddrinfo(addrs,ports,&hints,&resultp)))
-	  {
-	    // Error
-	    Con_Printf ("NET_StringToAdr: string %s:\n%s\n",s, gai_strerror(err));
-	    return 0;
-	  }
+	{
+		// Error
+		Con_Printf ("NET_StringToAdr: string %s:\n%s\n",s, gai_strerror(err));
+		return 0;
+	}
 
 	switch (resultp->ai_family) {
 	case AF_INET:
-	  // convert to ipv6 addr
-	  memset(&ss,0,sizeof(ss));
-	  ss6=(struct sockaddr_in6 *) &ss;
-	  ss4=(struct sockaddr_in *) resultp->ai_addr;
-	  ss6->sin6_family=AF_INET6;
+		// convert to ipv6 addr
+		memset(&ss,0,sizeof(ss));
+		ss6=(struct sockaddr_in6 *) &ss;
+		ss4=(struct sockaddr_in *) resultp->ai_addr;
+		ss6->sin6_family=AF_INET6;
 
-	  memset(&ss6->sin6_addr, 0, sizeof(ss6->sin6_addr));
-          ss6->sin6_addr.s6_addr[10] = ss6->sin6_addr.s6_addr[11] = 0xff;
-	  memcpy(&ss6->sin6_addr.s6_addr[12], &ss4->sin_addr, sizeof(ss4->sin_addr));
+		memset(&ss6->sin6_addr, 0, sizeof(ss6->sin6_addr));
+		ss6->sin6_addr.s6_addr[10] = ss6->sin6_addr.s6_addr[11] = 0xff;
+		memcpy(&ss6->sin6_addr.s6_addr[12], &ss4->sin_addr, sizeof(ss4->sin_addr));
 
-	  ss6->sin6_port=ss4->sin_port;
-	  break;
+		ss6->sin6_port=ss4->sin_port;
+		break;
 	case AF_INET6:
-	  memcpy(&ss,resultp->ai_addr,sizeof(struct sockaddr_in6));
-	  break;
+		memcpy(&ss,resultp->ai_addr,sizeof(struct sockaddr_in6));
+		break;
 	default:
-	    Con_Printf ("NET_StringToAdr: string %s:\nprotocol family %d not supported\n",s, resultp->ai_family);
-	    return 0;
+		Con_Printf ("NET_StringToAdr: string %s:\nprotocol family %d not supported\n",s, resultp->ai_family);
+		return 0;
 	}
 	SockadrToNetadr ((struct sockaddr_in6 *) &ss, a);
 
@@ -287,14 +295,15 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 
 // Returns true if we can't bind the address locally--in other words,
 // the IP is NOT one of our interfaces.
-qboolean NET_IsClientLegal(netadr_t *adr)
+qboolean
+NET_IsClientLegal ( netadr_t *adr )
 {
 #if 0
 	struct sockaddr_in sadr;
 	int newsocket;
 
 	if (adr->ip[0] == 127)
-		return false; // no local connections period
+		return false;	// no local connections period
 
 	NetadrToSockadr (adr, &sadr);
 
@@ -319,7 +328,8 @@ qboolean NET_IsClientLegal(netadr_t *adr)
 
 //=============================================================================
 
-qboolean NET_GetPacket (void)
+qboolean
+NET_GetPacket ( void )
 {
 	int 	ret;
 	struct sockaddr_in6	from;
@@ -353,7 +363,7 @@ qboolean NET_GetPacket (void)
 	net_message.cursize = ret;
 	if (ret == sizeof(net_message_buffer))	{
 		Con_Printf ("Oversize packet from %s\n",
-			    NET_AdrToString (net_from));
+			NET_AdrToString (net_from));
 		return false;
 	}
 
@@ -362,7 +372,8 @@ qboolean NET_GetPacket (void)
 
 //=============================================================================
 
-void NET_SendPacket (int length, void *data, netadr_t to)
+void
+NET_SendPacket ( int length, void *data, netadr_t to )
 {
 	int ret;
 	struct sockaddr_in6	addr;
@@ -393,7 +404,8 @@ void NET_SendPacket (int length, void *data, netadr_t to)
 
 //=============================================================================
 
-int UDP_OpenSocket (int port)
+int
+UDP_OpenSocket ( int port )
 {
 	int newsocket;
 	struct sockaddr_in6 address;
@@ -436,8 +448,8 @@ int UDP_OpenSocket (int port)
 		Service = NULL;
 	else {
 		sprintf(Buf, "%5d", port);
-                Service = Buf;
-        }
+		Service = Buf;
+	}
 
 	if((Error = getaddrinfo(Host, Service, &hints, &res)))
 		Sys_Error ("UDP_OpenSocket: getaddrinfo: %s", gai_strerror(Error));
@@ -454,7 +466,7 @@ int UDP_OpenSocket (int port)
 
 #ifdef IPV6_BINDV6ONLY
 	if (setsockopt(newsocket, IPPROTO_IPV6, IPV6_BINDV6ONLY, &dummy,
-	    sizeof(dummy)) < 0) {
+		sizeof(dummy)) < 0) {
 		/* I don't care */
 	}
 #endif
@@ -467,14 +479,15 @@ int UDP_OpenSocket (int port)
 	return newsocket;
 }
 
-void NET_GetLocalAddress (void)
+void
+NET_GetLocalAddress ( void )
 {
 	char	buff[MAXHOSTNAMELEN];
 	struct sockaddr_in6	address;
 	unsigned int		namelen;
 
 	if (gethostname(buff, MAXHOSTNAMELEN) == -1)
-	        Sys_Error ("Net_GetLocalAddress: gethostname: %s", strerror(errno));
+		Sys_Error ("Net_GetLocalAddress: gethostname: %s", strerror(errno));
 	buff[MAXHOSTNAMELEN-1] = 0;
 
 	NET_StringToAdr (buff, &net_local_adr);
@@ -492,7 +505,8 @@ void NET_GetLocalAddress (void)
 NET_Init
 ====================
 */
-void NET_Init (int port)
+void
+NET_Init ( int port )
 {
 #ifdef _WIN32
 	WORD	wVersionRequested;
@@ -529,7 +543,8 @@ void NET_Init (int port)
 NET_Shutdown
 ====================
 */
-void	NET_Shutdown (void)
+void
+NET_Shutdown ( void )
 {
 #ifdef _WIN32
 	closesocket(net_socket);

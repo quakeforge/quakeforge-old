@@ -40,7 +40,8 @@
 ============================================================================
 */
 
-int Q_atoi (char *str)
+int
+Q_atoi ( char *str )
 {
 	int		val;
 	int		sign;
@@ -99,7 +100,8 @@ int Q_atoi (char *str)
 }
 
 
-float Q_atof (char *str)
+float
+Q_atof ( char *str )
 {
 	double	val;
 	int		sign;
@@ -183,7 +185,8 @@ float Q_atof (char *str)
 
 // Note, this is /NOT/ a work-alike strcmp, this groups numbers sanely.
 //int Q_qstrcmp(const char *val, const char *ref)
-int Q_qstrcmp(char **os1, char **os2)
+int
+Q_qstrcmp ( char **os1, char **os2 )
 {
 	int in1, in2, n1, n2;
 	char *s1, *s2;
@@ -212,4 +215,3 @@ int Q_qstrcmp(char **os1, char **os2)
 		}
 	}
 }
-

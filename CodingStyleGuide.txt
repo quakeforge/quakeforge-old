@@ -21,4 +21,19 @@ SECTION_FunctionName ( args )
 		:
 		:
 	}
+
+	if (stuff) {	// check something silly
+		:
+	} else {
+		:
+	}
+
+	switch ( var ) {
+		case a:
+			:
+		case b:
+			:
+		default:
+			:
+	}
 }

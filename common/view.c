@@ -102,7 +102,7 @@ player_state_t		*view_message;
 	(desc)
 */
 float
-V_CalcRoll (vec3_t angles, vec3_t velocity)
+V_CalcRoll ( vec3_t angles, vec3_t velocity )
 {
 	vec3_t	forward, right, up;
 	float	sign;
@@ -446,7 +446,7 @@ V_BonusFlash_f ( void )
 	Underwater, lava, etc each has a color shift
 */
 void
-V_SetContentsColor (int contents)
+V_SetContentsColor ( int contents )
 {
 	if (!v_contentblend->value) {
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
@@ -833,7 +833,7 @@ V_CalcRefdef ( void )
 #else
 // offsets
 	angles[PITCH] = -ent->angles[PITCH];	// because entity pitches are
-											//  actually backward
+											// actually backward
 	angles[YAW] = ent->angles[YAW];
 	angles[ROLL] = ent->angles[ROLL];
 #endif
@@ -955,7 +955,7 @@ V_CalcRefdef ( void )
 */
 #ifdef QUAKEWORLD
 void
-DropPunchAngle (void)
+DropPunchAngle ( void )
 {
 	cl.punchangle -= 10*host_frametime;
 	cl.punchangle = max(cl.punchangle, 0);
@@ -971,12 +971,12 @@ DropPunchAngle (void)
 extern vrect_t scr_vrect;
 
 void
-V_RenderView (void)
+V_RenderView ( void )
 {
 #ifdef QUAKEWORLD
 //	if (cl.simangles[ROLL])
 //		Sys_Error ("cl.simangles[ROLL]");	// DEBUG
-cl.simangles[ROLL] = 0;	// FIXME
+	cl.simangles[ROLL] = 0;	// FIXME
 #endif
 
 	if (cls.state != ca_active)
@@ -1063,7 +1063,7 @@ V_Init ( void )
 
 	v_centermove	= Cvar_Get ("v_centermove", "0.15", CVAR_NONE,
 		"Sets how far the player must move forward before the view "
-		"recenters");	
+		"recenters");
 	v_centerspeed	= Cvar_Get ("v_centerspeed", "500", CVAR_NONE,
 		"Sets how quickly you return to a center view after a "
 		"lookup or lookdown");
@@ -1077,7 +1077,7 @@ V_Init ( void )
 		"Sets how quickly you lean forwards and backwards when "
 		"v_idlescale is active");
 	v_iyaw_level	= Cvar_Get ("v_iyaw_level", "0.3", CVAR_NONE,
-		"Sets how far you look left and right when v_idlescale is " 
+		"Sets how far you look left and right when v_idlescale is "
 		"active");
 	v_iroll_level	= Cvar_Get ("v_iroll_level", "0.1", CVAR_NONE,
 		"Sets how far you tilt right and left when v_idlescale is "
@@ -1088,7 +1088,7 @@ V_Init ( void )
 	v_contentblend	= Cvar_Get ("v_contentblend", "1", CVAR_NONE,
 		"Shift color in liquids");
 
-	v_idlescale 	= Cvar_Get ("v_idlescale", "0", CVAR_NONE, 
+	v_idlescale 	= Cvar_Get ("v_idlescale", "0", CVAR_NONE,
 		"Toggles whether the the view remains idle");
 	crosshaircolor	= Cvar_Get ("crosshaircolor", "79", CVAR_ARCHIVE,
 		"Sets the crosshair color");
@@ -1131,4 +1131,3 @@ V_Init ( void )
 
 	BuildGammaTable (v_gamma->value);	// no gamma yet
 }
-

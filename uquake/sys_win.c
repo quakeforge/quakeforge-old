@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAXIMUM_WIN_MEMORY		0x1000000
 
 #define CONSOLE_ERROR_TIMEOUT	60.0	// # of seconds to wait on Sys_Error running
-										//  dedicated before exiting
+										// dedicated before exiting
 #define PAUSE_SLEEP		50				// sleep time on pause or minimization
 #define NOT_FOCUS_SLEEP	20				// sleep time when not focus
 
@@ -66,21 +66,22 @@ void Sys_InitFloatTime (void);
 void Sys_PushFPCW_SetHigh (void);
 void Sys_PopFPCW (void);
 
-volatile int					sys_checksum;
+volatile int	sys_checksum;
 
 
-void Sys_DebugLog(char *file, char *fmt, ...)
+void
+Sys_DebugLog ( char *file, char *fmt, ... )
 {
-    va_list argptr;
-    static char data[1024];
-    int fd;
+	va_list argptr;
+	static char data[1024];
+	int fd;
 
-    va_start(argptr, fmt);
-    vsnprintf(data, sizeof(data), fmt, argptr);
-    va_end(argptr);
-    fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
-    write(fd, data, strlen(data));
-    close(fd);
+	va_start(argptr, fmt);
+	vsnprintf(data, sizeof(data), fmt, argptr);
+	va_end(argptr);
+	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	write(fd, data, strlen(data));
+	close(fd);
 };
 
 /*
@@ -88,7 +89,8 @@ void Sys_DebugLog(char *file, char *fmt, ...)
 Sys_PageIn
 ================
 */
-void Sys_PageIn (void *ptr, int size)
+void
+Sys_PageIn ( void *ptr, int size )
 {
 	byte	*x;
 	int		j, m, n;
@@ -120,7 +122,8 @@ FILE IO
 #define	MAX_HANDLES		64	// 1999-12-23 More PAK files support by Maddes
 QFile	*sys_handles[MAX_HANDLES];
 
-int		findhandle (void)
+int
+findhandle ( void )
 {
 	int		i;
 
@@ -136,7 +139,8 @@ int		findhandle (void)
 filelength
 ================
 */
-int wfilelength (QFile *f)
+int
+wfilelength ( QFile *f )
 {
 	int		pos;
 	int		end;
@@ -154,7 +158,8 @@ int wfilelength (QFile *f)
 	return end;
 }
 
-int Sys_FileOpenRead (char *path, int *hndl)
+int
+Sys_FileOpenRead ( char *path, int *hndl )
 {
 	QFile	*f;
 	int		i, retval;
@@ -183,7 +188,8 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	return retval;
 }
 
-int Sys_FileOpenWrite (char *path)
+int
+Sys_FileOpenWrite ( char *path )
 {
 	QFile	*f;
 	int		i;
@@ -203,7 +209,8 @@ int Sys_FileOpenWrite (char *path)
 	return i;
 }
 
-void Sys_FileClose (int handle)
+void
+Sys_FileClose ( int handle )
 {
 	int		t;
 
@@ -213,7 +220,8 @@ void Sys_FileClose (int handle)
 	VID_ForceLockState (t);
 }
 
-void Sys_FileSeek (int handle, int position)
+void
+Sys_FileSeek ( int handle, int position )
 {
 	int		t;
 
@@ -222,7 +230,8 @@ void Sys_FileSeek (int handle, int position)
 	VID_ForceLockState (t);
 }
 
-int Sys_FileRead (int handle, void *dest, int count)
+int
+Sys_FileRead ( int handle, void *dest, int count )
 {
 	int		t, x;
 
@@ -232,7 +241,8 @@ int Sys_FileRead (int handle, void *dest, int count)
 	return x;
 }
 
-int Sys_FileWrite (int handle, void *data, int count)
+int
+Sys_FileWrite ( int handle, void *data, int count )
 {
 	int		t, x;
 
@@ -256,28 +266,26 @@ SYSTEM IO
 Sys_MakeCodeWriteable
 ================
 */
-void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
+void
+Sys_MakeCodeWriteable ( unsigned long startaddr, unsigned long length )
 {
-	DWORD  flOldProtect;
+	DWORD	flOldProtect;
 
 	if (!VirtualProtect((LPVOID)startaddr, length, PAGE_READWRITE, &flOldProtect))
-   		Sys_Error("Protection change failed\n");
+		Sys_Error("Protection change failed\n");
 }
 
 
 #if 0
-
-
-
-void Sys_PushFPCW_SetHigh (void)
+void
+Sys_PushFPCW_SetHigh ( void )
 {
 }
 
-void Sys_PopFPCW (void)
+void
+Sys_PopFPCW ( void )
 {
 }
-
-
 #endif
 
 /*
@@ -285,7 +293,8 @@ void Sys_PopFPCW (void)
 Sys_Init
 ================
 */
-void Sys_Init (void)
+void
+Sys_Init ( void )
 {
 	LARGE_INTEGER	PerformanceFreq;
 	unsigned int	lowpart, highpart;
@@ -335,7 +344,8 @@ void Sys_Init (void)
 }
 
 
-void Sys_Error (char *error, ...)
+void
+Sys_Error ( char *error, ... )
 {
 	va_list		argptr;
 	char		text[1024], text2[1024];
@@ -390,12 +400,12 @@ void Sys_Error (char *error, ...)
 			in_sys_error0 = 1;
 			VID_SetDefaultMode ();
 			MessageBox(NULL, text, "Quake Error",
-					   MB_OK | MB_SETFOREGROUND | MB_ICONSTOP);
+					MB_OK | MB_SETFOREGROUND | MB_ICONSTOP);
 		}
 		else
 		{
 			MessageBox(NULL, text, "Double Quake Error",
-					   MB_OK | MB_SETFOREGROUND | MB_ICONSTOP);
+					MB_OK | MB_SETFOREGROUND | MB_ICONSTOP);
 		}
 	}
 
@@ -415,7 +425,8 @@ void Sys_Error (char *error, ...)
 	exit (1);
 }
 
-void Sys_Quit (void)
+void
+Sys_Quit ( void )
 {
 
 	VID_ForceUnlockedAndReturnState ();
@@ -441,7 +452,8 @@ void Sys_Quit (void)
 Sys_DoubleTime
 ================
 */
-double Sys_DoubleTime (void)
+double
+Sys_DoubleTime ( void )
 {
 	static int			sametimecount;
 	static unsigned int	oldtime;
@@ -455,7 +467,7 @@ double Sys_DoubleTime (void)
 	QueryPerformanceCounter (&PerformanceCount);
 
 	temp = ((unsigned int)PerformanceCount.LowPart >> lowshift) |
-		   ((unsigned int)PerformanceCount.HighPart << (32 - lowshift));
+		((unsigned int)PerformanceCount.HighPart << (32 - lowshift));
 
 	if (first)
 	{
@@ -499,7 +511,7 @@ double Sys_DoubleTime (void)
 
 	Sys_PopFPCW ();
 
-    return curtime;
+	return curtime;
 }
 
 
@@ -508,7 +520,8 @@ double Sys_DoubleTime (void)
 Sys_InitFloatTime
 ================
 */
-void Sys_InitFloatTime (void)
+void
+Sys_InitFloatTime ( void )
 {
 	int		j;
 
@@ -529,7 +542,8 @@ void Sys_InitFloatTime (void)
 }
 #endif
 
-char *Sys_ConsoleInput (void)
+char *
+Sys_ConsoleInput ( void )
 {
 	static char	text[256];
 	static int		len;
@@ -609,15 +623,17 @@ char *Sys_ConsoleInput (void)
 	return NULL;
 }
 
-void Sys_Sleep (void)
+void
+Sys_Sleep ( void )
 {
 	Sleep (1);
 }
 
 
-void IN_SendKeyEvents (void)
+void
+IN_SendKeyEvents ( void )
 {
-    MSG        msg;
+	MSG	msg;
 
 	while (PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE))
 	{
@@ -627,8 +643,8 @@ void IN_SendKeyEvents (void)
 		if (!GetMessage (&msg, NULL, 0, 0))
 			Sys_Quit ();
 
-      	TranslateMessage (&msg);
-      	DispatchMessage (&msg);
+		TranslateMessage (&msg);
+		DispatchMessage (&msg);
 	}
 }
 
@@ -647,7 +663,8 @@ void IN_SendKeyEvents (void)
 WinMain
 ==================
 */
-void SleepUntilInput (int time)
+void
+SleepUntilInput ( int time )
 {
 
 	MsgWaitForMultipleObjects(1, &tevent, FALSE, time, QS_ALLINPUT);
@@ -666,9 +683,10 @@ static char	*empty_string = "";
 HWND		hwnd_dialog;
 
 
-int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int
+WINAPI WinMain ( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-    MSG				msg;
+	MSG				msg;
 	quakeparms_t	parms;
 	double			time, oldtime, newtime;
 	MEMORYSTATUS	lpBuffer;
@@ -676,9 +694,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	int				t;
 	RECT			rect;
 
-    /* previous instances do not exist in Win32 */
-    if (hPrevInstance)
-        return 0;
+	/* previous instances do not exist in Win32 */
+	if (hPrevInstance)
+		return 0;
 
 	global_hInstance = hInstance;
 	global_nCmdShow = nCmdShow;
@@ -828,7 +846,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	oldtime = Sys_DoubleTime ();
 
-    /* main window message loop */
+	/* main window message loop */
 	while (1)
 	{
 		if (isDedicated)
@@ -864,7 +882,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		oldtime = newtime;
 	}
 
-    /* return success of application */
-    return TRUE;
+	/* return success of application */
+	return TRUE;
 }
-

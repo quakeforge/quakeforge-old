@@ -55,9 +55,9 @@ void (*d_drawspans) (espan_t *pspan);
 D_Init
 ===============
 */
-void D_Init (void)
+void
+D_Init ( void )
 {
-
 	r_skydirect = 1;
 
 //	Cvar_RegisterVariable (&d_subdiv16);
@@ -80,9 +80,9 @@ void D_Init (void)
 D_CopyRects
 ===============
 */
-void D_CopyRects (vrect_t *prects, int transparent)
+void
+D_CopyRects ( vrect_t *prects, int transparent )
 {
-
 // this function is only required if the CPU doesn't have direct access to the
 // back buffer, and there's some driver interface function that the driver
 // doesn't support and requires Quake to do in software (such as drawing the
@@ -99,9 +99,9 @@ void D_CopyRects (vrect_t *prects, int transparent)
 D_EnableBackBufferAccess
 ===============
 */
-void D_EnableBackBufferAccess (void)
+void
+D_EnableBackBufferAccess ( void )
 {
-
 	VID_LockBuffer ();
 }
 
@@ -111,7 +111,8 @@ void D_EnableBackBufferAccess (void)
 D_TurnZOn
 ===============
 */
-void D_TurnZOn (void)
+void
+D_TurnZOn ( void )
 {
 // not needed for software version
 }
@@ -122,7 +123,8 @@ void D_TurnZOn (void)
 D_DisableBackBufferAccess
 ===============
 */
-void D_DisableBackBufferAccess (void)
+void
+D_DisableBackBufferAccess ( void )
 {
 	VID_UnlockBuffer ();
 }
@@ -133,7 +135,8 @@ void D_DisableBackBufferAccess (void)
 D_SetupFrame
 ===============
 */
-void D_SetupFrame (void)
+void
+D_SetupFrame ( void )
 {
 	int		i;
 
@@ -177,11 +180,10 @@ void D_SetupFrame (void)
 D_UpdateRects
 ===============
 */
-void D_UpdateRects (vrect_t *prect)
+void
+D_UpdateRects ( vrect_t *prect )
 {
-
 // the software driver draws these directly to the vid buffer
 
 	UNUSED(prect);
 }
-

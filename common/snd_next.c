@@ -33,7 +33,8 @@
 extern int desired_speed;
 extern int desired_bits;
 
-qboolean SNDDMA_Init(void)
+qboolean
+SNDDMA_Init ( void )
 {
 	int size;
 
@@ -53,14 +54,15 @@ qboolean SNDDMA_Init(void)
 
 // return the current sample position (in mono samples read)
 // inside the recirculating dma buffer
-int SNDDMA_GetDMAPos(void)
+int
+SNDDMA_GetDMAPos ( void )
 {
 	shm->samplepos = (int)(realtime*shm->speed*shm->channels) & (shm->samples-1);
 
 	return shm->samplepos;
 }
 
-void SNDDMA_Shutdown(void)
+void
+SNDDMA_Shutdown ( void )
 {
 }
-

@@ -93,18 +93,18 @@ Create an empty cursor
 */
 
 static void
-CreateNullCursor(Display *display, Window root)
+CreateNullCursor ( Display *display, Window root )
 {
-    Pixmap cursormask;
-    XGCValues xgc;
-    GC gc;
-    XColor dummycolour;
+	Pixmap cursormask;
+	XGCValues xgc;
+	GC gc;
+	XColor dummycolour;
 
 	if (nullcursor != None) return;
 
 	cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
 	xgc.function = GXclear;
-	gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
+	gc = XCreateGC(display, cursormask, GCFunction, &xgc);
 	XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
 	dummycolour.pixel = 0;
 	dummycolour.red = 0;
@@ -117,7 +117,7 @@ CreateNullCursor(Display *display, Window root)
 
 
 static int
-XLateKey(XKeyEvent *ev)
+XLateKey ( XKeyEvent *ev )
 {
 	int key = 0;
 	KeySym keysym;
@@ -244,14 +244,14 @@ XLateKey(XKeyEvent *ev)
 
 
 static void
-event_key(XEvent *event)
+event_key ( XEvent *event )
 {
 	Key_Event(XLateKey(&event->xkey), event->type == KeyPress);
 }
 
 
 static void
-event_button(XEvent *event)
+event_button ( XEvent *event )
 {
 	int but;
 
@@ -277,7 +277,7 @@ event_button(XEvent *event)
 
 
 static void
-center_pointer(void)
+center_pointer ( void )
 {
 	XEvent event;
 
@@ -293,7 +293,7 @@ center_pointer(void)
 
 
 static void
-event_motion(XEvent *event)
+event_motion ( XEvent *event )
 {
 #ifdef HAS_DGA
 	if (in_dgamouse->value) {
@@ -311,9 +311,9 @@ event_motion(XEvent *event)
 #undef ABS
 #define ABS(a) (((int)(a) < 0) ? -(a) : (a))
 				if (ABS(vid.width/2 - event->xmotion.x)
-				    > vid.width / 4
-				    || ABS(vid.height/2 - event->xmotion.y)
-				    > vid.height / 4) {
+					> vid.width / 4
+					|| ABS(vid.height/2 - event->xmotion.y)
+					> vid.height / 4) {
 #undef ABS
 					center_pointer();
 				}
@@ -329,7 +329,7 @@ event_motion(XEvent *event)
 
 
 void
-IN_Frame(void)
+IN_Frame ( void )
 {
 	if (old_in_grab != in_grab->value) {
 		old_in_grab = in_grab->value;
@@ -349,7 +349,7 @@ IN_Frame(void)
 
 
 void
-IN_SendKeyEvents(void)
+IN_SendKeyEvents ( void )
 {
 	/* Get events from X server. */
 	x11_process_events();
@@ -357,7 +357,7 @@ IN_SendKeyEvents(void)
 
 
 void
-IN_Move(usercmd_t *cmd)
+IN_Move ( usercmd_t *cmd )
 {
 	if (!mouse_avail)
 		return;
@@ -396,14 +396,16 @@ IN_Move(usercmd_t *cmd)
 }
 
 /*
-static void IN_ExtraOptionDraw(unsigned int options_draw_cursor)
+static void
+IN_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	// Windowed Mouse
 	M_Print(16, options_draw_cursor+=8, "             Use Mouse");
 	M_DrawCheckbox(220, options_draw_cursor, in_grab->value);
 }
 
-static void IN_ExtraOptionCmd(int option_cursor)
+static void
+IN_ExtraOptionCmd ( int option_cursor )
 {
 	switch (option_cursor) {
 	case 1:	// in_grab
@@ -417,7 +419,7 @@ static void IN_ExtraOptionCmd(int option_cursor)
   Called at shutdown
 */
 void
-IN_Shutdown(void)
+IN_Shutdown ( void )
 {
 	Con_Printf("IN_Shutdown\n");
 	mouse_avail = 0;
@@ -426,18 +428,18 @@ IN_Shutdown(void)
 		XFreeCursor(x_disp, nullcursor);
 		nullcursor = None;
 	}
-	
+
 #ifdef HAS_DGA
 	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp), 0);
 #endif
-	
+
 	x11_close_display();
 }
 
 extern int scr_width, scr_height;
 
 int
-IN_Init(void)
+IN_Init ( void )
 {
 // open the display
 	if (!x_disp)
@@ -459,7 +461,7 @@ IN_Init(void)
 	}
 
 	in_grab = Cvar_Get ("in_grab","0",CVAR_ARCHIVE,"None");
-	Cvar_Alias_Get ("_windowed_mouse", in_grab);	
+	Cvar_Alias_Get ("_windowed_mouse", in_grab);
 	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
@@ -472,11 +474,11 @@ IN_Init(void)
 
 		//	XF86DGASetViewPort(x_disp, DefaultScreen(x_disp), 0, 0);
 		XF86DGADirectVideo(x_disp, DefaultScreen(x_disp),
-						   /*XF86DGADirectGraphics|*/
-						   XF86DGADirectMouse|XF86DGADirectKeyb);
+						/*XF86DGADirectGraphics|*/
+						XF86DGADirectMouse|XF86DGADirectKeyb);
 		//	XF86DGASetVidPage(x_disp, DefaultScreen(x_disp), 0);
 
-		XGrabKeyboard (x_disp, x_win, True, GrabModeAsync, 
+		XGrabKeyboard (x_disp, x_win, True, GrabModeAsync,
 				GrabModeAsync, CurrentTime);
 
 		XGrabPointer (x_disp, x_win, True, MOUSE_MASK, GrabModeAsync,

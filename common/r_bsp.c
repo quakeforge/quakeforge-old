@@ -72,7 +72,8 @@ static qboolean		makeclippededge;
 R_EntityRotate
 ================
 */
-void R_EntityRotate (vec3_t vec)
+void
+R_EntityRotate ( vec3_t vec )
 {
 	vec3_t	tvec;
 
@@ -88,7 +89,8 @@ void R_EntityRotate (vec3_t vec)
 R_RotateBmodel
 ================
 */
-void R_RotateBmodel (void)
+void
+R_RotateBmodel ( void )
 {
 	float	angle, s, c, temp1[3][3], temp2[3][3], temp3[3][3];
 
@@ -167,7 +169,8 @@ void R_RotateBmodel (void)
 R_RecursiveClipBPoly
 ================
 */
-void R_RecursiveClipBPoly (bedge_t *pedges, mnode_t *pnode, msurface_t *psurf)
+void
+R_RecursiveClipBPoly ( bedge_t *pedges, mnode_t *pnode, msurface_t *psurf )
 {
 	bedge_t		*psideedges[2], *pnextedge, *ptedge;
 	int			i, side, lastside;
@@ -198,7 +201,7 @@ void R_RecursiveClipBPoly (bedge_t *pedges, mnode_t *pnode, msurface_t *psurf)
 	// FIXME: cache this stuff somehow?
 		plastvert = pedges->v[0];
 		lastdist = DotProduct (plastvert->position, tplane.normal) -
-				   tplane.dist;
+				tplane.dist;
 
 		if (lastdist > 0)
 			lastside = 0;
@@ -324,7 +327,7 @@ void R_RecursiveClipBPoly (bedge_t *pedges, mnode_t *pnode, msurface_t *psurf)
 				else
 				{
 					R_RecursiveClipBPoly (psideedges[i], pnode->children[i],
-									  psurf);
+									psurf);
 				}
 			}
 		}
@@ -337,7 +340,8 @@ void R_RecursiveClipBPoly (bedge_t *pedges, mnode_t *pnode, msurface_t *psurf)
 R_DrawSolidClippedSubmodelPolygons
 ================
 */
-void R_DrawSolidClippedSubmodelPolygons (model_t *pmodel)
+void
+R_DrawSolidClippedSubmodelPolygons ( model_t *pmodel )
 {
 	int			i, j, lindex;
 	vec_t		dot;
@@ -382,7 +386,7 @@ void R_DrawSolidClippedSubmodelPolygons (model_t *pmodel)
 
 				for (j=0 ; j<psurf->numedges ; j++)
 				{
-				   lindex = pmodel->surfedges[psurf->firstedge+j];
+					lindex = pmodel->surfedges[psurf->firstedge+j];
 
 					if (lindex > 0)
 					{
@@ -419,7 +423,8 @@ void R_DrawSolidClippedSubmodelPolygons (model_t *pmodel)
 R_DrawSubmodelPolygons
 ================
 */
-void R_DrawSubmodelPolygons (model_t *pmodel, int clipflags)
+void
+R_DrawSubmodelPolygons ( model_t *pmodel, int clipflags )
 {
 	int			i;
 	vec_t		dot;
@@ -457,7 +462,8 @@ void R_DrawSubmodelPolygons (model_t *pmodel, int clipflags)
 R_RecursiveWorldNode
 ================
 */
-void R_RecursiveWorldNode (mnode_t *node, int clipflags)
+void
+R_RecursiveWorldNode ( mnode_t *node, int clipflags )
 {
 	int			i, c, side, *pindex;
 	vec3_t		acceptpt, rejectpt;
@@ -474,7 +480,7 @@ void R_RecursiveWorldNode (mnode_t *node, int clipflags)
 
 // cull the clipping planes if not trivial accept
 // FIXME: the compiler is doing a lousy job of optimizing here; it could be
-//  twice as fast in ASM
+// twice as fast in ASM
 	if (clipflags)
 	{
 		for (i=0 ; i<4 ; i++)
@@ -657,7 +663,8 @@ void R_RecursiveWorldNode (mnode_t *node, int clipflags)
 R_RenderWorld
 ================
 */
-void R_RenderWorld (void)
+void
+R_RenderWorld ( void )
 {
 	int			i;
 	model_t		*clmodel;
@@ -686,5 +693,3 @@ void R_RenderWorld (void)
 		}
 	}
 }
-
-

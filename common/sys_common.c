@@ -83,7 +83,8 @@ Sys_Printf
 ================
 */
 #ifndef DJGPP
-void Sys_Printf (char *fmt, ...)
+void
+Sys_Printf ( char *fmt, ... )
 {
 	va_list	argptr;
 	char	text[2048];
@@ -96,13 +97,13 @@ void Sys_Printf (char *fmt, ...)
 	va_end(argptr);
 
 	for (p = (unsigned char *)text; *p; p++) {
-	    putc(trans_table[*p], stdout);
-	    /*
+		putc(trans_table[*p], stdout);
+		/*
 		if ((*p > 128 || *p < 32) && *p != 10 && *p != 13 && *p != 9)
 			printf("[%02x]", *p);
 		else
 			putc(*p, stdout);
-	    */
+		*/
 	}
 
 	/* Make sure output is seen. */
@@ -116,7 +117,8 @@ void Sys_Printf (char *fmt, ...)
 Sys_mkdir
 ================
 */
-void Sys_mkdir (char *path)
+void
+Sys_mkdir ( char *path )
 {
 #if defined(_WIN32)
 	_mkdir(path);
@@ -135,7 +137,8 @@ Sys_FileTime
 returns -1 if not present
 ============
 */
-int Sys_FileTime (char *path)
+int
+Sys_FileTime ( char *path )
 {
 	int	ret = -1;
 #ifdef HAVE_STAT
@@ -164,7 +167,8 @@ int Sys_FileTime (char *path)
 #ifdef DJGPP
 
 #elif defined(_WIN32)
-double Sys_DoubleTime (void)
+double
+Sys_DoubleTime ( void )
 {
 	static DWORD starttime;
 	static qboolean first = true;
@@ -178,7 +182,7 @@ double Sys_DoubleTime (void)
 		return 0.0;
 	}
 
-	if (now < starttime) // wrapped?
+	if (now < starttime)	// wrapped?
 		return (now / 1000.0) + (LONG_MAX - starttime / 1000.0);
 
 	if (now - starttime == 0)
@@ -193,7 +197,8 @@ double Sys_DoubleTime (void)
 Sys_DoubleTime
 ================
 */
-double Sys_DoubleTime(void)
+double
+Sys_DoubleTime ( void )
 {
 	static int starttime = 0;
 	long	secs, usecs;

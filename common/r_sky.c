@@ -51,9 +51,9 @@ int r_skydirect;		// not used?
 byte	bottomsky[128*131];
 byte	bottommask[128*131];
 byte	newsky[128*256];	// newsky and topsky both pack in here, 128 bytes
-							//  of newsky on the left of each scan, 128 bytes
-							//  of topsky on the right, because the low-level
-							//  drawers need 256-byte scan widths
+							// of newsky on the left of each scan, 128 bytes
+							// of topsky on the right, because the low-level
+							// drawers need 256-byte scan widths
 
 
 /*
@@ -63,7 +63,8 @@ R_InitSky
 A sky texture is 256*128, with the right side being a masked overlay
 ==============
 */
-void R_InitSky (texture_t *mt)
+void
+R_InitSky ( texture_t *mt )
 {
 	int			i, j;
 	byte		*src;
@@ -104,7 +105,8 @@ void R_InitSky (texture_t *mt)
 R_MakeSky
 =================
 */
-void R_MakeSky (void)
+void
+R_MakeSky ( void )
 {
 	int			x, y;
 	int			ofs, baseofs;
@@ -167,7 +169,8 @@ void R_MakeSky (void)
 R_GenSkyTile
 =================
 */
-void R_GenSkyTile (void *pdest)
+void
+R_GenSkyTile ( void *pdest )
 {
 	int			x, y;
 	int			ofs, baseofs;
@@ -195,8 +198,8 @@ void R_GenSkyTile (void *pdest)
 		// PORT: unaligned dword access to bottommask and bottomsky
 
 			*pd = (*(pnewsky + (128 / sizeof (unsigned))) &
-				   *(unsigned *)&bottommask[ofs]) |
-				   *(unsigned *)&bottomsky[ofs];
+				*(unsigned *)&bottommask[ofs]) |
+				*(unsigned *)&bottomsky[ofs];
 			pnewsky++;
 			pd++;
 		}
@@ -226,7 +229,8 @@ void R_GenSkyTile (void *pdest)
 R_GenSkyTile16
 =================
 */
-void R_GenSkyTile16 (void *pdest)
+void
+R_GenSkyTile16 ( void *pdest )
 {
 	int				x, y;
 	int				ofs, baseofs;
@@ -267,7 +271,8 @@ void R_GenSkyTile16 (void *pdest)
 R_SetSkyFrame
 ==============
 */
-void R_SetSkyFrame (void)
+void
+R_SetSkyFrame ( void )
 {
 	int		g, s1, s2;
 	float	temp;
@@ -285,5 +290,3 @@ void R_SetSkyFrame (void)
 
 	r_skymade = 0;
 }
-
-

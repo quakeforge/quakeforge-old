@@ -175,29 +175,35 @@ RECT	window_rect;
 
 // direct draw software compatability stuff
 
-void VID_HandlePause (qboolean pause)
+void
+VID_HandlePause ( qboolean pause )
 {
 }
 
-void VID_ForceLockState (int lk)
+void
+VID_ForceLockState ( int lk )
 {
 }
 
-int VID_ForceUnlockedAndReturnState (void)
+int
+VID_ForceUnlockedAndReturnState ( void )
 {
 	return 0;
 }
 
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 }
 
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 }
 
 
-void CenterWindow(HWND hWndCenter, int width, int height, BOOL lefttopjustify)
+void
+CenterWindow ( HWND hWndCenter, int width, int height, BOOL lefttopjustify )
 {
 	RECT	rect;
 	int	CenterX, CenterY;
@@ -212,7 +218,8 @@ void CenterWindow(HWND hWndCenter, int width, int height, BOOL lefttopjustify)
 			SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW | SWP_DRAWFRAME);
 }
 
-qboolean VID_SetWindowedMode (int modenum)
+qboolean
+VID_SetWindowedMode ( int modenum )
 {
 	HDC	hdc;
 	int	lastmodestate, width, height;
@@ -290,7 +297,8 @@ qboolean VID_SetWindowedMode (int modenum)
 }
 
 
-qboolean VID_SetFullDIBMode (int modenum)
+qboolean
+VID_SetFullDIBMode ( int modenum )
 {
 	HDC	hdc;
 	int	lastmodestate, width, height;
@@ -379,7 +387,8 @@ qboolean VID_SetFullDIBMode (int modenum)
 }
 
 
-int VID_SetMode (int modenum, unsigned char *palette)
+int
+VID_SetMode ( int modenum, unsigned char *palette )
 {
 	int		original_mode, temp;
 	qboolean	stat;
@@ -487,7 +496,8 @@ int VID_SetMode (int modenum, unsigned char *palette)
 VID_UpdateWindowStatus
 ================
 */
-void VID_UpdateWindowStatus (void)
+void
+VID_UpdateWindowStatus ( void )
 {
 	window_rect.left = window_x;
 	window_rect.top = window_y;
@@ -507,7 +517,8 @@ BINDTEXFUNCPTR	bindTexFunc;
 #define TEXTURE_EXT_STRING "GL_EXT_texture_object"
 
 
-void CheckTextureExtensions (void)
+void
+CheckTextureExtensions ( void )
 {
 	char		*tmp;
 	qboolean	texture_ext;
@@ -546,7 +557,8 @@ void CheckTextureExtensions (void)
 	}
 }
 
-void CheckArrayExtensions (void)
+void
+CheckArrayExtensions ( void )
 {
 	char	*tmp;
 
@@ -557,10 +569,10 @@ void CheckArrayExtensions (void)
 		if (strncmp((const char*)tmp, "GL_EXT_vertex_array", strlen("GL_EXT_vertex_array")) == 0)
 		{
 			if (
-((glArrayElementEXT = wglGetProcAddress("glArrayElementEXT")) == NULL) ||
-((glColorPointerEXT = wglGetProcAddress("glColorPointerEXT")) == NULL) ||
-((glTexCoordPointerEXT = wglGetProcAddress("glTexCoordPointerEXT")) == NULL) ||
-((glVertexPointerEXT = wglGetProcAddress("glVertexPointerEXT")) == NULL) )
+			((glArrayElementEXT = wglGetProcAddress("glArrayElementEXT")) == NULL) ||
+			((glColorPointerEXT = wglGetProcAddress("glColorPointerEXT")) == NULL) ||
+			((glTexCoordPointerEXT = wglGetProcAddress("glTexCoordPointerEXT")) == NULL) ||
+			((glVertexPointerEXT = wglGetProcAddress("glVertexPointerEXT")) == NULL) )
 			{
 				Sys_Error ("GetProcAddress for vertex extension failed");
 				return;
@@ -583,7 +595,8 @@ int	texture_mode = GL_LINEAR;
 int	texture_extension_number = 1;
 
 #ifdef _WIN32
-void CheckMultiTextureExtensions(void)
+void
+CheckMultiTextureExtensions ( void )
 {
 	if (strstr(gl_extensions, "GL_SGIS_multitexture ") && !COM_CheckParm("-nomtex")) {
 		Con_Printf("Multitexture extensions found.\n");
@@ -593,9 +606,10 @@ void CheckMultiTextureExtensions(void)
 	}
 }
 #else
-void CheckMultiTextureExtensions(void)
+void
+CheckMultiTextureExtensions ( void )
 {
-		gl_mtexable = true;
+	gl_mtexable = true;
 }
 #endif
 
@@ -604,7 +618,8 @@ void CheckMultiTextureExtensions(void)
 GL_Init
 ===============
 */
-void GL_Init (void)
+void
+GL_Init ( void )
 {
 	gl_vendor = glGetString (GL_VENDOR);
 	Con_Printf ("GL_VENDOR: %s\n", gl_vendor);
@@ -664,7 +679,8 @@ GL_BeginRendering
 
 =================
 */
-void GL_BeginRendering (int *x, int *y, int *width, int *height)
+void
+GL_BeginRendering ( int *x, int *y, int *width, int *height )
 {
 	extern cvar_t	*gl_clear;
 
@@ -679,7 +695,8 @@ void GL_BeginRendering (int *x, int *y, int *width, int *height)
 }
 
 
-void GL_EndRendering (void)
+void
+GL_EndRendering ( void )
 {
 	if (!scr_skipupdate || block_drawing)
 		SwapBuffers(maindc);
@@ -708,7 +725,8 @@ void GL_EndRendering (void)
 		Sbar_Changed();
 }
 
-void VID_SetPalette (unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 	byte		*pal;
 	unsigned	r,g,b;
@@ -770,7 +788,8 @@ void VID_SetPalette (unsigned char *palette)
 
 BOOL	gammaworks;
 
-void VID_ShiftPalette (unsigned char *palette)
+void
+VID_ShiftPalette ( unsigned char *palette )
 {
 	extern byte	ramps[3][256];
 
@@ -780,13 +799,15 @@ void VID_ShiftPalette (unsigned char *palette)
 }
 
 
-void VID_SetDefaultMode (void)
+void
+VID_SetDefaultMode ( void )
 {
 	IN_DeactivateMouse ();
 }
 
 
-void VID_Shutdown (void)
+void
+VID_Shutdown ( void )
 {
 	HGLRC	hRC;
 	HDC	hDC;
@@ -819,7 +840,8 @@ void VID_Shutdown (void)
 //==========================================================================
 
 
-BOOL bSetupPixelFormat(HDC hDC)
+BOOL
+bSetupPixelFormat ( HDC hDC )
 {
 	static PIXELFORMATDESCRIPTOR pfd = {
 	sizeof(PIXELFORMATDESCRIPTOR),	// size of this pfd
@@ -913,7 +935,8 @@ MapKey
 Map from windows to quake keynums
 =======
 */
-int MapKey (int key)
+int
+MapKey ( int key )
 {
 	int	extended;
 
@@ -945,7 +968,8 @@ extern qboolean	keydown[256];
 ClearAllStates
 ================
 */
-void ClearAllStates (void)
+void
+ClearAllStates ( void )
 {
 	int	i;
 
@@ -960,7 +984,8 @@ void ClearAllStates (void)
 	IN_ClearStates ();
 }
 
-void AppActivate(BOOL fActive, BOOL minimize)
+void
+AppActivate ( BOOL fActive, BOOL minimize )
 /****************************************************************************
 *
 * Function:     AppActivate
@@ -1032,11 +1057,8 @@ void AppActivate(BOOL fActive, BOOL minimize)
 
 
 /* main window procedure */
-LONG WINAPI MainWndProc (
-    HWND    hWnd,
-    UINT    uMsg,
-    WPARAM  wParam,
-    LPARAM  lParam)
+LONG WINAPI
+MainWndProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	long			lRet = 1;
 	int			fwKeys, xPos, yPos, fActive, fMinimized, temp;
@@ -1163,7 +1185,8 @@ LONG WINAPI MainWndProc (
 VID_NumModes
 =================
 */
-int VID_NumModes (void)
+int
+VID_NumModes ( void )
 {
 	return nummodes;
 }
@@ -1174,7 +1197,8 @@ int VID_NumModes (void)
 VID_GetModePtr
 =================
 */
-vmode_t *VID_GetModePtr (int modenum)
+vmode_t *
+VID_GetModePtr ( int modenum )
 {
 	if ((modenum >= 0) && (modenum < nummodes))
 		return &modelist[modenum];
@@ -1188,7 +1212,8 @@ vmode_t *VID_GetModePtr (int modenum)
 VID_GetModeDescription
 =================
 */
-char *VID_GetModeDescription (int mode)
+char *
+VID_GetModeDescription ( int mode )
 {
 	char		*pinfo;
 	vmode_t		*pv;
@@ -1216,7 +1241,8 @@ char *VID_GetModeDescription (int mode)
 
 // KJB: Added this to return the mode driver name in description for console
 
-char *VID_GetExtModeDescription (int mode)
+char *
+VID_GetExtModeDescription ( int mode )
 {
 	static char	pinfo[40];
 	vmode_t		*pv;
@@ -1255,7 +1281,8 @@ char *VID_GetExtModeDescription (int mode)
 VID_DescribeCurrentMode_f
 =================
 */
-void VID_DescribeCurrentMode_f (void)
+void
+VID_DescribeCurrentMode_f ( void )
 {
 	Con_Printf ("%s\n", VID_GetExtModeDescription (vid_modenum));
 }
@@ -1266,7 +1293,8 @@ void VID_DescribeCurrentMode_f (void)
 VID_NumModes_f
 =================
 */
-void VID_NumModes_f (void)
+void
+VID_NumModes_f ( void )
 {
 	if (nummodes == 1)
 		Con_Printf ("%i video mode is available\n", nummodes);
@@ -1280,7 +1308,8 @@ void VID_NumModes_f (void)
 VID_DescribeMode_f
 =================
 */
-void VID_DescribeMode_f (void)
+void
+VID_DescribeMode_f ( void )
 {
 	int	t, modenum;
 
@@ -1300,7 +1329,8 @@ void VID_DescribeMode_f (void)
 VID_DescribeModes_f
 =================
 */
-void VID_DescribeModes_f (void)
+void
+VID_DescribeModes_f ( void )
 {
 	int		i, lnummodes, t;
 	char		*pinfo;
@@ -1322,7 +1352,8 @@ void VID_DescribeModes_f (void)
 }
 
 
-void VID_InitDIB (HINSTANCE hInstance)
+void
+VID_InitDIB ( HINSTANCE hInstance )
 {
 	WNDCLASS	wc;
 	HDC		hdc;
@@ -1379,7 +1410,8 @@ void VID_InitDIB (HINSTANCE hInstance)
 VID_InitFullDIB
 =================
 */
-void VID_InitFullDIB (HINSTANCE hInstance)
+void
+VID_InitFullDIB ( HINSTANCE hInstance )
 {
 	DEVMODE	devmode;
 	int	i, modenum, cmodes, originalnummodes, existingmode, numlowresmodes;
@@ -1520,14 +1552,16 @@ void VID_InitFullDIB (HINSTANCE hInstance)
 		Con_SafePrintf ("No fullscreen DIB modes found\n");
 }
 
-qboolean VID_Is8bit()
+qboolean
+VID_Is8bit ( void )
 {
 	return is8bit;
 }
 
 #define GL_SHARED_TEXTURE_PALETTE_EXT 0x81FB
 
-void VID_Init8bitPalette()
+void
+VID_Init8bitPalette ( void )
 {
 	// Check for 8bit Extensions and initialize them.
 	int	i;
@@ -1554,7 +1588,8 @@ void VID_Init8bitPalette()
 	is8bit = TRUE;
 }
 
-static void Check_Gamma (unsigned char *pal)
+static void
+Check_Gamma ( unsigned char *pal )
 {
 	float		f, inf;
 	unsigned char	palette[768];
@@ -1588,7 +1623,8 @@ static void Check_Gamma (unsigned char *pal)
 VID_Init
 ===================
 */
-void VID_Init (unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	int	i, existingmode;
 	int	basenummodes, width, height, bpp, findbpp, done;
@@ -1889,7 +1925,8 @@ static modedesc_t	modedescs[MAX_MODEDESCS];
 VID_MenuDraw
 ================
 */
-void VID_MenuDraw (void)
+void
+VID_MenuDraw ( void )
 {
 	qpic_t	*p;
 	char	*ptr;
@@ -1961,7 +1998,8 @@ void VID_MenuDraw (void)
 
 	Process menu keystrokes
 */
-void VID_MenuKey ( int key )
+void
+VID_MenuKey ( int key )
 {
 	switch (key) {
 		case K_ESCAPE:
@@ -1973,7 +2011,8 @@ void VID_MenuKey ( int key )
 	}
 }
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -1988,7 +2027,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 	switch(option_cursor) {
@@ -1998,17 +2038,20 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 	}
 }
 
-void VID_InitCvars( void )
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 	// Empty function, locking not necessary here.
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 	// Empty function, locking not necessary here.
 }

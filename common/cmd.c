@@ -70,7 +70,8 @@ next frame.  This allows commands like:
 bind g "impulse 5 ; +attack ; wait ; -attack ; impulse 2"
 ============
 */
-void Cmd_Wait_f (void)
+void
+Cmd_Wait_f ( void )
 {
 	cmd_wait = true;
 }
@@ -91,7 +92,8 @@ byte		cmd_text_buf[8192];
 Cbuf_Init
 ============
 */
-void Cbuf_Init (void)
+void
+Cbuf_Init ( void )
 {
 	cmd_text.data = cmd_text_buf;
 	cmd_text.maxsize = sizeof(cmd_text_buf);
@@ -104,7 +106,8 @@ Cbuf_AddText
 Adds command text at the end of the buffer
 ============
 */
-void Cbuf_AddText (char *text)
+void
+Cbuf_AddText ( char *text )
 {
 	int		l;
 
@@ -128,7 +131,8 @@ Adds a \n to the text
 FIXME: actually change the command buffer to do less copying
 ============
 */
-void Cbuf_InsertText (char *text)
+void
+Cbuf_InsertText ( char *text )
 {
 	char	*temp;
 	int		templen;
@@ -156,7 +160,7 @@ void Cbuf_InsertText (char *text)
 }
 
 static void
-extract_line(char *line)
+extract_line ( char *line )
 {
 	int		i;
 	char	*text;
@@ -168,7 +172,7 @@ extract_line(char *line)
 	for (i=0 ; i< cmd_text.cursize ; i++) {
 		if (text[i] == '"')
 			quotes++;
-		if ( !(quotes&1) &&  text[i] == ';')
+		if ( !(quotes&1) && text[i] == ';')
 			break;	// don't break if inside a quoted string
 		if (text[i] == '\n' || text[i] == '\r')
 			break;
@@ -195,7 +199,7 @@ extract_line(char *line)
 
 */
 void
-Cbuf_Execute (void)
+Cbuf_Execute ( void )
 {
 	char	line[1024] = {0};
 
@@ -219,7 +223,7 @@ Cbuf_Execute (void)
 
 */
 void
-Cbuf_Execute_Sets (void)
+Cbuf_Execute_Sets ( void )
 {
 	char	line[1024] = {0};
 
@@ -251,7 +255,8 @@ quake +prog jctest.qp +cmd amlev1
 quake -nosound +cmd amlev1
 ===============
 */
-void Cmd_StuffCmds_f (void)
+void
+Cmd_StuffCmds_f ( void )
 {
 	int		i, j;
 	int		s;
@@ -286,7 +291,7 @@ void Cmd_StuffCmds_f (void)
 		}
 	}
 
-	//Con_Printf("[\n%s]\n",build);
+//	Con_Printf("[\n%s]\n",build);
 
 	if (build[0])
 		Cbuf_InsertText (build);
@@ -300,13 +305,13 @@ void Cmd_StuffCmds_f (void)
 
 */
 void
-Cmd_Exec_File (char *path)
+Cmd_Exec_File ( char *path )
 {
 	char	*f;
 	int		mark;
 	int		len;
 	char	base[32];
-	QFile   *file;
+	QFile	*file;
 
 	if ((file = Qopen (path, "r")) != NULL) {
 		// extract the filename base name for hunk tag
@@ -329,7 +334,8 @@ Cmd_Exec_File (char *path)
 Cmd_Exec_f
 ===============
 */
-void Cmd_Exec_f (void)
+void
+Cmd_Exec_f ( void )
 {
 	char	*f;
 	int		mark;
@@ -363,7 +369,8 @@ Cmd_Echo_f
 Just prints the rest of the line to the console
 ===============
 */
-void Cmd_Echo_f (void)
+void
+Cmd_Echo_f ( void )
 {
 	int		i;
 
@@ -379,8 +386,8 @@ Cmd_Alias_f
 Creates a new command that executes a command string (possibly ; seperated)
 ===============
 */
-
-char *CopyString (char *in)
+char *
+CopyString ( char *in )
 {
 	char	*out;
 
@@ -389,7 +396,8 @@ char *CopyString (char *in)
 	return out;
 }
 
-void Cmd_Alias_f (void)
+void
+Cmd_Alias_f ( void )
 {
 	cmdalias_t	*a;
 	char		cmd[1024];
@@ -443,7 +451,8 @@ void Cmd_Alias_f (void)
 	a->value = CopyString (cmd);
 }
 
-void Cmd_UnAlias_f (void)
+void
+Cmd_UnAlias_f ( void )
 {
 	cmdalias_t	*a, *prev;
 	char		*s;
@@ -511,7 +520,8 @@ static	cmd_function_t	*cmd_functions;		// possible commands to execute
 Cmd_Argc
 ============
 */
-int		Cmd_Argc (void)
+int
+Cmd_Argc ( void )
 {
 	return cmd_argc;
 }
@@ -521,7 +531,8 @@ int		Cmd_Argc (void)
 Cmd_Argv
 ============
 */
-char	*Cmd_Argv (int arg)
+char *
+Cmd_Argv ( int arg )
 {
 	if ( arg >= cmd_argc )
 		return cmd_null_string;
@@ -535,7 +546,8 @@ Cmd_Args
 Returns a single string containing argv(1) to argv(argc()-1)
 ============
 */
-char		*Cmd_Args (void)
+char *
+Cmd_Args ( void )
 {
 	if (!cmd_args)
 		return "";
@@ -550,7 +562,8 @@ Cmd_TokenizeString
 Parses the given string into command line tokens.
 ============
 */
-void Cmd_TokenizeString (char *text)
+void
+Cmd_TokenizeString ( char *text )
 {
 	int		i;
 
@@ -601,7 +614,8 @@ void Cmd_TokenizeString (char *text)
 Cmd_AddCommand
 ============
 */
-void	Cmd_AddCommand (char *cmd_name, xcommand_t function)
+void
+Cmd_AddCommand ( char *cmd_name, xcommand_t function )
 {
 	cmd_function_t	*cmd;
 
@@ -637,7 +651,8 @@ void	Cmd_AddCommand (char *cmd_name, xcommand_t function)
 Cmd_Exists
 ============
 */
-qboolean	Cmd_Exists (char *cmd_name)
+qboolean
+Cmd_Exists ( char *cmd_name )
 {
 	cmd_function_t	*cmd;
 
@@ -657,7 +672,8 @@ qboolean	Cmd_Exists (char *cmd_name)
 Cmd_CompleteCommand
 ============
 */
-char *Cmd_CompleteCommand (char *partial)
+char *
+Cmd_CompleteCommand ( char *partial )
 {
 	cmd_function_t	*cmd;
 	int				len;
@@ -697,7 +713,8 @@ things like godmode, noclip, etc, are commands directed to the server,
 so when they are typed in at the console, they will need to be forwarded.
 ===================
 */
-void Cmd_ForwardToServer (void)
+void
+Cmd_ForwardToServer ( void )
 {
 	if (cls.state == ca_disconnected)
 	{
@@ -725,7 +742,8 @@ void Cmd_ForwardToServer (void)
 }
 
 // don't forward the first argument
-void Cmd_ForwardToServer_f (void)
+void
+Cmd_ForwardToServer_f ( void )
 {
 	if (cls.state == ca_disconnected)
 	{
@@ -751,7 +769,8 @@ void Cmd_ForwardToServer_f (void)
 	}
 }
 #else
-void Cmd_ForwardToServer (void)
+void
+Cmd_ForwardToServer ( void )
 {
 }
 #endif
@@ -764,7 +783,8 @@ A complete command line has been parsed, so try to execute it
 FIXME: lookupnoadd the token to speed search?
 ============
 */
-void Cmd_ExecuteString (char *text, cmd_source_t src)
+void
+Cmd_ExecuteString ( char *text, cmd_source_t src )
 {
 	cmd_function_t	*cmd;
 	cmdalias_t		*a;
@@ -805,9 +825,7 @@ void Cmd_ExecuteString (char *text, cmd_source_t src)
 
 	if (cl_warncmd->value || developer->value)
 		Con_Printf ("Unknown command \"%s\"\n", Cmd_Argv(0));
-
 }
-
 
 
 /*
@@ -818,7 +836,8 @@ Returns the position (1 to argc-1) in the command's argument list
 where the given parameter apears, or 0 if not present
 ================
 */
-int Cmd_CheckParm (char *parm)
+int
+Cmd_CheckParm ( char *parm )
 {
 	int i;
 
@@ -832,7 +851,8 @@ int Cmd_CheckParm (char *parm)
 	return 0;
 }
 
-void Cmd_CmdList_f (void)
+void
+Cmd_CmdList_f ( void )
 {
 	cmd_function_t	*cmd;
 	int		i;
@@ -881,7 +901,8 @@ void Cmd_CmdList_f (void)
 Cmd_Init
 ============
 */
-void Cmd_Init (void)
+void
+Cmd_Init ( void )
 {
 //
 // register our commands
@@ -897,4 +918,3 @@ void Cmd_Init (void)
 	Cmd_AddCommand ("cmd", Cmd_ForwardToServer_f);
 #endif
 }
-

@@ -60,7 +60,8 @@ unsigned char dma_buffer[BUFFER_SIZE];
 unsigned char pend_buffer[BUFFER_SIZE];
 int pending;
 
-qboolean SNDDMA_Init(void)
+qboolean
+SNDDMA_Init ( void )
 {
 	if (snd_inited) {
 		printf("Sound already init'd\n");
@@ -137,7 +138,8 @@ qboolean SNDDMA_Init(void)
 	return 1;
 }
 
-int SNDDMA_GetDMAPos(void)
+int
+SNDDMA_GetDMAPos ( void )
 {
 	if (!snd_inited)
 		return (0);
@@ -153,7 +155,8 @@ int SNDDMA_GetDMAPos(void)
 	return ((info.play.samples*shm->channels) % shm->samples);
 }
 
-int SNDDMA_GetSamples(void)
+int
+SNDDMA_GetSamples ( void )
 {
 	if (!snd_inited)
 		return (0);
@@ -169,7 +172,8 @@ int SNDDMA_GetSamples(void)
 	return info.play.samples;
 }
 
-void SNDDMA_Shutdown(void)
+void
+SNDDMA_Shutdown ( void )
 {
 	if (snd_inited) {
 		close(audio_fd);
@@ -184,7 +188,8 @@ SNDDMA_Submit
 Send sound to device if buffer isn't really the dma buffer
 ===============
 */
-void SNDDMA_Submit(void)
+void
+SNDDMA_Submit ( void )
 {
 	int bsize;
 	int bytes, b;
@@ -221,4 +226,3 @@ void SNDDMA_Submit(void)
 		printf("audio can't keep up!\n");
 
 }
-

@@ -69,13 +69,13 @@ char *cachedir = "/tmp";
 // =======================================================================
 
 void
-Sys_DebugNumber(int y, int val)
+Sys_DebugNumber ( int y, int val )
 {
 }
 
 
 void
-Sys_Quit(void)
+Sys_Quit ( void )
 {
 	Host_Shutdown();
 	exit(0);
@@ -83,7 +83,7 @@ Sys_Quit(void)
 
 
 void
-Sys_Init(void)
+Sys_Init ( void )
 {
 #if id386
 	Sys_SetFPCW();
@@ -92,10 +92,10 @@ Sys_Init(void)
 
 
 void
-Sys_Error(char *error, ...)
+Sys_Error ( char *error, ... )
 {
-	va_list     argptr;
-	char        string[1024];
+	va_list	argptr;
+	char	string[1024];
 
 	va_start (argptr, error);
 	vsnprintf (string, sizeof(string), error, argptr);
@@ -108,10 +108,10 @@ Sys_Error(char *error, ...)
 
 
 void
-Sys_Warn(char *warning, ...)
+Sys_Warn ( char *warning, ... )
 {
-	va_list     argptr;
-	char        string[1024];
+	va_list	argptr;
+	char	string[1024];
 
 	va_start (argptr, warning);
 	vsnprintf (string, sizeof(string), warning, argptr);
@@ -121,7 +121,7 @@ Sys_Warn(char *warning, ...)
 
 
 int
-Sys_FileOpenRead(char *path, int *handle)
+Sys_FileOpenRead ( char *path, int *handle )
 {
 	int	h;
 	struct stat	fileinfo;
@@ -139,7 +139,7 @@ Sys_FileOpenRead(char *path, int *handle)
 
 
 int
-Sys_FileOpenWrite(char *path)
+Sys_FileOpenWrite ( char *path )
 {
 	int	handle;
 
@@ -153,49 +153,60 @@ Sys_FileOpenWrite(char *path)
 	return handle;
 }
 
-int Sys_FileWrite (int handle, void *src, int count) {
+int
+Sys_FileWrite ( int handle, void *src, int count )
+{
 	return write (handle, src, count);
 }
 
-void Sys_FileClose (int handle) {
+void
+Sys_FileClose ( int handle )
+{
 	close (handle);
 }
 
-void Sys_FileSeek (int handle, int position) {
+void
+Sys_FileSeek ( int handle, int position )
+{
 	lseek (handle, position, SEEK_SET);
 }
 
-int Sys_FileRead (int handle, void *dest, int count) {
-    return read (handle, dest, count);
+int
+Sys_FileRead ( int handle, void *dest, int count )
+{
+	return read (handle, dest, count);
 }
 
-void Sys_DebugLog(char *file, char *fmt, ...) {
-
+void
+Sys_DebugLog ( char *file, char *fmt, ... )
+{
 	va_list argptr;
 	static char data[1024];
 	QFile *stream;
 	unsigned char *p;
-	//int fd;
+//	int fd;
 
 	va_start(argptr, fmt);
 	vsnprintf(data, sizeof(data), fmt, argptr);
 	va_end(argptr);
-// fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
+//	fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
 	stream = Qopen(file, "a");
 	for (p = (unsigned char *) data; *p; p++) {
-	    Qputc(stream, trans_table[*p]);
+		Qputc(stream, trans_table[*p]);
 	}
 	Qclose(stream);
-	/*
+/*
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	write(fd, data, strlen(data));
 	close(fd);
-	*/
+*/
 }
+
 /*
 This function isn't used.
-void Sys_EditFile(char *filename) {
-
+void
+Sys_EditFile ( char *filename )
+{
 	char cmd[256];
 	char *term;
 	char *editor;
@@ -215,23 +226,29 @@ void Sys_EditFile(char *filename) {
 	}
 }
 */
+
 // =======================================================================
 // Sleeps for microseconds
 // =======================================================================
 
 static volatile int oktogo;
 
-void alarm_handler(int x) {
+void
+alarm_handler ( int x )
+{
 	oktogo=1;
 }
 
-void floating_point_exception_handler(int whatever) {
-// Sys_Warn("floating point exception\n");
+void
+floating_point_exception_handler ( int whatever )
+{
+//	Sys_Warn("floating point exception\n");
 	signal(SIGFPE, floating_point_exception_handler);
 }
 
-char *Sys_ConsoleInput(void) {
-
+char *
+Sys_ConsoleInput ( void )
+{
 #ifdef UQUAKE
 	static char text[256];
 	fd_set		fdset;
@@ -240,7 +257,7 @@ char *Sys_ConsoleInput(void) {
 
 	if (cls.state == ca_dedicated) {
 		FD_ZERO(&fdset);
-		FD_SET(0, &fdset); // stdin
+		FD_SET(0, &fdset);	// stdin
 		timeout.tv_sec = 0;
 		timeout.tv_usec = 0;
 		if (select (1, &fdset, NULL, NULL, &timeout) == -1 || !FD_ISSET(0, &fdset))
@@ -249,7 +266,7 @@ char *Sys_ConsoleInput(void) {
 		len = read (0, text, sizeof(text));
 		if (len < 1)
 			return NULL;
-		text[len-1] = 0;    // rip off the \n and terminate
+		text[len-1] = 0;	// rip off the \n and terminate
 
 		return text;
 	}
@@ -258,10 +275,14 @@ char *Sys_ConsoleInput(void) {
 }
 
 #if !id386
-void Sys_HighFPPrecision (void) {
+void
+Sys_HighFPPrecision ( void )
+{
 }
 
-void Sys_LowFPPrecision (void) {
+void
+Sys_LowFPPrecision ( void )
+{
 }
 #endif
 
@@ -269,8 +290,9 @@ void Sys_LowFPPrecision (void) {
 int		skipframes;
 #endif
 
-int main (int c, char **v) {
-
+int
+main ( int c, char **v )
+{
 	double		time, oldtime, newtime;
 	quakeparms_t parms;
 	int j;
@@ -325,10 +347,10 @@ int main (int c, char **v) {
 		time = newtime - oldtime;
 
 #ifdef UQUAKE
-		if (cls.state == ca_dedicated) {   // play vcrfiles at max speed
+		if (cls.state == ca_dedicated) {	// play vcrfiles at max speed
 			if (time < sys_ticrate->value && (vcrFile == -1 || recording) ) {
 				usleep(1);
-				continue;       // not time to run a server only tic yet
+				continue;	// not time to run a server only tic yet
 			}
 			time = sys_ticrate->value;
 		}
@@ -346,8 +368,9 @@ int main (int c, char **v) {
 /*
 	Sys_MakeCodeWriteable
 */
-void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length) {
-
+void
+Sys_MakeCodeWriteable ( unsigned long startaddr, unsigned long length )
+{
 	int r;
 	unsigned long addr;
 	int psize = getpagesize();
@@ -360,7 +383,5 @@ void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length) {
 	r = mprotect((char*)addr, length + startaddr - addr + psize, 7);
 
 	if (r < 0)
-    		Sys_Error("Protection change failed\n");
-
+		Sys_Error("Protection change failed\n");
 }
-

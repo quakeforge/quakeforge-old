@@ -39,7 +39,8 @@ is not a staircase.
 */
 int c_yes, c_no;
 
-qboolean SV_CheckBottom (edict_t *ent)
+qboolean
+SV_CheckBottom ( edict_t *ent )
 {
 	vec3_t	mins, maxs, start, stop;
 	trace_t	trace;
@@ -112,7 +113,8 @@ possible, no move is done, false is returned, and
 pr_global_struct->trace_normal is set to the normal of the blocking wall
 =============
 */
-qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink)
+qboolean
+SV_movestep ( edict_t *ent, vec3_t move, qboolean relink )
 {
 	float		dz;
 	vec3_t		oldorg, neworg, end;
@@ -235,7 +237,8 @@ facing it.
 ======================
 */
 void PF_changeyaw (void);
-qboolean SV_StepDirection (edict_t *ent, float yaw, float dist)
+qboolean
+SV_StepDirection ( edict_t *ent, float yaw, float dist )
 {
 	vec3_t		move, oldorigin;
 	float		delta;
@@ -270,7 +273,8 @@ SV_FixCheckBottom
 
 ======================
 */
-void SV_FixCheckBottom (edict_t *ent)
+void
+SV_FixCheckBottom ( edict_t *ent )
 {
 //	Con_Printf ("SV_FixCheckBottom\n");
 
@@ -286,10 +290,11 @@ SV_NewChaseDir
 ================
 */
 #define	DI_NODIR	-1
-void SV_NewChaseDir (edict_t *actor, edict_t *enemy, float dist)
+void
+SV_NewChaseDir ( edict_t *actor, edict_t *enemy, float dist )
 {
 	float		deltax,deltay;
-	float			d[3];
+	float		d[3];
 	float		tdir, olddir, turnaround;
 
 	olddir = anglemod( (int)(actor->v.ideal_yaw/45)*45 );
@@ -323,7 +328,7 @@ void SV_NewChaseDir (edict_t *actor, edict_t *enemy, float dist)
 	}
 
 // try other directions
-	if ( ((rand()&3) & 1) ||  abs(deltay)>abs(deltax))
+	if ( ((rand()&3) & 1) || abs(deltay)>abs(deltax))
 	{
 		tdir=d[1];
 		d[1]=d[2];
@@ -366,7 +371,6 @@ void SV_NewChaseDir (edict_t *actor, edict_t *enemy, float dist)
 
 	if (!SV_CheckBottom (actor))
 		SV_FixCheckBottom (actor);
-
 }
 
 /*
@@ -375,7 +379,8 @@ SV_CloseEnough
 
 ======================
 */
-qboolean SV_CloseEnough (edict_t *ent, edict_t *goal, float dist)
+qboolean
+SV_CloseEnough ( edict_t *ent, edict_t *goal, float dist )
 {
 	int		i;
 
@@ -395,7 +400,8 @@ SV_MoveToGoal
 
 ======================
 */
-void SV_MoveToGoal (void)
+void
+SV_MoveToGoal ( void )
 {
 	edict_t		*ent, *goal;
 	float		dist;
@@ -416,9 +422,9 @@ void SV_MoveToGoal (void)
 // if the next step hits the enemy, return immediately
 #ifdef QUAKE2
 	enemy = PROG_TO_EDICT(ent->v.enemy);
-	if (enemy != sv.edicts &&  SV_CloseEnough (ent, enemy, dist) )
+	if (enemy != sv.edicts && SV_CloseEnough (ent, enemy, dist) )
 #else
-	if ( PROG_TO_EDICT(ent->v.enemy) != sv.edicts &&  SV_CloseEnough (ent, goal, dist) )
+	if ( PROG_TO_EDICT(ent->v.enemy) != sv.edicts && SV_CloseEnough (ent, goal, dist) )
 #endif
 		return;
 
@@ -429,4 +435,3 @@ void SV_MoveToGoal (void)
 		SV_NewChaseDir (ent, goal, dist);
 	}
 }
-

@@ -59,7 +59,7 @@ qboolean	envmap;			// true during envmap command capture
 
 int		currenttexture = -1;	// to avoid unnecessary texture sets
 
-int		cnttextures[2] = {-1, -1};     // cached
+int		cnttextures[2] = {-1, -1};	// cached
 
 int		particletexture;	// little dot for particles
 int		playertextures;		// up to 16 color translated skins
@@ -156,7 +156,7 @@ R_CullBox (vec3_t mins, vec3_t maxs) {
 	R_BlendedRotateForEntity
 */
 void
-R_BlendedRotateForEntity (entity_t *e)
+R_BlendedRotateForEntity ( entity_t *e )
 {
 	float		blend;
 	vec3_t		d;
@@ -173,7 +173,7 @@ R_BlendedRotateForEntity (entity_t *e)
 	{
 		e->translate_start_time = realtime;
 		VectorCopy (e->origin2, e->origin1);
-		VectorCopy (e->origin,  e->origin2);
+		VectorCopy (e->origin, e->origin2);
 		blend = 0;
 	} else {
 		blend = (realtime - e->translate_start_time) / 0.1;
@@ -199,7 +199,7 @@ R_BlendedRotateForEntity (entity_t *e)
 	{
 		e->rotate_start_time = realtime;
 		VectorCopy (e->angles2, e->angles1);
-		VectorCopy (e->angles,  e->angles2);
+		VectorCopy (e->angles, e->angles2);
 		blend = 0;
 	} else {
 		blend = (realtime - e->rotate_start_time) / 0.1;
@@ -216,21 +216,21 @@ R_BlendedRotateForEntity (entity_t *e)
 		else if (d[i] < -180)
 			d[i] += 360;
 
-	glRotatef ( e->angles1[1] + ( blend * d[1]),  0, 0, 1);
-	glRotatef (-e->angles1[0] + (-blend * d[0]),  0, 1, 0);
-	glRotatef ( e->angles1[2] + ( blend * d[2]),  1, 0, 0);
+	glRotatef ( e->angles1[1] + ( blend * d[1]), 0, 0, 1);
+	glRotatef (-e->angles1[0] + (-blend * d[0]), 0, 1, 0);
+	glRotatef ( e->angles1[2] + ( blend * d[2]), 1, 0, 0);
 }
 #endif
 
 void
-R_RotateForEntity (entity_t *e)
+R_RotateForEntity ( entity_t *e )
 {
-	glTranslatef (e->origin[0],  e->origin[1],  e->origin[2]);
+	glTranslatef (e->origin[0], e->origin[1], e->origin[2]);
 
-	glRotatef (e->angles[1],  0, 0, 1);
-	glRotatef (-e->angles[0],  0, 1, 0);
+	glRotatef (e->angles[1], 0, 0, 1);
+	glRotatef (-e->angles[0], 0, 1, 0);
 	//ZOID: fixed z angle
-	glRotatef (e->angles[2],  1, 0, 0);
+	glRotatef (e->angles[2], 1, 0, 0);
 }
 
 /*
@@ -240,10 +240,9 @@ R_RotateForEntity (entity_t *e)
 /*
 	R_GetSpriteFrame
 */
-mspriteframe_t
-*R_GetSpriteFrame (entity_t *currententity)
+mspriteframe_t *
+R_GetSpriteFrame ( entity_t *currententity )
 {
-
 	msprite_t		*psprite;
 	mspritegroup_t	*pspritegroup;
 	mspriteframe_t	*pspriteframe;
@@ -286,7 +285,7 @@ mspriteframe_t
 	R_DrawSpriteModel
 */
 void
-R_DrawSpriteModel (entity_t *e)
+R_DrawSpriteModel ( entity_t *e )
 {
 
 	vec3_t	point;
@@ -313,7 +312,7 @@ R_DrawSpriteModel (entity_t *e)
 
 	GL_DisableMultitexture();
 
-    GL_Bind(frame->gl_texturenum);
+	GL_Bind(frame->gl_texturenum);
 
 	glEnable (GL_ALPHA_TEST);
 	glBegin (GL_QUADS);
@@ -371,7 +370,7 @@ int	lastposenum, lastposenum0;
 	GL_DrawAliasFrame
 */
 void
-GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
+GL_DrawAliasFrame ( aliashdr_t *paliashdr, int posenum )
 {
 	float		l;
 	trivertx_t	*verts;
@@ -408,7 +407,7 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 			// normals and vertexes come from the frame list
 
 			l = shadedots[verts->lightnormalindex] * shadelight[3];
-			glColor3f (l+shadelight[0], l+shadelight[1], 
+			glColor3f (l+shadelight[0], l+shadelight[1],
 					l+shadelight[2]);
 				glColor3f (l, l, l);
 
@@ -424,8 +423,7 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 	GL_DrawAliasBlendedFrame
 */
 void
-GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
-		float blend)
+GL_DrawAliasBlendedFrame ( aliashdr_t *paliashdr, int pose1, int pose2, float blend )
 {
 	float		l;
 	trivertx_t	*verts1;
@@ -439,7 +437,7 @@ GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
 
 	verts1 = (trivertx_t *)((byte *)paliashdr + paliashdr->posedata);
 	verts2 = verts1;
-	
+
 	verts1 += pose1 * paliashdr->poseverts;
 	verts2 += pose2 * paliashdr->poseverts;
 
@@ -473,8 +471,8 @@ GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
 
 			l = (shadedots[verts1->lightnormalindex] +
 					(blend * d[0])) * shadelight[3];
-			
-			glColor3f (l+shadelight[0], l+shadelight[1], 
+
+			glColor3f (l+shadelight[0], l+shadelight[1],
 					l+shadelight[2]);
 
 			VectorSubtract(verts2->v, verts1->v, d);
@@ -498,7 +496,7 @@ GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
 extern	vec3_t			lightspot;
 
 void
-GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
+GL_DrawAliasShadow ( aliashdr_t *paliashdr, int posenum )
 {
 	trivertx_t	*verts;
 	int		*order;
@@ -554,7 +552,7 @@ GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
 	R_SetupAliasFrame
 */
 void
-R_SetupAliasFrame (int frame, aliashdr_t *paliashdr)
+R_SetupAliasFrame ( int frame, aliashdr_t *paliashdr )
 {
 	int			pose, numposes;
 	float			interval;
@@ -582,7 +580,7 @@ R_SetupAliasFrame (int frame, aliashdr_t *paliashdr)
 	R_SetupAliasBlendedFrame
 */
 void
-R_SetupAliasBlendedFrame (int frame, aliashdr_t *paliashdr, entity_t *e)
+R_SetupAliasBlendedFrame ( int frame, aliashdr_t *paliashdr, entity_t *e )
 {
 	int			pose, numposes;
 	float			blend;
@@ -632,7 +630,7 @@ R_SetupAliasBlendedFrame (int frame, aliashdr_t *paliashdr, entity_t *e)
 	R_DrawAliasModel
 */
 void
-R_DrawAliasModel (entity_t *e)
+R_DrawAliasModel ( entity_t *e )
 {
 	int		i;
 	int		*j;
@@ -780,14 +778,14 @@ R_DrawAliasModel (entity_t *e)
 			R_TranslatePlayerSkin(i);
 		}
 		if (i >= 0 && i<MAX_CLIENTS) {
-		    GL_Bind(playertextures + i);
+			GL_Bind(playertextures + i);
 		}
 	}
 #else
 	if (currententity->colormap != vid.colormap && !gl_nocolors->value) {
 		i = currententity - cl_entities;
 		if (i >= 1 && i <= cl.maxclients )
-		    GL_Bind(playertextures - 1 + i);
+			GL_Bind(playertextures - 1 + i);
 	}
 #endif
 
@@ -978,10 +976,10 @@ R_PolyBlend ( void )
 	glDisable (GL_DEPTH_TEST);
 	glDisable (GL_TEXTURE_2D);
 
-    glLoadIdentity ();
+	glLoadIdentity ();
 
-    glRotatef (-90,  1, 0, 0);	    // put Z going up
-    glRotatef (90,  0, 0, 1);	    // put Z going up
+	glRotatef (-90, 1, 0, 0);	// put Z going up
+	glRotatef (90, 0, 0, 1);	// put Z going up
 
 	glColor4fv (v_blend);
 
@@ -1083,19 +1081,17 @@ R_SetupFrame ( void )
 }
 
 void
-MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear,
-		GLdouble zFar )
+MYgluPerspective( GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar )
 {
+	GLdouble xmin, xmax, ymin, ymax;
 
-   GLdouble xmin, xmax, ymin, ymax;
+	ymax = zNear * tan( fovy * M_PI / 360.0 );
+	ymin = -ymax;
 
-   ymax = zNear * tan( fovy * M_PI / 360.0 );
-   ymin = -ymax;
+	xmin = ymin * aspect;
+	xmax = ymax * aspect;
 
-   xmin = ymin * aspect;
-   xmax = ymax * aspect;
-
-   glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
+	glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
 }
 
 
@@ -1114,7 +1110,7 @@ R_SetupGL ( void )
 	// set up viewpoint
 	//
 	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity ();
+	glLoadIdentity ();
 	x = r_refdef.vrect.x * glwidth/vid.width;
 	x2 = (r_refdef.vrect.x + r_refdef.vrect.width) * glwidth/vid.width;
 	y = (vid.height-r_refdef.vrect.y) * glheight/vid.height;
@@ -1139,24 +1135,24 @@ R_SetupGL ( void )
 	}
 
 	glViewport (glx + x, gly + y2, w, h);
-    screenaspect = (float)r_refdef.vrect.width/r_refdef.vrect.height;
+	screenaspect = (float)r_refdef.vrect.width/r_refdef.vrect.height;
 //	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*180/M_PI;
 //	yfov = (2.0 * tan (scr_fov->value/360*M_PI)) / screenaspect;
 //	yfov = 2*atan((float)r_refdef.vrect.height/r_refdef.vrect.width)*(scr_fov->value*2)/M_PI;
-//	MYgluPerspective (yfov,  screenaspect,  4,  4096);
-    MYgluPerspective (r_refdef.fov_y,  screenaspect,  4,  4096);
+//	MYgluPerspective (yfov, screenaspect, 4, 4096);
+	MYgluPerspective (r_refdef.fov_y, screenaspect, 4, 4096);
 
 	glCullFace(GL_FRONT);
 
 	glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity ();
+	glLoadIdentity ();
 
-    glRotatef (-90,  1, 0, 0);	    // put Z going up
-    glRotatef (90,  0, 0, 1);	    // put Z going up
-    glRotatef (-r_refdef.viewangles[2],  1, 0, 0);
-    glRotatef (-r_refdef.viewangles[0],  0, 1, 0);
-    glRotatef (-r_refdef.viewangles[1],  0, 0, 1);
-    glTranslatef (-r_refdef.vieworg[0],  -r_refdef.vieworg[1],  -r_refdef.vieworg[2]);
+	glRotatef (-90, 1, 0, 0);	// put Z going up
+	glRotatef (90, 0, 0, 1);	// put Z going up
+	glRotatef (-r_refdef.viewangles[2], 1, 0, 0);
+	glRotatef (-r_refdef.viewangles[0], 0, 1, 0);
+	glRotatef (-r_refdef.viewangles[1], 0, 0, 1);
+	glTranslatef (-r_refdef.vieworg[0], -r_refdef.vieworg[1], -r_refdef.vieworg[2]);
 
 	glGetFloatv (GL_MODELVIEW_MATRIX, r_world_matrix);
 
@@ -1220,11 +1216,11 @@ R_Clear ( void )
 		{
 			if (l != (int)r_clearcolor->value)
 			{
-					l = (int)r_clearcolor->value;
-				        glClearColor (host_basepal[l*3]/255.0,
-						      host_basepal[l*3+1]/255.0,
-						      host_basepal[l*3+2]/255.0,
-						      1.0);
+				l = (int)r_clearcolor->value;
+				glClearColor (host_basepal[l*3]/255.0,
+								host_basepal[l*3+1]/255.0,
+								host_basepal[l*3+2]/255.0,
+								1.0);
 			}
 			glClear (GL_COLOR_BUFFER_BIT);
 		}
@@ -1337,4 +1333,3 @@ R_RenderView ( void )
 		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys);
 	}
 }
-

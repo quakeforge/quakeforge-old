@@ -55,7 +55,8 @@ short	*snd_out;
 void Snd_WriteLinearBlastStereo16 (void);
 
 #if	!id386
-void Snd_WriteLinearBlastStereo16 (void)
+void
+Snd_WriteLinearBlastStereo16 ( void )
 {
 	int		i;
 	int		val;
@@ -81,7 +82,8 @@ void Snd_WriteLinearBlastStereo16 (void)
 }
 #endif
 
-void S_TransferStereo16 (int endtime)
+void
+S_TransferStereo16 ( int endtime )
 {
 	int		lpos;
 	int		lpaintedtime;
@@ -104,7 +106,7 @@ void S_TransferStereo16 (int endtime)
 		reps = 0;
 
 		while ((hresult = pDSBuf->lpVtbl->Lock(pDSBuf, 0, gSndBufSize, &pbuf, &dwSize,
-									   &pbuf2, &dwSize2, 0)) != DS_OK)
+									&pbuf2, &dwSize2, 0)) != DS_OK)
 		{
 			if (hresult != DSERR_BUFFERLOST)
 			{
@@ -155,7 +157,8 @@ void S_TransferStereo16 (int endtime)
 #endif
 }
 
-void S_TransferPaintBuffer(int endtime)
+void
+S_TransferPaintBuffer ( int endtime )
 {
 	int 	out_idx;
 	int 	count;
@@ -191,7 +194,7 @@ void S_TransferPaintBuffer(int endtime)
 		reps = 0;
 
 		while ((hresult = pDSBuf->lpVtbl->Lock(pDSBuf, 0, gSndBufSize, &pbuf, &dwSize,
-									   &pbuf2,&dwSize2, 0)) != DS_OK)
+									&pbuf2,&dwSize2, 0)) != DS_OK)
 		{
 			if (hresult != DSERR_BUFFERLOST)
 			{
@@ -277,7 +280,8 @@ CHANNEL MIXING
 void SND_PaintChannelFrom8 (channel_t *ch, sfxcache_t *sc, int endtime);
 void SND_PaintChannelFrom16 (channel_t *ch, sfxcache_t *sc, int endtime);
 
-void S_PaintChannels(int endtime)
+void
+S_PaintChannels ( int endtime )
 {
 	int 	i;
 	int 	end;
@@ -350,7 +354,8 @@ void S_PaintChannels(int endtime)
 	}
 }
 
-void SND_InitScaletable (void)
+void
+SND_InitScaletable ( void )
 {
 	int		i, j;
 
@@ -361,8 +366,8 @@ void SND_InitScaletable (void)
 
 
 #if	!id386
-
-void SND_PaintChannelFrom8 (channel_t *ch, sfxcache_t *sc, int count)
+void
+SND_PaintChannelFrom8 ( channel_t *ch, sfxcache_t *sc, int count )
 {
 	int 	data;
 	int		*lscale, *rscale;
@@ -387,11 +392,11 @@ void SND_PaintChannelFrom8 (channel_t *ch, sfxcache_t *sc, int count)
 
 	ch->pos += count;
 }
-
 #endif	// !id386
 
 
-void SND_PaintChannelFrom16 (channel_t *ch, sfxcache_t *sc, int count)
+void
+SND_PaintChannelFrom16 ( channel_t *ch, sfxcache_t *sc, int count )
 {
 	int data;
 	int left, right;
@@ -414,4 +419,3 @@ void SND_PaintChannelFrom16 (channel_t *ch, sfxcache_t *sc, int count)
 
 	ch->pos += count;
 }
-

@@ -53,7 +53,8 @@ Space padding is so names can be printed nicely in tables.
 Can safely be performed in place.
 ==================
 */
-void W_CleanupName (char *in, char *out)
+void
+W_CleanupName ( char *in, char *out )
 {
 	int		i;
 	int		c;
@@ -79,7 +80,8 @@ void W_CleanupName (char *in, char *out)
 W_OpenWadFile
 ====================
 */
-wadfile_t * W_OpenWadFile (char *filename)
+wadfile_t *
+W_OpenWadFile ( char *filename )
 {
 	lumpinfo_t		*lump_p;
 	wadinfo_t		header;
@@ -132,7 +134,8 @@ wadfile_t * W_OpenWadFile (char *filename)
 W_LoadWadFile
 ====================
 */
-void W_LoadWadFile (char *filename)
+void
+W_LoadWadFile ( char *filename )
 {
 	lumpinfo_t		*lump_p;
 	wadinfo_t		*header;
@@ -172,7 +175,8 @@ void W_LoadWadFile (char *filename)
 W_GetLumpinfo
 =============
 */
-lumpinfo_t	*W_GetLumpinfo (char *name)
+lumpinfo_t *
+W_GetLumpinfo ( char *name )
 {
 	int		i;
 	lumpinfo_t	*lump_p;
@@ -191,7 +195,8 @@ lumpinfo_t	*W_GetLumpinfo (char *name)
 	return NULL;
 }
 
-void *W_GetLumpName (char *name)
+void *
+W_GetLumpName ( char *name )
 {
 	lumpinfo_t	*lump;
 
@@ -200,7 +205,8 @@ void *W_GetLumpName (char *name)
 	return (void *)(wad_base + lump->filepos);
 }
 
-void *W_GetLumpNum (int num)
+void *
+W_GetLumpNum ( int num )
 {
 	lumpinfo_t	*lump;
 
@@ -220,7 +226,8 @@ automatic byte swapping
 =============================================================================
 */
 
-void SwapPic (qpic_t *pic)
+void
+SwapPic ( qpic_t *pic )
 {
 	pic->width = LittleLong(pic->width);
 	pic->height = LittleLong(pic->height);

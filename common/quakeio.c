@@ -52,7 +52,7 @@
 #include <limits.h>
 
 void
-Qexpand_squiggle(const char *path, char *dest)
+Qexpand_squiggle ( const char *path, char *dest )
 {
 	char *home;
 #ifndef _WIN32
@@ -73,13 +73,13 @@ Qexpand_squiggle(const char *path, char *dest)
 
 	if (home) {
 		strcpy (dest, home);
-		strcat (dest, path+1); // skip leading ~
+		strcat (dest, path+1);	// skip leading ~
 	} else
 		strcpy (dest,path);
 }
 
 int
-Qrename(const char *old, const char *new)
+Qrename ( const char *old, const char *new )
 {
 	char e_old[PATH_MAX];
 	char e_new[PATH_MAX];
@@ -90,7 +90,7 @@ Qrename(const char *old, const char *new)
 }
 
 QFile *
-Qopen(const char *path, const char *mode)
+Qopen ( const char *path, const char *mode )
 {
 	QFile *file;
 	char m[80],*p;
@@ -132,7 +132,7 @@ Qopen(const char *path, const char *mode)
 }
 
 QFile *
-Qdopen(int fd, const char *mode)
+Qdopen ( int fd, const char *mode )
 {
 	QFile *file;
 	char m[80],*p;
@@ -178,7 +178,7 @@ Qdopen(int fd, const char *mode)
 }
 
 void
-Qclose(QFile *file)
+Qclose ( QFile *file )
 {
 	if (file->file)
 		fclose(file->file);
@@ -190,7 +190,7 @@ Qclose(QFile *file)
 }
 
 int
-Qread(QFile *file, void *buf, int count)
+Qread ( QFile *file, void *buf, int count )
 {
 	if (file->file)
 		return fread(buf, 1, count, file->file);
@@ -203,7 +203,7 @@ Qread(QFile *file, void *buf, int count)
 }
 
 int
-Qwrite(QFile *file, void *buf, int count)
+Qwrite ( QFile *file, void *buf, int count )
 {
 	if (file->file)
 		return fwrite(buf, 1, count, file->file);
@@ -216,7 +216,7 @@ Qwrite(QFile *file, void *buf, int count)
 }
 
 int
-Qprintf(QFile *file, const char *fmt, ...)
+Qprintf ( QFile *file, const char *fmt, ... )
 {
 	va_list args;
 	int ret=-1;
@@ -244,7 +244,7 @@ Qprintf(QFile *file, const char *fmt, ...)
 }
 
 char *
-Qgets(QFile *file, char *buf, int count)
+Qgets ( QFile *file, char *buf, int count )
 {
 	if (file->file)
 		return fgets(buf, count, file->file);
@@ -257,7 +257,7 @@ Qgets(QFile *file, char *buf, int count)
 }
 
 int
-Qgetc(QFile *file)
+Qgetc ( QFile *file )
 {
 	if (file->file)
 		return fgetc(file->file);
@@ -270,7 +270,7 @@ Qgetc(QFile *file)
 }
 
 int
-Qputc(QFile *file, int c)
+Qputc ( QFile *file, int c )
 {
 	if (file->file)
 		return fputc(c, file->file);
@@ -283,7 +283,7 @@ Qputc(QFile *file, int c)
 }
 
 int
-Qseek(QFile *file, long offset, int whence)
+Qseek ( QFile *file, long offset, int whence )
 {
 	if (file->file)
 		return fseek(file->file, offset, whence);
@@ -296,7 +296,7 @@ Qseek(QFile *file, long offset, int whence)
 }
 
 long
-Qtell(QFile *file)
+Qtell ( QFile *file )
 {
 	if (file->file)
 		return ftell(file->file);
@@ -309,7 +309,7 @@ Qtell(QFile *file)
 }
 
 int
-Qflush(QFile *file)
+Qflush ( QFile *file )
 {
 	if (file->file)
 		return fflush(file->file);
@@ -322,7 +322,7 @@ Qflush(QFile *file)
 }
 
 int
-Qeof(QFile *file)
+Qeof ( QFile *file )
 {
 	if (file->file)
 		return feof(file->file);

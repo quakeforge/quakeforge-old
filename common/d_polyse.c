@@ -1,6 +1,6 @@
 /*
 	d_polyset.c
-	
+
 	routines for drawing sets of polygons sharing the same texture
 	(used for Alias models)
 
@@ -132,7 +132,8 @@ void D_PolysetScanLeftEdge (int height);
 D_PolysetDraw
 ================
 */
-void D_PolysetDraw (void)
+void
+D_PolysetDraw ( void )
 {
 	spanpackage_t	spans[DPS_MAXSPANS + 1 +
 			((CACHE_SIZE - 1) / sizeof(spanpackage_t)) + 1];
@@ -157,7 +158,8 @@ void D_PolysetDraw (void)
 D_PolysetDrawFinalVerts
 ================
 */
-void D_PolysetDrawFinalVerts (finalvert_t *fv, int numverts)
+void
+D_PolysetDrawFinalVerts ( finalvert_t *fv, int numverts )
 {
 	int		i, z;
 	short	*zbuf;
@@ -190,7 +192,8 @@ void D_PolysetDrawFinalVerts (finalvert_t *fv, int numverts)
 D_DrawSubdiv
 ================
 */
-void D_DrawSubdiv (void)
+void
+D_DrawSubdiv ( void )
 {
 	mtriangle_t		*ptri;
 	finalvert_t		*pfv, *index0, *index1, *index2;
@@ -251,7 +254,8 @@ void D_DrawSubdiv (void)
 D_DrawNonSubdiv
 ================
 */
-void D_DrawNonSubdiv (void)
+void
+D_DrawNonSubdiv ( void )
 {
 	mtriangle_t		*ptri;
 	finalvert_t		*pfv, *index0, *index1, *index2;
@@ -319,7 +323,8 @@ void D_DrawNonSubdiv (void)
 D_PolysetRecursiveTriangle
 ================
 */
-void D_PolysetRecursiveTriangle (int *lp1, int *lp2, int *lp3)
+void
+D_PolysetRecursiveTriangle ( int *lp1, int *lp2, int *lp3 )
 {
 	int		*temp;
 	int		d;
@@ -404,7 +409,8 @@ nodraw:
 D_PolysetUpdateTables
 ================
 */
-void D_PolysetUpdateTables (void)
+void
+D_PolysetUpdateTables ( void )
 {
 	int		i;
 	byte	*s;
@@ -428,9 +434,9 @@ void D_PolysetUpdateTables (void)
 D_PolysetScanLeftEdge
 ====================
 */
-void D_PolysetScanLeftEdge (int height)
+void
+D_PolysetScanLeftEdge ( int height )
 {
-
 	do
 	{
 		d_pedgespanpackage->pdest = d_pdest;
@@ -497,8 +503,9 @@ void D_PolysetScanLeftEdge (int height)
 D_PolysetSetUpForLineScan
 ====================
 */
-void D_PolysetSetUpForLineScan(fixed8_t startvertu, fixed8_t startvertv,
-		fixed8_t endvertu, fixed8_t endvertv)
+void
+D_PolysetSetUpForLineScan(fixed8_t startvertu, fixed8_t startvertv,
+	fixed8_t endvertu, fixed8_t endvertv)
 {
 	double		dm, dn;
 	int			tm, tn;
@@ -538,7 +545,8 @@ void D_PolysetSetUpForLineScan(fixed8_t startvertu, fixed8_t startvertv,
 D_PolysetCalcGradients
 ================
 */
-void D_PolysetCalcGradients (int skinwidth)
+void
+D_PolysetCalcGradients ( int skinwidth )
 {
 	float	xstepdenominv, ystepdenominv, t0, t1;
 	float	p01_minus_p21, p11_minus_p21, p00_minus_p20, p10_minus_p20;
@@ -598,7 +606,8 @@ void D_PolysetCalcGradients (int skinwidth)
 
 
 byte gelmap[256];
-void InitGel (byte *palette)
+void
+InitGel ( byte *palette )
 {
 	int		i;
 	int		r;
@@ -619,7 +628,8 @@ void InitGel (byte *palette)
 D_PolysetDrawSpans8
 ================
 */
-void D_PolysetDrawSpans8 (spanpackage_t *pspanpackage)
+void
+D_PolysetDrawSpans8 ( spanpackage_t *pspanpackage )
 {
 	int		lcount;
 	byte	*lpdest;
@@ -690,7 +700,8 @@ void D_PolysetDrawSpans8 (spanpackage_t *pspanpackage)
 D_PolysetFillSpans8
 ================
 */
-void D_PolysetFillSpans8 (spanpackage_t *pspanpackage)
+void
+D_PolysetFillSpans8 ( spanpackage_t *pspanpackage )
 {
 	int				color;
 
@@ -727,7 +738,8 @@ void D_PolysetFillSpans8 (spanpackage_t *pspanpackage)
 D_RasterizeAliasPolySmooth
 ================
 */
-void D_RasterizeAliasPolySmooth (void)
+void
+D_RasterizeAliasPolySmooth ( void )
 {
 	int				initialleftheight, initialrightheight;
 	int				*plefttop, *prighttop, *pleftbottom, *prightbottom;
@@ -756,7 +768,7 @@ void D_RasterizeAliasPolySmooth (void)
 // scan out the top (and possibly only) part of the left edge
 //
 	D_PolysetSetUpForLineScan(plefttop[0], plefttop[1],
-						  pleftbottom[0], pleftbottom[1]);
+		pleftbottom[0], pleftbottom[1]);
 
 	d_pedgespanpackage = a_spans;
 
@@ -835,7 +847,7 @@ void D_RasterizeAliasPolySmooth (void)
 		pleftbottom = pedgetable->pleftedgevert2;
 
 		D_PolysetSetUpForLineScan(plefttop[0], plefttop[1],
-							  pleftbottom[0], pleftbottom[1]);
+				pleftbottom[0], pleftbottom[1]);
 
 		height = pleftbottom[1] - plefttop[1];
 
@@ -902,11 +914,11 @@ void D_RasterizeAliasPolySmooth (void)
 	d_pedgespanpackage = a_spans;
 
 	D_PolysetSetUpForLineScan(prighttop[0], prighttop[1],
-						  prightbottom[0], prightbottom[1]);
+			prightbottom[0], prightbottom[1]);
 	d_aspancount = 0;
 	d_countextrastep = ubasestep + 1;
 	originalcount = a_spans[initialrightheight].count;
-	a_spans[initialrightheight].count = -999999; // mark end of the spanpackages
+	a_spans[initialrightheight].count = -999999;	// mark end of the spanpackages
 	D_PolysetDrawSpans8 (a_spans);
 
 // scan out the bottom part of the right edge, if it exists
@@ -926,7 +938,7 @@ void D_RasterizeAliasPolySmooth (void)
 		height = prightbottom[1] - prighttop[1];
 
 		D_PolysetSetUpForLineScan(prighttop[0], prighttop[1],
-							  prightbottom[0], prightbottom[1]);
+				prightbottom[0], prightbottom[1]);
 
 		d_countextrastep = ubasestep + 1;
 		a_spans[initialrightheight + height].count = -999999;
@@ -941,12 +953,13 @@ void D_RasterizeAliasPolySmooth (void)
 D_PolysetSetEdgeTable
 ================
 */
-void D_PolysetSetEdgeTable (void)
+void
+D_PolysetSetEdgeTable ( void )
 {
 	int			edgetableindex;
 
 	edgetableindex = 0;	// assume the vertices are already in
-						//  top to bottom order
+						// top to bottom order
 
 //
 // determine which edges are right & left, and the order in which
@@ -1000,7 +1013,8 @@ void D_PolysetSetEdgeTable (void)
 
 #if 0
 
-void D_PolysetRecursiveDrawLine (int *lp1, int *lp2)
+void
+D_PolysetRecursiveDrawLine ( int *lp1, int *lp2 )
 {
 	int		d;
 	int		new[6];
@@ -1041,7 +1055,8 @@ split:
 	D_PolysetRecursiveDrawLine (new, lp2);
 }
 
-void D_PolysetRecursiveTriangle2 (int *lp1, int *lp2, int *lp3)
+void
+D_PolysetRecursiveTriangle2 ( int *lp1, int *lp2, int *lp3 )
 {
 	int		d;
 	int		new[4];
@@ -1071,4 +1086,3 @@ split:
 }
 
 #endif
-

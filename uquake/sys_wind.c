@@ -37,7 +37,8 @@ FILE IO
 #define	MAX_HANDLES		64	// 1999-12-23 More PAK files support by Maddes
 QFile	*sys_handles[MAX_HANDLES];
 
-int		findhandle (void)
+int
+findhandle ( void )
 {
 	int		i;
 
@@ -53,7 +54,8 @@ int		findhandle (void)
 filelength
 ================
 */
-int filelength (QFile *f)
+int
+filelength ( QFile *f )
 {
 	int		pos;
 	int		end;
@@ -66,7 +68,8 @@ int filelength (QFile *f)
 	return end;
 }
 
-int Sys_FileOpenRead (char *path, int *hndl)
+int
+Sys_FileOpenRead ( char *path, int *hndl )
 {
 	QFile	*f;
 	int		i;
@@ -85,7 +88,8 @@ int Sys_FileOpenRead (char *path, int *hndl)
 	return filelength(f);
 }
 
-int Sys_FileOpenWrite (char *path)
+int
+Sys_FileOpenWrite ( char *path )
 {
 	QFile	*f;
 	int		i;
@@ -100,23 +104,27 @@ int Sys_FileOpenWrite (char *path)
 	return i;
 }
 
-void Sys_FileClose (int handle)
+void
+Sys_FileClose ( int handle )
 {
 	fclose (sys_handles[handle]);
 	sys_handles[handle] = NULL;
 }
 
-void Sys_FileSeek (int handle, int position)
+void
+Sys_FileSeek ( int handle, int position )
 {
 	fseek (sys_handles[handle], position, SEEK_SET);
 }
 
-int Sys_FileRead (int handle, void *dest, int count)
+int
+Sys_FileRead ( int handle, void *dest, int count )
 {
 	return fread (dest, 1, count, sys_handles[handle]);
 }
 
-int Sys_FileWrite (int handle, void *data, int count)
+int
+Sys_FileWrite ( int handle, void *data, int count )
 {
 	return fwrite (data, 1, count, sys_handles[handle]);
 }
@@ -129,16 +137,19 @@ SYSTEM IO
 ===============================================================================
 */
 
-void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length)
+void
+Sys_MakeCodeWriteable ( unsigned long startaddr, unsigned long length )
 {
 }
 
 
-void Sys_DebugLog(char *file, char *fmt, ...)
+void
+Sys_DebugLog ( char *file, char *fmt, ... )
 {
 }
 
-void Sys_Error (char *error, ...)
+void
+Sys_Error ( char *error, ... )
 {
 	va_list		argptr;
 	char		text[1024];
@@ -147,35 +158,41 @@ void Sys_Error (char *error, ...)
 	vsnprintf (text, sizeof(text), error, argptr);
 	va_end (argptr);
 
-//    MessageBox(NULL, text, "Error", 0 /* MB_OK */ );
+//	MessageBox(NULL, text, "Error", 0 /* MB_OK */ );
 	printf ("ERROR: %s\n", text);
 
 	exit (1);
 }
 
-void Sys_Quit (void)
+void
+Sys_Quit ( void )
 {
 	exit (0);
 }
 
-void Sys_Sleep (void)
+void
+Sys_Sleep ( void )
 {
 }
 
 
-void Sys_SendKeyEvents (void)
+void
+Sys_SendKeyEvents ( void )
 {
 }
 
-void Sys_HighFPPrecision (void)
+void
+Sys_HighFPPrecision ( void )
 {
 }
 
-void Sys_LowFPPrecision (void)
+void
+Sys_LowFPPrecision ( void )
 {
 }
 
-char *Sys_ConsoleInput (void)
+char *
+Sys_ConsoleInput ( void )
 {
 	static char	text[256];
 	static int		len;
@@ -224,9 +241,10 @@ main
 */
 char	*newargv[256];
 
-int main (int argc, char **argv)
+int
+main ( int argc, char **argv )
 {
-    MSG        msg;
+	MSG		msg;
 	quakeparms_t	parms;
 	double			time, oldtime;
 	static	char	cwd[1024];
@@ -239,7 +257,7 @@ int main (int argc, char **argv)
 	_getcwd (cwd, sizeof(cwd));
 	if (cwd[Q_strlen(cwd)-1] == '\\')
 		cwd[Q_strlen(cwd)-1] = 0;
-	parms.basedir = cwd; //"f:/quake";
+	parms.basedir = cwd;	//"f:/quake";
 //	parms.basedir = "f:\\quake";
 
 	COM_InitArgv (argc, argv);
@@ -262,7 +280,7 @@ int main (int argc, char **argv)
 
 	oldtime = Sys_DoubleTime ();
 
-    /* main window message loop */
+	/* main window message loop */
 	while (1)
 	{
 		time = Sys_DoubleTime();
@@ -276,7 +294,6 @@ int main (int argc, char **argv)
 		oldtime = time;
 	}
 
-    /* return success of application */
-    return TRUE;
+	/* return success of application */
+	return TRUE;
 }
-

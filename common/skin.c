@@ -53,7 +53,8 @@ Skin_Find
 
 ================
 */
-void Skin_Find (player_info_t *sc)
+void
+Skin_Find ( player_info_t *sc )
 {
 	skin_t		*skin;
 	int			i;
@@ -107,7 +108,8 @@ Skin_Cache
 Returns a pointer to the skin bitmap, or NULL to use the default
 ==========
 */
-byte	*Skin_Cache (skin_t *skin)
+byte *
+Skin_Cache ( skin_t *skin )
 {
 	char	name[1024];
 //	byte	*raw;
@@ -120,8 +122,8 @@ byte	*Skin_Cache (skin_t *skin)
 	if (cls.downloadtype == dl_skin)
 		return NULL;		// use base until downloaded
 
-	if (noskins->value==1) // JACK: So NOSKINS > 1 will show skins, but
-		return NULL;	  // not download new ones.
+	if (noskins->value==1)	// JACK: So NOSKINS > 1 will show skins, but
+		return NULL;		// not download new ones.
 
 	if (skin->failedload)
 		return NULL;
@@ -156,7 +158,8 @@ byte	*Skin_Cache (skin_t *skin)
 Skin_NextDownload
 =================
 */
-void Skin_NextDownload (void)
+void
+Skin_NextDownload ( void )
 {
 	player_info_t	*sc;
 	int			i;
@@ -210,7 +213,8 @@ Skin_Skins_f
 Refind all skins, downloading if needed.
 ==========
 */
-void	Skin_Skins_f (void)
+void
+Skin_Skins_f ( void )
 {
 	int		i;
 
@@ -234,9 +238,9 @@ Skin_AllSkins_f
 Sets all skins to one specific one
 ==========
 */
-void	Skin_AllSkins_f (void)
+void
+Skin_AllSkins_f ( void )
 {
 	strcpy (allskins, Cmd_Argv(1));
 	Skin_Skins_f ();
 }
-

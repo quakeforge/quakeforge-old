@@ -66,7 +66,8 @@ cachepic_t	menu_cachepics[MAX_CACHED_PICS];
 int			menu_numcachepics;
 
 
-qpic_t	*Draw_PicFromWad (char *name)
+qpic_t *
+Draw_PicFromWad ( char *name )
 {
 	return W_GetLumpName (name);
 }
@@ -76,7 +77,8 @@ qpic_t	*Draw_PicFromWad (char *name)
 Draw_CachePic
 ================
 */
-qpic_t	*Draw_CachePic (char *path)
+qpic_t *
+Draw_CachePic ( char *path )
 {
 	cachepic_t	*pic;
 	int			i;
@@ -122,7 +124,8 @@ qpic_t	*Draw_CachePic (char *path)
 Draw_Init
 ===============
 */
-void Draw_Init (void)
+void
+Draw_Init ( void )
 {
 	draw_chars = W_GetLumpName ("conchars");
 	draw_disc = W_GetLumpName ("disc");
@@ -145,7 +148,8 @@ It can be clipped to the top of the screen to allow the console to be
 smoothly scrolled off.
 ================
 */
-void Draw_Character (int x, int y, int num)
+void
+Draw_Character ( int x, int y, int num )
 {
 	byte			*dest;
 	byte			*source;
@@ -239,7 +243,8 @@ void Draw_Character (int x, int y, int num)
 Draw_String
 ================
 */
-void Draw_String (int x, int y, char *str)
+void
+Draw_String ( int x, int y, char *str )
 {
 	while (*str)
 	{
@@ -254,7 +259,8 @@ void Draw_String (int x, int y, char *str)
 Draw_Alt_String
 ================
 */
-void Draw_Alt_String (int x, int y, char *str)
+void
+Draw_Alt_String ( int x, int y, char *str )
 {
 	while (*str)
 	{
@@ -264,7 +270,8 @@ void Draw_Alt_String (int x, int y, char *str)
 	}
 }
 
-void Draw_Pixel(int x, int y, byte color)
+void
+Draw_Pixel ( int x, int y, byte color )
 {
 	byte			*dest;
 	unsigned short	*pusdest;
@@ -283,7 +290,8 @@ void Draw_Pixel(int x, int y, byte color)
 	}
 }
 
-void Draw_Crosshair(void)
+void
+Draw_Crosshair ( void )
 {
 	int x, y;
 	extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor;
@@ -318,7 +326,8 @@ This is for debugging lockups by drawing different chars in different parts
 of the code.
 ================
 */
-void Draw_DebugChar (char num)
+void
+Draw_DebugChar ( char num )
 {
 	byte			*dest;
 	byte			*source;
@@ -357,7 +366,8 @@ void Draw_DebugChar (char num)
 Draw_Pic
 =============
 */
-void Draw_Pic (int x, int y, qpic_t *pic)
+void
+Draw_Pic ( int x, int y, qpic_t *pic )
 {
 	byte			*dest, *source;
 	unsigned short	*pusdest;
@@ -408,7 +418,8 @@ void Draw_Pic (int x, int y, qpic_t *pic)
 Draw_SubPic
 =============
 */
-void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int height)
+void
+Draw_SubPic ( int x, int y, qpic_t *pic, int srcx, int srcy, int width, int height )
 {
 	byte			*dest, *source;
 	unsigned short	*pusdest;
@@ -459,7 +470,8 @@ void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int h
 Draw_TransPic
 =============
 */
-void Draw_TransPic (int x, int y, qpic_t *pic)
+void
+Draw_TransPic ( int x, int y, qpic_t *pic )
 {
 	byte	*dest, *source, tbyte;
 	unsigned short	*pusdest;
@@ -546,7 +558,8 @@ void Draw_TransPic (int x, int y, qpic_t *pic)
 Draw_TransPicTranslate
 =============
 */
-void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
+void
+Draw_TransPicTranslate ( int x, int y, qpic_t *pic, byte *translation )
 {
 	byte	*dest, *source, tbyte;
 	unsigned short	*pusdest;
@@ -634,7 +647,8 @@ Draw_ConsoleBackground
 
 ================
 */
-void Draw_ConsoleBackground (int lines)
+void
+Draw_ConsoleBackground ( int lines )
 {
 	int			x, y, v;
 	byte			*src, *dest;
@@ -717,8 +731,8 @@ void Draw_ConsoleBackground (int lines)
 R_DrawRect8
 ==============
 */
-void R_DrawRect8 (vrect_t *prect, int rowbytes, byte *psrc,
-	int transparent)
+void
+R_DrawRect8 ( vrect_t *prect, int rowbytes, byte *psrc, int transparent)
 {
 	byte	t;
 	int		i, j, srcdelta, destdelta;
@@ -766,8 +780,8 @@ void R_DrawRect8 (vrect_t *prect, int rowbytes, byte *psrc,
 R_DrawRect16
 ==============
 */
-void R_DrawRect16 (vrect_t *prect, int rowbytes, byte *psrc,
-	int transparent)
+void
+R_DrawRect16 ( vrect_t *prect, int rowbytes, byte *psrc, int transparent)
 {
 	byte			t;
 	int				i, j, srcdelta, destdelta;
@@ -827,7 +841,8 @@ This repeats a 64*64 tile graphic to fill the screen around a sized down
 refresh window.
 =============
 */
-void Draw_TileClear (int x, int y, int w, int h)
+void
+Draw_TileClear ( int x, int y, int w, int h )
 {
 	int				width, height, tileoffsetx, tileoffsety;
 	byte			*psrc;
@@ -899,7 +914,8 @@ Draw_Fill
 Fills a box of pixels with a single color
 =============
 */
-void Draw_Fill (int x, int y, int w, int h, int c)
+void
+Draw_Fill ( int x, int y, int w, int h, int c )
 {
 	byte			*dest;
 	unsigned short	*pusdest;
@@ -938,7 +954,8 @@ Draw_FadeScreen
 
 ================
 */
-void Draw_FadeScreen (void)
+void
+Draw_FadeScreen ( void )
 {
 	int			x,y;
 	byte		*pbuf;
@@ -976,7 +993,8 @@ Draws the little blue disc in the corner of the screen.
 Call before beginning any disc IO.
 ================
 */
-void Draw_BeginDisc (void)
+void
+Draw_BeginDisc ( void )
 {
 	if (!draw_disc)
 		return;
@@ -993,11 +1011,11 @@ Erases the disc icon.
 Call after completing any disc IO
 ================
 */
-void Draw_EndDisc (void)
+void
+Draw_EndDisc ( void )
 {
 	if (!draw_disc)
 		return;
 
 	D_EndDirectRect (vid.width - 24, 0, 24, 24);
 }
-

@@ -107,7 +107,8 @@ void VID_MenuKey (int key);
 VID_Init
 ================
 */
-void VID_Init (unsigned char *palette)
+void
+VID_Init ( unsigned char *palette )
 {
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
 	vid_wait = Cvar_Get ("vid_wait","0",0,"None");
@@ -160,7 +161,8 @@ void VID_Init (unsigned char *palette)
 VID_GetModePtr
 =================
 */
-vmode_t *VID_GetModePtr (int modenum)
+vmode_t *
+VID_GetModePtr ( int modenum )
 {
 	vmode_t	*pv;
 
@@ -183,7 +185,8 @@ vmode_t *VID_GetModePtr (int modenum)
 VID_NumModes
 ================
 */
-int VID_NumModes ()
+int
+VID_NumModes ( void )
 {
 	return (numvidmodes);
 }
@@ -194,7 +197,8 @@ int VID_NumModes ()
 VID_ModeInfo
 ================
 */
-char *VID_ModeInfo (int modenum, char **ppheader)
+char *
+VID_ModeInfo ( int modenum, char **ppheader )
 {
 	static char	*badmodestr = "Bad mode number";
 	vmode_t		*pv;
@@ -221,7 +225,8 @@ char *VID_ModeInfo (int modenum, char **ppheader)
 VID_SetMode
 ================
 */
-int VID_SetMode (int modenum, unsigned char *palette)
+int
+VID_SetMode ( int modenum, unsigned char *palette )
 {
 	int	stat;
 	vmode_t	*pnewmode, *poldmode;
@@ -237,7 +242,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 		if (pcurrentmode == NULL)
 		{
 			modenum = 0;	// mode hasn't been set yet, so initialize to base
-							//  mode since they gave us an invalid initial mode
+							// mode since they gave us an invalid initial mode
 		}
 		else
 		{
@@ -308,7 +313,8 @@ int VID_SetMode (int modenum, unsigned char *palette)
 VID_SetPalette
 ================
 */
-void VID_SetPalette (unsigned char *palette)
+void
+VID_SetPalette ( unsigned char *palette )
 {
 	if (palette != vid_current_palette)
 		Q_memcpy(vid_current_palette, palette, 768);
@@ -321,7 +327,8 @@ void VID_SetPalette (unsigned char *palette)
 VID_ShiftPalette
 ================
 */
-void VID_ShiftPalette (unsigned char *palette)
+void
+VID_ShiftPalette ( unsigned char *palette )
 {
 	VID_SetPalette (palette);
 }
@@ -332,7 +339,8 @@ void VID_ShiftPalette (unsigned char *palette)
 VID_Shutdown
 ================
 */
-void VID_Shutdown (void)
+void
+VID_Shutdown ( void )
 {
 	regs.h.ah = 0;
 	regs.h.al = 0x3;
@@ -347,7 +355,8 @@ void VID_Shutdown (void)
 VID_Update
 ================
 */
-void VID_Update (vrect_t *rects)
+void
+VID_Update ( vrect_t *rects )
 {
 	if (firstupdate && _vid_default_mode->value)
 	{
@@ -377,7 +386,7 @@ void VID_Update (vrect_t *rects)
 				VID_SetMode ((int)vid_mode->value, vid_current_palette);
 				vid_mode->value = (float)vid_modenum;
 									// so if mode set fails, we don't keep on
-									//  trying to set that mode
+									// trying to set that mode
 				vid_realmode = vid_modenum;
 			}
 		}
@@ -390,7 +399,8 @@ void VID_Update (vrect_t *rects)
 VID_NumModes_f
 =================
 */
-void VID_NumModes_f (void)
+void
+VID_NumModes_f ( void )
 {
 	int	nummodes;
 
@@ -407,7 +417,8 @@ void VID_NumModes_f (void)
 VID_DescribeCurrentMode_f
 =================
 */
-void VID_DescribeCurrentMode_f (void)
+void
+VID_DescribeCurrentMode_f ( void )
 {
 	Con_Printf ("%s\n", VID_ModeInfo (vid_modenum, NULL));
 }
@@ -418,7 +429,8 @@ void VID_DescribeCurrentMode_f (void)
 VID_DescribeMode_f
 =================
 */
-void VID_DescribeMode_f (void)
+void
+VID_DescribeMode_f ( void )
 {
 	int	modenum;
 
@@ -433,7 +445,8 @@ void VID_DescribeMode_f (void)
 VID_DescribeModes_f
 =================
 */
-void VID_DescribeModes_f (void)
+void
+VID_DescribeModes_f ( void )
 {
 	int		i, nummodes;
 	char		*pinfo, *pheader;
@@ -474,7 +487,8 @@ void VID_DescribeModes_f (void)
 VID_GetModeDescription
 =================
 */
-char *VID_GetModeDescription (int mode)
+char *
+VID_GetModeDescription ( int mode )
 {
 	char	*pinfo, *pheader;
 	vmode_t	*pv;
@@ -499,7 +513,8 @@ char *VID_GetModeDescription (int mode)
 VID_TestMode_f
 =================
 */
-void VID_TestMode_f (void)
+void
+VID_TestMode_f ( void )
 {
 	int	modenum;
 	double	testduration;
@@ -525,7 +540,8 @@ void VID_TestMode_f (void)
 D_BeginDirectRect
 ================
 */
-void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void
+D_BeginDirectRect ( int x, int y, byte *pbitmap, int width, int height )
 {
 
 	if (!vid.direct || !pcurrentmode)
@@ -538,7 +554,7 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 		return;
 
 	(*pcurrentmode->begindirectrect) (&vid, pcurrentmode, x, y, pbitmap, width,
-									  height);
+									height);
 }
 
 
@@ -547,7 +563,8 @@ void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 D_EndDirectRect
 ================
 */
-void D_EndDirectRect (int x, int y, int width, int height)
+void
+D_EndDirectRect ( int x, int y, int width, int height )
 {
 	if (!vid.direct || !pcurrentmode)
 		return;
@@ -591,7 +608,8 @@ static modedesc_t	modedescs[MAX_MODEDESCS];
 VID_MenuDraw
 ================
 */
-void VID_MenuDraw (void)
+void
+VID_MenuDraw ( void )
 {
 	qpic_t	*p;
 	char	*ptr;
@@ -716,7 +734,8 @@ void VID_MenuDraw (void)
 VID_MenuKey
 ================
 */
-void VID_MenuKey (int key)
+void
+VID_MenuKey ( int key )
 {
 	if (vid_testingmode)
 		return;
@@ -799,7 +818,8 @@ void VID_MenuKey (int key)
 	}
 }
 
-int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int
+VID_ExtraOptionDraw ( unsigned int options_draw_cursor )
 {
 	int	drawn;
 
@@ -815,7 +835,8 @@ int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor, int dir)
+void
+VID_ExtraOptionCmd ( int option_cursor, int dir )
 {
 /* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
@@ -827,15 +848,18 @@ void VID_ExtraOptionCmd(int option_cursor, int dir)
 #endif
 }
 
-void VID_InitCvars ()
+void
+VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void VID_LockBuffer ( void )
+void
+VID_LockBuffer ( void )
 {
 }
 
-void VID_UnlockBuffer ( void )
+void
+VID_UnlockBuffer ( void )
 {
 }

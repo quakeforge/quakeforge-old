@@ -37,9 +37,9 @@
 #include <server.h>
 
 #define MAX_PARTICLES			2048	// default max # of particles at one
-										//  time
+										// time
 #define ABSOLUTE_MIN_PARTICLES	512		// no fewer than this no matter what's
-										//  on the command line
+										// on the command line
 
 int		ramp1[8] = {0x6f, 0x6d, 0x6b, 0x69, 0x67, 0x65, 0x63, 0x61};
 int		ramp2[8] = {0x6f, 0x6e, 0x6d, 0x6c, 0x6b, 0x6a, 0x68, 0x66};
@@ -58,7 +58,8 @@ vec3_t			r_pright, r_pup, r_ppn;
 R_InitParticles
 ===============
 */
-void R_InitParticles (void)
+void
+R_InitParticles ( void )
 {
 	int		i;
 
@@ -80,7 +81,8 @@ void R_InitParticles (void)
 }
 
 #ifdef QUAKE2
-void R_DarkFieldParticles (entity_t *ent)
+void
+R_DarkFieldParticles ( entity_t *ent )
 {
 	int			i, j, k;
 	particle_t	*p;
@@ -114,7 +116,7 @@ void R_DarkFieldParticles (entity_t *ent)
 				p->org[1] = org[1] + j + (rand()&3);
 				p->org[2] = org[2] + k + (rand()&3);
 
-				VectorNormalize (dir);						
+				VectorNormalize (dir);
 				vel = 50 + (rand()&63);
 				VectorScale (dir, vel, p->vel);
 			}
@@ -136,7 +138,8 @@ vec3_t	avelocity = {23, 7, 3};
 float	partstep = 0.01;
 float	timescale = 0.01;
 
-void R_EntityParticles (entity_t *ent)
+void
+R_EntityParticles ( entity_t *ent )
 {
 	int			count;
 	int			i;
@@ -183,9 +186,9 @@ void R_EntityParticles (entity_t *ent)
 		p->color = 0x6f;
 		p->type = pt_explode;
 
-		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;			
-		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;			
-		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;			
+		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;
+		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;
+		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;
 	}
 }
 
@@ -195,7 +198,8 @@ void R_EntityParticles (entity_t *ent)
 R_ClearParticles
 ===============
 */
-void R_ClearParticles (void)
+void
+R_ClearParticles ( void )
 {
 	int		i;
 
@@ -208,7 +212,8 @@ void R_ClearParticles (void)
 }
 
 
-void R_ReadPointFile_f (void)
+void
+R_ReadPointFile_f ( void )
 {
 	QFile	*f;
 	vec3_t	org;
@@ -266,7 +271,8 @@ R_ParseParticleEffect
 Parse an effect out of the server message
 ===============
 */
-void R_ParseParticleEffect (void)
+void
+R_ParseParticleEffect ( void )
 {
 	vec3_t		org, dir;
 	int			i, count, msgcount, color;
@@ -292,7 +298,8 @@ R_ParticleExplosion
 
 ===============
 */
-void R_ParticleExplosion (vec3_t org)
+void
+R_ParticleExplosion ( vec3_t org )
 {
 	int			i, j;
 	particle_t	*p;
@@ -336,7 +343,8 @@ R_ParticleExplosion2
 
 ===============
 */
-void R_ParticleExplosion2 (vec3_t org, int colorStart, int colorLength)
+void
+R_ParticleExplosion2 ( vec3_t org, int colorStart, int colorLength )
 {
 	int			i, j;
 	particle_t	*p;
@@ -370,7 +378,8 @@ R_BlobExplosion
 
 ===============
 */
-void R_BlobExplosion (vec3_t org)
+void
+R_BlobExplosion ( vec3_t org )
 {
 	int			i, j;
 	particle_t	*p;
@@ -415,7 +424,8 @@ R_RunParticleEffect
 
 ===============
 */
-void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
+void
+R_RunParticleEffect ( vec3_t org, vec3_t dir, int color, int count )
 {
 	int			i, j;
 	particle_t	*p;
@@ -429,7 +439,7 @@ void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 	else
 		scale = 1;
 #endif
-	
+
 	for (i=0 ; i<count ; i++) {
 		if (!free_particles)
 			return;
@@ -485,7 +495,8 @@ R_LavaSplash
 
 ===============
 */
-void R_LavaSplash (vec3_t org)
+void
+R_LavaSplash ( vec3_t org )
 {
 	int			i, j, k;
 	particle_t	*p;
@@ -531,7 +542,8 @@ R_TeleportSplash
 
 ===============
 */
-void R_TeleportSplash (vec3_t org)
+void
+R_TeleportSplash ( vec3_t org )
 {
 	int			i, j, k;
 	particle_t	*p;
@@ -575,7 +587,7 @@ void R_TeleportSplash (vec3_t org)
 	R_RocketTrail
 */
 void
-R_RocketTrail (vec3_t start, vec3_t end, int type, entity_t *ent)
+R_RocketTrail ( vec3_t start, vec3_t end, int type, entity_t *ent )
 {
 	vec3_t		vec;
 	float		len;
@@ -676,7 +688,7 @@ R_RocketTrail (vec3_t start, vec3_t end, int type, entity_t *ent)
 }
 
 #ifdef UQUAKE
-extern cvar_t  *sv_gravity;
+extern cvar_t	*sv_gravity;
 #endif
 
 /*
@@ -684,7 +696,8 @@ extern cvar_t  *sv_gravity;
 R_DrawParticles
 ===============
 */
-void R_DrawParticles (void)
+void
+R_DrawParticles ( void )
 {
 	particle_t		*p, *kill;
 	float			grav;
@@ -706,7 +719,7 @@ void R_DrawParticles (void)
 #endif
 
 	time3 = frametime * 15;
-	time2 = frametime * 10; // 15;
+	time2 = frametime * 10;		// 15;
 	time1 = frametime * 5;
 #ifdef QUAKEWORLD
 	grav = frametime * 800 * 0.05;
@@ -805,4 +818,3 @@ void R_DrawParticles (void)
 
 	D_EndParticles ();
 }
-

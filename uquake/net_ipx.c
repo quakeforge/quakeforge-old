@@ -68,9 +68,9 @@ typedef struct
 
 struct sockaddr_ipx
 {
-    short			sipx_family;
+	short			sipx_family;
 	IPXaddr			sipx_addr;
-    char			sipx_zero[2];
+	char			sipx_zero[2];
 };
 #define sipx_port sipx_addr.socket
 
@@ -144,7 +144,8 @@ static PollProcedure pollProcedure = {NULL, 0.0, IPX_PollProcedure};
 
 //=============================================================================
 
-static void IPX_GetLocalAddress(IPXaddr *addr)
+static void
+IPX_GetLocalAddress ( IPXaddr *addr )
 {
 	regs.x.cs = ipx_cs;
 	regs.x.ip = ipx_ip;
@@ -157,7 +158,8 @@ static void IPX_GetLocalAddress(IPXaddr *addr)
 
 //=============================================================================
 
-static int IPX_GetLocalTarget(IPXaddr *addr, byte *localTarget)
+static int
+IPX_GetLocalTarget ( IPXaddr *addr, byte *localTarget )
 {
 	regs.x.cs = ipx_cs;
 	regs.x.ip = ipx_ip;
@@ -175,7 +177,8 @@ static int IPX_GetLocalTarget(IPXaddr *addr, byte *localTarget)
 
 //=============================================================================
 
-static void IPX_ListenForPacket(ECB *ecb)
+static void
+IPX_ListenForPacket ( ECB *ecb )
 {
 	regs.x.cs = ipx_cs;
 	regs.x.ip = ipx_ip;
@@ -187,7 +190,8 @@ static void IPX_ListenForPacket(ECB *ecb)
 
 //=============================================================================
 
-static void IPX_RelinquishControl(void)
+static void
+IPX_RelinquishControl ( void )
 {
 	regs.x.cs = ipx_cs;
 	regs.x.ip = ipx_ip;
@@ -196,7 +200,8 @@ static void IPX_RelinquishControl(void)
 }
 
 
-void IPX_PollProcedure(void)
+void
+IPX_PollProcedure ( void )
 {
 	IPX_RelinquishControl();
 	SchedulePollProcedure(&pollProcedure, 0.01);
@@ -204,7 +209,8 @@ void IPX_PollProcedure(void)
 
 //=============================================================================
 
-static void ProcessReadyList(int s)
+static void
+ProcessReadyList ( int s )
 {
 	int n;
 	ECB *ecb;
@@ -235,7 +241,8 @@ static void ProcessReadyList(int s)
 
 //=============================================================================
 
-int IPX_Init(void)
+int
+IPX_Init ( void )
 {
 	int s;
 	int n;
@@ -297,7 +304,7 @@ int IPX_Init(void)
 	SchedulePollProcedure(&pollProcedure, 0.01);
 
 	IPX_GetSocketAddr (net_controlsocket, &addr);
-	Q_strcpy(my_ipx_address,  IPX_AddrToString (&addr));
+	Q_strcpy(my_ipx_address, IPX_AddrToString (&addr));
 	colon = Q_strrchr (my_ipx_address, ':');
 	if (colon)
 		*colon = 0;
@@ -309,7 +316,8 @@ int IPX_Init(void)
 
 //=============================================================================
 
-void IPX_Shutdown(void)
+void
+IPX_Shutdown ( void )
 {
 	IPX_Listen (false);
 	IPX_CloseSocket (net_controlsocket);
@@ -318,7 +326,8 @@ void IPX_Shutdown(void)
 
 //=============================================================================
 
-void IPX_Listen (qboolean state)
+void
+IPX_Listen ( qboolean state )
 {
 	// enable listening
 	if (state)
@@ -339,7 +348,8 @@ void IPX_Listen (qboolean state)
 
 //=============================================================================
 
-int IPX_OpenSocket(int port)
+int
+IPX_OpenSocket ( int port )
 {
 	int handle;
 	int n;
@@ -399,7 +409,8 @@ int IPX_OpenSocket(int port)
 
 //=============================================================================
 
-int IPX_CloseSocket(int handle)
+int
+IPX_CloseSocket ( int handle )
 {
 	// if there's a send in progress, give it one last chance
 	if (lma->socketbuffer[handle][0].ecb.inUse != 0)
@@ -420,7 +431,8 @@ int IPX_CloseSocket(int handle)
 
 //=============================================================================
 
-int IPX_Connect (int handle, struct qsockaddr *addr)
+int
+IPX_Connect ( int handle, struct qsockaddr *addr )
 {
 	IPXaddr ipxaddr;
 
@@ -436,7 +448,8 @@ int IPX_Connect (int handle, struct qsockaddr *addr)
 
 //=============================================================================
 
-int IPX_CheckNewConnections (void)
+int
+IPX_CheckNewConnections ( void )
 {
 	int n;
 
@@ -451,7 +464,8 @@ int IPX_CheckNewConnections (void)
 
 //=============================================================================
 
-int IPX_Read (int handle, byte *buf, int len, struct qsockaddr *addr)
+int
+IPX_Read ( int handle, byte *buf, int len, struct qsockaddr *addr )
 {
 	ECB		*ecb;
 	ipx_lowmem_buffer_t *rcvbuf;
@@ -500,7 +514,8 @@ tryagain:
 
 //=============================================================================
 
-int IPX_Broadcast (int handle, byte *buf, int len)
+int
+IPX_Broadcast ( int handle, byte *buf, int len )
 {
 	struct sockaddr_ipx addr;
 	int ret;
@@ -515,7 +530,8 @@ int IPX_Broadcast (int handle, byte *buf, int len)
 
 //=============================================================================
 
-int IPX_Write (int handle, byte *buf, int len, struct qsockaddr *addr)
+int
+IPX_Write ( int handle, byte *buf, int len, struct qsockaddr *addr )
 {
 	// has the previous send completed?
 	while (lma->socketbuffer[handle][0].ecb.inUse != 0)
@@ -523,17 +539,17 @@ int IPX_Write (int handle, byte *buf, int len, struct qsockaddr *addr)
 
 	switch (lma->socketbuffer[handle][0].ecb.completionCode)
 	{
-		case 0x00: // success
-		case 0xfc: // request cancelled
+		case 0x00:	// success
+		case 0xfc:	// request cancelled
 			break;
 
-		case 0xfd: // malformed packet
+		case 0xfd:	// malformed packet
 		default:
 			Con_Printf("IPX driver send failure: %02x\n", lma->socketbuffer[handle][0].ecb.completionCode);
 			break;
 
-		case 0xfe: // packet undeliverable
-		case 0xff: // unable to send packet
+		case 0xfe:	// packet undeliverable
+		case 0xff:	// unable to send packet
 			Con_Printf("IPX lost route, trying to re-establish\n");
 
 			// look for a new route
@@ -580,7 +596,8 @@ int IPX_Write (int handle, byte *buf, int len, struct qsockaddr *addr)
 
 //=============================================================================
 
-char *IPX_AddrToString (struct qsockaddr *addr)
+char *
+IPX_AddrToString ( struct qsockaddr *addr )
 {
 	static char buf[28];
 
@@ -602,10 +619,11 @@ char *IPX_AddrToString (struct qsockaddr *addr)
 
 //=============================================================================
 
-int IPX_StringToAddr (char *string, struct qsockaddr *addr)
+int
+IPX_StringToAddr ( char *string, struct qsockaddr *addr )
 {
-	int  val;
-	char buf[3];
+	int		val;
+	char	buf[3];
 
 	buf[2] = 0;
 	Q_memset(addr, 0, sizeof(struct qsockaddr));
@@ -638,7 +656,8 @@ int IPX_StringToAddr (char *string, struct qsockaddr *addr)
 
 //=============================================================================
 
-int IPX_GetSocketAddr (int handle, struct qsockaddr *addr)
+int
+IPX_GetSocketAddr ( int handle, struct qsockaddr *addr )
 {
 	Q_memset(addr, 0, sizeof(struct qsockaddr));
 	addr->sa_family = AF_NETWARE;
@@ -649,7 +668,8 @@ int IPX_GetSocketAddr (int handle, struct qsockaddr *addr)
 
 //=============================================================================
 
-int IPX_GetNameFromAddr (struct qsockaddr *addr, char *name)
+int
+IPX_GetNameFromAddr ( struct qsockaddr *addr, char *name )
 {
 	Q_strcpy(name, IPX_AddrToString(addr));
 	return 0;
@@ -657,7 +677,8 @@ int IPX_GetNameFromAddr (struct qsockaddr *addr, char *name)
 
 //=============================================================================
 
-int IPX_GetAddrFromName (char *name, struct qsockaddr *addr)
+int
+IPX_GetAddrFromName ( char *name, struct qsockaddr *addr )
 {
 	int n;
 	char buf[32];
@@ -682,7 +703,8 @@ int IPX_GetAddrFromName (char *name, struct qsockaddr *addr)
 
 //=============================================================================
 
-int IPX_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
+int
+IPX_AddrCompare ( struct qsockaddr *addr1, struct qsockaddr *addr2 )
 {
 	if (addr1->sa_family != addr2->sa_family)
 		return -1;
@@ -698,13 +720,15 @@ int IPX_AddrCompare (struct qsockaddr *addr1, struct qsockaddr *addr2)
 
 //=============================================================================
 
-int IPX_GetSocketPort (struct qsockaddr *addr)
+int
+IPX_GetSocketPort ( struct qsockaddr *addr )
 {
 	return ntohs(((struct sockaddr_ipx *)addr)->sipx_port);
 }
 
 
-int IPX_SetSocketPort (struct qsockaddr *addr, int port)
+int
+IPX_SetSocketPort ( struct qsockaddr *addr, int port )
 {
 	((struct sockaddr_ipx *)addr)->sipx_port = htons(port);
 	return 0;

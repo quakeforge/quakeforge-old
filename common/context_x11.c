@@ -64,7 +64,7 @@ static int	x_disp_ref_count = 0;
 Display		*x_disp = NULL;
 
 qboolean
-x11_add_event(int event, void (*event_handler)(XEvent *))
+x11_add_event ( int event, void (*event_handler)(XEvent *) )
 {
 	if (event >= LASTEvent) {
 		printf("event: %d, LASTEvent: %d\n", event, LASTEvent);
@@ -78,7 +78,7 @@ x11_add_event(int event, void (*event_handler)(XEvent *))
 }
 
 qboolean
-x11_del_event(int event, void (*event_handler)(XEvent *))
+x11_del_event ( int event, void (*event_handler)(XEvent *) )
 {
 	if (event >= LASTEvent)
 		return false;
@@ -90,7 +90,7 @@ x11_del_event(int event, void (*event_handler)(XEvent *))
 }
 
 void
-x11_process_event( void )
+x11_process_event ( void )
 {
 	XEvent	x_event;
 
@@ -106,7 +106,7 @@ x11_process_event( void )
 }
 
 void
-x11_process_events(void)
+x11_process_events ( void )
 {
 	/* Get events from X server. */
 	while ( XPending( x_disp )) {
@@ -119,15 +119,15 @@ x11_process_events(void)
 // ========================================================================
 
 static void
-TragicDeath(int signal_num)
+TragicDeath ( int signal_num )
 {
-	//XCloseDisplay(x_disp);
-	//VID_Shutdown();
+//	XCloseDisplay(x_disp);
+//	VID_Shutdown();
 	Sys_Error("This death brought to you by the number %d\n", signal_num);
 }
 
 void
-x11_open_display( void )
+x11_open_display ( void )
 {
 	struct sigaction sa;
 
@@ -154,7 +154,7 @@ x11_open_display( void )
 }
 
 void
-x11_close_display( void )
+x11_close_display ( void )
 {
 	if (!--x_disp_ref_count) {
 		XCloseDisplay( x_disp );

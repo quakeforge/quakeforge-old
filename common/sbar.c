@@ -76,18 +76,18 @@ qboolean	sb_showteamscores;
 int			sb_lines;			// scan lines to draw
 
 #ifdef UQUAKE
-qpic_t      *rsb_invbar[2];
-qpic_t      *rsb_weapons[5];
-qpic_t      *rsb_items[2];
-qpic_t      *rsb_ammo[3];
-qpic_t      *rsb_teambord;		// PGM 01/19/97 - team color border
+qpic_t	*rsb_invbar[2];
+qpic_t	*rsb_weapons[5];
+qpic_t	*rsb_items[2];
+qpic_t	*rsb_ammo[3];
+qpic_t	*rsb_teambord;		// PGM 01/19/97 - team color border
 
 //MED 01/04/97 added two more weapons + 3 alternates for grenade launcher
-qpic_t      *hsb_weapons[7][5];   // 0 is active, 1 is owned, 2-5 are flashes
+qpic_t	*hsb_weapons[7][5];		// 0 is active, 1 is owned, 2-5 are flashes
 //MED 01/04/97 added array to simplify weapon parsing
-int         hipweapons[4] = {HIT_LASER_CANNON_BIT,HIT_MJOLNIR_BIT,4,HIT_PROXIMITY_GUN_BIT};
+int		hipweapons[4] = {HIT_LASER_CANNON_BIT,HIT_MJOLNIR_BIT,4,HIT_PROXIMITY_GUN_BIT};
 //MED 01/04/97 added hipnotic items array
-qpic_t      *hsb_items[2];
+qpic_t	*hsb_items[2];
 #endif
 
 #ifdef QUAKEWORLD
@@ -107,7 +107,8 @@ Sbar_ShowScores
 Tab key down
 ===============
 */
-void Sbar_ShowScores (void)
+void
+Sbar_ShowScores ( void )
 {
 	if (sb_showscores)
 		return;
@@ -123,7 +124,8 @@ Sbar_DontShowScores
 Tab key up
 ===============
 */
-void Sbar_DontShowScores (void)
+void
+Sbar_DontShowScores ( void )
 {
 	sb_showscores = false;
 	sb_updates = 0;
@@ -136,7 +138,8 @@ Sbar_ShowTeamScores
 Tab key down
 ===============
 */
-void Sbar_ShowTeamScores (void)
+void
+Sbar_ShowTeamScores ( void )
 {
 #ifdef QUAKEWORLD
 	if (sb_showteamscores)
@@ -154,7 +157,8 @@ Sbar_DontShowTeamScores
 Tab key up
 ===============
 */
-void Sbar_DontShowTeamScores (void)
+void
+Sbar_DontShowTeamScores ( void )
 {
 #ifdef QUAKEWORLD
 	sb_showteamscores = false;
@@ -167,7 +171,8 @@ void Sbar_DontShowTeamScores (void)
 Sbar_Changed
 ===============
 */
-void Sbar_Changed (void)
+void
+Sbar_Changed ( void )
 {
 	sb_updates = 0;	// update next frame
 }
@@ -177,7 +182,8 @@ void Sbar_Changed (void)
 Sbar_Init
 ===============
 */
-void Sbar_Init (void)
+void
+Sbar_Init ( void )
 {
 	int		i;
 
@@ -272,29 +278,28 @@ void Sbar_Init (void)
 #ifdef UQUAKE
 	if (hipnotic)	//MED 01/04/97 added new hipnotic weapons
 	{
-	  hsb_weapons[0][0] = Draw_PicFromWad ("inv_laser");
-	  hsb_weapons[0][1] = Draw_PicFromWad ("inv_mjolnir");
-	  hsb_weapons[0][2] = Draw_PicFromWad ("inv_gren_prox");
-	  hsb_weapons[0][3] = Draw_PicFromWad ("inv_prox_gren");
-	  hsb_weapons[0][4] = Draw_PicFromWad ("inv_prox");
+		hsb_weapons[0][0] = Draw_PicFromWad ("inv_laser");
+		hsb_weapons[0][1] = Draw_PicFromWad ("inv_mjolnir");
+		hsb_weapons[0][2] = Draw_PicFromWad ("inv_gren_prox");
+		hsb_weapons[0][3] = Draw_PicFromWad ("inv_prox_gren");
+		hsb_weapons[0][4] = Draw_PicFromWad ("inv_prox");
 
-	  hsb_weapons[1][0] = Draw_PicFromWad ("inv2_laser");
-	  hsb_weapons[1][1] = Draw_PicFromWad ("inv2_mjolnir");
-	  hsb_weapons[1][2] = Draw_PicFromWad ("inv2_gren_prox");
-	  hsb_weapons[1][3] = Draw_PicFromWad ("inv2_prox_gren");
-	  hsb_weapons[1][4] = Draw_PicFromWad ("inv2_prox");
+		hsb_weapons[1][0] = Draw_PicFromWad ("inv2_laser");
+		hsb_weapons[1][1] = Draw_PicFromWad ("inv2_mjolnir");
+		hsb_weapons[1][2] = Draw_PicFromWad ("inv2_gren_prox");
+		hsb_weapons[1][3] = Draw_PicFromWad ("inv2_prox_gren");
+		hsb_weapons[1][4] = Draw_PicFromWad ("inv2_prox");
 
-	  for (i=0 ; i<5 ; i++)
-	  {
-		 hsb_weapons[2+i][0] = Draw_PicFromWad (va("inva%i_laser",i+1));
-		 hsb_weapons[2+i][1] = Draw_PicFromWad (va("inva%i_mjolnir",i+1));
-		 hsb_weapons[2+i][2] = Draw_PicFromWad (va("inva%i_gren_prox",i+1));
-		 hsb_weapons[2+i][3] = Draw_PicFromWad (va("inva%i_prox_gren",i+1));
-		 hsb_weapons[2+i][4] = Draw_PicFromWad (va("inva%i_prox",i+1));
-	  }
+		for (i=0 ; i<5 ; i++) {
+			hsb_weapons[2+i][0] = Draw_PicFromWad (va("inva%i_laser",i+1));
+			hsb_weapons[2+i][1] = Draw_PicFromWad (va("inva%i_mjolnir",i+1));
+			hsb_weapons[2+i][2] = Draw_PicFromWad (va("inva%i_gren_prox",i+1));
+			hsb_weapons[2+i][3] = Draw_PicFromWad (va("inva%i_prox_gren",i+1));
+			hsb_weapons[2+i][4] = Draw_PicFromWad (va("inva%i_prox",i+1));
+		}
 
-	  hsb_items[0] = Draw_PicFromWad ("sb_wsuit");
-	  hsb_items[1] = Draw_PicFromWad ("sb_eshld");
+		hsb_items[0] = Draw_PicFromWad ("sb_wsuit");
+		hsb_items[1] = Draw_PicFromWad ("sb_eshld");
 	}
 
 	if (rogue)
@@ -309,10 +314,10 @@ void Sbar_Init (void)
 		rsb_weapons[4] = Draw_PicFromWad ("r_plasma");
 
 		rsb_items[0] = Draw_PicFromWad ("r_shield1");
-        rsb_items[1] = Draw_PicFromWad ("r_agrav1");
+		rsb_items[1] = Draw_PicFromWad ("r_agrav1");
 
 // PGM 01/19/97 - team color border
-        rsb_teambord = Draw_PicFromWad ("r_teambord");
+		rsb_teambord = Draw_PicFromWad ("r_teambord");
 // PGM 01/19/97 - team color border
 
 		rsb_ammo[0] = Draw_PicFromWad ("r_ammolava");
@@ -332,7 +337,8 @@ void Sbar_Init (void)
 Sbar_DrawPic
 =============
 */
-void Sbar_DrawPic (int x, int y, qpic_t *pic)
+void
+Sbar_DrawPic ( int x, int y, qpic_t *pic )
 {
 #ifdef UQUAKE
 	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
@@ -350,7 +356,8 @@ Sbar_DrawSubPic
 =============
 JACK: Draws a portion of the picture in the status bar.
 */
-void Sbar_DrawSubPic(int x, int y, qpic_t *pic,
+void
+Sbar_DrawSubPic ( int x, int y, qpic_t *pic,
 		int srcx, int srcy, int width, int height)
 {
 #ifdef UQUAKE
@@ -371,7 +378,8 @@ void Sbar_DrawSubPic(int x, int y, qpic_t *pic,
 Sbar_DrawTransPic
 =============
 */
-void Sbar_DrawTransPic (int x, int y, qpic_t *pic)
+void
+Sbar_DrawTransPic ( int x, int y, qpic_t *pic )
 {
 #ifdef UQUAKE
 	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
@@ -390,7 +398,8 @@ Sbar_DrawCharacter
 Draws one solid graphics character
 ================
 */
-void Sbar_DrawCharacter (int x, int y, int num)
+void
+Sbar_DrawCharacter ( int x, int y, int num )
 {
 #ifdef UQUAKE
 	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
@@ -407,7 +416,8 @@ void Sbar_DrawCharacter (int x, int y, int num)
 Sbar_DrawString
 ================
 */
-void Sbar_DrawString (int x, int y, char *str)
+void
+Sbar_DrawString ( int x, int y, char *str )
 {
 #ifdef UQUAKE
 	if ((cl_sbar->value && !cl.gametype == GAME_DEATHMATCH)
@@ -424,7 +434,8 @@ void Sbar_DrawString (int x, int y, char *str)
 Sbar_itoa
 =============
 */
-int Sbar_itoa (int num, char *buf)
+int
+Sbar_itoa ( int num, char *buf )
 {
 	char	*str;
 	int		pow10;
@@ -458,7 +469,8 @@ int Sbar_itoa (int num, char *buf)
 Sbar_DrawNum
 =============
 */
-void Sbar_DrawNum (int x, int y, int num, int digits, int color)
+void
+Sbar_DrawNum ( int x, int y, int num, int digits, int color )
 {
 	char			str[12];
 	char			*ptr;
@@ -514,7 +526,8 @@ Sbar_SortFrags
 ===============
 */
 #ifdef QUAKEWORLD
-void Sbar_SortFrags (qboolean includespec)
+void
+Sbar_SortFrags ( qboolean includespec )
 {
 	int		i, j, k;
 
@@ -542,7 +555,8 @@ void Sbar_SortFrags (qboolean includespec)
 			}
 }
 #else
-void Sbar_SortFrags (void)
+void
+Sbar_SortFrags ( void )
 {
 	int		i, j, k;
 
@@ -567,7 +581,8 @@ void Sbar_SortFrags (void)
 }
 #endif	// QUAKEWORLD
 
-void Sbar_SortTeams (void)
+void
+Sbar_SortTeams ( void )
 {
 #ifdef QUAKEWORLD
 	int				i, j, k;
@@ -598,14 +613,14 @@ void Sbar_SortTeams (void)
 		t[16] = 0;
 		strncpy(t, Info_ValueForKey(s->userinfo, "team"), 16);
 		if (!t || !t[0])
-			continue; // not on team
+			continue;	// not on team
 		for (j = 0; j < scoreboardteams; j++)
 			if (!strcmp(teams[j].team, t)) {
 				teams[j].frags += s->frags;
 				teams[j].players++;
 				goto addpinginfo;
 			}
-		if (j == scoreboardteams) { // must add him
+		if (j == scoreboardteams) {	// must add him
 			j = scoreboardteams++;
 			strcpy(teams[j].team, t);
 			teams[j].frags = s->frags;
@@ -634,7 +649,8 @@ addpinginfo:
 #endif	// QUAKEWORLD
 }
 
-int	Sbar_ColorForMap (int m)
+int
+Sbar_ColorForMap ( int m )
 {
 #ifdef QUAKEWORLD
 	m = (m < 0) ? 0 : ((m > 13) ? 13 : m);
@@ -650,7 +666,8 @@ int	Sbar_ColorForMap (int m)
 Sbar_DrawScoreboard
 ===============
 */
-void Sbar_DrawScoreboard (void)
+void
+Sbar_DrawScoreboard ( void )
 {
 	char	str[80];
 	int		minutes, seconds, tens, units;
@@ -699,17 +716,18 @@ void Sbar_DrawScoreboard (void)
 Sbar_DrawInventory
 ===============
 */
-void Sbar_DrawInventory (void)
+void
+Sbar_DrawInventory ( void )
 {
 	int		i;
 	char		num[6];
 	float		time;
 	int		flashon;
 	qboolean	headsup = false;
-	qboolean    	hudswap = false;
+	qboolean	hudswap = false;
 
 	headsup = !(cl_sbar->value || (scr_viewsize->value < 100));
-	hudswap = cl_hudswap->value; // Get that nasty float out :)
+	hudswap = cl_hudswap->value;	// Get that nasty float out :)
 
 #ifdef UQUAKE
 	if (hipnotic)
@@ -728,7 +746,7 @@ void Sbar_DrawInventory (void)
 #else
 	if (!headsup)
 		Sbar_DrawPic (0, -24, sb_ibar);
-#endif // !QUAKEWORLD
+#endif	// !QUAKEWORLD
 // weapons
 	for (i=0 ; i<7 ; i++)
 	{
@@ -761,17 +779,16 @@ void Sbar_DrawInventory (void)
 #ifdef UQUAKE
 	// hipnotic weapons
 	if (hipnotic) {
-
 		int grenadeflashing=0;
 
-	  	for (i=0 ; i<4 ; i++) {
+		for (i=0 ; i<4 ; i++) {
 			if (cl.stats[STAT_ITEMS] & (1<<hipweapons[i]) ) {
 				time = cl.item_gettime[hipweapons[i]];
 				flashon = (int)((cl.time - time)*10);
 				if (flashon < 0)
 					flashon = 0;
 				if (flashon >= 10) {
-					if ( cl.stats[STAT_ACTIVEWEAPON] == (1<<hipweapons[i])  )
+					if ( cl.stats[STAT_ACTIVEWEAPON] == (1<<hipweapons[i]) )
 						flashon = 1;
 					else
 						flashon = 0;
@@ -798,10 +815,10 @@ void Sbar_DrawInventory (void)
 				} else
 					Sbar_DrawPic (176 + (i*24), -16, hsb_weapons[flashon][i]);
 				if (flashon > 1)
-	               sb_updates = 0;	// force update to remove flash
+					sb_updates = 0;	// force update to remove flash
 			}
 		}
-    }
+	}
 
 	if (rogue) {
 		// check for powered up weapon.
@@ -864,7 +881,7 @@ void Sbar_DrawInventory (void)
 			for (i=0 ; i<2 ; i++) {
 				if (cl.stats[STAT_ITEMS] & (1<<(24+i))) {
 					time = cl.item_gettime[24+i];
-					if (time && time > cl.time - 2 && flashon ) {  // flash frame
+					if (time && time > cl.time - 2 && flashon ) {	// flash frame
 						sb_updates = 0;
 					} else {
 						Sbar_DrawPic (288 + i*16, -16, hsb_items[i]);
@@ -918,7 +935,8 @@ void Sbar_DrawInventory (void)
 Sbar_DrawFrags
 ===============
 */
-void Sbar_DrawFrags (void)
+void
+Sbar_DrawFrags ( void )
 {
 	int				i, k, l;
 	int				top, bottom;
@@ -998,7 +1016,8 @@ void Sbar_DrawFrags (void)
 Sbar_DrawFace
 ===============
 */
-void Sbar_DrawFace (void)
+void
+Sbar_DrawFace ( void )
 {
 	int		f, anim;
 
@@ -1053,7 +1072,7 @@ void Sbar_DrawFace (void)
 		return;
 	}
 	// PGM 01/19/97 - team color drawing
-#endif // !QUAKEWORLD
+#endif	// !QUAKEWORLD
 
 	if ( (cl.stats[STAT_ITEMS] & (IT_INVISIBILITY | IT_INVULNERABILITY) )
 		== (IT_INVISIBILITY | IT_INVULNERABILITY) ) {
@@ -1095,7 +1114,8 @@ void Sbar_DrawFace (void)
 Sbar_DrawNormal
 =============
 */
-void Sbar_DrawNormal (void)
+void
+Sbar_DrawNormal ( void )
 {
 	if (cl_sbar->value || scr_viewsize->value<100 || rogue || hipnotic)
 	Sbar_DrawPic (0, 0, sb_sbar);
@@ -1185,16 +1205,17 @@ void Sbar_DrawNormal (void)
 Sbar_Draw
 ===============
 */
-void Sbar_Draw (void)
+void
+Sbar_Draw ( void )
 {
 	qboolean headsup = false;
 #ifdef QUAKEWORLD
 	char st[512];
 #endif
 
-	headsup = !(cl_sbar->value || rogue || hipnotic 
+	headsup = !(cl_sbar->value || rogue || hipnotic
 			|| scr_viewsize->value<100);
-	
+
 //	if ((sb_updates >= vid.numpages) && !headsup)
 //		return;
 
@@ -1300,7 +1321,8 @@ Sbar_IntermissionNumber
 
 ==================
 */
-void Sbar_IntermissionNumber (int x, int y, int num, int digits, int color)
+void
+Sbar_IntermissionNumber ( int x, int y, int num, int digits, int color )
 {
 	char			str[12];
 	char			*ptr;
@@ -1333,7 +1355,8 @@ team frags
 added by Zoid
 ==================
 */
-void Sbar_TeamOverlay (void)
+void
+Sbar_TeamOverlay ( void )
 {
 #ifdef QUAKEWORLD
 	qpic_t			*pic;
@@ -1342,7 +1365,7 @@ void Sbar_TeamOverlay (void)
 	char			num[12];
 	int				teamplay;
 	char			team[5];
-	team_t  		*tm;
+	team_t			*tm;
 	int plow, phigh, pavg;
 
 // request new ping times every two second
@@ -1429,7 +1452,8 @@ ping time frags name
 ==================
 */
 #ifdef QUAKEWORLD
-void Sbar_DeathmatchOverlay (int start)
+void
+Sbar_DeathmatchOverlay ( int start )
 {
 	qpic_t			*pic;
 	int				i, k, l;
@@ -1478,7 +1502,7 @@ void Sbar_DeathmatchOverlay (int start)
 	if (teamplay)
 	{
 		x = 4;
-//                            0    40 64   104   152  192
+//		                      0    40 64   104   152  192
 		Draw_String ( x , y, "ping pl time frags team name");
 		y += 8;
 //		Draw_String ( x , y, "---- -- ---- ----- ---- ----------------");
@@ -1488,7 +1512,7 @@ void Sbar_DeathmatchOverlay (int start)
 	else
 	{
 		x = 16;
-//                            0    40 64   104   152
+//		                      0    40 64   104   152
 		Draw_String ( x , y, "ping pl time frags name");
 		y += 8;
 //		Draw_String ( x , y, "---- -- ---- ----- ----------------");
@@ -1583,7 +1607,7 @@ void Sbar_DeathmatchOverlay (int start)
 		y += skip;
 	}
 
-	if (y >= vid.height-10) // we ran over the screen size, squish
+	if (y >= vid.height-10)	// we ran over the screen size, squish
 		largegame = true;
 }
 
@@ -1596,7 +1620,8 @@ frags team name
 displayed to right of status bar if there's room
 ==================
 */
-void Sbar_MiniDeathmatchOverlay (void)
+void
+Sbar_MiniDeathmatchOverlay ( void )
 {
 	int				i, k;
 	int				top, bottom;
@@ -1610,7 +1635,7 @@ void Sbar_MiniDeathmatchOverlay (void)
 	team_t			*tm;
 
 	if (vid.width < 512 || !sb_lines)
-		return; // not enuff room
+		return;	// not enuff room
 
 	teamplay = atoi(Info_ValueForKey(cl.serverinfo, "teamplay"));
 
@@ -1623,22 +1648,22 @@ void Sbar_MiniDeathmatchOverlay (void)
 		Sbar_SortTeams();
 
 	if (!scoreboardlines)
-		return; // no one there?
+		return;	// no one there?
 
 // draw the text
 	y = vid.height - sb_lines - 1;
 	numlines = sb_lines/8;
 	if (numlines < 3)
-		return; // not enough room
+		return;	// not enough room
 
 	// find us
 	for (i=0 ; i < scoreboardlines; i++)
 		if (fragsort[i] == cl.playernum)
 			break;
 
-	if (i == scoreboardlines) // we're not there, we are probably a spectator, just display top
+	if (i == scoreboardlines)	// we're not there, we are probably a spectator, just display top
 		i = 0;
-	else // figure out start
+	else	// figure out start
 		i = i - numlines/2;
 
 	if (i > scoreboardlines - numlines)
@@ -1733,7 +1758,8 @@ void Sbar_MiniDeathmatchOverlay (void)
 
 }
 #else
-void Sbar_DeathmatchOverlay (int start)
+void
+Sbar_DeathmatchOverlay ( int start )
 {
 	qpic_t			*pic;
 	int				i, k, l;
@@ -1814,7 +1840,8 @@ Sbar_MiniDeathmatchOverlay
 
 ==================
 */
-void Sbar_MiniDeathmatchOverlay (void)
+void
+Sbar_MiniDeathmatchOverlay ( void )
 {
 	int		i, k, l;
 	int		top, bottom;
@@ -1844,15 +1871,15 @@ void Sbar_MiniDeathmatchOverlay (void)
 		if (fragsort[i] == cl.playernum)
 			break;
 
-    if (i == scoreboardlines) // we're not there
-            i = 0;
-    else // figure out start
-            i = i - numlines/2;
+	if (i == scoreboardlines)	// we're not there
+		i = 0;
+	else	// figure out start
+		i = i - numlines/2;
 
-    if (i > scoreboardlines - numlines)
-            i = scoreboardlines - numlines;
-    if (i < 0)
-            i = 0;
+	if (i > scoreboardlines - numlines)
+		i = scoreboardlines - numlines;
+	if (i < 0)
+		i = 0;
 
 	x = 324;
 	for (/* */; i < scoreboardlines && y < vid.height - 8 ; i++)
@@ -1909,13 +1936,15 @@ void Sbar_MiniDeathmatchOverlay (void)
 	}
 }
 #endif	// QUAKEWORLD
+
 /*
 ==================
 Sbar_IntermissionOverlay
 
 ==================
 */
-void Sbar_IntermissionOverlay (void)
+void
+Sbar_IntermissionOverlay ( void )
 {
 #ifdef UQUAKE
 	qpic_t	*pic;
@@ -1968,7 +1997,8 @@ Sbar_FinaleOverlay
 
 ==================
 */
-void Sbar_FinaleOverlay (void)
+void
+Sbar_FinaleOverlay ( void )
 {
 	qpic_t	*pic;
 

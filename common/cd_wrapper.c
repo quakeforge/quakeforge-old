@@ -41,7 +41,8 @@ static void CD_f(void);
 #endif
 
 #ifndef CD_f_DEFINED
-static void CD_f(void)
+static void
+CD_f ( void )
 {
 	char	*command;
 	int	ret, n;

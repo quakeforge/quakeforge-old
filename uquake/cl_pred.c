@@ -40,6 +40,7 @@ extern	frame_t		*view_frame;
 CL_PredictUsercmd
 ==============
 */
-void CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u, qboolean spectator)
+void
+CL_PredictUsercmd ( player_state_t *from, player_state_t *to, usercmd_t *u, qboolean spectator )
 {
 }

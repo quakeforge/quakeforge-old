@@ -42,7 +42,9 @@
 server_entry_t	slist[MAX_SERVER_LIST];
 extern cvar_t *fs_basepath;
 
-void Server_List_Init(void) { // Do this or everything else will sig11
+void
+Server_List_Init ( void )
+{	// Do this or everything else will sig11
 	int i;
 	for(i=0;i < MAX_SERVER_LIST;i++) {
 		slist[i].server = '\0';
@@ -52,7 +54,9 @@ void Server_List_Init(void) { // Do this or everything else will sig11
 }
 
 
-void Server_List_Shutdown(void) {  // I am the liberator of memory.
+void
+Server_List_Shutdown ( void )
+{	// I am the liberator of memory.
 	int i;
 	QFile *f;
 	if (!(f = Qopen(va("%s/servers.txt",fs_basepath->string),"w"))) {
@@ -68,9 +72,11 @@ void Server_List_Shutdown(void) {  // I am the liberator of memory.
 			free(slist[i].description);
 	}
 }
-			
 
-int Server_List_Set(int i,char *addr,char *desc) {
+
+int
+Server_List_Set ( int i,char *addr,char *desc )
+{
 	int len;
 	if (i < MAX_SERVER_LIST && i >= 0) {
 		if (slist[i].server)	// (Re)allocate memory first
@@ -82,11 +88,14 @@ int Server_List_Set(int i,char *addr,char *desc) {
 		slist[i].description = malloc(len + 1);
 		strcpy(slist[i].server,addr);
 		strcpy(slist[i].description,desc);
-		return 0;  // Yay, we haven't segfaulted yet.
+		return 0;	// Yay, we haven't segfaulted yet.
 	}
-	return 1; // Out of range
+	return 1;	// Out of range
 }
-int Server_List_Reset_NoFree (int i) { //NEVER USE THIS UNLESS REALLY NEEDED
+
+int
+Server_List_Reset_NoFree ( int i )
+{	//NEVER USE THIS UNLESS REALLY NEEDED
 	if (i < MAX_SERVER_LIST && i >= 0) {
 		slist[i].server = '\0';
 		slist[i].description = '\0';
@@ -96,7 +105,9 @@ int Server_List_Reset_NoFree (int i) { //NEVER USE THIS UNLESS REALLY NEEDED
 	return 1;
 }
 
-int Server_List_Reset (int i) {
+int
+Server_List_Reset ( int i )
+{
 	if (i < MAX_SERVER_LIST && i >= 0) {
 		if (slist[i].server)
 			free(slist[i].server);
@@ -110,24 +121,30 @@ int Server_List_Reset (int i) {
 	return 1;
 }
 
-void Server_List_Switch(int a,int b) {
+void
+Server_List_Switch ( int a, int b )
+{
 	server_entry_t temp;
 	memcpy(&temp,&slist[a],sizeof(temp));
 	memcpy(&slist[a],&slist[b],sizeof(temp));
 	memcpy(&slist[b],&temp,sizeof(temp));
 }
 
-int Server_List_Len (void) {
+int
+Server_List_Len ( void )
+{
 	int i;
 	for (i = 0; i < MAX_SERVER_LIST && slist[i].server;i++)
 		;
 	return i;
 }
 
-int Server_List_Load (QFile *f) { // This could get messy
+int
+Server_List_Load ( QFile *f )
+{	// This could get messy
 	int serv = 0;
 	char line[256]; /* Long lines get truncated. */
-	int c = ' ';    /* int so it can be compared to EOF properly*/
+	int c = ' ';	/* int so it can be compared to EOF properly*/
 	char *start;
 	int len;
 	int i;
@@ -147,7 +164,7 @@ int Server_List_Load (QFile *f) { // This could get messy
 				i++;
 			}
 		}
-		line[i - 1] = '\0'; // Now we can parse it
+		line[i - 1] = '\0';		// Now we can parse it
 		if ((start = gettokstart(line,1,' ')) != NULL) {
 			len = gettoklen(line,1,' ');
 			addr = malloc(len + 1);
@@ -160,14 +177,16 @@ int Server_List_Load (QFile *f) { // This could get messy
 				Server_List_Set(serv,addr,"Unknown");
 			}
 			serv++;
-		} 
-		if (c == EOF)  // We're done
+		}
+		if (c == EOF)	// We're done
 			return 0;
 	}
 	return 0;
 }
 
-int Server_List_Save(QFile *f) {
+int
+Server_List_Save ( QFile *f )
+{
 	int i;
 	for(i=0;i < MAX_SERVER_LIST;i++) {
 		if (slist[i].server)
@@ -177,9 +196,12 @@ int Server_List_Save(QFile *f) {
 	}
 	return 0;
 }
-char *gettokstart (char *str, int req, char delim) {
+
+char *
+gettokstart ( char *str, int req, char delim )
+{
 	char *start = str;
-	
+
 	int tok = 1;
 
 	while (*start == delim) {
@@ -187,9 +209,9 @@ char *gettokstart (char *str, int req, char delim) {
 	}
 	if (*start == '\0')
 		return '\0';
-	while (tok < req) { //Stop when we get to the requested token
-		if (*++start == delim) { //Increment pointer and test
-			while (*start == delim) { //Get to next token
+	while (tok < req) {		//Stop when we get to the requested token
+		if (*++start == delim) {	//Increment pointer and test
+			while (*start == delim) {	//Get to next token
 				start++;
 			}
 			tok++;
@@ -201,11 +223,13 @@ char *gettokstart (char *str, int req, char delim) {
 	return start;
 }
 
-int gettoklen (char *str, int req, char delim) {
+int
+gettoklen ( char *str, int req, char delim )
+{
 	char *start = 0;
-	
+
 	int len = 0;
-	
+
 	start = gettokstart(str,req,delim);
 	if (start == '\0') {
 		return 0;

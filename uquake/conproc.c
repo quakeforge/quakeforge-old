@@ -42,7 +42,8 @@ int CharToCode (char c);
 BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy);
 
 
-void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
+void
+InitConProc ( HANDLE hFile, HANDLE heventParent, HANDLE heventChild )
 {
 	DWORD	dwID;
 
@@ -64,11 +65,11 @@ void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
 	}
 
 	if (!CreateThread (NULL,
-					   0,
-					   (LPTHREAD_START_ROUTINE) RequestProc,
-					   0,
-					   0,
-					   &dwID))
+					0,
+					(LPTHREAD_START_ROUTINE) RequestProc,
+					0,
+					0,
+					&dwID))
 	{
 		CloseHandle (heventDone);
 		Con_SafePrintf ("Couldn't create QHOST thread\n");
@@ -84,14 +85,16 @@ void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
 }
 
 
-void DeinitConProc (void)
+void
+DeinitConProc ( void )
 {
 	if (heventDone)
 		SetEvent (heventDone);
 }
 
 
-DWORD RequestProc (DWORD dwNichts)
+DWORD
+RequestProc ( DWORD dwNichts )
 {
 	int		*pBuffer;
 	DWORD	dwRet;
@@ -131,7 +134,7 @@ DWORD RequestProc (DWORD dwNichts)
 				iBeginLine = pBuffer[1];
 				iEndLine = pBuffer[2];
 				pBuffer[0] = ReadText ((LPTSTR) (pBuffer + 1), iBeginLine,
-									   iEndLine);
+									iEndLine);
 				break;
 
 			case CCOM_GET_SCR_LINES:
@@ -153,7 +156,8 @@ DWORD RequestProc (DWORD dwNichts)
 }
 
 
-LPVOID GetMappedBuffer (HANDLE hfileBuffer)
+LPVOID
+GetMappedBuffer ( HANDLE hfileBuffer )
 {
 	LPVOID pBuffer;
 
@@ -164,13 +168,15 @@ LPVOID GetMappedBuffer (HANDLE hfileBuffer)
 }
 
 
-void ReleaseMappedBuffer (LPVOID pBuffer)
+void
+ReleaseMappedBuffer ( LPVOID pBuffer )
 {
 	UnmapViewOfFile (pBuffer);
 }
 
 
-BOOL GetScreenBufferLines (int *piLines)
+BOOL
+GetScreenBufferLines ( int *piLines )
 {
 	CONSOLE_SCREEN_BUFFER_INFO	info;
 	BOOL						bRet;
@@ -184,14 +190,16 @@ BOOL GetScreenBufferLines (int *piLines)
 }
 
 
-BOOL SetScreenBufferLines (int iLines)
+BOOL
+SetScreenBufferLines ( int iLines )
 {
 
 	return SetConsoleCXCY (hStdout, 80, iLines);
 }
 
 
-BOOL ReadText (LPTSTR pszText, int iBeginLine, int iEndLine)
+BOOL
+ReadText ( LPTSTR pszText, int iBeginLine, int iEndLine )
 {
 	COORD	coord;
 	DWORD	dwRead;
@@ -215,7 +223,8 @@ BOOL ReadText (LPTSTR pszText, int iBeginLine, int iEndLine)
 }
 
 
-BOOL WriteText (LPCTSTR szText)
+BOOL
+WriteText ( LPCTSTR szText )
 {
 	DWORD			dwWritten;
 	INPUT_RECORD	rec;
@@ -261,7 +270,8 @@ BOOL WriteText (LPCTSTR szText)
 }
 
 
-int CharToCode (char c)
+int
+CharToCode ( char c )
 {
 	char upper;
 
@@ -286,7 +296,8 @@ int CharToCode (char c)
 }
 
 
-BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy)
+BOOL
+SetConsoleCXCY ( HANDLE hStdout, int cx, int cy )
 {
 	CONSOLE_SCREEN_BUFFER_INFO	info;
 	COORD						coordMax;
@@ -303,10 +314,10 @@ BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy)
 		return FALSE;
 
 // height
-    info.srWindow.Left = 0;
-    info.srWindow.Right = info.dwSize.X - 1;
-    info.srWindow.Top = 0;
-    info.srWindow.Bottom = cy - 1;
+	info.srWindow.Left = 0;
+	info.srWindow.Right = info.dwSize.X - 1;
+	info.srWindow.Top = 0;
+	info.srWindow.Bottom = cy - 1;
 
 	if (cy < info.dwSize.Y)
 	{
@@ -317,9 +328,9 @@ BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy)
 
 		if (!SetConsoleScreenBufferSize(hStdout, info.dwSize))
 			return FALSE;
-    }
-    else if (cy > info.dwSize.Y)
-    {
+	}
+	else if (cy > info.dwSize.Y)
+	{
 		info.dwSize.Y = cy;
 
 		if (!SetConsoleScreenBufferSize(hStdout, info.dwSize))
@@ -327,7 +338,7 @@ BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy)
 
 		if (!SetConsoleWindowInfo(hStdout, TRUE, &info.srWindow))
 			return FALSE;
-    }
+	}
 
 	if (!GetConsoleScreenBufferInfo(hStdout, &info))
 		return FALSE;
@@ -361,4 +372,3 @@ BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy)
 
 	return TRUE;
 }
-
