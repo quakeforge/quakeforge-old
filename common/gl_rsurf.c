@@ -51,7 +51,7 @@ unsigned	cblocklights[3][18*18];
 #define	BLOCK_WIDTH		128
 #define	BLOCK_HEIGHT	128
 
-#define	MAX_LIGHTMAPS	64
+#define	MAX_LIGHTMAPS	256  /*64*/
 int			active_lightmaps;
 
 typedef struct glRect_s {
