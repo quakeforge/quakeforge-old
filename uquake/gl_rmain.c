@@ -1094,7 +1094,7 @@ void R_RenderView (void)
 //>>>>>>> 1.3
 
 	// Fixme: the last argument should be a cvar... r_fog_gamma
-	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.10};
+	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.15};
 
 	if (r_norefresh.value)
 		return;
@@ -1135,10 +1135,9 @@ display _much_ prettier. small hack
 if(r_fog.value) {
         
 	// fixme: would be nice if the user could select what fogmode... (r_fog_mode)
-	// and if they want fog or not... (r_fog)
         glFogi (GL_FOG_MODE, GL_EXP2);
         glFogfv (GL_FOG_COLOR, colors);
-	// fixme: GL_FOG_DENSITY should have r_fog_density cvar
+	// fixme: GL_FOG_DENSITY should have r_fog_density var
         glFogf (GL_FOG_DENSITY, .0005); 
         glEnable(GL_FOG);
 }
