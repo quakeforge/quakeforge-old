@@ -155,11 +155,7 @@ VID_Shutdown(void)
 {
 	Con_Printf("VID_Shutdown\n");
 
-	if(x_disp && ctx)
-	{
-		glXDestroyContext(x_disp, ctx);
-		ctx = NULL;
-	}
+	glXDestroyContext(x_disp, ctx);
 
 #ifdef HAS_DGA
 	if (hasvidmode) {
