@@ -23,6 +23,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <ctype.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <qtypes.h>
 #include <quakefs.h>
 #include <sys.h>
@@ -260,6 +262,36 @@ void COM_CopyFile (char *netpath, char *cachepath)
 	fclose (out);
 }
 
+
+gzFile *COM_gzOpenRead(const char *path, int offs, int len)
+{
+	int fd=open(path,O_RDONLY);
+	unsigned char id[2];
+	unsigned char len_bytes[4];
+	if (fd==-1) {
+		Sys_Error ("Couldn't open %s", path);
+		return 0;
+	}
+	if (offs<0 || len<0) {
+		// normal file
+		offs=0;
+		len=lseek(fd,0,SEEK_END);
+		lseek(fd,0,SEEK_SET);
+	}
+	read(fd,id,2);
+	if (id[0]==0x1f && id[1]==0x8b) {
+		lseek(fd,offs+len-4,SEEK_SET);
+		read(fd,len_bytes,4);
+		len=((len_bytes[3]<<24)
+			 |(len_bytes[2]<<16)
+			 |(len_bytes[1]<<8)
+			 |(len_bytes[0]));
+	}
+	lseek(fd,offs,SEEK_SET);
+	com_filesize=len;
+	return gzdopen(fd,"rb");
+}
+
 /*
 ===========
 COM_FindFile
@@ -270,7 +302,7 @@ Sets com_filesize and one of handle or file
 */
 int file_from_pak; // global indicating file came from pack file ZOID
 
-int COM_FOpenFile (char *filename, FILE **file)
+int COM_FOpenFile (char *filename, gzFile **gzfile)
 {
 	searchpath_t	*search;
 	char		netpath[MAX_OSPATH];
@@ -305,11 +337,13 @@ int COM_FOpenFile (char *filename, FILE **file)
 					if(developer.value)
 						Sys_Printf ("PackFile: %s : %s\n",pak->filename, fn);
 				// open a new file on the pakfile
-					*file = fopen (pak->filename, "rb");
-					if (!*file)
-						Sys_Error ("Couldn't reopen %s", pak->filename);
-					fseek (*file, pak->files[i].filepos, SEEK_SET);
-					com_filesize = pak->files[i].filelen;
+					//*file = fopen (pak->filename, "rb");
+					//if (!*file)
+					//	Sys_Error ("Couldn't reopen %s", pak->filename);
+					//fseek (*file, pak->files[i].filepos, SEEK_SET);
+					//com_filesize = pak->files[i].filelen;
+					*gzfile=COM_gzOpenRead(pak->filename,pak->files[i].filepos,
+										   pak->files[i].filelen);
 					file_from_pak = 1;
 					return com_filesize;
 				}
@@ -333,15 +367,17 @@ int COM_FOpenFile (char *filename, FILE **file)
 			if(developer.value)
 				Sys_Printf ("FindFile: %s\n",netpath);
 
-			*file = fopen (netpath, "rb");
-			return COM_filelength (*file);
+			//*file = fopen (netpath, "rb");
+			//return COM_filelength (*file);
+			*gzfile=COM_gzOpenRead(netpath,-1,-1);
+			return com_filesize;
 		}
 		
 	}
 	
 	Sys_Printf ("FindFile: can't find %s\n", filename);
 	
-	*file = NULL;
+	*gzfile = NULL;
 	com_filesize = -1;
 	return -1;
 }
@@ -359,7 +395,7 @@ byte	*loadbuf;
 int		loadsize;
 byte *COM_LoadFile (char *path, int usehunk)
 {
-	FILE	*h;
+	gzFile	*h;
 	byte	*buf;
 	char	base[32];
 	int		len;
@@ -399,8 +435,8 @@ byte *COM_LoadFile (char *path, int usehunk)
 #ifndef SERVERONLY
 	Draw_BeginDisc ();
 #endif
-	fread (buf, 1, len, h);
-	fclose (h);
+	gzread (h, buf, len);
+	gzclose (h);
 #ifndef SERVERONLY
 	Draw_EndDisc ();
 #endif

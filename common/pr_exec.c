@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #include <sys.h>
+#include <console.h>
 
 typedef struct
 {
@@ -371,9 +372,9 @@ PR_ExecuteProgram
 */
 void PR_ExecuteProgram (func_t fnum)
 {
-	eval_t	*a, *b, *c;
+	eval_t	*a=0, *b=0, *c=0;
 	int			s;
-	dstatement_t	*st;
+	dstatement_t	*st=0;
 	dfunction_t	*f, *newf;
 	int		runaway;
 	int		i;

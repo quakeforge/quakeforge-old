@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _QUAKEFS_H
 #define _QUAKEFS_H
 
+#include <zlib.h>
 
 //============================================================================
 
@@ -35,7 +36,7 @@ struct cache_user_s;
 extern	char	com_gamedir[MAX_OSPATH];
 
 void COM_WriteFile (char *filename, void *data, int len);
-int COM_FOpenFile (char *filename, FILE **file);
+int COM_FOpenFile (char *filename, gzFile **file);
 void COM_CloseFile (FILE *h);
 
 byte *COM_LoadStackFile (char *path, void *buffer, int bufsize);

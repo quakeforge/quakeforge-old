@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _SERVER_H
 #define _SERVER_H
 
+#include <zlib.h>
+
 #include <progs.h>
 
 #define	QW_SERVER
@@ -175,7 +177,7 @@ typedef struct client_s
 
 	client_frame_t		frames[UPDATE_BACKUP];	// updates can be deltad from here
 
-	FILE			*download;		// file being downloaded
+	gzFile			*download;		// file being downloaded
 	int			downloadsize;		// total bytes
 	int			downloadcount;		// bytes sent
 

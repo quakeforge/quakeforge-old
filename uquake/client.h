@@ -22,6 +22,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _CLIENT_H
 #define _CLIENT_H
 
+#include <zlib.h>
+
 #include <qtypes.h>
 #include <common.h>
 #include <quakefs.h>
@@ -129,7 +131,7 @@ typedef struct
 	qboolean	demoplayback;
 	qboolean	timedemo;
 	int			forcetrack;			// -1 = use normal cd track
-	FILE		*demofile;
+	gzFile		*demofile;
 	int			td_lastframe;		// to meter out one message a frame
 	int			td_startframe;		// host_framecount at start
 	float		td_starttime;		// realtime at second frame of timedemo

@@ -306,7 +306,7 @@ void SV_Map_f (void)
 {
 	char	level[MAX_QPATH];
 	char	expanded[MAX_QPATH];
-	FILE	*f;
+	gzFile	*f;
 
 	if (Cmd_Argc() != 2)
 	{
@@ -331,7 +331,7 @@ void SV_Map_f (void)
 		Con_Printf ("Can't find %s\n", expanded);
 		return;
 	}
-	fclose (f);
+	gzclose (f);
 
 	SV_BroadcastCommand ("changing\n");
 	SV_SendMessagesToAll ();

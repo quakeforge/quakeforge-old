@@ -113,6 +113,10 @@ fi
 
 dnl Checks for working -lm
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([math library (-lm) appears broken]))
+     
+dnl Check for working -lz
+AC_CHECK_LIB(z, gzopen, LIBS="$LIBS -lz"
+  HAS_ZLIB=yes, HAS_ZLIB=no, [$LIBS])
 
 dnl Checks for X11 support
 dnl (XoXus: Since vid_x.c relies on XShm being there, this now disables
@@ -435,7 +439,7 @@ dnl CFLAGS for release and devel versions
 if test "x$RELEASE" = xyes; then
    if test "x$GCC" = xyes; then
       AC_MSG_CHECKING(for special release compiler settings)
-      BASE_RELEASE_CFLAGS="-Wall -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
+      BASE_RELEASE_CFLAGS="-Wall -Werror -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
       case "${target}" in
          changequote(,)dnl
          i?86-*-*)
@@ -478,7 +482,7 @@ fi
 
 dnl We want warnings, lots of warnings...
 if test "x$GCC" = xyes; then
-   CFLAGS="$CFLAGS -Wall"
+   CFLAGS="$CFLAGS -Wall -Werror"
 fi
 #   CFLAGS="$CFLAGS -Wall -pedantic"
 

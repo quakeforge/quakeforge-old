@@ -551,11 +551,14 @@ Draws the console with the solid background
 */
 void Con_DrawConsole (int lines)
 {
-	int				i, j, x, y, n;
+	int				i, x, y;
 	int				rows;
 	char			*text;
 	int				row;
+#ifdef QUAKEWORLD
+	int				j, n;
 	char			dlbar[1024];
+#endif
 	
 	if (lines <= 0)
 		return;

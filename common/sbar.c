@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "cmd.h"
 #include <protocol.h>
 
+extern void M_DrawPic (int x, int y, qpic_t *pic);
+
 int			sb_updates;		// if >= vid.numpages, no update needed
 
 #define STAT_MINUS		10	// num frame for '-' stats digit
@@ -655,7 +657,6 @@ void Sbar_SoloScoreboard (void)
 {
 	char	str[80];
 	int		minutes, seconds, tens, units;
-	int 	l;
 
 #ifdef QUAKEWORLD
 	Sbar_DrawPic (0, 0, sb_scorebar);
@@ -676,9 +677,11 @@ void Sbar_SoloScoreboard (void)
 	Sbar_DrawString (184, 4, str);
 
 #ifdef UQUAKE
-	// draw level name
-	l = strlen (cl.levelname);
-	Sbar_DrawString (232 - l*4, 12, cl.levelname);
+	{
+		// draw level name
+		int l = strlen (cl.levelname);
+		Sbar_DrawString (232 - l*4, 12, cl.levelname);
+	}
 #endif	// QUAKEWORLD
 }
 
@@ -1194,7 +1197,9 @@ Sbar_Draw
 void Sbar_Draw (void)
 {
 	qboolean headsup;
+#ifdef QUAKEWORLD
 	char st[512];
+#endif
 
 	headsup = !(cl_sbar.value || scr_viewsize.value<100);
 	if ((sb_updates >= vid.numpages) && !headsup)

@@ -533,7 +533,7 @@ void SV_NextDownload_f (void)
 	r = host_client->downloadsize - host_client->downloadcount;
 	if (r > 768)
 		r = 768;
-	r = fread (buffer, 1, r, host_client->download);
+	r = gzread (host_client->download, buffer, r);
 	ClientReliableWrite_Begin (host_client, svc_download, 6+r);
 	ClientReliableWrite_Short (host_client, r);
 
@@ -548,7 +548,7 @@ void SV_NextDownload_f (void)
 	if (host_client->downloadcount != host_client->downloadsize)
 		return;
 
-	fclose (host_client->download);
+	gzclose (host_client->download);
 	host_client->download = NULL;
 
 }
@@ -678,7 +678,7 @@ void SV_BeginDownload_f(void)
 	}
 
 	if (host_client->download) {
-		fclose (host_client->download);
+		gzclose (host_client->download);
 		host_client->download = NULL;
 	}
 
@@ -700,7 +700,7 @@ void SV_BeginDownload_f(void)
 		|| (strncmp(name, "maps/", 5) == 0 && file_from_pak))
 	{
 		if (host_client->download) {
-			fclose(host_client->download);
+			gzclose(host_client->download);
 			host_client->download = NULL;
 		}
 

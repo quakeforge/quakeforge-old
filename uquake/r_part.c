@@ -199,12 +199,13 @@ void R_ClearParticles (void)
 
 void R_ReadPointFile_f (void)
 {
-	FILE	*f;
+	gzFile	*f;
 	vec3_t	org;
 	int		r;
 	int		c;
 	particle_t	*p;
 	char	name[MAX_OSPATH];
+	char	buf[256];
 	
 	snprintf(name, sizeof(name),"maps/%s.pts", sv.name);
 
@@ -219,7 +220,9 @@ void R_ReadPointFile_f (void)
 	c = 0;
 	for ( ;; )
 	{
-		r = fscanf (f,"%f %f %f\n", &org[0], &org[1], &org[2]);
+		if (!gzgets(f,buf,sizeof(buf)))
+			break;
+		r = sscanf (buf,"%f %f %f\n", &org[0], &org[1], &org[2]);
 		if (r != 3)
 			break;
 		c++;
@@ -241,7 +244,7 @@ void R_ReadPointFile_f (void)
 		VectorCopy (org, p->org);
 	}
 
-	fclose (f);
+	gzclose (f);
 	Con_Printf ("%i points read\n", c);
 }
 

@@ -167,7 +167,7 @@ to start a download from the server.
 */
 qboolean	CL_CheckOrDownloadFile (char *filename)
 {
-	FILE	*f;
+	gzFile	*f;
 
 	if (strstr (filename, ".."))
 	{
@@ -178,7 +178,7 @@ qboolean	CL_CheckOrDownloadFile (char *filename)
 	COM_FOpenFile (filename, &f);
 	if (f)
 	{	// it exists, no need to download
-		fclose (f);
+		gzclose (f);
 		return true;
 	}
 

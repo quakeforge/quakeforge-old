@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _CLIENT_H
 #define _CLIENT_H
 
+#include <zlib.h>
+
 #include "qtypes.h"
 #include "zone.h"
 #include "protocol.h"
@@ -195,7 +197,7 @@ typedef struct
 	qboolean	demorecording;
 	qboolean	demoplayback;
 	qboolean	timedemo;
-	FILE		*demofile;
+	gzFile		*demofile;
 	float		td_lastframe;		// to meter out one message a frame
 	int			td_startframe;		// host_framecount at start
 	float		td_starttime;		// realtime at second frame of timedemo
