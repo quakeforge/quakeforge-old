@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -54,7 +54,7 @@ client_t	*host_client;			// current client
 cvar_t	*sv_maxrate;
 //cvar_t	sv_mintic = {"sv_mintic","0.03"};	// bound the size of the
 cvar_t	*sv_mintic;
-//cvar_t	sv_maxtic = {"sv_maxtic","0.1"};	// physics time tic 
+//cvar_t	sv_maxtic = {"sv_maxtic","0.1"};	// physics time tic
 cvar_t	*sv_maxtic;
 
 //cvar_t	developer = {"developer","0"};		// show extra messages
@@ -183,7 +183,7 @@ void SV_Error (char *error, ...)
 	Con_Printf ("SV_Error: %s\n",string);
 
 	SV_FinalMessage (va("server crashed: %s\n", string));
-		
+
 	SV_Shutdown ();
 
 	Sys_Error ("SV_Error: %s\n",string);
@@ -203,7 +203,7 @@ void SV_FinalMessage (char *message)
 {
 	int			i;
 	client_t	*cl;
-	
+
 	SZ_Clear (&net_message);
 	MSG_WriteByte (&net_message, svc_print);
 	MSG_WriteByte (&net_message, PRINT_HIGH);
@@ -330,15 +330,15 @@ void SV_FullClientUpdate (client_t *client, sizebuf_t *buf)
 	MSG_WriteByte (buf, svc_updatefrags);
 	MSG_WriteByte (buf, i);
 	MSG_WriteShort (buf, client->old_frags);
-	
+
 	MSG_WriteByte (buf, svc_updateping);
 	MSG_WriteByte (buf, i);
 	MSG_WriteShort (buf, client->ping);
-	
+
 	MSG_WriteByte (buf, svc_updatepl);
 	MSG_WriteByte (buf, i);
 	MSG_WriteByte (buf, client->lossage);
-	
+
 	MSG_WriteByte (buf, svc_updateentertime);
 	MSG_WriteByte (buf, i);
 	MSG_WriteFloat (buf, realtime - client->connection_started);
@@ -413,7 +413,7 @@ void SVC_Status (void)
 			top = (top < 0) ? 0 : ((top > 13) ? 13 : top);
 			bottom = (bottom < 0) ? 0 : ((bottom > 13) ? 13 : bottom);
 			ping = cl->ping;
-			Con_Printf ("%i %i %i %i \"%s\" \"%s\" %i %i\n", cl->userid, 
+			Con_Printf ("%i %i %i %i \"%s\" \"%s\" %i %i\n", cl->userid,
 				cl->old_frags, (int)(realtime - cl->connection_started)/60,
 				ping, cl->name, Info_ValueForKey (cl->userinfo, "skin"), top, bottom);
 		}
@@ -543,7 +543,7 @@ void SVC_GetChallenge (void)
 	}
 
 	// send it back
-	Netchan_OutOfBandPrint (net_from, "%c%i", S2C_CHALLENGE, 
+	Netchan_OutOfBandPrint (net_from, "%c%i", S2C_CHALLENGE,
 			svs.challenges[i].challenge);
 }
 
@@ -608,7 +608,7 @@ void SVC_DirectConnect (void)
 	s = Info_ValueForKey (userinfo, "spectator");
 	if (s[0] && strcmp(s, "0"))
 	{
-		if (spectator_password->string[0] && 
+		if (spectator_password->string[0] &&
 			stricmp(spectator_password->string, "none") &&
 			strcmp(spectator_password->string, s) )
 		{	// failed
@@ -623,7 +623,7 @@ void SVC_DirectConnect (void)
 	else
 	{
 		s = Info_ValueForKey (userinfo, "password");
-		if (password->string[0] && 
+		if (password->string[0] &&
 			stricmp(password->string, "none") &&
 			strcmp(password->string, s) )
 		{
@@ -647,7 +647,7 @@ void SVC_DirectConnect (void)
 	if (!sv_highchars->value) {
 		byte *p, *q;
 
-		for (p = (byte *)newcl->userinfo, q = (byte *)userinfo; 
+		for (p = (byte *)newcl->userinfo, q = (byte *)userinfo;
 			*q && p < (byte *)newcl->userinfo + sizeof(newcl->userinfo)-1; q++)
 			if (*q > 31 && *q <= 127)
 				*p++ = *q;
@@ -660,7 +660,7 @@ void SVC_DirectConnect (void)
 		if (cl->state == cs_free)
 			continue;
 		if (NET_CompareBaseAdr (adr, cl->netchan.remote_address)
-			&& ( cl->netchan.qport == qport 
+			&& ( cl->netchan.qport == qport
 			|| adr.port == cl->netchan.remote_address.port ))
 		{
 			if (cl->state == cs_connected) {
@@ -719,7 +719,7 @@ void SVC_DirectConnect (void)
 		return;
 	}
 
-	
+
 	// build a new connection
 	// accept the new client
 	// this is the only place a client_t is ever initialized
@@ -728,7 +728,7 @@ void SVC_DirectConnect (void)
 	Netchan_OutOfBandPrint (adr, "%c", S2C_CONNECTION );
 
 	edictnum = (newcl-svs.clients)+1;
-	
+
 	Netchan_Setup (&newcl->netchan , adr, qport);
 
 	newcl->state = cs_connected;
@@ -740,9 +740,9 @@ void SVC_DirectConnect (void)
 	// spectator mode can ONLY be set at join time
 	newcl->spectator = spectator;
 
-	ent = EDICT_NUM(edictnum);	
+	ent = EDICT_NUM(edictnum);
 	newcl->edict = ent;
-	
+
 	// parse some info from the info strings
 	SV_ExtractFromUserinfo (newcl);
 
@@ -893,7 +893,7 @@ void SV_ConnectionlessPacket (void)
 ==============================================================================
 
 PACKET FILTERING
- 
+
 
 You can add or remove addresses from the filter list with:
 
@@ -946,13 +946,13 @@ qboolean StringToFilter (char *s, ipfilter_t *f)
 	int		i, j;
 	byte	b[4];
 	byte	m[4];
-	
+
 	for (i=0 ; i<4 ; i++)
 	{
 		b[i] = 0;
 		m[i] = 0;
 	}
-	
+
 	for (i=0 ; i<4 ; i++)
 	{
 		if (*s < '0' || *s > '9')
@@ -960,7 +960,7 @@ qboolean StringToFilter (char *s, ipfilter_t *f)
 			Con_Printf ("Bad filter address: %s\n", s);
 			return false;
 		}
-		
+
 		j = 0;
 		while (*s >= '0' && *s <= '9')
 		{
@@ -975,10 +975,10 @@ qboolean StringToFilter (char *s, ipfilter_t *f)
 			break;
 		s++;
 	}
-	
+
 	f->mask = *(unsigned *)m;
 	f->compare = *(unsigned *)b;
-	
+
 	return true;
 }
 
@@ -990,7 +990,7 @@ SV_AddIP_f
 void SV_AddIP_f (void)
 {
 	int		i;
-	
+
 	for (i=0 ; i<numipfilters ; i++)
 		if (ipfilters[i].compare == 0xffffffff)
 			break;		// free spot
@@ -1003,7 +1003,7 @@ void SV_AddIP_f (void)
 		}
 		numipfilters++;
 	}
-	
+
 	if (!StringToFilter (Cmd_Argv(1), &ipfilters[i]))
 		ipfilters[i].compare = 0xffffffff;
 }
@@ -1073,13 +1073,13 @@ void SV_WriteIP_f (void)
 		Con_Printf ("Couldn't open %s\n", name);
 		return;
 	}
-	
+
 	for (i=0 ; i<numipfilters ; i++)
 	{
 		*(unsigned *)b = ipfilters[i].compare;
 		Qprintf (f, "addip %i.%i.%i.%i\n", b[0], b[1], b[2], b[3]);
 	}
-	
+
 	Qclose (f);
 }
 
@@ -1096,7 +1096,7 @@ void SV_SendBan (void)
 	data[4] = A2C_PRINT;
 	data[5] = 0;
 	strcat (data, "\nbanned.\n");
-	
+
 	NET_SendPacket (strlen(data), data, net_from);
 }
 
@@ -1109,7 +1109,7 @@ qboolean SV_FilterPacket (void)
 {
 	int		i;
 	unsigned	in;
-	
+
 	in = *(unsigned *)net_from.ip;
 
 	for (i=0 ; i<numipfilters ; i++)
@@ -1148,7 +1148,7 @@ void SV_ReadPackets (void)
 			SV_ConnectionlessPacket ();
 			continue;
 		}
-		
+
 		// read the qport out of the message so we can fix up
 		// stupid address translating routers
 		MSG_BeginReading ();
@@ -1180,10 +1180,10 @@ void SV_ReadPackets (void)
 			}
 			break;
 		}
-		
+
 		if (i != MAX_CLIENTS)
 			continue;
-	
+
 		// packet is not from a known client
 		//	Con_Printf ("%s:sequenced packet without connection\n"
 		// ,NET_AdrToString(net_from));
@@ -1208,7 +1208,7 @@ void SV_CheckTimeouts (void)
 	client_t	*cl;
 	float	droptime;
 	int	nclients;
-	
+
 	droptime = realtime - timeout->value;
 	nclients = 0;
 
@@ -1219,11 +1219,11 @@ void SV_CheckTimeouts (void)
 				nclients++;
 			if (cl->netchan.last_received < droptime) {
 				SV_BroadcastPrintf (PRINT_HIGH, "%s timed out\n", cl->name);
-				SV_DropClient (cl); 
+				SV_DropClient (cl);
 				cl->state = cs_free;	// don't bother with zombie state
 			}
 		}
-		if (cl->state == cs_zombie && 
+		if (cl->state == cs_zombie &&
 			realtime - cl->connection_started > zombietime->value)
 		{
 			cl->state = cs_free;	// can now be reused
@@ -1293,10 +1293,10 @@ SV_Frame
 void SV_Frame (double time)
 {
 	static double	start, end;
-	
+
 	start = Sys_DoubleTime ();
 	svs.stats.idle += start - end;
-	
+
 // keep the random time dependent
 	rand ();
 
@@ -1321,7 +1321,7 @@ void SV_Frame (double time)
 
 // check for commands typed to the host
 	SV_GetConsoleCommands ();
-	
+
 // process console commands
 	Cbuf_Execute ();
 
@@ -1369,7 +1369,7 @@ void SV_InitLocal (void)
 
 	SV_InitOperatorCommands	();
 	SV_UserInit ();
-	
+
 	rcon_password = Cvar_Get ("rcon_password","",CVAR_NONE,
 					"Password for remote server commands");
 	password = Cvar_Get ("password","",CVAR_NONE,
@@ -1420,7 +1420,7 @@ void SV_InitLocal (void)
 
 	sv_aim = Cvar_Get ("sv_aim","2",0,"None");
 	filterban = Cvar_Get ("filterban","1",0,"None");
-	
+
 	allow_download = Cvar_Get ("allow_download","1",0,"None");
 	allow_download_skins = Cvar_Get ("allow_download_skins","1",0,"None");
 	allow_download_models = Cvar_Get ("allow_download_models","1",0,"None");
@@ -1647,7 +1647,7 @@ void SV_ExtractFromUserinfo (client_t *cl)
 		} else
 			break;
 	}
-	
+
 	if (strncmp(val, cl->name, strlen(cl->name))) {
 		if (!sv.paused) {
 			if (!cl->lastnametime || realtime - cl->lastnametime > 5) {
@@ -1656,17 +1656,17 @@ void SV_ExtractFromUserinfo (client_t *cl)
 			} else if (cl->lastnamecount++ > 4) {
 				SV_BroadcastPrintf (PRINT_HIGH, "%s was kicked for name spam\n", cl->name);
 				SV_ClientPrintf (cl, PRINT_HIGH, "You were kicked from the game for name spamming\n");
-				SV_DropClient (cl); 
+				SV_DropClient (cl);
 				return;
 			}
 		}
-				
+
 		if (cl->state >= cs_spawned && !cl->spectator)
 			SV_BroadcastPrintf (PRINT_HIGH, "%s changed name to %s\n", cl->name, val);
 	}
 
 
-	strncpy (cl->name, val, sizeof(cl->name)-1);	
+	strncpy (cl->name, val, sizeof(cl->name)-1);
 
 	// rate command
 	val = Info_ValueForKey (cl->userinfo, "rate");
@@ -1741,11 +1741,11 @@ void SV_Init (quakeparms_t *parms)
 	Memory_Init (parms->membase, parms->memsize);
 	SV_InitCvars ();
 	Cbuf_Init ();
-	Cmd_Init ();	
+	Cmd_Init ();
 	Cvar_Init ();
 
 	COM_Init ();
-	
+
 	PR_Init ();
 	Mod_Init ();
 
@@ -1761,14 +1761,14 @@ void SV_Init (quakeparms_t *parms)
 	Cbuf_InsertText ("exec server.cfg\n");
 
 	host_initialized = true;
-	
+
 	Con_Printf ("Exe: "__TIME__" "__DATE__"\n");
-	Con_Printf ("%4.1f megabyte heap\n",parms->memsize/ (1024*1024.0));	
+	Con_Printf ("%4.1f megabyte heap\n",parms->memsize/ (1024*1024.0));
 
 	Con_Printf ("\nServer Version %s\n\n", QF_VERSION);
 
 	Con_Printf ("======== QuakeWorld Initialized ========\n");
-	
+
 // process command line arguments
 	Cmd_StuffCmds_f ();
 	Cbuf_Execute ();

@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -59,7 +59,7 @@ void CDAudio_Play(byte track, qboolean looping)
         /* XXX - Does this default value make sense? */
 	CDstatus cd_stat = CD_ERROR;
 	if(!cd_id || !enabled) return;
-	
+
 	if(!cdValid)
 	{
 		if(!CD_INDRIVE(cd_stat=SDL_CDStatus(cd_id)) ||(!cd_id->numtracks)) return;
@@ -158,11 +158,11 @@ int CDAudio_Init()
 			SDL_GetError());
 		return -1;
 	}
-	
+
 	initialized = true;
 	enabled = true;
 	cdValid = true;
-	
+
 	if(!CD_INDRIVE(SDL_CDStatus(cd_id)))
 	{
 		Con_Printf("CDAudio_Init: No CD in drive.\n");

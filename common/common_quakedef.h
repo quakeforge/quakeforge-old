@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -115,7 +115,7 @@ void Host_Quit_f (void);
 void Host_ClientCommands (char *fmt, ...);
 void Host_ShutdownServer (qboolean crash);
 
-extern qboolean	msg_suppress_1;	
+extern qboolean	msg_suppress_1;
 // suppresses resolution and cache size console output
 //  an fullscreen DIB focus gain/loss
 #endif // _COMMON_QUAKEDEF_H

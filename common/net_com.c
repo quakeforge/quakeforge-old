@@ -1,12 +1,12 @@
 /*
 net_com.c - MD4-based checksum utility functions
-	
+
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
 
 Author: Jeff Teunissen	<d2deek@pmail.net>
 Date: 01 Jan 2000
-	
+
 This file is part of the QuakeForge utility library.
 
 This program is free software; you can redistribute it and/or
@@ -16,7 +16,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -37,7 +37,7 @@ unsigned Com_BlockChecksum (void *buffer, int length)
 //	mdfour_update (&md, (unsigned char *) buffer, length);
 //	mdfour_result (&md, (unsigned char *) digest);
 	mdfour ( (unsigned char *) digest, (unsigned char *) buffer, length );
-	
+
 	val = digest[0] ^ digest[1] ^ digest[2] ^ digest[3];
 
 	return val;
@@ -46,7 +46,7 @@ unsigned Com_BlockChecksum (void *buffer, int length)
 void Com_BlockFullChecksum (void *buffer, int len, unsigned char *outbuf)
 {
 //	struct mdfour	md;
-	
+
 //	mdfour_begin (&md);
 //	mdfour_update (&md, (unsigned char *) buffer, len);
 //	mdfour_result (&md, outbuf);

@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -1122,14 +1122,14 @@ void M_AdjustSliders (int dir)
 		if (scr_viewsize->value < 30)
 			scr_viewsize->value = 30;
 		if (scr_viewsize->value > 120)
-			scr_viewsize->value = 120; 
+			scr_viewsize->value = 120;
 		break;
 	case 4:	// gamma
 		v_gamma->value -= dir * 0.05;
 		if (v_gamma->value < 0.5)
 			v_gamma->value = 0.5;
 		if (v_gamma->value > 1)
-			v_gamma->value = 1; 
+			v_gamma->value = 1;
 		break;
 	case 5:	// mouse speed
 		sensitivity->value += dir * 0.5;
@@ -1654,14 +1654,14 @@ int		m_quit_prevstate;
 qboolean	wasInMenus;
 
 #ifndef	_WIN32
-char *quitMessage [] = 
+char *quitMessage [] =
 {
 /* .........1.........2.... */
   "  Are you gonna quit    ",
   "  this game just like   ",
   "   everything else?     ",
   "                        ",
- 
+
   " Milord, methinks that  ",
   "   thou art a lowly     ",
   " quitter. Is this true? ",
@@ -1676,22 +1676,22 @@ char *quitMessage [] =
   "   for trying to quit!  ",
   "     Press Y to get     ",
   "      smacked out.      ",
- 
+
   " Press Y to quit like a ",
   "   big loser in life.   ",
   "  Press N to stay proud ",
   "    and successful!     ",
- 
+
   "   If you press Y to    ",
   "  quit, I will summon   ",
   "  Satan all over your   ",
   "      hard drive!       ",
- 
+
   "  Um, Asmodeus dislikes ",
   " his children trying to ",
   " quit. Press Y to return",
   "   to your Tinkertoys.  ",
- 
+
   "  If you quit now, I'll ",
   "  throw a blanket-party ",
   "   for you next time!   ",

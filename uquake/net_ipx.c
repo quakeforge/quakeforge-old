@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -460,7 +460,7 @@ tryagain:
 
 	if (ecb->completionCode != 0)
 	{
-		Con_Printf("Warning: IPX_Read error %02x\n", ecb->completionCode);	
+		Con_Printf("Warning: IPX_Read error %02x\n", ecb->completionCode);
 		ecb->fragSize = sizeof(IPXheader) + sizeof(int) + NET_DATAGRAMSIZE;
 		IPX_ListenForPacket(ecb);
 		goto tryagain;

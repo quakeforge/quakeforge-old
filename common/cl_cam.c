@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -128,7 +128,7 @@ static void vectoangles(vec3_t vec, vec3_t ang)
 {
 	float	forward;
 	float	yaw, pitch;
-	
+
 	if (vec[1] == 0 && vec[0] == 0)
 	{
 		yaw = 0;
@@ -173,7 +173,7 @@ qboolean Cam_DrawViewModel(void)
 // returns true if we should draw this player, we don't if we are chase camming
 qboolean Cam_DrawPlayer(int playernum)
 {
-	if (cl.spectator && autocam && locked && cl_chasecam->value && 
+	if (cl.spectator && autocam && locked && cl_chasecam->value &&
 		spec_track == playernum)
 		return false;
 	return true;
@@ -216,7 +216,7 @@ pmtrace_t Cam_DoTrace(vec3_t vec1, vec3_t vec2)
 	VectorCopy (vec1, pmove.origin);
 	return PM_PlayerMove(pmove.origin, vec2);
 }
-	
+
 // Returns distance or 9999 if invalid for some reason
 static float Cam_TryFlyby(player_state_t *self, player_state_t *player, vec3_t vec, qboolean checkvis)
 {
@@ -268,7 +268,7 @@ static qboolean Cam_IsVisible(player_state_t *player, vec3_t vec)
 	return true;
 }
 
-static qboolean InitFlyby(player_state_t *self, player_state_t *player, int checkvis) 
+static qboolean InitFlyby(player_state_t *self, player_state_t *player, int checkvis)
 {
     float f, max;
     vec3_t vec, vec2;
@@ -354,7 +354,7 @@ static qboolean InitFlyby(player_state_t *self, player_state_t *player, int chec
 		return false;
 	}
 	locked = true;
-	VectorCopy(vec, desired_position); 
+	VectorCopy(vec, desired_position);
 	return true;
 }
 
@@ -377,7 +377,7 @@ static void Cam_CheckHighTarget(void)
 	} else
 		Cam_Unlock();
 }
-	
+
 // ZOID
 //
 // Take over the user controls and track a player.
@@ -391,7 +391,7 @@ void Cam_Track(usercmd_t *cmd)
 
 	if (!cl.spectator)
 		return;
-	
+
 	if (cl_hightrack->value && !locked)
 		Cam_CheckHighTarget();
 
@@ -419,7 +419,7 @@ void Cam_Track(usercmd_t *cmd)
 		}
 	} else
 		cam_lastviewtime = realtime;
-	
+
 	// couldn't track for some reason
 	if (!locked || !autocam)
 		return;
@@ -454,7 +454,7 @@ void Cam_Track(usercmd_t *cmd)
 
 		// move there locally immediately
 		VectorCopy(desired_position, self->origin);
-										 
+
 		VectorSubtract(player->origin, desired_position, vec);
 		vectoangles(vec, cl.viewangles);
 		cl.viewangles[0] = -cl.viewangles[0];
@@ -507,7 +507,7 @@ void Cam_SetView(void)
 	frame_t *frame;
 	vec3_t vec, vec2;
 
-	if (cls.state != ca_active || !cl.spectator || 
+	if (cls.state != ca_active || !cl.spectator ||
 		!autocam || !locked)
 		return;
 
@@ -635,7 +635,7 @@ void Cam_Reset(void)
 
 void CL_InitCam(void)
 {
-	cl_hightrack = Cvar_Get ("cl_hightrack","0",0,"None");	
+	cl_hightrack = Cvar_Get ("cl_hightrack","0",0,"None");
 }
 
 

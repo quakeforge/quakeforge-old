@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -131,7 +131,7 @@ void Netchan_OutOfBand (netadr_t adr, int length, byte *data)
 	send.data = send_buf;
 	send.maxsize = sizeof(send_buf);
 	send.cursize = 0;
-	
+
 	MSG_WriteLong (&send, -1);	// -1 sequence means out of band
 	SZ_Write (&send, data, length);
 
@@ -154,7 +154,7 @@ void Netchan_OutOfBandPrint (netadr_t adr, char *format, ...)
 {
 	va_list		argptr;
 	static char		string[8192];		// ??? why static?
-	
+
 	va_start (argptr, format);
 	vsnprintf (string, sizeof(string), format, argptr);
 	va_end (argptr);
@@ -174,16 +174,16 @@ called to open a channel to a remote system
 void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport)
 {
 	memset (chan, 0, sizeof(*chan));
-	
+
 	chan->remote_address = adr;
 	chan->last_received = realtime;
-	
+
 	chan->message.data = chan->message_buf;
 	chan->message.allowoverflow = true;
 	chan->message.maxsize = sizeof(chan->message_buf);
 
 	chan->qport = qport;
-	
+
 	chan->rate = 1.0/2500;
 }
 
@@ -208,7 +208,7 @@ qboolean Netchan_CanPacket (netchan_t *chan)
 ===============
 Netchan_CanReliable
 
-Returns true if the bandwidth choke isn't 
+Returns true if the bandwidth choke isn't
 ================
 */
 qboolean Netchan_CanReliable (netchan_t *chan)
@@ -290,7 +290,7 @@ void Netchan_Transmit (netchan_t *chan, int length, byte *data)
 		SZ_Write (&send, chan->reliable_buf, chan->reliable_length);
 		chan->last_reliable_sequence = chan->outgoing_sequence;
 	}
-	
+
 // add the unreliable part if space is available
 	if (send.maxsize - send.cursize >= length)
 		SZ_Write (&send, data, length);
@@ -344,12 +344,12 @@ qboolean Netchan_Process (netchan_t *chan)
 
 	if (
 #ifndef SERVERONLY
-			!cls.demoplayback && 
+			!cls.demoplayback &&
 #endif
 			!NET_CompareAdr (net_from, chan->remote_address))
 		return false;
-	
-// get sequence numbers		
+
+// get sequence numbers
 	MSG_BeginReading ();
 	sequence = MSG_ReadLong ();
 	sequence_ack = MSG_ReadLong ();
@@ -362,8 +362,8 @@ qboolean Netchan_Process (netchan_t *chan)
 	reliable_message = sequence >> 31;
 	reliable_ack = sequence_ack >> 31;
 
-	sequence &= ~(1<<31);	
-	sequence_ack &= ~(1<<31);	
+	sequence &= ~(1<<31);
+	sequence_ack &= ~(1<<31);
 
 	if (showpackets->value)
 		Con_Printf ("<-- s=%i(%i) a=%i(%i) %i\n"
@@ -379,7 +379,7 @@ qboolean Netchan_Process (netchan_t *chan)
 	{
 		int				i;
 		double			time, rate;
-	
+
 		i = sequence_ack & (MAX_LATENT - 1);
 		time = realtime - chan->outgoing_time[i];
 		time -= 0.1;	// subtract 100 ms
@@ -437,9 +437,9 @@ qboolean Netchan_Process (netchan_t *chan)
 //
 	if (reliable_ack == (unsigned)chan->reliable_sequence)
 		chan->reliable_length = 0;	// it has been received
-	
+
 //
-// if this message contains a reliable message, bump incoming_reliable_sequence 
+// if this message contains a reliable message, bump incoming_reliable_sequence
 //
 	chan->incoming_sequence = sequence;
 	chan->incoming_acknowledged = sequence_ack;
@@ -454,7 +454,7 @@ qboolean Netchan_Process (netchan_t *chan)
 	chan->frame_latency = chan->frame_latency*OLD_AVG
 		+ (chan->outgoing_sequence-sequence_ack)*(1.0-OLD_AVG);
 	chan->frame_rate = chan->frame_rate*OLD_AVG
-		+ (realtime-chan->last_received)*(1.0-OLD_AVG);		
+		+ (realtime-chan->last_received)*(1.0-OLD_AVG);
 	chan->good_count += 1;
 
 	chan->last_received = realtime;

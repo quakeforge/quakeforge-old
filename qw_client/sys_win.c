@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -63,7 +63,7 @@ void Sys_PushFPCW_SetHigh (void);
 void
 Sys_DebugLog (char *file, char *fmt, ...)
 {
-	va_list argptr; 
+	va_list argptr;
 	static char data[1024];
 	int fd;
 
@@ -93,7 +93,7 @@ int
 findhandle (void)
 {
 	int		i;
-	
+
 	for (i=1 ; i<MAX_HANDLES ; i++)
 		if (!sys_handles[i])
 			return i;
@@ -170,14 +170,14 @@ Sys_FileOpenWrite (char *path)
 	int		t;
 
 	t = VID_ForceUnlockedAndReturnState ();
-	
+
 	i = findhandle ();
 
 	f = fopen(path, "wb");
 	if (!f)
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
 	sys_handles[i] = f;
-	
+
 	VID_ForceLockState (t);
 
 	return i;
@@ -332,7 +332,7 @@ Sys_Init (void)
 	{
 		Sys_Error ("This program requires at least Win95 or NT 4.0");
 	}
-	
+
 	if (vinfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
 		WinNT = true;
 	else
@@ -510,8 +510,8 @@ Sys_ConsoleInput (void)
 				switch (ch)
 				{
 					case '\r':
-						WriteFile(houtput, "\r\n", 2, 
-							&dummy, NULL);	
+						WriteFile(houtput, "\r\n", 2,
+							&dummy, NULL);
 
 						if (len)
 						{
@@ -522,7 +522,7 @@ Sys_ConsoleInput (void)
 						break;
 
 					case '\b':
-						WriteFile(houtput, "\b \b", 
+						WriteFile(houtput, "\b \b",
 								3, &dummy,
 								NULL);
 						if (len)
@@ -534,8 +534,8 @@ Sys_ConsoleInput (void)
 
 					default:
 						Con_Printf("Stupid: %d\n", recs[0].Event.KeyEvent.dwControlKeyState);
-						if (((ch=='V' || ch=='v') && (recs[0].Event.KeyEvent.dwControlKeyState & 
-							(LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED))) || ((recs[0].Event.KeyEvent.dwControlKeyState 
+						if (((ch=='V' || ch=='v') && (recs[0].Event.KeyEvent.dwControlKeyState &
+							(LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED))) || ((recs[0].Event.KeyEvent.dwControlKeyState
 							& SHIFT_PRESSED) && (recs[0].Event.KeyEvent.wVirtualKeyCode
 							==VK_INSERT))) {
 							if (OpenClipboard(NULL)) {
@@ -564,7 +564,7 @@ Sys_ConsoleInput (void)
 							}
 						} else if (ch >= ' ')
 						{
-							WriteFile(houtput, &ch, 1, &dummy, NULL);	
+							WriteFile(houtput, &ch, 1, &dummy, NULL);
 							text[len] = ch;
 							len = (len + 1) & 0xff;
 						}
@@ -630,7 +630,7 @@ HWND		hwnd_dialog;
 
 
 int WINAPI
-WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, 
+WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 		int nCmdShow)
 {
 	MSG		msg;
@@ -682,7 +682,7 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 				*lpCmdLine = 0;
 				lpCmdLine++;
 			}
-			
+
 		}
 	}
 
@@ -703,7 +703,7 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 			if (rect.left > (rect.top * 2))
 			{
 				SetWindowPos (hwnd_dialog, 0,
-					(rect.left / 2) - ((rect.right 
+					(rect.left / 2) - ((rect.right
 							    - rect.left) / 2),
 					rect.top, 0, 0,
 					SWP_NOZORDER | SWP_NOSIZE);
@@ -806,7 +806,7 @@ SV_Error (char *error, ...)
 	Con_Printf ("SV_Error: %s\n",string);
 
 	//SV_FinalMessage (va("server crashed: %s\n", string));
-		
+
 
 	Sys_Error ("SV_Error: %s\n",string);
 }

@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -178,7 +178,7 @@ CL_PredictMove (void)
 	for (i=1 ; i<UPDATE_BACKUP-1 && cls.netchan.incoming_sequence+i <
 			cls.netchan.outgoing_sequence; i++)
 	{
-		to = &cl.frames[(cls.netchan.incoming_sequence+i) 
+		to = &cl.frames[(cls.netchan.incoming_sequence+i)
 				& UPDATE_MASK];
 		CL_PredictUsercmd (&from->playerstate[cl.playernum],
 				&to->playerstate[cl.playernum], &to->cmd,
@@ -198,7 +198,7 @@ CL_PredictMove (void)
 		f = 0;
 	else
 	{
-		f = (cl.time - from->senttime) / (to->senttime 
+		f = (cl.time - from->senttime) / (to->senttime
 				- from->senttime);
 
 		f = max(0, min(f, 1));
@@ -215,16 +215,16 @@ CL_PredictMove (void)
 					cl.simorg);
 			return;
 		}
-		
+
 	for (i=0 ; i<3 ; i++)
 	{
-		cl.simorg[i] = from->playerstate[cl.playernum].origin[i] 
+		cl.simorg[i] = from->playerstate[cl.playernum].origin[i]
 				+ f*(to->playerstate[cl.playernum].origin[i]
 				- from->playerstate[cl.playernum].origin[i]);
-		cl.simvel[i] = from->playerstate[cl.playernum].velocity[i] 
-				+ f*(to->playerstate[cl.playernum].velocity[i] 
+		cl.simvel[i] = from->playerstate[cl.playernum].velocity[i]
+				+ f*(to->playerstate[cl.playernum].velocity[i]
 				- from->playerstate[cl.playernum].velocity[i]);
-	}		
+	}
 }
 
 

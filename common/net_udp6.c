@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -136,7 +136,7 @@ char	*NET_BaseAdrToString (netadr_t a)
 	int err;
 
 	NetadrToSockadr(&a,&sa);
-	
+
 	if ((err=getnameinfo((struct sockaddr *) &sa,sizeof(sa),s,sizeof(s),NULL,0,NI_NUMERICHOST))) {
 	  strcpy(s,"<invalid>");
 	}
@@ -182,9 +182,9 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 	    }
 	    *space++='\0';
 	}
-	
+
 	for (; *space; space++) {
-	  if (*space==':') 
+	  if (*space==':')
 	    {
 	      *space='\0';
 	      ports=space+1;
@@ -218,14 +218,14 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 	  break;
 	default:
 	    Con_Printf ("NET_StringToAdr: string %s:\nprotocol family %d not supported\n",s, resultp->ai_family);
-	    return 0;	  
+	    return 0;
 	}
 	SockadrToNetadr ((struct sockaddr_in6 *) &ss, a);
 
 	return true;
 }
 
-// Returns true if we can't bind the address locally--in other words, 
+// Returns true if we can't bind the address locally--in other words,
 // the IP is NOT one of our interfaces.
 qboolean NET_IsClientLegal(netadr_t *adr)
 {
@@ -243,7 +243,7 @@ qboolean NET_IsClientLegal(netadr_t *adr)
 
 	sadr.sin_port = 0;
 
-	if( bind (newsocket, (void *)&sadr, sizeof(sadr)) == -1) 
+	if( bind (newsocket, (void *)&sadr, sizeof(sadr)) == -1)
 	{
 		// It is not a local address
 		close(newsocket);
@@ -362,7 +362,7 @@ int UDP_OpenSocket (int port)
 	        memset(&hints,0,sizeof(hints));
 		hints.ai_socktype=SOCK_DGRAM;
 		hints.ai_family=PF_UNSPEC;
-		
+
 	        if ((err=getaddrinfo(com_argv[i+1],NULL,&hints,&resultp)))
 		  {
 		    Sys_Error ("UDP_OpenSocket: addr %s: %s",com_argv[i+1], gai_strerror(err));
@@ -428,10 +428,10 @@ NET_Init
 void NET_Init (int port)
 {
 #ifdef _WIN32
-	WORD	wVersionRequested; 
+	WORD	wVersionRequested;
 	int		r;
 
-	wVersionRequested = MAKEWORD(1, 1); 
+	wVersionRequested = MAKEWORD(1, 1);
 
 	r = WSAStartup(MAKEWORD(1, 1), &winsockdata);
 	if (r)

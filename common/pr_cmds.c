@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -50,7 +50,7 @@ char *PF_VarString (int	first)
 {
 	int		i;
 	static char out[256];
-	
+
 	out[0] = 0;
 	for (i=first ; i<pr_argc ; i++)
 	{
@@ -74,7 +74,7 @@ void PF_error (void)
 {
 	char	*s;
 	edict_t	*ed;
-	
+
 	s = PF_VarString(0);
 	Con_Printf ("======SERVER ERROR in %s:\n%s\n", PR_GetString(pr_xfunction->s_name) ,s);
 	ed = PROG_TO_EDICT(pr_global_struct->self);
@@ -101,13 +101,13 @@ void PF_objerror (void)
 {
 	char	*s;
 	edict_t	*ed;
-	
+
 	s = PF_VarString(0);
 	Con_Printf ("======OBJECT ERROR in %s:\n%s\n", PR_GetString(pr_xfunction->s_name),s);
 	ed = PROG_TO_EDICT(pr_global_struct->self);
 	ED_Print (ed);
 	ED_Free (ed);
-	
+
 #ifdef QUAKEWORLD
 	SV_Error ("Program error");
 #else
@@ -143,7 +143,7 @@ void PF_setorigin (void)
 {
 	edict_t	*e;
 	float	*org;
-	
+
 	e = G_EDICT(OFS_PARM0);
 	org = G_VECTOR(OFS_PARM1);
 	VectorCopy (org, e->v.origin);
@@ -165,7 +165,7 @@ void SetMinMaxSize (edict_t *e, float *min, float *max, qboolean rotate)
 	float	a;
 	vec3_t	base, transformed;
 	int		i, j, k, l;
-	
+
 	for (i=0 ; i<3 ; i++)
 		if (min[i] > max[i])
 			PR_RunError ("backwards mins/maxs");
@@ -181,20 +181,20 @@ void SetMinMaxSize (edict_t *e, float *min, float *max, qboolean rotate)
 	{
 	// find min / max for rotations
 		angles = e->v.angles;
-		
+
 		a = angles[1]/180 * M_PI;
-		
+
 		xvector[0] = cos(a);
 		xvector[1] = sin(a);
 		yvector[0] = -sin(a);
 		yvector[1] = cos(a);
-		
+
 		VectorCopy (min, bounds[0]);
 		VectorCopy (max, bounds[1]);
-		
+
 		rmin[0] = rmin[1] = rmin[2] = 9999;
 		rmax[0] = rmax[1] = rmax[2] = -9999;
-		
+
 		for (i=0 ; i<= 1 ; i++)
 		{
 			base[0] = bounds[i][0];
@@ -204,12 +204,12 @@ void SetMinMaxSize (edict_t *e, float *min, float *max, qboolean rotate)
 				for (k=0 ; k<= 1 ; k++)
 				{
 					base[2] = bounds[k][2];
-					
+
 				// transform the point
 					transformed[0] = xvector[0]*base[0] + yvector[0]*base[1];
 					transformed[1] = xvector[1]*base[0] + yvector[1]*base[1];
 					transformed[2] = base[2];
-					
+
 					for (l=0 ; l<3 ; l++)
 					{
 						if (transformed[l] < rmin[l])
@@ -221,12 +221,12 @@ void SetMinMaxSize (edict_t *e, float *min, float *max, qboolean rotate)
 			}
 		}
 	}
-	
+
 // set derived values
 	VectorCopy (rmin, e->v.mins);
 	VectorCopy (rmax, e->v.maxs);
 	VectorSubtract (max, min, e->v.size);
-	
+
 	SV_LinkEdict (e, false);
 }
 
@@ -244,7 +244,7 @@ void PF_setsize (void)
 {
 	edict_t	*e;
 	float	*min, *max;
-	
+
 	e = G_EDICT(OFS_PARM0);
 	min = G_VECTOR(OFS_PARM1);
 	max = G_VECTOR(OFS_PARM2);
@@ -284,7 +284,7 @@ void PF_setmodel (void)
 
 	if (!*check)
 		PR_RunError ("no precache: %s\n", m);
-		
+
 	e->v.model = PR_SetString(m);
 	e->v.modelindex = i;
 
@@ -300,7 +300,7 @@ void PF_setmodel (void)
 	}
 #else
 	mod = sv.models[ (int)e->v.modelindex];  // Mod_ForName (m, true);
-	
+
 	if (mod)
 		SetMinMaxSize (e, mod->mins, mod->maxs, true);
 	else
@@ -352,7 +352,7 @@ void PF_sprint (void)
 #ifdef QUAKEWORLD
 	int		level;
 #endif
-	
+
 	entnum = G_EDICTNUM(OFS_PARM0);
 
 #ifdef QUAKEWORLD
@@ -362,7 +362,7 @@ void PF_sprint (void)
 #else
 	s = PF_VarString(1);
 #endif
-	
+
 #ifdef QUAKEWORLD
 	if (entnum < 1 || entnum > MAX_CLIENTS)
 #else
@@ -372,9 +372,9 @@ void PF_sprint (void)
 		Con_Printf ("tried to sprint to a non-client\n");
 		return;
 	}
-		
+
 	client = &svs.clients[entnum-1];
-	
+
 #ifdef QUAKEWORLD
 	SV_ClientPrintf (client, level, "%s", s);
 #else
@@ -398,10 +398,10 @@ void PF_centerprint (void)
 	char		*s;
 	int		entnum;
 	client_t	*cl;
-	
+
 	entnum = G_EDICTNUM(OFS_PARM0);
 	s = PF_VarString(1);
-	
+
 #ifdef QUAKEWORLD
 	if (entnum < 1 || entnum > MAX_CLIENTS)
 #else
@@ -411,7 +411,7 @@ void PF_centerprint (void)
 		Con_Printf ("tried to sprint to a non-client\n");
 		return;
 	}
-		
+
 	cl = &svs.clients[entnum-1];
 
 #ifdef QUAKEWORLD
@@ -436,12 +436,12 @@ void PF_normalize (void)
 	float	*value1;
 	vec3_t	newvalue;
 	float	new;
-	
+
 	value1 = G_VECTOR(OFS_PARM0);
 
 	new = value1[0] * value1[0] + value1[1] * value1[1] + value1[2]*value1[2];
 	new = sqrt(new);
-	
+
 	if (new == 0)
 		newvalue[0] = newvalue[1] = newvalue[2] = 0;
 	else
@@ -451,8 +451,8 @@ void PF_normalize (void)
 		newvalue[1] = value1[1] * new;
 		newvalue[2] = value1[2] * new;
 	}
-	
-	VectorCopy (newvalue, G_VECTOR(OFS_RETURN));	
+
+	VectorCopy (newvalue, G_VECTOR(OFS_RETURN));
 }
 
 /*
@@ -466,12 +466,12 @@ void PF_vlen (void)
 {
 	float	*value1;
 	float	new;
-	
+
 	value1 = G_VECTOR(OFS_PARM0);
 
 	new = value1[0] * value1[0] + value1[1] * value1[1] + value1[2]*value1[2];
 	new = sqrt(new);
-	
+
 	G_FLOAT(OFS_RETURN) = new;
 }
 
@@ -486,7 +486,7 @@ void PF_vectoyaw (void)
 {
 	float	*value1;
 	float	yaw;
-	
+
 	value1 = G_VECTOR(OFS_PARM0);
 
 	if (value1[1] == 0 && value1[0] == 0)
@@ -514,7 +514,7 @@ void PF_vectoangles (void)
 	float	*value1;
 	float	forward;
 	float	yaw, pitch;
-	
+
 	value1 = G_VECTOR(OFS_PARM0);
 
 	if (value1[1] == 0 && value1[0] == 0)
@@ -554,9 +554,9 @@ random()
 void PF_random (void)
 {
 	float		num;
-		
+
 	num = (rand ()&0x7fff) / ((float)0x7fff);
-	
+
 	G_FLOAT(OFS_RETURN) = num;
 }
 
@@ -573,7 +573,7 @@ void PF_particle (void)
 	float		*org, *dir;
 	float		color;
 	float		count;
-			
+
 	org = G_VECTOR(OFS_PARM0);
 	dir = G_VECTOR(OFS_PARM1);
 	color = G_FLOAT(OFS_PARM2);
@@ -596,16 +596,16 @@ void PF_ambientsound (void)
 	float 		vol, attenuation;
 	int			i, soundnum;
 
-	pos = G_VECTOR (OFS_PARM0);			
+	pos = G_VECTOR (OFS_PARM0);
 	samp = G_STRING(OFS_PARM1);
 	vol = G_FLOAT(OFS_PARM2);
 	attenuation = G_FLOAT(OFS_PARM3);
-	
+
 // check to see if samp was properly precached
 	for (soundnum=0, check = sv.sound_precache ; *check ; check++, soundnum++)
 		if (!strcmp(*check,samp))
 			break;
-			
+
 	if (!*check)
 	{
 		Con_Printf ("no precache: %s\n", samp);
@@ -647,7 +647,7 @@ void PF_sound (void)
 	edict_t		*entity;
 	int 		volume;
 	float attenuation;
-		
+
 	entity = G_EDICT(OFS_PARM0);
 	channel = G_FLOAT(OFS_PARM1);
 	sample = G_STRING(OFS_PARM2);
@@ -664,7 +664,7 @@ void PF_sound (void)
 	if (channel < 0 || channel > 7)
 		Sys_Error ("SV_StartSound: channel = %i", channel);
 #endif
-	
+
 	SV_StartSound (entity, channel, sample, volume, attenuation);
 }
 
@@ -714,7 +714,7 @@ void PF_traceline (void)
 	pr_global_struct->trace_inopen = trace.inopen;
 	VectorCopy (trace.endpos, pr_global_struct->trace_endpos);
 	VectorCopy (trace.plane.normal, pr_global_struct->trace_plane_normal);
-	pr_global_struct->trace_plane_dist =  trace.plane.dist;	
+	pr_global_struct->trace_plane_dist =  trace.plane.dist;
 	if (trace.ent)
 		pr_global_struct->trace_ent = EDICT_TO_PROG(trace.ent);
 	else
@@ -827,7 +827,7 @@ void PF_checkclient (void)
 	mleaf_t	*leaf;
 	int		l;
 	vec3_t	view;
-	
+
 // find a new check if on a new frame
 	if (sv.time - sv.lastchecktime >= 0.1)
 	{
@@ -835,7 +835,7 @@ void PF_checkclient (void)
 		sv.lastchecktime = sv.time;
 	}
 
-// return check if it might be visible	
+// return check if it might be visible
 	ent = EDICT_NUM(sv.lastcheck);
 	if (ent->free || ent->v.health <= 0)
 	{
@@ -877,7 +877,7 @@ void PF_stuffcmd (void)
 	int		entnum;
 	char	*str;
 	client_t	*cl;
-	
+
 	entnum = G_EDICTNUM(OFS_PARM0);
 #ifdef QUAKEWORLD
 	if (entnum < 1 || entnum > MAX_CLIENTS)
@@ -885,8 +885,8 @@ void PF_stuffcmd (void)
 	if (entnum < 1 || entnum > svs.maxclients)
 #endif
 		PR_RunError ("Parm 0 not a client");
-	str = G_STRING(OFS_PARM1);	
-	
+	str = G_STRING(OFS_PARM1);
+
 	cl = &svs.clients[entnum-1];
 
 #if QUAKEWORLD
@@ -918,8 +918,8 @@ localcmd (string)
 void PF_localcmd (void)
 {
 	char	*str;
-	
-	str = G_STRING(OFS_PARM0);	
+
+	str = G_STRING(OFS_PARM0);
 	Cbuf_AddText (str);
 }
 
@@ -933,9 +933,9 @@ float cvar (string)
 void PF_cvar (void)
 {
 	char	*str;
-	
+
 	str = G_STRING(OFS_PARM0);
-	
+
 	G_FLOAT(OFS_RETURN) = Cvar_VariableValue (str);
 }
 
@@ -949,10 +949,10 @@ float cvar (string)
 void PF_cvar_set (void)
 {
 	char	*var, *val;
-	
+
 	var = G_STRING(OFS_PARM0);
 	val = G_STRING(OFS_PARM1);
-	
+
 	Cvar_Set (var, val);
 }
 
@@ -974,7 +974,7 @@ void PF_findradius (void)
 	int		i, j;
 
 	chain = (edict_t *)sv.edicts;
-	
+
 	org = G_VECTOR(OFS_PARM0);
 	rad = G_FLOAT(OFS_PARM1);
 
@@ -986,10 +986,10 @@ void PF_findradius (void)
 		if (ent->v.solid == SOLID_NOT)
 			continue;
 		for (j=0 ; j<3 ; j++)
-			eorg[j] = org[j] - (ent->v.origin[j] + (ent->v.mins[j] + ent->v.maxs[j])*0.5);			
+			eorg[j] = org[j] - (ent->v.origin[j] + (ent->v.mins[j] + ent->v.maxs[j])*0.5);
 		if (Length(eorg) > rad)
 			continue;
-			
+
 		ent->v.chain = EDICT_TO_PROG(chain);
 		chain = ent;
 	}
@@ -1018,7 +1018,7 @@ void PF_ftos (void)
 {
 	float	v;
 	v = G_FLOAT(OFS_PARM0);
-	
+
 	if (v == (int)v)
 		snprintf(pr_string_temp, sizeof(pr_string_temp), "%d",(int)v);
 	else
@@ -1049,7 +1049,7 @@ void PF_Spawn (void)
 void PF_Remove (void)
 {
 	edict_t	*ed;
-	
+
 	ed = G_EDICT(OFS_PARM0);
 	ED_Free (ed);
 }
@@ -1058,17 +1058,17 @@ void PF_Remove (void)
 // entity (entity start, .string field, string match) find = #5;
 void PF_Find (void)
 {
-	int		e;	
+	int		e;
 	int		f;
 	char	*s, *t;
 	edict_t	*ed;
-	
+
 	e = G_EDICTNUM(OFS_PARM0);
 	f = G_INT(OFS_PARM1);
 	s = G_STRING(OFS_PARM2);
 	if (!s)
 		PR_RunError ("PF_Find: bad search string");
-		
+
 	for (e++ ; e < sv.num_edicts ; e++)
 	{
 		ed = EDICT_NUM(e);
@@ -1083,7 +1083,7 @@ void PF_Find (void)
 			return;
 		}
 	}
-	
+
 	RETURN_EDICT(sv.edicts);
 }
 
@@ -1102,14 +1102,14 @@ void PF_precache_sound (void)
 {
 	char	*s;
 	int		i;
-	
+
 	if (sv.state != ss_loading)
 		PR_RunError ("PF_Precache_*: Precache can only be done in spawn functions");
-		
+
 	s = G_STRING(OFS_PARM0);
 	G_INT(OFS_RETURN) = G_INT(OFS_PARM0);
 	PR_CheckEmptyString (s);
-	
+
 	for (i=0 ; i<MAX_SOUNDS ; i++)
 	{
 		if (!sv.sound_precache[i])
@@ -1127,10 +1127,10 @@ void PF_precache_model (void)
 {
 	char	*s;
 	int		i;
-	
+
 	if (sv.state != ss_loading)
 		PR_RunError ("PF_Precache_*: Precache can only be done in spawn functions");
-		
+
 	s = G_STRING(OFS_PARM0);
 	G_INT(OFS_RETURN) = G_INT(OFS_PARM0);
 	PR_CheckEmptyString (s);
@@ -1186,11 +1186,11 @@ void PF_walkmove (void)
 	vec3_t	move;
 	dfunction_t	*oldf;
 	int 	oldself;
-	
+
 	ent = PROG_TO_EDICT(pr_global_struct->self);
 	yaw = G_FLOAT(OFS_PARM0);
 	dist = G_FLOAT(OFS_PARM1);
-	
+
 	if ( !( (int)ent->v.flags & (FL_ONGROUND|FL_FLY|FL_SWIM) ) )
 	{
 		G_FLOAT(OFS_RETURN) = 0;
@@ -1198,7 +1198,7 @@ void PF_walkmove (void)
 	}
 
 	yaw = yaw*M_PI*2 / 360;
-	
+
 	move[0] = cos(yaw)*dist;
 	move[1] = sin(yaw)*dist;
 	move[2] = 0;
@@ -1206,10 +1206,10 @@ void PF_walkmove (void)
 // save program state, because SV_movestep may call other progs
 	oldf = pr_xfunction;
 	oldself = pr_global_struct->self;
-	
+
 	G_FLOAT(OFS_RETURN) = SV_movestep(ent, move, true);
-	
-	
+
+
 // restore program state
 	pr_xfunction = oldf;
 	pr_global_struct->self = oldself;
@@ -1227,12 +1227,12 @@ void PF_droptofloor (void)
 	edict_t		*ent;
 	vec3_t		end;
 	trace_t		trace;
-	
+
 	ent = PROG_TO_EDICT(pr_global_struct->self);
 
 	VectorCopy (ent->v.origin, end);
 	end[2] -= 256;
-	
+
 	trace = SV_Move (ent->v.origin, ent->v.mins, ent->v.maxs, end, false, ent);
 
 	if (trace.fraction == 1 || trace.allsolid)
@@ -1260,17 +1260,17 @@ void PF_lightstyle (void)
 	char	*val;
 	client_t	*client;
 	int			j;
-	
+
 	style = G_FLOAT(OFS_PARM0);
 	val = G_STRING(OFS_PARM1);
 
 // change the string in sv
 	sv.lightstyles[style] = val;
-	
+
 // send message to all clients on this server
 	if (sv.state != ss_active)
 		return;
-	
+
 #ifdef QUAKEWORLD
 	for (j=0, client = svs.clients ; j<MAX_CLIENTS ; j++, client++)
 		if ( client->state == cs_spawned )
@@ -1317,7 +1317,7 @@ PF_checkbottom
 void PF_checkbottom (void)
 {
 	edict_t	*ent;
-	
+
 	ent = G_EDICT(OFS_PARM0);
 
 	G_FLOAT(OFS_RETURN) = SV_CheckBottom (ent);
@@ -1331,10 +1331,10 @@ PF_pointcontents
 void PF_pointcontents (void)
 {
 	float	*v;
-	
+
 	v = G_VECTOR(OFS_PARM0);
 
-	G_FLOAT(OFS_RETURN) = SV_PointContents (v);	
+	G_FLOAT(OFS_RETURN) = SV_PointContents (v);
 }
 
 /*
@@ -1348,7 +1348,7 @@ void PF_nextent (void)
 {
 	int		i;
 	edict_t	*ent;
-	
+
 	i = G_EDICTNUM(OFS_PARM0);
 	while (1)
 	{
@@ -1427,7 +1427,7 @@ void PF_aim (void)
 	VectorCopy (dir, bestdir);
 	bestdist = sv_aim->value;
 	bestent = NULL;
-	
+
 	check = NEXT_EDICT(sv.edicts);
 	for (i=1 ; i<sv.num_edicts ; i++, check = NEXT_EDICT(check) )
 	{
@@ -1452,7 +1452,7 @@ void PF_aim (void)
 			bestent = check;
 		}
 	}
-	
+
 	if (bestent)
 	{
 		VectorSubtract (bestent->v.origin, ent->v.origin, dir);
@@ -1460,7 +1460,7 @@ void PF_aim (void)
 		VectorScale (pr_global_struct->v_forward, dist, end);
 		end[2] = dir[2];
 		VectorNormalize (end);
-		VectorCopy (end, G_VECTOR(OFS_RETURN));	
+		VectorCopy (end, G_VECTOR(OFS_RETURN));
 	}
 	else
 	{
@@ -1479,12 +1479,12 @@ void PF_changeyaw (void)
 {
 	edict_t		*ent;
 	float		ideal, current, move, speed;
-	
+
 	ent = PROG_TO_EDICT(pr_global_struct->self);
 	current = anglemod( ent->v.angles[1] );
 	ideal = ent->v.ideal_yaw;
 	speed = ent->v.yaw_speed;
-	
+
 	if (current == ideal)
 		return;
 	move = ideal - current;
@@ -1508,7 +1508,7 @@ void PF_changeyaw (void)
 		if (move < -speed)
 			move = -speed;
 	}
-	
+
 	ent->v.angles[1] = anglemod (current + move);
 }
 
@@ -1535,7 +1535,7 @@ sizebuf_t *WriteDest (void)
 	{
 	case MSG_BROADCAST:
 		return &sv.datagram;
-	
+
 	case MSG_ONE: {
 #ifdef QUAKEWORLD
 		SV_Error("Shouldn't be at MSG_ONE");
@@ -1551,10 +1551,10 @@ sizebuf_t *WriteDest (void)
 		return &svs.clients[entnum-1].message;
 #endif
 	}
-		
+
 	case MSG_ALL:
 		return &sv.reliable_datagram;
-	
+
 	case MSG_INIT:
 #ifdef QUAKEWORLD
 		if (sv.state != ss_loading)
@@ -1569,7 +1569,7 @@ sizebuf_t *WriteDest (void)
 		PR_RunError ("WriteDest: bad destination");
 		break;
 	}
-	
+
 	return NULL;
 }
 
@@ -1693,7 +1693,7 @@ void PF_makestatic (void)
 {
 	edict_t	*ent;
 	int		i;
-	
+
 	ent = G_EDICT(OFS_PARM0);
 
 	MSG_WriteByte (&sv.signon,svc_spawnstatic);
@@ -1762,7 +1762,7 @@ void PF_changelevel (void)
 		return;
 	svs.changelevel_issued = true;
 #endif
-	
+
 	s = G_STRING(OFS_PARM0);
 #ifdef QUAKEWORLD
 	Cbuf_AddText (va("map %s\n",s));
@@ -1792,11 +1792,11 @@ void PF_logfrag (void)
 
 	e1 = NUM_FOR_EDICT(ent1);
 	e2 = NUM_FOR_EDICT(ent2);
-	
+
 	if (e1 < 1 || e1 > MAX_CLIENTS
 	|| e2 < 1 || e2 > MAX_CLIENTS)
 		return;
-	
+
 	s = va("\\%s\\%s\\\n",svs.clients[e1-1].name, svs.clients[e2-1].name);
 
 	SZ_Print (&svs.log[svs.logsequence&1], s);

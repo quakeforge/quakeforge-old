@@ -1,16 +1,16 @@
 /*
 	host.c
-	
+
 	(description)
-	
+
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
 	Author: Jeff Teunissen	<deek@quakeforge.net>
 	Date:	09 Feb 2000
-	
+
 	This file is part of the QuakeForge Core system.
-	
+
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -18,13 +18,13 @@
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 	See the GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to:
-	
+
 	Free Software Foundation, Inc.
 	59 Temple Place - Suite 330
 	Boston, MA  02111-1307, USA.
@@ -129,7 +129,7 @@ Host_ClearMemory (void)
 
 #ifdef UQUAKE
 	cls.signon = 0;
-	
+
 	memset (&sv, 0, sizeof(sv));
 #endif
 	memset (&cl, 0, sizeof(cl));
@@ -151,14 +151,14 @@ Host_EndGame ( char *message, ... )
 	va_start (argptr, message);
 	vsnprintf (string, sizeof(string), message, argptr);
 	va_end (argptr);
-	
+
 	Con_Printf ("\n===========================\n");
 	Con_Printf ("Host_EndGame: %s\n", string);
 	Con_Printf ("===========================\n\n");
-	
+
 #if QUAKEWORLD
 	CL_Disconnect ();
-	
+
 	longjmp (host_abort, 1);
 #elif UQUAKE
 	cl.paused = false;
@@ -168,7 +168,7 @@ Host_EndGame ( char *message, ... )
 
 	if ( cls.state == ca_dedicated )
 		Sys_Error ("Host_EndGame: %s\n",string);	// dedicated servers exit
-	
+
 	if ( cls.demonum != -1 )
 		CL_NextDemo ();
 	else
@@ -236,7 +236,7 @@ Host_FilterTime ( float time )
 #ifdef UQUAKE
 	}
 #endif
-	
+
 	return true;
 }
 
@@ -272,7 +272,7 @@ Host_FrameMain ( float time )
 	// decide the simulation time
 	if ( !Host_FilterTime(time) )
 		return;
-		
+
 	// get new events
 	IN_SendKeyEvents ();
 	IN_Frame();
@@ -311,14 +311,14 @@ Host_FrameMain ( float time )
 	// if running the server locally, make intentions now
 	if (sv.active)
 		CL_SendCmd ();
-	
+
 	// check for commands typed to the host
 	Host_GetConsoleCommands ();
-	
+
 	if (sv.active)
 		SV_Frame ();		// Send frame to clients
 
-	/*	
+	/*
 		if running the server remotely, send intentions now after incoming
 		messages have been read
 	*/
@@ -341,7 +341,7 @@ Host_FrameMain ( float time )
 
 	if (host_speeds->value)
 		time2 = Sys_DoubleTime ();
-		
+
 	// update audio
 #ifdef QUAKEWORLD
 	if (cls.state == ca_active)	{
@@ -353,7 +353,7 @@ Host_FrameMain ( float time )
 	}
 	else
 		S_Update (vec3_origin, vec3_origin, vec3_origin, vec3_origin);
-	
+
 	CDAudio_Update();
 
 	if (host_speeds->value) {
@@ -393,14 +393,14 @@ Host_Frame ( float time )
 		Host_FrameMain (time);
 		return;
 	}
-	
+
 	time1 = Sys_DoubleTime ();
 	Host_FrameMain (time);
-	time2 = Sys_DoubleTime ();	
-	
+	time2 = Sys_DoubleTime ();
+
 	timetotal += time2 - time1;
 	timecount++;
-	
+
 	if (timecount < 1000)
 		return;
 
@@ -429,25 +429,25 @@ Host_Error ( char *error, ... )
 	va_list 			argptr;
 	char				string[1024];
 	static qboolean 	inerror = false;
-	
+
 	if ( inerror ) {
 		Sys_Error ("Host_Error: Called recursively from within an error");
 	}
 	inerror = true;
-	
+
 	va_start (argptr, error);
 	vsnprintf (string, sizeof(string), error, argptr);
 	va_end (argptr);
 	Con_Printf ("Host_Error: %s\n", string);
 
-#ifdef UQUAKE	
+#ifdef UQUAKE
 	if (sv.active)
 		SV_Shutdown (false);
 
 	if (cls.state == ca_dedicated)
 		Sys_Error ("Host_Error: %s\n",string);	// dedicated servers exit
 #endif
-	
+
 	CL_Disconnect ();
 	cls.demonum = -1;
 
@@ -464,7 +464,7 @@ Host_Error ( char *error, ... )
 
 /*
 	Host_InitVCR
-	
+
 	Set up playback and recording of demos.
 */
 extern int vcrFile;
@@ -475,7 +475,7 @@ Host_InitVCR ( quakeparms_t *parms )
 {
 	int		i, len, n;
 	char	*p;
-	
+
 	if ( COM_CheckParm("-playback") ) {
 		if ( com_argc != 2 )
 			Sys_Error("No other parameters allowed with -playback\n");
@@ -536,7 +536,7 @@ Host_InitDisplay ()
 
 /*
 	Host_Init
-	
+
 	System Startup
 */
 void
@@ -552,21 +552,21 @@ Host_Init (quakeparms_t *parms)
 
 	if ( COM_CheckParm ("-minmemory") )
 		parms->memsize = MINIMUM_MEMORY;
-	
+
 	host_parms = *parms;
 
 	if (parms->memsize < MINIMUM_MEMORY)
 		Sys_Error ("Only %4.1fMB of memory reported, can't execute game", parms->memsize / (float) 0x100000);
-	
+
 	Memory_Init (parms->membase, parms->memsize);
 	CL_InitCvars();
 	SCR_InitCvars();
 	VID_InitCvars ();
-	Cbuf_Init (); 
+	Cbuf_Init ();
 	Cmd_Init ();
 	Cvar_Init ();
 	V_Init ();
-	
+
 #ifdef QUAKEWORLD
 	COM_Init ();
 
@@ -575,20 +575,20 @@ Host_Init (quakeparms_t *parms)
 #elif UQUAKE
 	Chase_Init ();
 	Host_InitVCR (parms);
-	
+
 	COM_Init ();
 	Host_InitLocal ();
 #endif
 
 	W_LoadWadFile ("gfx.wad");
 	Key_Init ();
-	Con_Init ();	
-	M_Init ();	
+	Con_Init ();
+	M_Init ();
 
-#ifdef UQUAKE	
+#ifdef UQUAKE
 	PR_Init ();
 #endif
-	
+
 	Mod_Init ();
 
 #ifdef UQUAKE
@@ -598,7 +598,7 @@ Host_Init (quakeparms_t *parms)
 
 	Con_Printf ("Exe: "__TIME__" "__DATE__"\n");
 	Con_Printf ("%4.1f megabytes RAM used.\n", (parms->memsize / (1024 * 1024.0)) );
-	
+
 	R_InitTextures ();		// needed even for UQ dedicated server
 
 #ifdef UQUAKE
@@ -634,7 +634,7 @@ Host_Init (quakeparms_t *parms)
 
 	Cbuf_InsertText ("exec quake.rc\n");
 
-#ifdef QUAKEWORLD	
+#ifdef QUAKEWORLD
 	Cbuf_AddText ("echo Type connect <internet address> or use GameSpy to connect to a game.\n");
 #endif
 	Cbuf_AddText ("cl_warncmd 1\n");
@@ -643,10 +643,10 @@ Host_Init (quakeparms_t *parms)
 	host_hunklevel = Hunk_LowMark ();
 	host_initialized = true;
 
-#ifdef QUAKEWORLD	
+#ifdef QUAKEWORLD
 	Con_Printf ("\nClient Version %s\n\n", QF_VERSION);
 #endif
-	Sys_Printf ("======= QuakeForge Initialized =======\n");	
+	Sys_Printf ("======= QuakeForge Initialized =======\n");
 }
 
 
@@ -660,7 +660,7 @@ void
 Host_Shutdown( void )
 {
 	static qboolean 	isdown = false;
-	
+
 	if ( isdown ) {
 		printf ("recursive shutdown\n");
 		return;
@@ -672,8 +672,8 @@ Host_Shutdown( void )
 	scr_disabled_for_loading = true;
 #endif
 
-	Host_WriteConfiguration (); 
-		
+	Host_WriteConfiguration ();
+
 	CDAudio_Shutdown ();
 	NET_Shutdown ();
 	S_Shutdown();
@@ -683,7 +683,7 @@ Host_Shutdown( void )
 		//plugin_unload(IN->handle);
 	}
 
-#if QUAKEWORLD		
+#if QUAKEWORLD
 	if (host_basepal) {
 #elif UQUAKE
 	if (cls.state != ca_dedicated) {
@@ -710,7 +710,7 @@ Host_WriteConfiguration ( void )
 			Con_Printf ("Couldn't write config.cfg.\n");
 			return;
 		}
-		
+
 		Key_WriteBindings (f);
 		Cvar_WriteVariables (f);
 
@@ -722,14 +722,14 @@ Host_WriteConfiguration ( void )
 #ifdef UQUAKE
 /*
 	Host_InitLocal
-	
+
 	(desc)
 */
 void
 Host_InitLocal ( void )
 {
 	Host_InitCommands ();
-       
+
 //	Cvar_RegisterVariable (&host_framerate);
 	host_framerate = Cvar_Get ("host_framerate","0",0,"None");
 
@@ -767,14 +767,14 @@ Host_InitLocal ( void )
 	sv_filter = Cvar_Get ("sv_filter","1",0,"None");
 
 	Host_FindMaxClients ();
-	
+
 	host_time = 1.0;		// so a think at time 0 won't get called
 }
 
 
 /*
 	Host_FindMaxClients
-	
+
 	(desc)
 */
 void	Host_FindMaxClients (void)
@@ -782,7 +782,7 @@ void	Host_FindMaxClients (void)
 	int		i;
 
 	svs.maxclients = 1;
-		
+
 	i = COM_CheckParm ("-dedicated");
 	if (i)
 	{
@@ -834,11 +834,11 @@ void Host_ClientCommands (char *fmt, ...)
 {
 	va_list		argptr;
 	char		string[1024];
-	
+
 	va_start (argptr, fmt);
 	vsnprintf (string, sizeof(string), fmt, argptr);
 	va_end (argptr);
-	
+
 	MSG_WriteByte (&host_client->message, svc_stufftext);
 	MSG_WriteString (&host_client->message, string);
 }

@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -159,7 +159,7 @@ void Skin_NextDownload (void)
 		Con_Printf ("Checking skins...\n");
 	cls.downloadtype = dl_skin;
 
-	for ( 
+	for (
 		; cls.downloadnumber != MAX_CLIENTS
 		; cls.downloadnumber++)
 	{

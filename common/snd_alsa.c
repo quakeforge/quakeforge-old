@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -66,13 +66,13 @@ int check_card(int card)
 	snd_ctl_t *handle;
 	snd_ctl_hw_info_t info;
 	int rc;
-	
+
 	if ((rc = snd_ctl_open(&handle, card)) < 0) {
 		Con_Printf("Error: control open (%i): %s\n", card, snd_strerror(rc));
 		return rc;
 	}
 	if ((rc = snd_ctl_hw_info(handle, &info)) < 0) {
-		Con_Printf("Error: control hardware info (%i): %s\n", card, 
+		Con_Printf("Error: control hardware info (%i): %s\n", card,
 				   snd_strerror(rc));
 		snd_ctl_close(handle);
 		return rc;
@@ -289,7 +289,7 @@ void SNDDMA_Submit(void)
 	switch (mmap_control->status.status) {
 	case SND_PCM_STATUS_PREPARED:
 		if ((rc=snd_pcm_channel_go(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0) {
-			fprintf(stderr, "unable to start playback. %s\n", 
+			fprintf(stderr, "unable to start playback. %s\n",
 					snd_strerror(rc));
 			exit(1);
 		}
@@ -298,7 +298,7 @@ void SNDDMA_Submit(void)
 		break;
 	case SND_PCM_STATUS_UNDERRUN:
 		if ((rc=snd_pcm_plugin_prepare(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0) {
-			fprintf(stderr, "underrun: playback channel prepare error. %s\n", 
+			fprintf(stderr, "underrun: playback channel prepare error. %s\n",
 					snd_strerror(rc));
 			exit(1);
 		}

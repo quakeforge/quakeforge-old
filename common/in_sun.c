@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -108,8 +108,8 @@ static void CheckMouseState(void)
 		// make input rawer
 		XAutoRepeatOff(x_disp);
 		XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
-		XGrabPointer(x_disp, x_win, True, 
-			     PointerMotionMask | ButtonPressMask | ButtonReleaseMask, 
+		XGrabPointer(x_disp, x_win, True,
+			     PointerMotionMask | ButtonPressMask | ButtonReleaseMask,
 			     GrabModeAsync, GrabModeAsync, None, None, CurrentTime);
 
 //		if (XChangePointerControl( x_disp, True, True, 1, MOUSE_SCALE, x_mouse_thresh ))
@@ -193,7 +193,7 @@ IN_Move(usercmd_t *cmd)
 
 	if (!x_grabbed)
 		return; // no mouse movement
-	
+
 
 	now = gethrtime();
 
@@ -202,7 +202,7 @@ IN_Move(usercmd_t *cmd)
 
 	dy = global_dy;
 	global_dy = 0;
-	
+
 //	printf("GOT: dx %d dy %d\n", dx, dy);
 
 	dx *= sensitivity->value;
@@ -210,7 +210,7 @@ IN_Move(usercmd_t *cmd)
 
 //
 //	implement low pass filter to smooth motion a bit
-//	
+//
 	if (now - last_movement > 100000000) {
 		dx = .6 * dx;
 		dy = .6 * dy;
@@ -225,20 +225,20 @@ IN_Move(usercmd_t *cmd)
 	last_dy = dy;
 
 	if (!dx && !dy) {
-		if (in_mlook.state & 1) 
+		if (in_mlook.state & 1)
 			V_StopPitchDrift ();
 		return;
 	}
-	
+
 	// add mouse X/Y movement to cmd
 	if ((in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1)))
 		cmd->sidemove += m_side->value * dx;
-	else 
+	else
 		cl.viewangles[YAW] -= m_yaw->value * dx;
 
-	if (in_mlook.state & 1) 
+	if (in_mlook.state & 1)
 		V_StopPitchDrift ();
-	    
+
 	if ((in_mlook.state & 1) && !(in_strafe.state & 1)) {
 		cl.viewangles[PITCH] += m_pitch->value * dy;
 		if (cl.viewangles[PITCH] > 80) cl.viewangles[PITCH] = 80;

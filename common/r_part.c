@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -93,20 +93,20 @@ void R_DarkFieldParticles (entity_t *ent)
 				free_particles = p->next;
 				p->next = active_particles;
 				active_particles = p;
-		
+
 				p->die = cl.time + 0.2 + (rand()&7) * 0.02;
 				p->color = 150 + rand()%6;
 				p->type = pt_slowgrav;
-				
+
 				dir[0] = j*8;
 				dir[1] = i*8;
 				dir[2] = k*8;
-	
+
 				p->org[0] = org[0] + i + (rand()&3);
 				p->org[1] = org[1] + j + (rand()&3);
 				p->org[2] = org[2] + k + (rand()&3);
-	
-				VectorNormalize (dir);						
+
+				VectorNormalize (dir);
 				vel = 50 + (rand()&63);
 				VectorScale (dir, vel, p->vel);
 			}
@@ -137,7 +137,7 @@ void R_EntityParticles (entity_t *ent)
 	float		sr, sp, sy, cr, cp, cy;
 	vec3_t		forward;
 	float		dist;
-	
+
 	dist = 64;
 	count = 50;
 
@@ -159,7 +159,7 @@ avelocities[0][i] = (rand()&255) * 0.01;
 		angle = cl.time * avelocities[i][2];
 		sr = sin(angle);
 		cr = cos(angle);
-	
+
 		forward[0] = cp*cy;
 		forward[1] = cp*sy;
 		forward[2] = -sp;
@@ -174,10 +174,10 @@ avelocities[0][i] = (rand()&255) * 0.01;
 		p->die = cl.time + 0.01;
 		p->color = 0x6f;
 		p->type = pt_explode;
-		
-		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;			
-		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;			
-		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;			
+
+		p->org[0] = ent->origin[0] + r_avertexnormals[i][0]*dist + forward[0]*beamlength;
+		p->org[1] = ent->origin[1] + r_avertexnormals[i][1]*dist + forward[1]*beamlength;
+		p->org[2] = ent->origin[2] + r_avertexnormals[i][2]*dist + forward[2]*beamlength;
 	}
 }
 
@@ -190,7 +190,7 @@ R_ClearParticles
 void R_ClearParticles (void)
 {
 	int		i;
-	
+
 	free_particles = &particles[0];
 	active_particles = NULL;
 
@@ -209,7 +209,7 @@ void R_ReadPointFile_f (void)
 	particle_t	*p;
 	char	name[MAX_OSPATH];
 	char	buf[256];
-	
+
 // FIXME	snprintf(name, sizeof(name),"maps/%s.pts", sv.name);
 
 	COM_FOpenFile (name, &f);
@@ -218,7 +218,7 @@ void R_ReadPointFile_f (void)
 		Con_Printf ("couldn't open %s\n", name);
 		return;
 	}
-	
+
 	Con_Printf ("Reading %s...\n", name);
 	c = 0;
 	for ( ;; )
@@ -229,7 +229,7 @@ void R_ReadPointFile_f (void)
 		if (r != 3)
 			break;
 		c++;
-		
+
 		if (!free_particles)
 		{
 			Con_Printf ("Not enough free particles\n");
@@ -239,7 +239,7 @@ void R_ReadPointFile_f (void)
 		free_particles = p->next;
 		p->next = active_particles;
 		active_particles = p;
-		
+
 		p->die = 99999;
 		p->color = (-c)&15;
 		p->type = pt_static;
@@ -262,7 +262,7 @@ void R_ParseParticleEffect (void)
 {
 	vec3_t		org, dir;
 	int			i, count, msgcount, color;
-	
+
 	for (i=0 ; i<3 ; i++)
 		org[i] = MSG_ReadCoord ();
 	for (i=0 ; i<3 ; i++)
@@ -274,10 +274,10 @@ if (msgcount == 255)
 	count = 1024;
 else
 	count = msgcount;
-	
+
 	R_RunParticleEffect (org, dir, color, count);
 }
-	
+
 /*
 ===============
 R_ParticleExplosion
@@ -288,7 +288,7 @@ void R_ParticleExplosion (vec3_t org)
 {
 	int			i, j;
 	particle_t	*p;
-	
+
 	for (i=0 ; i<1024 ; i++)
 	{
 		if (!free_particles)
@@ -366,7 +366,7 @@ void R_BlobExplosion (vec3_t org)
 {
 	int			i, j;
 	particle_t	*p;
-	
+
 	for (i=0 ; i<1024 ; i++)
 	{
 		if (!free_particles)
@@ -421,7 +421,7 @@ void R_RunParticleEffect (vec3_t org, vec3_t dir, int color, int count)
 	else
 		scale = 1;
 #endif
-	
+
 	for (i=0 ; i<count ; i++)
 	{
 		if (!free_particles)
@@ -505,7 +505,7 @@ void R_LavaSplash (vec3_t org)
 				free_particles = p->next;
 				p->next = active_particles;
 				active_particles = p;
-		
+
 				p->die = cl.time + 2 + (rand()&31) * 0.02;
 				p->color = 224 + (rand()&7);
 #ifdef QUAKEWORLD
@@ -513,16 +513,16 @@ void R_LavaSplash (vec3_t org)
 #else
 				p->type = pt_slowgrav;
 #endif
-				
+
 				dir[0] = j*8 + (rand()&7);
 				dir[1] = i*8 + (rand()&7);
 				dir[2] = 256;
-	
+
 				p->org[0] = org[0] + dir[0];
 				p->org[1] = org[1] + dir[1];
 				p->org[2] = org[2] + (rand()&63);
-	
-				VectorNormalize (dir);						
+
+				VectorNormalize (dir);
 				vel = 50 + (rand()&63);
 				VectorScale (dir, vel, p->vel);
 			}
@@ -551,7 +551,7 @@ void R_TeleportSplash (vec3_t org)
 				free_particles = p->next;
 				p->next = active_particles;
 				active_particles = p;
-		
+
 				p->die = cl.time + 0.2 + (rand()&7) * 0.02;
 				p->color = 7 + (rand()&7);
 #ifdef QUAKEWORLD
@@ -559,16 +559,16 @@ void R_TeleportSplash (vec3_t org)
 #else
 				p->type = pt_slowgrav;
 #endif
-				
+
 				dir[0] = j*8;
 				dir[1] = i*8;
 				dir[2] = k*8;
-	
+
 				p->org[0] = org[0] + i + (rand()&3);
 				p->org[1] = org[1] + j + (rand()&3);
 				p->org[2] = org[2] + k + (rand()&3);
-	
-				VectorNormalize (dir);						
+
+				VectorNormalize (dir);
 				vel = 50 + (rand()&63);
 				VectorScale (dir, vel, p->vel);
 			}
@@ -606,7 +606,7 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 		free_particles = p->next;
 		p->next = active_particles;
 		active_particles = p;
-		
+
 		VectorCopy (vec3_origin, p->vel);
 		p->die = cl.time + 2;
 

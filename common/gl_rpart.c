@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -52,10 +52,10 @@ void R_DrawParticles (void)
 	vec3_t			up, right;
 	float			scale;
 	qboolean		alphaTestEnabled;
-    
+
 	GL_Bind(particletexture);
 	alphaTestEnabled = glIsEnabled(GL_ALPHA_TEST);
-	
+
 	if (alphaTestEnabled)
 		glDisable(GL_ALPHA_TEST);
 	glEnable (GL_BLEND);
@@ -78,8 +78,8 @@ void R_DrawParticles (void)
 	grav = frametime * 800 * 0.05;
 #endif
 	dvel = 4*frametime;
-	
-	for ( ;; ) 
+
+	for ( ;; )
 	{
 		kill = active_particles;
 		if (kill && kill->die < cl.time)
@@ -108,7 +108,7 @@ void R_DrawParticles (void)
 		}
 
 		// hack a scale up to keep particles from disapearing
-		scale = (p->org[0] - r_origin[0])*vpn[0] 
+		scale = (p->org[0] - r_origin[0])*vpn[0]
 			+ (p->org[1] - r_origin[1])*vpn[1]
 			+ (p->org[2] - r_origin[2])*vpn[2];
 		if (scale < 20)
@@ -140,7 +140,7 @@ void R_DrawParticles (void)
 		p->org[0] += p->vel[0]*frametime;
 		p->org[1] += p->vel[1]*frametime;
 		p->org[2] += p->vel[2]*frametime;
-		
+
 		switch (p->type)
 		{
 		case pt_static:

@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -115,7 +115,7 @@ void    VID_Init (unsigned char *palette)
 	vid_windowed_mode = Cvar_Get ("vid_windowed_mode","0",CVAR_ARCHIVE,
 					"None");
 	block_switch = Cvar_Get ("block_switch","0",CVAR_ARCHIVE,"None");
- 
+
 	Cmd_AddCommand ("vid_testmode", VID_TestMode_f);
 	Cmd_AddCommand ("vid_nummodes", VID_NumModes_f);
 	Cmd_AddCommand ("vid_describecurrentmode", VID_DescribeCurrentMode_f);
@@ -136,7 +136,7 @@ void    VID_Init (unsigned char *palette)
 	VID_SetMode (vid_modenum, palette);
 
 	vid_realmode = vid_modenum;
-	
+
 	vid_menudrawfn = VID_MenuDraw;
 	vid_menukeyfn = VID_MenuKey;
 }
@@ -205,7 +205,7 @@ char *VID_ModeInfo (int modenum, char **ppheader)
 
 /*
 ================
-VID_SetMode 
+VID_SetMode
 ================
 */
 int VID_SetMode (int modenum, unsigned char *palette)
@@ -410,7 +410,7 @@ VID_DescribeMode_f
 void VID_DescribeMode_f (void)
 {
 	int		modenum;
-	
+
 	modenum = Q_atoi (Cmd_Argv(1));
 
 	Con_Printf ("%s\n", VID_ModeInfo (modenum, NULL));
@@ -593,7 +593,7 @@ void VID_MenuDraw (void)
 
 	vid_wmodes = 0;
 	nummodes = VID_NumModes ();
-	
+
 	for (i=0 ; i<nummodes ; i++)
 	{
 		if (vid_wmodes < MAX_MODEDESCS)

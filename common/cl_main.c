@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -295,7 +295,7 @@ void CL_ClearState (void)
 
 	SZ_Clear (&cls.netchan.message);
 
-// clear other arrays	
+// clear other arrays
 	memset (cl_efrags, 0, sizeof(cl_efrags));
 #ifdef UQUAKE
 	memset (cl_entities, 0, sizeof(cl_entities));
@@ -337,14 +337,14 @@ void CL_Color_f (void)
 		top = atoi(Cmd_Argv(1));
 		bottom = atoi(Cmd_Argv(2));
 	}
-	
+
 	top &= 15;
 	if (top > 13)
 		top = 13;
 	bottom &= 15;
 	if (bottom > 13)
 		bottom = 13;
-	
+
 	snprintf(num, sizeof(num), "%i", top);
 	Cvar_Set ("topcolor", num);
 	snprintf(num, sizeof(num), "%i", bottom);
@@ -367,9 +367,9 @@ void CL_Connect_f (void)
 
 	if (Cmd_Argc() != 2) {
 		Con_Printf ("usage: connect <server>\n");
-		return;	
+		return;
 	}
-	
+
 	server = Cmd_Argv (1);
 
 	CL_Disconnect ();
@@ -408,7 +408,7 @@ void CL_ConnectionlessPacket (void)
 		}
 		Netchan_Setup (&cls.netchan, net_from, cls.qport);
 		MSG_WriteChar (&cls.netchan.message, clc_stringcmd);
-		MSG_WriteString (&cls.netchan.message, "new");	
+		MSG_WriteString (&cls.netchan.message, "new");
 		cls.state = ca_connected;
 		Con_Printf ("Connected.\n");
 		allowremotecmd = false; // localid required now for remote cmds
@@ -489,7 +489,7 @@ void CL_ConnectionlessPacket (void)
 		data[3] = 0xff;
 		data[4] = A2A_ACK;
 		data[5] = 0;
-		
+
 		NET_SendPacket (6, data, net_from);
 		return;
 	}
@@ -539,7 +539,7 @@ void CL_Disconnect (void)
 
 // stop sounds (especially looping!)
 	S_StopAllSounds (true);
-	
+
 // bring the console down and fade the colors back to normal
 //	SCR_BringDownConsole ();
 
@@ -668,7 +668,7 @@ void CL_EstablishConnection (char *host)
 		Host_Error ("CL_Connect: connect failed\n");
 #endif
 	Con_DPrintf ("CL_EstablishConnection: connected to %s\n", host);
-	
+
 	cls.demonum = -1;			// not in the demo loop now
 	cls.state = ca_connected;
 #ifdef UQUAKE
@@ -777,7 +777,7 @@ float	CL_LerpPoint (void)
 	float	f, frac;
 
 	f = cl.mtime[0] - cl.mtime[1];
-	
+
 	if (!f || cl_nolerp->value || cls.timedemo || sv.active)
 	{
 		cl.time = cl.mtime[0];
@@ -812,7 +812,7 @@ SetPal(2);
 	}
 	else
 		SetPal(0);
-		
+
 	return frac;
 }
 #endif
@@ -911,7 +911,7 @@ void CL_PrintEntities_f (void)
 {
 	entity_t	*ent;
 	int			i;
-	
+
 	for (i=0,ent=cl_entities ; i<cl.num_entities ; i++,ent++)
 	{
 		Con_Printf ("%3i:",i);
@@ -997,7 +997,7 @@ void CL_Rcon_f (void)
 		}
 		NET_StringToAdr (rcon_address->string, &to);
 	}
-	
+
 	NET_SendPacket (strlen(message)+1, message
 		, to);
 }
@@ -1017,7 +1017,7 @@ int CL_ReadFromServer (void)
 
 	cl.oldtime = cl.time;
 	cl.time += host_frametime;
-	
+
 	do
 	{
 		ret = CL_GetMessage ();
@@ -1025,11 +1025,11 @@ int CL_ReadFromServer (void)
 			Host_Error ("CL_ReadFromServer: lost server connection");
 		if (!ret)
 			break;
-		
+
 		cl.last_received_message = realtime;
 		CL_ParseServerMessage ();
 	} while (ret && cls.state >= ca_connected);
-	
+
 	if (cl_shownet->value)
 		Con_Printf ("\n");
 
@@ -1072,7 +1072,7 @@ void CL_ReadPackets (void)
 		//
 		// packet from server
 		//
-		if (!cls.demoplayback && 
+		if (!cls.demoplayback &&
 			!NET_CompareAdr (net_from, cls.netchan.remote_address))
 		{
 			Con_DPrintf ("%s:sequenced packet without connection\n"
@@ -1097,7 +1097,7 @@ void CL_ReadPackets (void)
 		CL_Disconnect ();
 		return;
 	}
-	
+
 }
 #endif
 
@@ -1153,7 +1153,7 @@ void CL_RelinkEntities (void)
 	vec3_t		oldorg;
 	dlight_t	*dl;
 
-// determine partial update time	
+// determine partial update time
 	frac = CL_LerpPoint ();
 
 	cl_numvisedicts = 0;
@@ -1162,12 +1162,12 @@ void CL_RelinkEntities (void)
 // interpolate player info
 //
 	for (i=0 ; i<3 ; i++)
-		cl.velocity[i] = cl.mvelocity[1][i] + 
+		cl.velocity[i] = cl.mvelocity[1][i] +
 			frac * (cl.mvelocity[0][i] - cl.mvelocity[1][i]);
 
 	if (cls.demoplayback)
 	{
-	// interpolate the angles	
+	// interpolate the angles
 		for (j=0 ; j<3 ; j++)
 		{
 			d = cl.mviewangles[0][j] - cl.mviewangles[1][j];
@@ -1178,9 +1178,9 @@ void CL_RelinkEntities (void)
 			cl.viewangles[j] = cl.mviewangles[1][j] + frac*d;
 		}
 	}
-	
+
 	bobjrotate = anglemod(100*cl.time);
-	
+
 // start on the entity after the world
 	for (i=1,ent=cl_entities+1 ; i<cl.num_entities ; i++,ent++)
 	{
@@ -1228,7 +1228,7 @@ void CL_RelinkEntities (void)
 					d += 360;
 				ent->angles[j] = ent->msg_angles[1][j] + f*d;
 			}
-			
+
 		}
 
 // rotate binary objects locally
@@ -1249,14 +1249,14 @@ void CL_RelinkEntities (void)
 			VectorCopy (ent->origin,  dl->origin);
 			dl->origin[2] += 16;
 			AngleVectors (ent->angles, fv, rv, uv);
-			 
+
 			VectorMA (dl->origin, 18, fv, dl->origin);
 			dl->radius = 200 + (rand()&31);
 			dl->minlight = 32;
 			dl->die = cl.time + 0.1;
 		}
 		if (ent->effects & EF_BRIGHTLIGHT)
-		{			
+		{
 			dl = CL_AllocDlight (i);
 			VectorCopy (ent->origin,  dl->origin);
 			dl->origin[2] += 16;
@@ -1264,7 +1264,7 @@ void CL_RelinkEntities (void)
 			dl->die = cl.time + 0.001;
 		}
 		if (ent->effects & EF_DIMLIGHT)
-		{			
+		{
 			dl = CL_AllocDlight (i);
 			VectorCopy (ent->origin,  dl->origin);
 			dl->radius = 200 + (rand()&31);
@@ -1272,7 +1272,7 @@ void CL_RelinkEntities (void)
 		}
 #ifdef QUAKE2
 		if (ent->effects & EF_DARKLIGHT)
-		{			
+		{
 			dl = CL_AllocDlight (i);
 			VectorCopy (ent->origin,  dl->origin);
 			dl->radius = 200.0 + (rand()&31);
@@ -1280,7 +1280,7 @@ void CL_RelinkEntities (void)
 			dl->dark = true;
 		}
 		if (ent->effects & EF_LIGHT)
-		{			
+		{
 			dl = CL_AllocDlight (i);
 			VectorCopy (ent->origin,  dl->origin);
 			dl->radius = 200;
@@ -1432,25 +1432,25 @@ Con_DPrintf ("CL_SignonReply: %i\n", cls.signon);
 		MSG_WriteString (&cls.netchan.message, "prespawn");
 		cls.state = ca_onserver;
 		break;
-		
-	case 2:		
+
+	case 2:
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		MSG_WriteString (&cls.netchan.message, va("name \"%s\"\n", cl_name->string));
-	
+
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		MSG_WriteString (&cls.netchan.message, va("color %i %i\n", ((int)cl_color->value)>>4, ((int)cl_color->value)&15));
-	
+
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		snprintf(str, sizeof(str), "spawn %s", cls.spawnparms);
 		MSG_WriteString (&cls.netchan.message, str);
 		break;
-		
-	case 3:	
+
+	case 3:
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		MSG_WriteString (&cls.netchan.message, "begin");
 		Cache_Report ();		// print remaining memory
 		break;
-		
+
 	case 4:
 		SCR_EndLoadingPlaque ();		// allow normal screen updates
 		cls.state = ca_active;
@@ -1563,7 +1563,7 @@ void SetPal (int i)
 	static int old;
 	byte	pal[768];
 	int		c;
-	
+
 	if (i == old)
 		return;
 	old = i;
@@ -1628,7 +1628,7 @@ void CL_Init (void)
 // register our commands
 //
 	Cmd_AddCommand ("changing", CL_Changing_f);
-#ifdef UQUAKE	
+#ifdef UQUAKE
 	Cmd_AddCommand ("entities", CL_PrintEntities_f);
 #endif
 	Cmd_AddCommand ("disconnect", CL_Disconnect_f);
@@ -1760,7 +1760,7 @@ void CL_InitCvars()
 			"None");
 	topcolor = Cvar_Get ("topcolor","0",
 				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-				"None"); 
+				"None");
 	bottomcolor = Cvar_Get ("bottomcolor","0",
 				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");

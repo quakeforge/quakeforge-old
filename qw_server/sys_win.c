@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -170,7 +170,7 @@ int main (int argc, char **argv)
 	int				sleep_msec;
 
 	COM_InitArgv (argc, argv);
-	
+
 	parms.argc = com_argc;
 	parms.argv = com_argv;
 
@@ -211,7 +211,7 @@ int main (int argc, char **argv)
 		Cvar_Set ("sys_sleep", "0");
 
 // run one frame immediately for first heartbeat
-	SV_Frame (0.1);		
+	SV_Frame (0.1);
 
 //
 // main loop
@@ -244,9 +244,9 @@ int main (int argc, char **argv)
 		newtime = Sys_DoubleTime ();
 		time = newtime - oldtime;
 		oldtime = newtime;
-		
-		SV_Frame (time);				
-	}	
+
+		SV_Frame (time);
+	}
 
 	return true;
 }

@@ -14,7 +14,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -67,7 +67,7 @@ static cvar_t	*vid_mode;
 static cvar_t	*vid_redrawfull;
 //static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
 static cvar_t	*vid_waitforrefresh;
- 
+
 static char	*framebuffer_ptr;
 
 
@@ -184,7 +184,7 @@ D_EndDirectRect (int x, int y, int width, int height)
 					vidpage=offset / 0x10000;
 					vga_setpage(vidpage);
 				}
-				memcpy (vid.direct + off, 
+				memcpy (vid.direct + off,
 					&backingbuf[(i +j)*24],	width);
 			}
 		}
@@ -224,7 +224,7 @@ static void
 VID_DescribeMode_f(void)
 {
 	int modenum;
-	
+
 	modenum = Q_atoi (Cmd_Argv(1));
 	if ((modenum >= num_modes) || (modenum < 0 ) ||
 	    !modes[modenum].width) {
@@ -244,7 +244,7 @@ static void
 VID_DescribeModes_f(void)
 {
 	int i;
-	
+
 	for (i=0;i<num_modes;i++) {
 		if (modes[i].width) {
 			Con_Printf("%d: %d x %d - ", i, modes[i].width,modes[i].height);
@@ -266,7 +266,7 @@ static int
 VID_NumModes(void)
 {
 	int i,i1=0;
-	
+
 	for (i=0; i < num_modes; i++) {
 		i1 += modes[i].width ? 1 : 0;
 	}
@@ -433,7 +433,7 @@ VID_SetMode(int modenum, unsigned char *palette)
 	vid.conwidth = vid.width;
 	vid.conheight = vid.height;
 	vid.numpages = 1;
-	
+
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
 
@@ -495,7 +495,7 @@ VID_Init(unsigned char *palette)
 	int err;
 
 	//plugin_load("in_svgalib.so");
-	
+
 	if (svgalib_inited) return;
 
 #if 0
@@ -517,7 +517,7 @@ VID_Init(unsigned char *palette)
 //		Cvar_RegisterVariable (&vid_waitforrefresh);
 		vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",
 						CVAR_ARCHIVE,"None");
-		
+
 		Cmd_AddCommand("vid_nummodes", VID_NumModes_f);
 		Cmd_AddCommand("vid_describemode", VID_DescribeMode_f);
 		Cmd_AddCommand("vid_describemodes", VID_DescribeModes_f);
@@ -558,7 +558,7 @@ VID_Init(unsigned char *palette)
 }
 
 
-void 
+void
 VID_Update(vrect_t *rects)
 {
 	if (!svgalib_inited) return;
@@ -596,22 +596,22 @@ VID_Update(vrect_t *rects)
 			offset = rects->y * vid.rowbytes + rects->x;
 			while (ycount--) {
 				register int i = offset % 0x10000;
-	
+
 				if ((offset / 0x10000) != vidpage) {
 					vidpage=offset / 0x10000;
 					vga_setpage(vidpage);
 				}
 				if (rects->width + i > 0x10000) {
-					memcpy(framebuffer_ptr + i, 
-							vid.buffer + offset, 
+					memcpy(framebuffer_ptr + i,
+							vid.buffer + offset,
 							0x10000 - i);
 					vga_setpage(++vidpage);
 					memcpy(framebuffer_ptr,
-							vid.buffer + offset + 0x10000 - i, 
+							vid.buffer + offset + 0x10000 - i,
 							rects->width - 0x10000 + i);
 				} else {
-					memcpy(framebuffer_ptr + i, 
-					       vid.buffer + offset, 
+					memcpy(framebuffer_ptr + i,
+					       vid.buffer + offset,
 					       rects->width);
 				}
 				offset += vid.rowbytes;
@@ -619,7 +619,7 @@ VID_Update(vrect_t *rects)
 			rects = rects->pnext;
 		}
 	}
-	
+
 	if (vid_mode->value != current_mode) {
 		VID_SetMode ((int)vid_mode->value, vid_current_palette);
 	}

@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -183,7 +183,7 @@ typedef struct
 	char			reserved1 [2];
 	unsigned short	dataLenPlus8;
 	char			reserved2 [2];
-	char			data[1];			// actual size is <dataLenPlus8> - 8		
+	char			data[1];			// actual size is <dataLenPlus8> - 8
 } BW_UDPreadInfo2_t;
 
 typedef struct
@@ -724,7 +724,7 @@ int BW_GetAddrFromName (char *name, struct qsockaddr *hostaddr)
 		port = net_hostport;
 
 	hostaddr->sa_family = AF_INET;
-	((struct sockaddr_in *)hostaddr)->sin_port = htons((short)port);	
+	((struct sockaddr_in *)hostaddr)->sin_port = htons((short)port);
 	((struct sockaddr_in *)hostaddr)->sin_addr.s_addr =
 	((ethdevinfo.inetAddr & mask) | addr);
 

@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -91,7 +91,7 @@ keyname_t keynames[] =
 	{"ALT", K_ALT},
 	{"CTRL", K_CTRL},
 	{"SHIFT", K_SHIFT},
-	
+
 	// Keypad stuff..
 	{"NUMLOCK", KP_NUMLCK},
 	{"KP_SLASH", KP_DIVIDE},
@@ -255,7 +255,7 @@ void Key_Console (int key)
 	HANDLE	th;
 	char	*clipText, *textCopied;
 #endif
-	
+
 	switch (key) {
 	    case KP_ENTER:
 	    case K_ENTER:
@@ -279,7 +279,7 @@ void Key_Console (int key)
 				Cbuf_AddText (key_lines[edit_line]+1);	// skip the ]
 
 			Cbuf_AddText ("\n");
-no_lf:			
+no_lf:
 			Con_Printf ("%s\n",key_lines[edit_line]);
 			edit_line = (edit_line + 1) & 31;
 			history_line = edit_line;
@@ -295,10 +295,10 @@ no_lf:
 			// command completion
 			CompleteCommand ();
 			return;
-	
+
 		case K_BACKSPACE:
 			if (key_linepos > 1)
-			{ 
+			{
 				strcpy(key_lines[edit_line] + key_linepos - 1, key_lines[edit_line] + key_linepos);
 				key_linepos--;
 			}
@@ -309,12 +309,12 @@ no_lf:
 			if (key_linepos < strlen(key_lines[edit_line]))
 				strcpy(key_lines[edit_line] + key_linepos, key_lines[edit_line] + key_linepos + 1);
 			return;
-	
+
 		case KP_RIGHTARROW:
 		case K_RIGHTARROW:
 			if (key_linepos < strlen(key_lines[edit_line]))
 				key_linepos++;
-			return;	
+			return;
 
 		case KP_LEFTARROW:
 	    case K_LEFTARROW:
@@ -351,7 +351,7 @@ no_lf:
 				key_linepos = Q_strlen(key_lines[edit_line]);
 			}
 			return;
-			
+
 	    case K_MWHEELUP:
 	    case KP_PGUP:
 	    case K_PGUP:
@@ -397,7 +397,7 @@ no_lf:
 						i = MAXCMDLINE-1 - strlen(key_lines[edit_line]);
 					if (i > 0)
 					{	// insert the string
-						memcpy (key_lines[edit_line] + key_linepos + i, 
+						memcpy (key_lines[edit_line] + key_linepos + i,
 							key_lines[edit_line] + key_linepos, strlen(key_lines[edit_line]) - key_linepos + 1);
 						memcpy (key_lines[edit_line] + key_linepos, textCopied, i);
 						key_linepos += i;
@@ -414,10 +414,10 @@ no_lf:
 
 	if (key < 32 || key > 127)
 		return;	// non printable
-		
+
 	if (key_linepos < MAXCMDLINE-1)
 	{
-		i = strlen(key_lines[edit_line]) - 1;			
+		i = strlen(key_lines[edit_line]) - 1;
 		if (i == MAXCMDLINE-2) i--;
 		for (; i >= key_linepos; i--)
 			key_lines[edit_line][i + 1] = key_lines[edit_line][i];
@@ -497,7 +497,7 @@ the K_* names are matched up.
 int Key_StringToKeynum (char *str)
 {
 	keyname_t	*kn;
-	
+
 	if (!str || !str[0])
 		return -1;
 	if (!str[1])
@@ -522,9 +522,9 @@ FIXME: handle quote special (general escape sequence?)
 */
 char *Key_KeynumToString (int keynum)
 {
-	keyname_t	*kn;	
+	keyname_t	*kn;
 	static	char	tinystr[2];
-	
+
 	if (keynum == -1)
 		return "<KEY NOT FOUND>";
 	if (keynum > 32 && keynum < 127)
@@ -533,7 +533,7 @@ char *Key_KeynumToString (int keynum)
 		tinystr[1] = 0;
 		return tinystr;
 	}
-	
+
 	for (kn=keynames ; kn->name ; kn++)
 		if (keynum == kn->keynum)
 			return kn->name;
@@ -551,7 +551,7 @@ void Key_SetBinding (int keynum, char *binding)
 {
 	char	*new;
 	int		l;
-			
+
 	if (keynum == -1)
 		return;
 
@@ -564,13 +564,13 @@ void Key_SetBinding (int keynum, char *binding)
 		Z_Free (keybindings[keynum]);
 		keybindings[keynum] = NULL;
 	}
-			
+
 // allocate memory for new binding
-	l = Q_strlen (binding);	
+	l = Q_strlen (binding);
 	new = Z_Malloc (l+1);
 	Q_strcpy (new, binding);
 	new[l] = 0;
-	keybindings[keynum] = new;	
+	keybindings[keynum] = new;
 
 	if (!Q_strncmp (new, "toggleconsole", 13)) {
 			consolekeys[keynum] = false;
@@ -591,7 +591,7 @@ void Key_Unbind_f (void)
 		Con_Printf ("unbind <key> : remove commands from a key\n");
 		return;
 	}
-	
+
 	b = Key_StringToKeynum (Cmd_Argv(1));
 	if (b==-1)
 	{
@@ -605,7 +605,7 @@ void Key_Unbind_f (void)
 void Key_Unbindall_f (void)
 {
 	int		i;
-	
+
 	for (i=0 ; i<256 ; i++)
 		if (keybindings[i])
 			Key_SetBinding (i, "");
@@ -621,7 +621,7 @@ void Key_Bind_f (void)
 {
 	int			i, c, b;
 	char		cmd[1024];
-	
+
 	c = Cmd_Argc();
 
 	if (c != 2 && c != 3)
@@ -644,7 +644,7 @@ void Key_Bind_f (void)
 			Con_Printf ("\"%s\" is not bound\n", Cmd_Argv(1) );
 		return;
 	}
-	
+
 // copy the rest of the command line
 	cmd[0] = 0;		// start out with a null string
 	for (i=2 ; i< c ; i++)
@@ -689,7 +689,7 @@ void Key_Init (void)
 		key_lines[i][1] = 0;
 	}
 	key_linepos = 1;
-	
+
 //
 // init ascii characters in console mode
 //
@@ -799,11 +799,11 @@ void Key_Event (int key, qboolean down)
 	{
 		key_repeats[key]++;
 		if (key != K_BACKSPACE && key != K_DEL
-			&& key != K_LEFTARROW && key != K_RIGHTARROW 
+			&& key != K_LEFTARROW && key != K_RIGHTARROW
 			&& key != K_PGUP && key != K_PGDN
 			&& key_repeats[key] > 1)
 			return;	// ignore most autorepeats
-			
+
 		if (key >= 200 && !keybindings[key])
 			Con_Printf ("%s is unbound, hit F4 to set.\n", Key_KeynumToString (key) );
 	}
@@ -881,7 +881,7 @@ void Key_Event (int key, qboolean down)
 //
 	if ( (key_dest == key_menu && menubound[key])
 	|| (key_dest == key_console && !consolekeys[key])
-	|| (key_dest == key_game && ( 
+	|| (key_dest == key_game && (
 		(cls.state == ca_active)
 		|| !consolekeys[key] ) ) )
 	{

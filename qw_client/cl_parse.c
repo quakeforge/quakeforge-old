@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -49,7 +49,7 @@ char *svc_strings[] =
 	"svc_stufftext",		// [string] stuffed into client's console buffer
 						// the string should be \n terminated
 	"svc_setangle",		// [vec3] set the view angle to this absolute value
-	
+
 	"svc_serverdata",		// [long] version ...
 	"svc_lightstyle",		// [byte] [string]
 	"svc_updatename",		// [byte] [string]
@@ -59,11 +59,11 @@ char *svc_strings[] =
 	"svc_updatecolors",	// [byte] [byte]
 	"svc_particle",		// [vec3] <variable>
 	"svc_damage",			// [byte] impact [byte] blood [vec3] from
-	
+
 	"svc_spawnstatic",
 	"OBSOLETE svc_spawnbinary",
 	"svc_spawnbaseline",
-	
+
 	"svc_temp_entity",		// <variable>
 	"svc_setpause",
 	"svc_signonnum",
@@ -225,7 +225,7 @@ void Model_NextDownload (void)
 	}
 
 	cls.downloadtype = dl_model;
-	for ( 
+	for (
 		; cl.model_name[cls.downloadnumber][0]
 		; cls.downloadnumber++)
 	{
@@ -282,7 +282,7 @@ void Sound_NextDownload (void)
 	}
 
 	cls.downloadtype = dl_sound;
-	for ( 
+	for (
 		; cl.sound_name[cls.downloadnumber][0]
 		; cls.downloadnumber++)
 	{
@@ -504,7 +504,7 @@ Con_DPrintf("Upload starting of %d...\n", size);
 	upload_pos = 0;
 
 	CL_NextUpload();
-} 
+}
 
 qboolean CL_IsUploading(void)
 {
@@ -541,7 +541,7 @@ void CL_ParseServerData (void)
 	qboolean	cflag = false;
 	extern	char	gamedirfile[MAX_OSPATH];
 	int protover;
-	
+
 	Con_DPrintf ("Serverdata packet received.\n");
 //
 // wipe the client_state_t struct
@@ -551,7 +551,7 @@ void CL_ParseServerData (void)
 // parse protocol version number
 // allow 2.2 and 2.29 demos to play
 	protover = MSG_ReadLong ();
-	if (protover != PROTOCOL_VERSION && 
+	if (protover != PROTOCOL_VERSION &&
 		!(cls.demoplayback && (protover == 26 || protover == 27 || protover == 28)))
 		Host_EndGame ("Server returned version %i, not %i\nYou probably need to upgrade.\nCheck http://www.quakeworld.net/", protover, PROTOCOL_VERSION);
 
@@ -559,16 +559,16 @@ void CL_ParseServerData (void)
 
 	// gametype is always GAME_DEATHMATCH in QW
 	cl.gametype = GAME_DEATHMATCH;
-	
+
 	// maxclients is irrelivant in QW
 	cl.maxclients = 0;
-	
+
 	// game directory
 	str = MSG_ReadString ();
 
 	if (stricmp(gamedirfile, str)) {
 		// save current config
-		Host_WriteConfiguration (); 
+		Host_WriteConfiguration ();
 		cflag = true;
 	}
 
@@ -719,7 +719,7 @@ CL_ParseBaseline
 void CL_ParseBaseline (entity_state_t *es)
 {
 	int			i;
-	
+
 	es->modelindex = MSG_ReadByte ();
 	es->frame = MSG_ReadByte ();
 	es->colormap = MSG_ReadByte();
@@ -748,7 +748,7 @@ void CL_ParseStatic (void)
 	entity_state_t	es;
 
 	CL_ParseBaseline (&es);
-		
+
 	i = cl.num_statics;
 	if (i >= MAX_STATIC_ENTITIES)
 		Host_EndGame ("Too many static entities");
@@ -763,7 +763,7 @@ void CL_ParseStatic (void)
 
 	VectorCopy (es.origin, ent->origin);
 	VectorCopy (es.angles, ent->angles);
-	
+
 	R_AddEfrags (ent);
 }
 
@@ -777,13 +777,13 @@ void CL_ParseStaticSound (void)
 	vec3_t		org;
 	int			sound_num, vol, atten;
 	int			i;
-	
+
 	for (i=0 ; i<3 ; i++)
 		org[i] = MSG_ReadCoord ();
 	sound_num = MSG_ReadByte ();
 	vol = MSG_ReadByte ();
 	atten = MSG_ReadByte ();
-	
+
 	S_StaticSound (cl.sound_precache[sound_num], org, vol, atten);
 }
 
@@ -808,34 +808,34 @@ void CL_ParseStartSoundPacket(void)
     int 	channel, ent;
     int 	sound_num;
     int 	volume;
-    float 	attenuation;  
+    float 	attenuation;
  	int		i;
-	           
-    channel = MSG_ReadShort(); 
+
+    channel = MSG_ReadShort();
 
     if (channel & SND_VOLUME)
 		volume = MSG_ReadByte ();
 	else
 		volume = DEFAULT_SOUND_PACKET_VOLUME;
-	
+
     if (channel & SND_ATTENUATION)
 		attenuation = MSG_ReadByte () / 64.0;
 	else
 		attenuation = DEFAULT_SOUND_PACKET_ATTENUATION;
-	
+
 	sound_num = MSG_ReadByte ();
 
 	for (i=0 ; i<3 ; i++)
 		pos[i] = MSG_ReadCoord ();
- 
+
 	ent = (channel>>3)&1023;
 	channel &= 7;
 
 	if (ent > MAX_EDICTS)
 		Host_EndGame ("CL_ParseStartSoundPacket: ent = %i", ent);
-	
+
     S_StartSound (ent, channel, cl.sound_precache[sound_num], pos, volume/255.0, attenuation);
-}       
+}
 
 
 /*
@@ -877,7 +877,7 @@ void CL_ParseClientdata (void)
 			cls.latency = latency;
 		else
 			cls.latency += 0.001;	// drift up, so correction are needed
-	}	
+	}
 }
 
 /*
@@ -985,7 +985,7 @@ void CL_SetStat (int stat, int value)
 		Sys_Error ("CL_SetStat: %i is invalid", stat);
 
 	Sbar_Changed ();
-	
+
 	if (stat == STAT_ITEMS)
 	{	// set flash times
 		Sbar_Changed ();
@@ -1023,7 +1023,7 @@ void CL_MuzzleFlash (void)
 	dl = CL_AllocDlight (i);
 	VectorCopy (pl->origin,  dl->origin);
 	AngleVectors (pl->viewangles, fv, rv, uv);
-		
+
 	VectorMA (dl->origin, 18, fv, dl->origin);
 	dl->radius = 200 + (rand()&31);
 	dl->minlight = 32;
@@ -1083,7 +1083,7 @@ void CL_ParseServerMessage (void)
 		}
 
 		SHOWNET(svc_strings[cmd]);
-	
+
 	// other commands
 		switch (cmd)
 		{
@@ -1092,11 +1092,11 @@ void CL_ParseServerMessage (void)
 
 			Host_EndGame ("CL_ParseServerMessage: Illegible server message");
 			break;
-			
+
 		case svc_nop:
 //			Con_Printf ("svc_nop\n");
 			break;
-			
+
 		case svc_disconnect:
 			if (cls.state == ca_connected)
 				Host_EndGame ("Server disconnected\n"
@@ -1115,34 +1115,34 @@ void CL_ParseServerMessage (void)
 			Con_Printf ("%s", MSG_ReadString ());
 			con_ormask = 0;
 			break;
-			
+
 		case svc_centerprint:
 			SCR_CenterPrint (MSG_ReadString ());
 			break;
-			
+
 		case svc_stufftext:
 			s = MSG_ReadString ();
 			//s = COM_EscapeEscapes(s);
 			Con_DPrintf ("stufftext: %s\n", s);
 			Cbuf_AddText (s);
 			break;
-			
+
 		case svc_damage:
 			V_ParseDamage ();
 			break;
-			
+
 		case svc_serverdata:
 			Cbuf_Execute ();		// make sure any stuffed commands are done
 			CL_ParseServerData ();
 			vid.recalc_refdef = true;	// leave full screen intermission
 			break;
-			
+
 		case svc_setangle:
 			for (i=0 ; i<3 ; i++)
 				cl.viewangles[i] = MSG_ReadAngle ();
 //			cl.viewangles[PITCH] = cl.viewangles[ROLL] = 0;
 			break;
-			
+
 		case svc_lightstyle:
 			i = MSG_ReadByte ();
 			if (i >= MAX_LIGHTSTYLES)
@@ -1150,23 +1150,23 @@ void CL_ParseServerMessage (void)
 			Q_strcpy (cl_lightstyle[i].map,  MSG_ReadString());
 			cl_lightstyle[i].length = Q_strlen(cl_lightstyle[i].map);
 			break;
-			
+
 		case svc_sound:
 			CL_ParseStartSoundPacket();
 			break;
-			
+
 		case svc_stopsound:
 			i = MSG_ReadShort();
 			S_StopSound(i>>3, i&7);
 			break;
-		
+
 		case svc_updatefrags:
 			Sbar_Changed ();
 			i = MSG_ReadByte ();
 			if (i >= MAX_CLIENTS)
 				Host_EndGame ("CL_ParseServerMessage: svc_updatefrags > MAX_SCOREBOARD");
 			cl.players[i].frags = MSG_ReadShort ();
-			break;			
+			break;
 
 		case svc_updateping:
 			i = MSG_ReadByte ();
@@ -1174,14 +1174,14 @@ void CL_ParseServerMessage (void)
 				Host_EndGame ("CL_ParseServerMessage: svc_updateping > MAX_SCOREBOARD");
 			cl.players[i].ping = MSG_ReadShort ();
 			break;
-			
+
 		case svc_updatepl:
 			i = MSG_ReadByte ();
 			if (i >= MAX_CLIENTS)
 				Host_EndGame ("CL_ParseServerMessage: svc_updatepl > MAX_SCOREBOARD");
 			cl.players[i].pl = MSG_ReadByte ();
 			break;
-			
+
 		case svc_updateentertime:
 		// time is sent over as seconds ago
 			i = MSG_ReadByte ();
@@ -1189,14 +1189,14 @@ void CL_ParseServerMessage (void)
 				Host_EndGame ("CL_ParseServerMessage: svc_updateentertime > MAX_SCOREBOARD");
 			cl.players[i].entertime = realtime - MSG_ReadFloat ();
 			break;
-			
+
 		case svc_spawnbaseline:
 			i = MSG_ReadShort ();
 			CL_ParseBaseline (&cl_baselines[i]);
 			break;
 		case svc_spawnstatic:
 			CL_ParseStatic ();
-			break;			
+			break;
 		case svc_temp_entity:
 			CL_ParseTEnt ();
 			break;
@@ -1219,7 +1219,7 @@ void CL_ParseServerMessage (void)
 			j = MSG_ReadLong ();
 			CL_SetStat (i, j);
 			break;
-			
+
 		case svc_spawnstaticsound:
 			CL_ParseStaticSound ();
 			break;
@@ -1234,7 +1234,7 @@ void CL_ParseServerMessage (void)
 			cl.completed_time = realtime;
 			vid.recalc_refdef = true;	// go to full screen
 			for (i=0 ; i<3 ; i++)
-				cl.simorg[i] = MSG_ReadCoord ();			
+				cl.simorg[i] = MSG_ReadCoord ();
 			for (i=0 ; i<3 ; i++)
 				cl.simangles[i] = MSG_ReadAngle ();
 			VectorCopy (vec3_origin, cl.simvel);
@@ -1244,9 +1244,9 @@ void CL_ParseServerMessage (void)
 			cl.intermission = 2;
 			cl.completed_time = realtime;
 			vid.recalc_refdef = true;	// go to full screen
-			SCR_CenterPrint (MSG_ReadString ());			
+			SCR_CenterPrint (MSG_ReadString ());
 			break;
-			
+
 		case svc_sellscreen:
 			Cmd_ExecuteString ("help", src_command);
 			break;

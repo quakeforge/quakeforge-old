@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -120,7 +120,7 @@ void Con_Printf (char *fmt, ...)
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
-	
+
 	va_start (argptr, fmt);
 	vsnprintf (msg, sizeof(msg), fmt, argptr);
 	va_end (argptr);
@@ -157,7 +157,7 @@ void Con_DPrintf (char *fmt, ...)
 	va_start (argptr, fmt);
 	vsnprintf (msg, sizeof(msg), fmt, argptr);
 	va_end (argptr);
-	
+
 	Con_Printf ("%s", msg);
 }
 
@@ -188,10 +188,10 @@ void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...)
 {
 	va_list		argptr;
 	char		string[1024];
-	
+
 	if (level < cl->messagelevel)
 		return;
-	
+
 	va_start (argptr, fmt);
 	vsnprintf (string, sizeof(string), fmt, argptr);
 	va_end (argptr);
@@ -216,7 +216,7 @@ void SV_BroadcastPrintf (int level, char *fmt, ...)
 	va_start (argptr, fmt);
 	vsnprintf (string, sizeof(string), fmt, argptr);
 	va_end (argptr);
-	
+
 	Sys_Printf ("%s", string);	// print to the console
 
 	for (i=0, cl = svs.clients ; i<MAX_CLIENTS ; i++, cl++)
@@ -241,7 +241,7 @@ void SV_BroadcastCommand (char *fmt, ...)
 {
 	va_list		argptr;
 	char		string[1024];
-	
+
 	if (!sv.state)
 		return;
 	va_start (argptr, fmt);
@@ -344,7 +344,7 @@ inrange:
 }
 
 
-/*  
+/*
 ==================
 SV_StartSound
 
@@ -358,10 +358,10 @@ An attenuation of 0 will play full volume everywhere in the level.
 Larger attenuations will drop off.  (max 4 attenuation)
 
 ==================
-*/  
+*/
 void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
     float attenuation)
-{       
+{
     int         sound_num;
     int			field_mask;
     int			i;
@@ -384,13 +384,13 @@ void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
         && sv.sound_precache[sound_num] ; sound_num++)
         if (!strcmp(sample, sv.sound_precache[sound_num]))
             break;
-    
+
     if ( sound_num == MAX_SOUNDS || !sv.sound_precache[sound_num] )
     {
         Con_Printf ("SV_StartSound: %s not precacheed\n", sample);
         return;
     }
-    
+
 	ent = NUM_FOR_EDICT(entity);
 
 	if ((channel & 8) || !sv_phs->value)	// no PHS flag
@@ -439,7 +439,7 @@ void SV_StartSound (edict_t *entity, int channel, char *sample, int volume,
 		SV_Multicast (origin, reliable ? MULTICAST_PHS_R : MULTICAST_PHS);
 	else
 		SV_Multicast (origin, reliable ? MULTICAST_ALL_R : MULTICAST_ALL);
-}           
+}
 
 
 /*
@@ -505,7 +505,7 @@ void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg)
 		MSG_WriteByte (msg, ent->v.dmg_take);
 		for (i=0 ; i<3 ; i++)
 			MSG_WriteCoord (msg, other->v.origin[i] + 0.5*(other->v.mins[i] + other->v.maxs[i]));
-	
+
 		ent->v.dmg_take = 0;
 		ent->v.dmg_save = 0;
 	}
@@ -533,10 +533,10 @@ void SV_UpdateClientStats (client_t *client)
 	edict_t	*ent;
 	int		stats[MAX_CL_STATS];
 	int		i;
-	
+
 	ent = client->edict;
 	memset (stats, 0, sizeof(stats));
-	
+
 	// if we are a spectator and we are tracking a player, we get his stats
 	// so our status bar reflects his
 	if (client->spectator && client->spec_track > 0)
@@ -746,7 +746,7 @@ void SV_SendClientMessages (void)
 				// it'll fit
 				SZ_Write(&c->netchan.message, c->backbuf_data[0],
 					c->backbuf_size[0]);
-				
+
 				//move along, move along
 				for (j = 1; j < c->num_backbuf; j++) {
 					memcpy(c->backbuf_data[j - 1], c->backbuf_data[j],
@@ -792,7 +792,7 @@ void SV_SendClientMessages (void)
 			SV_SendClientDatagram (c);
 		else
 			Netchan_Transmit (&c->netchan, 0, NULL);	// just update reliable
-			
+
 	}
 }
 
@@ -817,7 +817,7 @@ void SV_SendMessagesToAll (void)
 	for (i=0, c = svs.clients ; i<MAX_CLIENTS ; i++, c++)
 		if (c->state)		// FIXME: should this only send to active?
 			c->send_message = true;
-	
+
 	SV_SendClientMessages ();
 }
 

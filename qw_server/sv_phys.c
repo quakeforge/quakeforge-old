@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -39,7 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 pushmove objects do not obey gravity, and do not interact with each other or trigger fields, but block normal movement and push normal objects when they move.
 
-onground is set for toss objects when they come to a complete rest.  it is set for steping or walking objects 
+onground is set for toss objects when they come to a complete rest.  it is set for steping or walking objects
 
 doors, plats, etc are SOLID_BSP, and MOVETYPE_PUSH
 bonus items are SOLID_TRIGGER touch, and MOVETYPE_TOSS
@@ -52,26 +52,26 @@ solid_edge items only clip against bsp models.
 
 */
 
-//cvar_t	sv_maxvelocity = {"sv_maxvelocity","2000"}; 
+//cvar_t	sv_maxvelocity = {"sv_maxvelocity","2000"};
 cvar_t	*sv_maxvelocity;
 
-//cvar_t	sv_gravity			 = { "sv_gravity", "800"};    
+//cvar_t	sv_gravity			 = { "sv_gravity", "800"};
 cvar_t	*sv_gravity;
-//cvar_t	sv_stopspeed		 = { "sv_stopspeed", "100"};    
+//cvar_t	sv_stopspeed		 = { "sv_stopspeed", "100"};
 cvar_t	*sv_stopspeed;
-//cvar_t	sv_maxspeed			 = { "sv_maxspeed", "320"};    
+//cvar_t	sv_maxspeed			 = { "sv_maxspeed", "320"};
 cvar_t	*sv_maxspeed;
 //cvar_t	sv_spectatormaxspeed = { "sv_spectatormaxspeed", "500"};
 cvar_t	*sv_spectatormaxspeed;
-//cvar_t	sv_accelerate		 = { "sv_accelerate", "10"};     
+//cvar_t	sv_accelerate		 = { "sv_accelerate", "10"};
 cvar_t	*sv_accelerate;
-//cvar_t	sv_airaccelerate	 = { "sv_airaccelerate", "0.7"};    
+//cvar_t	sv_airaccelerate	 = { "sv_airaccelerate", "0.7"};
 cvar_t	*sv_airaccelerate;
-//cvar_t	sv_wateraccelerate	 = { "sv_wateraccelerate", "10"};     
+//cvar_t	sv_wateraccelerate	 = { "sv_wateraccelerate", "10"};
 cvar_t	*sv_wateraccelerate;
-//cvar_t	sv_friction			 = { "sv_friction", "4"};      
+//cvar_t	sv_friction			 = { "sv_friction", "4"};
 cvar_t	*sv_friction;
-//cvar_t	sv_waterfriction	 = { "sv_waterfriction", "4"};      
+//cvar_t	sv_waterfriction	 = { "sv_waterfriction", "4"};
 cvar_t	*sv_waterfriction;
 
 
@@ -158,7 +158,7 @@ qboolean SV_RunThink (edict_t *ent)
 			return true;
 		if (thinktime > sv.time + host_frametime)
 			return true;
-		
+
 		if (thinktime < sv.time)
 			thinktime = sv.time;	// don't let things stay in the past.
 									// it is possible to start that way
@@ -186,10 +186,10 @@ Two entities have touched, so run their touch functions
 void SV_Impact (edict_t *e1, edict_t *e2)
 {
 	int		old_self, old_other;
-	
+
 	old_self = pr_global_struct->self;
 	old_other = pr_global_struct->other;
-	
+
 	pr_global_struct->time = sv.time;
 	if (e1->v.touch && e1->v.solid != SOLID_NOT)
 	{
@@ -197,7 +197,7 @@ void SV_Impact (edict_t *e1, edict_t *e2)
 		pr_global_struct->other = EDICT_TO_PROG(e2);
 		PR_ExecuteProgram (e1->v.touch);
 	}
-	
+
 	if (e2->v.touch && e2->v.solid != SOLID_NOT)
 	{
 		pr_global_struct->self = EDICT_TO_PROG(e2);
@@ -225,13 +225,13 @@ int ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 	float	backoff;
 	float	change;
 	int		i, blocked;
-	
+
 	blocked = 0;
 	if (normal[2] > 0)
 		blocked |= 1;		// floor
 	if (!normal[2])
 		blocked |= 2;		// step
-	
+
 	backoff = DotProduct (in, normal) * overbounce;
 
 	for (i=0 ; i<3 ; i++)
@@ -241,7 +241,7 @@ int ClipVelocity (vec3_t in, vec3_t normal, vec3_t out, float overbounce)
 		if (out[i] > -STOP_EPSILON && out[i] < STOP_EPSILON)
 			out[i] = 0;
 	}
-	
+
 	return blocked;
 }
 
@@ -272,14 +272,14 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 	vec3_t		end;
 	float		time_left;
 	int			blocked;
-	
+
 	numbumps = 4;
-	
+
 	blocked = 0;
 	VectorCopy (ent->v.velocity, original_velocity);
 	VectorCopy (ent->v.velocity, primal_velocity);
 	numplanes = 0;
-	
+
 	time_left = time;
 
 	for (bumpcount=0 ; bumpcount<numbumps ; bumpcount++)
@@ -331,9 +331,9 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 		if (ent->free)
 			break;		// removed by the impact function
 
-		
+
 		time_left -= time_left * trace.fraction;
-		
+
 	// cliped to another plane
 		if (numplanes >= MAX_CLIP_PLANES)
 		{	// this shouldn't really happen
@@ -359,7 +359,7 @@ int SV_FlyMove (edict_t *ent, float time, trace_t *steptrace)
 			if (j == numplanes)
 				break;
 		}
-		
+
 		if (i != numplanes)
 		{	// go along this plane
 			VectorCopy (new_velocity, ent->v.velocity);
@@ -422,7 +422,7 @@ trace_t SV_PushEntity (edict_t *ent, vec3_t push)
 {
 	trace_t	trace;
 	vec3_t	end;
-		
+
 	VectorAdd (ent->v.origin, push, end);
 
 	if (ent->v.movetype == MOVETYPE_FLYMISSILE)
@@ -432,15 +432,15 @@ trace_t SV_PushEntity (edict_t *ent, vec3_t push)
 		trace = SV_Move (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_NOMONSTERS, ent);
 	else
 		trace = SV_Move (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_NORMAL, ent);
-	
+
 	VectorCopy (trace.endpos, ent->v.origin);
 	SV_LinkEdict (ent, true);
 
 	if (trace.ent)
-		SV_Impact (ent, trace.ent);		
+		SV_Impact (ent, trace.ent);
 
 	return trace;
-}					
+}
 
 
 /*
@@ -466,7 +466,7 @@ qboolean SV_Push (edict_t *pusher, vec3_t move)
 	}
 
 	VectorCopy (pusher->v.origin, pushorig);
-	
+
 // move the pusher to it's final position
 
 	VectorAdd (pusher->v.origin, move, pusher->v.origin);
@@ -511,7 +511,7 @@ qboolean SV_Push (edict_t *pusher, vec3_t move)
 		moved_edict[num_moved] = check;
 		num_moved++;
 
-		// try moving the contacted entity 
+		// try moving the contacted entity
 		VectorAdd (check->v.origin, move, check->v.origin);
 		block = SV_TestEntityPosition (check);
 		if (!block)
@@ -542,7 +542,7 @@ qboolean SV_Push (edict_t *pusher, vec3_t move)
 			SV_LinkEdict (check, false);
 			continue;
 		}
-		
+
 		VectorCopy (pushorig, pusher->v.origin);
 		SV_LinkEdict (pusher, false);
 
@@ -554,7 +554,7 @@ qboolean SV_Push (edict_t *pusher, vec3_t move)
 			pr_global_struct->other = EDICT_TO_PROG(check);
 			PR_ExecuteProgram (pusher->v.blocked);
 		}
-		
+
 	// move back any entities we already moved
 		for (i=0 ; i<num_moved ; i++)
 		{
@@ -607,7 +607,7 @@ vec3_t oldorg, move;
 float	l;
 
 	oldltime = ent->v.ltime;
-	
+
 	thinktime = ent->v.nextthink;
 	if (thinktime < ent->v.ltime + host_frametime)
 	{
@@ -622,7 +622,7 @@ float	l;
 	{
 		SV_PushMove (ent, movetime);	// advances ent->v.ltime if not blocked
 	}
-		
+
 	if (thinktime > oldltime && thinktime <= ent->v.ltime)
 	{
 VectorCopy (ent->v.origin, oldorg);
@@ -673,7 +673,7 @@ void SV_Physics_Noclip (edict_t *ent)
 // regular thinking
 	if (!SV_RunThink (ent))
 		return;
-	
+
 	VectorMA (ent->v.angles, host_frametime, ent->v.avelocity, ent->v.angles);
 	VectorMA (ent->v.origin, host_frametime, ent->v.velocity, ent->v.origin);
 
@@ -705,13 +705,13 @@ void SV_CheckWaterTransition (edict_t *ent)
 		ent->v.waterlevel = 1;
 		return;
 	}
-	
+
 	if (cont <= CONTENTS_WATER)
 	{
 		if (ent->v.watertype == CONTENTS_EMPTY)
 		{	// just crossed into water
 			SV_StartSound (ent, 0, "misc/h2ohit1.wav", 255, 1);
-		}		
+		}
 		ent->v.watertype = cont;
 		ent->v.waterlevel = 1;
 	}
@@ -720,7 +720,7 @@ void SV_CheckWaterTransition (edict_t *ent)
 		if (ent->v.watertype != CONTENTS_EMPTY)
 		{	// just crossed into water
 			SV_StartSound (ent, 0, "misc/h2ohit1.wav", 255, 1);
-		}		
+		}
 		ent->v.watertype = CONTENTS_EMPTY;
 		ent->v.waterlevel = cont;
 	}
@@ -767,7 +767,7 @@ void SV_Physics_Toss (edict_t *ent)
 		return;
 	if (ent->free)
 		return;
-	
+
 	if (ent->v.movetype == MOVETYPE_BOUNCE)
 		backoff = 1.5;
 	else
@@ -777,7 +777,7 @@ void SV_Physics_Toss (edict_t *ent)
 
 // stop if on ground
 	if (trace.plane.normal[2] > 0.7)
-	{		
+	{
 		if (ent->v.velocity[2] < 60 || ent->v.movetype != MOVETYPE_BOUNCE )
 		{
 			ent->v.flags = (int)ent->v.flags | FL_ONGROUND;
@@ -786,7 +786,7 @@ void SV_Physics_Toss (edict_t *ent)
 			VectorCopy (vec3_origin, ent->v.avelocity);
 		}
 	}
-	
+
 // check for in water
 	SV_CheckWaterTransition (ent);
 }
@@ -837,7 +837,7 @@ void SV_Physics_Step (edict_t *ent)
 
 // regular thinking
 	SV_RunThink (ent);
-	
+
 	SV_CheckWaterTransition (ent);
 }
 
@@ -889,7 +889,7 @@ void SV_RunEntity (edict_t *ent)
 		SV_Physics_Toss (ent);
 		break;
 	default:
-		SV_Error ("SV_Physics: bad movetype %i", (int)ent->v.movetype);			
+		SV_Error ("SV_Physics: bad movetype %i", (int)ent->v.movetype);
 	}
 }
 
@@ -908,8 +908,8 @@ void SV_RunNewmis (void)
 	ent = PROG_TO_EDICT(pr_global_struct->newmis);
 	host_frametime = 0.05;
 	pr_global_struct->newmis = 0;
-	
-	SV_RunEntity (ent);		
+
+	SV_RunEntity (ent);
 }
 
 /*
@@ -955,21 +955,21 @@ void SV_Physics (void)
 		SV_RunEntity (ent);
 		SV_RunNewmis ();
 	}
-	
+
 	if (pr_global_struct->force_retouch)
-		pr_global_struct->force_retouch--;	
+		pr_global_struct->force_retouch--;
 }
 
 void SV_SetMoveVars(void)
 {
-	movevars.gravity			= sv_gravity->value; 
-	movevars.stopspeed		    = sv_stopspeed->value;		 
-	movevars.maxspeed			= sv_maxspeed->value;			 
-	movevars.spectatormaxspeed  = sv_spectatormaxspeed->value; 
-	movevars.accelerate		    = sv_accelerate->value;		 
-	movevars.airaccelerate	    = sv_airaccelerate->value;	 
-	movevars.wateraccelerate	= sv_wateraccelerate->value;	   
-	movevars.friction			= sv_friction->value;			 
-	movevars.waterfriction	    = sv_waterfriction->value;	 
+	movevars.gravity			= sv_gravity->value;
+	movevars.stopspeed		    = sv_stopspeed->value;
+	movevars.maxspeed			= sv_maxspeed->value;
+	movevars.spectatormaxspeed  = sv_spectatormaxspeed->value;
+	movevars.accelerate		    = sv_accelerate->value;
+	movevars.airaccelerate	    = sv_airaccelerate->value;
+	movevars.wateraccelerate	= sv_wateraccelerate->value;
+	movevars.friction			= sv_friction->value;
+	movevars.waterfriction	    = sv_waterfriction->value;
 	movevars.entgravity			= 1.0;
 }

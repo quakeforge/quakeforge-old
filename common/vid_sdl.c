@@ -1,5 +1,5 @@
 /*
-vid_sdl.h - sdl video driver 
+vid_sdl.h - sdl video driver
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -117,7 +117,7 @@ void    VID_Init (unsigned char *palette)
     if ( COM_CheckParm ("-fullscreen") )
         flags |= SDL_FULLSCREEN;
 
-    // Initialize display 
+    // Initialize display
     if (!(screen = SDL_SetVideoMode(vid.width, vid.height, 8, flags)))
         Sys_Error("VID: Couldn't set video mode: %s\n", SDL_GetError());
     VID_SetPalette(palette);
@@ -134,7 +134,7 @@ void    VID_Init (unsigned char *palette)
     vid.conbuffer = vid.buffer;
     vid.conrowbytes = vid.rowbytes;
     vid.direct = 0;
-    
+
     // allocate z buffer and surface cache
     chunk = vid.width * vid.height * sizeof (*d_pzbuffer);
     cachesize = D_SurfaceCacheForRes (vid.width, vid.height);
@@ -143,7 +143,7 @@ void    VID_Init (unsigned char *palette)
     if (d_pzbuffer == NULL)
         Sys_Error ("Not enough memory for video mode\n");
 
-    // initialize the cache memory 
+    // initialize the cache memory
         cache = (byte *) d_pzbuffer
                 + vid.width * vid.height * sizeof (*d_pzbuffer);
     D_InitCaches (cache, cachesize);
@@ -275,8 +275,8 @@ void Sys_SendKeyEvents(void)
                    case SDLK_RALT:
                    case SDLK_LALT: sym = K_ALT; break;
 		   case SDLK_CAPSLOCK:	sym = K_CAPSLOCK; break;
-                   case SDLK_KP0: 
-                       if(modstate & KMOD_NUM) sym = K_INS; 
+                   case SDLK_KP0:
+                       if(modstate & KMOD_NUM) sym = K_INS;
                        else sym = SDLK_0;
                        break;
                    case SDLK_KP1:
@@ -369,7 +369,7 @@ void IN_Init (void)
 {
     _windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
 
-    if ( COM_CheckParm("-nomouse") && !_windowed_mouse->value) 
+    if ( COM_CheckParm("-nomouse") && !_windowed_mouse->value)
         return;
 
     mouse_x = mouse_y = 0.0;
@@ -389,9 +389,9 @@ void IN_Frame(void)
 {
     int i;
     int mouse_buttonstate;
-   
+
     if (!mouse_avail) return;
-   
+
     i = SDL_GetMouseState(NULL, NULL);
     /* Quake swaps the second and third buttons */
     mouse_buttonstate = (i & ~0x06) | ((i & 0x02)<<1) | ((i & 0x04)>>1);
@@ -409,17 +409,17 @@ void IN_Move (usercmd_t *cmd)
 {
     if (!mouse_avail)
         return;
-   
+
     mouse_x *= sensitivity->value;
     mouse_y *= sensitivity->value;
-   
+
     if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
         cmd->sidemove += m_side->value * mouse_x;
     else
         cl.viewangles[YAW] -= m_yaw->value * mouse_x;
     if (in_mlook.state & 1)
         V_StopPitchDrift ();
-   
+
     if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
         cl.viewangles[PITCH] += m_pitch->value * mouse_y;
         if (cl.viewangles[PITCH] > 80)

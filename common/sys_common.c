@@ -14,7 +14,7 @@
 
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
  See the GNU General Public License for more details.
 
@@ -53,10 +53,10 @@ cvar_t	*sys_nostdout;
 
 char trans_table[256] = {
 '\0', '#', '#', '#', '#', '.', '#', '#', '#', 9, 10, '#', ' ', 13, '.',
-'.', '[', ']', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '<', 
+'.', '[', ']', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '<',
 '=', '>', ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',',
-'-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', 
-'<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+'-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';',
+'<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
@@ -133,14 +133,14 @@ int Sys_FileTime (char *path)
 	int	ret = -1;
 #ifdef HAVE_STAT
 	struct	stat	buf;
-	
+
 	if (stat(path, &buf) == 0) ret = buf.st_mtime;
 #else /* HAVE_STAT */
 	QFile	*f;
 #if defined(_WIN32) && !defined(SERVERONLY)
 	int t = VID_ForceUnlockedAndReturnState();
 #endif
-	
+
 	f = fopen(path, "rb");
 	if (f) {
 		fclose(f);
@@ -213,7 +213,7 @@ double Sys_DoubleTime(void)
 #endif
 
 	if (!starttime) starttime = secs;
-	
+
 	return (secs - starttime) + usecs/1000000.0;
 }
 

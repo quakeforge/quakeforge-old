@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -348,7 +348,7 @@ void TragicDeath(int signal_num)
 
 static Cursor CreateNullCursor(Display *display, Window root)
 {
-    Pixmap cursormask; 
+    Pixmap cursormask;
     XGCValues xgc;
     GC gc;
     XColor dummycolour;
@@ -751,7 +751,7 @@ void	VID_Init (unsigned char *palette)
 	vid.aspect = ((float)vid.height / (float)vid.width) * (320.0 / 240.0);
 
 	D_InitCaches (surfcache, sizeof(surfcache));
-	
+
 //	XSynchronize(x_disp, False);
 	IN_Init();
 
@@ -876,16 +876,16 @@ XLateKey(XKeyEvent *ev)
 		case XK_Shift_L:
 		case XK_Shift_R:	key = K_SHIFT; break;
 
-		case XK_Execute: 
-		case XK_Control_L: 
+		case XK_Execute:
+		case XK_Control_L:
 		case XK_Control_R:	key = K_CTRL; break;
 
 		case XK_Mode_switch:
-		case XK_Alt_L:	
-		case XK_Meta_L: 
-		case XK_Alt_R:	
+		case XK_Alt_L:
+		case XK_Meta_L:
+		case XK_Alt_R:
 		case XK_Meta_R:		key = K_ALT; break;
-		
+
 		case XK_Caps_Lock:	key = K_CAPSLOCK; break;
 		case XK_KP_Begin:	key = K_AUX30; break;
 
@@ -931,7 +931,7 @@ XLateKey(XKeyEvent *ev)
 				key = key + ('a' - 'A');
 			}
 			break;
-	} 
+	}
 
 	return key;
 }
@@ -985,7 +985,7 @@ GetEvent(void)
 		if (mouse_avail && mouse_grabbed) {
 			mouse_x = (float) ((int)x_event.xmotion.x - (int)(vid.width/2));
 			mouse_y = (float) ((int)x_event.xmotion.y - (int)(vid.height/2));
-	//printf("m: x=%d,y=%d, mx=%3.2f,my=%3.2f\n", 
+	//printf("m: x=%d,y=%d, mx=%3.2f,my=%3.2f\n",
 	//	x_event.xmotion.x, x_event.xmotion.y, mouse_x, mouse_y);
 
 			/* move the mouse to the window center again */
@@ -1025,7 +1025,7 @@ GetEvent(void)
 		if (doShm && x_event.type == x_shmeventtype)
 			oktodraw = true;
 	}
-   
+
 	if (mouse_avail) {
 		if (key_dest == key_game && !mouse_grabbed && mouse_in_window) {
 			mouse_grabbed = true;
@@ -1075,11 +1075,11 @@ VID_Update(vrect_t *rects)
 	if (doShm) {
 		while (rects) {
 			if (x_visinfo->depth == 16) {
-				st2_fixup(x_framebuffer[current_framebuffer], 
+				st2_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			} else if (x_visinfo->depth == 24) {
-				st3_fixup(x_framebuffer[current_framebuffer], 
+				st3_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			}
@@ -1101,11 +1101,11 @@ VID_Update(vrect_t *rects)
 	} else {
 		while (rects) {
 			if (x_visinfo->depth == 16) {
-				st2_fixup(x_framebuffer[current_framebuffer], 
+				st2_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			} else if (x_visinfo->depth == 24) {
-				st3_fixup(x_framebuffer[current_framebuffer], 
+				st3_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			}

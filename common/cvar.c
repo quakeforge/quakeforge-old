@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -50,7 +50,7 @@ Cvar_FindVar
 cvar_t *Cvar_FindVar (char *var_name)
 {
 	cvar_t	*var;
-	
+
 	for (var=cvar_vars ; var ; var=var->next)
 		if (!Q_strcmp (var_name, var->name))
 			return var;
@@ -66,7 +66,7 @@ Cvar_VariableValue
 float	Cvar_VariableValue (char *var_name)
 {
 	cvar_t	*var;
-	
+
 	var = Cvar_FindVar (var_name);
 	if (!var)
 		return 0;
@@ -82,7 +82,7 @@ Cvar_VariableString
 char *Cvar_VariableString (char *var_name)
 {
 	cvar_t *var;
-	
+
 	var = Cvar_FindVar (var_name);
 	if (!var)
 		return cvar_null_string;
@@ -99,12 +99,12 @@ char *Cvar_CompleteVariable (char *partial)
 {
 	cvar_t		*cvar;
 	int			len;
-	
+
 	len = Q_strlen(partial);
-	
+
 	if (!len)
 		return NULL;
-		
+
 	// check exact match
 	for (cvar=cvar_vars ; cvar ; cvar=cvar->next)
 		if (!strcmp (partial,cvar->name))
@@ -132,7 +132,7 @@ Cvar_Set
 void Cvar_Set (char *var_name, char *value)
 {
 	cvar_t	*var;
-	
+
 	var = Cvar_FindVar (var_name);
 	if (!var)
 	{	// there is an error in C code if this happens
@@ -158,9 +158,9 @@ void Cvar_Set (char *var_name, char *value)
 		}
 	}
 #endif
-	
+
 	Z_Free (var->string);	// free the old value string
-	
+
 	var->string = Z_Malloc (Q_strlen(value)+1);
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
@@ -170,7 +170,7 @@ void Cvar_Set (char *var_name, char *value)
 {
 	cvar_t	*var;
 	qboolean changed;
-	
+
 	var = Cvar_FindVar (var_name);
 	if (!var)
 	{	// there is an error in C code if this happens
@@ -180,11 +180,11 @@ void Cvar_Set (char *var_name, char *value)
 
 	// Don't change if this is a CVAR_ROM
 	if(var->flags&CVAR_ROM) return;
-	
+
 	changed = Q_strcmp(var->string, value);
-	
+
 	Z_Free (var->string);	// free the old value string
-	
+
 	var->string = Z_Malloc (Q_strlen(value)+1);
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
@@ -212,7 +212,7 @@ qboolean	Cvar_Command (void)
 	v = Cvar_FindVar (Cmd_Argv(0));
 	if (!v)
 		return false;
-		
+
 // perform a variable print or set
 	if (Cmd_Argc() == 1)
 	{
@@ -236,7 +236,7 @@ with the archive flag set to true.
 void Cvar_WriteVariables (QFile *f)
 {
 	cvar_t	*var;
-	
+
 	for (var = cvar_vars ; var ; var = var->next)
 		if (var->flags&CVAR_ARCHIVE)
 			Qprintf (f, "%s \"%s\"\n", var->name, var->string);
@@ -256,15 +256,15 @@ void Cvar_Set_f(void)
 	var_name = Cmd_Argv (1);
 	value = Cmd_Argv (2);
 	var = Cvar_FindVar (var_name);
-	if (var) 
+	if (var)
 	{
 		Cvar_Set (var->name, value);
-	} 
-	else 
+	}
+	else
 	{
 		var = Cvar_Get (var_name, value, CVAR_USER_CREATED|CVAR_HEAP,
 				"User created cvar");
-	}	
+	}
 }
 
 void Cvar_Toggle_f (void)
@@ -294,7 +294,7 @@ void Cvar_Help_f (void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf ("usage: help <cvar>\n");	
+		Con_Printf ("usage: help <cvar>\n");
 		return;
 	}
 
@@ -329,7 +329,7 @@ void Cvar_Init()
 void Cvar_Shutdown (void)
 {
 	cvar_t	*var,*next;
-	
+
 	var = cvar_vars;
 	while(var)
 	{
@@ -340,7 +340,7 @@ void Cvar_Shutdown (void)
 		free(var);
 		var = next;
 	}
-} 
+}
 
 
 cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
@@ -354,7 +354,7 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 		return NULL;
 	}
 	v = Cvar_FindVar(name);
-	if (!v) 
+	if (!v)
 	{
 		v = (cvar_t *) malloc(sizeof(cvar_t));
 		// Cvar doesn't exist, so we create it
@@ -365,7 +365,7 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 		Q_strcpy (v->string, string);
 		v->flags = cvarflags;
 		v->description = strdup(description);
-		v->value = Q_atof (v->string); 
+		v->value = Q_atof (v->string);
 		return v;
 	}
 	// Cvar does exist, so we update the flags and return.

@@ -1,6 +1,6 @@
 /*
 	dga_check.c
-	
+
 	Routines to check for XFree86 DGA and VidMode extensions
 
 	Copyright (C) 2000 Contributors of the QuakeForge Project
@@ -14,7 +14,7 @@
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 	See the GNU General Public License for more details.
 
@@ -84,7 +84,7 @@ VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 #if defined(HAS_DGA)
 	int event_base, error_base;
 	int dummy;
-	
+
 	if (! XF86VidModeQueryExtension(dpy, &event_base, &error_base)) {
 		return 0;
 	}

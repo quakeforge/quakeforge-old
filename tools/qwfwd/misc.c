@@ -35,7 +35,7 @@ where the given parameter apears, or 0 if not present
 int COM_CheckParm (char *parm)
 {
 	int		i;
-	
+
 	for (i=1 ; i<com_argc ; i++)
 	{
 		if (!com_argv[i])
@@ -43,14 +43,14 @@ int COM_CheckParm (char *parm)
 		if (!strcmp (parm,com_argv[i]))
 			return i;
 	}
-		
+
 	return 0;
 }
 
 char	*AdrToString (netadr_t a)
 {
 	static	char	s[64];
-	
+
 	sprintf (s, "%i.%i.%i.%i:%i",
 		a.sin_addr.S_un.S_un_b.s_b1,
 		a.sin_addr.S_un.S_un_b.s_b2,
@@ -65,10 +65,10 @@ netadr_t	StringToAdr (char *s)
 {
 	netadr_t		a;
 	int			b1, b2, b3, b4, p;
-	
+
 	b1 = b2 = b3 = b4 = p = 0;
 	sscanf (s, "%i.%i.%i.%i:%i", &b1, &b2, &b3, &b4, &p);
-	
+
 	a.sin_addr.S_un.S_un_b.s_b1 = b1;
 	a.sin_addr.S_un.S_un_b.s_b2 = b2;
 	a.sin_addr.S_un.S_un_b.s_b3 = b3;
@@ -80,7 +80,7 @@ netadr_t	StringToAdr (char *s)
 
 qboolean	CompareAdr (netadr_t a, netadr_t b)
 {
-	if (a.sin_addr.s_addr == b.sin_addr.s_addr 
+	if (a.sin_addr.s_addr == b.sin_addr.s_addr
 	&& a.sin_port == b.sin_port)
 		return true;
 	return false;
@@ -90,29 +90,29 @@ qboolean	CompareAdr (netadr_t a, netadr_t b)
 void	mprintf (char *msg, ...)
 {
 	va_list	argptr;
-	
+
 	va_start (argptr, msg);
 	vprintf (msg, argptr);
 	vfprintf (logfile, msg, argptr);
 	va_end (argptr);
-		
+
 }
 
 int	msg_readcount;
 char	*MSG_ReadString (void)
 {
 	char	*start;
-	
+
 	start = packet_data + msg_readcount;
-	
+
 	for ( ; msg_readcount < packet_length ; msg_readcount++)
 		if (packet_data[msg_readcount] == '\n'
 		|| packet_data[msg_readcount] == 0)
 			break;
-	
+
 	packet_data[msg_readcount] = 0;
 	msg_readcount++;
-	
+
 	return start;
 }
 
@@ -141,13 +141,13 @@ char *COM_Parse (char *data)
 {
 	int		c;
 	int		len;
-	
+
 	len = 0;
 	com_token[0] = 0;
-	
+
 	if (!data)
 		return NULL;
-		
+
 // skip whitespace
 skipwhite:
 	while ( (c = *data) <= ' ')
@@ -156,7 +156,7 @@ skipwhite:
 			return NULL;			// end of file;
 		data++;
 	}
-	
+
 // skip // comments
 	if (c=='/' && data[1] == '/')
 	{
@@ -164,7 +164,7 @@ skipwhite:
 			data++;
 		goto skipwhite;
 	}
-	
+
 
 // handle quoted strings specially
 	if (c == '\"')
@@ -191,7 +191,7 @@ skipwhite:
 		len++;
 		c = *data;
 	} while (c>32);
-	
+
 	com_token[len] = 0;
 	return data;
 }
@@ -215,7 +215,7 @@ char	*Cmd_Argv (int arg)
 {
 	if ( (unsigned)arg >= cmd_argc )
 		return "";
-	return cmd_argv[arg];	
+	return cmd_argv[arg];
 }
 
 /*
@@ -226,9 +226,9 @@ Parses the given string into command line tokens.
 ============
 */
 void Cmd_TokenizeString (char *text)
-{	
+{
 	cmd_argc = 0;
-	
+
 	while (1)
 	{
 // skip whitespace up to a /n
@@ -236,10 +236,10 @@ void Cmd_TokenizeString (char *text)
 		{
 			text++;
 		}
-		
+
 		if (!*text)
 			return;
-	
+
 		text = COM_Parse (text);
 		if (!text)
 			return;
@@ -250,7 +250,7 @@ void Cmd_TokenizeString (char *text)
 			cmd_argc++;
 		}
 	}
-	
+
 }
 
 
@@ -275,7 +275,7 @@ char *Info_ValueForKey (char *s, char *key)
 	char	pkey[512];
 	static	char value[512];
 	char	*o;
-	
+
 	if (*s == '\\')
 		s++;
 	while (1)

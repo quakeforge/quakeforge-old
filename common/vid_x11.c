@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -292,7 +292,7 @@ void VID_Gamma_f (void)
 
 static Cursor CreateNullCursor(Display *display, Window root)
 {
-    Pixmap cursormask; 
+    Pixmap cursormask;
     XGCValues xgc;
     GC gc;
     XColor dummycolour;
@@ -755,11 +755,11 @@ VID_Update(vrect_t *rects)
 	if (doShm) {
 		while (rects) {
 			if (x_visinfo->depth == 16) {
-				st2_fixup(x_framebuffer[current_framebuffer], 
+				st2_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			} else if (x_visinfo->depth == 24) {
-				st3_fixup(x_framebuffer[current_framebuffer], 
+				st3_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			}
@@ -781,11 +781,11 @@ VID_Update(vrect_t *rects)
 	} else {
 		while (rects) {
 			if (x_visinfo->depth == 16) {
-				st2_fixup(x_framebuffer[current_framebuffer], 
+				st2_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			} else if (x_visinfo->depth == 24) {
-				st3_fixup(x_framebuffer[current_framebuffer], 
+				st3_fixup(x_framebuffer[current_framebuffer],
 					  rects->x, rects->y, rects->width,
 					  rects->height);
 			}

@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -50,7 +50,7 @@ static int	UseDisplay = 1;
 static cvar_t	*vid_mode;
 static cvar_t	*vid_redrawfull;
 static cvar_t	*vid_waitforrefresh;
- 
+
 static char	*framebuffer_ptr;
 
 static byte     backingbuf[48*24];
@@ -179,7 +179,7 @@ D_EndDirectRect (int x, int y, int width, int height)
 					vidpage=offset / 0x10000;
 					aa_setpage();
 				}
-				memcpy (vid.direct + off, 
+				memcpy (vid.direct + off,
 					&backingbuf[(i +j)*24],	width);
 			}
 		}
@@ -305,7 +305,7 @@ VID_SetMode(int modenum, unsigned char *palette)
 	vid.conwidth = vid.width;
 	vid.conheight = vid.height;
 	vid.numpages = 1;
-	
+
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
 
@@ -388,7 +388,7 @@ VID_Init(unsigned char *palette)
 		vid_redrawfull = Cvar_Get ("vid_redrawfull","0",0,"None");
 		vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",
 						CVAR_ARCHIVE,"None");
-		
+
 		Cmd_AddCommand("vid_nummodes", VID_NumModes_f);
 		Cmd_AddCommand("vid_describemode", VID_DescribeMode_f);
 		Cmd_AddCommand("vid_describemodes", VID_DescribeModes_f);
@@ -424,7 +424,7 @@ VID_Init(unsigned char *palette)
 }
 
 
-void 
+void
 VID_Update(vrect_t *rects)
 {
 		int ycount;
@@ -438,22 +438,22 @@ VID_Update(vrect_t *rects)
 			offset = rects->y * vid.rowbytes + rects->x;
 			while (ycount--) {
 				register int i = offset % 0x10000;
-	
+
 				if ((offset / 0x10000) != vidpage) {
 					vidpage=offset / 0x10000;
 					aa_setpage();
 				}
 				if (rects->width + i > 0x10000) {
-					memcpy(framebuffer_ptr + i, 
-							vid.buffer + offset, 
+					memcpy(framebuffer_ptr + i,
+							vid.buffer + offset,
 							0x10000 - i);
 					aa_setpage();
 					memcpy(framebuffer_ptr,
-							vid.buffer + offset + 0x10000 - i, 
+							vid.buffer + offset + 0x10000 - i,
 							rects->width - 0x10000 + i);
 				} else {
-					memcpy(framebuffer_ptr + i, 
-					       vid.buffer + offset, 
+					memcpy(framebuffer_ptr + i,
+					       vid.buffer + offset,
 					       rects->width);
 				}
 				offset += vid.rowbytes;
@@ -461,7 +461,7 @@ VID_Update(vrect_t *rects)
 			rects = rects->pnext;
 		}
 	}
-	
+
 	if (vid_mode->value != current_mode) {
 		VID_SetMode ((int)vid_mode->value, vid_current_palette);
 	}

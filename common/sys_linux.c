@@ -1,8 +1,8 @@
 /*
 	sys_linux.c
-	
+
 	Linux-style Unix system driver.
-	
+
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -12,13 +12,13 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-	
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
 	See the GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
@@ -100,7 +100,7 @@ Sys_Error(char *error, ...)
 
 	Host_Shutdown ();
 	exit (1);
-} 
+}
 
 
 void
@@ -167,12 +167,12 @@ int Sys_FileRead (int handle, void *dest, int count) {
 
 void Sys_DebugLog(char *file, char *fmt, ...) {
 
-	va_list argptr; 
+	va_list argptr;
 	static char data[1024];
 	QFile *stream;
 	unsigned char *p;
 	//int fd;
-    
+
 	va_start(argptr, fmt);
 	vsnprintf(data, sizeof(data), fmt, argptr);
 	va_end(argptr);
@@ -188,7 +188,7 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 	close(fd);
 	*/
 }
-/* 
+/*
 This function isn't used.
 void Sys_EditFile(char *filename) {
 
@@ -241,7 +241,7 @@ char *Sys_ConsoleInput(void) {
 		timeout.tv_usec = 0;
 		if (select (1, &fdset, NULL, NULL, &timeout) == -1 || !FD_ISSET(0, &fdset))
 			return NULL;
-			
+
 		len = read (0, text, sizeof(text));
 		if (len < 1)
 			return NULL;

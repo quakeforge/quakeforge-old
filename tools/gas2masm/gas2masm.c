@@ -8,7 +8,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -400,7 +400,7 @@ void emitonejumpdata (void)
 
 	isaddr = 0;
 	len = strlen(tokens[1]);
-	
+
 	if (tokens[1][0] == '*') {
 
 		for (i=0 ; i<len ; i++) {
@@ -676,8 +676,8 @@ parsefield	parsedata[] = {
 	{"fcoms",  " fcom", 2, emitoneoperandl},
 	{"fcomp",  " fcomp", 2, emitoneoperandl},
 	{"fcomps", " fcomp", 2, emitoneoperandl},
-	{"fdiv",   "", -2, special_fdivl}, 
-	{"fdivp",  "", -2, special_fdivpl}, 
+	{"fdiv",   "", -2, special_fdivl},
+	{"fdivp",  "", -2, special_fdivpl},
 	{"fdivr",  "", -2, special_fdivrl},
 	{"fdivrp", "", -2, special_fdivrpl},
 	{"fdivrs", "", -2, special_fdivrl},
@@ -747,7 +747,7 @@ parsefield	parsedata[] = {
 	{"sarl",   " sar", 3, emittwooperandsl},
 	{"sbbl",   " sbb", 3, emittwooperandsl},
 	{"shll",   " shl", 3, emittwooperandsl},
-	{"shrl",   " shr", 3, emittwooperandsl},	
+	{"shrl",   " shr", 3, emittwooperandsl},
 	{"subl",   " sub", 3, emittwooperandsl},
 	{"testb",  " test", 3, emittwooperandsb},
 	{"testl",  " test", 3, emittwooperandsl},
@@ -823,7 +823,7 @@ int gettoken (void)
 
 		} while (c != ')');
 	}
-	
+
 	for ( ;; )
 	{
 		if ((c = getchar ()) == EOF)
@@ -1046,7 +1046,7 @@ void main (int argc, char **argv)
 
 			printf (" END\n");
 			exit (0);
-		
+
 		case PARSED_OKAY:
 			break;
 

@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -124,7 +124,7 @@ qboolean	NET_CompareAdr (netadr_t a, netadr_t b)
 char	*NET_AdrToString (netadr_t a)
 {
 	static	char	s[64];
-	
+
 	snprintf(s, sizeof(s), "%i.%i.%i.%i:%i", a.ip[0], a.ip[1], a.ip[2], a.ip[3], ntohs(a.port));
 
 	return s;
@@ -133,7 +133,7 @@ char	*NET_AdrToString (netadr_t a)
 char	*NET_BaseAdrToString (netadr_t a)
 {
 	static	char	s[64];
-	
+
 	snprintf(s, sizeof(s), "%i.%i.%i.%i", a.ip[0], a.ip[1], a.ip[2], a.ip[3]);
 
 	return s;
@@ -155,11 +155,11 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 	struct sockaddr_in sadr;
 	char	*colon;
 	char	copy[128];
-	
-	
+
+
 	memset (&sadr, 0, sizeof(sadr));
 	sadr.sin_family = AF_INET;
-	
+
 	sadr.sin_port = 0;
 
 	strcpy (copy, s);
@@ -170,7 +170,7 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 			*colon = 0;
 			sadr.sin_port = htons((unsigned short)atoi(colon+1));
 		}
-	
+
 	if (copy[0] >= '0' && copy[0] <= '9')
 	{
 		*(int *)&sadr.sin_addr = inet_addr(copy);
@@ -181,13 +181,13 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 			return 0;
 		*(int *)&sadr.sin_addr = *(int *)h->h_addr_list[0];
 	}
-	
+
 	SockadrToNetadr (&sadr, a);
 
 	return true;
 }
 
-// Returns true if we can't bind the address locally--in other words, 
+// Returns true if we can't bind the address locally--in other words,
 // the IP is NOT one of our interfaces.
 qboolean NET_IsClientLegal(netadr_t *adr)
 {
@@ -205,7 +205,7 @@ qboolean NET_IsClientLegal(netadr_t *adr)
 
 	sadr.sin_port = 0;
 
-	if( bind (newsocket, (void *)&sadr, sizeof(sadr)) == -1) 
+	if( bind (newsocket, (void *)&sadr, sizeof(sadr)) == -1)
 	{
 		// It is not a local address
 		close(newsocket);
@@ -357,10 +357,10 @@ NET_Init
 void NET_Init (int port)
 {
 #ifdef _WIN32
-	WORD	wVersionRequested; 
+	WORD	wVersionRequested;
 	int		r;
 
-	wVersionRequested = MAKEWORD(1, 1); 
+	wVersionRequested = MAKEWORD(1, 1);
 
 	r = WSAStartup(MAKEWORD(1, 1), &winsockdata);
 	if (r)

@@ -322,7 +322,7 @@ GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 
 GLX_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
               $(basename $(GLX_GL_SRC) .c .s)))
-	      
+
 ALL_GL_OBJS = $(GLX_GL_OBJS) $(GL_REND_OBJS) \
 	      $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 

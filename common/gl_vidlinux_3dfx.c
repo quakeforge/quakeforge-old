@@ -1,6 +1,6 @@
 /*
 gl_vidlinux_3dfx.c - OpenGL device driver for 3Dfx chipsets running Linux
-	
+
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -13,7 +13,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -51,7 +51,7 @@ static cvar_t	*vid_redrawfull;
 static cvar_t	*vid_waitforrefresh;
 cvar_t	*gl_ztrick;
 extern cvar_t	*gl_triplebuffer;
- 
+
 static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;
 static qboolean is8bit = 0;
@@ -148,7 +148,7 @@ void	VID_SetPalette (unsigned char *palette)
 		g = pal[1];
 		b = pal[2];
 		pal += 3;
-		
+
 //		v = (255<<24) + (r<<16) + (g<<8) + (b<<0);
 //		v = (255<<0) + (r<<8) + (g<<16) + (b<<24);
 		v = (255<<24) + (r<<0) + (g<<8) + (b<<16);
@@ -272,7 +272,7 @@ void GL_EndRendering (void)
 	fxMesaSwapBuffers();
 }
 
-static int resolutions[][3]={ 
+static int resolutions[][3]={
 	{ 320,	200,	GR_RESOLUTION_320x200 },
 	{ 320,	240,	GR_RESOLUTION_320x240 },
 	{ 400,	256,	GR_RESOLUTION_400x256 },
@@ -337,7 +337,7 @@ findres(int *width, int *height)
 			return resolutions[i][2];
 		}
 	}
-        
+
 	*width = 640;
 	*height = 480;
 	return GR_RESOLUTION_640x480;
@@ -349,7 +349,7 @@ qboolean VID_Is8bit(void)
 }
 
 #ifdef GL_EXT_SHARED
-void VID_Init8bitPalette() 
+void VID_Init8bitPalette()
 {
 	// Check for 8bit Extensions and initialize them.
 	int i;
@@ -376,7 +376,7 @@ void VID_Init8bitPalette()
 #else
 extern void gl3DfxSetPaletteEXT(GLuint *pal);
 
-void VID_Init8bitPalette(void) 
+void VID_Init8bitPalette(void)
 {
 	// Check for 8bit Extensions and initialize them.
 	int i;
@@ -417,7 +417,7 @@ void VID_Init(unsigned char *palette)
 					"None");
 //	Cvar_RegisterVariable (&gl_ztrick);
 	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
-	
+
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
 	vid.colormap = host_colormap;
@@ -456,7 +456,7 @@ void VID_Init(unsigned char *palette)
 	if (vid.conheight < 200)
 		vid.conheight = 200;
 
-	fc = fxMesaCreateContext(0, findres(&width, &height), GR_REFRESH_75Hz, 
+	fc = fxMesaCreateContext(0, findres(&width, &height), GR_REFRESH_75Hz,
 		attribs);
 	if (!fc)
 		Sys_Error("Unable to create 3DFX context.\n");
@@ -497,7 +497,7 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 /* Port specific Options menu entrys */
 }
- 
+
 void VID_ExtraOptionCmd(int option_cursor)
 {
 /*

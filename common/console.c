@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -61,7 +61,7 @@ qboolean	con_debuglog;
 extern	char	key_lines[32][MAXCMDLINE];
 extern	int		edit_line;
 extern	int		key_linepos;
-		
+
 
 qboolean	con_initialized;
 
@@ -88,7 +88,7 @@ void Con_ToggleConsole_f (void)
 	}
 	else
 		key_dest = key_console;
-	
+
 	Con_ClearNotify ();
 }
 
@@ -108,7 +108,7 @@ void Con_ToggleChat_f (void)
 	}
 	else
 		key_dest = key_console;
-	
+
 	Con_ClearNotify ();
 }
 
@@ -123,7 +123,7 @@ void Con_Clear_f (void)
 	Q_memset (con_chat.text, ' ', CON_TEXTSIZE);
 }
 
-						
+
 /*
 ================
 Con_ClearNotify
@@ -132,12 +132,12 @@ Con_ClearNotify
 void Con_ClearNotify (void)
 {
 	int		i;
-	
+
 	for (i=0 ; i<NUM_CON_TIMES ; i++)
 		con_times[i] = 0;
 }
 
-						
+
 /*
 ================
 Con_MessageMode_f
@@ -195,7 +195,7 @@ void Con_Resize (console_t *con)
 			numlines = con_totallines;
 
 		numchars = oldwidth;
-	
+
 		if (con_linewidth < numchars)
 			numchars = con_linewidth;
 
@@ -219,7 +219,7 @@ void Con_Resize (console_t *con)
 	con->display = con->current;
 }
 
-					
+
 /*
 ================
 Con_CheckResize
@@ -246,7 +246,7 @@ void Con_Init (void)
 	con = &con_main;
 	con_linewidth = -1;
 	Con_CheckResize ();
-	
+
 	Con_Printf ("Console initialized.\n");
 
 //
@@ -323,7 +323,7 @@ void Con_Print (char *txt)
 			cr = false;
 		}
 
-		
+
 		if (!con->x)
 		{
 			Con_Linefeed ();
@@ -351,7 +351,7 @@ void Con_Print (char *txt)
 				con->x = 0;
 			break;
 		}
-		
+
 	}
 }
 
@@ -369,24 +369,24 @@ void Con_Printf (char *fmt, ...)
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
 	static qboolean	inupdate;
-	
+
 	va_start (argptr,fmt);
 	vsnprintf (msg, sizeof(msg), fmt, argptr);
 	va_end (argptr);
-	
+
 // also echo to debugging console
 	Sys_Printf ("%s", msg);	// also echo to debugging console
 
 // log all messages to file
 	if (con_debuglog)
 		Sys_DebugLog(va("%s/qconsole.log",com_gamedir), "%s", msg);
-		
+
 	if (!con_initialized)
 		return;
-		
+
 // write it to the scrollable buffer
 	Con_Print (msg);
-	
+
 // update the screen immediately if the console is displayed
 	if (cls.state != ca_active)
 	{
@@ -412,14 +412,14 @@ void Con_DPrintf (char *fmt, ...)
 {
 	va_list		argptr;
 	char		msg[MAXPRINTMSG];
-		
+
 	if (!developer->value)
 		return;			// don't confuse non-developers with techie stuff...
 
 	va_start (argptr,fmt);
 	vsnprintf (msg, sizeof(msg), fmt, argptr);
 	va_end (argptr);
-	
+
 	Con_Printf ("%s", msg);
 }
 
@@ -462,7 +462,7 @@ void Con_DrawInput (void)
 //	prestep if horizontally scrolling
 	if (key_linepos >= con_linewidth)
 		text += 1 + key_linepos - con_linewidth;
-		
+
 // draw it
 	y = con_vislines-22;
 
@@ -499,7 +499,7 @@ void Con_DrawNotify (void)
 		if (time > con_notifytime->value)
 			continue;
 		text = con->text + (i % con_totallines)*con_linewidth;
-		
+
 		clearnotify = 0;
 		scr_copytop = 1;
 
@@ -514,7 +514,7 @@ void Con_DrawNotify (void)
 	{
 		clearnotify = 0;
 		scr_copytop = 1;
-	
+
 		if (chat_team)
 		{
 			Draw_String (8, v, "say_team:");
@@ -538,7 +538,7 @@ void Con_DrawNotify (void)
 		Draw_Character ( (x+skip)<<3, v, 10+((int)(realtime*con_cursorspeed)&1));
 		v += 8;
 	}
-	
+
 	if (v > con_notifylines)
 		con_notifylines = v;
 }
@@ -560,7 +560,7 @@ void Con_DrawConsole (int lines)
 	int				j, n;
 	char			dlbar[1024];
 #endif
-	
+
 	if (lines <= 0)
 		return;
 
@@ -569,7 +569,7 @@ void Con_DrawConsole (int lines)
 
 // draw the text
 	con_vislines = lines;
-	
+
 // changed to line things up better
 	rows = (lines-22)>>3;		// rows of text to draw
 
@@ -581,11 +581,11 @@ void Con_DrawConsole (int lines)
 	// draw arrows to show the buffer is backscrolled
 		for (x=0 ; x<con_linewidth ; x+=4)
 			Draw_Character ( (x+1)<<3, y, '^');
-	
+
 		y -= 8;
 		rows--;
 	}
-	
+
 	row = con->display;
 	for (i=0 ; i<rows ; i++, y-=8, row--)
 	{
@@ -593,7 +593,7 @@ void Con_DrawConsole (int lines)
 			break;
 		if (con->current - row >= con_totallines)
 			break;		// past scrollback wrap point
-			
+
 		text = con->text + (row % con_totallines)*con_linewidth;
 
 		for (x=0 ; x<con_linewidth ; x++)
@@ -627,7 +627,7 @@ void Con_DrawConsole (int lines)
 			n = 0;
 		else
 			n = y * cls.downloadpercent / 100;
-			
+
 		for (j = 0; j < y; j++)
 			if (j == n)
 				dlbar[i++] = '\x83';
@@ -698,11 +698,11 @@ void Con_SafePrintf (char *fmt, ...)
 	va_list		argptr;
 	char		msg[1024];
 	int			temp;
-		
+
 	va_start (argptr, fmt);
 	vsnprintf (msg, sizeof(msg), fmt,argptr);
 	va_end (argptr);
-	
+
 	temp = scr_disabled_for_loading;
 	scr_disabled_for_loading = true;
 	Con_Printf ("%s", msg);

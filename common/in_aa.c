@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -95,7 +95,7 @@ static void IN_init_kb()
 		fprintf(stderr, "Video mode not set?\n");
 		Sys_Error("keyboard_init() failed");
 		}
-		
+
 	for (i = 0; i < 128; i++)
 		scantokey[i] = ' ';
 
@@ -208,7 +208,7 @@ static void IN_init_kb()
 	scantokey[119] = AA_UNKNOWN; /* pause */	// misc
 
 	if (!aa_autoinitkbd(context, AA_SENDRELEASE))
-		{ 
+		{
 		fprintf(stderr, "Error in aa_autoinitkbd!\n");
 		Sys_Error("keyboard_init() failed");
 		}

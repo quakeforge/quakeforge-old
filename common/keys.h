@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -49,7 +49,7 @@ typedef enum {
 	K_DOWNARROW,
 	K_LEFTARROW,
 	K_RIGHTARROW,
-	
+
 	K_ALT,
 	K_CTRL,
 	K_SHIFT,
@@ -79,21 +79,21 @@ typedef enum {
 	KP_NUMLCK,
 	KP_DIVIDE,
 	KP_MULTIPLY,
-	
+
 	KP_HOME,
 	KP_UPARROW,
 	KP_PGUP,
 	KP_MINUS,
-	
+
 	KP_LEFTARROW,
 	KP_5,
 	KP_RIGHTARROW,
 	KP_PLUS,
-	
+
 	KP_END,
 	KP_DOWNARROW,
 	KP_PGDN,
-	
+
 	KP_INS,
 	KP_DEL,
 	KP_ENTER,
@@ -104,7 +104,7 @@ typedef enum {
 	K_MOUSE1 = 200,
 	K_MOUSE2,
 	K_MOUSE3,
-	
+
 //
 // joystick buttons
 //
@@ -112,7 +112,7 @@ typedef enum {
 	K_JOY2,
 	K_JOY3,
 	K_JOY4,
-	
+
 //
 // aux keys are for multi-buttoned joysticks to generate so they can use
 // the normal binding process
@@ -149,9 +149,9 @@ typedef enum {
 	K_AUX30,
 	K_AUX31,
 	K_AUX32,
-	
+
 // JACK: Intellimouse(c) Mouse Wheel Support
-	
+
 	K_MWHEELUP,
 	K_MWHEELDOWN
 } keynum_t;

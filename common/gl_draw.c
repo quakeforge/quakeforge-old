@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -292,7 +292,7 @@ qpic_t	*Draw_CachePic (char *path)
 //
 // load the pic from disk
 //
-	dat = (qpic_t *)COM_LoadTempFile (path);	
+	dat = (qpic_t *)COM_LoadTempFile (path);
 	if (!dat)
 		Sys_Error ("Draw_CachePic: failed to load %s", path);
 	SwapPic (dat);
@@ -460,7 +460,7 @@ void Draw_Character (int x, int y, int num)
 		return;		// space
 
 	num &= 255;
-	
+
 	if (y <= -8)
 		return;			// totally off screen
 
@@ -522,7 +522,7 @@ void Draw_Crosshair(void)
 	unsigned char *pColor;
 
 	if (crosshair->value == 3) {
-		x = scr_vrect.x + scr_vrect.width/2 - 3 + cl_crossx->value; 
+		x = scr_vrect.x + scr_vrect.width/2 - 3 + cl_crossx->value;
 		y = scr_vrect.y + scr_vrect.height/2 - 3 + cl_crossy->value;
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
@@ -531,7 +531,7 @@ void Draw_Crosshair(void)
 		GL_Bind (cs_texture3);
 
 		glBegin (GL_QUADS);
-		
+
 		glTexCoord2f (0, 0);
 		glVertex2f (x - 7, y - 1);
 		glTexCoord2f (1, 0);
@@ -540,12 +540,12 @@ void Draw_Crosshair(void)
 		glVertex2f (x + 9, y + 17);
 		glTexCoord2f (0, 1);
 		glVertex2f (x - 7, y + 17);
-		
+
 		glEnd ();
-		
+
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 	} else if (crosshair->value == 2) {
-		x = scr_vrect.x + scr_vrect.width/2 - 3 + cl_crossx->value; 
+		x = scr_vrect.x + scr_vrect.width/2 - 3 + cl_crossx->value;
 		y = scr_vrect.y + scr_vrect.height/2 - 3 + cl_crossy->value;
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
@@ -554,7 +554,7 @@ void Draw_Crosshair(void)
 		GL_Bind (cs_texture);
 
 		glBegin (GL_QUADS);
-		
+
 		glTexCoord2f (0, 0);
 		glVertex2f (x - 4, y - 4);
 		glTexCoord2f (1, 0);
@@ -563,13 +563,13 @@ void Draw_Crosshair(void)
 		glVertex2f (x + 12, y + 12);
 		glTexCoord2f (0, 1);
 		glVertex2f (x - 4, y + 12);
-		
+
 		glEnd ();
-		
+
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 	} else if (crosshair->value)
-		Draw_Character (scr_vrect.x + scr_vrect.width/2-4 + cl_crossx->value, 
-			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy->value, 
+		Draw_Character (scr_vrect.x + scr_vrect.width/2-4 + cl_crossx->value,
+			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy->value,
 			'+');
 }
 
@@ -655,7 +655,7 @@ void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int h
 	if (scrap_dirty)
 		Scrap_Upload ();
 	gl = (glpic_t *)pic->data;
-	
+
 	oldglwidth = gl->sh - gl->sl;
 	oldglheight = gl->th - gl->tl;
 
@@ -664,7 +664,7 @@ void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int h
 
 	newtl = gl->tl + (srcy*oldglheight)/pic->height;
 	newth = newtl + (height*oldglheight)/pic->height;
-	
+
 	glColor4f (1,1,1,1);
 	GL_Bind (gl->texnum);
 	glBegin (GL_QUADS);
@@ -692,7 +692,7 @@ void Draw_TransPic (int x, int y, qpic_t *pic)
 	{
 		Sys_Error ("Draw_TransPic: bad coordinates");
 	}
-		
+
 	Draw_Pic (x, y, pic);
 }
 
@@ -769,7 +769,7 @@ void Draw_ConsoleBackground (int lines)
 
 	conback = Draw_CachePic ("gfx/conback.lmp");
 	gl = (glpic_t *)conback->data;
-	
+
 	y = vid.height * 0.9;
 	if (lines > y)
 		alpha = 1;
@@ -803,7 +803,7 @@ void Draw_ConsoleBackground (int lines)
 		glCullFace(GL_FRONT);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
-	
+
 	ofs = (vid.height - lines)/(float)vid.height;
 
 	glBegin (GL_QUADS);
@@ -1225,7 +1225,7 @@ done: ;
 	}
 }
 
-void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboolean alpha) 
+void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboolean alpha)
 {
 	int			i, s;
 	qboolean	noalpha;
@@ -1397,13 +1397,13 @@ int GL_LoadTexture (char *identifier, int width, int height, byte *data, qboolea
 		{
 			if (!strcmp (identifier, glt->identifier))
 			{
-				if (width != glt->width 
+				if (width != glt->width
 						|| height != glt->height)
 				{
 					glt->width = width;
 					glt->height = height;
 					glt->mipmap = mipmap;
-				
+
 					GL_Bind (glt->texnum);
 
 					GL_Upload8 (data, width, height,
@@ -1446,12 +1446,12 @@ int GL_LoadPicTexture (qpic_t *pic)
 
 static GLenum oldtarget = TEXTURE0_SGIS;
 
-void GL_SelectTexture (GLenum target) 
+void GL_SelectTexture (GLenum target)
 {
 	if (!gl_mtexable)
 		return;
 	qglSelectTextureSGIS(target);
-	if (target == oldtarget) 
+	if (target == oldtarget)
 		return;
 	cnttextures[oldtarget-TEXTURE0_SGIS] = currenttexture;
 	currenttexture = cnttextures[target-TEXTURE0_SGIS];

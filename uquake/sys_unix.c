@@ -8,7 +8,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -58,7 +58,7 @@ FILE IO
 
 #define MAX_HANDLES             10
 
-typedef struct 
+typedef struct
 {
     QFile	    *hFile;
     char	    *pMap;
@@ -71,7 +71,7 @@ MEMFILE		    sys_handles[MAX_HANDLES];
 int findhandle (void)
 {
     int             i;
-    
+
     for (i=1 ; i<MAX_HANDLES ; i++)
 	    if (!sys_handles[i].hFile)
 		    return i;
@@ -118,7 +118,7 @@ int Sys_FileOpenWrite (char *path)
 {
     QFile    *f;
     int             i;
-    
+
     i = findhandle ();
 
     f = Qopen(path, "wb");
@@ -128,7 +128,7 @@ int Sys_FileOpenWrite (char *path)
     sys_handles[i].nLen = 0;
     sys_handles[i].nPos = 0;
     sys_handles[i].pMap = NULL;
-    
+
     return i;
 }
 
@@ -175,12 +175,12 @@ int Sys_FileWrite (int handle, void *data, int count)
 
 void Sys_DebugLog(char *file, char *fmt, ...) {
 
-	va_list argptr; 
+	va_list argptr;
 	static char data[1024];
 	QFile *stream;
 	unsigned char *p;
 	//int fd;
-    
+
 	va_start(argptr, fmt);
 	vsnprintf(data, sizeof(data), fmt, argptr);
 	va_end(argptr);
@@ -230,7 +230,7 @@ void Sys_Error (char *error, ...)
 {
     va_list         argptr;
 
-    printf ("Sys_Error: ");   
+    printf ("Sys_Error: ");
     va_start (argptr,error);
     vprintf (error,argptr);
     va_end (argptr);
@@ -252,13 +252,13 @@ char *Sys_ConsoleInput (void)
     fd_set	readfds;
     int		ready;
     struct timeval timeout;
-    
+
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
     FD_ZERO(&readfds);
     FD_SET(0, &readfds);
     ready = select(1, &readfds, 0, 0, &timeout);
-    
+
     if (ready>0)
     {
 	len = read (0, text, sizeof(text));
@@ -268,7 +268,7 @@ char *Sys_ConsoleInput (void)
 		return text;
 	}
     }
-    
+
     return 0;
 }
 
@@ -299,7 +299,7 @@ int main (int argc, char **argv)
 {
     static quakeparms_t    parms;
     float oldtime, newtime;
-    
+
     parms.memsize = 16*1024*1024;
     parms.membase = malloc (parms.memsize);
     parms.basedir = ".";

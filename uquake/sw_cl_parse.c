@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -59,7 +59,7 @@ void CL_ParseUpdate (int bits)
 		bits |= (i<<8);
 	}
 
-	if (bits & U_LONGENTITY)	
+	if (bits & U_LONGENTITY)
 		num = MSG_ReadShort ();
 	else
 		num = MSG_ReadByte ();
@@ -76,7 +76,7 @@ if (bits&(1<<i))
 		forcelink = false;
 
 	ent->msgtime = cl.mtime[0];
-	
+
 	if (bits & U_MODEL)
 	{
 		modnum = MSG_ReadByte ();
@@ -85,7 +85,7 @@ if (bits&(1<<i))
 	}
 	else
 		modnum = ent->baseline.modelindex;
-		
+
 	model = cl.model_precache[modnum];
 	if (model != ent->model)
 	{
@@ -102,7 +102,7 @@ if (bits&(1<<i))
 		else
 			forcelink = true;	// hack to make null model players work
 	}
-	
+
 	if (bits & U_FRAME)
 		ent->frame = MSG_ReadByte ();
 	else
@@ -186,7 +186,7 @@ void CL_NewTranslation (int slot)
 	int		i, j;
 	int		top, bottom;
 	byte	*dest, *source;
-	
+
 	if (slot > cl.maxclients)
 		Sys_Error ("CL_NewTranslation: slot > cl.maxclients");
 	dest = cl.scores[slot].translations;
@@ -202,11 +202,11 @@ void CL_NewTranslation (int slot)
 		else
 			for (j=0 ; j<16 ; j++)
 				dest[TOP_RANGE+j] = source[top+15-j];
-				
+
 		if (bottom < 128)
 			memcpy (dest + BOTTOM_RANGE, source + bottom, 16);
 		else
 			for (j=0 ; j<16 ; j++)
-				dest[BOTTOM_RANGE+j] = source[bottom+15-j];		
+				dest[BOTTOM_RANGE+j] = source[bottom+15-j];
 	}
 }

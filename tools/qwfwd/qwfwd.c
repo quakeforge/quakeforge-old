@@ -8,7 +8,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -214,7 +214,7 @@ int main(int argc, char *argv[])
 				if(i1 > 0) {
 					for (p = peers; p; p = p->next)
 						if (memcmp(&p->sin.sin_addr, &fsin.sin_addr, sizeof(p->sin.sin_addr)) == 0 &&
-							memcmp(&p->sin.sin_port, &fsin.sin_port, sizeof(p->sin.sin_port)) == 0) 
+							memcmp(&p->sin.sin_port, &fsin.sin_port, sizeof(p->sin.sin_port)) == 0)
 						{
 							send(p->s, buffer, i1, 0);
 							time(&p->last);
@@ -238,15 +238,15 @@ int main(int argc, char *argv[])
 					i1 = recv(p->s, buffer, 4096, 0);
 					if(i1 > 0) {
 						time(&p->last);
-						sendto(s, buffer, i1, 0, (struct sockaddr *) &p->sin, 
-							sizeof(p->sin)); 
+						sendto(s, buffer, i1, 0, (struct sockaddr *) &p->sin,
+							sizeof(p->sin));
 					}
 				}
 		} else {
 			peer_t *pp;
 
 			pp = NULL;
-			p = peers; 
+			p = peers;
 			while (p) {
 				if (time(NULL) - p->last > 300) {
 					if (!pp && !p->next) {

@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -40,7 +40,7 @@ static int	snd_sent, snd_completed;
 
 static HPSTR		lpData;
 static LPWAVEHDR	lpWaveHdr;
-static HWAVEOUT		hWaveOut; 
+static HWAVEOUT		hWaveOut;
 static DWORD		gSndBufSize;
 
 
@@ -147,10 +147,10 @@ qboolean SNDDMA_InitWav (void)
 	format->wf.nBlockAlign = format->wf.nChannels
 		*format->wBitsPerSample / 8;
 	format->wf.nAvgBytesPerSec = format->wf.nSamplesPerSec
-		*format->wf.nBlockAlign; 
-	
+		*format->wf.nBlockAlign;
+
 	/* Open a waveform device for output using our callback function. */
-	while ((hr = waveOutOpen((LPHWAVEOUT)&hWaveOut, WAVE_MAPPER, 
+	while ((hr = waveOutOpen((LPHWAVEOUT)&hWaveOut, WAVE_MAPPER,
 				 (LPWAVEFORMAT)format,
 				 (void (*)())mme_callback, 0,
 				 CALLBACK_FUNCTION | WAVE_OPEN_SHAREABLE))
@@ -166,40 +166,40 @@ qboolean SNDDMA_InitWav (void)
 	}
 	mmeFreeMem(format);
 
-	/* 
-	 * Allocate and lock memory for the waveform data. The memory 
-	 * for waveform data must be globally allocated with 
-	 * GMEM_MOVEABLE and GMEM_SHARE flags. 
+	/*
+	 * Allocate and lock memory for the waveform data. The memory
+	 * for waveform data must be globally allocated with
+	 * GMEM_MOVEABLE and GMEM_SHARE flags.
 
-	*/ 
+	*/
 	gSndBufSize = WAV_BUFFERS*WAV_BUFFER_SIZE;
-	lpData = mmeAllocBuffer(gSndBufSize); 
-	if (!lpData) { 
+	lpData = mmeAllocBuffer(gSndBufSize);
+	if (!lpData) {
 		Con_SafePrintf ("Sound: Out of memory.\n");
 		FreeSound ();
-		return false; 
+		return false;
 	}
 	memset (lpData, 0, gSndBufSize);
 
-	/* 
-	 * Allocate and lock memory for the header. This memory must 
-	 * also be globally allocated with GMEM_MOVEABLE and 
-	 * GMEM_SHARE flags. 
-	 */ 
+	/*
+	 * Allocate and lock memory for the header. This memory must
+	 * also be globally allocated with GMEM_MOVEABLE and
+	 * GMEM_SHARE flags.
+	 */
 	lpWaveHdr = mmeAllocMem(sizeof(WAVEHDR) * WAV_BUFFERS);
 
 	if (lpWaveHdr == NULL)
-	{ 
+	{
 		Con_SafePrintf ("Sound: Failed to Alloc header.\n");
 		FreeSound ();
-		return false; 
-	} 
+		return false;
+	}
 
 	memset (lpWaveHdr, 0, sizeof(WAVEHDR) * WAV_BUFFERS);
 
-	/* After allocation, set up and prepare headers. */ 
+	/* After allocation, set up and prepare headers. */
 	for (i=0 ; i<WAV_BUFFERS ; i++)	{
-		lpWaveHdr[i].dwBufferLength = WAV_BUFFER_SIZE; 
+		lpWaveHdr[i].dwBufferLength = WAV_BUFFER_SIZE;
 		lpWaveHdr[i].lpData = lpData + i*WAV_BUFFER_SIZE;
 	}
 
@@ -306,22 +306,22 @@ void SNDDMA_Submit(void)
 
 		h = lpWaveHdr + i;
 
-		h->dwBufferLength = WAV_BUFFER_SIZE; 
+		h->dwBufferLength = WAV_BUFFER_SIZE;
 		h->lpData = lpData + i*WAV_BUFFER_SIZE;
 
 		snd_sent++;
-		/* 
-		 * Now the data block can be sent to the output device. The 
-		 * waveOutWrite function returns immediately and waveform 
-		 * data is sent to the output device in the background. 
-		 */ 
-		wResult = waveOutWrite(hWaveOut, h, sizeof(WAVEHDR)); 
+		/*
+		 * Now the data block can be sent to the output device. The
+		 * waveOutWrite function returns immediately and waveform
+		 * data is sent to the output device in the background.
+		 */
+		wResult = waveOutWrite(hWaveOut, h, sizeof(WAVEHDR));
 
 		if (wResult != MMSYSERR_NOERROR)
-		{ 
+		{
 			Con_SafePrintf ("Failed to write block to device\n");
 			FreeSound ();
-			return; 
+			return;
 		}
 	}
 }

@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -68,16 +68,16 @@ typedef struct
 	server_state_t	state;			// precache commands are only valid during load
 
 	double		time;
-	
+
 	int			lastcheck;			// used by PF_checkclient
-	double		lastchecktime;		// for monster ai 
+	double		lastchecktime;		// for monster ai
 
 	qboolean	paused;				// are we paused?
 
 	//check player/eyes models for hacks
 	unsigned	model_player_checksum;
 	unsigned	eyes_player_checksum;
-	
+
 	char		name[64];			// map name
 	char		modelname[MAX_QPATH];		// maps/<name>.bsp, for model_precache[0]
 	struct model_s 	*worldmodel;
@@ -111,7 +111,7 @@ typedef struct
 
 	// the signon buffer will be sent to each client as they connect
 	// includes the entity baselines, the static entities, etc
-	// large levels will have >MAX_DATAGRAM sized signons, so 
+	// large levels will have >MAX_DATAGRAM sized signons, so
 	// multiple signon messages are kept
 	sizebuf_t	signon;
 	int			num_signon_buffers;
@@ -127,10 +127,10 @@ typedef struct
 	qboolean	loadgame;			// handle connections specially
 
 	double		time;
-	
+
 	int			lastcheck;			// used by PF_checkclient
 	double		lastchecktime;
-	
+
 	char		name[64];			// map name
 #ifdef QUAKE2
 	char		startspot[64];
@@ -229,9 +229,9 @@ typedef struct client_s
 // spawn parms are carried from level to level
 	float			spawn_parms[NUM_SPAWN_PARMS];
 
-// client known data for deltas	
+// client known data for deltas
 	int			old_frags;
-	
+
 	int			stats[MAX_CL_STATS];
 
 
@@ -253,7 +253,7 @@ typedef struct client_s
 	char			uploadfn[MAX_QPATH];
 	netadr_t		snap_from;
 	qboolean		remote_snap;
- 
+
 //===== NETWORK ============
 	int			chokecount;
 	int			delta_sequence;		// -1 = no compression
@@ -285,14 +285,14 @@ typedef struct client_s
 	edict_t			*edict;				// EDICT_NUM(clientnum+1)
 	char			name[32];			// for printing to other people
 	int				colors;
-		
+
 	float			ping_times[NUM_PING_TIMES];
 	int				num_pings;			// ping_times[num_pings%NUM_PING_TIMES]
 
 // spawn parms are carried from level to level
 	float			spawn_parms[NUM_SPAWN_PARMS];
 
-// client known data for deltas	
+// client known data for deltas
 	int				old_frags;
 } client_t;
 #endif
@@ -337,7 +337,7 @@ typedef struct
 									// used to check late spawns
 	client_t	clients[MAX_CLIENTS];
 	int			serverflags;		// episode completion information
-	
+
 	double		last_heartbeat;
 	int			beatcount;
 	int			mheartbeat_sequence;

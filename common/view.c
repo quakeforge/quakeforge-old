@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -100,21 +100,21 @@ V_CalcRoll (vec3_t angles, vec3_t velocity)
 	float	sign;
 	float	side;
 	float	value;
-	
+
 	AngleVectors (angles, forward, right, up);
 	side = DotProduct (velocity, right);
 	sign = side < 0 ? -1 : 1;
 	side = fabs(side);
-	
+
 	value = cl_rollangle->value;
 
 	if (side < cl_rollspeed->value)
 		side = side * value / cl_rollspeed->value;
 	else
 		side = value;
-	
+
 	return side*sign;
-	
+
 }
 
 
@@ -133,7 +133,7 @@ V_CalcBob ( void )
 	float	bob;
 #endif
 	float	cycle;
-	
+
 #ifdef QUAKEWORLD
 	if (cl.spectator)
 		return 0;
@@ -163,7 +163,7 @@ V_CalcBob ( void )
 	bob = bob*0.3 + bob*0.7*sin(cycle);
 	bob = bound( -7, bob, 4);
 	return bob;
-	
+
 }
 
 
@@ -205,7 +205,7 @@ V_StopPitchDrift (void)
 	stopped.
 
 	Drifting is enabled when the center view key is hit, mlook is released
-	and lookspring is nonzero, or when 
+	and lookspring is nonzero, or when
 */
 void
 V_DriftPitch ( void )
@@ -232,7 +232,7 @@ V_DriftPitch ( void )
 			cl.driftmove = 0;
 		else
 			cl.driftmove += host_frametime;
-	
+
 		if ( cl.driftmove > v_centermove->value) {
 			V_StartPitchDrift ();
 		}
@@ -248,7 +248,7 @@ V_DriftPitch ( void )
 
 	move = host_frametime * cl.pitchvel;
 	cl.pitchvel += host_frametime * v_centerspeed->value;
-	
+
 	//Con_Printf ("move: %f (%f)\n", move, host_frametime);
 
 	if (delta > 0) {
@@ -269,14 +269,14 @@ V_DriftPitch ( void )
 
 
 /*
-============================================================================== 
- 
-						PALETTE FLASHES 
- 
-============================================================================== 
-*/ 
- 
- 
+==============================================================================
+
+						PALETTE FLASHES
+
+==============================================================================
+*/
+
+
 cshift_t	cshift_empty = { {130,80,50}, 0 };
 cshift_t	cshift_water = { {130,80,50}, 128 };
 cshift_t	cshift_slime = { {0,25,5}, 150 };
@@ -293,13 +293,13 @@ void
 BuildGammaTable ( float g )
 {
 	int		i, inf;
-	
+
 	if (g == 1.0) {
 		for (i=0 ; i<256 ; i++)
 			gammatable[i] = i;
 		return;
 	}
-	
+
 	for (i=0 ; i<256 ; i++) {
 		inf = 255 * pow ( (i+0.5)/255.5 , g ) + 0.5;
 		inf = bound(0, inf, 255);
@@ -316,14 +316,14 @@ qboolean
 V_CheckGamma ( void )
 {
 	static float oldgammavalue;
-	
+
 	if (v_gamma->value == oldgammavalue)
 		return false;
 	oldgammavalue = v_gamma->value;
-	
+
 	BuildGammaTable (v_gamma->value);
 	vid.recalc_refdef = 1;				// force a surface cache flush
-	
+
 	return true;
 }
 
@@ -345,7 +345,7 @@ V_ParseDamage ( void )
 #endif
 	float	side;
 	float	count;
-	
+
 	armor = MSG_ReadByte ();
 	blood = MSG_ReadByte ();
 	for (i=0 ; i<3 ; i++)
@@ -378,11 +378,11 @@ V_ParseDamage ( void )
 	VectorSubtract (from, cl.simorg, from);
 #else
 	ent = &cl_entities[cl.playernum + 1];
-	
+
 	VectorSubtract (from, ent->origin, from);
 #endif
 	VectorNormalize (from);
-	
+
 #ifdef QUAKEWORLD
 	AngleVectors (cl.simangles, forward, right, up);
 #else
@@ -391,7 +391,7 @@ V_ParseDamage ( void )
 
 	side = DotProduct (from, right);
 	v_dmg_roll = count*side*v_kickroll->value;
-	
+
 	side = DotProduct (from, forward);
 	v_dmg_pitch = count*side*v_kickpitch->value;
 
@@ -536,13 +536,13 @@ V_CalcBlend ( void )
 	v_blend[3] = bound(0.0, a, 1.0);
 }
 
-/* 
-============================================================================== 
- 
-						VIEW RENDERING 
- 
-============================================================================== 
-*/ 
+/*
+==============================================================================
+
+						VIEW RENDERING
+
+==============================================================================
+*/
 
 float
 angledelta ( float a )
@@ -560,17 +560,17 @@ angledelta ( float a )
 */
 void
 CalcGunAngle ( void )
-{	
+{
 	float	yaw, pitch, move;
 	static float oldyaw = 0;
 	static float oldpitch = 0;
-	
+
 	yaw = r_refdef.viewangles[YAW];
 	pitch = -r_refdef.viewangles[PITCH];
 
 	yaw = angledelta(yaw - r_refdef.viewangles[YAW]) * 0.4;
 	yaw = bound(-10, yaw, 10);
-	
+
 	pitch = angledelta(-pitch - r_refdef.viewangles[PITCH]) * 0.4;
 	pitch = bound(-10, pitch, 10);
 
@@ -582,7 +582,7 @@ CalcGunAngle ( void )
 		if (oldyaw - move > yaw)
 			yaw = oldyaw - move;
 	}
-	
+
 	if ( pitch > oldpitch ) {
 		if (oldpitch + move < pitch)
 			pitch = oldpitch + move;
@@ -590,7 +590,7 @@ CalcGunAngle ( void )
 		if (oldpitch - move > pitch)
 			pitch = oldpitch - move;
 	}
-	
+
 	oldyaw = yaw;
 	oldpitch = pitch;
 
@@ -614,7 +614,7 @@ V_BoundOffsets ( void )
 {
 #ifdef UQUAKE
 	entity_t	*ent;
-	
+
 	ent = &cl_entities[cl.playernum + 1];
 #endif
 // absolutely bound refresh reletive to entity clipping hull
@@ -677,7 +677,7 @@ void
 V_CalcViewRoll (void)
 {
 	float		side;
-		
+
 #ifdef QUAKEWORLD
 	side = V_CalcRoll (cl.simangles, cl.simvel);
 #else
@@ -778,11 +778,11 @@ V_CalcRefdef ( void )
 										// the view dir
 	ent->angles[PITCH] = -cl.viewangles[PITCH];	// the model should face
 										// the view dir
-										
-	
+
+
 #endif
 	bob = V_CalcBob ();
-	
+
 #ifdef QUAKEWORLD
 // refresh position from simulated origin
 	VectorCopy (cl.simorg, r_refdef.vieworg);
@@ -847,9 +847,9 @@ V_CalcRefdef ( void )
 		r_refdef.vieworg[i] += scr_ofsx->value*forward[i]
 			+ scr_ofsy->value*right[i]
 			+ scr_ofsz->value*up[i];
-	
+
 #endif
-	
+
 #ifdef UQUAKE
 	V_BoundOffsets ();
 #endif
@@ -859,7 +859,7 @@ V_CalcRefdef ( void )
 #else
 	VectorCopy (cl.viewangles, view->angles);
 #endif
-	
+
 	CalcGunAngle ();
 
 #ifdef QUAKEWORLD
@@ -908,7 +908,7 @@ V_CalcRefdef ( void )
 #ifdef QUAKEWORLD
 	if ( (view_message->onground != -1) && (cl.simorg[2] - oldz > 0) ) {
 		float steptime;
-		
+
 		steptime = host_frametime;
 
 		oldz += steptime * 80;
@@ -994,7 +994,7 @@ cl.simangles[ROLL] = 0;	// FIXME
 	DropPunchAngle ();
 #endif
 	if (cl.intermission) {	// intermission / finale rendering
-		V_CalcIntermissionRefdef ();	
+		V_CalcIntermissionRefdef ();
 	} else {
 		if (!cl.paused /* && (sv.maxclients > 1 || key_dest == key_game) */ )
 			V_CalcRefdef ();
@@ -1037,7 +1037,7 @@ cl.simangles[ROLL] = 0;	// FIXME
 #else
 	R_RenderView ();
 #endif
-	
+
 	if (crosshair->value)
 		Draw_Crosshair();
 }
@@ -1046,13 +1046,13 @@ cl.simangles[ROLL] = 0;	// FIXME
 
 /*
 	V_Init
-	
+
 	Create and initialize view cvars and console commands
 */
 void
 V_Init ( void )
 {
-	Cmd_AddCommand ("v_cshift", V_cshift_f);	
+	Cmd_AddCommand ("v_cshift", V_cshift_f);
 	Cmd_AddCommand ("bf", V_BonusFlash_f);
 	Cmd_AddCommand ("centerview", V_StartPitchDrift);
 
@@ -1074,7 +1074,7 @@ V_Init ( void )
 	v_idlescale 	= Cvar_Get ("v_idlescale", "0", CVAR_NONE, "None");
 	crosshaircolor	= Cvar_Get ("crosshaircolor", "79", CVAR_ARCHIVE, "Crosshair Color");
 	crosshair		= Cvar_Get ("crosshair", "0", CVAR_ARCHIVE, "Crosshair selection");
-	cl_crossx		= Cvar_Get ("cl_crossx", "0", CVAR_ARCHIVE, "Crosshair X location"); 
+	cl_crossx		= Cvar_Get ("cl_crossx", "0", CVAR_ARCHIVE, "Crosshair X location");
 	cl_crossy		= Cvar_Get ("cl_crossy", "0", CVAR_ARCHIVE, "Crosshair Y location");
 	gl_cshiftpercent = Cvar_Get ("gl_cshiftpercent", "100", CVAR_NONE, "Percentage of color shifting");
 

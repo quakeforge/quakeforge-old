@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -88,7 +88,7 @@ void R_TimeRefresh_f (void)
 	vrect_t		vr;
 
 	startangle = r_refdef.viewangles[1];
-	
+
 	start = Sys_DoubleTime ();
 	for (i=0 ; i<128 ; i++)
 	{
@@ -110,7 +110,7 @@ void R_TimeRefresh_f (void)
 	stop = Sys_DoubleTime ();
 	time = stop-start;
 	Con_Printf ("%f seconds (%f fps)\n", time, 128/time);
-	
+
 	r_refdef.viewangles[1] = startangle;
 }
 
@@ -129,12 +129,12 @@ void R_LineGraph (int x, int y, int h)
 	int		color;
 
 // FIXME: should be disabled on no-buffer adapters, or should be in the driver
-#ifdef UQUAKE	
+#ifdef UQUAKE
 	x += r_refdef.vrect.x;
 	y += r_refdef.vrect.y;
 #endif
 	dest = vid.buffer + vid.rowbytes*y + x;
-	
+
 	s = r_graphheight->value;
 
 	if (h == 10000)
@@ -182,7 +182,7 @@ void R_TimeGraph (void)
 	float	r_time2;
 	static byte	r_timings[MAX_TIMINGS];
 	int		x;
-	
+
 	r_time2 = Sys_DoubleTime ();
 
 	a = (r_time2-r_time1)/0.01;
@@ -291,7 +291,7 @@ void R_PrintTimes (void)
 	r_time2 = Sys_DoubleTime ();
 
 	ms = 1000* (r_time2 - r_time1);
-	
+
 	Con_Printf ("%5.1f ms %3i/%3i/%3i poly %3i surf\n",
 				ms, c_faceclip, r_polycount, r_drawnpolycount, c_surf);
 	c_surf = 0;
@@ -339,7 +339,7 @@ void WarpPalette (void)
 	int		i,j;
 	byte	newpalette[768];
 	int		basecolor[3];
-	
+
 	basecolor[0] = 130;
 	basecolor[1] = 80;
 	basecolor[2] = 50;
@@ -352,7 +352,7 @@ void WarpPalette (void)
 			newpalette[i*3+j] = (host_basepal[i*3+j] + basecolor[j])/2;
 		}
 	}
-	
+
 	VID_ShiftPalette (newpalette);
 }
 
@@ -366,7 +366,7 @@ void R_TransformFrustum (void)
 {
 	int		i;
 	vec3_t	v, v2;
-	
+
 	for (i=0 ; i<4 ; i++)
 	{
 		v[0] = screenedge[i].normal[2];
@@ -395,7 +395,7 @@ void TransformVector (vec3_t in, vec3_t out)
 {
 	out[0] = DotProduct(in,vright);
 	out[1] = DotProduct(in,vup);
-	out[2] = DotProduct(in,vpn);		
+	out[2] = DotProduct(in,vpn);
 }
 
 #endif
@@ -409,7 +409,7 @@ R_TransformPlane
 void R_TransformPlane (mplane_t *p, float *normal, float *dist)
 {
 	float	d;
-	
+
 	d = DotProduct (r_origin, p->normal);
 	*dist = p->dist - d;
 // TODO: when we have rotating entities, this will need to use the view matrix
@@ -499,9 +499,9 @@ void R_SetupFrame (void)
 	if (!sv.active)
 #endif
 		r_draworder->value = 0;	// don't let cheaters look behind walls
-		
+
 	R_CheckVariables ();
-	
+
 	R_AnimateLight ();
 
 	r_framecount++;

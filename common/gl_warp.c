@@ -1,8 +1,8 @@
 /*
 	gl_warp.c
-	
+
 	Sky and water polygons
-	
+
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
@@ -15,7 +15,7 @@
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 	See the GNU General Public License for more details.
 
@@ -355,7 +355,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 	targa_header.id_length = Qgetc(fin);
 	targa_header.colormap_type = Qgetc(fin);
 	targa_header.image_type = Qgetc(fin);
-	
+
 	targa_header.colormap_index = QgetLittleShort(fin);
 	targa_header.colormap_length = QgetLittleShort(fin);
 	targa_header.colormap_size = Qgetc(fin);
@@ -366,7 +366,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 	targa_header.pixel_size = Qgetc(fin);
 	targa_header.attributes = Qgetc(fin);
 
-	if (targa_header.image_type!=2 && targa_header.image_type!=10) 
+	if (targa_header.image_type!=2 && targa_header.image_type!=10)
 		Sys_Error ("LoadTGA: Only type 2 and 10 targa RGB images supported\n");
 
 	if (targa_header.colormap_type !=0 ||
@@ -379,17 +379,17 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 	numPixels = columns * rows;
 
 	*targa_rgba = malloc (numPixels*4);
-	
+
 	if (targa_header.id_length != 0)
 		Qseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
-	
+
 	if (targa_header.image_type==2) {  // Uncompressed, RGB images
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = *targa_rgba + row*columns*4;
 			for(column=0; column<columns; column++) {
 				switch (targa_header.pixel_size) {
 					case 24:
-							
+
 							blue = Qgetc(fin);
 							green = Qgetc(fin);
 							red = Qgetc(fin);
@@ -434,7 +434,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 								alphabyte = Qgetc(fin);
 								break;
 					}
-	
+
 					for(j=0;j<packetSize;j++) {
 						*pixbuf++=red;
 						*pixbuf++=green;
@@ -482,7 +482,7 @@ LoadTGA (QFile *fin, byte **targa_rgba) {
 							else
 								goto breakOut;
 							pixbuf = *targa_rgba + row*columns*4;
-						}						
+						}
 					}
 				}
 			}
@@ -537,7 +537,7 @@ vec3_t	skyclip[6] = {
 	{0,-1,1},
 	{0,1,1},
 	{1,0,1},
-	{-1,0,1} 
+	{-1,0,1}
 };
 int	c_sky;
 

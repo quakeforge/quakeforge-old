@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -32,7 +32,7 @@ typedef struct cvar_s
 	char    *name;
 	char    *string;
 	int	flags;
-	char 	*description;	// for "help" command 
+	char 	*description;	// for "help" command
 //	qboolean archive;	// set to true to cause it to be saved to vars.rc
 //	qboolean info;		// added to serverinfo or userinfo when changed
 //	qboolean server;	// notifies players when changed (UQUAKE)
@@ -54,12 +54,12 @@ typedef struct cvar_s
 
 #define	CVAR_ROM			64	// display only, cannot be set by user at all
 #define	CVAR_USER_CREATED	128	// created by a set command
-#define	CVAR_HEAP			256	// allocated off the heap, safe to free 
+#define	CVAR_HEAP			256	// allocated off the heap, safe to free
 #define CVAR_CHEAT			512	// can not be changed if cheats are disabled
 #define CVAR_NORESTART		1024	// do not clear when a cvar_restart is issued
 #define CVAR_LATCH		2048	// will only change when C code next does
 					// a Cvar_Get(), so it can't be changed
-#define CVAR_TEMP		4906	// can be set even when cheats are 
+#define CVAR_TEMP		4906	// can be set even when cheats are
 					// disabled, but is not archived
 
 // Zoid| A good CVAR_ROM example is basepath.  The code should read "cvar_t

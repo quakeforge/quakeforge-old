@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -56,7 +56,7 @@ void R_DrawParticles (void)
 #else
 	frametime = cl.time - cl.oldtime;
 #endif
-	
+
 	time3 = frametime * 15;
 	time2 = frametime * 10; // 15;
 	time1 = frametime * 5;
@@ -66,8 +66,8 @@ void R_DrawParticles (void)
 	grav = frametime * sv_gravity->value * 0.05;
 #endif
 	dvel = 4*frametime;
-	
-	for ( ;; ) 
+
+	for ( ;; )
 	{
 		kill = active_particles;
 		if (kill && kill->die < cl.time)
@@ -100,7 +100,7 @@ void R_DrawParticles (void)
 		p->org[0] += p->vel[0]*frametime;
 		p->org[1] += p->vel[1]*frametime;
 		p->org[2] += p->vel[2]*frametime;
-		
+
 		switch (p->type)
 		{
 		case pt_static:

@@ -1,10 +1,10 @@
 /*
 	gl_rmain.c
-	
+
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
-	
+
 	Author:
 	Date: 07 Jan 2000
 
@@ -15,13 +15,13 @@
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 	See the GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to:
-	
+
 	Free Software Foundation, Inc.
 	59 Temple Place - Suite 330
 	Boston, MA  02111-1307, USA.
@@ -54,7 +54,7 @@ mplane_t	frustum[4];
 
 int		c_brush_polys, c_alias_polys;
 
-qboolean	envmap;			// true during envmap command capture 
+qboolean	envmap;			// true during envmap command capture
 
 int		currenttexture = -1;	// to avoid unnecessary texture sets
 
@@ -123,7 +123,7 @@ cvar_t	*gl_nocolors;
 cvar_t	*gl_keeptjunctions;
 cvar_t	*gl_doubleeyes;
 
-extern	cvar_t	*gl_ztrick; 
+extern	cvar_t	*gl_ztrick;
 #ifdef QUAKEWORLD
 extern	cvar_t	*scr_fov;
 #endif
@@ -257,7 +257,7 @@ R_DrawSpriteModel (entity_t *e) {
 	VectorMA (e->origin, frame->down, up, point);
 	VectorMA (point, frame->right, right, point);
 	glVertex3fv (point);
-	
+
 	glEnd ();
 
 	glDisable (GL_ALPHA_TEST);
@@ -327,7 +327,7 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 
 			// normals and vertexes come from the frame list
 
-			l = shadedots[verts->lightnormalindex] 
+			l = shadedots[verts->lightnormalindex]
 				* shadelight[3];
 			if (shadelight[0] || shadelight[1] || shadelight[2])
 				glColor3f (l*shadelight[0], l*shadelight[1],
@@ -397,7 +397,7 @@ GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum) {
 			verts++;
 		} while (--count);
 		glEnd ();
-	}	
+	}
 }
 
 /*
@@ -460,7 +460,7 @@ R_DrawAliasModel (entity_t *e) {
 	shadelight[2] = (float)j[2];
 	shadelight[3] = (float)j[3];
 	ambientlight = shadelight[3];
-		
+
 	// allways give the gun some light
 	if (e == &cl.viewent && ambientlight < 24)
 		ambientlight = shadelight[3] = 24;
@@ -477,7 +477,7 @@ R_DrawAliasModel (entity_t *e) {
 			if (add > 0)
 			{
 				ambientlight += add;
-				// ZOID: models should be affected by 
+				// ZOID: models should be affected by
 				//       dlights as well
 				shadelight[0] += cl_dlights[lnum].color[0];
 				shadelight[1] += cl_dlights[lnum].color[1];
@@ -497,7 +497,7 @@ R_DrawAliasModel (entity_t *e) {
 	if (!strcmp(clmodel->name, "progs/player.mdl"))
 #else
 	i = currententity - cl_entities;
-	if (i >= 1 && i <= cl.maxclients 
+	if (i >= 1 && i <= cl.maxclients
 			/*&& !strcmp (currententity->model->name,
 					"progs/player.mdl")*/ )
 #endif
@@ -509,11 +509,11 @@ R_DrawAliasModel (entity_t *e) {
 		// HACK HACK HACK -- no fullbright colors, so make torches full light
 		ambientlight = shadelight[3] = 256;
 
-	shadedots = r_avertexnormal_dots[((int)(e->angles[1] 
+	shadedots = r_avertexnormal_dots[((int)(e->angles[1]
 				* (SHADEDOT_QUANT / 360.0)))
 				& (SHADEDOT_QUANT - 1)];
 	shadelight[3] /= 200.0;
-	
+
 	an = e->angles[1]/180*M_PI;
 	shadevector[0] = cos(-an);
 	shadevector[1] = sin(-an);
@@ -570,7 +570,7 @@ R_DrawAliasModel (entity_t *e) {
 #else
 	if (currententity->colormap != vid.colormap && !gl_nocolors->value) {
 		i = currententity - cl_entities;
-		if (i >= 1 && i<=cl.maxclients 
+		if (i >= 1 && i<=cl.maxclients
 				/*&& !strcmp (currententity->model->name,
 				 	"progs/player.mdl")*/ )
 		    GL_Bind(playertextures - 1 + i);
@@ -704,7 +704,7 @@ R_DrawViewModel ( void )
 	shadelight[2] = j[2];
 	shadelight[3] = j[3];
 
-// add dynamic lights		
+// add dynamic lights
 	for (lnum=0 ; lnum<MAX_DLIGHTS ; lnum++) {
 		dl = &cl_dlights[lnum];
 		if (!dl->radius)
@@ -957,7 +957,7 @@ R_RenderScene ( void ) {
 
 	R_SetupFrame ();
 	R_SetFrustum ();
-	
+
 	R_SetupGL ();
 
 	R_MarkLeaves ();	// done here so we know if we're in water
@@ -1065,12 +1065,12 @@ R_RenderView ( void ) {
 	// render normal view
 
 /*** Render Volumetric Fog ***/
-	
-	if(r_volfog->value) 
+
+	if(r_volfog->value)
 	{
 		R_RenderScene ();
 		R_DrawViewModel ();
- 
+
 		glClear(GL_STENCIL_BUFFER_BIT);
 		//glColorMask(GL_FALSE);
 		glStencilFunc(GL_ALWAYS, 1, 1);
@@ -1082,7 +1082,7 @@ R_RenderView ( void ) {
         	        glFogfv (GL_FOG_COLOR, colors);
 // fixme: GL_FOG_DENSITY should have r_volfog_density var
 			glFogf (GL_FOG_DENSITY, r_volfog->value);
-		
+
                 glEnable(GL_FOG);
 		R_DrawWaterSurfaces();
 		glDisable(GL_FOG);
@@ -1094,11 +1094,11 @@ R_RenderView ( void ) {
 
 /*** Depth fog code ***/
 
-	else if (r_fog->value) 
+	else if (r_fog->value)
 	{	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
 		glFogi (GL_FOG_MODE, GL_EXP2);
 		glFogfv (GL_FOG_COLOR, colors);
-		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog->value); 
+		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog->value);
 //		glFogi (GL_FOG_MODE, GL_LINEAR);
 //		glFogfv (GL_FOG_COLOR, colors);
 //		glFogf (GL_FOG_START, 300.0);
@@ -1109,24 +1109,24 @@ R_RenderView ( void ) {
 		R_RenderScene ();
 	        R_DrawViewModel ();
 		R_DrawWaterSurfaces ();
-		
+
 		glDisable(GL_FOG);
-	} 
+	}
 
 /*** Regular rendering code ***/
 
-else 
+else
 	{
 		R_RenderScene ();
 		R_DrawViewModel ();
 		R_DrawWaterSurfaces ();
-	}	
+	}
 
 	R_PolyBlend ();
 
 	if (r_speeds->value) {
 		//glFinish ();
 		time2 = Sys_DoubleTime ();
-		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys); 
+		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys);
 	}
 }

@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -260,19 +260,19 @@ void SV_Give_f (void)
 {
 	char	*t;
 	int		v;
-	
+
 	if (!sv_allow_cheats)
 	{
 		Con_Printf ("You must run the server with -cheats to enable this command.\n");
 		return;
 	}
-	
+
 	if (!SV_SetPlayer ())
 		return;
 
 	t = Cmd_Argv(2);
 	v = atoi (Cmd_Argv(3));
-	
+
 	switch (t[0])
 	{
 	case '2':
@@ -285,22 +285,22 @@ void SV_Give_f (void)
 	case '9':
 		sv_player->v.items = (int)sv_player->v.items | IT_SHOTGUN<< (t[0] - '2');
 		break;
-	
+
 	case 's':
 		sv_player->v.ammo_shells = v;
-		break;		
+		break;
 	case 'n':
 		sv_player->v.ammo_nails = v;
-		break;		
+		break;
 	case 'r':
 		sv_player->v.ammo_rockets = v;
-		break;		
+		break;
 	case 'h':
 		sv_player->v.health = v;
-		break;		
+		break;
 	case 'c':
 		sv_player->v.ammo_cells = v;
-		break;		
+		break;
 	}
 }
 
@@ -309,7 +309,7 @@ void SV_Give_f (void)
 ======================
 SV_Map_f
 
-handle a 
+handle a
 map <mapname>
 command from the console or progs.
 ======================
@@ -368,7 +368,7 @@ void SV_Kick_f (void)
 	int			uid;
 
 	uid = atoi(Cmd_Argv(1));
-	
+
 	for (i = 0, cl = svs.clients; i < MAX_CLIENTS; i++, cl++)
 	{
 		if (!cl->state)
@@ -379,7 +379,7 @@ void SV_Kick_f (void)
 			// print directly, because the dropped client won't get the
 			// SV_BroadcastPrintf message
 			SV_ClientPrintf (cl, PRINT_HIGH, "You were kicked from the game\n");
-			SV_DropClient (cl); 
+			SV_DropClient (cl);
 			return;
 		}
 	}
@@ -411,7 +411,7 @@ void SV_Status_f (void)
 	Con_Printf ("cpu utilization  : %3i%%\n",(int)cpu);
 	Con_Printf ("avg response time: %i ms\n",(int)avg);
 	Con_Printf ("packets/frame    : %5.2f (%d)\n", pak, num_prstr);
-	
+
 // min fps lat drp
 	if (sv_redirected != RD_NONE) {
 		// most remote clients are 40 columns
@@ -429,7 +429,7 @@ void SV_Status_f (void)
 			Con_Printf ("%6i %5i", cl->userid, (int)cl->edict->v.frags);
 			if (cl->spectator)
 				Con_Printf(" (s)\n");
-			else			
+			else
 				Con_Printf("\n");
 
 			s = NET_BaseAdrToString ( cl->netchan.remote_address);
@@ -463,7 +463,7 @@ void SV_Status_f (void)
 			l = 16 - strlen(s);
 			for (j=0 ; j<l ; j++)
 				Con_Printf (" ");
-			
+
 			Con_Printf ("%s", cl->name);
 			l = 16 - strlen(cl->name);
 			for (j=0 ; j<l ; j++)
@@ -485,10 +485,10 @@ void SV_Status_f (void)
 				, cl->netchan.qport);
 			if (cl->spectator)
 				Con_Printf(" (s)\n");
-			else			
+			else
 				Con_Printf("\n");
 
-				
+
 		}
 	}
 	Con_Printf ("\n");
@@ -581,11 +581,11 @@ void SV_Serverinfo_f (void)
 	}
 	Info_SetValueForKey (svs.info, Cmd_Argv(1), Cmd_Argv(2), MAX_SERVERINFO_STRING);
 
-	// if this is a cvar, change it too	
+	// if this is a cvar, change it too
 	var = Cvar_FindVar (Cmd_Argv(1));
 	if (var)
 	{
-		Z_Free (var->string);	// free the old value string	
+		Z_Free (var->string);	// free the old value string
 		var->string = CopyString (Cmd_Argv(2));
 		var->value = Q_atof (var->string);
 	}
@@ -636,11 +636,11 @@ SV_Floodport_f
 void SV_Floodprot_f (void)
 {
 	int arg1, arg2, arg3;
-	
+
 	if (Cmd_Argc() == 1)
 	{
 		if (fp_messages) {
-			Con_Printf ("Current floodprot settings: \nAfter %d msgs per %d seconds, silence for %d seconds\n", 
+			Con_Printf ("Current floodprot settings: \nAfter %d msgs per %d seconds, silence for %d seconds\n",
 				fp_messages, fp_persecond, fp_secondsdead);
 			return;
 		} else
@@ -662,7 +662,7 @@ void SV_Floodprot_f (void)
 		Con_Printf ("All values must be positive numbers\n");
 		return;
 	}
-	
+
 	if (arg1 > 10) {
 		Con_Printf ("Can only track up to 10 messages.\n");
 		return;
@@ -793,7 +793,7 @@ SV_Snap
 void SV_Snap (int uid)
 {
 	client_t *cl;
-	char		pcxname[80]; 
+	char		pcxname[80];
 	char		checkname[MAX_OSPATH];
 	int			i;
 
@@ -814,18 +814,18 @@ void SV_Snap (int uid)
 	snprintf(checkname, sizeof(checkname), "%s/snap", gamedirfile);
 	Sys_mkdir(gamedirfile);
 	Sys_mkdir(checkname);
-		
-	for (i=0 ; i<=99 ; i++) 
-	{ 
-		pcxname[strlen(pcxname) - 6] = i/10 + '0'; 
-		pcxname[strlen(pcxname) - 5] = i%10 + '0'; 
+
+	for (i=0 ; i<=99 ; i++)
+	{
+		pcxname[strlen(pcxname) - 6] = i/10 + '0';
+		pcxname[strlen(pcxname) - 5] = i%10 + '0';
 		snprintf(checkname, sizeof(checkname), "%s/snap/%s", gamedirfile, pcxname);
 		if (Sys_FileTime(checkname) == -1)
 			break;	// file doesn't exist
-	} 
-	if (i==100) 
+	}
+	if (i==100)
 	{
-		Con_Printf ("Snap: Couldn't create a file, clean some out.\n"); 
+		Con_Printf ("Snap: Couldn't create a file, clean some out.\n");
 		return;
 	}
 	strcpy(cl->uploadfn, checkname);

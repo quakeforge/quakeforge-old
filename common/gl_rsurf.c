@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -113,7 +113,7 @@ void R_AddDynamicLights (msurface_t *surf)
 
 		local[0] -= surf->texturemins[0];
 		local[1] -= surf->texturemins[1];
-		
+
 		for (t = 0 ; t<tmax ; t++)
 		{
 			td = local[1] - t*16;
@@ -290,13 +290,13 @@ texture_t *R_TextureAnimation (texture_t *base)
 		if (base->alternate_anims)
 			base = base->alternate_anims;
 	}
-	
+
 	if (!base->anim_total)
 		return base;
 
 	reletive = (int)(cl.time*10) % base->anim_total;
 
-	count = 0;	
+	count = 0;
 	while (base->anim_min > reletive || base->anim_max <= reletive)
 	{
 		base = base->anim_next;
@@ -333,7 +333,7 @@ qboolean mtexenabled = false;
 
 void GL_SelectTexture (GLenum target);
 
-void GL_DisableMultitexture(void) 
+void GL_DisableMultitexture(void)
 {
 	if (mtexenabled) {
 		glDisable(GL_TEXTURE_2D);
@@ -342,7 +342,7 @@ void GL_DisableMultitexture(void)
 	}
 }
 
-void GL_EnableMultitexture(void) 
+void GL_EnableMultitexture(void)
 {
 	if (gl_mtexable) {
 		GL_SelectTexture(TEXTURE1_SGIS);
@@ -435,7 +435,7 @@ void R_DrawSequentialPoly (msurface_t *s)
 			glBlendFunc (GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
 
 		glDisable (GL_BLEND);
-		
+
 	}
 
 	//
@@ -493,7 +493,7 @@ void R_DrawSequentialPoly (msurface_t *s)
 			{
 				lightmap_modified[i] = false;
 				theRect = &lightmap_rectchange[i];
-				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, theRect->t, 
+				glTexSubImage2D(GL_TEXTURE_2D, 0, 0, theRect->t,
 					BLOCK_WIDTH, theRect->h, gl_lightmap_format, GL_UNSIGNED_BYTE,
 					lightmaps+(i* BLOCK_HEIGHT + theRect->t) *BLOCK_WIDTH*lightmap_bytes);
 				theRect->l = BLOCK_WIDTH;
@@ -595,7 +595,7 @@ void R_DrawSequentialPoly (msurface_t *s)
 		{
 			lightmap_modified[i] = false;
 			theRect = &lightmap_rectchange[i];
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, theRect->t, 
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, theRect->t,
 				BLOCK_WIDTH, theRect->h, gl_lightmap_format, GL_UNSIGNED_BYTE,
 				lightmaps+(i* BLOCK_HEIGHT + theRect->t) *BLOCK_WIDTH*lightmap_bytes);
 			theRect->l = BLOCK_WIDTH;
@@ -761,12 +761,12 @@ void R_BlendLightmaps (void)
 //			theRect->w = BLOCK_WIDTH;
 //			theRect->h = BLOCK_HEIGHT;
 //			glTexImage2D (GL_TEXTURE_2D, 0, lightmap_bytes
-//			, BLOCK_WIDTH, BLOCK_HEIGHT, 0, 
+//			, BLOCK_WIDTH, BLOCK_HEIGHT, 0,
 //			gl_lightmap_format, GL_UNSIGNED_BYTE, lightmaps+i*BLOCK_WIDTH*BLOCK_HEIGHT*lightmap_bytes);
 //			glTexImage2D (GL_TEXTURE_2D, 0, lightmap_bytes
-//				, BLOCK_WIDTH, theRect->h, 0, 
+//				, BLOCK_WIDTH, theRect->h, 0,
 //				gl_lightmap_format, GL_UNSIGNED_BYTE, lightmaps+(i*BLOCK_HEIGHT+theRect->t)*BLOCK_WIDTH*lightmap_bytes);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, theRect->t, 
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, theRect->t,
 				BLOCK_WIDTH, theRect->h, gl_lightmap_format, GL_UNSIGNED_BYTE,
 				lightmaps+(i* BLOCK_HEIGHT + theRect->t) *BLOCK_WIDTH*lightmap_bytes);
 			theRect->l = BLOCK_WIDTH;
@@ -776,7 +776,7 @@ void R_BlendLightmaps (void)
 		}
 		for ( ; p ; p=p->chain)
 		{
-		
+
 		if (r_waterwarp->value && (p->flags & SURF_UNDERWATER)) {
 				DrawGLWaterPolyLightmap (p);
 //			if (r_waterwarp->value && ((r_viewleaf->contents==CONTENTS_EMPTY && (p->flags & SURF_UNDERWATER)))
@@ -831,7 +831,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 		EmitBothSkyLayers (fa);
 		return;
 	}
-		
+
 	t = R_TextureAnimation (fa->texinfo->texture);
 	GL_Bind (t->gl_texturenum);
 
@@ -905,7 +905,7 @@ void R_RenderDynamicLightmaps (msurface_t *fa)
 
 	if (fa->flags & ( SURF_DRAWSKY | SURF_DRAWTURB) )
 		return;
-		
+
 	fa->polys->chain = lightmap_polys[fa->lightmaptexturenum];
 	lightmap_polys[fa->lightmaptexturenum] = fa->polys;
 
@@ -1030,7 +1030,7 @@ void R_DrawWaterSurfaces (void)
 			GL_Bind (s->texinfo->texture->gl_texturenum);
 			EmitWaterPolys (s);
 		}
-		
+
 		waterchain = NULL;
 	} else {
 
@@ -1046,12 +1046,12 @@ void R_DrawWaterSurfaces (void)
 				continue;
 
 			// set modulate mode explicitly
-			
+
 			GL_Bind (t->gl_texturenum);
 
 			for ( ; s ; s=s->texturechain)
 				EmitWaterPolys (s);
-			
+
 			t->texturechain = NULL;
 		}
 
@@ -1088,7 +1088,7 @@ void DrawTextureChains (void)
 		}
 
 		return;
-	} 
+	}
 
 	for (i=0 ; i<cl.worldmodel->numtextures ; i++)
 	{
@@ -1245,7 +1245,7 @@ void R_RecursiveWorldNode (mnode_t *node)
 		return;
 	if (R_CullBox (node->minmaxs, node->minmaxs+3))
 		return;
-	
+
 // if a leaf node, draw stuff
 	if (node->contents < 0)
 	{
@@ -1396,7 +1396,7 @@ void R_MarkLeaves (void)
 
 	if (r_oldviewleaf == r_viewleaf && !r_novis->value)
 		return;
-	
+
 	r_visframecount++;
 	r_oldviewleaf = r_viewleaf;
 
@@ -1407,7 +1407,7 @@ void R_MarkLeaves (void)
 	}
 	else
 		vis = Mod_LeafPVS (r_viewleaf, cl.worldmodel);
-		
+
 	for (i=0 ; i<cl.worldmodel->numleafs ; i++)
 	{
 		if (vis[i>>3] & (1<<(i&7)))
@@ -1575,7 +1575,7 @@ void BuildSurfaceDisplayList (msurface_t *fa)
 			// skip co-linear points
 #define COLINEAR_EPSILON 0.001
 			if ((fabs( v1[0] - v2[0] ) <= COLINEAR_EPSILON) &&
-				(fabs( v1[1] - v2[1] ) <= COLINEAR_EPSILON) && 
+				(fabs( v1[1] - v2[1] ) <= COLINEAR_EPSILON) &&
 				(fabs( v1[2] - v2[2] ) <= COLINEAR_EPSILON))
 			{
 				int j;
@@ -1708,7 +1708,7 @@ void GL_BuildLightmaps (void)
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D (GL_TEXTURE_2D, 0, lightmap_bytes
-		, BLOCK_WIDTH, BLOCK_HEIGHT, 0, 
+		, BLOCK_WIDTH, BLOCK_HEIGHT, 0,
 		gl_lightmap_format, GL_UNSIGNED_BYTE, lightmaps+i*BLOCK_WIDTH*BLOCK_HEIGHT*lightmap_bytes);
 	}
 

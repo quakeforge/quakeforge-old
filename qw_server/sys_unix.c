@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -88,12 +88,12 @@ void Sys_Error (char *error, ...)
 {
 	va_list		argptr;
 	char		string[1024];
-	
+
 	va_start (argptr, error);
 	vsnprintf (string, sizeof(string), error, argptr);
 	va_end (argptr);
 	printf ("Fatal error: %s\n",string);
-	
+
 	exit (1);
 }
 
@@ -136,7 +136,7 @@ char *Sys_ConsoleInput (void)
 	if (len < 1)
 		return NULL;
 	text[len-1] = 0;	// rip off the /n and terminate
-	
+
 	return text;
 }
 
@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
 
 	memset (&parms, 0, sizeof(parms));
 
-	COM_InitArgv (argc, argv);	
+	COM_InitArgv (argc, argv);
 	parms.argc = com_argc;
 	parms.argv = com_argv;
 
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
 	SV_Init (&parms);
 
 // run one frame immediately for first heartbeat
-	SV_Frame (0.1);		
+	SV_Frame (0.1);
 
 //
 // main loop
@@ -218,13 +218,13 @@ int main(int argc, char *argv[])
 		newtime = Sys_DoubleTime ();
 		time = newtime - oldtime;
 		oldtime = newtime;
-		
-		SV_Frame (time);		
-		
+
+		SV_Frame (time);
+
 	// extrasleep is just a way to generate a fucked up connection on purpose
 		if (sys_extrasleep->value)
 			usleep (sys_extrasleep->value);
-	}	
+	}
 	exit(0);
 }
 

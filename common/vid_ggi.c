@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -150,7 +150,7 @@ do_copy8(int xsize, int ysize, uint8 *dest, uint8 *src)
 {
 	int i, j;
 	uint8 *palptr = palette;
-	
+
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; i++) {
 			dest[i] = palptr[src[i]];
@@ -166,7 +166,7 @@ do_copy16(int xsize, int ysize, void *destptr, uint8 *src)
 	int i, j, destinc = (stride/2 - xsize)/2;
 	uint16 *palptr = palette;
 	uint32 *dest = destptr;
-	
+
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize;  /* i is incremented below */) {
 			register uint32 pixel = palptr[src[i++]];
@@ -186,7 +186,7 @@ do_copy32(int xsize, int ysize, uint32 *dest, uint8 *src)
 {
 	int i, j, destinc = stride/4;
 	uint32 *palptr = palette;
-	
+
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; i++) {
 			dest[i] = palptr[src[i]];
@@ -394,7 +394,7 @@ void	VID_Init(unsigned char *pal)
 
 	if (!usedbuf) {
 		if ((drawptr = malloc(vid.width * vid.height)) == NULL) {
-			Sys_Error("VID: Unable to allocate draw buffer\n");			
+			Sys_Error("VID: Unable to allocate draw buffer\n");
 		}
 		if (!havedbuf && (scale || palette)) {
 			int linesize = pixelsize*realwidth;
@@ -803,7 +803,7 @@ static void GetEvent(void)
 {
 	ggi_event ev;
 	uint32 b;
-   
+
 	ggiEventRead(ggivis, &ev, emAll);
 	switch(ev.any.type) {
 	case evKeyPress:
@@ -850,7 +850,7 @@ static void GetEvent(void)
 		}
 		break;
 
-#if 0	
+#if 0
 	case ConfigureNotify:
 //printf("config notify\n");
 		config_notify_width = ev.xconfigure.width;
@@ -905,7 +905,7 @@ void
 IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail) return;
-   
+
 	if (m_filter->value) {
 		mouse_x = (mouse_x + old_mouse_x) * 0.5;
 		mouse_y = (mouse_y + old_mouse_y) * 0.5;
@@ -913,17 +913,17 @@ IN_Move(usercmd_t *cmd)
 
 	old_mouse_x = mouse_x;
 	old_mouse_y = mouse_y;
-   
+
 	mouse_x *= sensitivity->value;
 	mouse_y *= sensitivity->value;
-   
+
 	if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
 		cmd->sidemove += m_side->value * mouse_x;
 	else
 		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
 	if (in_mlook.state & 1)
 		V_StopPitchDrift ();
-   
+
 	if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
 		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
 		if (cl.viewangles[PITCH] > 80)

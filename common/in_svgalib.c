@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -140,41 +140,41 @@ static void IN_init_kb()
 	scantokey[ 13] = '=';
 	scantokey[ 14] = K_BACKSPACE;
 	scantokey[ 15] = K_TAB;
-	scantokey[ 16] = 'q';       
-	scantokey[ 17] = 'w';       
-	scantokey[ 18] = 'e';       
-	scantokey[ 19] = 'r';       
-	scantokey[ 20] = 't';       
-	scantokey[ 21] = 'y';       
-	scantokey[ 22] = 'u';       
-	scantokey[ 23] = 'i';       
-	scantokey[ 24] = 'o';       
-	scantokey[ 25] = 'p';       
+	scantokey[ 16] = 'q';
+	scantokey[ 17] = 'w';
+	scantokey[ 18] = 'e';
+	scantokey[ 19] = 'r';
+	scantokey[ 20] = 't';
+	scantokey[ 21] = 'y';
+	scantokey[ 22] = 'u';
+	scantokey[ 23] = 'i';
+	scantokey[ 24] = 'o';
+	scantokey[ 25] = 'p';
 	scantokey[ 26] = '[';
 	scantokey[ 27] = ']';
 	scantokey[ 28] = K_ENTER;
 	scantokey[ 29] = K_CTRL;	/*left */
 	scantokey[ 30] = 'a';
-	scantokey[ 31] = 's';       
-	scantokey[ 32] = 'd';       
-	scantokey[ 33] = 'f';       
-	scantokey[ 34] = 'g';       
-	scantokey[ 35] = 'h';       
-	scantokey[ 36] = 'j';       
-	scantokey[ 37] = 'k';       
-	scantokey[ 38] = 'l';       
+	scantokey[ 31] = 's';
+	scantokey[ 32] = 'd';
+	scantokey[ 33] = 'f';
+	scantokey[ 34] = 'g';
+	scantokey[ 35] = 'h';
+	scantokey[ 36] = 'j';
+	scantokey[ 37] = 'k';
+	scantokey[ 38] = 'l';
 	scantokey[ 39] = ';';
 	scantokey[ 40] = '\'';
 	scantokey[ 41] = '`';
 	scantokey[ 42] = K_SHIFT;	/*left */
 	scantokey[ 43] = '\\';
-	scantokey[ 44] = 'z';       
-	scantokey[ 45] = 'x';  
+	scantokey[ 44] = 'z';
+	scantokey[ 45] = 'x';
 	scantokey[ 46] = 'c';
-	scantokey[ 47] = 'v';       
+	scantokey[ 47] = 'v';
 	scantokey[ 48] = 'b';
-	scantokey[ 49] = 'n';       
-	scantokey[ 50] = 'm';       
+	scantokey[ 49] = 'n';
+	scantokey[ 50] = 'm';
 	scantokey[ 51] = ',';
 	scantokey[ 52] = '.';
 	scantokey[ 53] = '/';
@@ -182,7 +182,7 @@ static void IN_init_kb()
 	scantokey[ 55] = KP_MULTIPLY;
 	scantokey[ 56] = K_ALT;		/*left */
 	scantokey[ 57] = ' ';
-	scantokey[ 58] = K_CAPSLOCK;	
+	scantokey[ 58] = K_CAPSLOCK;
 	scantokey[ 59] = K_F1;
 	scantokey[ 60] = K_F2;
 	scantokey[ 61] = K_F3;
@@ -230,7 +230,7 @@ static void IN_init_kb()
 	scantokey[110] = K_INS;
 	scantokey[111] = K_DEL;
 	scantokey[119] = K_PAUSE;
-	
+
 	if (keyboard_init()) {
 		Sys_Error("keyboard_init() failed");
 	}
@@ -367,9 +367,9 @@ void IN_Move(usercmd_t *cmd)
 	} else {
 		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
 	}
-	
+
 	if ((in_mlook.state & 1)) V_StopPitchDrift();
-		
+
 	if ((in_mlook.state & 1) && !(in_strafe.state & 1)) {
 		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
 		if (cl.viewangles[PITCH] > 80) {

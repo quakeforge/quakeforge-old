@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -159,7 +159,7 @@ int COM_FileOpenRead (char *path, QFile **hndl)
 		return -1;
 	}
 	*hndl = f;
-	
+
 	return COM_filelength(f);
 }
 
@@ -172,7 +172,7 @@ COM_Path_f
 void COM_Path_f (void)
 {
 	searchpath_t	*s;
-	
+
 	Con_Printf ("Current search path:\n");
 	for (s=com_searchpaths ; s ; s=s->next)
 	{
@@ -196,9 +196,9 @@ void COM_WriteFile (char *filename, void *data, int len)
 {
 	QFile	*f;
 	char	name[MAX_OSPATH];
-	
+
 	snprintf(name, sizeof(name), "%s/%s", com_gamedir, filename);
-	
+
 	f = Qopen (name, "wb");
 	if (!f) {
 		Sys_mkdir(com_gamedir);
@@ -206,7 +206,7 @@ void COM_WriteFile (char *filename, void *data, int len)
 		if (!f)
 			Sys_Error ("Error opening %s", filename);
 	}
-	
+
 	Sys_Printf ("COM_WriteFile: %s\n", name);
 	Qwrite (f, data, len);
 	Qclose (f);
@@ -223,7 +223,7 @@ Only used for CopyFile and download
 void	COM_CreatePath (char *path)
 {
 	char	*ofs;
-	
+
 	for (ofs = path+1 ; *ofs ; ofs++)
 	{
 		if (*ofs == '/')
@@ -249,13 +249,13 @@ void COM_CopyFile (char *netpath, char *cachepath)
 	QFile	*in, *out;
 	int		remaining, count;
 	char	buf[4096];
-	
-	remaining = COM_FileOpenRead (netpath, &in);		
+
+	remaining = COM_FileOpenRead (netpath, &in);
 	COM_CreatePath (cachepath);	// create directories up to the cache file
 	out = Qopen(cachepath, "wb");
 	if (!out)
 		Sys_Error ("Error opening %s", cachepath);
-	
+
 	while (remaining)
 	{
 		if (remaining < sizeof(buf))
@@ -327,7 +327,7 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 #endif
 
 	file_from_pak = 0;
-		
+
 //
 // search through the path, one element at a time
 //
@@ -359,11 +359,11 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 			}
 		}
 		else
-		{		
+		{
 	// check a file in the directory tree
 			snprintf(netpath, sizeof(netpath), "%s/%s",search->filename,
 					 filename);
-			
+
 			findtime = Sys_FileTime (netpath);
 			if (findtime == -1) {
 #ifdef HAS_ZLIB
@@ -374,7 +374,7 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 #endif
 					continue;
 			}
-				
+
 			if(developer->value)
 				Sys_Printf ("FindFile: %s\n",netpath);
 
@@ -383,11 +383,11 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 			*gzfile=COM_OpenRead(netpath,-1,-1);
 			return com_filesize;
 		}
-		
+
 	}
-	
+
 	Sys_Printf ("FindFile: can't find %s\n", filename);
-	
+
 	*gzfile = NULL;
 	com_filesize = -1;
 	return -1;
@@ -417,10 +417,10 @@ byte *COM_LoadFile (char *path, int usehunk)
 	len = com_filesize = COM_FOpenFile (path, &h);
 	if (!h)
 		return NULL;
-	
+
 // extract the filename base name for hunk tag
 	COM_FileBase (path, base);
-	
+
 	if (usehunk == 1)
 		buf = Hunk_AllocName (len+1, base);
 	else if (usehunk == 2)
@@ -441,7 +441,7 @@ byte *COM_LoadFile (char *path, int usehunk)
 
 	if (!buf)
 		Sys_Error ("COM_LoadFile: not enough space for %s", path);
-		
+
 	((byte *)buf)[len] = 0;
 #ifndef SERVERONLY
 	Draw_BeginDisc ();
@@ -475,11 +475,11 @@ void COM_LoadCacheFile (char *path, struct cache_user_s *cu)
 byte *COM_LoadStackFile (char *path, void *buffer, int bufsize)
 {
 	byte	*buf;
-	
+
 	loadbuf = (byte *)buffer;
 	loadsize = bufsize;
 	buf = COM_LoadFile (path, 4);
-	
+
 	return buf;
 }
 
@@ -537,7 +537,7 @@ pack_t *COM_LoadPackFile (char *packfile)
 	pack->handle = packhandle;
 	pack->numfiles = numpackfiles;
 	pack->files = newfiles;
-	
+
 	Con_Printf ("Added packfile %s (%i files)\n", packfile, numpackfiles);
 	return pack;
 }
@@ -547,7 +547,7 @@ int
 COM_pakzip_checkfile(unzFile *pak, const char *path)
 {
     int status;
-        
+
     status = unzLocateFile(pak, path, 2);
     return (status == UNZ_OK);
 }
@@ -587,7 +587,7 @@ uint_t
 COM_pakzip_getlen(unzFile *pak)
 {
     unz_file_info info;
-    
+
     if (unzGetCurrentFileInfo(pak, &info, NULL, 0, NULL, 0, NULL, 0)
         != UNZ_OK)
         return 0;
@@ -598,10 +598,10 @@ uint_t
 COM_pakzip_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
 {
     uint_t len;
-   
+
     if (!COM_pakzip_open(pak,path))
         return 0;
-    
+
     if ((len = COM_pakzip_getlen(pak)) != 0)
     {
         if (COM_pakzip_read(pak, (void*)buf, 1, len) != len)
@@ -662,7 +662,7 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 	//pack_old->handle = unzGetLocalExtrafield(packfile, NULL, NULL);
 	pack_old->numfiles = numpackfiles;
 	pack_old->files = newfiles;
-	
+
 	Con_Printf ("Added packfile %s (%.0f files)\n", packfile, numpackfiles);
 
 	COM_pakzip_close(pak);
@@ -688,12 +688,12 @@ COM_LoadGameDirectory(char *dir)
 	pack_t			*pak;
 	char			pakfile[MAX_OSPATH];
 	qboolean 		done = false;
-	
+
 	for ( i=0 ; !done ; i++ ) {	// Load all Pak1 files
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
 
-		pak = COM_LoadPackFile(pakfile);                
-		
+		pak = COM_LoadPackFile(pakfile);
+
 		if( !pak ) {
 			done = true;
 		} else {
@@ -707,9 +707,9 @@ COM_LoadGameDirectory(char *dir)
 #ifdef GENERATIONS
 	for (done=false, i=0 ; !done ; i++ ) {	// Load all Pak3 files.
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.qz", dir, i);
-		
+
 		pak = COM_LoadPackZipFile(pakfile);
- 
+
 		if(!pak) {
 			done = true;
 		} else {
@@ -732,7 +732,7 @@ COM_LoadGameDirectory(char *dir)
 	char			pakfile[MAX_OSPATH];
 	DIR				*dir_ptr;
 	struct dirent	*dirent;
-	
+
 	dir_ptr = opendir(dir);
 	if (!dir_ptr)
 		return;
@@ -741,7 +741,7 @@ COM_LoadGameDirectory(char *dir)
 		if (!fnmatch("*.pak", dirent->d_name, 0)) {
 			snprintf(pakfile, sizeof(pakfile), "%s/%s", dir, dirent->d_name);
 
-			pak = COM_LoadPackFile(pakfile);                
+			pak = COM_LoadPackFile(pakfile);
 
 			if (!pak) {
 				Sys_Error(va("Bad pakfile %s!!", pakfile));
@@ -756,11 +756,11 @@ COM_LoadGameDirectory(char *dir)
 	closedir(dir_ptr);
 
 #ifdef GENERATIONS
-	for (done=false, i=0 ; !done ; i++ ) {	
+	for (done=false, i=0 ; !done ; i++ ) {
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.qz", dir, i);
-		
+
 		pak = COM_LoadPackZipFile(pakfile);
- 
+
 		if(!pak) {
 			done = true;
 		} else {
@@ -780,7 +780,7 @@ COM_LoadGameDirectory(char *dir)
 COM_AddGameDirectory
 
 Sets com_gamedir, adds the directory to the head of the path,
-then loads and adds pak1.pak pak2.pak ... 
+then loads and adds pak1.pak pak2.pak ...
 ================
 */
 void COM_AddGameDirectory (char *dir)

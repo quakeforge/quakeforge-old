@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -148,7 +148,7 @@ void CL_DecayLights (void)
 	{
 		if (dl->die < cl.time || !dl->radius)
 			continue;
-		
+
 		dl->radius -= host_frametime*dl->decay;
 		if (dl->radius < 0)
 			dl->radius = 0;
@@ -194,10 +194,10 @@ void CL_ParseDelta (entity_state_t *from, entity_state_t *to, int bits)
 			bitcounts[i]++;
 
 	to->flags = bits;
-	
+
 	if (bits & U_MODEL)
 		to->modelindex = MSG_ReadByte ();
-		
+
 	if (bits & U_FRAME)
 		to->frame = MSG_ReadByte ();
 
@@ -212,19 +212,19 @@ void CL_ParseDelta (entity_state_t *from, entity_state_t *to, int bits)
 
 	if (bits & U_ORIGIN1)
 		to->origin[0] = MSG_ReadCoord ();
-		
+
 	if (bits & U_ANGLE1)
 		to->angles[0] = MSG_ReadAngle();
 
 	if (bits & U_ORIGIN2)
 		to->origin[1] = MSG_ReadCoord ();
-		
+
 	if (bits & U_ANGLE2)
 		to->angles[1] = MSG_ReadAngle();
 
 	if (bits & U_ORIGIN3)
 		to->origin[2] = MSG_ReadCoord ();
-		
+
 	if (bits & U_ANGLE3)
 		to->angles[2] = MSG_ReadAngle();
 #ifdef QUAKEWORLD
@@ -474,9 +474,9 @@ void CL_LinkPacketEntities (void)
 
 		ent->keynum = s1->number;
 		ent->model = model = cl.model_precache[s1->modelindex];
-	
+
 		// set colormap
-		if (s1->colormap && (s1->colormap < MAX_CLIENTS) 
+		if (s1->colormap && (s1->colormap < MAX_CLIENTS)
 			&& !strcmp(ent->model->name,"progs/player.mdl") )
 		{
 			ent->colormap = cl.players[s1->colormap-1].translations;
@@ -490,7 +490,7 @@ void CL_LinkPacketEntities (void)
 
 		// set skin
 		ent->skinnum = s1->skinnum;
-		
+
 		// set frame
 		ent->frame = s1->frame;
 
@@ -519,7 +519,7 @@ void CL_LinkPacketEntities (void)
 
 		// calculate origin
 		for (i=0 ; i<3 ; i++)
-			ent->origin[i] = s2->origin[i] + 
+			ent->origin[i] = s2->origin[i] +
 			f * (s1->origin[i] - s2->origin[i]);
 
 		// add automatic particle trails
@@ -765,14 +765,14 @@ void CL_AddFlagModels (entity_t *ent, int team)
 	f = 14;
 	if (ent->frame >= 29 && ent->frame <= 40) {
 		if (ent->frame >= 29 && ent->frame <= 34) { //axpain
-			if      (ent->frame == 29) f = f + 2; 
+			if      (ent->frame == 29) f = f + 2;
 			else if (ent->frame == 30) f = f + 8;
 			else if (ent->frame == 31) f = f + 12;
 			else if (ent->frame == 32) f = f + 11;
 			else if (ent->frame == 33) f = f + 10;
 			else if (ent->frame == 34) f = f + 4;
 		} else if (ent->frame >= 35 && ent->frame <= 40) { // pain
-			if      (ent->frame == 35) f = f + 2; 
+			if      (ent->frame == 35) f = f + 2;
 			else if (ent->frame == 36) f = f + 10;
 			else if (ent->frame == 37) f = f + 10;
 			else if (ent->frame == 38) f = f + 8;
@@ -781,7 +781,7 @@ void CL_AddFlagModels (entity_t *ent, int team)
 		}
 	} else if (ent->frame >= 103 && ent->frame <= 118) {
 		if      (ent->frame >= 103 && ent->frame <= 104) f = f + 6;  //nailattack
-		else if (ent->frame >= 105 && ent->frame <= 106) f = f + 6;  //light 
+		else if (ent->frame >= 105 && ent->frame <= 106) f = f + 6;  //light
 		else if (ent->frame >= 107 && ent->frame <= 112) f = f + 7;  //rocketattack
 		else if (ent->frame >= 112 && ent->frame <= 118) f = f + 7;  //shotattack
 	}
@@ -826,7 +826,7 @@ void CL_LinkPlayers (void)
 
 	frame = &cl.frames[cl.parsecount&UPDATE_MASK];
 
-	for (j=0, info=cl.players, state=frame->playerstate ; j < MAX_CLIENTS 
+	for (j=0, info=cl.players, state=frame->playerstate ; j < MAX_CLIENTS
 		; j++, info++, state++)
 	{
 		if (state->messagenum != cl.parsecount)
@@ -942,7 +942,7 @@ void CL_SetSolidEntities (void)
 			continue;
 		if (!cl.model_precache[state->modelindex])
 			continue;
-		if ( cl.model_precache[state->modelindex]->hulls[1].firstclipnode 
+		if ( cl.model_precache[state->modelindex]->hulls[1].firstclipnode
 			|| cl.model_precache[state->modelindex]->clipbox )
 		{
 			pmove.physents[pmove.numphysent].model = cl.model_precache[state->modelindex];
@@ -979,7 +979,7 @@ void CL_SetUpPlayerPrediction(qboolean dopred)
 
 	frame = &cl.frames[cl.parsecount&UPDATE_MASK];
 
-	for (j=0, pplayer = predicted_players, state=frame->playerstate; 
+	for (j=0, pplayer = predicted_players, state=frame->playerstate;
 		j < MAX_CLIENTS;
 		j++, pplayer++, state++) {
 

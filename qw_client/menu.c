@@ -13,7 +13,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -38,9 +38,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 enum {
-	m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer, 
+	m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer,
 	m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit,
-	m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions, 
+	m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions,
 	m_search, m_slist
 } m_state;
 
@@ -187,7 +187,7 @@ void M_BuildTranslationTable(int top, int bottom)
 		memcpy (dest + BOTTOM_RANGE, source + bottom, 16);
 	else
 		for (j=0 ; j<16 ; j++)
-			dest[BOTTOM_RANGE+j] = source[bottom+15-j];		
+			dest[BOTTOM_RANGE+j] = source[bottom+15-j];
 }
 
 
@@ -256,7 +256,7 @@ void M_DrawTextBox (int x, int y, int width, int lines)
 //=============================================================================
 
 int m_save_demonum;
-		
+
 /*
 ================
 M_ToggleMenu_f
@@ -287,7 +287,7 @@ void M_ToggleMenu_f (void)
 	}
 }
 
-		
+
 //=============================================================================
 /* MAIN MENU */
 
@@ -306,7 +306,7 @@ void M_Menu_Main_f (void)
 	m_state = m_main;
 	m_entersound = true;
 }
-				
+
 
 void M_Main_Draw (void)
 {
@@ -319,7 +319,7 @@ void M_Main_Draw (void)
 	M_DrawTransPic (72, 32, Draw_CachePic ("gfx/mainmenu.lmp") );
 
 	f = (int)(realtime * 10)%6;
-	
+
 	M_DrawTransPic (54, 32 + m_main_cursor * 20,Draw_CachePic( va("gfx/menudot%i.lmp", f+1 ) ) );
 }
 
@@ -335,7 +335,7 @@ void M_Main_Key (int key)
 		if (cls.demonum != -1 && !cls.demoplayback && cls.state == ca_disconnected)
 			CL_NextDemo ();
 		break;
-		
+
 	case KP_DOWNARROW:
 	case K_DOWNARROW:
 		S_LocalSound ("misc/menu1.wav");
@@ -450,11 +450,11 @@ void M_AdjustSliders (int dir)
 			volume->value = 1;
 
 		break;
-		
+
 	case 8:	// allways run
 		if (cl_forwardspeed->value > 200)
 		{
-			cl_forwardspeed->value = 200;	
+			cl_forwardspeed->value = 200;
 			cl_backspeed->value = 200;
 		}
 		else
@@ -463,15 +463,15 @@ void M_AdjustSliders (int dir)
 			cl_backspeed->value = 400;
 		}
 		break;
-	
+
 	case 9:	// invert mouse
 		m_pitch->value = -m_pitch->value;
 		break;
-	
+
 	case 10:	// lookspring
 		lookspring->value = !lookspring->value;
 		break;
-	
+
 	case 11:	// lookstrafe
 		lookstrafe->value = !lookstrafe->value;
 		break;
@@ -524,7 +524,7 @@ void M_Options_Draw (void)
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
 	p = Draw_CachePic ("gfx/p_option.lmp");
 	M_DrawPic ( (320-p->width)/2, 4, p);
-	
+
 	M_Print (16, options_draw_cursor,    "    Customize controls");
 	M_Print (16, options_draw_cursor+=8, "         Go to console");
 	M_Print (16, options_draw_cursor+=8, "     Reset to defaults");
@@ -587,7 +587,7 @@ void M_Options_Key (int k)
 	case K_ESCAPE:
 		M_Menu_Main_f ();
 		break;
-		
+
 	case KP_ENTER:
 	case K_ENTER:
 		m_entersound = true;
@@ -612,7 +612,7 @@ void M_Options_Key (int k)
 			break;
 		}
 		return;
-	
+
 	case KP_UPARROW:
 	case K_UPARROW:
 		S_LocalSound ("misc/menu1.wav");
@@ -627,7 +627,7 @@ void M_Options_Key (int k)
 		options_cursor++;
 		if (options_cursor >= options_items)
 			options_cursor = 0;
-		break;	
+		break;
 
 	case KP_LEFTARROW:
 	case K_LEFTARROW:
@@ -740,7 +740,7 @@ void M_Keys_Draw (void)
 		M_Print (12, 32, "Press a key or button for this action");
 	else
 		M_Print (18, 32, "Enter to change, backspace to clear");
-		
+
 // search for known bindings
 	for (i=0 ; i<NUMCOMMANDS ; i++)
 	{
@@ -749,9 +749,9 @@ void M_Keys_Draw (void)
 		M_Print (16, y, bindnames[i][1]);
 
 		l = strlen (bindnames[i][0]);
-		
+
 		M_FindKeysForCommand (bindnames[i][0], keys);
-		
+
 		if (keys[0] == -1)
 		{
 			M_Print (140, y, "???");
@@ -768,7 +768,7 @@ void M_Keys_Draw (void)
 			}
 		}
 	}
-	
+
 	if (bind_grab)
 		M_DrawCharacter (130, 48 + keys_cursor*8, '=');
 	else
@@ -780,7 +780,7 @@ void M_Keys_Key (int k)
 {
 	char	cmd[80];
 	int		keys[2];
-	
+
 	if (bind_grab)
 	{	// defining a key
 		S_LocalSound ("misc/menu1.wav");
@@ -795,14 +795,14 @@ void M_Keys_Key (int k)
 		}
 		else if (k != '`')
 		{
-			snprintf(cmd, sizeof(cmd), "bind %s \"%s\"\n", Key_KeynumToString (k), bindnames[keys_cursor][0]);			
+			snprintf(cmd, sizeof(cmd), "bind %s \"%s\"\n", Key_KeynumToString (k), bindnames[keys_cursor][0]);
 			Cbuf_InsertText (cmd);
 		}
-		
+
 		bind_grab = false;
 		return;
 	}
-	
+
 	switch (k)
 	{
 	case K_ESCAPE:
@@ -933,7 +933,7 @@ void M_Help_Key (int key)
 	case K_ESCAPE:
 		M_Menu_Main_f ();
 		break;
-		
+
 	case KP_UPARROW:
 	case KP_RIGHTARROW:
 	case K_UPARROW:
@@ -962,14 +962,14 @@ int		msgNumber;
 int		m_quit_prevstate;
 qboolean	wasInMenus;
 
-char *quitMessage [] = 
+char *quitMessage [] =
 {
 /* .........1.........2.... */
   "  Are you gonna quit    ",
   "  this game just like   ",
   "   everything else?     ",
   "                        ",
- 
+
   " Milord, methinks that  ",
   "   thou art a lowly     ",
   " quitter. Is this true? ",
@@ -984,22 +984,22 @@ char *quitMessage [] =
   "   for trying to quit!  ",
   "     Press Y to get     ",
   "      smacked out.      ",
- 
+
   " Press Y to quit like a ",
   "   big loser in life.   ",
   "  Press N to stay proud ",
   "    and successful!     ",
- 
+
   "   If you press Y to    ",
   "  quit, I will summon   ",
   "  Satan all over your   ",
   "      hard drive!       ",
- 
+
   "  Um, Asmodeus dislikes ",
   " his children trying to ",
   " quit. Press Y to return",
   "   to your Tinkertoys.  ",
- 
+
   "  If you quit now, I'll ",
   "  throw a blanket-party ",
   "   for you next time!   ",
@@ -1064,7 +1064,7 @@ void M_SinglePlayer_Draw (void) {
 	M_DrawPic ( (320-p->width)/2, 4, p);
 //	M_DrawTransPic (72, 32, Draw_CachePic ("gfx/sp_menu.lmp") );
 
-	M_DrawTextBox (60, 10*8, 23, 4);	
+	M_DrawTextBox (60, 10*8, 23, 4);
 	M_PrintWhite (92, 12*8, "QuakeWorld is for");
 	M_PrintWhite (88, 13*8, "Internet play only");
 
@@ -1088,7 +1088,7 @@ void M_MultiPlayer_Draw (void) {
 	M_DrawPic ( (320-p->width)/2, 4, p);
 //	M_DrawTransPic (72, 32, Draw_CachePic ("gfx/sp_menu.lmp") );
 
-	M_DrawTextBox (46, 8*8, 27, 9);	
+	M_DrawTextBox (46, 8*8, 27, 9);
 	M_PrintWhite (72, 10*8, "If you want to find QW  ");
 	M_PrintWhite (72, 11*8, "games, head on over to: ");
 	     M_Print (72, 12*8, "   www.quakeworld.net   ");

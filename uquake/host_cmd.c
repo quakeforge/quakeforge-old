@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -61,7 +61,7 @@ void Host_Quit_f (void)
 		return;
 	}
 	CL_Disconnect ();
-	SV_Shutdown(false);		
+	SV_Shutdown(false);
 
 	Sys_Quit ();
 }
@@ -80,7 +80,7 @@ void Host_Status_f (void)
 	int			hours = 0;
 	int			j;
 	void		(*print) (char *fmt, ...);
-	
+
 	if (cmd_source == src_command)
 	{
 		if (!sv.active)
@@ -271,7 +271,7 @@ void Host_Ping_f (void)
 	int		i, j;
 	float	total;
 	client_t	*client;
-	
+
 	if (cmd_source == src_command)
 	{
 		Cmd_ForwardToServer ();
@@ -304,7 +304,7 @@ SERVER TRANSITIONS
 ======================
 Host_Map_f
 
-handle a 
+handle a
 map <servername>
 command from the console.  Active clients are kicked off.
 ======================
@@ -320,7 +320,7 @@ void Host_Map_f (void)
 	cls.demonum = -1;		// stop demo loop in case this fails
 
 	CL_Disconnect ();
-	SV_Shutdown(false);		
+	SV_Shutdown(false);
 
 	key_dest = key_game;			// remove console or menu
 	SCR_BeginLoadingPlaque ();
@@ -342,7 +342,7 @@ void Host_Map_f (void)
 #endif
 	if (!sv.active)
 		return;
-	
+
 	if (cls.state != ca_dedicated)
 	{
 		strcpy (cls.spawnparms, "");
@@ -352,9 +352,9 @@ void Host_Map_f (void)
 			strcat (cls.spawnparms, Cmd_Argv(i));
 			strcat (cls.spawnparms, " ");
 		}
-		
+
 		Cmd_ExecuteString ("connect local", src_command);
-	}	
+	}
 }
 
 /*
@@ -465,7 +465,7 @@ User command to connect to server
 void Host_Connect_f (void)
 {
 	char	name[MAX_QPATH];
-	
+
 	cls.demonum = -1;		// stop demo loop in case this fails
 	if (cls.demoplayback)
 	{
@@ -492,7 +492,7 @@ LOAD / SAVE GAME
 ===============
 Host_SavegameComment
 
-Writes a SAVEGAME_COMMENT_LENGTH character comment describing the current 
+Writes a SAVEGAME_COMMENT_LENGTH character comment describing the current
 ===============
 */
 void Host_SavegameComment (char *text)
@@ -557,7 +557,7 @@ void Host_Savegame_f (void)
 		Con_Printf ("Relative pathnames are not allowed.\n");
 		return;
 	}
-		
+
 	for (i=0 ; i<svs.maxclients ; i++)
 	{
 		if (svs.clients[i].active && (svs.clients[i].edict->v.health <= 0) )
@@ -569,7 +569,7 @@ void Host_Savegame_f (void)
 
 	snprintf(name, sizeof(name), "%s/%s", com_gamedir, Cmd_Argv(1));
 	COM_DefaultExtension (name, ".sav");
-	
+
 	Con_Printf ("Saving game to %s...\n", name);
 	f = Qopen (name, "w");
 	if (!f)
@@ -577,7 +577,7 @@ void Host_Savegame_f (void)
 		Con_Printf ("ERROR: couldn't open.\n");
 		return;
 	}
-	
+
 	Qprintf (f, "%i\n", SAVEGAME_VERSION);
 	Host_SavegameComment (comment);
 	Qprintf (f, "%s\n", comment);
@@ -641,7 +641,7 @@ void Host_Loadgame_f (void)
 
 	snprintf(name, sizeof(name), "%s/%s", com_gamedir, Cmd_Argv(1));
 	COM_DefaultExtension (name, ".sav");
-	
+
 // we can't call SCR_BeginLoadingPlaque, because too much stack space has
 // been used.  The menu calls it before stuffing loadgame command
 //	SCR_BeginLoadingPlaque ();
@@ -686,7 +686,7 @@ void Host_Loadgame_f (void)
 	sscanf (buf, "%f\n",&time);
 
 	CL_Disconnect_f ();
-	
+
 #ifdef QUAKE2
 	SV_SpawnServer (mapname, NULL);
 #else
@@ -735,7 +735,7 @@ void Host_Loadgame_f (void)
 			break;		// end of file
 		if (strcmp(com_token,"{"))
 			Sys_Error ("First token isn't a brace");
-			
+
 		if (entnum == -1)
 		{	// parse the global vars
 			ED_ParseGlobals (start);
@@ -747,7 +747,7 @@ void Host_Loadgame_f (void)
 			memset (&ent->v, 0, progs->entityfields * 4);
 			ent->free = false;
 			ED_ParseEdict (start, ent);
-	
+
 		// link it into the bsp tree
 			if (!ent->free)
 				SV_LinkEdict (ent, false);
@@ -755,7 +755,7 @@ void Host_Loadgame_f (void)
 
 		entnum++;
 	}
-	
+
 	sv.num_edicts = entnum;
 	sv.time = time;
 
@@ -781,7 +781,7 @@ void SaveGamestate()
 	edict_t	*ent;
 
 	snprintf(name, sizeof(name), "%s/%s.gip", com_gamedir, sv.name);
-	
+
 	Con_Printf ("Saving game to %s...\n", name);
 	f = fopen (name, "w");
 	if (!f)
@@ -789,7 +789,7 @@ void SaveGamestate()
 		Con_Printf ("ERROR: couldn't open.\n");
 		return;
 	}
-	
+
 	fprintf (f, "%i\n", SAVEGAME_VERSION);
 	Host_SavegameComment (comment);
 	fprintf (f, "%s\n", comment);
@@ -837,7 +837,7 @@ int LoadGamestate(char *level, char *startspot)
 //	float	spawn_parms[NUM_SPAWN_PARMS];
 
 	snprintf(name, sizeof(name), "%s/%s.gip", com_gamedir, level);
-	
+
 	Con_Printf ("Loading game from %s...\n", name);
 	f = fopen (name, "r");
 	if (!f)
@@ -912,19 +912,19 @@ int LoadGamestate(char *level, char *startspot)
 			break;		// end of file
 		if (strcmp(com_token,"{"))
 			Sys_Error ("First token isn't a brace");
-			
+
 		// parse an edict
 
 		ent = EDICT_NUM(entnum);
 		memset (&ent->v, 0, progs->entityfields * 4);
 		ent->free = false;
 		ED_ParseEdict (start, ent);
-	
+
 		// link it into the bsp tree
 		if (!ent->free)
 			SV_LinkEdict (ent, false);
 	}
-	
+
 //	sv.num_edicts = entnum;
 	sv.time = time;
 	Qclose (f);
@@ -992,7 +992,7 @@ void Host_Name_f (void)
 		return;
 	}
 	if (Cmd_Argc () == 2)
-		newName = Cmd_Argv(1);	
+		newName = Cmd_Argv(1);
 	else
 		newName = Cmd_Args();
 	newName[15] = 0;
@@ -1021,15 +1021,15 @@ void Host_Name_f (void)
 			Con_Printf ("%s renamed to %s\n", host_client->name, newName);
 	Q_strcpy (host_client->name, newName);
 	host_client->edict->v.netname = host_client->name - pr_strings;
-	
+
 // send notification to all clients
-	
+
 	MSG_WriteByte (&sv.reliable_datagram, svc_updatename);
 	MSG_WriteByte (&sv.reliable_datagram, host_client - svs.clients);
 	MSG_WriteString (&sv.reliable_datagram, host_client->name);
 }
 
-	
+
 void Host_Version_f (void)
 {
 	Con_Printf ("Version %s\n", QF_VERSION);
@@ -1174,7 +1174,7 @@ void Host_Color_f(void)
 {
 	int		top, bottom;
 	int		playercolor;
-	
+
 	if (Cmd_Argc() == 1)
 	{
 		Con_Printf ("\"color\" is \"%i %i\"\n", ((int)cl_color->value) >> 4, ((int)cl_color->value) & 0x0f);
@@ -1189,14 +1189,14 @@ void Host_Color_f(void)
 		top = atoi(Cmd_Argv(1));
 		bottom = atoi(Cmd_Argv(2));
 	}
-	
+
 	top &= 15;
 	if (top > 13)
 		top = 13;
 	bottom &= 15;
 	if (bottom > 13)
 		bottom = 13;
-	
+
 	playercolor = top*16 + bottom;
 
 	if (cmd_source == src_command)
@@ -1234,7 +1234,7 @@ void Host_Kill_f (void)
 		SV_ClientPrintf ("Can't suicide -- allready dead!\n");
 		return;
 	}
-	
+
 	pr_global_struct->time = sv.time;
 	pr_global_struct->self = EDICT_TO_PROG(sv_player);
 	PR_ExecuteProgram (pr_global_struct->ClientKill);
@@ -1253,7 +1253,7 @@ void Host_Pause_f (void)
 		cl.paused = !cl.paused;
 		return;
 	}
-	
+
 	if (cmd_source == src_command)
 	{
 		Cmd_ForwardToServer ();
@@ -1301,7 +1301,7 @@ void Host_PreSpawn_f (void)
 		Con_Printf ("prespawn not valid -- allready spawned\n");
 		return;
 	}
-	
+
 	SZ_Write (&host_client->message, sv.signon.data, sv.signon.cursize);
 	MSG_WriteByte (&host_client->message, svc_signonnum);
 	MSG_WriteByte (&host_client->message, 2);
@@ -1361,7 +1361,7 @@ void Host_Spawn_f (void)
 		if ((Sys_DoubleTime() - host_client->netconnection->connecttime) <= sv.time)
 			Sys_Printf ("%s entered the game\n", host_client->name);
 
-		PR_ExecuteProgram (pr_global_struct->PutClientInServer);	
+		PR_ExecuteProgram (pr_global_struct->PutClientInServer);
 	}
 
 
@@ -1384,7 +1384,7 @@ void Host_Spawn_f (void)
 		MSG_WriteByte (&host_client->message, i);
 		MSG_WriteByte (&host_client->message, client->colors);
 	}
-	
+
 // send all current light styles
 	for (i=0 ; i<MAX_LIGHTSTYLES ; i++)
 	{
@@ -1412,7 +1412,7 @@ void Host_Spawn_f (void)
 	MSG_WriteByte (&host_client->message, STAT_MONSTERS);
 	MSG_WriteLong (&host_client->message, pr_global_struct->killed_monsters);
 
-	
+
 //
 // send a fixangle
 // Never send a roll angle, because savegames can catch the server
@@ -1567,7 +1567,7 @@ void Host_Give_f (void)
 
 	t = Cmd_Argv(1);
 	v = atoi (Cmd_Argv(2));
-	
+
 	switch (t[0])
 	{
    case '0':
@@ -1603,7 +1603,7 @@ void Host_Give_f (void)
             sv_player->v.items = (int)sv_player->v.items | (IT_SHOTGUN << (t[0] - '2'));
       }
 		break;
-	
+
     case 's':
 		if (rogue)
 		{
@@ -1613,7 +1613,7 @@ void Host_Give_f (void)
 		}
 
         sv_player->v.ammo_shells = v;
-        break;		
+        break;
     case 'n':
 		if (rogue)
 		{
@@ -1629,7 +1629,7 @@ void Host_Give_f (void)
 		{
 			sv_player->v.ammo_nails = v;
 		}
-        break;		
+        break;
     case 'l':
 		if (rogue)
 		{
@@ -1657,7 +1657,7 @@ void Host_Give_f (void)
 		{
 			sv_player->v.ammo_rockets = v;
 		}
-        break;		
+        break;
     case 'm':
 		if (rogue)
 		{
@@ -1669,10 +1669,10 @@ void Host_Give_f (void)
 					sv_player->v.ammo_rockets = v;
 			}
 		}
-        break;		
+        break;
     case 'h':
         sv_player->v.health = v;
-        break;		
+        break;
     case 'c':
 		if (rogue)
 		{
@@ -1688,7 +1688,7 @@ void Host_Give_f (void)
 		{
 			sv_player->v.ammo_cells = v;
 		}
-        break;		
+        break;
     case 'p':
 		if (rogue)
 		{
@@ -1700,7 +1700,7 @@ void Host_Give_f (void)
 					sv_player->v.ammo_cells = v;
 			}
 		}
-        break;		
+        break;
     }
 }
 
@@ -1708,7 +1708,7 @@ edict_t	*FindViewthing (void)
 {
 	int		i;
 	edict_t	*e;
-	
+
 	for (i=0 ; i<sv.num_edicts ; i++)
 	{
 		e = EDICT_NUM(i);
@@ -1739,7 +1739,7 @@ void Host_Viewmodel_f (void)
 		Con_Printf ("Can't load %s\n", Cmd_Argv(1));
 		return;
 	}
-	
+
 	e->v.frame = 0;
 	cl.model_precache[(int)e->v.modelindex] = m;
 }
@@ -1764,7 +1764,7 @@ void Host_Viewframe_f (void)
 	if (f >= m->numframes)
 		f = m->numframes-1;
 
-	e->v.frame = f;		
+	e->v.frame = f;
 }
 
 
@@ -1777,7 +1777,7 @@ void PrintFrameName (model_t *m, int frame)
 	if (!hdr)
 		return;
 	pframedesc = &hdr->frames[frame];
-	
+
 	Con_Printf ("frame %i: %s\n", frame, pframedesc->name);
 }
 
@@ -1790,7 +1790,7 @@ void Host_Viewnext_f (void)
 {
 	edict_t	*e;
 	model_t	*m;
-	
+
 	e = FindViewthing ();
 	if (!e)
 		return;
@@ -1800,7 +1800,7 @@ void Host_Viewnext_f (void)
 	if (e->v.frame >= m->numframes)
 		e->v.frame = m->numframes - 1;
 
-	PrintFrameName (m, e->v.frame);		
+	PrintFrameName (m, e->v.frame);
 }
 
 /*
@@ -1823,7 +1823,7 @@ void Host_Viewprev_f (void)
 	if (e->v.frame < 0)
 		e->v.frame = 0;
 
-	PrintFrameName (m, e->v.frame);		
+	PrintFrameName (m, e->v.frame);
 }
 
 /*
@@ -1846,7 +1846,7 @@ void Host_Startdemos_f (void)
 
 	if (COM_CheckParm ("-nodemos")) // No demos, please..
 		return;
-	
+
 	if (cls.state == ca_dedicated)
 	{
 		if (!sv.active)

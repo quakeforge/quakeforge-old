@@ -1,8 +1,8 @@
 /*
 	pcx.c
-	
+
 	PCX loading/saving functions
-	
+
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
@@ -15,7 +15,7 @@
 
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 	See the GNU General Public License for more details.
 
@@ -57,7 +57,7 @@ byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
 		Con_Printf("Using cached version of %s\n", file);
 		return out;
 	}
-	
+
 	raw = COM_LoadTempFile (file);
 	if (!raw) {
 		Con_Printf("Can not open %s\n", file);
@@ -67,7 +67,7 @@ byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
 	pcx = (pcx_t *)raw;
 	raw = &pcx->data;
 
-	if (pcx->manufacturer != 0x0a 
+	if (pcx->manufacturer != 0x0a
 			|| pcx->version != 5
 			|| pcx->encoding != 1
 			|| pcx->bits_per_pixel != 8

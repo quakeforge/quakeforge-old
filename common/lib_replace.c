@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -36,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void Q_memset (void *dest, int fill, int count)
 {
 	int		i;
-	
+
 	if ( (((long)dest | count) & 3) == 0)
 	{
 		count >>= 2;
@@ -52,7 +52,7 @@ void Q_memset (void *dest, int fill, int count)
 void Q_memcpy (void *dest, void *src, int count)
 {
 	int		i;
-	
+
 	if (( ( (long)dest | (long)src | count) & 3) == 0 )
 	{
 		count>>=2;
@@ -97,7 +97,7 @@ void Q_strncpy (char *dest, char *src, int count)
 int Q_strlen (char *str)
 {
 	int		count;
-	
+
 	count = 0;
 	while (str[count])
 		count++;
@@ -125,13 +125,13 @@ int Q_strcmp (char *s1, char *s2)
 	while (1)
 	{
 		if (*s1 != *s2)
-			return -1;		// strings not equal	
+			return -1;		// strings not equal
 		if (!*s1)
 			return 0;		// strings are equal
 		s1++;
 		s2++;
 	}
-	
+
 	return -1;
 }
 
@@ -142,20 +142,20 @@ int Q_strncmp (char *s1, char *s2, int count)
 		if (!count--)
 			return 0;
 		if (*s1 != *s2)
-			return -1;		// strings not equal	
+			return -1;		// strings not equal
 		if (!*s1)
 			return 0;		// strings are equal
 		s1++;
 		s2++;
 	}
-	
+
 	return -1;
 }
 
 int Q_strncasecmp (char *s1, char *s2, int n)
 {
 	int		c1, c2;
-	
+
 	while (1)
 	{
 		c1 = *s1++;
@@ -163,7 +163,7 @@ int Q_strncasecmp (char *s1, char *s2, int n)
 
 		if (!n--)
 			return 0;		// strings are equal until end point
-		
+
 		if (c1 != c2)
 		{
 			if (c1 >= 'a' && c1 <= 'z')
@@ -178,7 +178,7 @@ int Q_strncasecmp (char *s1, char *s2, int n)
 //		s1++;
 //		s2++;
 	}
-	
+
 	return -1;
 }
 
@@ -194,7 +194,7 @@ int Q_atoi (char *str)
 	int		val;
 	int		sign;
 	int		c;
-	
+
 	if (*str == '-')
 	{
 		sign = -1;
@@ -202,7 +202,7 @@ int Q_atoi (char *str)
 	}
 	else
 		sign = 1;
-		
+
 	val = 0;
 
 //
@@ -224,7 +224,7 @@ int Q_atoi (char *str)
 				return val*sign;
 		}
 	}
-	
+
 //
 // check for character
 //
@@ -232,7 +232,7 @@ int Q_atoi (char *str)
 	{
 		return sign * str[1];
 	}
-	
+
 //
 // assume decimal
 //
@@ -243,7 +243,7 @@ int Q_atoi (char *str)
 			return val*sign;
 		val = val*10 + c - '0';
 	}
-	
+
 	return 0;
 }
 
@@ -254,7 +254,7 @@ float Q_atof (char *str)
 	int		sign;
 	int		c;
 	int		decimal, total;
-	
+
 	if (*str == '-')
 	{
 		sign = -1;
@@ -262,7 +262,7 @@ float Q_atof (char *str)
 	}
 	else
 		sign = 1;
-		
+
 	val = 0;
 
 //
@@ -284,7 +284,7 @@ float Q_atof (char *str)
 				return val*sign;
 		}
 	}
-	
+
 //
 // check for character
 //
@@ -292,7 +292,7 @@ float Q_atof (char *str)
 	{
 		return sign * str[1];
 	}
-	
+
 //
 // assume decimal
 //
@@ -319,6 +319,6 @@ float Q_atof (char *str)
 		val /= 10;
 		total--;
 	}
-	
+
 	return val*sign;
 }

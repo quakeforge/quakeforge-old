@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -302,7 +302,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 
 	aliasmodel = m;
 	paliashdr = hdr;	// (aliashdr_t *)Mod_Extradata (m);
-	
+
 	modelcrc = m->numclipnodes +
 			   m->numedges +
 			   m->numframes +
@@ -324,7 +324,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	COM_StripExtension (m->name+strlen("progs/"), cache+strlen("glquake/"));
 	strcat (cache, ".ms3");
 
-	COM_FOpenFile (cache, &f);	
+	COM_FOpenFile (cache, &f);
 	if (f)
 	{
 		byte sig[2];
@@ -336,7 +336,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		if ((memcmp(sig, "QF", sizeof(sig)) != 0) ||
 			cachecrc != modelcrc)
 			{
-			Con_Printf ("Mismatched mesh on model %s\n",m->name);			
+			Con_Printf ("Mismatched mesh on model %s\n",m->name);
 			}
 		else
 			{
@@ -348,7 +348,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 			fCacheSynced = 1;
 			}
 	}
-	
+
 	if (!fCacheSynced)
 	{
 		//
@@ -378,7 +378,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 			byte sig[2];
 			memcpy(sig, "QF",2);
 			Qwrite(f, sig, sizeof(sig));
-			Qwrite(f, &modelcrc, sizeof(modelcrc));			
+			Qwrite(f, &modelcrc, sizeof(modelcrc));
 			Qwrite(f, &numcommands, 4);
 			Qwrite(f, &numorder, 4);
 			Qwrite(f, commands, numcommands * sizeof(commands[0]));
@@ -396,7 +396,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	paliashdr->commands = (byte *)cmds - (byte *)paliashdr;
 	memcpy (cmds, commands, numcommands * 4);
 
-	verts = Hunk_Alloc (paliashdr->numposes * paliashdr->poseverts 
+	verts = Hunk_Alloc (paliashdr->numposes * paliashdr->poseverts
 		* sizeof(trivertx_t) );
 	paliashdr->posedata = (byte *)verts - (byte *)paliashdr;
 	for (i=0 ; i<paliashdr->numposes ; i++)

@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -51,7 +51,7 @@ SV_ModelIndex
 int SV_ModelIndex (char *name)
 {
 	int		i;
-	
+
 	if (!name || !name[0])
 		return 0;
 
@@ -97,8 +97,8 @@ void SV_CreateBaseline (void)
 {
 	int			i;
 	edict_t			*svent;
-	int				entnum;	
-		
+	int				entnum;
+
 	for (entnum = 0; entnum < sv.num_edicts ; entnum++)
 	{
 		svent = EDICT_NUM(entnum);
@@ -137,7 +137,7 @@ void SV_CreateBaseline (void)
 		//
 		// add to the message
 		//
-		MSG_WriteByte (&sv.signon,svc_spawnbaseline);		
+		MSG_WriteByte (&sv.signon,svc_spawnbaseline);
 		MSG_WriteShort (&sv.signon,entnum);
 
 		MSG_WriteByte (&sv.signon, svent->baseline.modelindex);
@@ -157,7 +157,7 @@ void SV_CreateBaseline (void)
 ================
 SV_SaveSpawnparms
 
-Grabs the current state of the progs serverinfo flags 
+Grabs the current state of the progs serverinfo flags
 and each client for saving across the
 transition to another level
 ================
@@ -301,7 +301,7 @@ void SV_SpawnServer (char *server)
 	int			i;
 
 	Con_DPrintf ("SpawnServer: %s\n",server);
-	
+
 	SV_SaveSpawnparms ();
 
 	svs.spawncount++;		// any partially connected client will be
@@ -321,13 +321,13 @@ void SV_SpawnServer (char *server)
 
 	sv.reliable_datagram.maxsize = sizeof(sv.reliable_datagram_buf);
 	sv.reliable_datagram.data = sv.reliable_datagram_buf;
-	
+
 	sv.multicast.maxsize = sizeof(sv.multicast_buf);
 	sv.multicast.data = sv.multicast_buf;
-	
+
 	sv.master.maxsize = sizeof(sv.master_buf);
 	sv.master.data = sv.master_buf;
-	
+
 	sv.signon.maxsize = sizeof(sv.signon_buffers[0]);
 	sv.signon.data = sv.signon_buffers[0];
 	sv.num_signon_buffers = 1;
@@ -340,7 +340,7 @@ void SV_SpawnServer (char *server)
 
 	// allocate edicts
 	sv.edicts = Hunk_AllocName (MAX_EDICTS*pr_edict_size, "edicts");
-	
+
 	// leave slots at start for clients only
 	sv.num_edicts = MAX_CLIENTS+1;
 	for (i=0 ; i<MAX_CLIENTS ; i++)
@@ -352,7 +352,7 @@ void SV_SpawnServer (char *server)
 	}
 
 	sv.time = 1.0;
-	
+
 	strcpy (sv.name, server);
 	snprintf(sv.modelname, sizeof(sv.modelname),"maps/%s.bsp", server);
 	sv.worldmodel = Mod_ForName (sv.modelname, true);
@@ -362,7 +362,7 @@ void SV_SpawnServer (char *server)
 	// clear physics interaction links
 	//
 	SV_ClearWorld ();
-	
+
 	sv.sound_precache[0] = pr_strings;
 
 	sv.model_precache[0] = pr_strings;
@@ -380,7 +380,7 @@ void SV_SpawnServer (char *server)
 
 	//
 	// spawn the rest of the entities on the map
-	//	
+	//
 
 	// precache and static commands can be issued during
 	// map initialization
@@ -396,7 +396,7 @@ void SV_SpawnServer (char *server)
 	pr_global_struct->mapname = PR_SetString(sv.name);
 	// serverflags are for cross level information (sigils)
 	pr_global_struct->serverflags = svs.serverflags;
-	
+
 	// run the frame start qc function to let progs check cvars
 	SV_ProgStartFrame ();
 
@@ -409,7 +409,7 @@ void SV_SpawnServer (char *server)
 	// all spawning is completed, any further precache statements
 	// or prog writes to the signon message are errors
 	sv.state = ss_active;
-	
+
 	// run two frames to allow everything to settle
 	host_frametime = 0.1;
 	SV_Physics ();

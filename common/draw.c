@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -74,7 +74,7 @@ qpic_t	*Draw_CachePic (char *path)
 	cachepic_t	*pic;
 	int			i;
 	qpic_t		*dat;
-	
+
 	for (pic=menu_cachepics, i=0 ; i<menu_numcachepics ; pic++, i++)
 		if (!strcmp (path, pic->name))
 			break;
@@ -96,7 +96,7 @@ qpic_t	*Draw_CachePic (char *path)
 // load the pic from disk
 //
 	COM_LoadCacheFile (path, &pic->cache);
-	
+
 	dat = (qpic_t *)pic->cache.data;
 	if (!dat)
 	{
@@ -143,11 +143,11 @@ void Draw_Character (int x, int y, int num)
 	byte			*dest;
 	byte			*source;
 	unsigned short	*pusdest;
-	int				drawline;	
+	int				drawline;
 	int				row, col;
 
 	num &= 255;
-	
+
 	if (y <= -8)
 		return;			// totally off screen
 
@@ -173,7 +173,7 @@ void Draw_Character (int x, int y, int num)
 	if (r_pixbytes == 1)
 	{
 		dest = vid.conbuffer + y*vid.conrowbytes + x;
-	
+
 		while (drawline--)
 		{
 			if (source[0])
@@ -284,7 +284,7 @@ void Draw_Crosshair(void)
 	byte c = (byte)crosshaircolor->value;
 
 	if (crosshair->value == 2) {
-		x = scr_vrect.x + scr_vrect.width/2 + cl_crossx->value; 
+		x = scr_vrect.x + scr_vrect.width/2 + cl_crossx->value;
 		y = scr_vrect.y + scr_vrect.height/2 + cl_crossy->value;
 		// FIXME:  Find a better way to do this...
 		Draw_Pixel(x - 1, y, c);
@@ -297,8 +297,8 @@ void Draw_Crosshair(void)
 		Draw_Pixel(x, y + 3, c);
 	} else if (crosshair->value)
 		Draw_Character (
-			scr_vrect.x + scr_vrect.width/2-4 + cl_crossx->value, 
-			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy->value, 
+			scr_vrect.x + scr_vrect.width/2-4 + cl_crossx->value,
+			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy->value,
 			'+');
 }
 
@@ -315,7 +315,7 @@ void Draw_DebugChar (char num)
 {
 	byte			*dest;
 	byte			*source;
-	int				drawline;	
+	int				drawline;
 	extern byte		*draw_chars;
 	int				row, col;
 
@@ -463,7 +463,7 @@ void Draw_TransPic (int x, int y, qpic_t *pic)
 	{
 		Sys_Error ("Draw_TransPic: bad coordinates");
 	}
-		
+
 	source = pic->data;
 
 	if (r_pixbytes == 1)
@@ -477,7 +477,7 @@ void Draw_TransPic (int x, int y, qpic_t *pic)
 				for (u=0 ; u<pic->width ; u++)
 					if ( (tbyte=source[u]) != TRANSPARENT_COLOR)
 						dest[u] = tbyte;
-	
+
 				dest += vid.rowbytes;
 				source += pic->width;
 			}
@@ -550,7 +550,7 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
 	{
 		Sys_Error ("Draw_TransPic: bad coordinates");
 	}
-		
+
 	source = pic->data;
 
 	if (r_pixbytes == 1)
@@ -642,7 +642,7 @@ void Draw_ConsoleBackground (int lines)
 		+ 320*186;
 
 	memcpy(saveback, conback->data + 320*186, 320*8);
-	
+
 // draw the pic
 	if (r_pixbytes == 1)
 	{

@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -33,7 +33,7 @@ typedef struct
 	long    numAxes;
 	long	numButtons;
 	long	flags;
-	
+
 	vec3_t  viewangles;
 
 // intended velocities
@@ -94,7 +94,7 @@ qboolean	joy_avail;
 int		joy_oldbuttonstate;
 int		joy_buttonstate;
 
-int     joyxl, joyxh, joyyl, joyyh; 
+int     joyxl, joyxh, joyyl, joyyh;
 int		joystickx, joysticky;
 
 qboolean		need_center;
@@ -134,9 +134,9 @@ IN_StartupMouse
 */
 void IN_StartupMouse (void)
 {
-	if ( COM_CheckParm ("-nomouse") ) 
-		return; 
- 
+	if ( COM_CheckParm ("-nomouse") )
+		return;
+
 // check for mouse
 	regs.x.ax = 0;
 	dos_int86(0x33);
@@ -146,7 +146,7 @@ void IN_StartupMouse (void)
 		Con_Printf ("No mouse found\n");
 		return;
 	}
-	
+
 	mouse_buttons = regs.x.bx;
 	if (mouse_buttons > 3)
 		mouse_buttons = 3;
@@ -205,7 +205,7 @@ void IN_Frame(void)
 		regs.x.ax = 3;		// read buttons
 		dos_int86(0x33);
 		mouse_buttonstate = regs.x.bx;
-	
+
 	// perform button actions
 		for (i=0 ; i<mouse_buttons ; i++)
 		{
@@ -219,11 +219,11 @@ void IN_Frame(void)
 			{
 				Key_Event (K_MOUSE1 + i, false);
 			}
-		}	
-		
+		}
+
 		mouse_oldbuttonstate = mouse_buttonstate;
 	}
-	
+
 	if (joy_avail)
 	{
 		joy_buttonstate = ((dos_inportb(0x201) >> 4)&15)^15;
@@ -241,14 +241,14 @@ void IN_Frame(void)
 				Key_Event (K_JOY1 + i, false);
 			}
 		}
-		
+
 		joy_oldbuttonstate = joy_buttonstate;
 	}
 
 	if (extern_avail)
 	{
 		extern_buttonstate = extern_control->buttons;
-	
+
 	// perform button actions
 		for (i=0 ; i<extern_buttons ; i++)
 		{
@@ -262,11 +262,11 @@ void IN_Frame(void)
 			{
 				Key_Event (K_AUX1 + i, false);
 			}
-		}	
-		
+		}
+
 		extern_oldbuttonstate = extern_buttonstate;
 	}
-	
+
 }
 
 
@@ -286,7 +286,7 @@ void IN_MouseMove (usercmd_t *cmd)
 	dos_int86(0x33);
 	mx = (short)regs.x.cx;
 	my = (short)regs.x.dx;
-	
+
 	if (m_filter->value)
 	{
 		mouse_x = (mx + old_mouse_x) * 0.5;
@@ -308,10 +308,10 @@ void IN_MouseMove (usercmd_t *cmd)
 		cmd->sidemove += m_side->value * mouse_x;
 	else
 		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
-	
+
 	if (in_mlook.state & 1)
 		V_StopPitchDrift ();
-		
+
 	if ( (in_mlook.state & 1) && !(in_strafe.state & 1))
 	{
 		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
@@ -338,10 +338,10 @@ void IN_JoyMove (usercmd_t *cmd)
 {
 	float	speed, aspeed;
 
-	if (!joy_avail || !in_joystick->value) 
-		return; 
- 
-	IN_ReadJoystick (); 
+	if (!joy_avail || !in_joystick->value)
+		return;
+
+	IN_ReadJoystick ();
 	if (joysticky > joyyh*2 || joystickx > joyxh*2)
 		return;		// assume something jumped in and messed up the joystick
 					// reading time (win 95)
@@ -355,15 +355,15 @@ void IN_JoyMove (usercmd_t *cmd)
 	if (in_strafe.state & 1)
 	{
 		if (joystickx < joyxl)
-			cmd->sidemove -= speed*cl_sidespeed->value; 
-		else if (joystickx > joyxh) 
-			cmd->sidemove += speed*cl_sidespeed->value; 
+			cmd->sidemove -= speed*cl_sidespeed->value;
+		else if (joystickx > joyxh)
+			cmd->sidemove += speed*cl_sidespeed->value;
 	}
 	else
 	{
 		if (joystickx < joyxl)
 			cl.viewangles[YAW] += aspeed*cl_yawspeed->value;
-		else if (joystickx > joyxh) 
+		else if (joystickx > joyxh)
 			cl.viewangles[YAW] -= aspeed*cl_yawspeed->value;
 		cl.viewangles[YAW] = anglemod(cl.viewangles[YAW]);
 	}
@@ -372,18 +372,18 @@ void IN_JoyMove (usercmd_t *cmd)
 	{
 		if (m_pitch->value < 0)
 			speed *= -1;
-		
-		if (joysticky < joyyl) 
+
+		if (joysticky < joyyl)
 			cl.viewangles[PITCH] += aspeed*cl_pitchspeed->value;
-		else if (joysticky > joyyh) 
+		else if (joysticky > joyyh)
 			cl.viewangles[PITCH] -= aspeed*cl_pitchspeed->value;
 	}
 	else
 	{
-		if (joysticky < joyyl) 
-			cmd->forwardmove += speed*cl_forwardspeed->value; 
-		else if (joysticky > joyyh) 
-			cmd->forwardmove -= speed*cl_backspeed->value;  
+		if (joysticky < joyyl)
+			cmd->forwardmove += speed*cl_forwardspeed->value;
+		else if (joysticky > joyyh)
+			cmd->forwardmove -= speed*cl_backspeed->value;
 	}
 }
 
@@ -399,12 +399,12 @@ void IN_Move (usercmd_t *cmd)
 	IN_ExternalMove (cmd);
 }
 
-/* 
-============================================================================ 
- 
-					JOYSTICK 
- 
-============================================================================ 
+/*
+============================================================================
+
+					JOYSTICK
+
+============================================================================
 */
 
 
@@ -432,7 +432,7 @@ qboolean IN_ReadJoystick (void)
 		if ( !(b&3) )
 			return true;
 	}
-	
+
 	Con_Printf ("IN_ReadJoystick: no response\n");
 	joy_avail = false;
 	return false;
@@ -443,12 +443,12 @@ qboolean IN_ReadJoystick (void)
 WaitJoyButton
 =============
 */
-qboolean WaitJoyButton (void) 
-{ 
-	int             oldbuttons, buttons; 
- 
-	oldbuttons = 0; 
-	do 
+qboolean WaitJoyButton (void)
+{
+	int             oldbuttons, buttons;
+
+	oldbuttons = 0;
+	do
 	{
 		key_count = -1;
 		Sys_SendKeyEvents ();
@@ -460,16 +460,16 @@ qboolean WaitJoyButton (void)
 		}
 		key_lastpress = 0;
 		SCR_UpdateScreen ();
-		buttons =  ((dos_inportb(0x201) >> 4)&1)^1; 
-		if (buttons != oldbuttons) 
-		{ 
-			oldbuttons = buttons; 
-			continue; 
+		buttons =  ((dos_inportb(0x201) >> 4)&1)^1;
+		if (buttons != oldbuttons)
+		{
+			oldbuttons = buttons;
+			continue;
 		}
-	} while ( !buttons); 
- 
-	do 
-	{ 
+	} while ( !buttons);
+
+	do
+	{
 		key_count = -1;
 		Sys_SendKeyEvents ();
 		key_count = 0;
@@ -480,87 +480,87 @@ qboolean WaitJoyButton (void)
 		}
 		key_lastpress = 0;
 		SCR_UpdateScreen ();
-		buttons =  ((dos_inportb(0x201) >> 4)&1)^1; 
-		if (buttons != oldbuttons) 
-		{ 
-			oldbuttons = buttons; 
-			continue; 
-		} 
-	} while ( buttons); 
- 
-	return true; 
-} 
- 
- 
- 
-/* 
-=============== 
-IN_StartupJoystick 
-=============== 
-*/  
-void IN_StartupJoystick (void) 
-{ 
-	int     centerx, centery; 
- 
- 	Con_Printf ("\n");
+		buttons =  ((dos_inportb(0x201) >> 4)&1)^1;
+		if (buttons != oldbuttons)
+		{
+			oldbuttons = buttons;
+			continue;
+		}
+	} while ( buttons);
 
-	joy_avail = false; 
-	if ( COM_CheckParm ("-nojoy") ) 
-		return; 
- 
-	if (!IN_ReadJoystick ()) 
-	{ 
-		joy_avail = false; 
-		Con_Printf ("joystick not found\n"); 
-		return; 
-	} 
+	return true;
+}
 
-	Con_Printf ("joystick found\n"); 
- 
-	Con_Printf ("CENTER the joystick\nand press button 1 (ESC to skip):\n"); 
-	if (!WaitJoyButton ()) 
-		return; 
-	IN_ReadJoystick (); 
-	centerx = joystickx; 
-	centery = joysticky; 
- 
-	Con_Printf ("Push the joystick to the UPPER LEFT\nand press button 1 (ESC to skip):\n"); 
-	if (!WaitJoyButton ()) 
-		return; 
-	IN_ReadJoystick (); 
-	joyxl = (centerx + joystickx)/2; 
-	joyyl = (centerx + joysticky)/2; 
- 
-	Con_Printf ("Push the joystick to the LOWER RIGHT\nand press button 1 (ESC to skip):\n"); 
-	if (!WaitJoyButton ()) 
-		return; 
-	IN_ReadJoystick (); 
-	joyxh = (centerx + joystickx)/2; 
-	joyyh = (centery + joysticky)/2; 
 
-	joy_avail = true; 
-	Con_Printf ("joystick configured.\n"); 
+
+/*
+===============
+IN_StartupJoystick
+===============
+*/
+void IN_StartupJoystick (void)
+{
+	int     centerx, centery;
 
  	Con_Printf ("\n");
-} 
- 
- 
-/* 
-============================================================================ 
- 
-					EXTERNAL 
- 
-============================================================================ 
+
+	joy_avail = false;
+	if ( COM_CheckParm ("-nojoy") )
+		return;
+
+	if (!IN_ReadJoystick ())
+	{
+		joy_avail = false;
+		Con_Printf ("joystick not found\n");
+		return;
+	}
+
+	Con_Printf ("joystick found\n");
+
+	Con_Printf ("CENTER the joystick\nand press button 1 (ESC to skip):\n");
+	if (!WaitJoyButton ())
+		return;
+	IN_ReadJoystick ();
+	centerx = joystickx;
+	centery = joysticky;
+
+	Con_Printf ("Push the joystick to the UPPER LEFT\nand press button 1 (ESC to skip):\n");
+	if (!WaitJoyButton ())
+		return;
+	IN_ReadJoystick ();
+	joyxl = (centerx + joystickx)/2;
+	joyyl = (centerx + joysticky)/2;
+
+	Con_Printf ("Push the joystick to the LOWER RIGHT\nand press button 1 (ESC to skip):\n");
+	if (!WaitJoyButton ())
+		return;
+	IN_ReadJoystick ();
+	joyxh = (centerx + joystickx)/2;
+	joyyh = (centery + joysticky)/2;
+
+	joy_avail = true;
+	Con_Printf ("joystick configured.\n");
+
+ 	Con_Printf ("\n");
+}
+
+
+/*
+============================================================================
+
+					EXTERNAL
+
+============================================================================
 */
 
 
-/* 
-=============== 
-IN_StartupExternal 
-=============== 
-*/  
-void IN_StartupExternal (void) 
-{ 
+/*
+===============
+IN_StartupExternal
+===============
+*/
+void IN_StartupExternal (void)
+{
 	if (extern_control->numButtons > 32)
 		extern_control->numButtons = 32;
 

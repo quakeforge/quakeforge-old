@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -79,7 +79,7 @@ SlowPrint ()
 Screen_Update ();
 Con_Printf ();
 
-net 
+net
 turn off messages option
 
 the refresh is allways rendered, unless the console is full screen
@@ -89,12 +89,12 @@ console is:
 	notify lines
 	half
 	full
-	
+
 
 */
 
 
-// only the refresh window will be updated unless these variables are flagged 
+// only the refresh window will be updated unless these variables are flagged
 int			scr_copytop;
 int			scr_copyeverything;
 
@@ -223,7 +223,7 @@ void SCR_DrawCenterString (void)
 	else
 		y = 48;
 
-	do	
+	do
 	{
 	// scan the width of the line
 		for (l=0 ; l<40 ; l++)
@@ -232,11 +232,11 @@ void SCR_DrawCenterString (void)
 		x = (vid.width - l*8)/2;
 		for (j=0 ; j<l ; j++, x+=8)
 		{
-			Draw_Character (x, y, start[j]);	
+			Draw_Character (x, y, start[j]);
 			if (!remaining--)
 				return;
 		}
-			
+
 		y += 8;
 
 		while (*start && *start != '\n')
@@ -255,7 +255,7 @@ void SCR_CheckDrawCenterString (void)
 		scr_erase_lines = scr_center_lines;
 
 	scr_centertime_off -= host_frametime;
-	
+
 	if (scr_centertime_off <= 0 && !cl.intermission)
 		return;
 	if (key_dest != key_game)
@@ -308,7 +308,7 @@ static void SCR_CalcRefdef (void)
 	Sbar_Changed ();
 
 //========================================
-	
+
 // bound viewsize
 	if (scr_viewsize->value < 30)
 		Cvar_Set ("viewsize","30");
@@ -324,7 +324,7 @@ static void SCR_CalcRefdef (void)
 	r_refdef.fov_x = scr_fov->value;
 	r_refdef.fov_y = CalcFov (r_refdef.fov_x, r_refdef.vrect.width, r_refdef.vrect.height);
 
-// intermission is always full screen	
+// intermission is always full screen
 	if (cl.intermission)
 		size = 120;
 	else
@@ -453,7 +453,7 @@ SCR_DrawTurtle
 void SCR_DrawTurtle (void)
 {
 	static int	count;
-	
+
 	if (!scr_showturtle->value)
 		return;
 
@@ -540,7 +540,7 @@ void SCR_DrawPause (void)
 		return;
 
 	pic = Draw_CachePic ("gfx/pause.lmp");
-	Draw_Pic ( (vid.width - pic->width)/2, 
+	Draw_Pic ( (vid.width - pic->width)/2,
 		(vid.height - 48 - pic->height)/2, pic);
 }
 
@@ -556,9 +556,9 @@ void SCR_DrawLoading (void)
 
 	if (!scr_drawloading)
 		return;
-		
+
 	pic = Draw_CachePic ("gfx/loading.lmp");
-	Draw_Pic ( (vid.width - pic->width)/2, 
+	Draw_Pic ( (vid.width - pic->width)/2,
 		(vid.height - 48 - pic->height)/2, pic);
 }
 
@@ -573,7 +573,7 @@ SCR_SetUpToDrawConsole
 void SCR_SetUpToDrawConsole (void)
 {
 	Con_CheckResize ();
-	
+
 	if (scr_drawloading)
 		return;		// never a console with loading plaque
 
@@ -586,10 +586,10 @@ void SCR_SetUpToDrawConsole (void)
 	else if (key_dest == key_console)
 		scr_conlines = vid.height * max(0.2,
 				min(scr_consize->value, 1));
-	
+
 	else
 		scr_conlines = 0;				// none visible
-	
+
 	if (scr_conlines < scr_con_current)
 	{
 		scr_con_current -= scr_conspeed->value * host_frametime * 4;
@@ -618,7 +618,7 @@ void SCR_SetUpToDrawConsole (void)
 	else
 		con_notifylines = 0;
 }
-	
+
 /*
 ==================
 SCR_DrawConsole
@@ -640,34 +640,34 @@ void SCR_DrawConsole (void)
 }
 
 
-/* 
-============================================================================== 
- 
-						SCREEN SHOTS 
- 
-============================================================================== 
-*/ 
+/*
+==============================================================================
+
+						SCREEN SHOTS
+
+==============================================================================
+*/
 
 
-/* 
-============== 
-WritePCXfile 
-============== 
-*/ 
+/*
+==============
+WritePCXfile
+==============
+*/
 void WritePCXfile (char *filename, byte *data, int width, int height,
-	int rowbytes, byte *palette, qboolean upload) 
+	int rowbytes, byte *palette, qboolean upload)
 {
 	int		i, j, length;
 	pcx_t	*pcx;
 	byte		*pack;
-	  
+
 	pcx = Hunk_TempAlloc (width*height*2+1000);
 	if (pcx == NULL)
 	{
 		Con_Printf("SCR_ScreenShot_f: not enough memory\n");
 		return;
-	} 
- 
+	}
+
 	pcx->manufacturer = 0x0a;	// PCX id
 	pcx->version = 5;			// 256 color
  	pcx->encoding = 1;		// uncompressed
@@ -686,7 +686,7 @@ void WritePCXfile (char *filename, byte *data, int width, int height,
 
 // pack the image
 	pack = &pcx->data;
-	
+
 	for (i=0 ; i<height ; i++)
 	{
 		for (j=0 ; j<width ; j++)
@@ -702,13 +702,13 @@ void WritePCXfile (char *filename, byte *data, int width, int height,
 
 		data += rowbytes - width;
 	}
-			
+
 // write the palette
 	*pack++ = 0x0c;	// palette ID byte
 	for (i=0 ; i<768 ; i++)
 		*pack++ = *palette++;
-		
-// write output file 
+
+// write output file
 	length = pack - (byte *)pcx;
 #ifdef QUAKEWORLD
 	if (upload)
@@ -716,43 +716,43 @@ void WritePCXfile (char *filename, byte *data, int width, int height,
 	else
 #endif
 		COM_WriteFile (filename, pcx, length);
-} 
- 
+}
 
 
-/* 
-================== 
+
+/*
+==================
 SCR_ScreenShot_f
-================== 
-*/  
-void SCR_ScreenShot_f (void) 
-{ 
-	int     i; 
-	char		pcxname[80]; 
+==================
+*/
+void SCR_ScreenShot_f (void)
+{
+	int     i;
+	char		pcxname[80];
 	char		checkname[MAX_OSPATH];
 
-// 
-// find a file name to save it to 
-// 
+//
+// find a file name to save it to
+//
 	strcpy(pcxname,"quake00.pcx");
-		
-	for (i=0 ; i<=99 ; i++) 
-	{ 
-		pcxname[5] = i/10 + '0'; 
-		pcxname[6] = i%10 + '0'; 
+
+	for (i=0 ; i<=99 ; i++)
+	{
+		pcxname[5] = i/10 + '0';
+		pcxname[6] = i%10 + '0';
 		snprintf(checkname, sizeof(checkname), "%s/%s", com_gamedir, pcxname);
 		if (Sys_FileTime(checkname) == -1)
 			break;	// file doesn't exist
-	} 
-	if (i==100) 
+	}
+	if (i==100)
 	{
-		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX"); 
+		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX");
 		return;
 	}
- 
-// 
-// save the pcx file 
-// 
+
+//
+// save the pcx file
+//
 	D_EnableBackBufferAccess ();	// enable direct drawing of console to back
 									//  buffer
 
@@ -763,7 +763,7 @@ void SCR_ScreenShot_f (void)
 									//  for linear writes all the time
 
 	Con_Printf ("Wrote %s\n", pcxname);
-} 
+}
 
 /*
 Find closest color in the palette for named color
@@ -842,17 +842,17 @@ void SCR_DrawStringToSnap (const char *s, byte *buf, int x, int y, int width)
 }
 
 #ifdef QUAKEWORLD
-/* 
-================== 
+/*
+==================
 SCR_RSShot_f
-================== 
-*/  
-void SCR_RSShot_f (void) 
-{ 
+==================
+*/
+void SCR_RSShot_f (void)
+{
 //	int     i, x, y;
 	int    x, y;
 	unsigned char		*src, *dest;
-	char		pcxname[80]; 
+	char		pcxname[80];
 //	char		checkname[MAX_OSPATH];
 	unsigned char		*newbuf;
 	int w, h;
@@ -879,29 +879,29 @@ void SCR_RSShot_f (void)
 	Con_Printf("Remote screen shot requested.\n");
 
 #if 0
-// 
-// find a file name to save it to 
-// 
+//
+// find a file name to save it to
+//
 	strcpy(pcxname,"mquake00.pcx");
-		
-	for (i=0 ; i<=99 ; i++) 
-	{ 
-		pcxname[6] = i/10 + '0'; 
-		pcxname[7] = i%10 + '0'; 
+
+	for (i=0 ; i<=99 ; i++)
+	{
+		pcxname[6] = i/10 + '0';
+		pcxname[7] = i%10 + '0';
 		snprintf(checkname, sizeof(checkname), "%s/%s", com_gamedir, pcxname);
 		if (Sys_FileTime(checkname) == -1)
 			break;	// file doesn't exist
-	} 
-	if (i==100) 
+	}
+	if (i==100)
 	{
-		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX"); 
+		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX");
 		return;
 	}
 #endif
- 
-// 
-// save the pcx file 
-// 
+
+//
+// save the pcx file
+//
 	D_EnableBackBufferAccess ();	// enable direct drawing of console to back
 									//  buffer
 
@@ -966,7 +966,7 @@ void SCR_RSShot_f (void)
 
 //	Con_Printf ("Wrote %s\n", pcxname);
 	Con_Printf ("Sending shot to server...\n");
-} 
+}
 #endif
 
 
@@ -985,7 +985,7 @@ void SCR_BeginLoadingPlaque (void)
 		return;
 	if (cls.signon != SIGNONS)
 		return;
-	
+
 // redraw with no console and the loading plaque
 	Con_ClearNotify ();
 	scr_centertime_off = 0;
@@ -1029,7 +1029,7 @@ void SCR_DrawNotifyString (void)
 
 	y = vid.height*0.35;
 
-	do	
+	do
 	{
 	// scan the width of the line
 		for (l=0 ; l<40 ; l++)
@@ -1037,8 +1037,8 @@ void SCR_DrawNotifyString (void)
 				break;
 		x = (vid.width - l*8)/2;
 		for (j=0 ; j<l ; j++, x+=8)
-			Draw_Character (x, y, start[j]);	
-			
+			Draw_Character (x, y, start[j]);
+
 		y += 8;
 
 		while (*start && *start != '\n')
@@ -1057,7 +1057,7 @@ void SCR_DrawNotifyString (void)
 SCR_ModalMessage
 
 Displays a text string in the center of the screen and waits for a Y or N
-keypress.  
+keypress.
 ==================
 */
 int SCR_ModalMessage (char *text)
@@ -1066,13 +1066,13 @@ int SCR_ModalMessage (char *text)
 		return true;
 
 	scr_notifystring = text;
- 
+
 // draw a fresh screen
 	scr_fullupdate = 0;
 	scr_drawdialog = true;
 	SCR_UpdateScreen ();
 	scr_drawdialog = false;
-	
+
 	S_ClearBuffer ();		// so dma doesn't loop current sound
 
 	do
@@ -1100,9 +1100,9 @@ Brings the console down and fades the palettes back to normal
 void SCR_BringDownConsole (void)
 {
 	int		i;
-	
+
 	scr_centertime_off = 0;
-	
+
 	for (i=0 ; i<20 && scr_conlines != scr_con_current ; i++)
 		SCR_UpdateScreen ();
 
@@ -1168,7 +1168,7 @@ void SCR_UpdateScreen (void)
 		oldscr_viewsize = scr_viewsize->value;
 		vid.recalc_refdef = 1;
 	}
-	
+
 //
 // check for vid changes
 //
@@ -1177,13 +1177,13 @@ void SCR_UpdateScreen (void)
 		oldfov = scr_fov->value;
 		vid.recalc_refdef = true;
 	}
-	
+
 	if (oldlcd_x != lcd_x->value)
 	{
 		oldlcd_x = lcd_x->value;
 		vid.recalc_refdef = true;
 	}
-	
+
 	if (oldscreensize != scr_viewsize->value)
 	{
 		oldscreensize = scr_viewsize->value;
@@ -1195,7 +1195,7 @@ void SCR_UpdateScreen (void)
 		oldsbar = cl_sbar->value;
 		vid.recalc_refdef = true;
 	}
-	
+
 	if (vid.recalc_refdef)
 	{
 		// something changed, so reorder the screen
@@ -1219,7 +1219,7 @@ void SCR_UpdateScreen (void)
 
 	SCR_SetUpToDrawConsole ();
 	SCR_EraseCenterString ();
-	
+
 	D_DisableBackBufferAccess ();	// for adapters that can't stay mapped in
 									//  for linear writes all the time
 
@@ -1263,7 +1263,7 @@ void SCR_UpdateScreen (void)
 		SCR_DrawFPS ();
 		SCR_CheckDrawCenterString ();
 		Sbar_Draw ();
-		SCR_DrawConsole ();	
+		SCR_DrawConsole ();
 		M_Draw ();
 	}
 
@@ -1287,7 +1287,7 @@ void SCR_UpdateScreen (void)
 		vrect.width = vid.width;
 		vrect.height = vid.height;
 		vrect.pnext = 0;
-	
+
 		VID_Update (&vrect);
 	}
 	else if (scr_copytop)
@@ -1297,9 +1297,9 @@ void SCR_UpdateScreen (void)
 		vrect.width = vid.width;
 		vrect.height = vid.height - sb_lines;
 		vrect.pnext = 0;
-	
+
 		VID_Update (&vrect);
-	}	
+	}
 	else
 	{
 		vrect.x = scr_vrect.x;
@@ -1307,9 +1307,9 @@ void SCR_UpdateScreen (void)
 		vrect.width = scr_vrect.width;
 		vrect.height = scr_vrect.height;
 		vrect.pnext = 0;
-	
+
 		VID_Update (&vrect);
-	}	
+	}
 }
 
 /*

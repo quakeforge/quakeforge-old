@@ -12,7 +12,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -162,14 +162,14 @@ int XLateKey(XKeyEvent *ev)
 		case XK_Shift_L:
 		case XK_Shift_R:	key = K_SHIFT; break;
 
-		case XK_Execute: 
-		case XK_Control_L: 
+		case XK_Execute:
+		case XK_Control_L:
 		case XK_Control_R:	key = K_CTRL; break;
 
 		case XK_Mode_switch:
-		case XK_Alt_L:	
-		case XK_Meta_L: 
-		case XK_Alt_R:	
+		case XK_Alt_L:
+		case XK_Meta_L:
+		case XK_Alt_R:
 		case XK_Meta_R:		key = K_ALT; break;
 
 		case XK_Caps_Lock:	key = K_CAPSLOCK; break;
@@ -217,7 +217,7 @@ int XLateKey(XKeyEvent *ev)
 				key = key + ('a' - 'A');
 			}
 			break;
-	} 
+	}
 
 	return key;
 }
@@ -272,7 +272,7 @@ static void event_motion(XEvent *event)
 			XWarpPointer(x_disp, None, x_win, 0, 0, 0, 0,
 					(vid.width / 2), (vid.height / 2));
 			XSelectInput(x_disp, x_win, INPUT_MASK);
-			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, 
+			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync,
 						 GrabModeAsync, x_win, None, CurrentTime);
 		} else {
 			mouse_x = (event->xmotion.x - p_mouse_x);
@@ -294,7 +294,7 @@ IN_Frame(void)
 			XUngrabPointer(x_disp,CurrentTime);
 		} else {
 			/* grab the pointer */
-			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, 
+			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync,
 						 GrabModeAsync, x_win, None, CurrentTime);
 			//XGrabPointer(x_disp,x_win,True,0,GrabModeAsync,
 			//		GrabModeAsync,x_win,None,CurrentTime);
@@ -315,7 +315,7 @@ void IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail)
 		return;
-   
+
 	if (m_filter->value) {
 		mouse_x = (mouse_x + old_mouse_x) * 0.5;
 		mouse_y = (mouse_y + old_mouse_y) * 0.5;
@@ -323,17 +323,17 @@ void IN_Move(usercmd_t *cmd)
 
 	old_mouse_x = mouse_x;
 	old_mouse_y = mouse_y;
-   
+
 	mouse_x *= sensitivity->value;
 	mouse_y *= sensitivity->value;
-   
+
 	if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
 		cmd->sidemove += m_side->value * mouse_x;
 	else
 		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
 	if (in_mlook.state & 1)
 		V_StopPitchDrift ();
-   
+
 	if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
 		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
 		if (cl.viewangles[PITCH] > 80)

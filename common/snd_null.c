@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -44,7 +44,7 @@ cvar_t	*bgmvolume;
 //cvar_t volume = {"volume", "0.7", true};
 cvar_t	*volume;
 
- 
+
 void S_Init (void)
 {
 }
@@ -91,7 +91,7 @@ void S_ClearPrecache (void)
 }
 
 void S_Update (vec3_t origin, vec3_t v_forward, vec3_t v_right, vec3_t v_up)
-{	
+{
 }
 
 void S_StopAllSounds (qboolean clear)

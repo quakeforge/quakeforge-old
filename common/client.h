@@ -11,7 +11,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -214,7 +214,7 @@ typedef struct
 
 	int		signon;
 	struct qsocket_s	*netcon;
-	
+
 // demos - this stuff can't go into client_state_t
 	int		demonum;
 	char		demos[MAX_DEMOS][MAX_DEMONAME];
@@ -224,8 +224,8 @@ typedef struct
 	int		forcetrack;
 	QFile		*demofile;
 	float		td_lastframe;
-	int		td_startframe;	
-	float		td_starttime;	
+	int		td_startframe;
+	float		td_starttime;
 
 } client_static_t;
 
@@ -239,7 +239,7 @@ typedef struct
 {
 	int		movemessages;	// since connecting to this server
 					// throw out the first couple, so the
-					// player doesn't accidentally do 
+					// player doesn't accidentally do
 					// something the first frame
 
 // information for local display
@@ -270,7 +270,7 @@ typedef struct
 	int		completed_time;	// latched at intermission start
 	float		punchangle;	// temporary yview for weapon kick
 	int		intermission;	// don't change view, full screen, etc
-	
+
 //
 // information that is static for the entire time connected to a server
 //
@@ -321,11 +321,11 @@ typedef struct
 // UQ specific.
 	int		num_entities;	// held in cl_entities array
 	float		last_received_message;	// (time) for net trouble icon
-	double		mtime[2];	// the timestamp of last two messages	
+	double		mtime[2];	// the timestamp of last two messages
 	double		oldtime;	// previous cl.time, time-oldtime is
 					// used to decay light values and
 					// smooth step ups
-	
+
 	qboolean	onground;
 	qboolean	inwater;
 	float		viewheight;

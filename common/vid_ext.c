@@ -10,7 +10,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -730,12 +730,12 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 	{
 	// page flipped
 		regs.x.ax = 0x4f07;
-	
+
 		if (vid_wait->value != VID_WAIT_VSYNC)
 		{
 			if ((vid_wait->value == VID_WAIT_DISPLAY_ENABLE) && de_exists)
 				VID_ExtraWaitDisplayEnable ();
-	
+
 			regs.x.bx = VESA_DONT_WAIT_VSYNC;
 		}
 		else
@@ -746,11 +746,11 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 		regs.x.cx = pageoffset % VGA_rowbytes;
 		regs.x.dx = pageoffset / VGA_rowbytes;
 		dos_int86(0x10);
-	
+
 		VID_displayedpage = VID_currentpage;
 		if (++VID_currentpage >= lvid->numpages)
 			VID_currentpage = 0;
-	
+
 	//
 	// set the new write window if this is a banked mode; otherwise, set the
 	// new address to which to write
@@ -769,7 +769,7 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 			lvid->buffer = VID_membase + VID_pagelist[VID_currentpage];
 			lvid->conbuffer = lvid->buffer;
 		}
-	
+
 		VGA_pagebase = lvid->buffer;
 	}
 	else

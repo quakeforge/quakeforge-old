@@ -9,7 +9,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -63,11 +63,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	svc_updatecolors	17	// [byte] [byte]
 #define	svc_particle		18	// [vec3] <variable>
 #define	svc_damage			19
-	
+
 #define	svc_spawnstatic		20
 //	svc_spawnbinary		21
 #define	svc_spawnbaseline	22
-	
+
 #define	svc_temp_entity		23
 
 #define	svc_setpause		24	// [byte] on / off
@@ -104,7 +104,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define	svc_download		41		// [short] size [size bytes]
 #define	svc_playerinfo		42		// variable
-#define	svc_nails			43		// [byte] num [48 bits] xyzpy 12 12 12 4 8 
+#define	svc_nails			43		// [byte] num [48 bits] xyzpy 12 12 12 4 8
 #define	svc_chokecount		44		// [byte] packets choked
 #define	svc_modellist		45		// [strings]
 #define	svc_soundlist		46		// [strings]
@@ -176,9 +176,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	TE_TELEPORT			11
 #define TE_EXPLOSION2		12
 
-// PGM 01/21/97 
+// PGM 01/21/97
 #define TE_BEAM				13
-// PGM 01/21/97 
+// PGM 01/21/97
 
 // QUAKEWORLD
 #define	TE_BLOOD			12
