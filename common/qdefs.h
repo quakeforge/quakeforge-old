@@ -31,8 +31,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAX_MODELS		256
 #define MAX_SOUNDS		256
 #define MAX_SCOREBOARDNAME 32
-#define MAX_NUM_ARGVS	50
-#define NUM_SAFE_ARGVS	7
 #define MAX_STYLESTRING	64
 #define MAX_EDICTS		768
 #define MAX_LIGHTSTYLES	64

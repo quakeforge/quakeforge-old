@@ -155,14 +155,11 @@ char *COM_Parse (char *data);
 
 extern	int		com_argc;
 extern	char	**com_argv;
+extern	cvar_t	cmdline;
 
 int COM_CheckParm (char *parm);
-#ifdef QUAKEWORLD
 void COM_AddParm (char *parm);
 void COM_Init (void);
-#else
-void COM_Init (char *path);
-#endif
 void COM_InitArgv (int argc, char **argv);
 
 char *COM_SkipPath (char *pathname);

@@ -543,7 +543,7 @@ Host_Init ( quakeparms_t *parms)
 	Chase_Init ();
 	Host_InitVCR (parms);
 	
-	COM_Init (parms->basedir);
+	COM_Init ();
 	Host_InitLocal ();
 #endif
 

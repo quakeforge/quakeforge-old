@@ -21,40 +21,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-#include <ctype.h>
-#include <common.h>
-#include <crc.h>
-#include <sys.h>
-#include <cmd.h>
-#include <console.h>
-
-#ifdef SERVERONLY 
-#include <qwsvdef.h>
-#else
-#include <quakedef.h>
-#endif
-
 #include "config.h"
 
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
-
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
+#include <stdarg.h>
+#include <ctype.h>
+#include <common.h>
+#include <protocol.h>
+#include <zone.h>
+#include <sys.h>
+#include <crc.h>
+#include <console.h>
+#include <cmd.h>
 
-void COM_InitFilesystem (void);
-void COM_Path_f (void);
-
-
+char	com_token[1024];
 qboolean		standard_quake = true, rogue, hipnotic;
-
-
-extern cvar_t developer;
-//============================================================================
-
 
 // ClearLink is used for new headnodes
 void ClearLink (link_t *l)
@@ -232,8 +218,6 @@ void MSG_WriteDeltaUsercmd (sizebuf_t *buf, usercmd_t *from, usercmd_t *cmd)
 	    MSG_WriteByte (buf, cmd->impulse);
 	MSG_WriteByte (buf, cmd->msec);
 }
-
-
 //
 // reading functions
 //
@@ -432,8 +416,25 @@ void MSG_ReadDeltaUsercmd (usercmd_t *from, usercmd_t *move)
 	move->msec = MSG_ReadByte ();
 }
 
-
 //===========================================================================
+
+void SZ_Alloc (sizebuf_t *buf, int startsize)
+{
+	if (startsize < 256)
+		startsize = 256;
+	buf->data = Hunk_AllocName (startsize, "sizebuf");
+	buf->maxsize = startsize;
+	buf->cursize = 0;
+}
+
+
+void SZ_Free (sizebuf_t *buf)
+{
+//      Z_Free (buf->data);
+//      buf->data = NULL;
+//      buf->maxsize = 0;
+	buf->cursize = 0;
+}
 
 void SZ_Clear (sizebuf_t *buf)
 {
@@ -480,10 +481,7 @@ void SZ_Print (sizebuf_t *buf, char *data)
 	else
 		Q_memcpy ((byte *)SZ_GetSpace(buf, len-1)-1,data,len); // write over trailing 0
 }
-
-
 //============================================================================
-
 
 /*
 ============
@@ -492,7 +490,7 @@ COM_SkipPath
 */
 char *COM_SkipPath (char *pathname)
 {
-	char	*last;
+	char    *last;
 	
 	last = pathname;
 	while (*pathname)
@@ -524,7 +522,7 @@ COM_FileExtension
 char *COM_FileExtension (char *in)
 {
 	static char exten[8];
-	int		i;
+	int             i;
 
 	while (*in && *in != '.')
 		in++;
@@ -588,12 +586,6 @@ void COM_DefaultExtension (char *path, char *extension)
 
 	strcat (path, extension);
 }
-
-//============================================================================
-
-char		com_token[1024];
-
-
 /*
 ==============
 COM_Parse
@@ -603,8 +595,8 @@ Parse a token out of a string
 */
 char *COM_Parse (char *data)
 {
-	int		c;
-	int		len;
+	int             c;
+	int             len;
 	
 	len = 0;
 	com_token[0] = 0;
@@ -617,7 +609,7 @@ skipwhite:
 	while ( (c = *data) <= ' ')
 	{
 		if (c == 0)
-			return NULL;			// end of file;
+			return NULL;                    // end of file;
 		data++;
 	}
 	
@@ -647,6 +639,15 @@ skipwhite:
 		}
 	}
 
+// parse single characters
+	if (c=='{' || c=='}'|| c==')'|| c=='(' || c=='\'' || c==':')
+	{
+		com_token[len] = c;
+		len++;
+		com_token[len] = 0;
+		return data+1;
+	}
+
 // parse a regular word
 	do
 	{
@@ -654,10 +655,44 @@ skipwhite:
 		data++;
 		len++;
 		c = *data;
+	if (c=='{' || c=='}'|| c==')'|| c=='(' || c=='\'' || c==':')
+			break;
 	} while (c>32);
 	
 	com_token[len] = 0;
 	return data;
+}
+
+/*
+============
+va
+
+does a varargs printf into a temp buffer, so I don't need to have
+varargs versions of all text functions.
+FIXME: make this buffer size safe someday
+============
+*/
+char    *va(char *format, ...)
+{
+	va_list         argptr;
+	static char             string[1024];
+	
+	va_start (argptr, format);
+	vsnprintf (string, sizeof(string), format, argptr);
+	va_end (argptr);
+
+	return string;  
+}
+
+/// just for debugging
+int     memsearch (byte *start, int count, int search)
+{
+	int             i;
+	
+	for (i=0 ; i<count ; i++)
+		if (start[i] == search)
+			return i;
+	return -1;
 }
 
 /*
@@ -683,43 +718,11 @@ void COM_Init (void)
 	LittleFloat = FloatNoSwap;
 #endif
 
+	Cvar_RegisterVariable (&cmdline);
 	Cmd_AddCommand ("path", COM_Path_f);
 
 	COM_InitFilesystem ();
 	register_check ();
-}
-
-
-/*
-============
-va
-
-does a varargs printf into a temp buffer, so I don't need to have
-varargs versions of all text functions.
-============
-*/
-char	*va(char *format, ...)
-{
-	va_list		argptr;
-	static char		string[1024];
-	
-	va_start (argptr, format);
-	vsnprintf (string, sizeof(string), format, argptr);
-	va_end (argptr);
-
-	return string;	
-}
-
-
-/// just for debugging
-int	memsearch (byte *start, int count, int search)
-{
-	int		i;
-	
-	for (i=0 ; i<count ; i++)
-		if (start[i] == search)
-			return i;
-	return -1;
 }
 
 /*
