@@ -209,3 +209,6 @@
 
 /* Define if you want the QSG standards */
 #define QSG_STANDARD "1"
+
+/* Define what the base path should be */
+#define FS_BASEPATH "."
