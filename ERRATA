@@ -12,3 +12,5 @@ Joseph Carter <knghtbrd@debian.org>
                               server ":0.0" after 65 requests (64 known
 			      processed) with 0 events remaining."
 
+Tonik <tonik@quake.ru>
+ - qw-server hangs in win32
