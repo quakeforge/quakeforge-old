@@ -1,4 +1,5 @@
 /*
+sv_phys.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,7 +20,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sv_phys.c
 
 #include <ctype.h>
 #include <quakedef.h>
@@ -86,8 +86,9 @@ void SV_CheckAllEnts (void)
 		if (check->free)
 			continue;
 		if (check->v.movetype == MOVETYPE_PUSH
-		|| check->v.movetype == MOVETYPE_NONE
-		|| check->v.movetype == MOVETYPE_NOCLIP)
+				|| check->v.movetype == MOVETYPE_NONE
+				|| check->v.movetype == MOVETYPE_NOCLIP
+				|| check->v.movetype == MOVETYPE_FLY)
 			continue;
 
 		if (SV_TestEntityPosition (check))
@@ -742,8 +743,8 @@ void SV_Physics_Toss (edict_t *ent)
 	SV_CheckVelocity (ent);
 
 // add gravity
-	if (ent->v.movetype != MOVETYPE_FLY
-	&& ent->v.movetype != MOVETYPE_FLYMISSILE)
+	if (ent->v.movetype != MOVETYPE_FLYMISSILE
+			&& ent->v.movetype != MOVETYPE_FLY)
 		SV_AddGravity (ent, 1.0);
 
 // move angles
@@ -867,9 +868,13 @@ void SV_RunEntity (edict_t *ent)
 	case MOVETYPE_STEP:
 		SV_Physics_Step (ent);
 		break;
+	case MOVETYPE_FLY:
+		if (!SV_RunThink (ent))
+			return;
+		SV_FlyMove (ent, host_frametime, NULL);
+		break;
 	case MOVETYPE_TOSS:
 	case MOVETYPE_BOUNCE:
-	case MOVETYPE_FLY:
 	case MOVETYPE_FLYMISSILE:
 		SV_Physics_Toss (ent);
 		break;

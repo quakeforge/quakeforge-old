@@ -300,7 +300,7 @@ void GL_Init (void)
 
 //	Con_Printf ("%s %s\n", gl_renderer, gl_version);
 
-	glClearColor (1,0,0,0);
+	glClearColor (0,0,0,0);
 	glCullFace(GL_FRONT);
 	glEnable(GL_TEXTURE_2D);
 

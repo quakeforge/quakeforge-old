@@ -1,4 +1,5 @@
 /*
+sv_ccmds.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -626,62 +627,6 @@ void SV_Localinfo_f (void)
 
 
 /*
-===========
-SV_User_f
-
-Examine a users info strings
-===========
-*/
-void SV_User_f (void)
-{
-	if (Cmd_Argc() != 2)
-	{
-		Con_Printf ("Usage: info <userid>\n");
-		return;
-	}
-
-	if (!SV_SetPlayer ())
-		return;
-
-	Info_Print (host_client->userinfo);
-}
-
-/*
-================
-SV_Gamedir
-
-Sets the fake *gamedir to a different directory.
-================
-*/
-void SV_Gamedir (void)
-{
-	char			*dir;
-
-	if (Cmd_Argc() == 1)
-	{
-		Con_Printf ("Current *gamedir: %s\n", Info_ValueForKey (svs.info, "*gamedir"));
-		return;
-	}
-
-	if (Cmd_Argc() != 2)
-	{
-		Con_Printf ("Usage: sv_gamedir <newgamedir>\n");
-		return;
-	}
-
-	dir = Cmd_Argv(1);
-
-	if (strstr(dir, "..") || strstr(dir, "/")
-		|| strstr(dir, "\\") || strstr(dir, ":") )
-	{
-		Con_Printf ("*Gamedir should be a single filename, not a path\n");
-		return;
-	}
-
-	Info_SetValueForStarKey (svs.info, "*gamedir", dir, MAX_SERVERINFO_STRING);
-}
-
-/*
 ================
 SV_Floodport_f
 
@@ -739,7 +684,70 @@ void SV_Floodprotmsg_f (void)
 	}
 	snprintf(fp_msg, sizeof(fp_msg), "%s", Cmd_Argv(1));
 }
-  
+
+/*
+	SV_Fly_f
+*/
+void
+SV_Fly_f ( void )
+{
+	if (!sv_allow_cheats)
+	{
+		Con_Printf ("You must run the server with -cheats to enable this command.\n");
+		return;
+	}
+
+	if (!SV_SetPlayer())
+		return;
+
+	if (sv_player->v.movetype != MOVETYPE_FLY)
+	{
+		sv_player->v.movetype = MOVETYPE_FLY;
+		SV_ClientPrintf (host_client, PRINT_HIGH, "Fly mode ON\n");
+	}
+	else
+	{
+		sv_player->v.movetype = MOVETYPE_WALK;
+		SV_ClientPrintf (host_client, PRINT_HIGH, "Fly mode OFF\n");
+	}
+}
+
+
+/*
+================
+SV_Gamedir
+
+Sets the fake *gamedir to a different directory.
+================
+*/
+void SV_Gamedir (void)
+{
+	char			*dir;
+
+	if (Cmd_Argc() == 1)
+	{
+		Con_Printf ("Current *gamedir: %s\n", Info_ValueForKey (svs.info, "*gamedir"));
+		return;
+	}
+
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("Usage: sv_gamedir <newgamedir>\n");
+		return;
+	}
+
+	dir = Cmd_Argv(1);
+
+	if (strstr(dir, "..") || strstr(dir, "/")
+		|| strstr(dir, "\\") || strstr(dir, ":") )
+	{
+		Con_Printf ("*Gamedir should be a single filename, not a path\n");
+		return;
+	}
+
+	Info_SetValueForStarKey (svs.info, "*gamedir", dir, MAX_SERVERINFO_STRING);
+}
+
 /*
 ================
 SV_Gamedir_f
@@ -872,6 +880,27 @@ void SV_SnapAll_f (void)
 }
 
 /*
+===========
+SV_User_f
+
+Examine a users info strings
+===========
+*/
+void SV_User_f (void)
+{
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("Usage: info <userid>\n");
+		return;
+	}
+
+	if (!SV_SetPlayer ())
+		return;
+
+	Info_Print (host_client->userinfo);
+}
+
+/*
 ==================
 SV_InitOperatorCommands
 ==================
@@ -908,6 +937,7 @@ void SV_InitOperatorCommands (void)
 	Cmd_AddCommand ("sv_gamedir", SV_Gamedir);
 	Cmd_AddCommand ("floodprot", SV_Floodprot_f);
 	Cmd_AddCommand ("floodprotmsg", SV_Floodprotmsg_f);
+	Cmd_AddCommand ("fly", SV_Fly_f);
 
 	cl_warncmd.value = 1;
 }

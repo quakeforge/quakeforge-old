@@ -940,29 +940,48 @@ R_RenderScene ( void ) {
 	R_Clear
 */
 void
-R_Clear ( void ) {
-	if (gl_ztrick.value)	{
+R_Clear ( void )
+{
+	static int l;
+
+	if (gl_ztrick.value)
+	{
 		static int trickframe;
 
 		if (gl_clear.value)
+		{
+			if (l != (int)r_clearcolor.value)
+			{
+					l = (int)r_clearcolor.value;
+				        glClearColor (host_basepal[l*3]/255.0,
+						      host_basepal[l*3+1]/255.0,
+						      host_basepal[l*3+2]/255.0,
+						      1.0);
+			}
 			glClear (GL_COLOR_BUFFER_BIT);
+		}
 
 		trickframe++;
-		if (trickframe & 1) {
+		if (trickframe & 1)
+		{
 			gldepthmin = 0;
 			gldepthmax = 0.49999;
 			glDepthFunc (GL_LEQUAL);
-		} else {
+		}
+		else
+		{
 			gldepthmin = 1;
 			gldepthmax = 0.5;
 			glDepthFunc (GL_GEQUAL);
 		}
-	} else {
-		if (gl_clear.value) {
+	}
+	else
+	{
+		if (gl_clear.value)
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		} else {
+		else
 			glClear (GL_DEPTH_BUFFER_BIT);
-		}
+
 		gldepthmin = 0;
 		gldepthmax = 1;
 		glDepthFunc (GL_LEQUAL);
@@ -1017,10 +1036,10 @@ R_RenderView ( void ) {
 	if (!r_worldentity.model || !cl.worldmodel)
 		Sys_Error ("R_RenderView: NULL worldmodel");
 
-	if ((int)cl_sbar.value == 1)
-		TileBC (0, 0, vid.width, vid.height - sb_lines);
-	else
-		TileBC (0, 0, vid.width, vid.height);
+//	if ((int)cl_sbar.value == 1)
+//		TileBC (0, 0, vid.width, vid.height - sb_lines);
+//	else
+//		TileBC (0, 0, vid.width, vid.height);
 
 	if (r_speeds.value)
 	{
