@@ -96,18 +96,19 @@ cvar_t	*config_modem_init;
 cvar_t	*config_modem_hangup;
 
 extern int	vcrFile;
-qboolean recording = false;
+qboolean	recording = false;
 
 // these two macros are to make the code more readable
 #define sfunc	net_drivers[sock->driver]
 #define dfunc	net_drivers[net_driverlevel]
 
-int	net_driverlevel;
+int		net_driverlevel;
 
 
-double			net_time;
+double	net_time;
 
-double SetNetTime(void)
+double
+SetNetTime ( void )
 {
 	net_time = Sys_DoubleTime();
 	return net_time;
@@ -122,7 +123,8 @@ Called by drivers when a new communications endpoint is required
 The sequence and buffer fields will be filled in properly
 ===================
 */
-qsocket_t *NET_NewQSocket (void)
+qsocket_t *
+NET_NewQSocket ( void )
 {
 	qsocket_t	*sock;
 
@@ -161,7 +163,8 @@ qsocket_t *NET_NewQSocket (void)
 }
 
 
-void NET_FreeQSocket(qsocket_t *sock)
+void
+NET_FreeQSocket ( qsocket_t *sock )
 {
 	qsocket_t	*s;
 
@@ -187,7 +190,8 @@ void NET_FreeQSocket(qsocket_t *sock)
 }
 
 
-static void NET_Listen_f (void)
+static void
+NET_Listen_f ( void )
 {
 	if (Cmd_Argc () != 2)
 	{
@@ -206,7 +210,8 @@ static void NET_Listen_f (void)
 }
 
 
-static void MaxPlayers_f (void)
+static void
+MaxPlayers_f ( void )
 {
 	int 	n;
 
@@ -238,14 +243,23 @@ static void MaxPlayers_f (void)
 		Cbuf_AddText ("listen 1\n");
 
 	svs.maxclients = n;
-	if (n == 1)
+	if (n == 1) {
 		Cvar_Set (deathmatch, "0");
-	else
-		Cvar_Set (deathmatch, "1");
+		Cvar_Set (coop, "0");			// 1999-07-30 coop and deathmatch flag fix by Frog/Maddes
+	} else {
+// 1999-07-30 coop and deathmatch flag fix by Frog/Maddes  start
+		if (coop->value) {
+			Cvar_Set (deathmatch, "0");
+		} else {
+// 1999-07-30 coop and deathmatch flag fix by Frog/Maddes  end
+			Cvar_Set (deathmatch, "1");
+		}	// 1999-07-30 coop and deathmatch flag fix by Frog/Maddes
+	}
 }
 
 
-static void NET_Port_f (void)
+static void
+NET_Port_f ( void )
 {
 	int 	n;
 
@@ -274,7 +288,8 @@ static void NET_Port_f (void)
 }
 
 
-static void PrintSlistHeader(void)
+static void
+PrintSlistHeader ( void )
 {
 	Con_Printf("Server          Map             Users\n");
 	Con_Printf("--------------- --------------- -----\n");
@@ -282,7 +297,8 @@ static void PrintSlistHeader(void)
 }
 
 
-static void PrintSlist(void)
+static void
+PrintSlist ( void )
 {
 	int n;
 
@@ -297,7 +313,8 @@ static void PrintSlist(void)
 }
 
 
-static void PrintSlistTrailer(void)
+static void
+PrintSlistTrailer ( void )
 {
 	if (hostCacheCount)
 		Con_Printf("== end list ==\n\n");
@@ -306,7 +323,8 @@ static void PrintSlistTrailer(void)
 }
 
 
-void NET_Slist_f (void)
+void
+NET_Slist_f ( void )
 {
 	if (slistInProgress)
 		return;
@@ -327,7 +345,8 @@ void NET_Slist_f (void)
 }
 
 
-static void Slist_Send(void)
+static void
+Slist_Send ( void )
 {
 	for (net_driverlevel=0; net_driverlevel < net_numdrivers; net_driverlevel++)
 	{
@@ -343,7 +362,8 @@ static void Slist_Send(void)
 }
 
 
-static void Slist_Poll(void)
+static void
+Slist_Poll ( void )
 {
 	for (net_driverlevel=0; net_driverlevel < net_numdrivers; net_driverlevel++)
 	{
@@ -377,10 +397,11 @@ NET_Connect
 ===================
 */
 
-int hostCacheCount = 0;
-hostcache_t hostcache[HOSTCACHESIZE];
+int			hostCacheCount = 0;
+hostcache_t	hostcache[HOSTCACHESIZE];
 
-qsocket_t *NET_Connect (char *host)
+qsocket_t *
+NET_Connect ( char *host )
 {
 	qsocket_t		*ret;
 	int				n;
@@ -469,7 +490,8 @@ struct
 	long	session;
 } vcrConnect;
 
-qsocket_t *NET_CheckNewConnections (void)
+qsocket_t *
+NET_CheckNewConnections ( void )
 {
 	qsocket_t	*ret;
 
@@ -512,7 +534,8 @@ qsocket_t *NET_CheckNewConnections (void)
 NET_Close
 ===================
 */
-void NET_Close (qsocket_t *sock)
+void
+NET_Close ( qsocket_t *sock )
 {
 	if (!sock)
 		return;
@@ -552,7 +575,8 @@ struct
 
 extern void PrintStats(qsocket_t *s);
 
-int	NET_GetMessage (qsocket_t *sock)
+int
+NET_GetMessage ( qsocket_t *sock )
 {
 	int ret;
 
@@ -637,7 +661,8 @@ struct
 	int		r;
 } vcrSendMessage;
 
-int NET_SendMessage (qsocket_t *sock, sizebuf_t *data)
+int
+NET_SendMessage ( qsocket_t *sock, sizebuf_t *data )
 {
 	int		r;
 
@@ -668,7 +693,8 @@ int NET_SendMessage (qsocket_t *sock, sizebuf_t *data)
 }
 
 
-int NET_SendUnreliableMessage (qsocket_t *sock, sizebuf_t *data)
+int
+NET_SendUnreliableMessage ( qsocket_t *sock, sizebuf_t *data )
 {
 	int		r;
 
@@ -707,7 +733,8 @@ Returns true or false if the given qsocket can currently accept a
 message to be transmitted.
 ==================
 */
-qboolean NET_CanSendMessage (qsocket_t *sock)
+qboolean
+NET_CanSendMessage ( qsocket_t *sock )
 {
 	int		r;
 
@@ -734,7 +761,8 @@ qboolean NET_CanSendMessage (qsocket_t *sock)
 }
 
 
-int NET_SendToAll(sizebuf_t *data, int blocktime)
+int
+NET_SendToAll ( sizebuf_t *data, int blocktime )
 {
 	double		start;
 	int			i;
@@ -816,7 +844,8 @@ NET_Init
 ====================
 */
 
-void NET_Init (int port)
+void
+NET_Init ( int port )
 {
 	int			i;
 	int			controlSocket;
@@ -922,7 +951,8 @@ NET_Shutdown
 ====================
 */
 
-void		NET_Shutdown (void)
+void
+NET_Shutdown ( void )
 {
 	qsocket_t	*sock;
 
@@ -953,7 +983,8 @@ void		NET_Shutdown (void)
 
 static PollProcedure *pollProcedureList = NULL;
 
-void NET_Poll(void)
+void
+NET_Poll ( void )
 {
 	PollProcedure *pp;
 	qboolean	useModem;
@@ -984,7 +1015,8 @@ void NET_Poll(void)
 }
 
 
-void SchedulePollProcedure(PollProcedure *proc, double timeOffset)
+void
+SchedulePollProcedure ( PollProcedure *proc, double timeOffset )
 {
 	PollProcedure *pp, *prev;
 
@@ -1006,4 +1038,3 @@ void SchedulePollProcedure(PollProcedure *proc, double timeOffset)
 	proc->next = pp;
 	prev->next = proc;
 }
-

@@ -61,7 +61,8 @@ Cvar_Display
 same cvar display for all cvar commands
 ============
 */
-void Cvar_Display (cvar_t *var)
+void
+Cvar_Display ( cvar_t *var )
 {
 	Con_Printf ("%c%c%c ",
 			(var->flags & CVAR_ARCHIVE) ? 'A' : ' ',	// archived
@@ -126,7 +127,8 @@ void Cvar_Display (cvar_t *var)
 Cvar_FindVar
 ============
 */
-cvar_t *Cvar_FindVar (char *var_name)
+cvar_t *
+Cvar_FindVar ( char *var_name )
 {
 	cvar_t	*var;
 
@@ -137,7 +139,8 @@ cvar_t *Cvar_FindVar (char *var_name)
 	return NULL;
 }
 
-cvar_t *Cvar_FindAlias (char *alias_name)
+cvar_t *
+Cvar_FindAlias ( char *alias_name )
 {
 	cvar_alias_t	*alias;
 
@@ -147,7 +150,8 @@ cvar_t *Cvar_FindAlias (char *alias_name)
 	return NULL;
 }
 
-void Cvar_Alias_Get (char *name, cvar_t *cvar)
+void
+Cvar_Alias_Get ( char *name, cvar_t *cvar )
 {
 	cvar_alias_t	*alias;
 	cvar_t		*var;
@@ -162,13 +166,13 @@ void Cvar_Alias_Get (char *name, cvar_t *cvar)
 		Con_Printf ("CAlias_Get: tried to alias used cvar name %s\n",name);
 		return;
 	}
-	var = Cvar_FindAlias(name);	
+	var = Cvar_FindAlias(name);
 	if (!var)
 	{
 		alias = (cvar_alias_t *) malloc(sizeof(cvar_alias_t));
 		alias->next = calias_vars;
 		calias_vars = alias;
-		alias->name = strdup(name);	
+		alias->name = strdup(name);
 		alias->cvar = cvar;
 	}
 }
@@ -178,7 +182,8 @@ void Cvar_Alias_Get (char *name, cvar_t *cvar)
 Cvar_VariableValue
 ============
 */
-float	Cvar_VariableValue (char *var_name)
+float
+Cvar_VariableValue ( char *var_name )
 {
 	cvar_t	*var;
 
@@ -196,7 +201,8 @@ float	Cvar_VariableValue (char *var_name)
 Cvar_VariableString
 ============
 */
-char *Cvar_VariableString (char *var_name)
+char *
+Cvar_VariableString ( char *var_name )
 {
 	cvar_t *var;
 
@@ -214,7 +220,8 @@ char *Cvar_VariableString (char *var_name)
 Cvar_CompleteVariable
 ============
 */
-char *Cvar_CompleteVariable (char *partial)
+char *
+Cvar_CompleteVariable ( char *partial )
 {
 	cvar_t		*cvar;
 	cvar_alias_t	*alias;
@@ -229,7 +236,7 @@ char *Cvar_CompleteVariable (char *partial)
 	for (cvar=cvar_vars ; cvar ; cvar=cvar->next)
 		if (!strcmp (partial,cvar->name))
 			return cvar->name;
-	
+
 	// check aliases too :)
 	for (alias=calias_vars ; alias ; alias=alias->next)
 		if (!strcmp (partial, alias->name))
@@ -259,7 +266,8 @@ Cvar_Set
 ============
 */
 #if defined(QUAKEWORLD)
-void Cvar_Set (cvar_t *var, char *value)
+void
+Cvar_Set ( cvar_t *var, char *value )
 {
 	if (!var)
 		return;
@@ -291,7 +299,8 @@ void Cvar_Set (cvar_t *var, char *value)
 	var->value = Q_atof (var->string);
 }
 #elif defined(UQUAKE)
-void Cvar_Set (cvar_t *var, char *value)
+void
+Cvar_Set ( cvar_t *var, char *value )
 {
 	qboolean changed;
 // 2000-06-22 Range check for cvars by Maddes  start
@@ -388,6 +397,18 @@ void Cvar_Set (cvar_t *var, char *value)
 		if (sv.active)
 			SV_BroadcastPrintf ("\"%s\" changed to \"%s\"\n", var->name, var->string);
 	}
+
+// 1999-09-06 deathmatch/coop not at the same time fix by Maddes  start
+	if ( (var == deathmatch) && (var->value != 0) )
+	{
+		Cvar_Set (coop, "0");
+	}
+
+	if ( (var == coop) && (var->value != 0) )
+	{
+		Cvar_Set (deathmatch, "0");
+	}
+// 1999-09-06 deathmatch/coop not at the same time fix by Maddes  end
 }
 #endif
 
@@ -399,7 +420,8 @@ Cvar_Command
 Handles variable inspection and changing from the console
 ============
 */
-qboolean	Cvar_Command (void)
+qboolean
+Cvar_Command ( void )
 {
 	cvar_t			*v;
 
@@ -430,7 +452,8 @@ Writes lines containing "set variable value" for all variables
 with the archive flag set to true.
 ============
 */
-void Cvar_WriteVariables (QFile *f)
+void
+Cvar_WriteVariables ( QFile *f )
 {
 	cvar_t	*var;
 
@@ -439,7 +462,8 @@ void Cvar_WriteVariables (QFile *f)
 			Qprintf (f, "%s \"%s\"\n", var->name, var->string);
 }
 
-void Cvar_Set_f(void)
+void
+Cvar_Set_f ( void )
 {
 	cvar_t *var;
 	char *value;
@@ -466,7 +490,8 @@ void Cvar_Set_f(void)
 	}
 }
 
-void Cvar_Toggle_f (void)
+void
+Cvar_Toggle_f ( void )
 {
 	cvar_t *var;
 
@@ -488,7 +513,8 @@ void Cvar_Toggle_f (void)
 	Cvar_Set (var, var->value ? "0" : "1");
 }
 
-void Cvar_Help_f (void)
+void
+Cvar_Help_f ( void )
 {
 	char	*var_name;
 	cvar_t	*var;
@@ -511,7 +537,8 @@ void Cvar_Help_f (void)
 	Con_Printf ("variable not found\n");
 }
 
-void Cvar_CvarList_f (void)
+void
+Cvar_CvarList_f ( void )
 {
 	cvar_t	*var;
 	int i;
@@ -556,7 +583,8 @@ void Cvar_CvarList_f (void)
 // 2000-06-22 Partial selection for CvarList command by Maddes  end
 }
 
-void Cvar_Init()
+void
+Cvar_Init ( )
 {
 	developer = Cvar_Get ("developer","0",0,"None");
 
@@ -566,7 +594,8 @@ void Cvar_Init()
 	Cmd_AddCommand ("cvarlist",Cvar_CvarList_f);
 }
 
-void Cvar_Shutdown (void)
+void
+Cvar_Shutdown ( void )
 {
 	cvar_t	*var,*next;
 	cvar_alias_t	*alias,*nextalias;
@@ -582,7 +611,7 @@ void Cvar_Shutdown (void)
 		free(var);
 		var = next;
 	}
-	// Free aliases 
+	// Free aliases
 	alias = calias_vars;
 	while(alias)
 	{
@@ -594,7 +623,8 @@ void Cvar_Shutdown (void)
 }
 
 
-cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
+cvar_t *
+Cvar_Get ( char *name, char *string, int cvarflags, char *description )
 {
 
 	cvar_t		*v;
@@ -629,7 +659,7 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 	v->flags ^= CVAR_HEAP;
 	v->flags |= cvarflags;
 	if (!Q_strcmp (v->description,"User created cvar"))
-	{	
+	{
 		// Set with the real description
 		free(v->description);
 		v->description = strdup (description);
