@@ -1,12 +1,11 @@
 /*
 	gl_rmain.c
 
+	(description)
+
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
-
-	Author:
-	Date: 07 Jan 2000
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -22,9 +21,11 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to:
 
-	Free Software Foundation, Inc.
-	59 Temple Place - Suite 330
-	Boston, MA  02111-1307, USA.
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
 #include <qtypes.h>
