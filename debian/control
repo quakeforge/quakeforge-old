@@ -1,0 +1,84 @@
+Source: quakeforge
+Section: contrib/games
+Priority: optional
+Maintainer: Joseph Carter <knghtbrd@debian.org>
+Standards-Version: 3.0.1
+
+Package: quake-svga
+Architecture: any
+Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - SVGALib version
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible
+ with the original game released by ID Software wile allowing optional
+ extensions which enhance the game.
+ .
+ This package contains the SVGALib versions of quake and qw-client.
+
+Package: quake-x11
+Architecture: any
+Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - X11 version
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
+ extensions which enhance the game.
+ .
+ This package contains the X11 versions of quake and qw-client.
+
+Package: quake-ggi
+Architecture: any
+Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - GGI version
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
+ extensions which enhance the game.
+ .
+ This package contains the GGI versions of quake and qw-client.
+
+Package: quake-gl
+Architecture: any
+Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - GL version
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
+ extensions which enhance the game.
+ .
+ This package contains the GL versions of quake and qw-client.
+
+Package: quake-3dfx
+Architecture: any
+Depends: ${shlibs:Depends}, mesag3-glide (>= 3.1-1), libglide2, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - 3dfx GL version
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
+ extensions which enhance the game.
+ .
+ This package contains the 3dfx GL versions of quake and qw-client.
+
+Package: quake-sdl
+Architecture: any
+Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - SDL version
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
+ extensions which enhance the game.
+ .
+ This package contains the SDL versions of quake and qw-client.
+
+Package: quake-server
+Architecture: any
+Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Provides: quake
+Description: First person shooting game - dedicated server
+ QuakeForge is a source port of Quake, the successor to ID Software's very
+ popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
+ extensions which enhance the game.
+ .
+ This package contains the QuakeWorld server.
+
