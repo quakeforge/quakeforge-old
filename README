@@ -75,6 +75,8 @@ III. Running and Compiling Quake
 
 Read the INSTALL file for more information on compiling.
 
+Autoconf 2.13 or greater required to use the bootstrap script.
+
 After you have compiled successfully, you must download the shareware
 version of Quake 1 to play. Insert the proper binaries in the same
 directory as the unpacked shareware files, and run.
