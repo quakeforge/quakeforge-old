@@ -1167,7 +1167,7 @@ void M_AdjustSliders (int dir)
 		break;
 
 	default:
-		Vid_ExtraOptionCmd(options_cursor);
+		VID_ExtraOptionCmd(options_cursor);
 
 
 	}
