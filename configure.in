@@ -14,6 +14,7 @@ AC_PROG_MAKE_SET
 
 dnl Checks for header files.
 AC_CHECK_HEADERS(unistd.h fcntl.h windows.h sys/ioctl.h sys/mman.h \
+	sys/io.h asm/io.h \
 	sys/stat.h sys/time.h sys/timeb.h \
 	sys/socket.h netinet/in.h netdb.h arpa/inet.h sys/filio.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
