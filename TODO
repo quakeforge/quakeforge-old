@@ -3,6 +3,12 @@ QuakeForge project.  If you'd like to add something to this list or point
 out that something has been done we forgot to remove, please send an email
 to quake-devel@lists.sourceforge.net with details.
 
+ * On unix systems /etc/quakerc should be read as a system-wide config
+   file which should be able to specify console commands and other things
+   like where to find the id1, qw, and other -game specified dirs
+ * On unix systems ~/.quake should overlay a shared data directory.  Files
+   in a user's ~/.quake directory should take precedence over files in the
+   shared data dir and all files written should be placed into ~/.quake
  * sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix some
    possible buffer overruns
  * configure.in: clean up the intel -mcpu stuff
