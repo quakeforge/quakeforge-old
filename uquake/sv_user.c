@@ -52,7 +52,7 @@ float	*angles;
 float	*origin;
 float	*velocity;
 
-int	onground;
+extern int	onground;
 
 usercmd_t	cmd;
 

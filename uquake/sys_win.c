@@ -50,7 +50,7 @@ static double		pfreq;
 static double		curtime = 0.0;
 static double		lastcurtime = 0.0;
 static int			lowshift;
-qboolean			isDedicated;
+extern qboolean	isDedicated;
 static qboolean		sc_return_on_enter = false;
 HANDLE				hinput, houtput;
 

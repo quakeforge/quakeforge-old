@@ -90,7 +90,10 @@ LPDIRECTSOUNDBUFFER pDSBuf, pDSPBuf;
 
 HINSTANCE hInstDS;
 
-qboolean SNDDMA_InitDirect (void);
+#ifdef HAVE_DSOUND
+sndinitstat SNDDMA_InitDirect (void);
+#endif
+
 qboolean SNDDMA_InitWav (void);
 
 

@@ -164,7 +164,11 @@ Qdopen(int fd, const char *mode)
 		}
 	}
 #ifdef WIN32
+#ifdef __BORLANDC__
+	setmode(_fileno(file->file),O_BINARY);
+#else
 	_setmode(_fileno(file->file),_O_BINARY);
+#endif
 #endif
 	return file;
 }

@@ -69,7 +69,11 @@ char *Sys_ConsoleInput (void)
 	int		c;
 
 	// read a line out
+#ifdef __BORLANDC__
+	while (kbhit())
+#else
 	while (_kbhit())
+#endif   
 	{
 		c = _getch();
 		putch (c);
