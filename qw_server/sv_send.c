@@ -558,6 +558,11 @@ void SV_UpdateClientStats (client_t *client)
 
 	// Extensions to the QW 2.40 protocol for MegaTF
 	stats[STAT_VIEWHEIGHT] = (int)ent->v.view_ofs[2];
+
+	if (ent->v.movetype == MOVETYPE_FLY
+			&& !Q_atoi (Info_ValueForKey (svs.info, "sv_allowflymode")))
+		ent->v.movetype = MOVETYPE_WALK;
+
 	stats[STAT_FLYMODE] = (ent->v.movetype == MOVETYPE_FLY);
 
 	for (i=0 ; i<MAX_CL_STATS ; i++)
