@@ -570,7 +570,7 @@ void CL_Disconnect (void)
 		cls.state = ca_disconnected;
 
 		cls.demoplayback = cls.demorecording = cls.timedemo = false;
-#ifdef UQUQKE
+#ifdef UQUAKE
 		if (sv.active)
 			SV_Shutdown(false);
 #endif
@@ -585,7 +585,7 @@ void CL_Disconnect (void)
 
 	CL_StopUpload();
 #endif
-#ifdef UQUQKE
+#ifdef UQUAKE
 	cls.demoplayback = cls.timedemo = false;
 	cls.signon = 0;
 #endif
@@ -594,7 +594,7 @@ void CL_Disconnect (void)
 void CL_Disconnect_f (void)
 {
 	CL_Disconnect ();
-#ifdef UQUQKE
+#ifdef UQUAKE
 	if (sv.active)
 		SV_Shutdown (false);
 #endif
