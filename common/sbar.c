@@ -1089,8 +1089,10 @@ void Sbar_DrawFace (void)
 
 	if (cl.stats[STAT_HEALTH] >= 100)
 		f = 4;
-	else
+	else {
 		f = cl.stats[STAT_HEALTH] / 20;
+		if (f < 0) f = 0;
+	}
 	
 	if (cl.time <= cl.faceanimtime)
 	{
