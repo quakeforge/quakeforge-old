@@ -1,5 +1,7 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -88,7 +90,11 @@ void R_DrawCulledPolys (void)
 	surf_t			*s;
 	msurface_t		*pface;
 
+#ifdef QUAKEWORLD
+	currententity = &r_worldentity;
+#else
 	currententity = &cl_entities[0];
+#endif
 
 	if (r_worldpolysbacktofront)
 	{
@@ -724,20 +730,16 @@ void R_ScanEdges (void)
 
 	// flush the span list if we can't be sure we have enough spans left for
 	// the next scan
-		if (span_p >= max_span_p)
+		if (span_p > max_span_p)
 		{
 			VID_UnlockBuffer ();
 			S_ExtraUpdate ();	// don't let sound get messed up if going slow
 			VID_LockBuffer ();
 		
 			if (r_drawculledpolys)
-			{
 				R_DrawCulledPolys ();
-			}
 			else
-			{
 				D_DrawSurfaces ();
-			}
 
 		// clear the surface span pointers
 			for (s = &surfaces[1] ; s<surface_p ; s++)
