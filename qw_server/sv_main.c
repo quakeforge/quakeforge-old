@@ -118,6 +118,7 @@ cvar_t	*watervis;
 
 //cvar_t	hostname = {"hostname","unnamed", CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*hostname;
+extern cvar_t	*cl_warncmd;
 
 QFile	*sv_logfile;
 QFile	*sv_fraglogfile;
@@ -367,6 +368,13 @@ void SV_FullClientUpdateToClient (client_t *client, client_t *cl)
 		SV_FullClientUpdate (client, &cl->netchan.message);
 }
 
+void SV_InitCvars ()
+{
+	developer = Cvar_Get ("developer","0",0,"None");
+	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
+
+	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");
+}
 
 /*
 ==============================================================================
@@ -1767,6 +1775,7 @@ void SV_Init (quakeparms_t *parms)
 		SV_Error ("Only %4.1f megs of memory reported, can't execute game", parms->memsize / (float)0x100000);
 
 	Memory_Init (parms->membase, parms->memsize);
+	SV_InitCvars ();
 	Cbuf_Init ();
 	Cmd_Init ();	
 

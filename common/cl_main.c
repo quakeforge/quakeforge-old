@@ -143,6 +143,8 @@ cvar_t	*cl_predict_players;
 cvar_t	*cl_predict_players2;
 cvar_t	*cl_solid_players;
 
+extern cvar_t	*sys_nostdout;
+
 //cvar_t  localid = {"localid", ""};
 cvar_t	*localid;
 
@@ -1778,6 +1780,7 @@ void CL_InitCvars()
 	show_fps = Cvar_Get ("show_fps","0",0,"None");
 	host_speeds = Cvar_Get ("host_speeds","0",0,"None");
 	developer = Cvar_Get ("developer","0",0,"None");
+	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 
 	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");
 	cl_name = Cvar_Get ("_cl_name","player",CVAR_ARCHIVE,"None");
