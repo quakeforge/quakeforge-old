@@ -579,22 +579,21 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 {
 	vec3_t		vec;
 	float		len;
-	int		j;
+	int			j;
 	particle_t	*p;
-	int		dec;
+	int			dec;
+	static int	tracercount;
 
 	VectorSubtract (end, start, vec);
 	len = VectorNormalize (vec);
-	if (type < 128)
+	if (type < 128) {
 		dec = 3;
-	else
-	{
+	} else {
 		dec = 1;
 		type -= 128;
 	}
 
-	while (len > 0)
-	{
+	while (len > 0) {
 		len -= dec;
 
 		if (!free_particles)
@@ -608,41 +607,35 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 		p->die = cl.time + 2;
 
 		switch (type) {
-		case 0:
-			// rocket trail
-			p->ramp = (rand()&3);
-			p->color = ramp3[(int)p->ramp];
-			p->type = pt_fire;
-			for (j=0 ; j<3 ; j++)
-				p->org[j] = start[j] + ((rand()%6)-3);
-			break;
-		case 1:
-			// smoke smoke
-			p->ramp = (rand()&3) + 2;
-			p->color = ramp3[(int)p->ramp];
-			p->type = pt_fire;
-			for (j=0 ; j<3 ; j++)
-				p->org[j] = start[j] + ((rand()%6)-3);
-			break;
-		case 2:
-			// blood
+			case 0:		// rocket trail
+				p->ramp = (rand()&3);
+				p->color = ramp3[(int)p->ramp];
+				p->type = pt_fire;
+				for (j=0 ; j<3 ; j++)
+					p->org[j] = start[j] + ((rand()%6)-3);
+				break;
+			case 1:		// smoke smoke
+				p->ramp = (rand()&3) + 2;
+				p->color = ramp3[(int)p->ramp];
+				p->type = pt_fire;
+				for (j=0 ; j<3 ; j++)
+					p->org[j] = start[j] + ((rand()%6)-3);
+				break;
+			case 2:		// blood
 #ifdef QUAKEWORLD
-			p->type = pt_slowgrav;
+				p->type = pt_slowgrav;
 #else
-			p->type = pt_grav;
+				p->type = pt_grav;
 #endif
-			p->color = 67 + (rand()&3);
-			for (j=0 ; j<3 ; j++)
-				p->org[j] = start[j] + ((rand()%6)-3);
-			break;
-		case 3:
-		case 5:
-			{
-				// tracer
-				static int tracercount;
-
+				p->color = 67 + (rand()&3);
+				for (j=0 ; j<3 ; j++)
+					p->org[j] = start[j] + ((rand()%6)-3);
+				break;
+			case 3:
+			case 5:		// tracer
 				p->die = cl.time + 0.5;
 				p->type = pt_static;
+
 				if (type == 3)
 					p->color = 52 + ((tracercount&4)<<1);
 				else
@@ -658,22 +651,19 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 					p->vel[0] = 30*-vec[1];
 					p->vel[1] = 30*vec[0];
 				}
-			}
-			break;
-		case 4:
-			// slight blood
+				break;
+			case 4:		// slight blood
 #ifdef QUAKEWORLD
-			p->type = pt_slowgrav;
+				p->type = pt_slowgrav;
 #else
-			p->type = pt_grav;
+				p->type = pt_grav;
 #endif
-			p->color = 67 + (rand()&3);
-			for (j=0 ; j<3 ; j++)
-				p->org[j] = start[j] + ((rand()%6)-3);
-			len -= 3;
-			break;
-			case 6:
-				// voor trail
+				p->color = 67 + (rand()&3);
+				for (j=0 ; j<3 ; j++)
+					p->org[j] = start[j] + ((rand()%6)-3);
+				len -= 3;
+				break;
+			case 6: 	// voor trail
 				p->color = 9*16 + 8 + (rand()&3);
 				p->type = pt_static;
 				p->die = cl.time + 0.3;

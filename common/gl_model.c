@@ -1187,7 +1187,7 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 
 	i = LittleLong (header->version);
 	if (!(i == BSPVERSION || i == CBSPVERSION))
-		Sys_Error ("Mod_LoadBrushModel: %s has unkonwn version %i",
+		Sys_Error ("Mod_LoadBrushModel: %s has unknown version %i",
 				mod->name, i);
 
 	bspver = i;		// save BSP version for later use
@@ -1556,6 +1556,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	daliasframetype_t	*pframetype;
 	daliasskintype_t	*pskintype;
 	int					start, end, total;
+
 #ifdef QUAKEWORLD
 	if (!strcmp(loadmodel->name, "progs/player.mdl") ||
 		!strcmp(loadmodel->name, "progs/eyes.mdl")) {

@@ -66,11 +66,11 @@
 #include <strings.h>
 #endif
 
-cvar_t	*_windowed_mouse;
-cvar_t	*m_filter;
+cvar_t		*_windowed_mouse;
+cvar_t		*m_filter;
 #ifdef HAS_DGA
-qboolean		dgamouse = 0;
-cvar_t	*vid_dga_mouseaccel;
+qboolean	dgamouse = 0;
+cvar_t		*vid_dga_mouseaccel;
 #endif
 
 static qboolean	mouse_avail;

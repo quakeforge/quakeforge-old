@@ -79,9 +79,8 @@ static Visual		*x_vis;
 static XVisualInfo	*x_visinfo;
 static Atom			aWMDelete = 0;
 
-
-int XShmQueryExtension(Display *);
-int XShmGetEventBase(Display *);
+int 	XShmQueryExtension(Display *);
+int 	XShmGetEventBase(Display *);
 
 qboolean				doShm;
 static XShmSegmentInfo	x_shminfo[2];
@@ -110,7 +109,7 @@ static long X11_highhunkmark;
 
 
 static void
-shiftmask_init()
+shiftmask_init( void )
 {
 	unsigned int x;
 
@@ -779,7 +778,7 @@ VID_Update(vrect_t *rects)
 static int dither;
 
 void
-VID_DitherOn(void)
+VID_DitherOn( void )
 {
 	if (dither == 0) {
 		vid.recalc_refdef = 1;
@@ -789,7 +788,7 @@ VID_DitherOn(void)
 
 
 void
-VID_DitherOff(void)
+VID_DitherOff( void )
 {
 	if (dither) {
 		vid.recalc_refdef = 1;

@@ -55,11 +55,13 @@
 #include <vid.h>
 #include <sys.h>
 
-static void (*event_handlers[LASTEvent])(XEvent *);
-qboolean oktodraw = false;
-int x_shmeventtype;
+static void (*event_handlers[LASTEvent])	(XEvent *);
+qboolean	oktodraw = false;
+int 		x_shmeventtype;
+
+static int	x_disp_ref_count = 0;
+
 Display		*x_disp = NULL;
-static int x_disp_ref_count = 0;
 
 qboolean
 x11_add_event(int event, void (*event_handler)(XEvent *))
@@ -88,12 +90,12 @@ x11_del_event(int event, void (*event_handler)(XEvent *))
 }
 
 void
-x11_process_event(void)
+x11_process_event( void )
 {
-	XEvent x_event;
+	XEvent	x_event;
 
 	XNextEvent(x_disp, &x_event);
-	if (x_event.type >= LASTEvent) {
+	if ( x_event.type >= LASTEvent ) {
 		// FIXME: KLUGE!!!!!!
 		if (x_event.type == x_shmeventtype)
 			oktodraw = 1;
@@ -107,7 +109,7 @@ void
 x11_process_events(void)
 {
 	/* Get events from X server. */
-	while (XPending(x_disp)) {
+	while ( XPending( x_disp )) {
 		x11_process_event();
 	}
 }
@@ -116,7 +118,8 @@ x11_process_events(void)
 // Tragic death handler
 // ========================================================================
 
-static void TragicDeath(int signal_num)
+static void
+TragicDeath(int signal_num)
 {
 	//XCloseDisplay(x_disp);
 	VID_Shutdown();
@@ -124,34 +127,35 @@ static void TragicDeath(int signal_num)
 }
 
 void
-x11_open_display(void)
+x11_open_display( void )
 {
 	struct sigaction sa;
 
-	if (!x_disp) {
-		x_disp = XOpenDisplay(0);
-		if (!x_disp) {
-			Sys_Error("VID: Could not open display [%s]\n", XDisplayName(0));
+	if ( !x_disp ) {
+		x_disp = XOpenDisplay( NULL );
+		if ( !x_disp ) {
+			Sys_Error("x11_open_display: Could not open display [%s]\n", XDisplayName( NULL ));
 		}
 
 		// catch signals
 		sigaction(SIGINT, 0, &sa);
+		sigaction(SIGTERM, 0, &sa);
 		sa.sa_handler = TragicDeath;
 		sigaction(SIGINT, &sa, 0);
 		sigaction(SIGTERM, &sa, 0);
 
 		// for debugging only
-		XSynchronize(x_disp, True);
+		XSynchronize( x_disp, True );
 	} else {
 		x_disp_ref_count++;
 	}
 }
 
 void
-x11_close_display(void)
+x11_close_display( void )
 {
 	if (!--x_disp_ref_count) {
-		XCloseDisplay(x_disp);
+		XCloseDisplay( x_disp );
 		x_disp = NULL;
 	}
 }

@@ -262,15 +262,12 @@ void R_Init (void)
 }
 
 /*
-===============
-R_TranslatePlayerSkin
+	R_TranslatePlayerSkin
 
-Translates a skin texture by the per-player color lookup
-===============
+	Translate a skin texture by the per-player color lookup
 */
 void R_TranslatePlayerSkin (int playernum)
 {
-#ifdef QUAKEWORLD
 	int		top, bottom;
 	byte	translate[256];
 	unsigned	translate32[256];
@@ -282,18 +279,26 @@ void R_TranslatePlayerSkin (int playernum)
 	int			tinwidth, tinheight;
 	byte		*inrow;
 	unsigned	frac, fracstep;
-	player_info_t *player;
-	extern	byte		player_8bit_texels[320*200];
+#ifdef QUAKEWORLD	
+	player_info_t	*player;
+	extern byte 	player_8bit_texels[320*200];
 	char s[512];
+#else
+	aliashdr_t	*paliashdr;
+	model_t 	*model;
+	int 		s;
+#endif
 
 	GL_DisableMultitexture();
 
+#ifdef QUAKEWORLD
 	player = &cl.players[playernum];
 	if (!player->name[0])
 		return;
 
 	strcpy(s, Info_ValueForKey(player->userinfo, "skin"));
 	COM_StripExtension(s, s);
+
 	if (player->skin && !stricmp(s, player->skin->name))
 		player->skin = NULL;
 
@@ -302,18 +307,21 @@ void R_TranslatePlayerSkin (int playernum)
 		player->_topcolor = player->topcolor;
 		player->_bottomcolor = player->bottomcolor;
 
-		top = player->topcolor;
-		bottom = player->bottomcolor;
-		top = (top < 0) ? 0 : ((top > 13) ? 13 : top);
-		bottom = (bottom < 0) ? 0 : ((bottom > 13) ? 13 : bottom);
+		top = bound (0, player->topcolor, 13);
+		bottom = bound (0, player->bottomcolor, 13);
 		top *= 16;
 		bottom *= 16;
+
+#elif UQUAKE
+	{
+		top = cl.scores[playernum].colors & 0xf0;
+		bottom = (cl.scores[playernum].colors &15)<<4;
+#endif
 
 		for (i=0 ; i<256 ; i++)
 			translate[i] = i;
 
-		for (i=0 ; i<16 ; i++)
-		{
+		for (i=0 ; i<16 ; i++) {
 			if (top < 128)	// the artists made some backwards ranges.  sigh.
 				translate[TOP_RANGE+i] = top+i;
 			else
@@ -328,63 +336,69 @@ void R_TranslatePlayerSkin (int playernum)
 		//
 		// locate the original skin pixels
 		//
+
+#ifdef QUAKEWORLD
 		// real model width
 		tinwidth = 296;
 		tinheight = 194;
 
 		if (!player->skin)
 			Skin_Find(player);
-		if ((original = Skin_Cache(player->skin)) != NULL) {
-			//skin data width
+		
+		original = Skin_Cache(player->skin);
+		if (original) { // skin data width
 			inwidth = 320;
 			inheight = 200;
 		} else {
 			original = player_8bit_texels;
-			inwidth = 296;
-			inheight = 194;
+			inwidth = tinwidth;
+			inheight = tinheight;
 		}
+#else	// UQUAKE
+		currententity = &cl_entities[1+playernum];
+		model = currententity->model;
 
+		if ( !model )
+			return;		// player doesn't have a model yet
+		if ( model->type != mod_alias )
+			return; 	// only translate skins on alias models
+
+		paliashdr = (aliashdr_t *)Mod_Extradata (model);
+		s = paliashdr->skinwidth * paliashdr->skinheight;
+		if (currententity->skinnum < 0 || currententity->skinnum >= paliashdr->numskins) {
+			Con_Printf("(%d): Invalid player skin #%d\n", playernum, currententity->skinnum);
+			original = (byte *)paliashdr + paliashdr->texels[0];
+		} else
+			original = (byte *)paliashdr + paliashdr->texels[currententity->skinnum];
+		if (s & 3)
+			Sys_Error ("R_TranslateSkin: s&3");
+
+		tinwidth = inwidth = paliashdr->skinwidth;
+		tinheight = inheight = paliashdr->skinheight;
+#endif
 
 		// because this happens during gameplay, do it fast
 		// instead of sending it through gl_upload 8
 		GL_Bind(playertextures + playernum);
 
-#if 0
-		s = 320*200;
-		byte	translated[320*200];
+		scaled_width = min (gl_max_size->value, 512);
+		scaled_height = min (gl_max_size->value, 256);
 
-		for (i=0 ; i<s ; i+=4)
-		{
-			translated[i] = translate[original[i]];
-			translated[i+1] = translate[original[i+1]];
-			translated[i+2] = translate[original[i+2]];
-			translated[i+3] = translate[original[i+3]];
-		}
-
-
-		// don't mipmap these, because it takes too long
-		GL_Upload8 (translated, paliashdr->skinwidth, paliashdr->skinheight,
-			false, false, true);
-#endif
-
-		scaled_width = gl_max_size->value < 512 ? gl_max_size->value : 512;
-		scaled_height = gl_max_size->value < 256 ? gl_max_size->value : 256;
 		// allow users to crunch sizes down even more if they want
 		scaled_width >>= (int)gl_playermip->value;
 		scaled_height >>= (int)gl_playermip->value;
 
-		if (VID_Is8bit()) { // 8bit texture upload
+		if ( VID_Is8bit() ) { // 8bit texture upload
 			byte *out2;
 
 			out2 = (byte *)pixels;
 			memset(pixels, 0, sizeof(pixels));
 			fracstep = tinwidth*0x10000/scaled_width;
-			for (i=0 ; i<scaled_height ; i++, out2 += scaled_width)
-			{
+			
+			for (i=0 ; i < scaled_height ; i++, out2 += scaled_width) {
 				inrow = original + inwidth*(i*tinheight/scaled_height);
 				frac = fracstep >> 1;
-				for (j=0 ; j<scaled_width ; j+=4)
-				{
+				for (j=0 ; j < scaled_width ; j += 4) {
 					out2[j] = translate[inrow[frac>>16]];
 					frac += fracstep;
 					out2[j+1] = translate[inrow[frac>>16]];
@@ -397,181 +411,38 @@ void R_TranslatePlayerSkin (int playernum)
 			}
 
 			GL_Upload8_EXT ((byte *)pixels, scaled_width, scaled_height, false, false);
-			return;
-		}
-
-		for (i=0 ; i<256 ; i++)
-			translate32[i] = d_8to24table[translate[i]];
-
-		out = pixels;
-		memset(pixels, 0, sizeof(pixels));
-		fracstep = tinwidth*0x10000/scaled_width;
-		for (i=0 ; i<scaled_height ; i++, out += scaled_width)
-		{
-			inrow = original + inwidth*(i*tinheight/scaled_height);
-			frac = fracstep >> 1;
-			for (j=0 ; j<scaled_width ; j+=4)
-			{
-				out[j] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-				out[j+1] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-				out[j+2] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-				out[j+3] = translate32[inrow[frac>>16]];
-				frac += fracstep;
+		} else {
+			for (i=0 ; i < 256 ; i++)
+				translate32[i] = d_8to24table[translate[i]];
+			out = pixels;
+			memset(pixels, 0, sizeof(pixels));
+			
+			fracstep = tinwidth*0x10000/scaled_width;
+			for ( i=0 ; i < scaled_height ; i++, out += scaled_width ) {
+				inrow = original + inwidth*(i*tinheight/scaled_height);
+				frac = fracstep >> 1;
+				for ( j=0 ; j < scaled_width ; j += 4) {
+					out[j] = translate32[inrow[frac>>16]];
+					frac += fracstep;
+					out[j+1] = translate32[inrow[frac>>16]];
+					frac += fracstep;
+					out[j+2] = translate32[inrow[frac>>16]];
+					frac += fracstep;
+					out[j+3] = translate32[inrow[frac>>16]];
+					frac += fracstep;
+				}
 			}
+
+			glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format,
+							scaled_width, scaled_height, 0, GL_RGBA,
+							GL_UNSIGNED_BYTE, pixels);
+
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
-
-		glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format,
-			scaled_width, scaled_height, 0, GL_RGBA,
-			GL_UNSIGNED_BYTE, pixels);
-
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
-#else /* not QUAKEWORLD */
-	int		top, bottom;
-	byte	translate[256];
-	unsigned	translate32[256];
-	int		i, j, s;
-	model_t	*model;
-	aliashdr_t *paliashdr;
-	byte	*original;
-	unsigned	pixels[512*256], *out;
-	unsigned	scaled_width, scaled_height;
-	int			inwidth, inheight;
-	byte		*inrow;
-	unsigned	frac, fracstep;
-
-	GL_DisableMultitexture();
-
-	top = cl.scores[playernum].colors & 0xf0;
-	bottom = (cl.scores[playernum].colors &15)<<4;
-
-	for (i=0 ; i<256 ; i++)
-		translate[i] = i;
-
-	for (i=0 ; i<16 ; i++)
-	{
-		if (top < 128)	// the artists made some backwards ranges.  sigh.
-			translate[TOP_RANGE+i] = top+i;
-		else
-			translate[TOP_RANGE+i] = top+15-i;
-
-		if (bottom < 128)
-			translate[BOTTOM_RANGE+i] = bottom+i;
-		else
-			translate[BOTTOM_RANGE+i] = bottom+15-i;
-	}
-
-	//
-	// locate the original skin pixels
-	//
-	currententity = &cl_entities[1+playernum];
-	model = currententity->model;
-	if (!model)
-		return;		// player doesn't have a model yet
-	if (model->type != mod_alias)
-		return; // only translate skins on alias models
-
-	paliashdr = (aliashdr_t *)Mod_Extradata (model);
-	s = paliashdr->skinwidth * paliashdr->skinheight;
-	if (currententity->skinnum < 0 || currententity->skinnum >= paliashdr->numskins) {
-		Con_Printf("(%d): Invalid player skin #%d\n", playernum, currententity->skinnum);
-		original = (byte *)paliashdr + paliashdr->texels[0];
-	} else
-		original = (byte *)paliashdr + paliashdr->texels[currententity->skinnum];
-	if (s & 3)
-		Sys_Error ("R_TranslateSkin: s&3");
-
-	inwidth = paliashdr->skinwidth;
-	inheight = paliashdr->skinheight;
-
-	// because this happens during gameplay, do it fast
-	// instead of sending it through gl_upload 8
-    GL_Bind(playertextures + playernum);
-
-#if 0
-	byte	translated[320*200];
-
-	for (i=0 ; i<s ; i+=4)
-	{
-		translated[i] = translate[original[i]];
-		translated[i+1] = translate[original[i+1]];
-		translated[i+2] = translate[original[i+2]];
-		translated[i+3] = translate[original[i+3]];
-	}
-
-
-	// don't mipmap these, because it takes too long
-	GL_Upload8 (translated, paliashdr->skinwidth, paliashdr->skinheight, false, false, true);
-#else
-	scaled_width = gl_max_size->value < 512 ? gl_max_size->value : 512;
-	scaled_height = gl_max_size->value < 256 ? gl_max_size->value : 256;
-
-	// allow users to crunch sizes down even more if they want
-	scaled_width >>= (int)gl_playermip->value;
-	scaled_height >>= (int)gl_playermip->value;
-
-	if (VID_Is8bit()) { // 8bit texture upload
-		byte *out2;
-
-		out2 = (byte *)pixels;
-		memset(pixels, 0, sizeof(pixels));
-		fracstep = inwidth*0x10000/scaled_width;
-		for (i=0 ; i<scaled_height ; i++, out2 += scaled_width)
-		{
-			inrow = original + inwidth*(i*inheight/scaled_height);
-			frac = fracstep >> 1;
-			for (j=0 ; j<scaled_width ; j+=4)
-			{
-				out2[j] = translate[inrow[frac>>16]];
-				frac += fracstep;
-				out2[j+1] = translate[inrow[frac>>16]];
-				frac += fracstep;
-				out2[j+2] = translate[inrow[frac>>16]];
-				frac += fracstep;
-				out2[j+3] = translate[inrow[frac>>16]];
-				frac += fracstep;
-			}
-		}
-
-		GL_Upload8_EXT ((byte *)pixels, scaled_width, scaled_height, false, false);
-		return;
-	} else {	// This is for 24/32 bit GL displays...
-
-		for (i=0 ; i<256 ; i++)
-			translate32[i] = d_8to24table[translate[i]];
-
-		out = pixels;
-		fracstep = inwidth*0x10000/scaled_width;
-		for (i=0 ; i<scaled_height ; i++, out += scaled_width)
-		{
-			inrow = original + inwidth*(i*inheight/scaled_height);
-			frac = fracstep >> 1;
-			for (j=0 ; j<scaled_width ; j+=4)
-			{
-				out[j] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-				out[j+1] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-				out[j+2] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-				out[j+3] = translate32[inrow[frac>>16]];
-				frac += fracstep;
-			}
-		}
-		glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-#endif
-
-#endif /* QUAKEWORLD */
+	return;
 }
 
 /*

@@ -576,9 +576,7 @@ R_DrawAliasModel (entity_t *e) {
 #else
 	if (currententity->colormap != vid.colormap && !gl_nocolors->value) {
 		i = currententity - cl_entities;
-		if (i >= 1 && i<=cl.maxclients
-				/*&& !strcmp (currententity->model->name,
-				 	"progs/player.mdl")*/ )
+		if (i >= 1 && i <= cl.maxclients )
 		    GL_Bind(playertextures - 1 + i);
 	}
 #endif
