@@ -623,18 +623,16 @@ VectorCopy (ent->v.origin, oldorg);
 		PR_ExecuteProgram (ent->v.think);
 		if (ent->free)
 			return;
-VectorSubtract (ent->v.origin, oldorg, move);
+		VectorSubtract (ent->v.origin, oldorg, move);
 
-l = Length(move);
-if (l > 1.0/64)
-{
-//	Con_Printf ("**** snap: %f\n", Length (l));
-	VectorCopy (oldorg, ent->v.origin);
-	SV_Push (ent, move);
-}
-
+		l = Length(move);
+		if (l > 1.0/64)
+		{
+			//Con_Printf ("**** snap: %f\n", Length (l));
+			VectorCopy (oldorg, ent->v.origin);
+			SV_Push (ent, move);
+		}
 	}
-
 }
 
 
@@ -856,6 +854,7 @@ void SV_RunEntity (edict_t *ent)
 
 	switch ( (int)ent->v.movetype)
 	{
+	case MOVETYPE_WALK:
 	case MOVETYPE_PUSH:
 		SV_Physics_Pusher (ent);
 		break;

@@ -531,6 +531,8 @@ extern cvar_t	*fs_basepath;
 void
 Host_Init (quakeparms_t *parms)
 {
+	QFile		*globalcfg;
+
 	COM_InitArgv (parms->argc, parms->argv);
 
 #if 0
@@ -556,6 +558,11 @@ Host_Init (quakeparms_t *parms)
 	SCR_InitCvars ();
 	VID_InitCvars ();
 
+	if ((globalcfg = Qopen ("/etc/quakeforge.conf", "r")) != NULL)
+	{
+		Cbuf_InsertText ((char *)globalcfg);
+	}
+
 	// FIXME: stuff only +set here, shouldn't stuff all commands --KB
 	Cmd_StuffCmds_f ();
 	Cbuf_Execute_Sets ();
@@ -580,6 +587,12 @@ Host_Init (quakeparms_t *parms)
 	Key_Init ();
 	Con_Init ();
 	M_Init ();
+
+	if (globalcfg != NULL)
+	{
+		Cbuf_InsertText ((char *)globalcfg);
+		Qclose (globalcfg);
+	}
 
 #ifdef UQUAKE
 	PR_Init ();
