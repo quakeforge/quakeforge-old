@@ -63,17 +63,15 @@ DarkAngel <bhunn@zipworld.com.au>
  - improve sound engine behavior when too many sounds play at once
 
 Tonik <tonik@quake.ru>
- - change Cvar_Set(char*, char*) to Cvar_Set(cvar_t*, char*) - please let
-   me do it!
  - enhanced say and say_team editing
  - single player & coop support (when progs.dat source if released under GPL)
  - add match, powerups,... qw-server cvars
  - ffa and match support (progs)
- - fix key_dest setting (it's often key_game instead of key_console)
- - make 'crosshair' accept pcx filenames, not only numbers.
- - pause in demo playback (qw, already done in uquake)
- - implement some teamplay macros into qw-client? Like $health, $armor
+ - crosshairfile <file.pcx> ?
+ - pause/fforward[/rewind] in demo playback
+ - client(server)-side teamplay macros: $health, $armor, $loc...
  - timescale server cvar (easy for uquake, requires new protocol for qw)
+ - TE_RAILTRAIL
 
 taniwha <bill@taniwha.org>
  - Dud explosives (yeah, yeah, it's probably QC, but still...)
