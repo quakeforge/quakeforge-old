@@ -450,9 +450,6 @@ V_SetContentsColor (int contents)
 			cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
 			break;
 		case CONTENTS_SOLID:
-#ifdef UQUAKE
-			cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
-#endif
 		case CONTENTS_SLIME:
 			cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
 			break;
