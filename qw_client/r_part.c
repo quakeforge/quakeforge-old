@@ -25,7 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "r_local.h"
 
 #include "d_iface.h"
-#include "glquake.h"
 
 #define MAX_PARTICLES			2048	// default max # of particles at one
 										//  time

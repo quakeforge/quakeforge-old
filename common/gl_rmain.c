@@ -28,6 +28,7 @@
 */
 
 #include "quakedef.h"
+#include "glquake.h"
 
 entity_t	r_worldentity;
 

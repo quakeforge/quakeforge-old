@@ -30,7 +30,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define MAX_LBM_HEIGHT	200
 
 #include "model.h"
-#include "glquake.h"
 
 typedef struct
 {

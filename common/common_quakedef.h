@@ -75,7 +75,6 @@ void	VID_UnlockBuffer (void);
 #include "crc.h"
 #include "cdaudio.h"
 
-#include "glquake.h"
 #include "cvars.h"
 
 #ifndef max
@@ -94,6 +93,13 @@ void	VID_UnlockBuffer (void);
 #endif
 #if !defined(HAVE_VSNPRINTF) && defined(HAVE__VSNPRINTF)
 # define vsnprintf _vsnprintf
+#endif
+#if !defined(HAVE_SNPRINTF) && !defined(HAVE__SNPRINTF)
+#ifdef HAVE_VSNPRINTF
+# define snprintf vsnprintf
+#elif defined(HAVE__VSNPRINTF)
+# define snprintf _vsnprintf
+#endif
 #endif
 
 //=============================================================================

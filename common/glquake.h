@@ -24,8 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _GLQUAKE_H
 #define _GLQUAKE_H
 
-#ifdef HAS_OGL
-
 #if !defined(__GNUC__) && !defined(__unix) && !defined(__unix__)
 #pragma warning(disable : 4244)     // MIPS
 #pragma warning(disable : 4136)     // X86
@@ -283,6 +281,4 @@ void GL_BuildLightmaps (void);
 // gl_ngraph.c
 //
 void R_NetGraph (void);
-
-#endif // HAS_OGL
 #endif // _GLQUAKE_H

@@ -28,6 +28,7 @@ Portions Copyright (C) 1999,2000  Nelson Rush.
 */
 
 #include "quakedef.h"
+#include "glquake.h"
 
 extern	model_t	*loadmodel;
 
