@@ -85,6 +85,14 @@ void	VID_UnlockBuffer (void);
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+/* Win32 have these underscored... */
+#if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
+# define snprintf _snprintf
+#endif
+#if !defined(HAVE_VSNPRINTF) && defined(HAVE__VSNPRINTF)
+# define vsnprintf _vsnprintf
+#endif
+
 //=============================================================================
 
 // the host system specifies the base of the directory tree, the

@@ -56,6 +56,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "world.h"
 #include "pmove.h"
 
+/* Win32 have these underscored... */
+#if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
+# define snprintf _snprintf
+#endif
+#if !defined(HAVE_VSNPRINTF) && defined(HAVE__VSNPRINTF)
+# define vsnprintf _vsnprintf
+#endif
+
 //=============================================================================
 
 // the host system specifies the base of the directory tree, the
