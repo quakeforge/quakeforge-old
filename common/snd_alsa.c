@@ -103,7 +103,7 @@ qboolean SNDDMA_Init(void)
 	}
 
 	err_msg="audio flush";
-	if ((rc=snd_pcm_flush_channel(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
+	if ((rc=snd_pcm_channel_flush(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
 		goto error;
 	err_msg="audio munmap";
 	if ((rc=snd_pcm_munmap(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
@@ -122,7 +122,7 @@ qboolean SNDDMA_Init(void)
 	params.buf.block.frags_min=1;
 	params.buf.block.frags_max=-1;
 //	err_msg="audio flush";
-//	if ((rc=snd_pcm_flush_channel(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
+//	if ((rc=snd_pcm_channel_flush(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
 //		goto error;
 	err_msg="audio params";
 	if ((rc=snd_pcm_channel_params(pcm_handle, &params))<0)
