@@ -91,7 +91,7 @@ cvar_t	r_netgraph = {"r_netgraph","0"};
 // All the fog code was disabled for QuakeWold
 // _reduced_ visability shouldn't be considered cheating :)
 cvar_t  r_fog = {"r_fog", "0"};
-
+cvar_t  r_volfog = {"r_volfog", "0"};
 
 cvar_t	gl_finish = {"gl_finish","0"};
 cvar_t	gl_clear = {"gl_clear","0"};
@@ -1199,18 +1199,37 @@ Eric Windisch: I basicly rewrote what carmack had here to
 display _much_ prettier. small hack
 */ 
 
-if(r_fog.value) {
-        
+	if(r_fog.value)
+	{
+		// The volume fog probally will not work yet :)
+		if(r_volfog.value) 
+		{
+       
+			glEnable(GL_STENCIL_TEST);
+			glStencilFunc(GL_ALWAYS, 1, 1);
+			glStencilOp(GL_KEEP, GL_ZERO, GL_REPLACE);
+			R_DrawWaterSurfaces();
+			glStencilFunc(GL_EQUAL, 1, 1);
+			glStencilMask(GL_FALSE);
+			glDisable(GL_DEPTH_TEST);
+		}
+
 	// fixme: would be nice if the user could select what fogmode... (r_fog_mode)
-        glFogi (GL_FOG_MODE, GL_EXP2);
-        glFogfv (GL_FOG_COLOR, colors);
+	        glFogi (GL_FOG_MODE, GL_EXP2);
+        	glFogfv (GL_FOG_COLOR, colors);
 	// fixme: GL_FOG_DENSITY should have r_fog_density var
-        glFogf (GL_FOG_DENSITY, .0005); 
-        glEnable(GL_FOG);
-}
+	        glFogf (GL_FOG_DENSITY, .0005); 
+        	glEnable(GL_FOG);
+
+	}
+
 	R_RenderScene ();
 	R_DrawViewModel ();
+
+if((!r_fog.value)||(!r_volfog.value)) 
+{
 	R_DrawWaterSurfaces ();
+}
 
 //  More fog right here :)
 	glDisable(GL_FOG);

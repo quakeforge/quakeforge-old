@@ -216,6 +216,9 @@ extern	cvar_t	r_wateralpha;
 extern	cvar_t	r_dynamic;
 extern	cvar_t	r_novis;
 extern	cvar_t	r_netgraph;
+extern  cvar_t  r_fog;
+extern  cvar_t  r_waterwarp;
+extern  cvar_t  r_volfog;
 
 extern	cvar_t	gl_clear;
 extern	cvar_t	gl_cull;
