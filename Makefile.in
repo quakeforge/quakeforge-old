@@ -51,7 +51,10 @@ ifeq ($(SRC_DIR),.)
 configure: configure.in acconfig.h
 	./bootstrap
 
-Makefile qw_client/Makefile qw_server/Makefile uquake/Makefile common/Makefile: configure Makefile.in qw_client/Makefile.in qw_server/Makefile.in uquake/Makefile.in common/Makefile.in
+CONFIG_SRC    = Makefile.in qw_client/Makefile.in qw_server/Makefile.in \
+		uquake/Makefile.in common/Makefile.in
+
+$(patsubst %.in,%,$(CONFIG_SRC)): configure $(CONFIG_SRC)
 	$(SHELL) ./config.status --recheck
 	$(SHELL) ./config.status
 
