@@ -123,7 +123,7 @@ fi
 dnl Checks for working -lm
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([math library (-lm) appears broken]))
      
-if test "x$disable_zlib" = "xyes"; then
+if test "x$enable_zlib" = "xyes"; then
 dnl Check for working -lz
 dnl Note - must have gztell *and* gzgets in -lz *and* zlib.h
 AC_CHECK_LIB(z, gztell, HAS_ZLIB=yes, HAS_ZLIB=no, [$LIBS])
