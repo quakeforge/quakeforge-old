@@ -1514,7 +1514,7 @@ void BuildSurfaceDisplayList (msurface_t *fa)
 			VectorNormalize( v2 );
 
 			// skip co-linear points
-			#define COLINEAR_EPSILON 0.001
+#define COLINEAR_EPSILON 0.001
 			if ((fabs( v1[0] - v2[0] ) <= COLINEAR_EPSILON) &&
 				(fabs( v1[1] - v2[1] ) <= COLINEAR_EPSILON) && 
 				(fabs( v1[2] - v2[2] ) <= COLINEAR_EPSILON))
