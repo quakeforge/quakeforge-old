@@ -101,9 +101,15 @@ keyname_t keynames[] =
 	{"SHIFT", K_SHIFT},
 
 	// Keypad stuff..
+	// These are duplicated, Tonik DIES if he breaks configs again.
 	{"NUMLOCK", KP_NUMLCK},
 	{"KP_SLASH", KP_DIVIDE},
 	{"KP_STAR", KP_MULTIPLY},
+
+	{"KP_NUMLOCK", KP_NUMLCK},
+	{"KP_DIVIDE", KP_DIVIDE},
+	{"KP_MULTIPLY", KP_MULTIPLY},
+
 	{"KP_MINUS", KP_MINUS},
 
 	{"KP_HOME", KP_HOME},
