@@ -3,12 +3,6 @@ QuakeForge project.  If you'd like to add something to this list or point
 out that something has been done we forgot to remove, please send an email
 to quake-devel@lists.sourceforge.net with details.
 
- * On unix systems /etc/quakerc should be read as a system-wide config
-   file which should be able to specify console commands and other things
-   like where to find the id1, qw, and other -game specified dirs
- * On unix systems ~/.quake should overlay a shared data directory.  Files
-   in a user's ~/.quake directory should take precedence over files in the
-   shared data dir and all files written should be placed into ~/.quake
  * sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix some
    possible buffer overruns
  * configure.in: clean up the intel -mcpu stuff
@@ -25,4 +19,18 @@ to quake-devel@lists.sourceforge.net with details.
    authors yet.  If your patch was applied and you haven't gotten a line
    in the AUTHORS file yet, please let us know so we can fix it.
  * Makefile.in */Makefile.in: developer-clean target ?
-
+ * Merge SDLQuake (BigM created a patch against an older revision of our
+   main tree)
+ * Remove TODO entries as they get finished.
+ * Add currently removed documentation to the README, and also add more
+   information to explain things that we've done, or broken.
+ * Poke Deek.
+ * Prep Aftershock for a future merge with the main tree.
+ * Add localized volumetric fog, water, etc.
+ * Implement a wind (airflow) engine.
+ * Add a more modern portal engine.
+ * Add cloudy skies, using the wind and fog engines
+ * Add some flags to the setup menu, ie. gl_ztrick and +mlook
+ * Allow more video and bpp modes
+ * Make every object depend on dead-reckoning for network play, ie. no
+   "moving entities"
