@@ -13,13 +13,25 @@ AC_PROG_CPP
 AC_PROG_MAKE_SET
 
 dnl Checks for header files.
-AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h sys/asoundlib.h \
+AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h \
+	sys/socket.h netinet/in.h netdb.h arpa/inet.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
-	dsound.h mmsystem.h mme/mmsystem.h mme/mme_public.h)
+	dsound.h mmsystem.h initguid.h mme/mmsystem.h mme/mme_public.h \
+	sys/asoundlib.h)
 
-dnl checks for compiler characteristics
+dnl Checks for typedefs, structures, and compiler characteristics.
 AC_PROG_GCC_TRADITIONAL
+AC_C_CONST
+AC_C_INLINE
+AC_HEADER_TIME
+AC_STRUCT_TM
 AC_C_BIGENDIAN
+
+dnl Checks for library functions.
+AC_FUNC_MMAP
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
+	putenv select socket strerror strstr vsnprintf)
 
 AC_ARG_ENABLE(release,
 [  --enable-release        compile release (with optimization)],
@@ -57,12 +69,32 @@ if test "x$HAS_DGA" != xno; then
    CPPFLAGS="$save_CPPFLAGS"
 fi
 
+dnl Checks for MGL support
+MGL_CFLAGS=""
+MGL_LIBS=""
+AC_ARG_WITH(mgl,
+[  --with-mgl=DIR          use MGL found in DIR],
+HAS_MGL=$withval, HAS_MGL=auto)
+if test "x$HAS_MGL" != xno; then
+ if test "x$ac_cv_header_windows_h" != "xyes"; then
+   HAS_MGL=no
+ else
+   if test "x$HAS_MGL" != xauto; then
+      MGL_CFLAGS="-I$withval/include"
+      MGL_LIBS="-L$withval/lib"
+   fi
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $MGL_CFLAGS"
+   AC_CHECK_HEADER(mgraph.h, HAS_MGL=yes, HAS_MGL=no)
+   CPPFLAGS="$save_CPPFLAGS"
+ fi
+fi
 
 dnl Checks for GGI support
 GGI_CFLAGS=""
 GGI_LIBS=""
 AC_ARG_WITH(ggi,
-[  --with-ggi=DIR         use LibGGI found in DIR],
+[  --with-ggi=DIR          use LibGGI found in DIR],
 HAS_GGI=$withval, HAS_GGI=auto)
 if test "x$HAS_GGI" != xno; then
    if test "x$HAS_GGI" != xauto; then
@@ -101,7 +133,7 @@ dnl Checks for SDL support
 SDL_CFLAGS=""
 SDL_LIBS=""
 AC_ARG_WITH(sdl,
-[  --with-sdl=DIR       use SDL found in DIR],
+[  --with-sdl=DIR          use SDL found in DIR],
 HAS_SDL=$withval, HAS_SDL=auto)
 if test "x$HAS_SDL" != xno; then
    if test "x$HAS_SDL" != xauto; then
@@ -211,6 +243,16 @@ else
    DGA_LIBS="-lXxf86dga -lXxf86vm"
 fi
 
+dnl Make sure -lmgllt works
+if test "x$HAS_MGL" = xyes; then
+   MGL_LIBS="$MGL_LIBS -lgdi32 -lwinmm -ldinput -lddraw"
+   AC_CHECK_LIB(mgllt,MGL_registerDriver, MGL_LIBS="-lmgllt $MGL_LIBS"
+      HAS_MGL=yes, HAS_MGL=no, [$MGL_LIBS])
+fi
+if test "x$HAS_MGL" != xyes; then
+   MGL_CFLAGS="" MGL_LIBS=""
+fi
+
 dnl Make sure -lggi works
 if test "x$HAS_GGI" = xyes; then
    AC_CHECK_LIB(ggi, ggiEventsQueued, GGI_LIBS="$GGI_LIBS -lggi"
@@ -306,7 +348,6 @@ else
    TDFXGL_LIBS=""
    HAS_TDFXGL="no"
 fi
-
 
 
 dnl CFLAGS for release and devel versions
@@ -423,7 +464,7 @@ QF_maGiC_VALUE
 #endif
 #endif
     ], SND_STYLE="Windows"
-    )
+       SND_LIBS="-lwinmm")
 fi
 
 if test "x$SND_STYLE" = "x"; then
@@ -431,6 +472,48 @@ if test "x$SND_STYLE" = "x"; then
 else
    AC_MSG_RESULT(yes ($SND_STYLE style))
 fi
+
+
+dnl ========================================================================
+dnl Check for networking
+
+NET_LIBS=""
+
+dnl Check for network libraries
+if test "x$ac_cv_func_connect" != "xyes"; then
+  AC_CHECK_LIB(socket,connect,
+    NET_LIBS="$NET_LIBS -lsocket"
+    ac_cv_func_connect=yes)
+fi
+if test "x$ac_cv_func_gethostbyname" != "xyes"; then
+  AC_CHECK_LIB(nsl,gethostbyname,
+    NET_LIBS="$NET_LIBS -lnsl"
+    ac_cv_func_gethostbyname=yes)
+fi
+
+AC_MSG_CHECKING([for connect in -lwsock32])
+SAVELIBS="$LIBS"
+LIBS="$LIBS -lwsock32"
+AC_TRY_LINK([
+#include <winsock.h>
+],[
+connect(0, NULL, 42);
+],
+  NET_LIBS="$NET_LIBS -lwsock32 -lwinmm"
+  ac_cv_func_connect=yes
+  ac_cv_func_gethostbyname=yes
+  AC_MSG_RESULT(yes),
+  AC_MSG_RESULT(no))
+LIBS="$SAVELIBS"
+
+AC_MSG_CHECKING(for UDP support)
+if test "x$ac_cv_func_connect" = "xyes" -a \
+	"x$ac_cv_func_gethostbyname" = "xyes"; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+
 
 dnl Checks for which system driver to use
 AC_MSG_CHECKING(for system driver)
@@ -440,15 +523,19 @@ case "${target}" in
       QW_CL_SYS_SRC="sys_linux.c"
       QW_SRV_SYS_SRC="sys_unix.c"
       ;;
+   i?86-*-mingw32*)
+      SYS_SRC="sys_win.c"
+      QW_CL_SYS_SRC="sys_win.c"
+      QW_SRV_SYS_SRC="sys_win.c"
+      ;;
    *)
       SYS_SRC="sys_unix.c" 
       QW_CL_SYS_SRC="sys_linux.c"
       QW_SRV_SYS_SRC="sys_unix.c"
       DEFAULT_SYS=yes
       ;;
-# XXX - windows - conproc.c sys_win.c
 # XXX - dos  - conproc.c(?) sys_dos.c
-# XXX - need to add dos, Windows
+# XXX - need to add dos
 esac
 if test "x$DEFAULT_SYS" = xyes; then
 AC_MSG_RESULT([no, using default])
@@ -515,6 +602,7 @@ AC_SUBST(SDL_LIBS)
 AC_SUBST(SND_STYLE)
 AC_SUBST(SND_LIBS)
 AC_SUBST(INTEL_ARCH)
+AC_SUBST(NET_LIBS)
 AC_SUBST(SYS_SRC)
 AC_SUBST(QW_CL_SYS_SRC)
 AC_SUBST(QW_SRV_SYS_SRC)
@@ -523,4 +611,3 @@ AC_SUBST(X11_VID_SRC)
 dnl Output files
 AC_CONFIG_HEADER(common/config.h)
 AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
-
