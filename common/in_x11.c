@@ -41,8 +41,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
+
+#ifdef HAS_DGA
 #include <X11/extensions/XShm.h>
 #include <X11/extensions/xf86dga.h>
+#endif
+
 #include <errno.h>
 
 #include <quakedef.h>
