@@ -101,20 +101,6 @@ static qboolean largegame = false;
 #endif
 
 /*
-	Sbar_Items
-
-	Return a target-independant items list
-int
-Sbar_Items ( void )
-{
-#ifdef QUAKEWORLD
-	return cl.stats[STAT_ITEMS];
-#else
-	return cl.items;
-#endif	// QUAKEWORLD
-}
-*/
-/*
 ===============
 Sbar_ShowScores
 
@@ -1210,24 +1196,17 @@ void Sbar_Draw (void)
 	char st[512];
 #endif
 
-	headsup = !(cl_sbar->value || scr_viewsize->value<100);
-	if ((sb_updates >= vid.numpages) && !headsup)
-		return;
+	headsup = !(cl_sbar->value || rogue || hipnotic 
+			|| scr_viewsize->value<100);
+	
+//	if ((sb_updates >= vid.numpages) && !headsup)
+//		return;
 
 	if (scr_con_current == vid.height)
 		return;		// console is full screen
 
 	if (!headsup && sb_lines && vid.width > 320)
 		Draw_TileClear (0, vid.height - sb_lines, vid.width, sb_lines);
-
-#ifdef UQUAKE
-	if (sb_lines > 24)
-	{
-		Sbar_DrawInventory ();
-		if (cl.maxclients != 1)
-			Sbar_DrawFrags ();
-	}
-#endif	// !QUAKEWORLD
 
 	scr_copyeverything = 1;
 
