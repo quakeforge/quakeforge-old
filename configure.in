@@ -114,7 +114,7 @@ if test "x$HAS_OGL" != xno; then
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $OGL_CFLAGS"
    AC_CHECK_HEADER(GL/gl.h, HAS_OGL=yes, HAS_OGL=no)
-   if test "x$HAS_OGL" != no; then
+   if test "x$HAS_OGL" != xno; then
       AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT in GL/gl.h)
       AC_TRY_COMPILE([#include "GL/gl.h"],
         [ int x = (int) GL_COLOR_INDEX8_EXT;],
