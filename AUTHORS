@@ -186,6 +186,7 @@ E: jukka.sorjonen@asikkala.fi
 D: Bug squasher (see below).
 D: QW network protocol fixes.
 D: Found out why our VERSION was messing things up..
+D: win32/Borland support
 
 N: Marcus Sundberg
 E: mackan@stacken.kth.se
@@ -236,7 +237,3 @@ N: Eric Windisch
 E: windisch@nni.com
 D: QW/Q1 tree merging
 D: GL renderer fixes/optimizations
-
-N: Jukka Sorjonen
-E: jukka.sorjonen@asikkala.fi
-D: win32/Borland support
