@@ -538,14 +538,14 @@ void SCR_SetUpToDrawConsole (void)
 	
 	if (scr_conlines < scr_con_current)
 	{
-		scr_con_current -= scr_conspeed.value*host_frametime;
+		scr_con_current -= scr_conspeed.value * host_frametime * 4;
 		if (scr_conlines > scr_con_current)
 			scr_con_current = scr_conlines;
 
 	}
 	else if (scr_conlines > scr_con_current)
 	{
-		scr_con_current += scr_conspeed.value*host_frametime;
+		scr_con_current += scr_conspeed.value * host_frametime * 4;
 		if (scr_conlines < scr_con_current)
 			scr_con_current = scr_conlines;
 	}
