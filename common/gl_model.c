@@ -1,6 +1,8 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,15 +25,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // models are the only shared resource between a client and server running
 // on the same machine.
 
+#include "qtypes.h"
 #include "quakedef.h"
+#include "cvar.h"
+#include "sys.h"
+#include "mathlib.h"
 #include "glquake.h"
-#include <qtypes.h>
-#include <cvar.h>
-#include <sys.h>
-#include <mathlib.h>
-#include <lib_replace.h>
-#include <console.h>
-#include <d_iface.h>
+#include "qendian.h"
+#include "lib_replace.h"
+#include "d_iface.h"
+#include "common.h"
+#include "crc.h"
+#include "console.h"
 
 model_t	*loadmodel;
 char	loadname[32];	// for hunk tags
@@ -904,6 +909,8 @@ void Mod_LoadLeafs (lump_t *l)
 	dleaf_t 	*in;
 	mleaf_t 	*out;
 	int			i, j, count, p;
+	char s[80];
+	qboolean isnotmap = true;
 
 	in = (void *)(mod_base + l->fileofs);
 	if (l->filelen % sizeof(*in))
@@ -913,7 +920,9 @@ void Mod_LoadLeafs (lump_t *l)
 
 	loadmodel->leafs = out;
 	loadmodel->numleafs = count;
-
+	snprintf(s, sizeof(s), "maps/%s.bsp", Info_ValueForKey(cl.serverinfo,"map"));
+	if (!strcmp(s, loadmodel->name))
+		isnotmap = false;
 	for ( i=0 ; i<count ; i++, in++, out++)
 	{
 		for (j=0 ; j<3 ; j++)
@@ -944,6 +953,11 @@ void Mod_LoadLeafs (lump_t *l)
 		{
 			for (j=0 ; j<out->nummarksurfaces ; j++)
 				out->firstmarksurface[j]->flags |= SURF_UNDERWATER;
+		}
+		if (isnotmap)
+		{
+			for (j=0 ; j<out->nummarksurfaces ; j++)
+				out->firstmarksurface[j]->flags |= SURF_DONTWARP;
 		}
 	}	
 }
@@ -1173,6 +1187,24 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 	for (i=0 ; i<sizeof(dheader_t)/4 ; i++)
 		((int *)header)[i] = LittleLong ( ((int *)header)[i]);
 
+#ifdef QUAKEWORLD
+// checksum all of the map, except for entities
+	mod->checksum = 0;
+	mod->checksum2 = 0;
+
+	for (i = 0; i < HEADER_LUMPS; i++) {
+		if (i == LUMP_ENTITIES)
+			continue;
+		mod->checksum ^= LittleLong(Com_BlockChecksum(mod_base + header->lumps[i].fileofs, 
+			header->lumps[i].filelen));
+
+		if (i == LUMP_VISIBILITY || i == LUMP_LEAFS || i == LUMP_NODES)
+			continue;
+		mod->checksum2 ^= LittleLong(Com_BlockChecksum(mod_base + header->lumps[i].fileofs, 
+			header->lumps[i].filelen));
+	}
+#endif
+
 // load into heap
 	
 	Mod_LoadVertexes (&header->lumps[LUMP_VERTEXES]);
@@ -1264,26 +1296,35 @@ void * Mod_LoadAliasFrame (void * pin, maliasframedesc_t *frame)
 	int				i;
 	daliasframe_t	*pdaliasframe;
 	
+	printf("pheader->numverts: %d\n", pheader->numverts);
 	pdaliasframe = (daliasframe_t *)pin;
 
 	strcpy (frame->name, pdaliasframe->name);
 	frame->firstpose = posenum;
 	frame->numposes = 1;
 
+	printf("pheader->numverts: %d\n", pheader->numverts);
 	for (i=0 ; i<3 ; i++)
 	{
 	// these are byte values, so we don't have to worry about
 	// endianness
 		frame->bboxmin.v[i] = pdaliasframe->bboxmin.v[i];
+		printf("1 pheader->numverts: %d\n", pheader->numverts);
 		frame->bboxmin.v[i] = pdaliasframe->bboxmax.v[i];
+		printf("2 pheader->numverts: %d\n", pheader->numverts);
 	}
+	printf("pheader->numverts: %d\n", pheader->numverts);
 
 	pinframe = (trivertx_t *)(pdaliasframe + 1);
+	printf("pinframe: %p, ", pinframe);
 
 	poseverts[posenum] = pinframe;
 	posenum++;
 
 	pinframe += pheader->numverts;
+	printf("pinframe: %p, ", pinframe);
+	printf("pheader: %p, ", pheader);
+	printf("pheader->numverts: %d\n", pheader->numverts);
 
 	return (void *)pinframe;
 }
@@ -1466,6 +1507,7 @@ void *Mod_LoadAllSkins (int numskins, daliasskintype_t *pskintype)
 			for (j=0 ; j<groupskins ; j++)
 			{
 					Mod_FloodFillSkin( skin, pheader->skinwidth, pheader->skinheight );
+
 					if (j == 0) {
 						texels = Hunk_AllocName(s, loadname);
 						pheader->texels[i] = texels - (byte *)pheader;
@@ -1505,7 +1547,32 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	daliasframetype_t	*pframetype;
 	daliasskintype_t	*pskintype;
 	int					start, end, total;
+#ifdef QUAKEWORLD
+	if (!strcmp(loadmodel->name, "progs/player.mdl") ||
+		!strcmp(loadmodel->name, "progs/eyes.mdl")) {
+		unsigned short crc;
+		byte *p;
+		int len;
+		char st[40];
+
+		CRC_Init(&crc);
+		for (len = com_filesize, p = buffer; len; len--, p++)
+			CRC_ProcessByte(&crc, *p);
 	
+		snprintf(st, sizeof(st), "%d", (int) crc);
+		Info_SetValueForKey (cls.userinfo, 
+			!strcmp(loadmodel->name, "progs/player.mdl") ? pmodel_name : emodel_name,
+			st, MAX_INFO_STRING);
+
+		if (cls.state >= ca_connected) {
+			MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
+			snprintf(st, sizeof(st), "setinfo %s %d", 
+				!strcmp(loadmodel->name, "progs/player.mdl") ? pmodel_name : emodel_name,
+				(int)crc);
+			SZ_Print (&cls.netchan.message, st);
+		}
+	}
+#endif
 	start = Hunk_LowMark ();
 
 	pinmodel = (mdl_t *)buffer;
@@ -1608,9 +1675,14 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	posenum = 0;
 	pframetype = (daliasframetype_t *)&pintriangles[pheader->numtris];
 
+	printf("loadmodel->name: '%s'\n", loadmodel->name);
+
 	for (i=0 ; i<numframes ; i++)
 	{
 		aliasframetype_t	frametype;
+
+		printf("i: %d, pframetype: %p, pframetype->type: %d\n", i, pframetype,
+				pframetype->type);
 
 		frametype = LittleLong (pframetype->type);
 
@@ -1625,6 +1697,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 					Mod_LoadAliasGroup (pframetype + 1, &pheader->frames[i]);
 		}
 	}
+	printf("Done\n");
 
 	pheader->numposes = posenum;
 
@@ -1664,8 +1737,8 @@ void * Mod_LoadSpriteFrame (void * pin, mspriteframe_t **ppframe, int framenum)
 {
 	dspriteframe_t		*pinframe;
 	mspriteframe_t		*pspriteframe;
-	int			width, height, size, origin[2];
-	char			name[64];
+	int					width, height, size, origin[2];
+	char				name[64];
 
 	pinframe = (dspriteframe_t *)pin;
 

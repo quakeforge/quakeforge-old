@@ -1,5 +1,7 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,10 +21,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // r_light.c
 
+#include "qtypes.h"
 #include "quakedef.h"
 #include "glquake.h"
-#include <mathlib.h>
-#include <view.h>
+#include "client.h"
+#include "mathlib.h"
+#include "view.h"
 
 int	r_dlightframecount;
 
@@ -73,15 +77,37 @@ void AddLightBlend (float r, float g, float b, float a2)
 	v_blend[0] = v_blend[1]*(1-a2) + r*a2;
 	v_blend[1] = v_blend[1]*(1-a2) + g*a2;
 	v_blend[2] = v_blend[2]*(1-a2) + b*a2;
+//Con_Printf("AddLightBlend(): %4.2f %4.2f %4.2f %4.6f\n", v_blend[0], v_blend[1], v_blend[2], v_blend[3]);
+}
+
+float bubble_sintable[17], bubble_costable[17];
+
+void R_InitBubble() {
+	float a;
+	int i;
+	float *bub_sin, *bub_cos;
+
+	bub_sin = bubble_sintable;
+	bub_cos = bubble_costable;
+
+	for (i=16 ; i>=0 ; i--)
+	{
+		a = i/16.0 * M_PI*2;
+		*bub_sin++ = sin(a);
+		*bub_cos++ = cos(a);
+	}
 }
 
 void R_RenderDlight (dlight_t *light)
 {
 	int		i, j;
-	float	a;
+//	float	a;
 	vec3_t	v;
 	float	rad;
+	float	*bub_sin, *bub_cos;
 
+	bub_sin = bubble_sintable;
+	bub_cos = bubble_costable;
 	rad = light->radius * 0.35;
 
 	VectorSubtract (light->origin, r_origin, v);
@@ -92,17 +118,22 @@ void R_RenderDlight (dlight_t *light)
 	}
 
 	glBegin (GL_TRIANGLE_FAN);
-	glColor3f (0.2,0.1,0.0);
+//	glColor3f (0.2,0.1,0.0);  // uquake had this (taniwha)
+//	glColor3f (0.2,0.1,0.05); // changed dimlight effect
+	glColor4f (light->color[0], light->color[1], light->color[2],
+		light->color[3]);
 	for (i=0 ; i<3 ; i++)
 		v[i] = light->origin[i] - vpn[i]*rad;
 	glVertex3fv (v);
 	glColor3f (0,0,0);
 	for (i=16 ; i>=0 ; i--)
 	{
-		a = i/16.0 * M_PI*2;
+//		a = i/16.0 * M_PI*2;
 		for (j=0 ; j<3 ; j++)
-			v[j] = light->origin[j] + vright[j]*cos(a)*rad
-				+ vup[j]*sin(a)*rad;
+			v[j] = light->origin[j] + (vright[j]*(*bub_cos) +
+				+ vup[j]*(*bub_sin)) * rad;
+		bub_sin++; 
+		bub_cos++;
 		glVertex3fv (v);
 	}
 	glEnd ();

@@ -226,10 +226,9 @@ void R_Init (void)
 
 	Cvar_RegisterVariable (&gl_keeptjunctions);
 
-#ifdef QUAKEWORLD
 	R_InitBubble();
 	
-#else /* not QUAKEWORLD */
+#ifdef UQUAKE
 	Cvar_RegisterVariable (&gl_doubleeyes);
 
 #endif /* QUAKEWORLD */
