@@ -1,4 +1,5 @@
 /*
+r_misc.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,16 +21,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_misc.c
 
-#include "quakedef.h"
-#include "r_local.h"
+#include <quakedef.h>
+#include <r_local.h>
+#include <mathlib.h>
+#include <sys.h>
+#include <console.h>
+#include <cvar.h>
 #include <cvars.h>
+#include <view.h>
 #include <sbar.h>
 #include <menu.h>
 #include <draw.h>
-#include <mathlib.h>
-#include <console.h>
+#include <server.h>
 
 
 /*
@@ -39,7 +43,7 @@ R_CheckVariables
 */
 void R_CheckVariables (void)
 {
-#if 0
+#ifdef UQUAKE
 	static float	oldbright;
 
 	if (r_fullbright.value != oldbright)
@@ -125,10 +129,10 @@ void R_LineGraph (int x, int y, int h)
 	int		color;
 
 // FIXME: should be disabled on no-buffer adapters, or should be in the driver
-	
-//	x += r_refdef.vrect.x;
-//	y += r_refdef.vrect.y;
-	
+#ifdef UQUAKE	
+	x += r_refdef.vrect.x;
+	y += r_refdef.vrect.y;
+#endif
 	dest = vid.buffer + vid.rowbytes*y + x;
 	
 	s = r_graphheight.value;
@@ -144,13 +148,15 @@ void R_LineGraph (int x, int y, int h)
 
 	if (h>s)
 		h = s;
-	
+
 	for (i=0 ; i<h ; i++, dest -= vid.rowbytes*2)
 	{
 		dest[0] = color;
-//		*(dest-vid.rowbytes) = 0x30;
+#ifdef UQUAKE
+		*(dest-vid.rowbytes) = 0x30;
+#endif
 	}
-#if 0
+#ifdef UQUAKE
 	for ( ; i<s ; i++, dest -= vid.rowbytes*2)
 	{
 		dest[0] = 0x30;
@@ -455,10 +461,13 @@ void R_SetupFrame (void)
 	float			w, h;
 
 // don't allow cheats in multiplayer
-r_draworder.value = 0;
-r_fullbright.value = 0;
-r_ambient.value = 0;
-r_drawflat.value = 0;
+	if (cl.maxclients > 1)
+	{
+		r_draworder.value = 0;
+		r_fullbright.value = 0;
+		r_ambient.value = 0;
+		r_drawflat.value = 0;
+	}
 
 	if (r_numsurfs.value)
 	{
@@ -484,8 +493,9 @@ r_drawflat.value = 0;
 
 	if (r_refdef.ambientlight < 0)
 		r_refdef.ambientlight = 0;
-
-//	if (!sv.active)
+#ifdef UQUAKE
+	if (!sv.active)
+#endif
 		r_draworder.value = 0;	// don't let cheaters look behind walls
 		
 	R_CheckVariables ();
@@ -519,7 +529,11 @@ r_refdef.viewangles[2]=    0;
 	r_dowarpold = r_dowarp;
 	r_dowarp = r_waterwarp.value && (r_viewleaf->contents <= CONTENTS_WATER);
 
-	if ((r_dowarp != r_dowarpold) || r_viewchanged)
+	if ((r_dowarp != r_dowarpold)
+#ifdef UQUAKE
+		|| lcd_x.value
+#endif
+		|| r_viewchanged)
 	{
 		if (r_dowarp)
 		{
