@@ -748,8 +748,8 @@ AC_OUTPUT(
 	qw_server/Makefile
 	uquake/Makefile
 	Makefile
-	quakeforge.spec
-	build_rpm
+	rpm/quakeforge.spec
+	rpm/build_rpm
 	,
-	chmod +x build_rpm
+	chmod +x rpm/build_rpm
 )
