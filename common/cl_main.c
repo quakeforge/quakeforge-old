@@ -143,7 +143,7 @@ static qboolean allowremotecmd = true;
 #endif
 // Need this defined here for server list loading
 #ifdef QUAKEWORLD
-cvar_t *fs_basepath;
+extern cvar_t *fs_basepath;
 #endif
 
 //
