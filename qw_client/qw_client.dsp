@@ -72,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /FR /YX /FD /I /GZ
+# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /FR /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "_DEBUG"
