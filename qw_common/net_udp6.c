@@ -29,9 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
 #define model_t quakeforgemodel_t
 
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 #include <sys/types.h>
 
 #ifdef HAVE_SYS_IOCTL_H
@@ -124,20 +122,24 @@ qboolean	NET_CompareAdr (netadr_t a, netadr_t b)
 char	*NET_AdrToString (netadr_t a)
 {
 	static	char	s[64];
-	unsigned short *addr16=(unsigned short *) &(a.ip);
+	char *base;
 
-	snprintf(s, sizeof(s), "%x:%x:%x:%x:%x:%x:%x:%x.%x", ntohs(addr16[0]), ntohs(addr16[1]), ntohs(addr16[2]), ntohs(addr16[3]),ntohs(addr16[4]), ntohs(addr16[5]), ntohs(addr16[6]), ntohs(addr16[7]), ntohs(a.port));
-
+	base=NET_BaseAdrToString(a);
+	sprintf(s,"[%s]:%d",base,ntohs(a.port));
 	return s;
 }
 
 char	*NET_BaseAdrToString (netadr_t a)
 {
 	static	char	s[64];
-	unsigned short *addr16=(unsigned short *) &(a.ip);
-	
-	snprintf(s, sizeof(s), "%x:%x:%x:%x:%x:%x:%x:%x", ntohs(addr16[0]), ntohs(addr16[1]), ntohs(addr16[2]), ntohs(addr16[3]),ntohs(addr16[4]), ntohs(addr16[5]), ntohs(addr16[6]), ntohs(addr16[7]));
+	struct sockaddr_in6 sa;
+	int err;
 
+	NetadrToSockadr(&a,&sa);
+	
+	if ((err=getnameinfo((struct sockaddr *) &sa,sizeof(sa),s,sizeof(s),NULL,0,NI_NUMERICHOST))) {
+	  strcpy(s,"<invalid>");
+	}
 	return s;
 }
 
@@ -159,29 +161,66 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 	char *space;
 	char *ports=NULL;
 	char copy[128];
+	char *addrs;
 	int err;
+	struct sockaddr_storage ss;
+	struct sockaddr_in6 *ss6;
+	struct sockaddr_in *ss4;
 
-	bzero(&hints,sizeof(hints));
+	memset(&hints,0,sizeof(hints));
 	hints.ai_socktype=SOCK_DGRAM;
-	hints.ai_family=PF_INET6;
+	hints.ai_family=PF_UNSPEC;
 
 	strcpy(copy,s);
-	for (space=copy; *space; space++) {
-	  if (*space==' ') 
+	addrs=space=copy;
+	if (*addrs=='[') {
+	    addrs++;
+	    for (; *space && *space!=']'; space++);
+	    if (!*space) {
+	      Con_Printf ("NET_StringToAdr: invalid IPv6 address %s\n",s);
+	      return 0;
+	    }
+	    *space++='\0';
+	}
+	
+	for (; *space; space++) {
+	  if (*space==':') 
 	    {
-	      *space=0;
+	      *space='\0';
 	      ports=space+1;
 	    }
 	}
 
-	if ((err=getaddrinfo(copy,ports,&hints,&resultp)))
+	// Con_Printf ("NET_StringToAdr: addrs %s ports %s\n",addrs, ports);
+
+	if ((err=getaddrinfo(addrs,ports,&hints,&resultp)))
 	  {
 	    // Error
-	    Sys_Error ("NET_StringToAdr: string %s: %s",s, gai_strerror(err));
+	    Con_Printf ("NET_StringToAdr: string %s:\n%s\n",s, gai_strerror(err));
 	    return 0;
 	  }
-	
-	SockadrToNetadr ((struct sockaddr_in6 *) resultp->ai_addr, a);
+
+	switch (resultp->ai_family) {
+	case AF_INET:
+	  // convert to ipv6 addr
+	  memset(&ss,0,sizeof(ss));
+	  ss6=(struct sockaddr_in6 *) &ss;
+	  ss4=(struct sockaddr_in *) resultp->ai_addr;
+	  ss6->sin6_family=AF_INET6;
+	  ss6->sin6_addr.in6_u.u6_addr32[0]=0;
+	  ss6->sin6_addr.in6_u.u6_addr32[1]=0;
+	  ss6->sin6_addr.in6_u.u6_addr32[2]=htonl(0xffff);
+	  ss6->sin6_addr.in6_u.u6_addr32[3]=ss4->sin_addr.s_addr;
+	  ss6->sin6_port=ss4->sin_port;
+	  break;
+	case AF_INET6:
+	  memcpy(&ss,resultp->ai_addr,sizeof(struct sockaddr_in6));
+	  break;
+	default:
+	    Con_Printf ("NET_StringToAdr: string %s:\nprotocol family %d not supported\n",s, resultp->ai_family);
+	    return 0;	  
+	}
+	SockadrToNetadr ((struct sockaddr_in6 *) &ss, a);
 
 	return true;
 }
@@ -299,8 +338,10 @@ int UDP_OpenSocket (int port)
         int err;
 	int newsocket;
 	struct sockaddr_in6 address;
+	struct sockaddr_in *ss4;
 	struct addrinfo hints;
 	struct addrinfo *resultp;
+	char addrbuf[128];
 #ifdef _WIN32
 #define ioctl ioctlsocket
 	unsigned long _true = true;
@@ -313,23 +354,39 @@ int UDP_OpenSocket (int port)
 		Sys_Error ("UDP_OpenSocket: socket: %s", strerror(errno));
 	if (ioctl (newsocket, FIONBIO, &_true) == -1)
 		Sys_Error ("UDP_OpenSocket: ioctl FIONBIO: %s", strerror(errno));
+	memset(&address,0,sizeof(address));
 	address.sin6_family = AF_INET6;
 //ZOID -- check for interface binding option
 	if ((i = COM_CheckParm("-ip")) != 0 && i < com_argc) {
 
-	        bzero(&hints,sizeof(hints));
+	        memset(&hints,0,sizeof(hints));
 		hints.ai_socktype=SOCK_DGRAM;
-		hints.ai_family=PF_INET6;
+		hints.ai_family=PF_UNSPEC;
 		
 	        if ((err=getaddrinfo(com_argv[i+1],NULL,&hints,&resultp)))
 		  {
 		    Sys_Error ("UDP_OpenSocket: addr %s: %s",com_argv[i+1], gai_strerror(err));
 		  }
-		memcpy((void *) &address,(void *) resultp->ai_addr,sizeof(address));
+		switch(resultp->ai_family) {
+		case AF_INET:
+		  ss4=(struct sockaddr_in *) resultp->ai_addr;
+		  address.sin6_family=AF_INET6;
+		  address.sin6_addr.in6_u.u6_addr32[0]=0;
+		  address.sin6_addr.in6_u.u6_addr32[1]=0;
+		  address.sin6_addr.in6_u.u6_addr32[2]=htonl(0xffff);
+		  address.sin6_addr.in6_u.u6_addr32[3]=ss4->sin_addr.s_addr;
+		  break;
+		case AF_INET6:
+		  memcpy((void *) &address,(void *) resultp->ai_addr,sizeof(address));
+		  break;
+		default:
+		    Sys_Error ("UDP_OpenSocket: address family %d not supported",com_argv[i+1], resultp->ai_family);
+		}
+
 		// address.sin_addr.s_addr = inet_addr(com_argv[i+1]);
 
-		// Con_Printf("Binding to IP Interface Address of %s\n",
-		// inet_ntop(address.sin6_addr));
+		Con_Printf("Binding to IP Interface Address of %s\n",
+		  inet_ntop(AF_INET6,&address.sin6_addr,addrbuf,sizeof(addrbuf)));
 
 	} else
 		address.sin6_addr = in6addr_any;
