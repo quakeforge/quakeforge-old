@@ -14,8 +14,9 @@ D: Website design
 
 N: Jeff Teunissen
 E: d2deek@pmail.net
-D: IRC Info bot
 D: QW/Q1 tree merging
+D: IRC Info bot
+D: Website design
 
 N: Zephaniah E. Hull
 E: warp@whitestar.soark.net
@@ -47,16 +48,19 @@ E: windisch@nni.com
 D: QW/Q1 tree merging
 D: GL renderer fixes/optimizations
 
-N: Joseph Carter
+N: Joseph Carter (Knghtbrd)
 E: knghtbrd@debian.org
 D: QW/Q1 tree merging
 D: Autoconf support and portability
 D: User documentation
-D: Development design
+D: Development design/documentation
 D: GL renderer fixes
+D: X11 GLX target fixes
+D: SVGALib target fixes
 D: Driver module support
-D: Skybox tutorial implementation
-D: Spinning console tutorial implementation
+D: Skybox implementation (several mods to existing tutorial)
+D: Made RGBA lightmaps actually work
+D: Statusbar fixes
 
 N: Peter Andreasen
 E: pandr@pandr.dk
@@ -119,7 +123,7 @@ D: SDL support
 
 N: Neal White III
 E: nwhite@softblox.com
-D: GL fullbright support
+D: GL fullbright support (removed temporarily)
 
 N: Dan Nelson
 E: dnelson@emsphone.com
@@ -165,7 +169,7 @@ N: Andrew Coles
 E: andycole123@ic24.net
 D: CD-ROM support/fixes
 
-N: Andrew "Slade" Alexander
+N: Andrew Alexander (Slade)
 E: slade@quakelives.com
 D: Reworking of the heart beat, and ping taking code on the server side.
 D: sv_maxrate support..
@@ -176,7 +180,7 @@ D: game dir fixes
 
 N: Jules Bean
 E: jules@debian.org
-D: Q1/QW tree merging
+D: show_fps merge into UQuake
 
 N: Jason Nelson
 E: jason_nelson@email.msn.com
@@ -190,8 +194,12 @@ D: Found out why our VERSION was messing things up..
 
 N: Tane Piper
 E: descent@barrysworld.com
-D: GL skybox implementation tutorial
+D: GL skybox tutorial
 
 N: Nawfel Tricha
 E: topaz@endorproductions.com
-D: GL spinning console implementation tutorial
+D: GL spinning console
+
+N: Aaron Alcock (SaRcaZm)
+E: epca@powerup.com.au
+D: RGBA colored lightmaps (static/dynamic)
