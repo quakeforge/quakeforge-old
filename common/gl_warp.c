@@ -358,7 +358,7 @@ byte	*pcx_rgb;
 	LoadPCX
 */
 void
-LoadPCX (FILE *f) {
+LoadPCX (gzFile *f) {
 
 	pcx_t	*pcx, pcxbuf;
 	byte	palette[768];
@@ -370,7 +370,7 @@ LoadPCX (FILE *f) {
 /*
 	Parse PCX file
 */
-	fread (&pcxbuf, 1, sizeof(pcxbuf), f);
+	gzread (f, &pcxbuf, sizeof(pcxbuf));
 
 	pcx = &pcxbuf;
 
@@ -382,10 +382,10 @@ LoadPCX (FILE *f) {
 	}
 
 	// seek to palette
-	fseek (f, -768, SEEK_END);
-	fread (palette, 1, 768, f);
+	gzseek (f, -768, SEEK_END);
+	gzread (f, palette, 768);
 
-	fseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
+	gzseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
 
 	count = (pcx->xmax+1) * (pcx->ymax+1);
 	pcx_rgb = malloc( count * 4);
@@ -393,11 +393,11 @@ LoadPCX (FILE *f) {
 	for (y=0 ; y<=pcx->ymax ; y++) {
 		pix = pcx_rgb + 4*y*(pcx->xmax+1);
 		for (x=0 ; x<=pcx->ymax ; ) {
-			dataByte = fgetc(f);
+			dataByte = gzgetc(f);
 
 			if((dataByte & 0xC0) == 0xC0) {
 				runLength = dataByte & 0x3F;
-				dataByte = fgetc(f);
+				dataByte = gzgetc(f);
 			}
 			else
 				runLength = 1;
@@ -502,19 +502,19 @@ LoadTGA (gzFile *fin) {
 				switch (targa_header.pixel_size) {
 					case 24:
 							
-							blue = getc(fin);
-							green = getc(fin);
-							red = getc(fin);
+							blue = gzgetc(fin);
+							green = gzgetc(fin);
+							red = gzgetc(fin);
 							*pixbuf++ = red;
 							*pixbuf++ = green;
 							*pixbuf++ = blue;
 							*pixbuf++ = 255;
 							break;
 					case 32:
-							blue = getc(fin);
-							green = getc(fin);
-							red = getc(fin);
-							alphabyte = getc(fin);
+							blue = gzgetc(fin);
+							green = gzgetc(fin);
+							red = gzgetc(fin);
+							alphabyte = gzgetc(fin);
 							*pixbuf++ = red;
 							*pixbuf++ = green;
 							*pixbuf++ = blue;
@@ -529,21 +529,21 @@ LoadTGA (gzFile *fin) {
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = targa_rgba + row*columns*4;
 			for(column=0; column<columns; ) {
-				packetHeader=getc(fin);
+				packetHeader=gzgetc(fin);
 				packetSize = 1 + (packetHeader & 0x7f);
 				if (packetHeader & 0x80) {        // run-length packet
 					switch (targa_header.pixel_size) {
 						case 24:
-								blue = getc(fin);
-								green = getc(fin);
-								red = getc(fin);
+								blue = gzgetc(fin);
+								green = gzgetc(fin);
+								red = gzgetc(fin);
 								alphabyte = 255;
 								break;
 						case 32:
-								blue = getc(fin);
-								green = getc(fin);
-								red = getc(fin);
-								alphabyte = getc(fin);
+								blue = gzgetc(fin);
+								green = gzgetc(fin);
+								red = gzgetc(fin);
+								alphabyte = gzgetc(fin);
 								break;
 					}
 	
@@ -567,19 +567,19 @@ LoadTGA (gzFile *fin) {
 					for(j=0;j<packetSize;j++) {
 						switch (targa_header.pixel_size) {
 							case 24:
-									blue = getc(fin);
-									green = getc(fin);
-									red = getc(fin);
+									blue = gzgetc(fin);
+									green = gzgetc(fin);
+									red = gzgetc(fin);
 									*pixbuf++ = red;
 									*pixbuf++ = green;
 									*pixbuf++ = blue;
 									*pixbuf++ = 255;
 									break;
 							case 32:
-									blue = getc(fin);
-									green = getc(fin);
-									red = getc(fin);
-									alphabyte = getc(fin);
+									blue = gzgetc(fin);
+									green = gzgetc(fin);
+									red = gzgetc(fin);
+									alphabyte = gzgetc(fin);
 									*pixbuf++ = red;
 									*pixbuf++ = green;
 									*pixbuf++ = blue;
