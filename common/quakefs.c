@@ -820,16 +820,18 @@ COM_AddDirectory (char *dir)
 	char			*p;
 
 	if (strncmp (dir, "~/", 2) == 0) {
-		struct passwd *pwd_ent;
 		char *home;
 		char *tmp;
 
+#ifndef _WIN32
+		struct passwd *pwd_ent;
 		if ((pwd_ent = getpwuid (getuid()))) {
 			home = pwd_ent->pw_dir;
 			printf("%p\n",pwd_ent);
-		} else {
+		} else
+#endif
 			home = getenv("HOME");
-		}
+
 		if (home) {
 			tmp = alloca(strlen(home)+strlen(dir));
 			strcpy (tmp, home);
