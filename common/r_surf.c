@@ -1,4 +1,5 @@
 /*
+r_surf.c - surface-related refresh code
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,10 +20,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_surf.c: surface-related refresh code
 
-#include "quakedef.h"
-#include "r_local.h"
+#include <quakedef.h>
+#include <r_local.h>
 #include <mathlib.h>
 #include <cvars.h>
 #include <sys.h>
@@ -66,13 +66,13 @@ R_AddDynamicLights
 void R_AddDynamicLights (void)
 {
 	msurface_t *surf;
-	int			lnum;
-	int			sd, td;
+	int		lnum;
+	int		sd, td;
 	float		dist, rad, minlight;
 	vec3_t		impact, local;
-	int			s, t;
-	int			i;
-	int			smax, tmax;
+	int		s, t;
+	int		i;
+	int		smax, tmax;
 	mtexinfo_t	*tex;
 
 	surf = r_drawsurf.surf;
@@ -86,8 +86,8 @@ void R_AddDynamicLights (void)
 			continue;		// not lit by this light
 
 		rad = cl_dlights[lnum].radius;
-		dist = DotProduct (cl_dlights[lnum].origin, surf->plane->normal) -
-				surf->plane->dist;
+		dist = DotProduct (cl_dlights[lnum].origin,
+				surf->plane->normal) - surf->plane->dist;
 		rad -= fabs(dist);
 		minlight = cl_dlights[lnum].minlight;
 		if (rad < minlight)
@@ -155,7 +155,7 @@ void R_BuildLightMap (void)
 {
 	int			smax, tmax;
 	int			t;
-	int			i, size;
+	int			i, j, size;
 	byte		*lightmap;
 	unsigned	scale;
 	int			maps;
@@ -182,12 +182,22 @@ void R_BuildLightMap (void)
 
 // add all the lightmaps
 	if (lightmap)
-		for (maps = 0 ; maps < MAXLIGHTMAPS && surf->styles[maps] != 255 ;
-			 maps++)
+		for (maps = 0;
+			(maps < MAXLIGHTMAPS) && (surf->styles[maps] != 255);
+			maps++)
 		{
-			scale = r_drawsurf.lightadj[maps];	// 8.8 fraction		
+			scale = r_drawsurf.lightadj[maps];  // 8.8 fraction		
 			for (i=0 ; i<size ; i++)
-				blocklights[i] += lightmap[i] * scale;
+				if (bspver == CBSPVERSION)
+				{
+					// no color, so we'll just add the
+					//  color values together
+					for (j=0 ; j<3 ; j++)
+						blocklights[i] +=
+							lightmap[j] * scale;
+				} else {
+					blocklights[i] += lightmap[i] * scale;
+				}
 			lightmap += size;	// skip to next lightmap
 		}
 
