@@ -1442,11 +1442,11 @@ BuildSurfaceDisplayList
 */
 void BuildSurfaceDisplayList (msurface_t *fa)
 {
-	int		t, i, lindex, lnumverts;
+	int		i, lindex, lnumverts;
 	medge_t		*pedges, *r_pedge;
 	int		vertpage;
 	float		*vec;
-	float		s;
+	float		s, t;
 	glpoly_t	*poly;
 
 // reconstruct the polygon
