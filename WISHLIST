@@ -76,3 +76,13 @@ Tonik <tonik@quake.ru>
 
 taniwha <bill@taniwha.org>
  - Dud explosives (yeah, yeah, it's probably QC, but still...)
+
+djsmoke <djsmoke@optonline.net>
+ - scripting support additions; sleep/timer command, if statements, server
+ - server type variables (mega-tf, teamfortress, deadlode, etc)
+ - automatic map rotation, just specify multiple args on the map statement line
+   and the server sets up the rotation. ie map <map1> <map2> <map3>
+ - rcon_checkip [0/1] in config file, if 0 dont try to match, if 1 it will cause
+   the server to compare the ip address of the person who sent the rcon command
+   to a list of hosts specified in the below command.
+   rcon_iplist <ip1> <ip2> ...
