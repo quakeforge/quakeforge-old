@@ -450,8 +450,8 @@ void SV_WriteClientdataToMessage (client_t *client, sizebuf_t *msg);
 void SV_ClientPrintf (client_t *cl, int level, char *fmt, ...);
 void SV_BroadcastPrintf (int level, char *fmt, ...);
 void SV_Frame (float time);
-vvoid SV_Physics_Client (edict_t	*ent);
-oid SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
+void SV_Physics_Client (edict_t	*ent);
+void SV_WriteEntitiesToClient (client_t *client, sizebuf_t *msg);
 #else
 void SV_AddGravity (edict_t *ent);
 void SV_Shutdown (qboolean crash);
