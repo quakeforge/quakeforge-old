@@ -158,13 +158,15 @@ of the QEMM installation.
 VII. Technical Support
 ----------------------
 
-Please do *not* call ID Software, Inc regarding technical support issues
-related to QuakeForge.  QuakeForge is heavily modified from the original
-Quake source release and they wouldn't be likely to even know how to help
-you with such problems.  Instead visit the QuakeForge project webpage for
-information on technical support at:  http://www.quakeforge.net
+Please do *not* contact ID Software, Inc regarding technical support
+issues related to QuakeForge. QuakeForge is heavily modified from the
+original Quake source release and Id Software does not support these
+modifications.
 
-Thank you for your understanding.
+Visit the QuakeForge project's webpage for more information on technical
+support, bugs reports, and help at: http://www.quakeforge.net/
+
+Thank you.
 
 
 VIII. Joystick notes
@@ -191,11 +193,16 @@ IX. Tested Systems
 ------------------
 
 Processors tested:
-   Various Intel ia32
+   Intel PI
+   Intel PII
+   Intel PIII
+   Athlon
+   K6-2
    Motorola PowerPC
    Compaq Alpha
    Sun UltraSPARC
    SGI Indigo 2
+   Mips R10k
 
 Operating systems tested:
    Linux
@@ -225,3 +232,6 @@ User testimonies:
    AIX 4.3.3, Power3, GTX3000p
    Irix 6.5, MIPS R10k, MXI (Octane)
 
+email user testimonies to: palisade@quakeforge.net
+Or to our quake-devel mailing list which you can find more information
+about on our website at: http://www.quakeforge.net/
