@@ -64,20 +64,20 @@ int			fps_count;
 int 		vcrFile = -1;
 double		host_time;
 
-cvar_t	sys_ticrate		= {"sys_ticrate","0.05"};
+cvar_t	sys_ticrate	= {"sys_ticrate","0.05"};
 cvar_t	serverprofile	= {"serverprofile", "0"};
 cvar_t	host_framerate	= {"host_framerate", "0"};	// set for slow motion
-cvar_t	samelevel		= {"samelevel", "0"};
-cvar_t	noexit			= {"noexit", "0", false, true};
-cvar_t	pausable		= {"pausable", "1"};
-cvar_t	temp1			= {"temp1", "0"};
-cvar_t	sv_filter		= {"sv_filter", "1"};	// filter \n & \r in names?
-cvar_t	teamplay		= {"teamplay","0",false,true};
-cvar_t	deathmatch		= {"deathmatch","0"};			// 0, 1, or 2
-cvar_t	coop			= {"coop","0"};			// 0 or 1
-cvar_t	fraglimit		= {"fraglimit","0",false,true};
-cvar_t	skill			= {"skill","1"};						// 0 - 3
-cvar_t	timelimit		= {"timelimit","0",false,true};
+cvar_t	samelevel	= {"samelevel", "0"};
+cvar_t	noexit		= {"noexit", "0", false, true};
+cvar_t	pausable	= {"pausable", "1"};
+cvar_t	temp1		= {"temp1", "0"};
+cvar_t	sv_filter	= {"sv_filter", "1"};	// strip \n, \r in names?
+cvar_t	teamplay	= {"teamplay","0",false,true};
+cvar_t	deathmatch	= {"deathmatch","0"};		// 0, 1, or 2
+cvar_t	coop		= {"coop","0"};			// 0 or 1
+cvar_t	fraglimit	= {"fraglimit","0",false,true};
+cvar_t	skill		= {"skill","1"};		// 0 - 3
+cvar_t	timelimit	= {"timelimit","0",false,true};
 
 #ifdef UQUAKE
 client_t	*host_client;			// current client
