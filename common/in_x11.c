@@ -427,7 +427,9 @@ IN_Shutdown(void)
 		nullcursor = None;
 	}
 	
+#ifdef HAS_DGA
 	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp), 0);
+#endif
 	
 	x11_close_display();
 }
@@ -475,9 +477,6 @@ IN_Init(void)
 	XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, GrabModeAsync,
 				 x_win, None, CurrentTime);
 
-	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
-			"1 if you have DGA mouse support");
-#else
 	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
 			"1 if you have DGA mouse support");
 #endif
