@@ -32,6 +32,9 @@
 #define DGA_CHECK_H
 
 #include <config.h>
+#include <quakedef.h>
+
+#include <X11/Xlib.h>
 
 #ifdef HAS_DGA
 #include <X11/extensions/xf86dga.h>

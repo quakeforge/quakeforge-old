@@ -27,6 +27,9 @@
 	59 Temple Place - Suite 330
 	Boston, MA  02111-1307, USA.
 */
+
+#include <config.h>
+
 #ifdef HAS_DGA
 #include "dga_check.h"
 
@@ -41,8 +44,9 @@
 int
 VID_CheckDGA ( Display *dpy )
 {
-	int event_base, error_base = 0;
+	int *event_base, *error_base;
 	
+	event_base = error_base = NULL;
 	XF86DGAQueryExtension ( dpy, event_base, error_base );
 	if ( event_base )
 		return true;
@@ -55,10 +59,11 @@ VID_CheckDGA ( Display *dpy )
 	Check for the presence of the XFree86-VMode X server extension
 */
 int
-VID_CheckVMode ( Display *dpy );
+VID_CheckVMode ( Display *dpy )
 {
-	int event_base, error_base = 0;
+	int *event_base, *error_base;
 	
+	event_base = error_base = NULL;
 	XF86VidModeQueryExtension ( dpy, event_base, error_base );
 	if ( event_base )
 		return true;
