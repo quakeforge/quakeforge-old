@@ -33,7 +33,8 @@ DarkAngel <bhunn@zipworld.com.au>
  - optimize graphics effects currently only doable with slow progs
  - status bar improvements
  - fix GL model mesh for "barely legal" models (perquake, old obsidian, etc)
- - fix "speed jumping" [not sure of cause, very hard to fix]
+ - standardise "speed jumping" [not sure of cause, very hard to fix]
+   dependant on !something!, and works differently on different computers
  - improve sound engine behavior when too many sounds play at once
 
 Tonik <tonik@quake.ru>
