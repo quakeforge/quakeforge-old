@@ -99,8 +99,10 @@ int UDP_Init (void)
 
 	// determine my name & address
 	gethostname(buff, MAXHOSTNAMELEN);
-	local = gethostbyname(buff);
-	myAddr = *(int *)local->h_addr_list[0];
+	if ((local = gethostbyname(buff)) == NULL)
+		myAddr = INADDR_LOOPBACK;
+	else
+		myAddr = *(int *)local->h_addr_list[0];
 
 	// if the quake hostname isn't set, set it to the machine name
 	if (Q_strcmp(hostname->string, "UNNAMED") == 0)
