@@ -572,6 +572,7 @@ R_LoadSkys ( void ) {
 	for (i=0 ; i<6 ; i++) {
 		GL_Bind (SKY_TEX + i);
 		snprintf(name, sizeof(name), "gfx/env/%s%s.tga",
+//		snprintf(name, sizeof(name), "gfx/env/%s%s.pcx",
 				r_skyname->string, suf[i]);
 		COM_FOpenFile (name, &f);
 		if (!f) {

@@ -111,7 +111,6 @@ byte	*Skin_Cache (skin_t *skin)
 //	int		x, y;
 //	int		dataByte;
 //	int		runLength;
-	QFile	*f;
 
 	if (cls.downloadtype == dl_skin)
 		return NULL;		// use base until downloaded
@@ -130,99 +129,18 @@ byte	*Skin_Cache (skin_t *skin)
 // load the pic from disk
 //
 	snprintf(name, sizeof(name), "skins/%s.pcx", skin->name);
-//	raw = COM_LoadTempFile (name);
-	COM_FOpenFile (name, &f);
-	if (f == NULL)
-	{
+	out = LoadPCX (name, &skin->cache, 320, 200);
+	if (out == NULL) {
 		Con_Printf ("Couldn't load skin %s\n", name);
 		snprintf(name, sizeof(name), "skins/%s.pcx", baseskin->string);
-//		raw = COM_LoadTempFile (name);
-		COM_FOpenFile (name, &f);
-		if (f == NULL)
-		{
+		out = LoadPCX (name, &skin->cache, 320, 200);
+		if (out == NULL) {
 			skin->failedload = true;
 			return NULL;
 		}
 	}
 
-	LoadPCX (f, &out);
-#if 0
-//
-// parse the PCX file
-//
-	pcx = (pcx_t *)raw;
-	raw = &pcx->data;
-
-	if (pcx->manufacturer != 0x0a
-		|| pcx->version != 5
-		|| pcx->encoding != 1
-		|| pcx->bits_per_pixel != 8
-		|| pcx->xmax >= 320
-		|| pcx->ymax >= 200)
-	{
-		skin->failedload = true;
-		Con_Printf ("Bad skin %s\n", name);
-		return NULL;
-	}
-	
-	out = Cache_Alloc (&skin->cache, 320*200, skin->name);
-	if (!out)
-		Sys_Error ("Skin_Cache: couldn't allocate");
-
-	pix = out;
-	memset (out, 0, 320*200);
-
-	for (y=0 ; y<pcx->ymax ; y++, pix += 320)
-	{
-		for (x=0 ; x<=pcx->xmax ; )
-		{
-			if (raw - (byte*)pcx > com_filesize) 
-			{
-				Cache_Free (&skin->cache);
-				skin->failedload = true;
-				Con_Printf ("Skin %s was malformed.  You should delete it.\n", name);
-				return NULL;
-			}
-			dataByte = *raw++;
-
-			if((dataByte & 0xC0) == 0xC0)
-			{
-				runLength = dataByte & 0x3F;
-				if (raw - (byte*)pcx > com_filesize) 
-				{
-					Cache_Free (&skin->cache);
-					skin->failedload = true;
-					Con_Printf ("Skin %s was malformed.  You should delete it.\n", name);
-					return NULL;
-				}
-				dataByte = *raw++;
-			}
-			else
-				runLength = 1;
-
-			// skin sanity check
-			if (runLength + x > pcx->xmax + 2) {
-				Cache_Free (&skin->cache);
-				skin->failedload = true;
-				Con_Printf ("Skin %s was malformed.  You should delete it.\n", name);
-				return NULL;
-			}
-			while(runLength-- > 0)
-				pix[x++] = dataByte;
-		}
-
-	}
-
-	if ( raw - (byte *)pcx > com_filesize)
-	{
-		Cache_Free (&skin->cache);
-		skin->failedload = true;
-		Con_Printf ("Skin %s was malformed.  You should delete it.\n", name);
-		return NULL;
-	}
-
 	skin->failedload = false;
-#endif
 	return out;
 }
 

@@ -32,68 +32,100 @@
 #include <quakeio.h>
 #include <console.h>
 #include <image.h>
+#include <zone.h>
+#include <quakefs.h>
+#include <sys.h>
 
 /*
 	LoadPCX
 */
-void
-LoadPCX (QFile *f, byte **pcx_rgb) {
+byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
 
-	pcx_t	*pcx, pcxbuf;
-	byte	palette[768];
+	pcx_t	*pcx;
 	byte	*pix;
+	byte	*raw, *out;
 	int	x, y;
 	int	dataByte, runLength;
-	int	count;
 
 /*
 	Parse PCX file
 */
-	Qread (f, &pcxbuf, sizeof(pcxbuf));
-
-	pcx = &pcxbuf;
-
-	if (pcx->manufacturer != 0x0a || pcx->version != 5 || pcx->encoding != 1
-			|| pcx->bits_per_pixel != 8 || pcx->xmax >= 320
-			|| pcx->ymax >= 256) {
-		Con_Printf ("Bad PCX file\n");
-		return;
+	out = Cache_Check (cache);
+	if (out)
+	{
+		Con_Printf("Using cached version of %s\n", file);
+		return out;
+	}
+	
+	raw = COM_LoadTempFile (file);
+	if (!raw) {
+		Con_Printf("Can not open %s\n", file);
+		return NULL;
 	}
 
-	// seek to palette
-	Qseek (f, -768, SEEK_END);
-	Qread (f, palette, 768);
+	pcx = (pcx_t *)raw;
+	raw = &pcx->data;
 
-	Qseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
-
-	count = (pcx->xmax+1) * (pcx->ymax+1);
-	*pcx_rgb = malloc( count); // * 3);
-
-	for (y=0 ; y<=pcx->ymax ; y++)
+	if (pcx->manufacturer != 0x0a 
+			|| pcx->version != 5
+			|| pcx->encoding != 1
+			|| pcx->bits_per_pixel != 8
+			|| pcx->xmax >= 320
+			|| pcx->ymax >= 200)
 	{
-		pix = *pcx_rgb + /*3**/y*(pcx->xmax+1);
-		for (x=0 ; x<=pcx->ymax ; )
-		{
-			dataByte = Qgetc(f);
+		Con_Printf ("Bad PCX file\n");
+		return NULL;
+	}
 
-			if ((dataByte & 0xC0) == 0xC0)
-			{
-				runLength = dataByte & 0x3F;
-				dataByte = Qgetc(f);
+	if (!buf_x)
+		buf_x = pcx->ymax;
+	if (!buf_y)
+		buf_y = pcx->ymax;
+
+	Con_Printf("PCX file %s %dx%d\n", file, buf_x, buf_y);
+	out = Cache_Alloc (cache, buf_x * buf_y, file);
+	if (!out)
+		Sys_Error("LoadPCX: couldn't allocate.");
+
+	pix = out;
+	memset(out, 0, buf_x * buf_y);
+
+	for (y=0 ; y<=pcx->ymax ; y++, pix += buf_x) {
+		for (x=0 ; x<=pcx->xmax ; ) {
+			if (raw - (byte*)pcx > com_filesize) {
+				Cache_Free(cache);
+				Con_Printf("PCX file %s was malformed.  You should delete it.\n", file);
+				return NULL;
 			}
-			else
+			dataByte = *raw++;
+
+			if ((dataByte & 0xC0) == 0xC0) {
+				runLength = dataByte & 0x3F;
+				if (raw - (byte*)pcx > com_filesize) {
+					Cache_Free(cache);
+					Con_Printf("PCX file %s was malformed.  You should delete it.\n", file);
+					return NULL;
+				}
+				dataByte = *raw++;
+			} else
 				runLength = 1;
 
-			while(runLength-- > 0) {
-				pix[x++] = dataByte;
-//				pix[0] = palette[dataByte*3];
-//				pix[1] = palette[dataByte*3+1];
-//				pix[2] = palette[dataByte*3+2];
-//				pix[3] = 255;
-//				pix += 4;
-//				x++;
+			if (runLength + x > pcx->xmax + 2) {
+				Cache_Free(cache);
+				Con_Printf("PCX file %s was malformed.  You should delete it.\n", file);
+				return NULL;
 			}
+
+			while(runLength-- > 0)
+				pix[x++] = dataByte;
 		}
 	}
+	if (raw - (byte*)pcx > com_filesize) {
+		Cache_Free(cache);
+		Con_Printf("PCX file %s was malformed.  You should delete it.\n", file);
+		return NULL;
+	}
+
+	return NULL;
 }
 

@@ -42,6 +42,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 #include <X11/extensions/XShm.h>
+#include <X11/extensions/xf86dga.h>
 #include <errno.h>
 
 #include <quakedef.h>
@@ -242,26 +243,32 @@ static void event_button(XEvent *event)
 static void event_motion(XEvent *event)
 {
 #ifdef HAS_DGA
-		if (dgamouse) {
-			mouse_x += event->xmotion.x_root * vid_dga_mouseaccel->value;
-			mouse_y += event->xmotion.y_root * vid_dga_mouseaccel->value;
-		} else
+	if (dgamouse) {
+		mouse_x += event->xmotion.x_root * vid_dga_mouseaccel->value;
+		mouse_y += event->xmotion.y_root * vid_dga_mouseaccel->value;
+	} else
 #endif
-			if (_windowed_mouse->value) {
-				mouse_x = (float) ((int) event->xmotion.x - ((int) vid.width / 2));
-				mouse_y = (float) ((int) event->xmotion.y - ((int) vid.height / 2));
+		//printf("_windowed_mouse: %f\n", _windowed_mouse->value);
+		//printf("CurrentTime: %ld\n", CurrentTime);
+		if (_windowed_mouse->value) {
+			mouse_x = (float) ((int) event->xmotion.x - ((int) vid.width / 2));
+			mouse_y = (float) ((int) event->xmotion.y - ((int) vid.height / 2));
 
-				/* move the mouse to the window center again */
-				XSelectInput(x_disp, x_win, INPUT_MASK & ~PointerMotionMask);
-				XWarpPointer(x_disp, None, x_win, 0, 0, 0, 0,
-						(vid.width / 2), (vid.height / 2));
-				XSelectInput(x_disp, x_win, INPUT_MASK);
-			} else {
-				mouse_x = (event->xmotion.x - p_mouse_x);
-				mouse_y = (event->xmotion.y - p_mouse_y);
-				p_mouse_x = event->xmotion.x;
-				p_mouse_y = event->xmotion.y;
-			}
+			/* move the mouse to the window center again */
+			XGrabPointer(x_disp, x_win, True, MOUSE_MASK & ~PointerMotionMask,
+						GrabModeAsync, GrabModeAsync, x_win, None, CurrentTime);
+			XSelectInput(x_disp, x_win, INPUT_MASK & ~PointerMotionMask);
+			XWarpPointer(x_disp, None, x_win, 0, 0, 0, 0,
+					(vid.width / 2), (vid.height / 2));
+			XSelectInput(x_disp, x_win, INPUT_MASK);
+			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, 
+						 GrabModeAsync, x_win, None, CurrentTime);
+		} else {
+			mouse_x = (event->xmotion.x - p_mouse_x);
+			mouse_y = (event->xmotion.y - p_mouse_y);
+			p_mouse_x = event->xmotion.x;
+			p_mouse_y = event->xmotion.y;
+		}
 }
 
 
@@ -276,8 +283,10 @@ IN_Frame(void)
 			XUngrabPointer(x_disp,CurrentTime);
 		} else {
 			/* grab the pointer */
-			XGrabPointer(x_disp,x_win,True,0,GrabModeAsync,
-					GrabModeAsync,x_win,None,CurrentTime);
+			XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, 
+						 GrabModeAsync, x_win, None, CurrentTime);
+			//XGrabPointer(x_disp,x_win,True,0,GrabModeAsync,
+			//		GrabModeAsync,x_win,None,CurrentTime);
 		}
 	}
 }
@@ -375,6 +384,13 @@ int IN_Init ()
 //	Cvar_RegisterVariable(&vid_dga_mouseaccel);
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
+	XF86DGASetViewPort(x_disp, x_win, 0, 0);
+	XF86DGADirectVideo(x_disp, x_win, XF86DGADirectGraphics|XF86DGADirectMouse|XF86DGADirectKeyb);
+	XF86DGASetVidPage(x_disp, x_win, 0);
+
+	XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+	XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, GrabModeAsync,
+				 x_win, None, CurrentTime);
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;

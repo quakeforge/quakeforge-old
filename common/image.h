@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#include <zone.h>
+
 typedef struct
 {
     char		manufacturer;
@@ -38,5 +40,5 @@ typedef struct
     unsigned char	data;			// unbounded
 } pcx_t;
 
-void LoadPCX (QFile *f, byte **pcx_rgb);
+byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y);
 
