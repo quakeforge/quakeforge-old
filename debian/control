@@ -7,6 +7,7 @@ Standards-Version: 3.0.1
 Package: quake-svga
 Architecture: any
 Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
+Replaces: squake, quake-common
 Provides: quake
 Description: First person shooting game - SVGALib version
  QuakeForge is a source port of Quake, the successor to ID Software's very
@@ -18,6 +19,7 @@ Description: First person shooting game - SVGALib version
 
 Package: quake-x11
 Architecture: any
+Replaces: squake, quake-common
 Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
 Provides: quake
 Description: First person shooting game - X11 version
@@ -42,6 +44,7 @@ Package: quake-gl
 Architecture: any
 Depends: ${shlibs:Depends}, quake-lib (>= 1.06-4) | quake-lib-stub
 Provides: quake
+Replaces: glquake-glx, quake-common
 Description: First person shooting game - GL version
  QuakeForge is a source port of Quake, the successor to ID Software's very
  popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
@@ -53,6 +56,7 @@ Package: quake-3dfx
 Architecture: any
 Depends: ${shlibs:Depends}, mesag3-glide (>= 3.1-1), libglide2, quake-lib (>= 1.06-4) | quake-lib-stub
 Provides: quake
+Replaces: glquake-3dfxgl, quake-common
 Description: First person shooting game - 3dfx GL version
  QuakeForge is a source port of Quake, the successor to ID Software's very
  popular DOOM series.  Its primary development goal is to remain compatible      with the original game released by ID Software wile allowing optional 
