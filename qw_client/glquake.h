@@ -33,6 +33,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void GL_BeginRendering (int *x, int *y, int *width, int *height);
 void GL_EndRendering (void);
 
+/* palisade -	i didn't add loring's 1999/12/30 patch directly, i edited it
+		by hand because he was behind on the updates...
+		it looks like he might have fudged the following, so i'm
+		not including it... here's what his "new" code looks like:
+
+-#ifndef APIENTRY
+-/* Mesa defines APIENTRY, but other versions of OpenGL do not */
+-#ifdef GLAPIENTRY
+-#define APIENTRY GLAPIENTRY
+-#else
+-#define APIENTRY
+-#endif
+-#endif
+
+	note: the rest of his patch is further down /loring
+*/
 	/* Mesa pre-3.1 defines APIENTRY instead of GLAPIENTRY */
 #ifndef GLAPIENTRY
 #ifdef APIENTRY
@@ -44,6 +60,14 @@ void GL_EndRendering (void);
 #endif
 #endif
 
+/*	continuation of loring's patch, he just #ifdef'd and #endif'd _WIN32
+	this section, reason follows:
+
+	The solution in uquake/glquake.h is to put a #ifdef _WIN32 around the
+	code, so Mesa 3.2 is required under at least Windows, but probably
+	nowhere else (ie, the issue is sidestepped for non-Windows systems).
+*/
+#ifdef _WIN32
 // Function prototypes for the Texture Object Extension routines
 typedef GLboolean (GLAPIENTRY *ARETEXRESFUNCPTR)(GLsizei, const GLuint *,
                     const GLboolean *);
@@ -58,6 +82,7 @@ typedef void (GLAPIENTRY *TEXSUBIMAGEPTR)(int, int, int, int, int, int, int, int
 extern	BINDTEXFUNCPTR bindTexFunc;
 extern	DELTEXFUNCPTR delTexFunc;
 extern	TEXSUBIMAGEPTR TexSubImage2DFunc;
+#endif
 
 extern	int texture_extension_number;
 extern	int		texture_mode;
