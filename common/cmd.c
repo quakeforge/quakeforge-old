@@ -1,4 +1,5 @@
 /*
+cmd.c - Quake script command processing module
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,14 +20,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cmd.c -- Quake script command processing module
 
-#include "common.h"
-#include "cmd.h"
-#include "console.h"
-#include "cvar.h"
-#include "sys.h"
-#include "client.h"
+#include <common.h>
+#include <cmd.h>
+#include <console.h>
+#include <cvar.h>
+#include <sys.h>
+#include <client.h>
 #include <lib_replace.h>
 #include <zone.h>
 #include <string.h>
@@ -628,7 +628,16 @@ void Cmd_ForwardToServer (void)
 	if (cls.demoplayback)
 		return;		// not really connected
 
-#ifdef QUAKEWORLD
+#ifdef UQUAKE
+	MSG_WriteByte (&cls.message, clc_stringcmd);
+	SZ_Print (&cls.message, Cmd_Argv(0));
+	if (Cmd_Argc() > 1)
+	{
+		SZ_Print (&cls.message, " ");
+		SZ_Print (&cls.message, Cmd_Args());
+	} else
+		SZ_Print (&cls.message, "\n");
+#elif QUAKEWORLD
 	MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 	SZ_Print (&cls.netchan.message, Cmd_Argv(0));
 	if (Cmd_Argc() > 1)
