@@ -50,6 +50,6 @@ void Com_BlockFullChecksum (void *buffer, int len, unsigned char *outbuf)
 	
 	mdfour_begin (&md);
 	mdfour_update (&md, (unsigned char *) buffer, len);
-	mdfour_final (&md, outbuf);
+	mdfour_result (&md, outbuf);
 //	mdfour ( outbuf, (unsigned char *) buffer, len );
 }
