@@ -467,13 +467,13 @@ LoadTGA (gzFile *fin) {
 	targa_header.colormap_type = gzgetc(fin);
 	targa_header.image_type = gzgetc(fin);
 	
-	targa_header.colormap_index = fgetLittleShort(fin);
-	targa_header.colormap_length = fgetLittleShort(fin);
-	targa_header.colormap_size = fgetc(fin);
-	targa_header.x_origin = fgetLittleShort(fin);
-	targa_header.y_origin = fgetLittleShort(fin);
-	targa_header.width = fgetLittleShort(fin);
-	targa_header.height = fgetLittleShort(fin);
+	targa_header.colormap_index = gzgetLittleShort(fin);
+	targa_header.colormap_length = gzgetLittleShort(fin);
+	targa_header.colormap_size = gzgetc(fin);
+	targa_header.x_origin = gzgetLittleShort(fin);
+	targa_header.y_origin = gzgetLittleShort(fin);
+	targa_header.width = gzgetLittleShort(fin);
+	targa_header.height = gzgetLittleShort(fin);
 	targa_header.pixel_size = gzgetc(fin);
 	targa_header.attributes = gzgetc(fin);
 
@@ -601,7 +601,8 @@ LoadTGA (gzFile *fin) {
 			breakOut:;
 		}
 	}
-	fclose(fin);
+	gzclose(fin);
+	// fclose(fin);
 }
 
 /*

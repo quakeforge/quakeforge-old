@@ -123,31 +123,47 @@ typedef struct
 {
 	cactive_t	state;
 
+#ifdef QUAKEWORLD
+	netchan_t	netchan;
+
+	char		userinfo[MAX_INFO_STRING];
+	char		servername[MAX_OSPATH];
+
+	// download stuff
+	int		qport;
+	FILE		*download;
+	char		downloadtempname[MAX_OSPATH];
+	char		downloadname[MAX_OSPATH];
+	int		downloadnumber;
+	dltyle_t	downloadtype;
+	int		downloadpercent;
+
+	int		challenge;
+	float		latency;
+#endif
+
+#ifdef UQUAKE
 // personalization data sent to server	
 	char		mapstring[MAX_QPATH];
 	char		spawnparms[MAX_MAPSTRING];	// to restart a level
 
-// demo loop control
-	int			demonum;		// -1 = don't play demos
-	char		demos[MAX_DEMOS][MAX_DEMONAME];		// when not playing
+// connection information
+	int		signon;			// 0 to SIGNONS
+	struct qsocket_s	*netcon;
+	sizebuf_t	message;		// net msg write buffer
+#endif
 
-// demo recording info must be here, because record is started before
-// entering a map (and clearing client_state_t)
+// demos - this stuff can't go into client_state_t
+	int		demonum;		// -1 == don't play
+	char		demos[MAX_DEMOS][MAX_DEMONAME];	// when not playing
 	qboolean	demorecording;
 	qboolean	demoplayback;
 	qboolean	timedemo;
-	int			forcetrack;			// -1 = use normal cd track
+	int		forcetrack;		// -1 == normal cd track
 	gzFile		*demofile;
-	int			td_lastframe;		// to meter out one message a frame
-	int			td_startframe;		// host_framecount at start
-	float		td_starttime;		// realtime at second frame of timedemo
-
-
-// connection information
-	int			signon;			// 0 to SIGNONS
-	struct qsocket_s	*netcon;
-	sizebuf_t	message;		// writing buffer to send to server
-	
+	int		td_lastframe;		// for msg timing
+	int		td_startframe;		// inits to host_framecount
+	float		td_starttime;		// of 2nd frame of timedemo
 } client_static_t;
 
 extern client_static_t	cls;

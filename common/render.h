@@ -1,4 +1,5 @@
 /*
+render.h - public interface to both GL and software renderers
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -23,10 +24,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _RENDER_H
 #define _RENDER_H
 
-#include "qtypes.h"
-#include "vid.h"
+#include <qtypes.h>
+#include <vid.h>
 
-// refresh.h -- public interface to refresh functions
 
 #define	MAXCLIPPLANES	11
 

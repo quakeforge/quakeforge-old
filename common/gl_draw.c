@@ -47,6 +47,11 @@ int			translate_texture;
 int			char_texture;
 int			cs_texture;	// crosshair 2 texture
 int			cs_texture3;	// crosshair 3 texture
+int			bc_texture;	// used for noclip
+
+static byte bc_data[4] = {
+	0xfe, 0xfe, 0xfe, 0xfe
+};
 
 static byte cs_data[64] = {
 	0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xff, 0xff,
@@ -417,6 +422,7 @@ void Draw_Init (void)
 	cs_texture3 = GL_LoadTexture ("crosshair3", 16, 16, cs_data3,
 			false, true);
 	cs_texture = GL_LoadTexture ("crosshair", 8, 8, cs_data, false, true);
+	bc_texture = GL_LoadTexture ("bctex", 2, 2, bc_data, false, true);
 	// For some reason which I cannot claim to fathom, it seems to be
 	//  necessary to call GL_LoadTexture() here in descending (in terms
 	//  of size) order else things don't work right.  No idea why this

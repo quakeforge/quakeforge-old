@@ -1,4 +1,5 @@
 /*
+r_misc.c
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,18 +20,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_misc.c
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "glquake.h"
-#include "cvar.h"
-#include "console.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <glquake.h>
+#include <cvar.h>
+#include <console.h>
 #include <sys.h>
 #include <lib_replace.h>
 #include <cmd.h>
 
 extern void R_InitBubble();
+
+extern cvar_t r_clearcolor;
 
 /*
 ==================
@@ -205,6 +207,7 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_volfog);
 #endif
 	Cvar_RegisterVariable (&r_waterripple);
+	Cvar_RegisterVariable (&r_clearcolor);
 
 	Cvar_RegisterVariable (&gl_clear);
 	Cvar_RegisterVariable (&gl_texsort);

@@ -27,15 +27,18 @@
 	Boston, MA  02111-1307, USA.
 */
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "glquake.h"
-#include "mathlib.h"
-#include "console.h"
-#include "view.h"
-#include "sound.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <glquake.h>
+#include <mathlib.h>
+#include <console.h>
+#include <view.h>
+#include <sound.h>
 #include <cvar.h>
 #include <sys.h>
+
+#include <draw.h>
+#include <sbar.h>
 
 entity_t	r_worldentity;
 
@@ -82,6 +85,7 @@ texture_t	*r_notexture_mip;
 
 int		d_lightstylevalue[256];	// 8.8 fraction of base light value
 
+cvar_t		r_clearcolor = {"r_clearcolor", "2"};
 
 void R_MarkLeaves (void);
 
@@ -975,6 +979,34 @@ R_Clear ( void ) {
 	glDepthRange (gldepthmin, gldepthmax);
 }
 
+extern int bc_texture;
+extern cvar_t crosshaircolor;
+
+void TileBC (int x, int y, int w, int h)
+{
+	unsigned char *pColor;
+
+	glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	pColor = (unsigned char *) &d_8to24table[(byte) r_clearcolor.value];
+
+	glColor4ubv ( pColor );
+	GL_Bind (bc_texture);
+	
+	glBegin (GL_QUADS);
+	glTexCoord2f (x/64.0, y/64.0);
+	glVertex2f (x, y);
+	glTexCoord2f ( (x+w)/64.0, y/64.0);
+	glVertex2f (x+w, y);
+	glTexCoord2f ( (x+w)/64.0, (y+h)/64.0);
+	glVertex2f (x+w, y+h);
+	glTexCoord2f ( x/64.0, (y+h)/64.0 );
+	glVertex2f (x, y+h);
+	glEnd ();
+
+	glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+}
+
+
 /*
 	R_RenderView
 
@@ -992,6 +1024,11 @@ R_RenderView ( void ) {
 
 	if (!r_worldentity.model || !cl.worldmodel)
 		Sys_Error ("R_RenderView: NULL worldmodel");
+
+	if ((int)cl_sbar.value == 1)
+		TileBC (0, 0, vid.width, vid.height - sb_lines);
+	else
+		TileBC (0, 0, vid.width, vid.height);
 
 	if (r_speeds.value)
 	{
