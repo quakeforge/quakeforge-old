@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static Display *dpy = NULL;
 static Window win;
-static Cursor cursor;
+static Cursor cursor = None;
 static GLXContext ctx = NULL;
 
 static float old_windowed_mouse = 0;
@@ -248,7 +248,9 @@ static void blank_cursor(void)
 
 static void install_grabs(void)
 {
-	blank_cursor();
+	if (cursor == None){
+		blank_cursor();
+	}
 	
 	XGrabPointer(dpy, win,
 				 True,
