@@ -1027,17 +1027,14 @@ void ED_LoadFromFile (char *data)
 		data = ED_ParseEdict (data, ent);
 
 // remove things from different skill levels or deathmatch
-#ifndef QUAKEWORLD
 		if (deathmatch->value)
 		{
-#endif
 			if (((int)ent->v.spawnflags & SPAWNFLAG_NOT_DEATHMATCH))
 			{
 				ED_Free (ent);
 				inhibit++;
 				continue;
 			}
-#ifndef QUAKEWORLD
 		}
 		else if ((current_skill == 0 && ((int)ent->v.spawnflags & SPAWNFLAG_NOT_EASY))
 				|| (current_skill == 1 && ((int)ent->v.spawnflags & SPAWNFLAG_NOT_MEDIUM))
@@ -1047,7 +1044,6 @@ void ED_LoadFromFile (char *data)
 			inhibit++;
 			continue;
 		}
-#endif
 
 //
 // immediately call spawn function
