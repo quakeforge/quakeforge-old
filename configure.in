@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(common/crc.h)
 
-# Version of this release
+dnl Version of this release
 AC_DEFINE(VERSION,"0.1.0-pre")
 
 AC_CANONICAL_SYSTEM
@@ -13,18 +13,31 @@ AC_PROG_CPP
 AC_PROG_MAKE_SET
 
 dnl Checks for header files.
-AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h \
+AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h sys/asoundlib.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
 	dsound.h mmsystem.h mme/mmsystem.h mme/mme_public.h)
 
 dnl checks for compiler characteristics
+AC_PROG_GCC_TRADITIONAL
 AC_C_BIGENDIAN
 
 AC_ARG_ENABLE(release,
 [  --enable-release        compile release (with optimization)],
        RELEASE=$enable_release
 )
-AC_SUBST(RELEASE)
+
+dnl FIXME: Remove next line when ALSA support is added
+enable-alsa=no
+AC_ARG_ENABLE(alsa,
+[  --enable-alsa           enable alsa support],
+)	
+
+dnl Checks for stricmp/strcasecmp
+AC_CHECK_FUNC(stricmp,,
+  AC_CHECK_FUNC(strcasecmp, AC_DEFINE(stricmp,strcasecmp)))
+
+dnl Checks for working -lm
+AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([math library (-lm) appears broken]))
 
 dnl Checks for X11 support
 AC_PATH_XTRA
@@ -185,17 +198,20 @@ fi
 
 dnl Make sure DGA works
 if test "x$HAS_DGA" = xyes; then
+   dnl FIXME: figure out why -lXxf86dga -lXxf86vm is getting into LIBS if
+   dnl        we don't save/restore them
    save_LIBS="$LIBS"
-   LIBS="$X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS"
    AC_CHECK_LIB(Xxf86dga, XF86DGAQueryVersion,,
-     HAS_DGA=no)
+     HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
    AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,,
-     HAS_DGA=no)
+     HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
    LIBS="$save_LIBS"
-   DGA_LIBS="-lXxf86dga -lXxf86vm"
 fi
-if test "x$USE_DGA" != xyes; then
-   USE_DGA=no DGA_LIBS=""
+if test "x$HAS_DGA" != xyes; then
+   DGA_LIBS=""
+else
+   AC_DEFINE(HAS_DGA,1)
+   DGA_LIBS="-lXxf86dga -lXxf86vm"
 fi
 
 dnl Make sure -lggi works
@@ -235,8 +251,6 @@ if test "x$HAS_SDL" != xyes; then
 fi
 
 
-
-
 dnl Make sure -lglide2x works
 if test "x$HAS_GLIDE" = xyes; then
    AC_CHECK_LIB(glide2x, main, GLIDE_LIBS="$GLIDE_LIBS -lglide2x"
@@ -248,27 +262,21 @@ fi
 
 dnl Make sure -lGL or -lMesaGL works
 if test "x$HAS_OGL" = xyes; then
-   save_LIBS="$LIBS"
-   LIBS="$X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS"   
    AC_CHECK_LIB(GL, glColor4f, OGL_LIBS="$OGL_LIBS -lGL"
-     HAS_OGL=yes, HAS_OGL=no, [$OGL_LIBS])
+     HAS_OGL=yes, HAS_OGL=no,
+     [$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS])
    if test "x$HAS_OGL" != xyes; then
       AC_CHECK_LIB(MesaGL, glColor4f, OGL_LIBS="$OGL_LIBS -lMesaGL"
-        HAS_OGL=yes, HAS_OGL=no, [$OGL_LIBS])
+        HAS_OGL=yes, HAS_OGL=no,
+	[$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS])
    fi
-   LIBS="$save_LIBS"
 fi
 if test "x$HAS_OGL" != xyes; then
    OGL_CFLAGS="" OGL_LIBS=""
 fi
 
-dnl Check for other libraries
-AC_CHECK_LIB(m, pow, HAS_M=yes, HAS_M=no)
-if test "x$HAS_M" != xyes; then
-  AC_MSG_ERROR([math library (-lm) appears broken])
-fi
+dnl Check for xil
 AC_CHECK_LIB(xil,xil_import, HAS_XIL=yes, HAS_XIL=no)
-AC_SUBST(HAS_XIL)
 
 TDFXGL_CFLAGS=""
 TDFXGL_LIBS=""
@@ -303,64 +311,21 @@ else
 fi
 
 
-AC_SUBST(X_LIBS)
-AC_SUBST(X_CFLAGS)
-AC_SUBST(X11_SHM_LIB)
-AC_SUBST(HAS_X11)
-if test "x$HAS_DGA" = xyes; then
-   AC_DEFINE(HAS_DGA,1)
-fi
-AC_SUBST(HAS_DGA)
-AC_SUBST(DGA_LIBS)
-AC_SUBST(HAS_GGI)
-AC_SUBST(GGI_CFLAGS)
-AC_SUBST(GGI_LIBS)
-AC_SUBST(HAS_SVGA)
-AC_SUBST(SVGA_CFLAGS)
-AC_SUBST(SVGA_LIBS)
-AC_SUBST(HAS_GLIDE)
-AC_SUBST(GLIDE_CFLAGS)
-AC_SUBST(GLIDE_LIBS)
-AC_SUBST(HAS_OGL)
-AC_SUBST(OGL_CFLAGS)
-AC_SUBST(OGL_LIBS)
-AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, HAS_INDEX8)
-AC_SUBST(HAS_TDFXGL)
-AC_SUBST(TDFXGL_CFLAGS)
-AC_SUBST(TDFXGL_LIBS)
-AC_SUBST(HAS_SDL)
-AC_SUBST(SDL_CFLAGS)
-AC_SUBST(SDL_LIBS)
-AC_SUBST(prefix)
-AC_SUBST(bindir)
-AC_SUBST(mandir)
 
-dnl Checks for library functions.
-AC_PROG_GCC_TRADITIONAL
-AC_CHECK_FUNC(stricmp,,
-  AC_CHECK_FUNC(strcasecmp, AC_DEFINE(stricmp,strcasecmp)))
-
-
-##########################################################
-#
-# Release (optimized) compiler settings (GCC only)
-#
+dnl CFLAGS for release and devel versions
 if test "x$RELEASE" = xyes; then
    if test "x$GCC" = xyes; then
       AC_MSG_CHECKING(for special release compiler settings)
       BASE_RELEASE_CFLAGS="-Wall -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
-dnl FIX:  Someone PLEASE be so kind as to make this -mcpu stuff sane?
       case "${target}" in
          changequote(,)dnl
-         i[34567]86-*-*)
+         i?86-*-*)
          changequote([,])dnl
-            case "${target_cpu}" in
-	       changequote(,)dnl
-               i[456]86) CPU_SUBMODEL="-mcpu=${target_cpu}" ;;
-	       changequote([,])dnl
-            esac
-            MORE_RELEASE_CFLAGS="${GCC_EMULATION} -malign-loops=2 -malign-jumps=2 -malign-functions=2" ;;
-         *) MORE_RELEASE_CFLAGS="" ;;
+            MORE_RELEASE_CFLAGS="-malign-loops=2 -malign-jumps=2 -malign-functions=2"
+	    ;;
+         *)
+	    MORE_RELEASE_CFLAGS=""
+	    ;;
       esac
       if test "x$MORE_RELEASE_CFLAGS" = x; then
          RELEASE_CFLAGS=-O
@@ -374,38 +339,40 @@ dnl FIX:  Someone PLEASE be so kind as to make this -mcpu stuff sane?
       RELEASE_CFLAGS=-O2
    fi
 fi
-AC_SUBST(RELEASE_CFLAGS)
 
-##########################################################
-#
-# is it an intel box?
-#
-AC_MSG_CHECKING(for an Intel machine)
+
+dnl Check for ia32
+AC_MSG_CHECKING(for an ia32 machine)
 case "${target}" in
-changequote(,)dnl
-   i[34567]86-*-*)
-changequote([,])dnl
+   i?86-*-*)
       INTEL_ARCH=yes
       AC_MSG_RESULT(yes)
           ;;
    *) AC_MSG_RESULT(no)
 esac
-AC_SUBST(INTEL_ARCH)
 
-##########################################################
-#
-# Sound available?
-#
 
 dnl Check for sound libraries
 AC_CHECK_LIB(mme,waveOutOpen,HAVE_LIBMME=yes)
 
 SND_LIBS=""
-AC_MSG_CHECKING(for sound support)
-
 SND_STYLE=""
-if test "x$ac_cv_header_sys_soundcard_h" = "xyes"; then
-  AC_EGREP_CPP([QF_maGiC_VALUE],[
+AC_MSG_CHECKING(for sound support)
+if test "x$enable_alsa" = "xyes"; then
+   if test -z "$SND_STYLE" -a "x$ac_cv_header_sys_asoundlib_h" = "xyes"; then
+      AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <sys/asoundlib.h>
+#if defined(SND_LIB_MAJOR) && defined(SND_LIB_MINOR)
+#if SND_LIB_MAJOR>0 || (SND_LIB_MAJOR==0 && SND_LIB_MINOR>=5)
+QF_maGiC_VALUE
+#endif
+#endif
+      ],[ SND_STYLE="ALSA" SND_LIBS="-lasound"])
+   fi
+fi
+
+if test -z "$SND_STYLE" -a "x$ac_cv_header_sys_soundcard_h" = "xyes"; then
+   AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <sys/soundcard.h>
 #ifdef SNDCTL_DSP_SETTRIGGER
 QF_maGiC_VALUE
@@ -413,7 +380,7 @@ QF_maGiC_VALUE
     ], SND_STYLE="OSS")
 fi
 if test -z "$SND_STYLE" -a "x$ac_cv_header_linux_soundcard_h" = "xyes"; then
-  AC_EGREP_CPP([QF_maGiC_VALUE],[
+   AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <linux/soundcard.h>
 #ifdef SNDCTL_DSP_SETTRIGGER
 QF_maGiC_VALUE
@@ -421,7 +388,7 @@ QF_maGiC_VALUE
     ], SND_STYLE="OSS")
 fi
 if test -z "$SND_STYLE" -a "x$ac_cv_header_machine_soundcard_h" = "xyes"; then
-  AC_EGREP_CPP([QF_maGiC_VALUE],[
+   AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <machine/soundcard.h>
 #ifdef SNDCTL_DSP_SETTRIGGER
 QF_maGiC_VALUE
@@ -463,22 +430,15 @@ QF_maGiC_VALUE
 fi
 
 if test "x$SND_STYLE" = "x"; then
-AC_MSG_RESULT(no)
+   AC_MSG_RESULT(no)
 else
-AC_MSG_RESULT(yes ($SND_STYLE style))
+   AC_MSG_RESULT(yes ($SND_STYLE style))
 fi
-AC_SUBST(SND_STYLE)
-AC_SUBST(SND_LIBS)
 
-##########################################################
-#
-# System driver?
-#
+dnl Checks for which system driver to use
 AC_MSG_CHECKING(for system driver)
 case "${target}" in
-changequote(,)dnl
-   i[34567]86-*-linux-gnu*)
-changequote([,])dnl
+   *-*-linux-gnu*)
       SYS_SRC="sys_linux.c"
       QW_CL_SYS_SRC="sys_linux.c"
       QW_SRV_SYS_SRC="sys_unix.c"
@@ -487,7 +447,8 @@ changequote([,])dnl
       SYS_SRC="sys_unix.c" 
       QW_CL_SYS_SRC="sys_linux.c"
       QW_SRV_SYS_SRC="sys_unix.c"
-      DEFAULT_SYS=yes ;;
+      DEFAULT_SYS=yes
+      ;;
 # XXX - windows - conproc.c sys_win.c
 # XXX - dos  - conproc.c(?) sys_dos.c
 # XXX - need to add dos, Windows
@@ -497,16 +458,8 @@ AC_MSG_RESULT([no, using default])
 else
 AC_MSG_RESULT(yes ($SYS_SRC $QW_CL_SYS_SRC $QW_SRV_SYS_SRC))
 fi
-AC_SUBST(SYS_SRC)
-AC_SUBST(QW_CL_SYS_SRC)
-AC_SUBST(QW_SRV_SYS_SRC)
 
-##########################################################
-#
-# X11 video driver?
-#
-# If Solaris, use vid_sunx.c,
-# otherwise (if X available) use vid_x.c
+dnl check for X11 video driver
 AC_MSG_CHECKING(for X11 video driver)
 case "${target}" in
    *-solaris*) 
@@ -524,17 +477,53 @@ AC_MSG_RESULT(no)
 else
 AC_MSG_RESULT(yes ($X11_VID_SRC))
 fi
-AC_SUBST(X11_VID_SRC)
 
 dnl Check for system services
 AC_EXEEXT
 AC_OBJEXT
 
-##########################################################
-#
-# Output files
-#
+dnl if the user doesn't say otherwise, games belong in $prefix/games
+if test "x$bindir" = 'x${exec_prefix}/bin'; then
+   bindir='${exec_prefix}/games'
+fi
 
+
+AC_SUBST(RELEASE)
+AC_SUBST(RELEASE_CFLAGS)
+AC_SUBST(HAS_XIL)
+AC_SUBST(X_LIBS)
+AC_SUBST(X_CFLAGS)
+AC_SUBST(X11_SHM_LIB)
+AC_SUBST(HAS_X11)
+AC_SUBST(HAS_DGA)
+AC_SUBST(DGA_LIBS)
+AC_SUBST(HAS_GGI)
+AC_SUBST(GGI_CFLAGS)
+AC_SUBST(GGI_LIBS)
+AC_SUBST(HAS_SVGA)
+AC_SUBST(SVGA_CFLAGS)
+AC_SUBST(SVGA_LIBS)
+AC_SUBST(HAS_GLIDE)
+AC_SUBST(GLIDE_CFLAGS)
+AC_SUBST(GLIDE_LIBS)
+AC_SUBST(HAS_OGL)
+AC_SUBST(OGL_CFLAGS)
+AC_SUBST(OGL_LIBS)
+AC_SUBST(HAS_TDFXGL)
+AC_SUBST(TDFXGL_CFLAGS)
+AC_SUBST(TDFXGL_LIBS)
+AC_SUBST(HAS_SDL)
+AC_SUBST(SDL_CFLAGS)
+AC_SUBST(SDL_LIBS)
+AC_SUBST(SND_STYLE)
+AC_SUBST(SND_LIBS)
+AC_SUBST(INTEL_ARCH)
+AC_SUBST(SYS_SRC)
+AC_SUBST(QW_CL_SYS_SRC)
+AC_SUBST(QW_SRV_SYS_SRC)
+AC_SUBST(X11_VID_SRC)
+
+dnl Output files
 AC_CONFIG_HEADER(common/config.h)
 AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
 

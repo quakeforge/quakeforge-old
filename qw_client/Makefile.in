@@ -123,6 +123,9 @@ CD_AUDIO_SRC   = cd_wrapper.c
 SND_STYLE      = @SND_STYLE@
 SND_SRC = snd_null.c
 
+ifeq ($(SND_STYLE),ALSA)
+SND_SRC = snd_alsa.c alsa.c
+endif
 ifeq ($(SND_STYLE),OSS)
 SND_SRC = snd_dma.c snd_oss.c
 endif
