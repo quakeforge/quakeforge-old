@@ -19,7 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_surf.c: surface-related refresh code
+// r_surf.c: surrface-related refresh code
 
 #include "quakedef.h"
 
@@ -725,12 +725,13 @@ void R_BlendLightmaps (void)
 		}
 		for ( ; p ; p=p->chain)
 		{
-//			if (p->flags & SURF_UNDERWATER)
-//				DrawGLWaterPolyLightmap (p);
-			if (r_waterwarp.value && ((r_viewleaf->contents==CONTENTS_EMPTY && (p->flags & SURF_UNDERWATER)) ||
-				(r_viewleaf->contents!=CONTENTS_EMPTY && !(p->flags & SURF_UNDERWATER)))
-				&& !(p->flags & SURF_DONTWARP))
+		
+		if (r_waterwarp.value && (p->flags & SURF_UNDERWATER)) {
 				DrawGLWaterPolyLightmap (p);
+//			if (r_waterwarp.value && ((r_viewleaf->contents==CONTENTS_EMPTY && (p->flags & SURF_UNDERWATER)))
+//				&& !(p->flags & SURF_DONTWARP)) {
+				DrawGLWaterPolyLightmap (p);
+			}
 			else
 			{
 				glBegin (GL_POLYGON);
@@ -787,9 +788,7 @@ void R_RenderBrushPoly (msurface_t *fa)
 		return;
 	}
 
-	if (r_waterwarp.value&&((r_viewleaf->contents==CONTENTS_EMPTY && (fa->flags & SURF_UNDERWATER)) ||
-		(r_viewleaf->contents!=CONTENTS_EMPTY && !(fa->flags & SURF_UNDERWATER)))
-		&& !(fa->flags & SURF_DONTWARP))
+	if (r_waterwarp.value&&(fa->flags & SURF_UNDERWATER))
 		DrawGLWaterPoly (fa->polys);
 	else
 		DrawGLPoly (fa->polys);
@@ -1265,12 +1264,14 @@ void R_RecursiveWorldNode (mnode_t *node)
 					continue;
 
 				// don't backface underwater surfaces, because they warp
-//				if ( !(surf->flags & SURF_UNDERWATER) && ( (dot < 0) ^ !!(surf->flags & SURF_PLANEBACK)) )
-//					continue;		// wrong side
-				if (r_waterwarp.value && !(((r_viewleaf->contents==CONTENTS_EMPTY && (surf->flags & SURF_UNDERWATER)) ||
+				if (r_waterwarp.value && !(surf->flags & SURF_UNDERWATER) && ( (dot < 0) ^ !!(surf->flags & SURF_PLANEBACK)) )
+					continue;		// wrong side
+
+/*				if (r_waterwarp.value && !(((r_viewleaf->contents==CONTENTS_EMPTY && (surf->flags & SURF_UNDERWATER)) ||
 					(r_viewleaf->contents!=CONTENTS_EMPTY && !(surf->flags & SURF_UNDERWATER)))
 					&& !(surf->flags & SURF_DONTWARP)) && ( (dot < 0) ^ !!(surf->flags & SURF_PLANEBACK)) )
 					continue;		// wrong side
+*/
 
 				// if sorting by texture, just store it out
 				if (gl_texsort.value)
