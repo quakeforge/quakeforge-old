@@ -877,8 +877,7 @@ void Host_Init (quakeparms_t *parms)
 	
 	R_InitTextures ();		// needed even for dedicated servers
  
-	if (cls.state != ca_dedicated)
-	{
+	if (cls.state != ca_dedicated) {
 		host_basepal = (byte *)COM_LoadHunkFile ("gfx/palette.lmp");
 		if (!host_basepal)
 			Sys_Error ("Couldn't load gfx/palette.lmp");
@@ -886,14 +885,14 @@ void Host_Init (quakeparms_t *parms)
 		if (!host_colormap)
 			Sys_Error ("Couldn't load gfx/colormap.lmp");
 
-		IN_Init ();
-		VID_Init (host_basepal);
-		Draw_Init ();
-		SCR_Init ();
-		R_Init ();
-		CDAudio_Init ();
-		Sbar_Init ();
-		CL_Init ();
+		VID_Init(host_basepal);
+		IN_Init();
+		Draw_Init();
+		SCR_Init();
+		R_Init();
+		CDAudio_Init();
+		Sbar_Init();
+		CL_Init();
 	}
 
 	Cbuf_InsertText ("exec quake.rc\n");
