@@ -1146,7 +1146,7 @@ else
 		R_DrawWaterSurfaces ();
 		if (r_volfog->value || r_fog->value)
 			glDisable(GL_FOG);
-		if (r_wateralpha->value<1.0) {
+		if (r_wateralpha->value<1.0 || r_volfog->value) {
 			glStencilFunc(GL_EQUAL, 1, 1);
 			glStencilMask(GL_FALSE);
 			glDisable(GL_DEPTH_TEST);
