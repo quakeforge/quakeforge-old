@@ -152,6 +152,10 @@ issues.
 5	Errata and Known Bugs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Problem:  After running the X11 target my keyboard repeat turns off! How
+          do I turn it back on?
+Solution: xset r on
+
 Problem:  The screen flickers once about every other frame when using GL
 Solution: Not all GL implementations support a performance hack which is
           used by the GL renderer allowing it to avoid clearing the
