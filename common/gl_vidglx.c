@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #include <ctype.h>
 #include <signal.h>
+#include <plugin.h>
 
 #ifdef HAVE_DLFCN_H
 # include <dlfcn.h>
@@ -573,6 +574,9 @@ void VID_Init(unsigned char *palette)
 	unsigned long mask;
 	Window root;
 	XVisualInfo *visinfo;
+
+	plugin_load("./in_x11.so");
+	IN->Init();
 
 	S_Init();
 
