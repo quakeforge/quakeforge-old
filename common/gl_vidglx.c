@@ -42,9 +42,9 @@
 #include <draw.h>
 #include <context_x11.h>
 
-#ifndef _EXPERIMENTAL_
-# undef HAS_DGA
-#endif
+//#ifndef _EXPERIMENTAL_
+//# undef HAS_DGA
+//#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -485,6 +485,7 @@ void VID_Init(unsigned char *palette)
 			hasvidmode = 0;
 		}
 	}
+	Con_SafePrintf ("hasdga = %i\nhasdgavideo = %i\nnummodes = %i\nhasvidmode = %i\n", hasdga, hasdgavideo, nummodes, hasvidmode);
 #endif
 #ifdef HAVE_DLOPEN
 	dlhand = dlopen(NULL, RTLD_LAZY);
@@ -514,7 +515,7 @@ void VID_Init(unsigned char *palette)
 #endif
 		/* Glide uses DGA internally, so we don't want to
 		   mess with it. */
-		hasdga = 0;
+//		hasdga = 0;
 	}
 
 	/* window attributes */

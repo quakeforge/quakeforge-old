@@ -807,7 +807,7 @@ void Draw_ConsoleBackground (int lines)
 	gl = (glpic_t *)conback->data;
 
 	y = vid.height * 0.9;
-	if (lines > y)
+	if (lines > y || gl_conalpha->value >= 1.0)
 		alpha = 1;
 	else
 		alpha = (float)(gl_conalpha->value * 2 * lines)/y;
