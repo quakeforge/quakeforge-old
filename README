@@ -264,6 +264,8 @@ Operating systems tested:
    SGI Irix
    IBM AIX 4.x
    Compaq/Digital Tru64 Unix
+   Windows 98
+   Windows NT
 
 Video cards tested (On Intel-based systems):
    3Dfx Voodoo Graphics (Linux)
