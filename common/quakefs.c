@@ -208,7 +208,7 @@ void COM_Maplist_f (void)
 		if (search->pack) {
 			int i;
 			pack_t *pak = search->pack;
-			Con_Printf ("Looking in %s...\n",search->filename);
+			Con_Printf ("Looking in %s...\n",search->pack->filename);
 			for (i=0 ; i<pak->numfiles ; i++) {
 				char *name=pak->files[i].name;
 				if (!fnmatch ("maps/*.bsp", name, FNM_PATHNAME)
