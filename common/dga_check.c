@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <X11/Xlib.h>
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#if defined(HAS_DGA)
 #include <X11/extensions/xf86dga.h>
 #include <X11/extensions/xf86vmode.h>
 #endif
@@ -47,7 +47,7 @@
 int
 VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
 {
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#if defined(HAS_DGA)
 	int event_base, error_base, dgafeat, dummy;
 
 	if (! XF86DGAQueryExtension(dpy, &event_base, &error_base)) {
@@ -81,7 +81,7 @@ VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
 int
 VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 {
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#if defined(HAS_DGA)
 	XF86VidModeModeInfo **vidmodes;
 	int event_base, error_base;
 	int dummy;
