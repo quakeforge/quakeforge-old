@@ -429,6 +429,9 @@ V_cshift_f ( void )
 void
 V_BonusFlash_f ( void )
 {
+	if (!cl_bonusflash->value)
+		return;
+
 	cl.cshifts[CSHIFT_BONUS].destcolor[0] = 215;
 	cl.cshifts[CSHIFT_BONUS].destcolor[1] = 186;
 	cl.cshifts[CSHIFT_BONUS].destcolor[2] = 69;

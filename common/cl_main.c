@@ -133,6 +133,7 @@ cvar_t	*cl_solid_players;
 cvar_t	*cl_verstring;
 
 cvar_t	*cl_talksound;
+cvar_t	*cl_bonusflash;
 cvar_t	*cl_muzzleflash;
 cvar_t	*cl_rocketlight;
 
@@ -1860,6 +1861,8 @@ void CL_InitCvars()
 
 	cl_talksound	= Cvar_Get ("cl_talksound", "misc/talk.wav", CVAR_NONE,
 		"Sets the sound used for talk messages");
+	cl_bonusflash	= Cvar_Get ("cl_bonusflash", "1", CVAR_NONE,
+		"Toggle light flashes on item pickup");
 	cl_muzzleflash	= Cvar_Get ("cl_muzzleflash", "1", CVAR_NONE,
 		"Muzzleflashes: 0 - off, 1 - none, 2 - own off");
 	cl_rocketlight	= Cvar_Get ("cl_rocketlight", "1", CVAR_NONE,
