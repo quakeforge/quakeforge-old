@@ -553,6 +553,7 @@ Host_Init (quakeparms_t *parms)
 	Cmd_Init ();
 	Cvar_Init ();
 	V_Init ();
+	Chase_Init ();
 
 #ifdef QUAKEWORLD
 	COM_Init ();
@@ -560,7 +561,6 @@ Host_Init (quakeparms_t *parms)
 	NET_Init (PORT_CLIENT);
 	Netchan_Init ();
 #elif UQUAKE
-	Chase_Init ();
 	Host_InitVCR (parms);
 
 	COM_Init ();
