@@ -282,7 +282,7 @@ void R_Init (void)
 
 	gl_particles = Cvar_Get ("gl_particles", "1", CVAR_ARCHIVE,
 			"Toggles and sets the size of particles");
-	gl_fires = Cvar_Get ("gl_fires", "1", CVAR_ARCHIVE,
+	gl_fires = Cvar_Get ("gl_fires", "0", CVAR_ARCHIVE,
 			"Toggles lavaball and rocket fireballs");
 
 	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions", "1", CVAR_NONE,
