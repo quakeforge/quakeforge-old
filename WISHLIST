@@ -86,3 +86,6 @@ djsmoke <djsmoke@optonline.net>
    the server to compare the ip address of the person who sent the rcon command
    to a list of hosts specified in the below command.
    rcon_iplist <ip1> <ip2> ...
+
+bf galbraith <bfgalbraith@yahoo.com>
+ - Skeletal Animation
