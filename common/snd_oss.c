@@ -160,7 +160,8 @@ qboolean SNDDMA_Init(void)
 // memory map the dma buffer
 
 	shm->buffer = (unsigned char *) mmap(NULL, info.fragstotal
-		* info.fragsize, PROT_WRITE, MAP_FILE|MAP_SHARED, audio_fd, 0);
+		* info.fragsize, PROT_READ|PROT_WRITE, MAP_FILE|MAP_SHARED,
+		audio_fd, 0);
 
 	if (shm->buffer == MAP_FAILED)
 	{
