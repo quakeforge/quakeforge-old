@@ -576,19 +576,18 @@ void CL_ParseServerData (void)
 	//ZOID--run the autoexec.cfg in the gamedir
 	//if it exists
 	if (cflag) {
+		int cl_warncmd_val = cl_warncmd->value;
 		snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "config.cfg");
 		if ((f = Qopen(fn, "r")) != NULL) {
 			Qclose(f);
 			Cbuf_AddText ("cl_warncmd 0\n");
 			Cbuf_AddText ("exec config.cfg\n");
-			Cbuf_AddText ("cl_warncmd 1\n");
 		}
 		snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "frontend.cfg");
 		if ((f = Qopen(fn, "r")) != NULL) {
 			Qclose(f);
 			Cbuf_AddText ("cl_warncmd 0\n");
 			Cbuf_AddText ("exec frontend.cfg\n");
-			Cbuf_AddText ("cl_warncmd 1\n");
 		}
 		if (cl_autoexec->value) {
 			snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "autoexec.cfg");
@@ -596,9 +595,10 @@ void CL_ParseServerData (void)
 				Qclose(f);
 				Cbuf_AddText ("cl_warncmd 0\n");
 				Cbuf_AddText ("exec autoexec.cfg\n");
-				Cbuf_AddText ("cl_warncmd 1\n");
 			}
 		}
+		snprintf(fn,sizeof(fn), "cl_warncmd %d\n",cl_warncmd_val);
+		Cbuf_AddText(fn);
 	}
 
 	// parse player slot, high bit means spectator
