@@ -944,7 +944,7 @@ void
 R_DrawFire (fire_t *f)
 {
 	int		i, j;
-	vec3_t		vec;
+	vec3_t		vec,vec2;
 	float		radius;
 	float		*b_sin, *b_cos;
 
@@ -972,15 +972,14 @@ R_DrawFire (fire_t *f)
 	// don't panic, this just draws a bubble...
 	for (i=16 ; i>=0 ; i--)
 	{
-		for (j=0 ; j<3 ; j++)
+		for (j=0 ; j<3 ; j++) {
 			vec[j] = f->origin[j] + (*b_cos * vright[j]
 				+ vup[j]*(*b_sin)) * radius;
-		glVertex3fv (vec);
-
-		for (j=0 ; j<3 ; j++)
-			vec[j] = f->owner[j] + (*b_cos * vright[j]
+			vec2[j] = f->owner[j] + (*b_cos * vright[j]
 				+ vup[j]*(*b_sin)) * radius;
+		}
 		glVertex3fv (vec);
+		glVertex3fv (vec2);
 
 		b_sin++;
 		b_cos++;
