@@ -436,7 +436,7 @@ void SND_Spatialize(channel_t *ch)
 		ch->rightvol = ch->master_vol;
 		return;
 	}
-	printf("%d %d\n",ch->entnum,cl.playernum);
+
 // calculate stereo seperation and distance attenuation
 
 	sndfx = ch->sfx;
