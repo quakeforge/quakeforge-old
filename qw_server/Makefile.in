@@ -119,7 +119,7 @@ $(BUILD_DIR)/../$(SRVQUAKE): $(ALL_SRV_OBJS)
 distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
-clean: clean-soft clean-gl $(CLEAN_TARGETS)
+clean: $(CLEAN_TARGETS)
 	rm -r $(BUILD_DIR)
 
 install: $(targets)
