@@ -430,25 +430,25 @@ TargaHeader		targa_header;
 byte			*targa_rgba;
 
 int
-fgetLittleShort ( FILE *f ) {
+gzgetLittleShort ( gzFile *f ) {
 
 	byte	b1, b2;
 
-	b1 = fgetc(f);
-	b2 = fgetc(f);
+	b1 = gzgetc(f);
+	b2 = gzgetc(f);
 
 	return (short)(b1 + b2*256);
 }
 
 int
-fgetLittleLong (FILE *f) {
+gzgetLittleLong (gzFile *f) {
 
 	byte	b1, b2, b3, b4;
 
-	b1 = fgetc(f);
-	b2 = fgetc(f);
-	b3 = fgetc(f);
-	b4 = fgetc(f);
+	b1 = gzgetc(f);
+	b2 = gzgetc(f);
+	b3 = gzgetc(f);
+	b4 = gzgetc(f);
 
 	return b1 + (b2<<8) + (b3<<16) + (b4<<24);
 }
@@ -457,15 +457,15 @@ fgetLittleLong (FILE *f) {
 	LoadTGA
 */
 void
-LoadTGA (FILE *fin) {
+LoadTGA (gzFile *fin) {
 
 	int		columns, rows, numPixels;
 	byte	*pixbuf;
 	int		row, column;
 
-	targa_header.id_length = fgetc(fin);
-	targa_header.colormap_type = fgetc(fin);
-	targa_header.image_type = fgetc(fin);
+	targa_header.id_length = gzgetc(fin);
+	targa_header.colormap_type = gzgetc(fin);
+	targa_header.image_type = gzgetc(fin);
 	
 	targa_header.colormap_index = fgetLittleShort(fin);
 	targa_header.colormap_length = fgetLittleShort(fin);
@@ -474,8 +474,8 @@ LoadTGA (FILE *fin) {
 	targa_header.y_origin = fgetLittleShort(fin);
 	targa_header.width = fgetLittleShort(fin);
 	targa_header.height = fgetLittleShort(fin);
-	targa_header.pixel_size = fgetc(fin);
-	targa_header.attributes = fgetc(fin);
+	targa_header.pixel_size = gzgetc(fin);
+	targa_header.attributes = gzgetc(fin);
 
 	if (targa_header.image_type!=2 && targa_header.image_type!=10) 
 		Sys_Error ("LoadTGA: Only type 2 and 10 targa RGB images supported\n");
@@ -492,7 +492,7 @@ LoadTGA (FILE *fin) {
 	targa_rgba = malloc (numPixels*4);
 	
 	if (targa_header.id_length != 0)
-		fseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
+		gzseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
 	
 	if (targa_header.image_type==2) {  // Uncompressed, RGB images
 		for(row=rows-1; row>=0; row--) {
@@ -613,7 +613,7 @@ void
 R_LoadSkys ( void ) {
 
 	int		i;
-	FILE	*f;
+	gzFile	*f;
 	char	name[64];
 
 	for (i=0 ; i<6 ; i++) {

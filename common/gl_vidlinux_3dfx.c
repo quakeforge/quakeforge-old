@@ -131,7 +131,7 @@ void	VID_SetPalette (unsigned char *palette)
 	unsigned short i;
 	unsigned	*table;
 //#ifdef QUAKEWORLD
-	FILE *f;
+	gzFile *f;
 	char s[255];
 //#endif
 	float dist, bestdist;
@@ -169,8 +169,8 @@ void	VID_SetPalette (unsigned char *palette)
 
 	COM_FOpenFile("glquake/15to8.pal", &f);
 	if (f) {
-		fread(d_15to8table, 1<<15, 1, f);
-		fclose(f);
+		gzread(f, d_15to8table, 1<<15);
+		gzclose(f);
 	} else
 //#endif // QUAKEWORLD
 	{

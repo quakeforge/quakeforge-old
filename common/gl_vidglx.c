@@ -376,7 +376,7 @@ void	VID_SetPalette (unsigned char *palette)
 	int		k;
 	unsigned short i;
 	unsigned	*table;
-	FILE *f;
+	gzFile *f;
 	char s[255];
 	float dist, bestdist;
 	static qboolean palflag = false;
@@ -410,8 +410,8 @@ void	VID_SetPalette (unsigned char *palette)
 
 	COM_FOpenFile("glquake/15to8.pal", &f);
 	if (f) {
-		fread(d_15to8table, 1<<15, 1, f);
-		fclose(f);
+		gzread(f, d_15to8table, 1<<15);
+		gzclose(f);
 	} else {
 		for (i=0; i < (1<<15); i++) {
 			/* Maps
