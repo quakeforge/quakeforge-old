@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <lib_replace.h>
 #include <draw.h>
+#include <context_x11.h>
 
 #ifndef _EXPERIMENTAL_
 # undef HAS_DGA
@@ -70,7 +71,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
 
-Display			*x_disp = NULL;
 static int		screen;
 Window			x_win;
 static GLXContext	ctx = NULL;
@@ -145,10 +145,7 @@ VID_Shutdown(void)
 {
 	Con_Printf("VID_Shutdown\n");
 
-	if (x_disp && ctx) {
-		glXDestroyContext(x_disp, ctx);
-		ctx = NULL;
-	}
+	glXDestroyContext(x_disp, ctx);
 #ifdef HAS_DGA
 	if (hasvidmode) {
 		int i;
@@ -165,11 +162,7 @@ VID_Shutdown(void)
 		dlhand = NULL;
 	}
 #endif
-
-	if (x_disp) {
-		XCloseDisplay(x_disp);
-		x_disp = NULL;
-	}
+	x11_close_display();
 }
 
 
@@ -450,11 +443,7 @@ void VID_Init(unsigned char *palette)
 	if (vid.conheight < 200)
 		vid.conheight = 200;
 
-	x_disp = XOpenDisplay(NULL);
-	if ( !x_disp ) {
-		fprintf(stderr, "Error couldn't open the X display\n");
-		exit(1);
-	}
+	x11_open_display();
 
 	screen = DefaultScreen(x_disp);
 	root = RootWindow(x_disp, screen);

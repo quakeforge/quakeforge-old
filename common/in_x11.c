@@ -94,11 +94,8 @@ void IN_Shutdown(void)
 {
 	Con_Printf("IN_Shutdown\n");
 	mouse_avail = 0;
-	if (x_disp) {
-		XAutoRepeatOn(x_disp);
-		XCloseDisplay(x_disp);
-		x_disp = 0;
-	}
+	XAutoRepeatOn(x_disp);
+	x11_close_display();
 }
 
 
@@ -378,6 +375,7 @@ int IN_Init ()
 	if (!x_win)
 		Sys_Error("IN: No window!!\n");
 
+	x11_open_display();	// call to increment the reference counter
 	{
 		int attribmask = CWEventMask;
 		XWindowAttributes attribs_1;

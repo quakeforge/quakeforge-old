@@ -65,7 +65,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];
 
-Display		*x_disp = NULL;
 Window		x_win;
 static Colormap		x_cmap;
 static GC		x_gc;
@@ -288,16 +287,6 @@ void VID_Gamma_f (void)
 }
 
 // ========================================================================
-// Tragic death handler
-// ========================================================================
-
-static void TragicDeath(int signal_num)
-{
-	XCloseDisplay(x_disp);
-	Sys_Error("This death brought to you by the number %d\n", signal_num);
-}
-
-// ========================================================================
 // makes a null cursor
 // ========================================================================
 
@@ -503,27 +492,7 @@ void VID_Init (unsigned char *palette)
 	verbose=COM_CheckParm("-verbose");
 
 // open the display
-	x_disp = XOpenDisplay(0);
-	if (!x_disp)
-	{
-		if (getenv("DISPLAY"))
-			Sys_Error("VID: Could not open display [%s]\n",
-				getenv("DISPLAY"));
-		else
-			Sys_Error("VID: Could not open local display\n");
-	}
-
-// catch signals
-	{
-		struct sigaction sa;
-		sigaction(SIGINT, 0, &sa);
-		sa.sa_handler = TragicDeath;
-		sigaction(SIGINT, &sa, 0);
-		sigaction(SIGTERM, &sa, 0);
-	}
-
-// for debugging only
-	XSynchronize(x_disp, True);
+	x11_open_display();
 
 // check for command-line window size
 	if ((pnum=COM_CheckParm("-winsize")))
@@ -746,7 +715,7 @@ VID_Shutdown(void)
 	Sys_Printf("VID_Shutdown\n");
 	if (x_disp) {
 		XAutoRepeatOn(x_disp);
-		XCloseDisplay(x_disp);
+		x11_close_display();
 		x_disp = 0;
 	}
 }

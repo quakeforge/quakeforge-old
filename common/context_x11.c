@@ -45,12 +45,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <context_x11.h>
 #include <qtypes.h>
+#include <vid.h>
+#include <sys.h>
 
 static void (*event_handlers[LASTEvent])(XEvent *);
 qboolean oktodraw = false;
 int x_shmeventtype;
+Display		*x_disp = NULL;
+static int x_disp_ref_count = 0;
 
-qboolean x11_add_event(int event, void (*event_handler)(XEvent *))
+qboolean
+x11_add_event(int event, void (*event_handler)(XEvent *))
 {
 	if (event >= LASTEvent) {
 		printf("event: %d, LASTEvent: %d\n", event, LASTEvent);
@@ -63,7 +68,8 @@ qboolean x11_add_event(int event, void (*event_handler)(XEvent *))
 	return true;
 }
 
-qboolean x11_del_event(int event, void (*event_handler)(XEvent *))
+qboolean
+x11_del_event(int event, void (*event_handler)(XEvent *))
 {
 	if (event >= LASTEvent)
 		return false;
@@ -74,7 +80,8 @@ qboolean x11_del_event(int event, void (*event_handler)(XEvent *))
 	return true;
 }
 
-void x11_process_event(void)
+void
+x11_process_event(void)
 {
 	XEvent x_event;
 
@@ -89,10 +96,55 @@ void x11_process_event(void)
 		event_handlers[x_event.type](&x_event);
 }
 
-void x11_process_events(void)
+void
+x11_process_events(void)
 {
 	/* Get events from X server. */
 	while (XPending(x_disp)) {
 		x11_process_event();
+	}
+}
+
+// ========================================================================
+// Tragic death handler
+// ========================================================================
+
+static void TragicDeath(int signal_num)
+{
+	//XCloseDisplay(x_disp);
+	VID_Shutdown();
+	Sys_Error("This death brought to you by the number %d\n", signal_num);
+}
+
+void
+x11_open_display(void)
+{
+	struct sigaction sa;
+
+	if (!x_disp) {
+		x_disp = XOpenDisplay(0);
+		if (!x_disp) {
+			Sys_Error("VID: Could not open display [%s]\n", XDisplayName(0));
+		}
+
+		// catch signals
+		sigaction(SIGINT, 0, &sa);
+		sa.sa_handler = TragicDeath;
+		sigaction(SIGINT, &sa, 0);
+		sigaction(SIGTERM, &sa, 0);
+
+		// for debugging only
+		XSynchronize(x_disp, True);
+	} else {
+		x_disp_ref_count++;
+	}
+}
+
+void
+x11_close_display(void)
+{
+	if (!--x_disp_ref_count) {
+		XCloseDisplay(x_disp);
+		x_disp = NULL;
 	}
 }

@@ -35,9 +35,11 @@ extern qboolean	doShm;
 extern int	x_shmeventtype;
 extern qboolean	oktodraw;
 
-extern qboolean x11_add_event(int event, void (*event_handler)(XEvent *));
-extern qboolean x11_del_event(int event, void (*event_handler)(XEvent *));
-extern void x11_process_event(void);
-extern void x11_process_events(void);
+qboolean x11_add_event(int event, void (*event_handler)(XEvent *));
+qboolean x11_del_event(int event, void (*event_handler)(XEvent *));
+void x11_process_event(void);
+void x11_process_events(void);
+void x11_open_display(void);
+void x11_close_display(void);
 
 #endif	// __CONTEXT_X11_H__
