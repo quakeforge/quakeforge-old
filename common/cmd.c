@@ -628,22 +628,19 @@ void Cmd_ForwardToServer (void)
 	if (cls.demoplayback)
 		return;		// not really connected
 
-#ifdef UQUAKE
-	MSG_WriteByte (&cls.message, clc_stringcmd);
-	SZ_Print (&cls.message, Cmd_Argv(0));
-	if (Cmd_Argc() > 1)
-	{
-		SZ_Print (&cls.message, " ");
-		SZ_Print (&cls.message, Cmd_Args());
-	} else
-		SZ_Print (&cls.message, "\n");
-#elif QUAKEWORLD
+#ifdef QUAKEWORLD
 	MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 	SZ_Print (&cls.netchan.message, Cmd_Argv(0));
-	if (Cmd_Argc() > 1)
-	{
+	if (Cmd_Argc() > 1) {
 		SZ_Print (&cls.netchan.message, " ");
 		SZ_Print (&cls.netchan.message, Cmd_Args());
+	}
+#elif UQUAKE
+	MSG_WriteByte (&cls.message, clc_stringcmd);
+	SZ_Print (&cls.message, Cmd_Argv(0));
+	if (Cmd_Argc() > 1) {
+		SZ_Print (&cls.message, " ");
+		SZ_Print (&cls.message, Cmd_Args());
 	}
 #endif
 }
@@ -665,11 +662,13 @@ void Cmd_ForwardToServer_f (void)
 	if (cls.demoplayback)
 		return;		// not really connected
 
-	if (Cmd_Argc() > 1)
-	{
+	if (Cmd_Argc() > 1) {
 #ifdef QUAKEWORLD
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		SZ_Print (&cls.netchan.message, Cmd_Args());
+#elif UQUAKE
+		MSG_WriteByte (&cls.message, clc_stringcmd);
+		SZ_Print (&cls.message, Cmd_Args());
 #endif
 	}
 }
