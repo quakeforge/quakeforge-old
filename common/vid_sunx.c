@@ -56,6 +56,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <common.h>
 #include <sys.h>
 #include <client.h>
+#include <plugin.h>
 
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
@@ -534,6 +535,8 @@ void	VID_Init (unsigned char *palette)
 	int num_visuals;
 	int template_mask;
 
+	plugin_load("in_x11.so");
+	IN->Init();
 	S_Init();	// sound is initialized here
 
 	Cmd_AddCommand("gamma", VID_Gamma_f);

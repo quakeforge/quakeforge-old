@@ -163,7 +163,7 @@ sound_lib_DIR:
 $(SOUND_LIB): sound_lib_DIR $(TARGET_DIR)/sound_lib.a
 
 $(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
-	#gcc -Wall -shared -o $@ $(SOUND_LIB_OBJS)
+	#gcc -Wall @SHARED@ -o $@ $(SOUND_LIB_OBJS)
 	ar cru $@ $(SOUND_LIB_OBJS)
 	@RANLIB@ $@
 
@@ -179,8 +179,7 @@ IN_SVGALIB_OBJS	= $(BUILD_DIR)/input_libs/in_svgalib.@OBJEXT@
 $(IN_SVGALIB_LIB): in_input_DIR $(TARGET_DIR)/$(IN_SVGALIB_LIB)
 
 $(TARGET_DIR)/$(IN_SVGALIB_LIB): $(IN_SVGALIB_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -lvga -shared -rdynamic -o $@ $(IN_SVGALIB_OBJS) 
-
+	$(CC) $(CFLAGS) $(LDFLAGS) @SHARED@ -o $@ @USE_SHARED_LIBS@ $(IN_SVGALIB_OBJS) 
 endif
 
 ifneq ($(IN_X11_LIB),)
@@ -190,8 +189,7 @@ IN_X11_OBJS	= $(BUILD_DIR)/input_libs/in_x11.@OBJEXT@
 $(IN_X11_LIB): in_input_DIR $(TARGET_DIR)/$(IN_X11_LIB)
 
 $(TARGET_DIR)/$(IN_X11_LIB): $(IN_X11_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -shared -rdynamic -o $@ $(IN_X11_OBJS) 
-
+	$(CC) $(CFLAGS) $(LDFLAGS) @SHARED@ @USE_SHARED_LIBS@ -o $@ $(IN_X11_OBJS) 
 endif
 
 ###########################################################################

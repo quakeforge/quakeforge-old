@@ -31,6 +31,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <server.h>
 #include <world.h>
 
+#if !defined(SERVERONLY) && !defined(UQUAKE)
+#define SV_Error Sys_Error
+#endif
+
 /*
 
 entities never clip against themselves, or their owner
@@ -617,11 +621,7 @@ qboolean SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 	}
 
 	if (num < hull->firstclipnode || num > hull->lastclipnode) {
-#if defined(SERVERONLY) || defined(UQUAKE)
 		SV_Error ("SV_RecursiveHullCheck: bad node number");
-#else
-		Sys_Error ("SV_RecursiveHullCheck: bad node number");
-#endif
 	}
 
 //
