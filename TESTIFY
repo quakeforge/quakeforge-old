@@ -1,0 +1,144 @@
+This file is where we store user testimonials on what works, where, and
+why.
+
+Note to maintainers: When you add testimonials, use the following format:
+
+(Optional)
+Name:
+Email:
+
+(Required)
+Chip:
+Card:
+Driver:
+Target:
+Extra:
+
+...under the heading for the OS used. Use other entries as a reference. If
+you aren't sure where something goes, put it under Extra. If the user
+tested more than one type of category, you may use a comma delimited list.
+
+Also, don't forget to add any additional platform information to the
+README if you add something entirely new to the testimonials.
+
+On the other hand, end users can:
+
+email user testimonies to: palisade@quakeforge.net
+Or to our quake-devel mailing list which you can find more information
+about on our website at: http://www.quakeforge.net/
+
+User testimonies:
+
+Linux
+-----
+
+Chip: Athlon
+Card: G400
+Driver: utah-glx
+
+Chip: PII
+Card: G200
+Driver: utah-glx
+
+Distro: RH6.1
+Card: dual V2
+Driver: Mesa 3.1
+
+Chip: PII 266MHz, K6-2, PIII-450
+Distro: Debian Potato
+Card: 3Dfx V3 3000 AGP, TNT1, 3Dfx V3 3000 AGP
+Driver: Mesa 3.1, ancient nvidia glx drivers, Mesa 3.1
+
+Chip: P133, Celeron 400Mhz
+Distro: Suse 6.1
+Card: 8mb V2, NeoMagic
+Driver: Mesa 3.1
+Target: all, all
+Extra: at 16bpp
+
+Chip: K6-2 350MHz, K6-2 350Mhz, K6-2 266Mhz
+Distro: n/a
+Kernel: 2.2, 2.2, 2.0
+Card: 8mb V2
+Driver: Mesa 3.1
+Target: quake-x11, quake-gl, quake-x11
+Extra: glide2x, at 16bpp
+
+Chip: PII 300MHz
+Distro: Slackware 7
+Kernel: 2.2
+Card: TNT (Velocity 4400)
+Driver: Nvidia new GLX, Mesa 3.1
+Target: all
+Extra: XFree86 3.3.5, libvga.so.1.4.0, GL freeze problem with new GLX
+
+Chip: Dell G1 400
+Distro: Mandrake 6.1, RH6.1
+Kernel: 2.x
+Card: Creative Riva TNT 16MB, onboard S3
+Driver: Mesa 3.1, Nvidia new GLX
+Target: quake-x11
+
+------------
+End of Linux
+
+
+FreeBSD
+-------
+
+Chip: n/a
+Version: 2.2.8
+Card: n/a
+Driver: n/a
+Target: quake-x11
+
+Chip: n/a
+Version: 3.2
+Card: n/a
+Driver: n/a
+Target: quake-x11
+
+Chip: n/a
+Version: 4.0
+Card: TNT2
+Driver: GLX
+Target: quake-x11
+
+--------------
+End of FreeBSD
+
+Solaris
+-------
+
+Chip: Ultrasparc
+Version: 7.0
+Card: Elite3D (?)
+Driver: n/a
+Target: n/a
+
+--------------
+End of Solaris
+
+AIX
+---
+
+Chip: Power3
+Version: 4.3.3
+Card: GTX3000p (?)
+Driver: n/a
+Target: n/a
+
+----------
+End of AIX
+
+IRIX
+----
+
+Chip: MIPS R10k
+Version: 6.5
+Card: MXI (Octane)
+Driver: n/a
+Target: n/a
+
+-----------
+End of IRIX
