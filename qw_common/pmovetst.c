@@ -252,14 +252,13 @@ qboolean PM_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 	if (!PM_RecursiveHullCheck (hull, node->children[side], p1f, midf, p1, mid, trace) )
 		return false;
 
-#ifdef PARANOID
-	if (PM_HullPointContents (pm_hullmodel, mid, node->children[side])
-	== CONTENTS_SOLID)
-	{
-		Con_Printf ("mid PointInHullSolid\n");
-		return false;
-	}
-#endif
+//#ifdef PARANOID
+//	if (PM_HullPointContents (pm_hullmodel, mid, node->children[side]) == CONTENTS_SOLID)
+//	{
+//		Con_Printf ("mid PointInHullSolid\n");
+//		return false;
+//	}
+//#endif
 	
 	if (PM_HullPointContents (hull, node->children[side^1], mid)
 	!= CONTENTS_SOLID)
