@@ -56,3 +56,12 @@
 
 /* Define this if your system has size_t */
 #undef HAVE_SIZE_T
+
+/* Define this if you have ss_len member in struct sockaddr_storage (BSD) */
+#undef HAVE_SS_LEN
+
+/* Define this if you have sin6_len member in struct sockaddr_in6 (BSD) */
+#undef HAVE_SIN6_LEN
+
+/* Define this if you have sa_len member in struct sockaddr (BSD) */
+#undef HAVE_SA_LEN

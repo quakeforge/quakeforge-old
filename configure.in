@@ -42,20 +42,44 @@ AC_C_INLINE
 AC_HEADER_TIME
 AC_STRUCT_TM
 AC_C_BIGENDIAN
-AC_MSG_CHECKING(for socklen_t in sys/socket.h)
-AC_TRY_COMPILE([#include <sys/socket.h>],
-        [ socklen_t x = 0;],
-        AC_DEFINE(HAVE_SOCKLEN_T) AC_MSG_RESULT(yes),
-        AC_MSG_RESULT(no))
 AC_MSG_CHECKING(for socklen_t in sys/types.h)
 AC_TRY_COMPILE([#include <sys/types.h>],
         [ socklen_t x = 0;],
         AC_DEFINE(HAVE_SOCKLEN_T) AC_MSG_RESULT(yes),
-        AC_MSG_RESULT(no))
+	AC_MSG_RESULT(no)
+	dnl FreeBSD 4.0 has it in sys/socket.h
+	AC_MSG_CHECKING(for socklen_t in sys/socket.h)
+	AC_TRY_COMPILE([#include <sys/types.h>
+		#include <sys/socket.h>],
+        	[ socklen_t x = 0;],
+        	AC_DEFINE(HAVE_SOCKLEN_T) AC_MSG_RESULT(yes),
+        	AC_MSG_RESULT(no))
+        )
 AC_MSG_CHECKING(for size_t in sys/types.h)
 AC_TRY_COMPILE([#include <sys/types.h>],
         [ size_t x = 0;],
         AC_DEFINE(HAVE_SIZE_T) AC_MSG_RESULT(yes),
+        AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING(for ss_len in struct sockaddr_storage)
+dnl maybe these two (at least the 2nd) should only be checked if ipv6
+dnl is enabled?
+AC_TRY_COMPILE([#include <sys/types.h>
+#include <sys/socket.h>],
+        [ void f(void) { struct sockaddr_storage ss; ss.ss_len=0; }],
+        AC_DEFINE(HAVE_SS_LEN) AC_MSG_RESULT(yes),
+        AC_MSG_RESULT(no))
+AC_MSG_CHECKING(for sin6_len in struct sockaddr_in6)
+AC_TRY_COMPILE([#include <sys/types.h>
+#include <netinet/in.h>],
+        [ void f(void) { struct sockaddr_in6 s6; s6.sin6_len=0; }],
+        AC_DEFINE(HAVE_SIN6_LEN) AC_MSG_RESULT(yes),
+        AC_MSG_RESULT(no))
+AC_MSG_CHECKING(for sa_len in struct sockaddr)
+AC_TRY_COMPILE([#include <sys/types.h>
+#include <netinet/in.h>],
+        [ void f(void) { struct sockaddr sa; sa.sa_len=0; }],
+        AC_DEFINE(HAVE_SA_LEN) AC_MSG_RESULT(yes),
         AC_MSG_RESULT(no))
 
 dnl Check for symbol underscore prefix 
@@ -109,12 +133,25 @@ AC_ARG_ENABLE(release,
        RELEASE=$enable_release
 )
 
-AC_ARG_ENABLE(ipv6,
-[  --enable-ipv6           enable IPv6 support],
+AC_ARG_WITH(ipv6,
+[  --with-ipv6             enable IPv6 support. Optional argument specifies
+                          location of inet6 libraries.],
 	AC_DEFINE(HAVE_IPV6)
-	NET_SOURCE=net_udp6.c
+	if test "x$witharg" = xno ; then
+		NET_SOURCE=net_udp.c
+		IPV6_LIBS=""
+	else
+		NET_SOURCE=net_udp6.c
+		if test "x$witharg" = xyes ; then
+			IPV6_LIBS=""
+		else
+			IPV6_LIBS="-L${witharg}"
+		fi
+	fi
 ,
+dnl Default is no IPv6
 	NET_SOURCE=net_udp.c
+	IPV6_LIBS=""
 )
 
 AC_ARG_ENABLE(alsa,
@@ -143,6 +180,11 @@ if test "x$ac_cv_func_dlopen" = "xno"; then
     AC_DEFINE(HAVE_DLOPEN))
 else
   have_dynload=yes
+fi
+
+dnl Checks for getaddrinfo in separate IPv6 lib, if not available by default
+if test "x$ac_cv_func_getaddrinfo" = xno ; then
+  AC_CHECK_LIB(inet6,getaddrinfo,LIBS="${LIBS} -L${IPV6_LIBS} -linet6")
 fi
 
 dnl Checks for working -lm
