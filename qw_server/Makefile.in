@@ -26,9 +26,6 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
 		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
 		   mkdir -p $(BUILD_DIR)/$$DIR; \
                 fi
-MAKE_SURE_bin_DIR = @DIR=bin; \
-	 $(MAKE_SURE_DIR)
-
 
 
 ########################################################################
@@ -118,11 +115,10 @@ $(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_srv_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(SRVQUAKE): $(BUILD_DIR)/bin/$(SRVQUAKE)
+$(SRVQUAKE): $(BUILD_DIR)/../$(SRVQUAKE)
 
-$(BUILD_DIR)/bin/$(SRVQUAKE): $(OBJSqw-server)
-	$(MAKE_SURE_bin_DIR)
-	$(CC) $(CFLAGS) $(OBJSqw-server) $(SRV_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(SRVQUAKE)
+$(BUILD_DIR)/../$(SRVQUAKE): $(OBJSqw-server)
+	$(CC) $(CFLAGS) $(OBJSqw-server) $(SRV_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SRVQUAKE)
 # XXX - Can this be automated?
 clean-$(SRVQUAKE):
 	rm -f $(OBJSqw-server)

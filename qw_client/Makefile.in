@@ -34,9 +34,6 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
 		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
 		   mkdir -p $(BUILD_DIR)/$$DIR; \
                 fi
-MAKE_SURE_bin_DIR = @DIR=bin; \
-	 $(MAKE_SURE_DIR)
-
 
 
 ########################################################################
@@ -240,11 +237,10 @@ $(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_x11_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(X11QUAKE): $(BUILD_DIR)/bin/$(X11QUAKE)
+$(X11QUAKE): $(BUILD_DIR)/../$(X11QUAKE)
 
-$(BUILD_DIR)/bin/$(X11QUAKE): $(OBJSquake-x11)
-	$(MAKE_SURE_bin_DIR)
-	$(CC) $(CFLAGS) $(OBJSquake-x11) $(X11_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(X11QUAKE)
+$(BUILD_DIR)/../$(X11QUAKE): $(OBJSquake-x11)
+	$(CC) $(CFLAGS) $(OBJSquake-x11) $(X11_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(X11QUAKE)
 # XXX - Can this be automated?
 clean-$(X11QUAKE):
 	rm -f $(OBJSquake-x11)
@@ -294,11 +290,10 @@ $(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(SVGAQUAKE): $(BUILD_DIR)/bin/$(SVGAQUAKE)
+$(SVGAQUAKE): $(BUILD_DIR)/../$(SVGAQUAKE)
 
-$(BUILD_DIR)/bin/$(SVGAQUAKE): $(OBJSquake-svga)
-	$(MAKE_SURE_bin_DIR)
-	$(CC) $(CFLAGS) $(OBJSquake-svga) $(SVGA_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(SVGAQUAKE)
+$(BUILD_DIR)/../$(SVGAQUAKE): $(OBJSquake-svga)
+	$(CC) $(CFLAGS) $(OBJSquake-svga) $(SVGA_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SVGAQUAKE)
 # XXX - Can this be automated?
 clean-$(SVGAQUAKE):
 	rm -f $(OBJSquake-svga)
@@ -344,11 +339,10 @@ $(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(GLQUAKE): $(BUILD_DIR)/bin/$(GLQUAKE)
+$(GLQUAKE): $(BUILD_DIR)/../$(GLQUAKE)
 
-$(BUILD_DIR)/bin/$(GLQUAKE): $(OBJSquake-gl)
-	$(MAKE_SURE_bin_DIR)
-	$(CC) $(CFLAGS) $(OBJSquake-gl) $(GL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(GLQUAKE)
+$(BUILD_DIR)/../$(GLQUAKE): $(OBJSquake-gl)
+	$(CC) $(CFLAGS) $(OBJSquake-gl) $(GL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(GLQUAKE)
 
 # XXX - Can this be automated?
 clean-$(GLQUAKE):
@@ -394,11 +388,10 @@ $(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(TDFXQUAKE): $(BUILD_DIR)/bin/$(TDFXQUAKE)
+$(TDFXQUAKE): $(BUILD_DIR)/../$(TDFXQUAKE)
 
-$(BUILD_DIR)/bin/$(TDFXQUAKE): $(OBJSquake-3dfx)
-	$(MAKE_SURE_bin_DIR)
-	$(CC) $(CFLAGS) $(OBJSquake-3dfx) $(TDFX_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(TDFXQUAKE)
+$(BUILD_DIR)/../$(TDFXQUAKE): $(OBJSquake-3dfx)
+	$(CC) $(CFLAGS) $(OBJSquake-3dfx) $(TDFX_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(TDFXQUAKE)
 
 # XXX - Can this be automated?
 clean-$(TDFXQUAKE):
