@@ -1102,7 +1102,6 @@ void VID_ExtraOptionCmd(int option_cursor)
 	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
-
 	}
 }
 
