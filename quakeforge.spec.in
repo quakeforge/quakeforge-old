@@ -33,7 +33,6 @@ Group: Amusements/Games
 Requires: quakeforge
 
 %description server
-%endif
 
 %if "%{HAS_OGL}"=="'yes'"
 %package gl
@@ -111,7 +110,7 @@ Requires: quakeforge
 %setup -q
 
 %build
-%if "%{SND_STYLE}"==ALSA
+%if "%{SND_STYLE}"=="'ALSA'"
 CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr --enable-alsa
 %else
 CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
@@ -120,6 +119,8 @@ make
 
 %install
 rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/games/quake
+mkdir -p $RPM_BUILD_ROOT/usr/games/quake/id1
 make DESTDIR="$RPM_BUILD_ROOT" install
 
 %files
@@ -137,43 +138,43 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 %endif
 
 %if "%{HAS_TDFXGL}"=="'yes'"
-%files gl
+%files 3dfx
 /usr/bin/quake-3dfx
 /usr/bin/qw-client-3dfx
 %endif
 
 %if "%{HAS_X11}"=="'yes'"
-%files gl
+%files x11
 /usr/bin/quake-x11
 /usr/bin/qw-client-x11
 %endif
 
 %if "%{HAS_SVGA}"=="'yes'"
-%files gl
+%files svga
 /usr/bin/quake-svga
 /usr/bin/qw-client-svga
 %endif
 
 %if "%{HAS_VGA}"=="'yes'"
-%files gl
+%files vga
 /usr/bin/quake-vga
 /usr/bin/qw-client-vga
 %endif
 
 %if "%{HAS_MGL}"=="'yes'"
-%files gl
+%files gml
 /usr/bin/quake-mgl
 /usr/bin/qw-client-mgl
 %endif
 
 %if "%{HAS_GGI}"=="'yes'"
-%files gl
+%files ggi
 /usr/bin/quake-ggi
 /usr/bin/qw-client-ggi
 %endif
 
 %if "%{HAS_SDL}"=="'yes'"
-%files gl
+%files sdl
 /usr/bin/quake-sdl
 /usr/bin/qw-client-sdl
 %endif
