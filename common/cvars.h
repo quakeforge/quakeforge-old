@@ -53,5 +53,6 @@ extern cvar_t	*r_numsurfs;
 extern cvar_t	*r_reportedgeout;
 extern cvar_t	*r_maxedges;
 extern cvar_t	*r_numedges;
+extern cvar_t	*developer;
 
 #endif /* _CVARS_H */

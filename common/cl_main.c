@@ -189,7 +189,6 @@ netadr_t	master_adr;				// address of the master server
 
 cvar_t	*host_speeds;
 cvar_t	*show_fps;
-cvar_t	*developer;
 
 void Master_Connect_f (void);
 
@@ -1726,7 +1725,6 @@ void CL_InitCvars()
 //
 	host_speeds = Cvar_Get ("host_speeds","0",0,"None");
 	show_fps = Cvar_Get ("show_fps","0",0,"None");
-	developer = Cvar_Get ("developer","0",0,"None");
 	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 
 	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");

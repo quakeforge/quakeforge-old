@@ -54,8 +54,6 @@ cvar_t	*sv_maxrate;
 cvar_t	*sv_mintic;
 cvar_t	*sv_maxtic;
 
-cvar_t	*developer;
-
 cvar_t	*timeout;
 cvar_t	*zombietime;
 											// after disconnect
@@ -353,7 +351,6 @@ void SV_FullClientUpdateToClient (client_t *client, client_t *cl)
 
 void SV_InitCvars ()
 {
-	developer = Cvar_Get ("developer","0",0,"None");
 	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 
 	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");
@@ -1386,7 +1383,6 @@ void SV_InitLocal (void)
 				"None");
 
 	sv_maxrate = Cvar_Get ("sv_maxrate","0",0,"None");
-	developer = Cvar_Get ("developer","0",0,"None");
 
 	timeout = Cvar_Get ("timeout","65",0,"None");
 	zombietime = Cvar_Get ("zombietime","2",0,"None");

@@ -35,6 +35,8 @@
 #include <lib_replace.h>
 #include <console.h>
 #include <cmd.h>
+#include <cvar.h>
+#include <cvars.h>
 #include <client.h>
 #include <stdlib.h>
 #if defined(UQUAKE) || defined(SERVERONLY)
@@ -48,6 +50,7 @@
 
 cvar_t	*cvar_vars;
 char	*cvar_null_string = "";
+cvar_t	*developer;
 
 /*
 ============
@@ -319,6 +322,8 @@ void Cvar_CvarList_f (void)
 
 void Cvar_Init()
 {
+	developer = Cvar_Get ("developer","0",0,"None");
+
 	Cmd_AddCommand ("set", Cvar_Set_f);
 	Cmd_AddCommand ("toggle", Cvar_Toggle_f);
 	Cmd_AddCommand ("help",Cvar_Help_f);
