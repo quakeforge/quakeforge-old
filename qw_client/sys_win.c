@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <resource.h>
 #include <sys.h>
 #include <screen.h>
+#include <client.h>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -761,12 +762,12 @@ WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 	while (1)
 	{
 // yield the CPU for a little while when paused, minimized, or not the focus
-/*		if ((cl.paused && (!ActiveApp && !DDActive)) || Minimized || block_drawing)
+		if ((cl.paused && (!ActiveApp && !DDActive)) || Minimized || block_drawing)
 		{
 			SleepUntilInput (PAUSE_SLEEP);
 			scr_skipupdate = 1;		// no point in bothering to draw
 		}
-		else*/ if (!ActiveApp && !DDActive)
+		else if (!ActiveApp && !DDActive)
 		{
 			SleepUntilInput (NOT_FOCUS_SLEEP);
 		}
