@@ -56,7 +56,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"Release/qw-client-win.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
@@ -83,7 +83,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"Debug/qw-client-win.exe" /pdbtype:sept
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
@@ -112,7 +112,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"qwcl_Release/qw_client.exe"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/glqw_client.exe"
+# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
@@ -125,12 +125,14 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "qw_client___Win32_GLDebug"
-# PROP Intermediate_Dir "qw_client___Win32_GLDebug"
+# PROP Output_Dir "GLDebug"
+# PROP Intermediate_Dir "GLDebug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "QUAKEWORLD" /D "GLQUAKE" /FR /YX /FD /c
-# ADD CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /FR /YX /FD /c
+# ADD BASE CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
+# SUBTRACT BASE CPP /Fr
+# ADD CPP /nologo /GX /ZI /Od /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
+# SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -139,9 +141,9 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/glqw_client.exe"
+# ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/glqw_client.exe"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/glqw_client.exe"
+# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /out:"GLDebug/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -218,6 +220,22 @@ SOURCE=..\common\cvars.c
 # Begin Source File
 
 SOURCE=..\common\d_edge.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -382,6 +400,22 @@ SOURCE=..\common\d_sprite.c
 # Begin Source File
 
 SOURCE=..\common\d_surf.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -445,6 +479,25 @@ SOURCE=..\common\draw.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\gl_cl_parse.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=..\common\gl_draw.c
 
 !IF  "$(CFG)" == "qw_client - Win32 Release"
@@ -487,6 +540,44 @@ SOURCE=..\common\gl_mesh.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\gl_model.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\gl_ngraph.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=..\common\gl_refrag.c
 
 !IF  "$(CFG)" == "qw_client - Win32 Release"
@@ -500,6 +591,25 @@ SOURCE=..\common\gl_refrag.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 # PROP BASE Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\gl_rlight.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
@@ -550,6 +660,25 @@ SOURCE=..\common\gl_rmisc.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\gl_rpart.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=..\common\gl_rsurf.c
 
 !IF  "$(CFG)" == "qw_client - Win32 Release"
@@ -563,6 +692,25 @@ SOURCE=..\common\gl_rsurf.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 # PROP BASE Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\gl_screen.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
@@ -605,6 +753,25 @@ SOURCE=..\common\gl_vidnt.c
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 # PROP BASE Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\gl_view.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
@@ -663,6 +830,22 @@ SOURCE=.\menu.c
 # Begin Source File
 
 SOURCE=..\common\model.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -705,6 +888,10 @@ SOURCE=..\common\pcx.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\plugin.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\common\pmove.c
 # End Source File
 # Begin Source File
@@ -730,38 +917,182 @@ SOURCE=..\common\quakeio.c
 # Begin Source File
 
 SOURCE=..\common\r_aclip.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_alias.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_bsp.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_draw.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_edge.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_efrag.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_light.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_main.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_misc.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -770,18 +1101,82 @@ SOURCE=..\common\r_part.c
 # Begin Source File
 
 SOURCE=..\common\r_sky.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_sprite.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_surf.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\r_vars.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -794,6 +1189,22 @@ SOURCE=..\common\sbar.c
 # Begin Source File
 
 SOURCE=..\common\screen.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -818,14 +1229,62 @@ SOURCE=..\common\snd_win.c
 # Begin Source File
 
 SOURCE=.\sw_cl_parse.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\sw_rpart.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=..\common\sw_view.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP BASE Exclude_From_Build 1
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -896,7 +1355,7 @@ InputName=d_draw
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -911,7 +1370,7 @@ InputName=d_draw
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -942,7 +1401,7 @@ InputName=d_draw16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -957,7 +1416,7 @@ InputName=d_draw16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -988,7 +1447,7 @@ InputName=d_parta
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1003,7 +1462,7 @@ InputName=d_parta
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1034,7 +1493,7 @@ InputName=d_polysa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1049,7 +1508,7 @@ InputName=d_polysa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1080,7 +1539,7 @@ InputName=d_scana
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1095,7 +1554,7 @@ InputName=d_scana
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1126,7 +1585,7 @@ InputName=d_spr8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1141,7 +1600,7 @@ InputName=d_spr8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1172,7 +1631,7 @@ InputName=d_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1187,7 +1646,7 @@ InputName=d_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1218,7 +1677,7 @@ InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1233,7 +1692,7 @@ InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1247,9 +1706,9 @@ InputPath=..\common\math.s
 InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
-	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
 # End Custom Build
@@ -1257,13 +1716,13 @@ InputName=math
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
 # Begin Custom Build
-OutDir=.\qw_client___Win32_GLDebug
+OutDir=.\GLDebug
 InputPath=..\common\math.s
 InputName=math
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1285,7 +1744,7 @@ InputName=r_aclipa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1300,7 +1759,7 @@ InputName=r_aclipa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1331,7 +1790,7 @@ InputName=r_aliasa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1346,7 +1805,7 @@ InputName=r_aliasa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1377,7 +1836,7 @@ InputName=r_drawa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1392,7 +1851,7 @@ InputName=r_drawa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1423,7 +1882,7 @@ InputName=r_edgea
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1438,7 +1897,7 @@ InputName=r_edgea
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1469,7 +1928,7 @@ InputName=r_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1484,7 +1943,7 @@ InputName=r_varsa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1515,7 +1974,7 @@ InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1530,7 +1989,7 @@ InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1544,9 +2003,9 @@ InputPath=..\common\snd_mixa.s
 InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
-	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
 # End Custom Build
@@ -1554,13 +2013,13 @@ InputName=snd_mixa
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
 # Begin Custom Build
-OutDir=.\qw_client___Win32_GLDebug
+OutDir=.\GLDebug
 InputPath=..\common\snd_mixa.s
 InputName=snd_mixa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1582,7 +2041,7 @@ InputName=surf16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1597,7 +2056,7 @@ InputName=surf16
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1628,7 +2087,7 @@ InputName=surf8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1643,7 +2102,7 @@ InputName=surf8
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1674,7 +2133,7 @@ InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1689,7 +2148,7 @@ InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1703,9 +2162,9 @@ InputPath=..\common\sys_dosa.s
 InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
-	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
 # End Custom Build
@@ -1713,13 +2172,13 @@ InputName=sys_dosa
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
 # Begin Custom Build
-OutDir=.\qw_client___Win32_GLDebug
+OutDir=.\GLDebug
 InputPath=..\common\sys_dosa.s
 InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1741,7 +2200,7 @@ InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1756,7 +2215,7 @@ InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
@@ -1770,9 +2229,9 @@ InputPath=..\common\worlda.s
 InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
-	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	ml /nologo /c /Cp /coff /Zi /H64 /FoGLRele~1\$(InputName).obj   GLRele~1\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
 # End Custom Build
@@ -1780,13 +2239,13 @@ InputName=worlda
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
 
 # Begin Custom Build
-OutDir=.\qw_client___Win32_GLDebug
+OutDir=.\GLDebug
 InputPath=..\common\worlda.s
 InputName=worlda
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	cl /D "id386" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
-	..\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
+	cl /D "id386" /D "GLQUAKE" /I "..\common" /nologo /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
+	..\tools\gas2masm\debug\gas2masm < $(OUTDIR)\$(InputName).spp > $(OUTDIR)\$(InputName).asm 
 	ml /nologo /c /Cp /coff /Zi /H64 /Fo$(OUTDIR)\$(InputName).obj $(OUTDIR)\$(InputName).asm 
 	del $(OUTDIR)\$(InputName).spp 
 	
