@@ -13,8 +13,8 @@ AC_PROG_CPP
 AC_PROG_MAKE_SET
 
 dnl Checks for header files.
-AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h sys/stat.h \
-	sys/time.h sys/timeb.h \
+AC_CHECK_HEADERS(unistd.h fcntl.h windows.h sys/ioctl.h sys/mman.h \
+	sys/stat.h sys/time.h sys/timeb.h \
 	sys/socket.h netinet/in.h netdb.h arpa/inet.h sys/filio.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
 	dsound.h mmsystem.h initguid.h mme/mmsystem.h mme/mme_public.h \
@@ -33,7 +33,7 @@ dnl !!! FIXME !!! Do some real check here...
 
 AC_MSG_CHECKING(whether C symbols are prefixed by '_')
 case "${target}" in
-  *-*-mingw* | *-*-cygwin* | *-*-openbsd*)
+  *-*-msdos* | *-*-djgpp* | *-*-mingw* | *-*-cygwin* | *-*-openbsd*)
 	AC_DEFINE(HAVE_SYM_PREFIX_UNDERSCORE)
         AC_MSG_RESULT(yes)
 	;;
@@ -46,7 +46,7 @@ dnl Checks for library functions.
 AC_FUNC_MMAP
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
-	ftime _ftime stat putenv select socket strerror strstr \
+	ftime _ftime fcntl stat putenv select socket strerror strstr \
 	snprintf _snprintf vsnprintf _vsnprintf)
 
 AC_ARG_ENABLE(release,
@@ -91,6 +91,18 @@ if test "x$HAS_DGA" != xno; then
    AC_CHECK_HEADER(X11/extensions/xf86dga.h, HAS_DGA=yes, HAS_DGA=no)
    CPPFLAGS="$save_CPPFLAGS"
 fi
+
+dnl Checks for VGA support
+VGA_CFLAGS=""
+VGA_LIBS=""
+case "${target}" in
+  i?86-*-*djgpp* | i?86-*-*msdos*)
+	HAS_VGA=yes
+	;;
+  *)
+	HAS_VGA=no
+	;;
+esac
 
 dnl Checks for MGL support
 MGL_CFLAGS=""
@@ -288,7 +300,7 @@ fi
 dnl Make sure -lvga works
 if test "x$HAS_SVGA" = xyes; then
    AC_CHECK_LIB(vga, vga_getmousetype, SVGA_LIBS="$SVGA_LIBS -lvga"
-     HAS_VGA=yes, HAS_VGA=no, [$SVGA_LIBS])
+     HAS_SVGA=yes, HAS_SVGA=no, [$SVGA_LIBS])
 fi 
 if test "x$HAS_SVGA" != xyes; then
    SVGA_CFLAGS="" SVGA_LIBS=""
@@ -356,7 +368,7 @@ if test "x$HAS_TDFXGL" != xno; then
    fi
    if test "x$HAS_GLIDE" != x; then
       if test "x$HAS_OGL" != x; then
-         if test "x$HAS_VGA" != x; then
+         if test "x$HAS_SVGA" != x; then
 	    AC_CHECK_LIB($TDFXGL_NAME, glColor4f, 
 	      HAS_TDFXGL=yes, HAS_TDFXGL=no, [$GLIDE_LIBS $TDFXGL_LIBS])
 	 fi
@@ -564,6 +576,7 @@ connect(0, NULL, 42);
   NET_LIBS="$NET_LIBS -lwsock32 -lwinmm"
   ac_cv_func_connect=yes
   ac_cv_func_gethostbyname=yes
+  HAVE_WSOCK=yes
   AC_MSG_RESULT(yes),
   AC_MSG_RESULT(no))
 LIBS="$SAVELIBS"
@@ -571,6 +584,7 @@ LIBS="$SAVELIBS"
 AC_MSG_CHECKING(for UDP support)
 if test "x$ac_cv_func_connect" = "xyes" -a \
 	"x$ac_cv_func_gethostbyname" = "xyes"; then
+  HAVE_UDP=yes
   AC_MSG_RESULT(yes)
 else
   AC_MSG_RESULT(no)
@@ -589,6 +603,11 @@ case "${target}" in
       SYS_SRC="sys_win.c"
       QW_CL_SYS_SRC="sys_win.c"
       QW_SRV_SYS_SRC="sys_win.c"
+      ;;
+   i?86-*-*djgpp* | i?86-*-*msdos*)
+      SYS_SRC="sys_dos.c"
+      QW_CL_SYS_SRC=""
+      QW_SRV_SYS_SRC=""
       ;;
    *)
       SYS_SRC="sys_unix.c" 
@@ -643,6 +662,9 @@ AC_SUBST(X11_SHM_LIB)
 AC_SUBST(HAS_X11)
 AC_SUBST(HAS_DGA)
 AC_SUBST(DGA_LIBS)
+AC_SUBST(HAS_VGA)
+AC_SUBST(VGA_CFLAGS)
+AC_SUBST(VGA_LIBS)
 AC_SUBST(HAS_MGL)
 AC_SUBST(MGL_CFLAGS)
 AC_SUBST(MGL_LIBS)
@@ -672,6 +694,8 @@ AC_SUBST(SYS_SRC)
 AC_SUBST(QW_CL_SYS_SRC)
 AC_SUBST(QW_SRV_SYS_SRC)
 AC_SUBST(X11_VID_SRC)
+AC_SUBST(HAVE_WSOCK)
+AC_SUBST(HAVE_UDP)
 
 dnl Output files
 AC_CONFIG_HEADER(common/config.h)
