@@ -88,6 +88,15 @@ Card: Creative Riva TNT 16MB, onboard S3
 Driver: Mesa 3.1, Nvidia new GLX
 Target: quake-x11
 
+Name:   Leon Breedt
+Chip:   PIII 450
+Kernel: 2.2.15pre20
+Card:   Riva TNT2 32MB (not Ultra)
+Distro: Debian Woody
+Driver: NVidia Accelerated GLX
+Target: quake-gl
+Extra:  XFree86 4.0
+
 ------------
 End of Linux
 
