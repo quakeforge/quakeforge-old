@@ -21,6 +21,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifndef _SERVER_H
+#define _SERVER_H
+
+#include <progs.h>
+
 #define	QW_SERVER
 
 #define	MAX_MASTERS	8				// max recipients for heartbeat packets
@@ -469,3 +474,5 @@ void ClientReliableWrite_SZ(client_t *cl, void *data, int len);
 // The Heartbeat function
 
 void HeartBeat (void);
+
+#endif // _SERVER_H
