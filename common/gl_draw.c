@@ -1176,10 +1176,8 @@ static	unsigned	scaled[1024*512];	// [512*256];
 	scaled_width >>= (int)gl_picmip->value;
 	scaled_height >>= (int)gl_picmip->value;
 
-	if (scaled_width > gl_max_size->value)
-		scaled_width = gl_max_size->value;
-	if (scaled_height > gl_max_size->value)
-		scaled_height = gl_max_size->value;
+	scaled_width = max (1, min (scaled_width, gl_max_size->value));
+	scaled_height = max (1, min (scaled_height, gl_max_size->value));
 
 	if (scaled_width * scaled_height > sizeof(scaled)/4)
 		Sys_Error ("GL_LoadTexture: too big");
