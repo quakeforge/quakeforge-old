@@ -193,8 +193,8 @@ typedef struct client_s
 	int				delta_sequence;		// -1 = no compression
 	int				ping;
 	netchan_t		netchan;
-	int				msecs[MAX_MSECS], msec_count, msec_head, msec_total, msec_pool;
-	double			frame_time;
+	int				msecs, msec_cheating;
+	double			last_check;
 } client_t;
 
 // a client can leave the server in one of four ways:

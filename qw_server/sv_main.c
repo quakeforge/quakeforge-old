@@ -714,13 +714,9 @@ void SVC_DirectConnect (void)
 	newcl->sendinfo = true;
 
 	// QuakeForge stuff.
-	for (i=0; i<MAX_MSECS; i++)
-		newcl->msecs[i] = 0;
-
-	newcl->msec_count = 0;
-	newcl->msec_head = 0;
-	newcl->msec_total = 0;
-	newcl->frame_time = realtime;
+	newcl->msecs = 0;
+	newcl->msec_cheating = 0;
+	newcl->last_check = realtime;
 }
 
 int Rcon_Validate (void)
