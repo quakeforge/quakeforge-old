@@ -164,10 +164,14 @@ E: slade@quakelives.com
 D: Reworking of the heart beat, and ping taking code on the server side.
 D: sv_maxrate support..
 
-A: Nye "nyet" Liu
+N: Nye "nyet" Liu
 E: nyet@nbase.com
 D: game dir fixes
 
 N: Jules Bean
 E: jules@debian.org
 D: Q1/QW tree merging
+
+N: Jason Nelson
+E: jason_nelson@email.msn.com
+D: VC win32 support.
