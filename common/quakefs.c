@@ -277,6 +277,10 @@ int COM_FOpenFile (char *filename, FILE **file)
 	pack_t		*pak;
 	int			i;
 	int			findtime;
+	char		gzfilename[MAX_OSPATH];
+
+	strncpy(gzfilename,filename,sizeof(gzfilename));
+	strncat(gzfilename,".gz",sizeof(gzfilename));
 
 	file_from_pak = 0;
 		
@@ -290,29 +294,41 @@ int COM_FOpenFile (char *filename, FILE **file)
 		{
 		// look through all the pak file elements
 			pak = search->pack;
-			for (i=0 ; i<pak->numfiles ; i++)
+			for (i=0 ; i<pak->numfiles ; i++) {
+				char *fn=0;
 				if (!strcmp (pak->files[i].name, filename))
+					fn=filename;
+				else if (!strcmp (pak->files[i].name, gzfilename))
+					fn=gzfilename;
+				if (fn)
 				{	// found it!
 					if(developer.value)
-						Sys_Printf ("PackFile: %s : %s\n",pak->filename, filename);
+						Sys_Printf ("PackFile: %s : %s\n",pak->filename, fn);
 				// open a new file on the pakfile
 					*file = fopen (pak->filename, "rb");
 					if (!*file)
-						Sys_Error ("Couldn't reopen %s", pak->filename);	
+						Sys_Error ("Couldn't reopen %s", pak->filename);
 					fseek (*file, pak->files[i].filepos, SEEK_SET);
 					com_filesize = pak->files[i].filelen;
 					file_from_pak = 1;
 					return com_filesize;
 				}
+			}
 		}
 		else
 		{		
 	// check a file in the directory tree
-			snprintf(netpath, sizeof(netpath), "%s/%s",search->filename, filename);
+			snprintf(netpath, sizeof(netpath), "%s/%s",search->filename,
+					 filename);
 			
 			findtime = Sys_FileTime (netpath);
-			if (findtime == -1)
-				continue;
+			if (findtime == -1) {
+				snprintf(netpath, sizeof(netpath), "%s/%s",search->filename,
+						 gzfilename);
+				findtime = Sys_FileTime (netpath);
+				if (findtime == -1)
+					continue;
+			}
 				
 			if(developer.value)
 				Sys_Printf ("FindFile: %s\n",netpath);
