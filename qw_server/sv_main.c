@@ -78,6 +78,8 @@ cvar_t	*pausable;
 
 cvar_t	*sv_fraglogdir;
 
+cvar_t	*sv_nailcompression;
+
 cvar_t	*sv_timekick;					// Time cheat protection
 cvar_t	*sv_timekick_fuzz;				// Timecheat sensitivity
 cvar_t	*sv_timekick_interval;			// Timecheat check interval
@@ -1360,10 +1362,8 @@ void SV_InitLocal (void)
 	sv_mintic = Cvar_Get ("sv_mintic","0.03",0,"None");
 	sv_maxtic = Cvar_Get ("sv_maxtic","0.1",0,"None");
 
-	coop = Cvar_Get ("coop","0",CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-	skill = Cvar_Get ("skill","1",CVAR_USERINFO|CVAR_SERVERINFO,
-				"Current skill setting");
+	coop = Cvar_Get ("coop","0",0, "None");
+	skill = Cvar_Get ("skill","1",0, "Current skill level");
 	deathmatch = Cvar_Get ("deathmatch","1",CVAR_USERINFO|CVAR_SERVERINFO,
 				"None");
 	teamplay = Cvar_Get ("teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO,
@@ -1421,6 +1421,8 @@ void SV_InitLocal (void)
 	sv_timekick_interval = Cvar_Get( "sv_timekick_interval", "30", CVAR_NONE, "Time cheat check interval");
 
 	sv_fraglogdir = Cvar_Get ("fraglogdir","",0,"Where to store fraglog files");
+
+	sv_nailcompression = Cvar_Get ("sv_nailcompression","1",0,"Toggle QW nail compression (disable for better Qizmo compression)");
 
 	Cmd_AddCommand ("addip", SV_AddIP_f);
 	Cmd_AddCommand ("removeip", SV_RemoveIP_f);

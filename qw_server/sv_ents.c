@@ -108,8 +108,12 @@ int		numnails;
 
 extern	int	sv_nailmodel, sv_supernailmodel, sv_playermodel;
 
+extern	cvar_t *sv_nailcompression;
+
 qboolean SV_AddNailUpdate (edict_t *ent)
 {
+	if (!sv_nailcompression->value)
+		return false;
 	if (ent->v.modelindex != sv_nailmodel
 		&& ent->v.modelindex != sv_supernailmodel)
 		return false;
