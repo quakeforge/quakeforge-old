@@ -7,7 +7,7 @@ VERSION=2.40
 ifneq (,$(findstring alpha,$(shell uname -m)))
 ARCH=axp
 else
-ARCH=$(shell uname -m)
+ARCH=$(shell uname -m | sed s/i.86/i386/)
 endif
 
 PROJECT_DIR=..
