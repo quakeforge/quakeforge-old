@@ -71,12 +71,11 @@ typedef unsigned short ushort_t;
 #endif
 /* End Generations */
 
-int	com_filesize;
+int com_filesize;
 
-
-//
-// in memory
-//
+/*
+	In-memory pack file structs
+*/
 
 typedef struct
 {
@@ -92,9 +91,9 @@ typedef struct pack_s
 	packfile_t	*files;
 } pack_t;
 
-//
-// on disk
-//
+/*
+	Structs for pack files on disk
+*/
 typedef struct
 {
 	char	name[56];
@@ -812,30 +811,48 @@ void COM_Gamedir (char *dir)
 COM_InitFilesystem
 ================
 */
-void COM_InitFilesystem (void)
+void
+COM_InitFilesystem ( void )
 {
-	int		i;
+	int		i, len;
+	char	*p;
+	char	*games;
 
-//
-// -basedir <path>
-// Overrides the system supplied base directory
-//
+/*
+	-basedir <path>
+	Overrides the system supplied base directory
+*/
 	i = COM_CheckParm ("-basedir");
 	if (i && i < com_argc-1)
 		strcpy (com_basedir, com_argv[i+1]);
 	else
 		strcpy (com_basedir, host_parms.basedir);
 
-//
-// start up with GAMENAME by default
-//
+/*
+	start up with GAMENAME by default
+*/
 	COM_AddGameDirectory (va("%s/" GAMENAME, com_basedir) );
+#ifdef QUAKEWORLD
 	COM_AddGameDirectory (va("%s/qw", com_basedir) );
+#endif	// QUAKEWORLD
 	if ( hipnotic ) {
 		COM_AddGameDirectory (va("%s/hipnotic", com_basedir) );
 	}
 	if ( rogue ) {
 		COM_AddGameDirectory (va("%s/rogue", com_basedir) );
+	}
+
+	i = COM_CheckParm ("-game");
+	if (i && i < com_argc-1) {
+
+		len = strlen(com_argv[i+1]) + 1;
+		games = (char *) malloc(len);
+		strcpy(games, com_argv[i+1]);
+
+		for ( p = strtok(games, ",") ; p != NULL; p = strtok(NULL, ",")) {
+			COM_AddGameDirectory (va("%s/%s", com_basedir, p));
+		}
+		free(games);
 	}
 
 	// any set gamedirs will be freed up to here
