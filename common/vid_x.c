@@ -717,6 +717,7 @@ int XLateKey(XKeyEvent *ev)
 		case XK_Control_L: 
 		case XK_Control_R:	key = K_CTRL;		 break;
 
+		case XK_Mode_switch:
 		case XK_Alt_L:	
 		case XK_Meta_L: 
 		case XK_Alt_R:	

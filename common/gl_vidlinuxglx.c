@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static Display *dpy = NULL;
 static Window win;
+static Cursor cursor;
 static GLXContext ctx = NULL;
 
 static float old_windowed_mouse = 0;
@@ -180,6 +181,7 @@ static int XLateKey(XKeyEvent *ev)
 		case XK_Control_L: 
 		case XK_Control_R:	key = K_CTRL;		 break;
 
+		case XK_Mode_switch:
 		case XK_Alt_L:	
 		case XK_Meta_L: 
 		case XK_Alt_R:	
@@ -229,16 +231,33 @@ static int XLateKey(XKeyEvent *ev)
 	return key;
 }
 
+static void blank_cursor(void)
+{
+	Pixmap blank;
+	XColor dummy;
+	char data[1] = {0};
+
+	blank = XCreateBitmapFromData(dpy, win, data, 1, 1);
+	if (blank == None) {
+		fprintf(stderr,"Could not create cursor: Out of memory.\n");
+	} else {
+		cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy, &dummy, 0, 0);
+		XFreePixmap(dpy, blank);
+	}
+}
+
 static void install_grabs(void)
 {
+	blank_cursor();
+	
 	XGrabPointer(dpy, win,
 				 True,
 				 0,
 				 GrabModeAsync, GrabModeAsync,
 				 win,
-				 None,
+				 cursor,
 				 CurrentTime);
-
+	
 #ifdef USE_DGA
 	XF86DGADirectVideo(dpy, DefaultScreen(dpy), XF86DGADirectMouse);
 	dgamouse = 1;
@@ -668,7 +687,7 @@ void VID_Init(unsigned char *palette)
 
 	GL_Init();
 
-	sprintf (gldir, "%s/glquake", com_gamedir);
+	sprintf (gldir, "%s/OpenGL", com_gamedir);
 	Sys_mkdir (gldir);
 
 	VID_SetPalette(palette);
@@ -700,6 +719,7 @@ void IN_Init(void)
 
 void IN_Shutdown(void)
 {
+	uninstall_grabs();
 }
 
 /*
