@@ -22,109 +22,50 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/vt.h>
-#include <stdarg.h>
+#include "quakedef.h"
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
 
-#include <asm/io.h>
-
-#include "vga.h"
-#include "vgakeyboard.h"
-#include "vgamouse.h"
-
-#include "quakedef.h"
-#include "GL/fxmesa.h"
+#include <GL/gl.h>
+#include <GL/fxmesa.h>
 
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
 
-static fxMesaContext fc = NULL;
-#define stringify(m) { #m, m }
 
-unsigned short	d_8to16table[256];
-unsigned	d_8to24table[256];
-unsigned char d_15to8table[65536];
+unsigned short		d_8to16table[256];
+unsigned		d_8to24table[256];
+unsigned char		d_15to8table[65536];
 
-int num_shades=32;
-
-struct
-{
-	char *name;
-	int num;
-} mice[] =
-{
-	stringify(MOUSE_MICROSOFT),
-	stringify(MOUSE_MOUSESYSTEMS),
-	stringify(MOUSE_MMSERIES),
-	stringify(MOUSE_LOGITECH),
-	stringify(MOUSE_BUSMOUSE),
-	stringify(MOUSE_PS2),
-};
-
-static unsigned char scantokey[128];
-
-int num_mice = sizeof (mice) / sizeof(mice[0]);
-
-int	d_con_indirect = 0;
-
-int		svgalib_inited=0;
-int		UseMouse = 1;
-int		UseKeyboard = 1;
-
-int		mouserate = MOUSE_DEFAULTSAMPLERATE;
-
-cvar_t	_windowed_mouse = {"_windowed_mouse","0", true};
-
-cvar_t		vid_mode = {"vid_mode","5",false};
-cvar_t		vid_redrawfull = {"vid_redrawfull","0",false};
-cvar_t		vid_waitforrefresh = {"vid_waitforrefresh","0",true};
+static cvar_t	vid_mode = {"vid_mode","5",false};
+static cvar_t	vid_redrawfull = {"vid_redrawfull","0",false};
+static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
+cvar_t	gl_ztrick = {"gl_ztrick", "1", true};
  
-char	*framebuffer_ptr;
-
-cvar_t  mouse_button_commands[3] =
-{
-    {"mouse1","+attack"},
-    {"mouse2","+strafe"},
-    {"mouse3","+forward"},
-};
-
-int     mouse_buttons;
-int     mouse_buttonstate;
-int     mouse_oldbuttonstate;
-float   mouse_x, mouse_y;
-float	old_mouse_x, old_mouse_y;
-int		mx, my;
-
-cvar_t	m_filter = {"m_filter","1"};
-
-int scr_width, scr_height;
+static fxMesaContext fc = NULL;
+static int	scr_width, scr_height;
+static qboolean is8bit = 0;
 
 /*-----------------------------------------------------------------------*/
 
-//int		texture_mode = GL_NEAREST;
-//int		texture_mode = GL_NEAREST_MIPMAP_NEAREST;
-//int		texture_mode = GL_NEAREST_MIPMAP_LINEAR;
-int		texture_mode = GL_LINEAR;
-//int		texture_mode = GL_LINEAR_MIPMAP_NEAREST;
-//int		texture_mode = GL_LINEAR_MIPMAP_LINEAR;
+//int	texture_mode = GL_NEAREST;
+//int	texture_mode = GL_NEAREST_MIPMAP_NEAREST;
+//int	texture_mode = GL_NEAREST_MIPMAP_LINEAR;
+int	texture_mode = GL_LINEAR;
+//int	texture_mode = GL_LINEAR_MIPMAP_NEAREST;
+//int	texture_mode = GL_LINEAR_MIPMAP_LINEAR;
 
-int		texture_extension_number = 1;
+int	texture_extension_number = 1;
 
 float		gldepthmin, gldepthmax;
-
-cvar_t	gl_ztrick = {"gl_ztrick", "1", true};
 
 const char *gl_vendor;
 const char *gl_renderer;
 const char *gl_version;
 const char *gl_extensions;
 
-qboolean is8bit = false;
-qboolean isPermedia = false;
 qboolean gl_mtexable = false;
 
 /*-----------------------------------------------------------------------*/
@@ -136,54 +77,12 @@ void D_EndDirectRect (int x, int y, int width, int height)
 {
 }
 
-int matchmouse(int mouse, char *name)
-{
-	int i;
-	for (i=0 ; i<num_mice ; i++)
-		if (!strcmp(mice[i].name, name))
-			return i;
-	return mouse;
-}
-
-#if 0
-
-void vtswitch(int newconsole)
-{
-
-	int fd;
-	struct vt_stat x;
-
-// switch consoles and wait until reactivated
-	fd = open("/dev/console", O_RDONLY);
-	ioctl(fd, VT_GETSTATE, &x);
-	ioctl(fd, VT_ACTIVATE, newconsole);
-	ioctl(fd, VT_WAITACTIVE, x.v_active);
-	close(fd);
-
-}
-
-#endif
-
-void keyhandler(int scancode, int state)
-{
-	
-	int sc;
-
-	sc = scancode & 0x7f;
-
-	Key_Event(scantokey[sc], state == KEY_EVENTPRESS);
-
-}
-
 void VID_Shutdown(void)
 {
 	if (!fc)
 		return;
 
 	fxMesaDestroyContext(fc);
-
-	if (UseKeyboard)
-		keyboard_close();
 }
 
 void signal_handler(int sig)
@@ -221,8 +120,10 @@ void	VID_SetPalette (unsigned char *palette)
 	int		k;
 	unsigned short i;
 	unsigned	*table;
+#ifdef QUAKEWORLD
 	FILE *f;
 	char s[255];
+#endif
 	float dist, bestdist;
 //
 // 8 8 8 encoding
@@ -363,130 +264,6 @@ void GL_EndRendering (void)
 	fxMesaSwapBuffers();
 }
 
-void Init_KBD(void)
-{
-	int i;
-
-	if (COM_CheckParm("-nokbd")) UseKeyboard = 0;
-
-	if (UseKeyboard)
-	{
-		for (i=0 ; i<128 ; i++)
-			scantokey[i] = ' ';
-
-		scantokey[1 ] = K_ESCAPE;
-		scantokey[2] = '1';
-		scantokey[3] = '2';
-		scantokey[4] = '3';
-		scantokey[5] = '4';
-		scantokey[6] = '5';
-		scantokey[7] = '6';
-		scantokey[8] = '7';
-		scantokey[9] = '8';
-		scantokey[10] = '9';
-		scantokey[11] = '0';
-		scantokey[12] = '-';
-		scantokey[13] = '=';
-		scantokey[14] = K_BACKSPACE;
-		scantokey[15] = K_TAB;
-		scantokey[16] = 'q';       
-		scantokey[17] = 'w';       
-		scantokey[18] = 'e';       
-		scantokey[19] = 'r';       
-		scantokey[20] = 't';       
-		scantokey[21] = 'y';       
-		scantokey[22] = 'u';       
-		scantokey[23] = 'i';       
-		scantokey[24] = 'o';       
-		scantokey[25] = 'p';       
-		scantokey[26] = '[';
-		scantokey[27] = ']';
-		scantokey[28] = K_ENTER;
-		scantokey[29] = K_CTRL;
-		scantokey[30] = 'a';
-		scantokey[31] = 's';       
-		scantokey[32] = 'd';       
-		scantokey[33] = 'f';       
-		scantokey[34] = 'g';       
-		scantokey[35] = 'h';       
-		scantokey[36] = 'j';       
-		scantokey[37] = 'k';       
-		scantokey[38] = 'l';       
-		scantokey[39] = ';';
-		scantokey[40] = '\'';
-		scantokey[41] = '`';
-		scantokey[42] = K_SHIFT;
-		scantokey[43] = '\\';
-		scantokey[44] = 'z';       
-		scantokey[45] = 'x';       
-		scantokey[46] = 'c';
-		scantokey[47] = 'v';       
-		scantokey[48] = 'b';
-		scantokey[49] = 'n';       
-		scantokey[50] = 'm';       
-		scantokey[51] = ',';
-		scantokey[52] = '.';
-		scantokey[53] = '/';
-		scantokey[54] = K_SHIFT;
-		scantokey[55] = KP_MULTIPLY;
-		scantokey[56] = K_ALT;
-		scantokey[57] = ' ';
-//		scantokey[58] = JK_CAPS;
-		scantokey[59] = K_F1;
-		scantokey[60] = K_F2;
-		scantokey[61] = K_F3;
-		scantokey[62] = K_F4;
-		scantokey[63] = K_F5;
-		scantokey[64] = K_F6;
-		scantokey[65] = K_F7;
-		scantokey[66] = K_F8;
-		scantokey[67] = K_F9;
-		scantokey[68] = K_F10;
-		scantokey[69] = KP_NUM;
-//		scantokey[70] = FIXME!!
-		scantokey[71] = KP_HOME;
-		scantokey[72] = KP_UPARROW;
-		scantokey[73] = KP_PGUP;
-		scantokey[74] = KP_MINUS;
-		scantokey[75] = KP_LEFTARROW;
-		scantokey[76] = KP_5;
-		scantokey[77] = KP_RIGHTARROW;
-		scantokey[78] = KP_PLUS;
-		scantokey[79] = KP_END;
-		scantokey[80] = KP_DOWNARROW;
-		scantokey[81] = KP_PGDN;
-		scantokey[82] = KP_INS;
-		scantokey[83] = KP_DEL;
-//		FIXME! 84 - 86
-		scantokey[87] = K_F11;
-		scantokey[88] = K_F12;
-//		FIXME! 89 - 95
-		scantokey[96] = KP_ENTER;
-		scantokey[97] = K_CTRL;
-		scantokey[98] = KP_DIVIDE;
-
-		scantokey[100] = K_ALT;
-		scantokey[102] = K_HOME;
-		scantokey[103] = K_UPARROW;
-		scantokey[104] = K_PGUP;
-		scantokey[105] = K_LEFTARROW;
-		scantokey[106] = K_RIGHTARROW;
-		scantokey[107] = K_END;
-		scantokey[108] = K_DOWNARROW;
-		scantokey[109] = K_PGDN;
-		scantokey[110] = K_INS;
-		scantokey[111] = K_DEL;
-
-		scantokey[119] = K_PAUSE;
-
-
-
-		if (keyboard_init())
-			Sys_Error("keyboard_init() failed");
-		keyboard_seteventhandler(keyhandler);
-	}
-}
-
 #define NUM_RESOLUTIONS 3
 
 static int resolutions[NUM_RESOLUTIONS][3]={ 
@@ -578,8 +355,6 @@ void VID_Init(unsigned char *palette)
 
 	S_Init();
 
-	Init_KBD();
-
 	Cvar_RegisterVariable (&vid_mode);
 	Cvar_RegisterVariable (&vid_redrawfull);
 	Cvar_RegisterVariable (&vid_waitforrefresh);
@@ -661,186 +436,16 @@ void VID_Init(unsigned char *palette)
 	vid.recalc_refdef = 1;				// force a surface cache flush
 }
 
-void Sys_SendKeyEvents(void)
-{
-	if (UseKeyboard)
-		while (keyboard_update());
-}
 
-void Force_CenterView_f (void)
+void
+VID_ExtraOptionDraw(void)
 {
-	cl.viewangles[PITCH] = 0;
+	/* No extra option menu items yet */
 }
 
 
-void mousehandler(int buttonstate, int dx, int dy)
+void
+VID_ExtraOptionCmd(int options_cursor)
 {
-	mouse_buttonstate = buttonstate;
-	mx += dx;
-	my += dy;
+	/* No extra option menu items yet */
 }
-
-void IN_Init(void)
-{
-
-	int mtype;
-	char *mousedev;
-	int mouserate;
-
-	if (UseMouse)
-	{
-
-		Cvar_RegisterVariable (&mouse_button_commands[0]);
-		Cvar_RegisterVariable (&mouse_button_commands[1]);
-		Cvar_RegisterVariable (&mouse_button_commands[2]);
-		Cmd_AddCommand ("force_centerview", Force_CenterView_f);
-
-		mouse_buttons = 3;
-
-		mtype = vga_getmousetype();
-
-		mousedev = "/dev/mouse";
-		if (getenv("MOUSEDEV")) mousedev = getenv("MOUSEDEV");
-		if (COM_CheckParm("-mdev"))
-			mousedev = com_argv[COM_CheckParm("-mdev")+1];
-
-		mouserate = 1200;
-		if (getenv("MOUSERATE")) mouserate = atoi(getenv("MOUSERATE"));
-		if (COM_CheckParm("-mrate"))
-			mouserate = atoi(com_argv[COM_CheckParm("-mrate")+1]);
-
-		if (mouse_init(mousedev, mtype, mouserate))
-		{
-			Con_Printf("No mouse found\n");
-			UseMouse = 0;
-		}
-		else
-			mouse_seteventhandler(mousehandler);
-
-	}
-
-}
-
-void IN_Shutdown(void)
-{
-	if (UseMouse)
-		mouse_close();
-}
-
-/*
-===========
-IN_Commands
-===========
-*/
-void IN_Commands (void)
-{
-	if (UseMouse)
-	{
-		// poll mouse values
-		while (mouse_update())
-			;
-
-		// perform button actions
-		if ((mouse_buttonstate & MOUSE_LEFTBUTTON) &&
-			!(mouse_oldbuttonstate & MOUSE_LEFTBUTTON))
-			Key_Event (K_MOUSE1, true);
-		else if (!(mouse_buttonstate & MOUSE_LEFTBUTTON) &&
-			(mouse_oldbuttonstate & MOUSE_LEFTBUTTON))
-			Key_Event (K_MOUSE1, false);
-
-		if ((mouse_buttonstate & MOUSE_RIGHTBUTTON) &&
-			!(mouse_oldbuttonstate & MOUSE_RIGHTBUTTON))
-			Key_Event (K_MOUSE2, true);
-		else if (!(mouse_buttonstate & MOUSE_RIGHTBUTTON) &&
-			(mouse_oldbuttonstate & MOUSE_RIGHTBUTTON))
-			Key_Event (K_MOUSE2, false);
-
-		if ((mouse_buttonstate & MOUSE_MIDDLEBUTTON) &&
-			!(mouse_oldbuttonstate & MOUSE_MIDDLEBUTTON))
-			Key_Event (K_MOUSE3, true);
-		else if (!(mouse_buttonstate & MOUSE_MIDDLEBUTTON) &&
-			(mouse_oldbuttonstate & MOUSE_MIDDLEBUTTON))
-			Key_Event (K_MOUSE3, false);
-
-		mouse_oldbuttonstate = mouse_buttonstate;
-	}
-}
-
-/*
-===========
-IN_Move
-===========
-*/
-void IN_MouseMove (usercmd_t *cmd)
-{
-	if (!UseMouse)
-		return;
-
-	// poll mouse values
-	while (mouse_update())
-		;
-
-	if (m_filter.value)
-	{
-		mouse_x = (mx + old_mouse_x) * 0.5;
-		mouse_y = (my + old_mouse_y) * 0.5;
-	}
-	else
-	{
-		mouse_x = mx;
-		mouse_y = my;
-	}
-	old_mouse_x = mx;
-	old_mouse_y = my;
-	mx = my = 0; // clear for next update
-
-	mouse_x *= sensitivity.value;
-	mouse_y *= sensitivity.value;
-
-// add mouse X/Y movement to cmd
-	if ( (in_strafe.state & 1) || (lookstrafe.value && (in_mlook.state & 1) ))
-		cmd->sidemove += m_side.value * mouse_x;
-	else
-		cl.viewangles[YAW] -= m_yaw.value * mouse_x;
-	
-	if (in_mlook.state & 1)
-		V_StopPitchDrift ();
-		
-	if ( (in_mlook.state & 1) && !(in_strafe.state & 1))
-	{
-		cl.viewangles[PITCH] += m_pitch.value * mouse_y;
-		if (cl.viewangles[PITCH] > 80)
-			cl.viewangles[PITCH] = 80;
-		if (cl.viewangles[PITCH] < -70)
-			cl.viewangles[PITCH] = -70;
-	}
-	else
-	{
-		if ((in_strafe.state & 1) && noclip_anglehack)
-			cmd->upmove -= m_forward.value * mouse_y;
-		else
-			cmd->forwardmove -= m_forward.value * mouse_y;
-	}
-}
-
-void IN_Move (usercmd_t *cmd)
-{
-	IN_MouseMove(cmd);
-}
-
-void VID_ExtraOptionDraw(void)
-{
-/* Port specific Options menu entrys */
-}
-
-void VID_ExtraOptionCmd(int option_cursor)
-{
-/*
-	switch(option_cursor)
-	{
-	case 12:  // Always start with 12
-	break;
-	}
-*/
-}
-
