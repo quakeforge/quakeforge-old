@@ -33,6 +33,8 @@
 #include <mathlib.h>
 
 
+cvar_t	*pm_slidefix;
+
 movevars_t		movevars;
 
 playermove_t	pmove;
@@ -63,6 +65,7 @@ void PM_CategorizePosition (void);
 
 void Pmove_Init (void)
 {
+	pm_slidefix = Cvar_Get ("pm_slidefix", "0", 0, "Enable NetQuake-like sliding down the slope");
 	PM_InitBoxHull ();
 }
 
@@ -251,14 +254,19 @@ void PM_GroundMove (void)
 	vec3_t	original, originalvel, down, up, downvel;
 	float	downdist, updist;
 
-	pmove.velocity[2] = 0;
-	if (!pmove.velocity[0] && !pmove.velocity[1] && !pmove.velocity[2])
+	if (!pm_slidefix->value)
+		pmove.velocity[2] = 0;
+
+	if (!pmove.velocity[0] && !pmove.velocity[1])
+	{
+		pmove.velocity[2] = 0;
 		return;
+	}
 
 	// first try just moving to the destination
 	dest[0] = pmove.origin[0] + pmove.velocity[0]*frametime;
 	dest[1] = pmove.origin[1] + pmove.velocity[1]*frametime;
-	dest[2] = pmove.origin[2];
+	dest[2] = pmove.origin[2] + pmove.velocity[2]*frametime;
 
 	// first try moving directly to the next spot
 	VectorCopy (dest, start);
@@ -313,7 +321,7 @@ void PM_GroundMove (void)
 	updist = (up[0] - original[0])*(up[0] - original[0])
 		+ (up[1] - original[1])*(up[1] - original[1]);
 
-	if (downdist > updist)
+	if (downdist >= updist)
 	{
 usedown:
 		VectorCopy (down, pmove.origin);
@@ -552,7 +560,8 @@ void PM_AirMove (void)
 
 	if ( onground != -1)
 	{
-		pmove.velocity[2] = 0;
+		if (pmove.velocity[2] > 0 || !pm_slidefix->value)
+			pmove.velocity[2] = 0;
 		PM_Accelerate (wishdir, wishspeed, movevars.accelerate);
 		pmove.velocity[2] -= movevars.entgravity * movevars.gravity * frametime;
 		PM_GroundMove ();
