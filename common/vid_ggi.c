@@ -49,7 +49,7 @@
 #include <console.h>
 #include <client.h>
 
-extern viddef_t        vid; // global video state
+extern viddef_t	vid;	// global video state
 unsigned short	d_8to16table[256];
 
 cvar_t	*in_grab;
@@ -61,7 +61,7 @@ cvar_t	*m_filter;
 static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
-static int		p_mouse_x, p_mouse_y;
+static int	p_mouse_x, p_mouse_y;
 static float	oldin_grab;
 
 static ggi_visual_t		ggivis = NULL;
@@ -81,17 +81,15 @@ static int	stride, drawstride;
 static int	pixelsize;
 static int	usedbuf, havedbuf;
 
-static long GGI_highhunkmark, GGI_buffersize;
+static long	GGI_highhunkmark, GGI_buffersize;
 
 static int	vid_surfcachesize;
 static void	*vid_surfcache;
 
-int	VID_options_items = 1;
-
-static void
-do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
 {
-	int i, j, destinc = stride*2-xsize*2;
+	int	i, j, destinc = stride*2-xsize*2;
+
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; /* i is incremented below */) {
 			register uint32 pix1 = src[i++], pix2 = src[i++];
@@ -113,10 +111,10 @@ do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
 	}
 }
 
-static void
-do_scale16(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void do_scale16(int xsize, int ysize, uint8 *dest, uint8 *src)
 {
-	int i, j, destinc = stride*2-xsize*4;
+	int	i, j, destinc = stride*2-xsize*4;
+
 	uint16 *palptr = palette;
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; /* i is incremented below */) {
@@ -131,10 +129,10 @@ do_scale16(int xsize, int ysize, uint8 *dest, uint8 *src)
 	}
 }
 
-static void
-do_scale32(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void do_scale32(int xsize, int ysize, uint8 *dest, uint8 *src)
 {
-	int i, j, destinc = stride*2-xsize*8;
+	int	i, j, destinc = stride*2-xsize*8;
+
 	uint32 *palptr = palette;
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; /* i is incremented below */) {
@@ -152,11 +150,10 @@ do_scale32(int xsize, int ysize, uint8 *dest, uint8 *src)
 }
 
 
-static void
-do_copy8(int xsize, int ysize, uint8 *dest, uint8 *src)
+static void do_copy8(int xsize, int ysize, uint8 *dest, uint8 *src)
 {
-	int i, j;
-	uint8 *palptr = palette;
+	int	i, j;
+	uint8	*palptr = palette;
 
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; i++) {
@@ -167,12 +164,11 @@ do_copy8(int xsize, int ysize, uint8 *dest, uint8 *src)
 	}
 }
 
-static void
-do_copy16(int xsize, int ysize, void *destptr, uint8 *src)
+static void do_copy16(int xsize, int ysize, void *destptr, uint8 *src)
 {
-	int i, j, destinc = (stride/2 - xsize)/2;
-	uint16 *palptr = palette;
-	uint32 *dest = destptr;
+	int	i, j, destinc = (stride/2 - xsize)/2;
+	uint16	*palptr = palette;
+	uint32	*dest = destptr;
 
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize;  /* i is incremented below */) {
@@ -188,11 +184,10 @@ do_copy16(int xsize, int ysize, void *destptr, uint8 *src)
 	}
 }
 
-static void
-do_copy32(int xsize, int ysize, uint32 *dest, uint8 *src)
+static void do_copy32(int xsize, int ysize, uint32 *dest, uint8 *src)
 {
-	int i, j, destinc = stride/4;
-	uint32 *palptr = palette;
+	int	i, j, destinc = stride/4;
+	uint32	*palptr = palette;
 
 	for (j = 0; j < ysize; j++) {
 		for (i = 0; i < xsize; i++) {
@@ -241,9 +236,9 @@ void ResetFrameBuffer(void)
 // the palette data will go away after the call, so it must be copied off if
 // the video driver will need it again
 
-void	VID_Init(unsigned char *pal)
+void VID_Init(unsigned char *pal)
 {
-	int pnum;
+	int	pnum;
 
 	vid.width = GGI_AUTO;
 	vid.height = GGI_AUTO;
@@ -333,13 +328,13 @@ void	VID_Init(unsigned char *pal)
 	}
 
 	/* Pixel size must be 1, 2 or 4 bytes */
-	if (GT_SIZE(mode.graphtype) != 8 &&
-	    GT_SIZE(mode.graphtype) != 16 &&
-	    GT_SIZE(mode.graphtype) != 32) {
+	if (GT_SIZE(mode.graphtype) != 8
+	&&  GT_SIZE(mode.graphtype) != 16
+	&&  GT_SIZE(mode.graphtype) != 32) {
 		if (GT_SIZE(mode.graphtype) == 24) {
 			Sys_Error("VID: 24 bits per pixel not supported - try using the palemu target.\n");
 		} else {
-			Sys_Error("VID: %d bits per pixel not supported by GGI Quake.\n",
+			Sys_Error("VID: %i bits per pixel not supported by GGI Quake.\n",
 				  GT_SIZE(mode.graphtype));
 		}
 	}
@@ -369,13 +364,13 @@ void	VID_Init(unsigned char *pal)
 	usedbuf = havedbuf = 0;
 	drawstride = vid.width;
 	stride = realwidth*pixelsize;
-	if ((dbuf1 = ggiDBGetBuffer(ggivis, 0)) != NULL &&
-	    (dbuf1->type & GGI_DB_SIMPLE_PLB)) {
+	if ((dbuf1 = ggiDBGetBuffer(ggivis, 0)) != NULL
+	&&  (dbuf1->type & GGI_DB_SIMPLE_PLB)) {
 		havedbuf = 1;
 		stride = dbuf1->buffer.plb.stride;
 		if (doublebuffer) {
-			if  ((dbuf2 = ggiDBGetBuffer(ggivis, 1)) == NULL ||
-			     !(dbuf2->type & GGI_DB_SIMPLE_PLB)) {
+			if  ((dbuf2 = ggiDBGetBuffer(ggivis, 1)) == NULL
+			||   !(dbuf2->type & GGI_DB_SIMPLE_PLB)) {
 				/* Only one DB? No double buffering then */
 				doublebuffer = 0;
 			}
@@ -441,9 +436,8 @@ void VID_ShiftPalette(unsigned char *pal)
 
 void VID_SetPalette(unsigned char *pal)
 {
-
-	int i;
-	ggi_color colors[256];
+	int		i;
+	ggi_color	colors[256];
 
 	for (i=0 ; i<256 ; i++) {
 		colors[i].r = pal[i*3] * 257;
@@ -459,7 +453,7 @@ void VID_SetPalette(unsigned char *pal)
 
 // Called at shutdown
 
-void	VID_Shutdown (void)
+void VID_Shutdown (void)
 {
 	Con_Printf("VID_Shutdown\n");
 
@@ -485,13 +479,12 @@ void	VID_Shutdown (void)
 
 // flushes the given rectangles from the view buffer to the screen
 
-void	VID_Update(vrect_t *rects)
+void VID_Update(vrect_t *rects)
 {
-	int height = 0;
+	int	height = 0;
 
 #if 0
 // if the window changes dimension, skip this frame
-
 	if (config_notify)
 	{
 		fprintf(stderr, "config notify\n");
@@ -533,11 +526,8 @@ void	VID_Update(vrect_t *rects)
 
 		if (havedbuf) {
 			if (ggiResourceAcquire(dbuf1->resource,
-					       GGI_ACTYPE_WRITE) != 0 ||
-			    (doublebuffer ?
-			     ggiResourceAcquire(dbuf2->resource,
-						GGI_ACTYPE_WRITE) != 0
-			     : 0)) {
+					GGI_ACTYPE_WRITE) != 0
+			|| (doublebuffer ? ggiResourceAcquire(dbuf2->resource,	GGI_ACTYPE_WRITE) != 0 : 0)) {
 				ggiPanic("Unable to acquire DirectBuffer!\n");
 			}
 			/* ->write is allowed to change at acquire time */
@@ -691,7 +681,7 @@ void D_EndDirectRect (int x, int y, int width, int height)
 
 static int XLateKey(ggi_key_event *ev)
 {
-	int key = 0;
+	int	key = 0;
 
 	if (GII_KTYP(ev->label) == GII_KT_DEAD) {
 		ev->label = GII_KVAL(ev->label);
@@ -808,8 +798,8 @@ static int XLateKey(ggi_key_event *ev)
 
 static void GetEvent(void)
 {
-	ggi_event ev;
-	uint32 b;
+	ggi_event	ev;
+	uint32		b;
 
 	ggiEventRead(ggivis, &ev, emAll);
 	switch(ev.any.type) {
@@ -875,7 +865,7 @@ void IN_SendKeyEvents(void)
 {
 	/* Get events from LibGGI */
 	if (ggivis) {
-		struct timeval t = {0,0};
+		struct timeval	t = {0,0};
 
 		if (ggiEventPoll(ggivis, emAll, &t)) {
 			int i = ggiEventsQueued(ggivis, emAll);
@@ -890,7 +880,7 @@ void IN_Frame(void)
 	/* Only supported by LibGII 0.7 or later. */
 #ifdef GII_CMDCODE_PREFER_RELPTR
 	if (oldin_grab != in_grab->value) {
-		gii_event ev;
+		gii_event	ev;
 
 		oldin_grab = in_grab->value;
 
@@ -906,11 +896,9 @@ void IN_Frame(void)
 }
 
 
-void
-IN_Init(void)
+void IN_Init(void)
 {
-	in_grab = Cvar_Get("in_grab", "0", CVAR_ARCHIVE,
-			"None");
+	in_grab = Cvar_Get("in_grab", "0", CVAR_ARCHIVE, "None");
 	oldin_grab = -1; /* Force update */
 	m_filter = Cvar_Get("m_filter","0",CVAR_ARCHIVE, "None");
 	if (COM_CheckParm ("-nomouse")) return;
@@ -920,15 +908,13 @@ IN_Init(void)
 }
 
 
-void
-IN_Shutdown(void)
+void IN_Shutdown(void)
 {
 	mouse_avail = 0;
 }
 
 
-void
-IN_Move(usercmd_t *cmd)
+void IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail) return;
 
@@ -966,38 +952,41 @@ IN_Move(usercmd_t *cmd)
 }
 
 
-void
-VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
 	// Windowed Mouse
-        M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, in_grab->value);
+	M_Print (16, options_draw_cursor+=8, "             Use Mouse");
+	M_DrawCheckbox (220, options_draw_cursor, in_grab->value);
+	drawn++;
+
+	return drawn;	// return number of drawn menu entries
 }
 
 
-void
-VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 	switch(option_cursor) {
-	case 1:	// in_grab
+	case 0:	// in_grab
 		in_grab->value = !in_grab->value;
 		break;
-
 	}
 }
 
-void VID_InitCvars ()
+void VID_InitCvars ( void )
 {
-	// It may not look it, but this is important
+	// It may not look like it, but this is important
 }
 
-void    
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

@@ -76,8 +76,8 @@
 # include <GL/xmesa.h>
 #endif
 
-#define WARP_WIDTH              320
-#define WARP_HEIGHT             200
+#define WARP_WIDTH	320
+#define WARP_HEIGHT	200
 
 static qboolean		vid_initialized = false;
 
@@ -94,11 +94,11 @@ unsigned char	d_15to8table[65536];
 cvar_t	*vid_mode;
 cvar_t	*vid_fullscreen;
 extern cvar_t	*gl_triplebuffer;
-extern cvar_t *vid_dga_mouseaccel;
+extern cvar_t	*vid_dga_mouseaccel;
 
 #ifdef HAS_VIDMODE
-static XF86VidModeModeInfo **vidmodes;
-static int	nummodes, hasvidmode = 0;
+static XF86VidModeModeInfo	**vidmodes;
+static int			nummodes, hasvidmode = 0;
 #endif
 #ifdef HAS_DGA
 static int	hasdgavideo = 0;
@@ -112,36 +112,30 @@ static void	*dlhand = NULL;
 static GLboolean (*QF_XMesaSetFXmode)(GLint mode) = NULL;
 
 
-int scr_width, scr_height;
-
-#if defined(XMESA) || defined(HAS_DGA)
-int VID_options_items = 2;
-#else
-int VID_options_items = 1;
-#endif
+int	scr_width, scr_height;
 
 /*-----------------------------------------------------------------------*/
 
-//int		texture_mode = GL_NEAREST;
-//int		texture_mode = GL_NEAREST_MIPMAP_NEAREST;
-//int		texture_mode = GL_NEAREST_MIPMAP_LINEAR;
-int		texture_mode = GL_LINEAR;
-//int		texture_mode = GL_LINEAR_MIPMAP_NEAREST;
-//int		texture_mode = GL_LINEAR_MIPMAP_LINEAR;
+//int	texture_mode = GL_NEAREST;
+//int	texture_mode = GL_NEAREST_MIPMAP_NEAREST;
+//int	texture_mode = GL_NEAREST_MIPMAP_LINEAR;
+int	texture_mode = GL_LINEAR;
+//int	texture_mode = GL_LINEAR_MIPMAP_NEAREST;
+//int	texture_mode = GL_LINEAR_MIPMAP_LINEAR;
 
-int		texture_extension_number = 1;
+int	texture_extension_number = 1;
 
-float		gldepthmin, gldepthmax;
+float	gldepthmin, gldepthmax;
 
 cvar_t	*gl_ztrick;
 
-const char *gl_vendor;
-const char *gl_renderer;
-const char *gl_version;
-const char *gl_extensions;
+const char	*gl_vendor;
+const char	*gl_renderer;
+const char	*gl_version;
+const char	*gl_extensions;
 
-qboolean is8bit = false;
-qboolean gl_mtexable = false;
+qboolean	is8bit = false;
+qboolean	gl_mtexable = false;
 
 /*-----------------------------------------------------------------------*/
 void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
@@ -152,8 +146,7 @@ void D_EndDirectRect (int x, int y, int width, int height)
 {
 }
 
-void
-VID_Shutdown(void)
+void VID_Shutdown(void)
 {
 	if (!vid_initialized)
 		return;
@@ -164,7 +157,7 @@ VID_Shutdown(void)
 
 #ifdef HAS_VIDMODE
 	if (hasvidmode) {
-		int i;
+		int	i;
 
 		XF86VidModeSwitchToMode (x_disp, DefaultScreen (x_disp),
 								 vidmodes[0]);
@@ -183,16 +176,14 @@ VID_Shutdown(void)
 	x11_close_display();
 }
 
-static void
-signal_handler(int sig)
+static void signal_handler(int sig)
 {
-	printf("Received signal %d, exiting...\n", sig);
+	printf("Received signal %i, exiting...\n", sig);
 	Sys_Quit();
 	exit(sig);
 }
 
-static void
-InitSig(void)
+static void InitSig(void)
 {
 	signal(SIGHUP, signal_handler);
 	signal(SIGINT, signal_handler);
@@ -211,19 +202,19 @@ void VID_ShiftPalette(unsigned char *p)
 	VID_SetPalette(p);
 }
 
-void	VID_SetPalette (unsigned char *palette)
+void VID_SetPalette (unsigned char *palette)
 {
-	byte	*pal;
-	unsigned r,g,b;
-	unsigned v;
-	int     r1,g1,b1;
+	byte		*pal;
+	unsigned	r,g,b;
+	unsigned	v;
+	int		r1,g1,b1;
 	int		k;
-	unsigned short i;
+	unsigned short	i;
 	unsigned	*table;
-	QFile *f;
-	char s[255];
-	float dist, bestdist;
-	static qboolean palflag = false;
+	QFile		*f;
+	char		s[255];
+	float		dist, bestdist;
+	static qboolean	palflag = false;
 
 //
 // 8 8 8 encoding
@@ -348,7 +339,7 @@ void GL_BeginRendering (int *x, int *y, int *width, int *height)
 	*width = scr_width;
 	*height = scr_height;
 
-//    if (!wglMakeCurrent( maindc, baseRC ))
+//	if (!wglMakeCurrent( maindc, baseRC ))
 //		Sys_Error ("wglMakeCurrent failed");
 
 //	glViewport (*x, *y, *width, *height);
@@ -370,16 +361,16 @@ qboolean VID_Is8bit(void)
 void VID_Init8bitPalette()
 {
 	// Check for 8bit Extensions and initialize them.
-	int i;
-	char thePalette[256*3];
-	char *oldPalette, *newPalette;
+	int	i;
+	char	thePalette[256*3];
+	char	*oldPalette, *newPalette;
 
 	if (strstr(gl_extensions, "GL_EXT_shared_texture_palette") == NULL)
 		return;
 
 	Con_SafePrintf("8-bit GL extensions enabled.\n");
 	glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
-	oldPalette = (char *) d_8to24table; //d_8to24table3dfx;
+	oldPalette = (char *) d_8to24table;	//d_8to24table3dfx;
 	newPalette = thePalette;
 	for (i=0;i<256;i++) {
 		*newPalette++ = *oldPalette++;
@@ -401,8 +392,8 @@ void VID_Init8bitPalette(void)
 
 void VID_Init(unsigned char *palette)
 {
-	int i;
-	int attrib[] = {
+	int	i;
+	int	attrib[] = {
 		GLX_RGBA,
 		GLX_RED_SIZE, 1,
 		GLX_GREEN_SIZE, 1,
@@ -411,12 +402,12 @@ void VID_Init(unsigned char *palette)
 		GLX_DEPTH_SIZE, 1,
 		None
 	};
-	char	gldir[MAX_OSPATH];
-	int width = 640, height = 480;
-	XSetWindowAttributes attr;
-	unsigned long mask;
-	Window root;
-	XVisualInfo *visinfo;
+	char			gldir[MAX_OSPATH];
+	int			width = 640, height = 480;
+	XSetWindowAttributes	attr;
+	unsigned long		mask;
+	Window			root;
+	XVisualInfo		*visinfo;
 
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
 	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
@@ -430,8 +421,7 @@ void VID_Init(unsigned char *palette)
 	vid.colormap = host_colormap;
 	vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
 
-	/* Interpret command-line params
-	 */
+	/* Interpret command-line params */
 
 	/* Set vid parameters */
 	if ((i = COM_CheckParm("-width")) != 0)
@@ -444,7 +434,7 @@ void VID_Init(unsigned char *palette)
 	else
 		vid.conwidth = width;
 
-	vid.conwidth &= 0xfff8; // make it a multiple of eight
+	vid.conwidth &= 0xfff8;	// make it a multiple of eight
 	if (vid.conwidth < 320)
 		vid.conwidth = 320;
 
@@ -470,7 +460,7 @@ void VID_Init(unsigned char *palette)
 
 #ifdef HAS_DGA
 	{
-		int maj_ver;
+		int	maj_ver;
 
 		hasdga = VID_CheckDGA(x_disp, &maj_ver, NULL, &hasdgavideo);
 		if (!hasdga || maj_ver < 1) {
@@ -484,7 +474,7 @@ void VID_Init(unsigned char *palette)
 	if (hasvidmode) {
 		if (! XF86VidModeGetAllModeLines(x_disp, DefaultScreen(x_disp),
 						 &nummodes, &vidmodes)
-		    || nummodes <= 0) {
+		||  nummodes <= 0) {
 			hasvidmode = 0;
 		}
 	}
@@ -507,7 +497,7 @@ void VID_Init(unsigned char *palette)
 #endif
 	if (QF_XMesaSetFXmode) {
 #ifdef XMESA
-		const char *str = getenv("MESA_GLX_FX");
+		const char	*str = getenv("MESA_GLX_FX");
 		if (str != NULL && *str != 'd') {
 			if (tolower(*str) == 'w') {
 				Cvar_Set (vid_fullscreen, "0");
@@ -516,8 +506,7 @@ void VID_Init(unsigned char *palette)
 			}
 		}
 #endif
-		/* Glide uses DGA internally, so we don't want to
-		   mess with it. */
+		/* Glide uses DGA internally, so we don't want to mess with it. */
 //		hasdga = 0;
 	}
 
@@ -530,7 +519,7 @@ void VID_Init(unsigned char *palette)
 
 #ifdef HAS_VIDMODE
 	if (hasvidmode && vid_fullscreen->value) {
-		int smallest_mode=0, x=MAXINT, y=MAXINT;
+		int	smallest_mode=0, x=MAXINT, y=MAXINT;
 
 		attr.override_redirect=1;
 		mask|=CWOverrideRedirect;
@@ -542,14 +531,14 @@ void VID_Init(unsigned char *palette)
 				x=vidmodes[i]->hdisplay;
 				y=vidmodes[i]->vdisplay;
 			}
-			printf("%dx%d\n",vidmodes[i]->hdisplay,vidmodes[i]->vdisplay);
+			printf("%ix%i\n",vidmodes[i]->hdisplay,vidmodes[i]->vdisplay);
 		}
 		// chose the smallest mode that our window fits into;
 		for (i=smallest_mode;
-			 i!=(smallest_mode+1)%nummodes;
-			 i=(i?i-1:nummodes-1)) {
+			i!=(smallest_mode+1)%nummodes;
+			i=(i?i-1:nummodes-1)) {
 			if (vidmodes[i]->hdisplay>=width
-				&& vidmodes[i]->vdisplay>=height) {
+			&& vidmodes[i]->vdisplay>=height) {
 				XF86VidModeSwitchToMode (x_disp, DefaultScreen (x_disp),
 										 vidmodes[i]);
 				break;
@@ -592,7 +581,7 @@ void VID_Init(unsigned char *palette)
 	vid.aspect = ((float)vid.height / (float)vid.width) * (320.0 / 240.0);
 	vid.numpages = 2;
 
-	InitSig(); // trap evil signals
+	InitSig();	// trap evil signals
 
 	GL_Init();
 
@@ -604,7 +593,7 @@ void VID_Init(unsigned char *palette)
 	// Check for 3DFX Extensions and initialize them.
 	VID_Init8bitPalette();
 
-	Con_SafePrintf ("Video mode %dx%d initialized.\n",
+	Con_SafePrintf ("Video mode %ix%i initialized.\n",
 			width, height);
 
 	vid_initialized = true;
@@ -612,18 +601,43 @@ void VID_Init(unsigned char *palette)
 	vid.recalc_refdef = 1;		// force a surface cache flush
 }
 
-void VID_InitCvars()
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+{
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
+}
+
+void VID_ExtraOptionCmd(int option_cursor, int dir)
+{
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
+#if 0
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
+		break;
+	}
+#endif
+}
+
+void VID_InitCvars( void )
 {
 	gl_triplebuffer = Cvar_Get("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 }
 
-void
-VID_LockBuffer ( void )
+void VID_LockBuffer ( void )
 {
 }
 
-void
-VID_UnlockBuffer ( void )
+void VID_UnlockBuffer ( void )
 {
 }
-

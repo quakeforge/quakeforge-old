@@ -44,10 +44,10 @@
 #include <dosisms.h>
 #include <vid_dos.h>
 
-int			vid_modenum;
-vmode_t		*pcurrentmode = NULL;
-int			vid_testingmode, vid_realmode;
-double		vid_testendtime;
+int	vid_modenum;
+vmode_t	*pcurrentmode = NULL;
+int	vid_testingmode, vid_realmode;
+double	vid_testendtime;
 
 cvar_t	*vid_mode;
 cvar_t	*vid_wait;
@@ -65,16 +65,14 @@ cvar_t	*block_switch;
 cvar_t	*vid_window_x;
 cvar_t	*vid_window_y;
 
-int	VID_options_items = 0;
-
 int	d_con_indirect = 0;
 
-int		numvidmodes;
+int	numvidmodes;
 vmode_t	*pvidmodes;
 
 static int	firstupdate = 1;
 
-extern regs_t regs;
+extern regs_t	regs;
 
 void VID_TestMode_f (void);
 void VID_NumModes_f (void);
@@ -88,7 +86,7 @@ byte	vid_current_palette[768];	// save for mode changes
 static qboolean	nomodecheck = false;
 
 unsigned short	d_8to16table[256];	// not used in 8 bpp mode
-unsigned		d_8to24table[256];	// not used in 8 bpp mode
+unsigned	d_8to24table[256];	// not used in 8 bpp mode
 
 void VID_MenuDraw (void);
 void VID_MenuKey (int key);
@@ -99,7 +97,7 @@ void VID_MenuKey (int key);
 VID_Init
 ================
 */
-void    VID_Init (unsigned char *palette)
+void VID_Init (unsigned char *palette)
 {
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
 	vid_wait = Cvar_Get ("vid_mode","0",0,"None");
@@ -215,7 +213,7 @@ VID_SetMode
 */
 int VID_SetMode (int modenum, unsigned char *palette)
 {
-	int		stat;
+	int	stat;
 	vmode_t	*pnewmode, *poldmode;
 
 	if ((modenum >= numvidmodes) || (modenum < 0))
@@ -223,7 +221,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 		vid_mode->value = (float)vid_modenum;
 
 		nomodecheck = true;
-		Con_Printf ("No such video mode: %d\n", modenum);
+		Con_Printf ("No such video mode: %i\n", modenum);
 		nomodecheck = false;
 
 		if (pcurrentmode == NULL)
@@ -260,8 +258,8 @@ int VID_SetMode (int modenum, unsigned char *palette)
 		// real, hard failure that requires resetting the mode
 			if (!VID_SetMode (vid_modenum, palette))	// restore prior mode
 				Sys_Error ("VID_SetMode: Unable to set any mode, probably "
-						   "because there's not enough memory available");
-			Con_Printf ("Failed to set mode %d\n", modenum);
+						"because there's not enough memory available");
+			Con_Printf ("Failed to set mode %i\n", modenum);
 			return 0;
 		}
 		else if (stat == -1)
@@ -276,7 +274,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 		}
 		else
 		{
-			Sys_Error ("VID_SetMode: invalid setmode return code %d");
+			Sys_Error ("VID_SetMode: invalid setmode return code %i");
 		}
 	}
 
@@ -300,7 +298,7 @@ int VID_SetMode (int modenum, unsigned char *palette)
 VID_SetPalette
 ================
 */
-void    VID_SetPalette (unsigned char *palette)
+void VID_SetPalette (unsigned char *palette)
 {
 	if (palette != vid_current_palette)
 		Q_memcpy(vid_current_palette, palette, 768);
@@ -313,9 +311,8 @@ void    VID_SetPalette (unsigned char *palette)
 VID_ShiftPalette
 ================
 */
-void    VID_ShiftPalette (unsigned char *palette)
+void VID_ShiftPalette (unsigned char *palette)
 {
-
 	VID_SetPalette (palette);
 }
 
@@ -327,7 +324,6 @@ VID_Shutdown
 */
 void VID_Shutdown (void)
 {
-
 	regs.h.ah = 0;
 	regs.h.al = 0x3;
 	dos_int86(0x10);
@@ -341,7 +337,7 @@ void VID_Shutdown (void)
 VID_Update
 ================
 */
-void    VID_Update (vrect_t *rects)
+void VID_Update (vrect_t *rects)
 {
 	if (firstupdate && _vid_default_mode->value)
 	{
@@ -386,13 +382,13 @@ VID_NumModes_f
 */
 void VID_NumModes_f (void)
 {
-	int		nummodes;
+	int	nummodes;
 
 	nummodes = VID_NumModes ();
 	if (nummodes == 1)
-		Con_Printf ("%d video mode is available\n", VID_NumModes ());
+		Con_Printf ("%i video mode is available\n", VID_NumModes ());
 	else
-		Con_Printf ("%d video modes are available\n", VID_NumModes ());
+		Con_Printf ("%i video modes are available\n", VID_NumModes ());
 }
 
 
@@ -414,7 +410,7 @@ VID_DescribeMode_f
 */
 void VID_DescribeMode_f (void)
 {
-	int		modenum;
+	int	modenum;
 
 	modenum = Q_atoi (Cmd_Argv(1));
 
@@ -429,7 +425,7 @@ VID_DescribeModes_f
 */
 void VID_DescribeModes_f (void)
 {
-	int			i, nummodes;
+	int		i, nummodes;
 	char		*pinfo, *pheader;
 	vmode_t		*pv;
 	qboolean	na;
@@ -470,8 +466,8 @@ VID_GetModeDescription
 */
 char *VID_GetModeDescription (int mode)
 {
-	char		*pinfo, *pheader;
-	vmode_t		*pv;
+	char	*pinfo, *pheader;
+	vmode_t	*pv;
 
 	pv = VID_GetModePtr (mode);
 	pinfo = VID_ModeInfo (mode, &pheader);
@@ -495,7 +491,7 @@ VID_TestMode_f
 */
 void VID_TestMode_f (void)
 {
-	int		modenum;
+	int	modenum;
 	double	testduration;
 
 	if (!vid_testingmode)
@@ -543,7 +539,6 @@ D_EndDirectRect
 */
 void D_EndDirectRect (int x, int y, int width, int height)
 {
-
 	if (!vid.direct || !pcurrentmode)
 		return;
 
@@ -570,9 +565,9 @@ static int	vid_line, vid_wmodes, vid_column_size;
 
 typedef struct
 {
-	int		modenum;
+	int	modenum;
 	char	*desc;
-	int		iscur;
+	int	iscur;
 } modedesc_t;
 
 #define MAX_COLUMN_SIZE	11
@@ -588,10 +583,10 @@ VID_MenuDraw
 */
 void VID_MenuDraw (void)
 {
-	qpic_t		*p;
-	char		*ptr;
-	int			nummodes, i, j, column, row, dup;
-	char		temp[100];
+	qpic_t	*p;
+	char	*ptr;
+	int	nummodes, i, j, column, row, dup;
+	char	temp[100];
 
 	p = Draw_CachePic("gfx/vidmodes.lmp");
 	M_Draw((320-p->width)/2,4,p);
@@ -794,34 +789,43 @@ void VID_MenuKey (int key)
 	}
 }
 
-void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
-/* Port specific Options menu entrys */
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
-/*
-	switch(option_cursor)
-	{
-	case 1:  // Always start with 1
-	break;
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
+#if 0
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
+		break;
 	}
-*/
+#endif
 }
 
 void VID_InitCvars ()
 {
-	// It may not look it, but this is important
+	// It may not look like it, but this is important
 }
 
-void
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

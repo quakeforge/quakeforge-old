@@ -1,6 +1,6 @@
 /*
 	vid_sunx.c
-	
+
 	Sun X11 video driver
 
 	Copyright (C) 1996-1997  Id Software, Inc.
@@ -73,18 +73,18 @@ static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static int	p_mouse_x, p_mouse_y;
 static qboolean	mouse_in_window = false;
-static qboolean	mouse_grabbed = false; // we grab it when console is up
+static qboolean	mouse_grabbed = false;	// we grab it when console is up
 
 /* Also in vid_x11.c - referenced by in_x11.c */
-Window		x_win;
+Window	x_win;
 
 typedef struct
 {
-	int input;
-	int output;
+	int	input;
+	int	output;
 } keymap_t;
 
-extern viddef_t        vid; // global video state
+extern viddef_t	vid;	// global video state
 unsigned short	d_8to16table[256];
 
 static Colormap		x_cmap;
@@ -94,8 +94,8 @@ static XVisualInfo	*x_visinfo;
 static Atom		aWMDelete = 0;
 
 
-int XShmQueryExtension(Display *);
-int XShmGetEventBase(Display *);
+int	XShmQueryExtension(Display *);
+int	XShmGetEventBase(Display *);
 
 static qboolean		doShm;
 static int		x_shmeventtype;
@@ -106,21 +106,19 @@ static qboolean		oktodraw = false;
 static int		current_framebuffer;
 static XImage		*x_framebuffer[2] = { 0, 0 };
 
-static int verbose = 0;
+static int	verbose = 0;
 
-int	VID_options_items = 1;
+static byte	current_palette[768];
 
-static byte current_palette[768];
+typedef unsigned short	PIXEL16;
+typedef unsigned long	PIXEL24;
+static PIXEL16		st2d_8to16table[256];
+static PIXEL24		st2d_8to24table[256];
+static int		shiftmask_fl=0;
+static long		r_shift,g_shift,b_shift;
+static unsigned long	r_mask,g_mask,b_mask;
 
-typedef unsigned short PIXEL16;
-typedef unsigned long PIXEL24;
-static PIXEL16 st2d_8to16table[256];
-static PIXEL24 st2d_8to24table[256];
-static int shiftmask_fl=0;
-static long r_shift,g_shift,b_shift;
-static unsigned long r_mask,g_mask,b_mask;
-
-static long X11_highhunkmark;
+static long		X11_highhunkmark;
 
 #define STD_EVENT_MASK \
 	(KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask \
@@ -134,13 +132,13 @@ static long X11_highhunkmark;
 // uninteresting fields (to QUAKE) so just stick with the
 // smaller Motif 1.1 structure.
 
-#define MWM_HINTS_DECORATIONS   2
+#define MWM_HINTS_DECORATIONS 2
 typedef struct
 {
-	long flags;
-	long functions;
-	long decorations;
-	long input_mode;
+	long	flags;
+	long	functions;
+	long	decorations;
+	long	input_mode;
 } MotifWmHints;
 
 static int	x_screen, x_screen_width, x_screen_height;
@@ -151,10 +149,9 @@ static Atom	aHints = 0;
 static byte	surfcache[1024*1024];
 
 
-static void
-shiftmask_init()
+static void shiftmask_init()
 {
-	unsigned int x;
+	unsigned int	x;
 
 	r_mask=x_vis->red_mask;
 	g_mask=x_vis->green_mask;
@@ -166,10 +163,9 @@ shiftmask_init()
 }
 
 
-static PIXEL16
-xlib_rgb16(int r, int g, int b)
+static PIXEL16 xlib_rgb16(int r, int g, int b)
 {
-	PIXEL16 p = 0;
+	PIXEL16	p = 0;
 
 	if (shiftmask_fl==0) shiftmask_init();
 
@@ -195,10 +191,9 @@ xlib_rgb16(int r, int g, int b)
 }
 
 
-static PIXEL24
-xlib_rgb24(int r,int g,int b)
+static PIXEL24 xlib_rgb24(int r,int g,int b)
 {
-	PIXEL24 p = 0;
+	PIXEL24	p = 0;
 
 	if (shiftmask_fl==0) shiftmask_init();
 
@@ -224,12 +219,11 @@ xlib_rgb24(int r,int g,int b)
 }
 
 
-static void
-st2_fixup(XImage *framebuf, int x, int y, int width, int height)
+static void st2_fixup(XImage *framebuf, int x, int y, int width, int height)
 {
-	int xi,yi;
-	unsigned char *src;
-	PIXEL16 *dest;
+	int		xi,yi;
+	unsigned char	*src;
+	PIXEL16		*dest;
 
 	if (x < 0 || y < 0) return;
 
@@ -243,13 +237,12 @@ st2_fixup(XImage *framebuf, int x, int y, int width, int height)
 }
 
 
-static void
-st3_fixup(XImage *framebuf, int x, int y, int width, int height)
+static void st3_fixup(XImage *framebuf, int x, int y, int width, int height)
 {
-	int yi;
-	unsigned char *src;
-	PIXEL24 *dest;
-	register int count, n;
+	int		yi;
+	unsigned char	*src;
+	PIXEL24		*dest;
+	register int	count, n;
 
 	if (x < 0 || y < 0) return;
 
@@ -310,13 +303,12 @@ Keybinding command
 =================
 */
 
-byte vid_gamma[256];
+byte	vid_gamma[256];
 
 void VID_Gamma_f (void)
 {
-
 	float	g, f, inf;
-	int		i;
+	int	i;
 
 	if (Cmd_Argc () == 2) {
 		g = Q_atof (Cmd_Argv(1));
@@ -344,7 +336,7 @@ void TragicDeath(int signal_num)
 {
 	//XAutoRepeatOn(x_disp);
 	VID_Shutdown();
-	Sys_Error("This death brought to you by the number %d\n", signal_num);
+	Sys_Error("This death brought to you by the number %i\n", signal_num);
 }
 
 // ========================================================================
@@ -353,33 +345,32 @@ void TragicDeath(int signal_num)
 
 static Cursor CreateNullCursor(Display *display, Window root)
 {
-    Pixmap cursormask;
-    XGCValues xgc;
-    GC gc;
-    XColor dummycolour;
-    Cursor cursor;
+	Pixmap		cursormask;
+	XGCValues	xgc;
+	GC		gc;
+	XColor		dummycolour;
+	Cursor		cursor;
 
-    cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
-    xgc.function = GXclear;
-    gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
-    XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
-    dummycolour.pixel = 0;
-    dummycolour.red = 0;
-    dummycolour.flags = 04;
-    cursor = XCreatePixmapCursor(display, cursormask, cursormask,
-          &dummycolour,&dummycolour, 0,0);
-    XFreePixmap(display,cursormask);
-    XFreeGC(display,gc);
-    return cursor;
+	cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
+	xgc.function = GXclear;
+	gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
+	XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
+	dummycolour.pixel = 0;
+	dummycolour.red = 0;
+	dummycolour.flags = 04;
+	cursor = XCreatePixmapCursor(display, cursormask, cursormask,
+					&dummycolour,&dummycolour, 0,0);
+	XFreePixmap(display,cursormask);
+	XFreeGC(display,gc);
+	return cursor;
 }
 
 
-static void
-ResetFrameBuffer(void)
+static void ResetFrameBuffer(void)
 {
-	int vid_surfcachesize, buffersize;
-	void *vid_surfcache;
-	int mem, pwidth;
+	int	vid_surfcachesize, buffersize;
+	void	*vid_surfcache;
+	int	mem, pwidth;
 
 	if (x_framebuffer[0]) {
 		XDestroyImage(x_framebuffer[0]);
@@ -426,12 +417,11 @@ ResetFrameBuffer(void)
 }
 
 
-static int
-ResetSharedFrameBuffers(void)
+static int ResetSharedFrameBuffers(void)
 {
-	int size;
-	int minsize = getpagesize();
-	int frm;
+	int	size;
+	int	minsize = getpagesize();
+	int	frm;
 
 	if (d_pzbuffer)	{
 		D_FlushCaches ();
@@ -469,29 +459,28 @@ ResetSharedFrameBuffers(void)
 		size = x_framebuffer[frm]->bytes_per_line
 			* x_framebuffer[frm]->height;
 		if (size < minsize)
-			Sys_Error("VID: Window must use at least %d bytes\n", minsize);
+			Sys_Error("VID: Window must use at least %i bytes\n", minsize);
 
 		x_shminfo[frm].shmid = shmget(IPC_PRIVATE, size,IPC_CREAT|0777);
 		if (x_shminfo[frm].shmid==-1) {
-                        int i;
-			Sys_Printf(
-                        "VID: Could not get %dk of shared memory, error: %s\n",
-                           size/1024, strerror(errno));
-                        Sys_Printf("Trying without shared memory\n");
-                        /* Deallocate memory */
-                        /* Z_Free(d_pzbuffer); */
-                        for (i = 0; i <= frm; i++) {
-                           free(x_framebuffer[i]);
-                           x_framebuffer[i] = 0;
-                        }
-                        return 0;
-                }
+			int i;
+			Sys_Printf("VID: Could not get %ik of shared memory, error: %s\n",
+					size/1024, strerror(errno));
+			Sys_Printf("Trying without shared memory\n");
+			/* Deallocate memory */
+			/* Z_Free(d_pzbuffer); */
+			for (i = 0; i <= frm; i++) {
+				free(x_framebuffer[i]);
+				x_framebuffer[i] = 0;
+			}
+			return 0;
+		}
 
 		// attach to the shared memory segment
 		x_shminfo[frm].shmaddr =
 			(void *) shmat(x_shminfo[frm].shmid, 0, 0);
 
-		printf("VID: shared memory id=%d, addr=0x%x\n", x_shminfo[frm].shmid,
+		printf("VID: shared memory id=%i, addr=0x%x\n", x_shminfo[frm].shmid,
 			(int) x_shminfo[frm].shmaddr);
 
 		x_framebuffer[frm]->data = x_shminfo[frm].shmaddr;
@@ -504,7 +493,7 @@ ResetSharedFrameBuffers(void)
 		shmctl(x_shminfo[frm].shmid, IPC_RMID, 0);
 
 	}
-        return 1;
+	return 1;
 }
 
 //
@@ -513,35 +502,35 @@ ResetSharedFrameBuffers(void)
 
 qboolean VID_FullScreen( Window win )
 {
-    MotifWmHints    hints;
-    XWindowChanges  changes;
+	MotifWmHints	hints;
+	XWindowChanges	changes;
 
-    aHints = XInternAtom( x_disp, "_MOTIF_WM_HINTS", 0 );
-    if (aHints == None)
-    {
+	aHints = XInternAtom( x_disp, "_MOTIF_WM_HINTS", 0 );
+	if (aHints == None)
+	{
 		Con_Printf( "Could not intern X atom for _MOTIF_WM_HINTS." );
 		return( false );
-    }
+	}
 
-    hints.flags = MWM_HINTS_DECORATIONS;
-    hints.decorations = 0; // Absolutely no decorations.
-    XChangeProperty( x_disp, win, aHints, aHints, 32, PropModeReplace, (unsigned char *)&hints, 4 );
+	hints.flags = MWM_HINTS_DECORATIONS;
+	hints.decorations = 0;	// Absolutely no decorations.
+	XChangeProperty( x_disp, win, aHints, aHints, 32, PropModeReplace, (unsigned char *)&hints, 4 );
 
-    changes.x = 0;
-    changes.y = 0;
-    changes.width = x_screen_width;
-    changes.height = x_screen_height;
-    changes.stack_mode = TopIf;
-    XConfigureWindow( x_disp, win, CWX | CWY | CWWidth | CWHeight | CWStackMode, &changes);
-    return( true );
+	changes.x = 0;
+	changes.y = 0;
+	changes.width = x_screen_width;
+	changes.height = x_screen_height;
+	changes.stack_mode = TopIf;
+	XConfigureWindow( x_disp, win, CWX | CWY | CWWidth | CWHeight | CWStackMode, &changes);
+	return( true );
 }
 
-void	VID_Init (unsigned char *palette)
+void VID_Init (unsigned char *palette)
 {
-	int pnum, i;
-	XVisualInfo template;
-	int num_visuals;
-	int template_mask;
+	int		pnum, i;
+	XVisualInfo	template;
+	int		num_visuals;
+	int		template_mask;
 
 	//plugin_load("in_x11.so");
 	S_Init();	// sound is initialized here
@@ -574,20 +563,19 @@ void	VID_Init (unsigned char *palette)
 			Sys_Error("VID: Could not open local display\n");
 	}
 
-    x_screen = XDefaultScreen( x_disp );
-    x_screen_width = WidthOfScreen( ScreenOfDisplay( x_disp, x_screen ) );
-    x_screen_height = HeightOfScreen( ScreenOfDisplay( x_disp, x_screen ) );
+	x_screen = XDefaultScreen( x_disp );
+	x_screen_width = WidthOfScreen( ScreenOfDisplay( x_disp, x_screen ) );
+	x_screen_height = HeightOfScreen( ScreenOfDisplay( x_disp, x_screen ) );
 
 	x_center_width  = x_screen_width/2;
 
 	x_center_height = x_screen_height/2;
 
-    Con_Printf( "Using screen %d: %dx%d\n", x_screen, x_screen_width, x_screen_height );
+	Con_Printf( "Using screen %i: %ix%i\n", x_screen, x_screen_width, x_screen_height );
 
 // catch signals so i can turn on auto-repeat
 // we never run full-screen, so no auto-repeat nukage
-	if (0)
-	{
+	if (0) {
 		struct sigaction sa;
 		sigaction(SIGINT, 0, &sa);
 		sa.sa_handler = TragicDeath;
@@ -625,7 +613,7 @@ void	VID_Init (unsigned char *palette)
 // If not specified, use default visual
 	else
 	{
-		int screen;
+		int	screen;
 		screen = XDefaultScreen(x_disp);
 		template.visualid =
 			XVisualIDFromVisual(XDefaultVisual(x_disp, screen));
@@ -635,29 +623,29 @@ void	VID_Init (unsigned char *palette)
 // pick a visual- warn if more than one was available
 	x_visinfo = XGetVisualInfo(x_disp, template_mask, &template, &num_visuals);
 	if (num_visuals > 1) {
-		printf("Found more than one visual id at depth %d:\n", template.depth);
+		printf("Found more than one visual id at depth %i:\n", template.depth);
 		for (i=0 ; i<num_visuals ; i++)
-			printf("	-visualid %d\n", (int)(x_visinfo[i].visualid));
+			printf("	-visualid %i\n", (int)(x_visinfo[i].visualid));
 	} else if (num_visuals == 0) {
 		if (template_mask == VisualIDMask) {
-			Sys_Error("VID: Bad visual id %d\n",
+			Sys_Error("VID: Bad visual id %i\n",
 				  template.visualid);
 		} else {
-			Sys_Error("VID: No visuals at depth %d\n",
+			Sys_Error("VID: No visuals at depth %i\n",
 				  template.depth);
 		}
 	}
 
 	if (verbose) {
-		printf("Using visualid %d:\n", (int)(x_visinfo->visualid));
-		printf("	class %d\n", x_visinfo->class);
-		printf("	screen %d\n", x_visinfo->screen);
-		printf("	depth %d\n", x_visinfo->depth);
+		printf("Using visualid %i:\n", (int)(x_visinfo->visualid));
+		printf("	class %i\n", x_visinfo->class);
+		printf("	screen %i\n", x_visinfo->screen);
+		printf("	depth %i\n", x_visinfo->depth);
 		printf("	red_mask 0x%x\n", (int)(x_visinfo->red_mask));
 		printf("	green_mask 0x%x\n", (int)(x_visinfo->green_mask));
 		printf("	blue_mask 0x%x\n", (int)(x_visinfo->blue_mask));
-		printf("	colormap_size %d\n", x_visinfo->colormap_size);
-		printf("	bits_per_rgb %d\n", x_visinfo->bits_per_rgb);
+		printf("	colormap_size %i\n", x_visinfo->colormap_size);
+		printf("	bits_per_rgb %i\n", x_visinfo->bits_per_rgb);
 	}
 
 	x_vis = x_visinfo->visual;
@@ -672,11 +660,11 @@ void	VID_Init (unsigned char *palette)
 
 		/* Create the main window */
 		x_win = XCreateWindow(x_disp,
-			      XRootWindow(x_disp, x_visinfo->screen),
-			      0, 0, vid.width, vid.height,
-			      0, /* borderwidth	*/
-			      x_visinfo->depth, InputOutput, x_vis,
-			      attribmask, &attribs);
+				XRootWindow(x_disp, x_visinfo->screen),
+				0, 0, vid.width, vid.height,
+				0, /* borderwidth	*/
+				x_visinfo->depth, InputOutput, x_vis,
+				attribmask, &attribs);
 
 		/* Give it a title */
 		XStoreName(x_disp, x_win, "XQuake");
@@ -709,7 +697,7 @@ void	VID_Init (unsigned char *palette)
 
 // wait for first exposure event
 	{
-		XEvent event;
+		XEvent	event;
 		do
 		{
 			XNextEvent(x_disp, &event);
@@ -722,7 +710,7 @@ void	VID_Init (unsigned char *palette)
 // even if MITSHM is available, make sure it's a local connection
 	if (XShmQueryExtension(x_disp))
 	{
-		char *displayname;
+		char	*displayname;
 		doShm = true;
 		displayname = (char *) getenv("DISPLAY");
 		if (displayname)
@@ -739,11 +727,11 @@ void	VID_Init (unsigned char *palette)
 	{
 		x_shmeventtype = XShmGetEventBase(x_disp) + ShmCompletion;
 		if (!ResetSharedFrameBuffers()) {
-                   doShm = false;
-                }
+			doShm = false;
+		}
 	}
 
-        if (!doShm) ResetFrameBuffer();
+	if (!doShm) ResetFrameBuffer();
 
 	current_framebuffer = 0;
 	vid.rowbytes = x_framebuffer[0]->bytes_per_line;
@@ -759,22 +747,19 @@ void	VID_Init (unsigned char *palette)
 
 //	XSynchronize(x_disp, False);
 	IN_Init();
-
 }
 
 
-void
-VID_ShiftPalette(unsigned char *p)
+void VID_ShiftPalette(unsigned char *p)
 {
 	VID_SetPalette(p);
 }
 
 
-void
-VID_SetPalette(unsigned char *palette)
+void VID_SetPalette(unsigned char *palette)
 {
-	int i;
-	XColor colors[256];
+	int	i;
+	XColor	colors[256];
 
 	for (i=0;i<256;i++) {
 		st2d_8to16table[i] = xlib_rgb16(palette[i*3], palette[i*3+1],
@@ -802,8 +787,7 @@ VID_SetPalette(unsigned char *palette)
 /*
   Called at shutdown
 */
-void
-VID_Shutdown(void)
+void VID_Shutdown(void)
 {
 	Con_Printf("VID_Shutdown\n");
 	if (x_disp) {
@@ -817,12 +801,11 @@ VID_Shutdown(void)
 }
 
 
-static int
-XLateKey(XKeyEvent *ev)
+static int XLateKey(XKeyEvent *ev)
 {
-	int key = 0;
-	char buf[64];
-	KeySym keysym;
+	int	key = 0;
+	char	buf[64];
+	KeySym	keysym;
 
 	XLookupString(ev, buf, sizeof(buf), &keysym, 0);
 
@@ -909,26 +892,26 @@ XLateKey(XKeyEvent *ev)
 		case XK_F35:		key = K_PGDN; break;
 
 #if 0
-		case 0x021: key = '1';break;/* [!] */
-		case 0x040: key = '2';break;/* [@] */
-		case 0x023: key = '3';break;/* [#] */
-		case 0x024: key = '4';break;/* [$] */
-		case 0x025: key = '5';break;/* [%] */
-		case 0x05e: key = '6';break;/* [^] */
-		case 0x026: key = '7';break;/* [&] */
-		case 0x02a: key = '8';break;/* [*] */
-		case 0x028: key = '9';;break;/* [(] */
-		case 0x029: key = '0';break;/* [)] */
-		case 0x05f: key = '-';break;/* [_] */
-		case 0x02b: key = '=';break;/* [+] */
-		case 0x07c: key = '\'';break;/* [|] */
-		case 0x07d: key = '[';break;/* [}] */
-		case 0x07b: key = ']';break;/* [{] */
-		case 0x022: key = '\'';break;/* ["] */
-		case 0x03a: key = ';';break;/* [:] */
-		case 0x03f: key = '/';break;/* [?] */
-		case 0x03e: key = '.';break;/* [>] */
-		case 0x03c: key = ',';break;/* [<] */
+		case 0x021: key = '1';break;	/* [!] */
+		case 0x040: key = '2';break;	/* [@] */
+		case 0x023: key = '3';break;	/* [#] */
+		case 0x024: key = '4';break;	/* [$] */
+		case 0x025: key = '5';break;	/* [%] */
+		case 0x05e: key = '6';break;	/* [^] */
+		case 0x026: key = '7';break;	/* [&] */
+		case 0x02a: key = '8';break;	/* [*] */
+		case 0x028: key = '9';;break;	/* [(] */
+		case 0x029: key = '0';break;	/* [)] */
+		case 0x05f: key = '-';break;	/* [_] */
+		case 0x02b: key = '=';break;	/* [+] */
+		case 0x07c: key = '\'';break;	/* [|] */
+		case 0x07d: key = '[';break;	/* [}] */
+		case 0x07b: key = ']';break;	/* [{] */
+		case 0x022: key = '\'';break;	/* ["] */
+		case 0x03a: key = ';';break;	/* [:] */
+		case 0x03f: key = '/';break;	/* [?] */
+		case 0x03e: key = '.';break;	/* [>] */
+		case 0x03c: key = ',';break;	/* [<] */
 #endif
 		default:
 			key = *(unsigned char*)buf;
@@ -942,15 +925,14 @@ XLateKey(XKeyEvent *ev)
 }
 
 
-static int config_notify=0;
-static int config_notify_width;
-static int config_notify_height;
+static int	config_notify=0;
+static int	config_notify_width;
+static int	config_notify_height;
 
-void
-GetEvent(void)
+void GetEvent(void)
 {
-	XEvent x_event;
-	int but;
+	XEvent	x_event;
+	int	but;
 
 	XNextEvent(x_disp, &x_event);
 	switch(x_event.type) {
@@ -990,7 +972,7 @@ GetEvent(void)
 		if (mouse_avail && mouse_grabbed) {
 			mouse_x = (float) ((int)x_event.xmotion.x - (int)(vid.width/2));
 			mouse_y = (float) ((int)x_event.xmotion.y - (int)(vid.height/2));
-	//printf("m: x=%d,y=%d, mx=%3.2f,my=%3.2f\n",
+	//printf("m: x=%i,y=%i, mx=%3.2f,my=%3.2f\n",
 	//	x_event.xmotion.x, x_event.xmotion.y, mouse_x, mouse_y);
 
 			/* move the mouse to the window center again */
@@ -1008,8 +990,8 @@ GetEvent(void)
 	case ConfigureNotify:
 		config_notify_width = x_event.xconfigure.width;
 		config_notify_height = x_event.xconfigure.height;
-		if (config_notify_width != vid.width ||
-		    config_notify_height != vid.height) {
+		if (config_notify_width != vid.width
+		||  config_notify_height != vid.height) {
 			config_notify = 1;
 		}
 		break;
@@ -1052,8 +1034,7 @@ GetEvent(void)
 /*
   Flushes the given rectangles from the view buffer to the screen.
 */
-void
-VID_Update(vrect_t *rects)
+void VID_Update(vrect_t *rects)
 {
 	/* If the window changes dimension, skip this frame. */
 	if (config_notify) {
@@ -1123,10 +1104,9 @@ VID_Update(vrect_t *rects)
 	}
 }
 
-static int dither;
+static int	dither;
 
-void
-VID_DitherOn(void)
+void VID_DitherOn(void)
 {
 	if (dither == 0) {
 		vid.recalc_refdef = 1;
@@ -1135,8 +1115,7 @@ VID_DitherOn(void)
 }
 
 
-void
-VID_DitherOff(void)
+void VID_DitherOff(void)
 {
 	if (dither) {
 		vid.recalc_refdef = 1;
@@ -1145,8 +1124,7 @@ VID_DitherOff(void)
 }
 
 
-void
-Sys_SendKeyEvents(void)
+void Sys_SendKeyEvents(void)
 {
 	/* Get events from X server. */
 	if (x_disp) {
@@ -1154,17 +1132,26 @@ Sys_SendKeyEvents(void)
 	}
 }
 
-void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
 	// Windowed Mouse
 	M_Print(16, options_draw_cursor+=8, "             Use Mouse");
 	M_DrawCheckbox(220, options_draw_cursor, in_grab->value);
+	drawn++;
+
+	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 	switch (option_cursor) {
-	case 1:	// in_grab
+	case 0:	// in_grab
 		in_grab->value = !in_grab->value;
 		break;
 	}
@@ -1175,13 +1162,10 @@ void VID_InitCvars (void)
 	// It may not look like it, but this is important
 }
 
-void    
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

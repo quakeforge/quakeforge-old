@@ -64,7 +64,7 @@ static int	VID_highhunkmark;
 static int		num_modes, current_mode;
 static vga_modeinfo	*modes;
 
-static byte vid_current_palette[768];
+static byte	vid_current_palette[768];
 
 static int	svgalib_inited=0;
 static int	UseDisplay = 1;
@@ -76,18 +76,14 @@ static cvar_t	*vid_waitforrefresh;
 static char	*framebuffer_ptr;
 
 
-static byte     backingbuf[48*24];
+static byte	backingbuf[48*24];
 
 int	VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
 byte	*VGA_pagebase;
 
-int	VID_options_items = 0;
-
-
-void
-D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 {
-	int i, j, k, plane, reps, repshift, offset, vidpage, off;
+	int	i, j, k, plane, reps, repshift, offset, vidpage, off;
 
 	if (!svgalib_inited || !vid.direct || !vga_oktowrite()) return;
 
@@ -144,10 +140,9 @@ D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 }
 
 
-void
-D_EndDirectRect (int x, int y, int width, int height)
+void D_EndDirectRect (int x, int y, int width, int height)
 {
-	int i, j, k, plane, reps, repshift, offset, vidpage, off;
+	int	i, j, k, plane, reps, repshift, offset, vidpage, off;
 
 	if (!svgalib_inited || !vid.direct || !vga_oktowrite()) return;
 
@@ -198,10 +193,9 @@ D_EndDirectRect (int x, int y, int width, int height)
 
 
 #if 0
-static void
-VID_Gamma_f(void)
+static void VID_Gamma_f(void)
 {
-	float	gamma, f, inf;
+	float		gamma, f, inf;
 	unsigned char	palette[768];
 	int		i;
 
@@ -225,38 +219,36 @@ VID_Gamma_f(void)
 #endif
 
 
-static void
-VID_DescribeMode_f(void)
+static void VID_DescribeMode_f(void)
 {
-	int modenum;
+	int	modenum;
 
 	modenum = Q_atoi (Cmd_Argv(1));
 	if ((modenum >= num_modes) || (modenum < 0 ) ||
 	    !modes[modenum].width) {
-		Con_Printf("Invalid video mode: %d!\n", modenum);
+		Con_Printf("Invalid video mode: %i!\n", modenum);
 	}
-	Con_Printf("%d: %d x %d - ", modenum,
+	Con_Printf("%i: %i x %i - ", modenum,
 		   modes[modenum].width, modes[modenum].height);
 	if (modes[modenum].bytesperpixel == 0) {
 		Con_Printf("ModeX\n");
 	} else {
-		Con_Printf("%d bpp\n", modes[modenum].bytesperpixel<<3);
+		Con_Printf("%i bpp\n", modes[modenum].bytesperpixel<<3);
 	}
 }
 
 
-static void
-VID_DescribeModes_f(void)
+static void VID_DescribeModes_f(void)
 {
-	int i;
+	int	i;
 
 	for (i=0;i<num_modes;i++) {
 		if (modes[i].width) {
-			Con_Printf("%d: %d x %d - ", i, modes[i].width,modes[i].height);
+			Con_Printf("%i: %i x %i - ", i, modes[i].width,modes[i].height);
 			if (modes[i].bytesperpixel == 0)
 				Con_Printf("ModeX\n");
 			else
-				Con_Printf("%d bpp\n", modes[i].bytesperpixel<<3);
+				Con_Printf("%i bpp\n", modes[i].bytesperpixel<<3);
 		}
 	}
 }
@@ -267,10 +259,9 @@ VID_DescribeModes_f(void)
 VID_NumModes
 ================
 */
-static int
-VID_NumModes(void)
+static int VID_NumModes(void)
 {
-	int i,i1=0;
+	int	i,i1=0;
 
 	for (i=0; i < num_modes; i++) {
 		i1 += modes[i].width ? 1 : 0;
@@ -279,27 +270,24 @@ VID_NumModes(void)
 }
 
 
-static void
-VID_NumModes_f(void)
+static void VID_NumModes_f(void)
 {
-	Con_Printf("%d modes\n", VID_NumModes());
+	Con_Printf("%i modes\n", VID_NumModes());
 }
 
 
-static void
-VID_Debug_f (void)
+static void VID_Debug_f (void)
 {
-	Con_Printf("mode: %d\n",current_mode);
-	Con_Printf("height x width: %d x %d\n",vid.height,vid.width);
-	Con_Printf("bpp: %d\n",modes[current_mode].bytesperpixel*8);
+	Con_Printf("mode: %i\n",current_mode);
+	Con_Printf("height x width: %i x %i\n",vid.height,vid.width);
+	Con_Printf("bpp: %i\n",modes[current_mode].bytesperpixel*8);
 	Con_Printf("vid.aspect: %f\n",vid.aspect);
 }
 
 
-static void
-VID_InitModes(void)
+static void VID_InitModes(void)
 {
-	int i;
+	int	i;
 
 	/* Get complete information on all modes */
 	num_modes = vga_lastmodenumber()+1;
@@ -309,7 +297,7 @@ VID_InitModes(void)
 			Q_memcpy(&modes[i], vga_getmodeinfo(i),
 				 sizeof (vga_modeinfo));
 		} else {
-			modes[i].width = 0; // means not available
+			modes[i].width = 0;	// means not available
 		}
 	}
 
@@ -322,10 +310,9 @@ VID_InitModes(void)
 }
 
 
-static int
-get_mode(char *name, int width, int height, int depth)
+static int get_mode(char *name, int width, int height, int depth)
 {
-	int i, ok, match;
+	int	i, ok, match;
 
 	match = (!!width) + (!!height)*2 + (!!depth)*4;
 
@@ -346,7 +333,7 @@ get_mode(char *name, int width, int height, int depth)
 			}
 		}
 		if (i==num_modes) {
-			Sys_Printf("Mode %dx%d (%d bits) not supported\n",
+			Sys_Printf("Mode %ix%i (%i bits) not supported\n",
 				   width, height, depth);
 			i = G320x200x256;
 		}
@@ -356,8 +343,7 @@ get_mode(char *name, int width, int height, int depth)
 }
 
 
-void
-VID_Shutdown(void)
+void VID_Shutdown(void)
 {
 	Sys_Printf("VID_Shutdown\n");
 
@@ -370,19 +356,17 @@ VID_Shutdown(void)
 }
 
 
-void
-VID_ShiftPalette(unsigned char *p)
+void VID_ShiftPalette(unsigned char *p)
 {
 	VID_SetPalette(p);
 }
 
 
-void
-VID_SetPalette(byte *palette)
+void VID_SetPalette(byte *palette)
 {
-	static int tmppal[256*3];
-	int *tp;
-	int i;
+	static int	tmppal[256*3];
+	int		*tp;
+	int		i;
 
 	if (!svgalib_inited) return;
 
@@ -401,16 +385,15 @@ VID_SetPalette(byte *palette)
 }
 
 
-int
-VID_SetMode(int modenum, unsigned char *palette)
+int VID_SetMode(int modenum, unsigned char *palette)
 {
-	int bsize, zsize, tsize;
-	int err;
+	int	bsize, zsize, tsize;
+	int	err;
 
 	if ((modenum >= num_modes) || (modenum < 0) || !modes[modenum].width){
 		vid_mode->value = (float)current_mode;
 
-		Con_Printf("No such video mode: %d\n",modenum);
+		Con_Printf("No such video mode: %i\n",modenum);
 
 		return 0;
 	}
@@ -468,7 +451,7 @@ VID_SetMode(int modenum, unsigned char *palette)
 	/* get goin' */
 	err = vga_setmode(current_mode);
 	if (err) {
-		Sys_Error("Video mode failed: %d\n",modenum);
+		Sys_Error("Video mode failed: %i\n",modenum);
 	}
 	VID_SetPalette(palette);
 
@@ -493,11 +476,10 @@ VID_SetMode(int modenum, unsigned char *palette)
 }
 
 
-void
-VID_Init(unsigned char *palette)
+void VID_Init(unsigned char *palette)
 {
-	int w, h, d;
-	int err;
+	int	w, h, d;
+	int	err;
 
 	//plugin_load("in_svgalib.so");
 
@@ -560,8 +542,7 @@ VID_Init(unsigned char *palette)
 }
 
 
-void
-VID_Update(vrect_t *rects)
+void VID_Update(vrect_t *rects)
 {
 	if (!svgalib_inited) return;
 
@@ -628,10 +609,9 @@ VID_Update(vrect_t *rects)
 }
 
 
-static int dither = 0;
+static int	dither = 0;
 
-void
-VID_DitherOn(void)
+void VID_DitherOn(void)
 {
 	if (dither == 0) {
 #if 0
@@ -642,8 +622,7 @@ VID_DitherOn(void)
 }
 
 
-void
-VID_DitherOff(void)
+void VID_DitherOff(void)
 {
 	if (dither) {
 #if 0
@@ -659,14 +638,13 @@ VID_DitherOff(void)
 VID_ModeInfo
 ================
 */
-char *
-VID_ModeInfo (int modenum)
+char *VID_ModeInfo (int modenum)
 {
-	static char *badmodestr = "Bad mode number";
-	static char  modestr[40];
+	static char	*badmodestr = "Bad mode number";
+	static char	modestr[40];
 
 	if (modenum == 0) {
-		snprintf(modestr, sizeof(modestr), "%d x %d, %d bpp",
+		snprintf(modestr, sizeof(modestr), "%i x %i, %i bpp",
 			 vid.width, vid.height, modes[current_mode].bytesperpixel*8);
 		return (modestr);
 	} else {
@@ -675,36 +653,43 @@ VID_ModeInfo (int modenum)
 }
 
 
-void
-VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
-	/* No extra option menu items yet */
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
 }
 
-
-void
-VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
-        switch(option_cursor) {
-        case 1:  // Always start with 1
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
 		break;
-        }
+	}
 #endif
 }
 
-void VID_InitCvars ()
+void VID_InitCvars ( void )
 {
 	// It may not look like it, but this is important
 }
 
-void    
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

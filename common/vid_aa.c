@@ -51,7 +51,7 @@ static int	VID_highhunkmark;
 static int		num_modes, current_mode;
 static vga_modeinfo	*modes;
 
-static byte vid_current_palette[768];
+static byte	vid_current_palette[768];
 
 static int	UseDisplay = 1;
 
@@ -61,61 +61,58 @@ static cvar_t	*vid_waitforrefresh;
 
 static char	*framebuffer_ptr;
 
-static byte     backingbuf[48*24];
+static byte	backingbuf[48*24];
 
-int	VID_options_items = 0;
+aa_context	*context = NULL;
+unsigned char	*buffer;
+aa_palette	palette;
+aa_renderparams	*params;
+int		aaversion=0;
 
-aa_context *context = NULL;
-unsigned char *buffer;
-aa_palette palette;
-aa_renderparams *params;
-int aaversion=0;
-
-void
-aa_setpage()
+void aa_setpage()
 {
-	int x,y;
-	unsigned char *img = aa_image(context);
+	int		x,y;
+	unsigned char	*img = aa_image(context);
 
 	switch(aaversion) {
 		case 11:
 			for (y = 0; y < 200; y++)
-			memcpy(img+y*aa_imgwidth(context),buffer+y*320,320);
+				memcpy(img+y*aa_imgwidth(context),buffer+y*320,320);
 			break;
 		case 12:
 			for (y=0;y<100;y++)
-			memcpy(img+y*aa_imgwidth(context),buffer+y*320*2,320);
+				memcpy(img+y*aa_imgwidth(context),buffer+y*320*2,320);
 			break;
 		case 13:
 			for (y=0;y<66;y++)
-			memcpy(img+y*aa_imgwidth(context),buffer+y*320*3,320);
-                        break;
+				memcpy(img+y*aa_imgwidth(context),buffer+y*320*3,320);
+			break;
 		case 14:
 			for (y=0;y<50;y++)
-			memcpy(img+y*aa_imgwidth(context),buffer+y*320*4,320);
-                        break;
+				memcpy(img+y*aa_imgwidth(context),buffer+y*320*4,320);
+			break;
 		case 21:
 			for (y = 0; y < 200; y++)
 				for (x=0;x<160;x++)
-				img[y*aa_imgwidth(context)+x]=buffer[y*320+x*2];
-                        break;
+					img[y*aa_imgwidth(context)+x]=buffer[y*320+x*2];
+			break;
 		case 22:
 			for (y=0;y<100;y++)
-                                for (x=0;x<160;x++)
-				img[y*aa_imgwidth(context)+x]=buffer[y*2*320+x*2];
-                        break;
+				for (x=0;x<160;x++)
+					img[y*aa_imgwidth(context)+x]=buffer[y*2*320+x*2];
+			break;
 		case 23:
 			for (y=0;y<66;y++)
-                                for (x=0;x<160;x++)
-				img[y*aa_imgwidth(context)+x]=buffer[y*3*320+x*2];
-                        break;
+				for (x=0;x<160;x++)
+					img[y*aa_imgwidth(context)+x]=buffer[y*3*320+x*2];
+			break;
 		case 24:
 			for (y=0;y<50;y++)
-                                for (x=0;x<160;x++)
-				img[y*aa_imgwidth(context)+x]=buffer[y*4*320+x*2];
-                        break;
+				for (x=0;x<160;x++)
+					img[y*aa_imgwidth(context)+x]=buffer[y*4*320+x*2];
+			break;
 		default:
-			fprintf(stderr,"version = %d, unknown version!\n",aaversion);
+			fprintf(stderr,"version = %i, unknown version!\n",aaversion);
 			exit(-1);
 			break;
 	}
@@ -123,14 +120,11 @@ aa_setpage()
 	aa_renderpalette(context, palette, params, 0, 0,
 			aa_scrwidth(context), aa_scrheight(context));
 	aa_flush(context);
-
-
 }
 
-void
-D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
+void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 {
-	int i, j, k, plane, reps, repshift, offset, vidpage, off;
+	int	i, j, k, plane, reps, repshift, offset, vidpage, off;
 
 	if (vid.aspect > 1.5) {
 		reps = 2;
@@ -143,29 +137,28 @@ D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
 	vidpage = 0;
 	aa_setpage();
 
-		for (i=0 ; i<(height << repshift) ; i += reps) {
-			for (j=0 ; j<reps ; j++) {
-				offset = x + ((y << repshift) + i + j)
+	for (i=0 ; i<(height << repshift) ; i += reps) {
+		for (j=0 ; j<reps ; j++) {
+			offset = x + ((y << repshift) + i + j)
 					* vid.rowbytes;
-				off = offset % 0x10000;
-				if ((offset / 0x10000) != vidpage) {
-					vidpage=offset / 0x10000;
-					aa_setpage();
-				}
-				memcpy (&backingbuf[(i + j) * 24],
-					vid.direct + off, width);
-				memcpy (vid.direct + off,
-					&pbitmap[(i >> repshift)*width],
-					width);
+			off = offset % 0x10000;
+			if ((offset / 0x10000) != vidpage) {
+				vidpage=offset / 0x10000;
+				aa_setpage();
 			}
+			memcpy (&backingbuf[(i + j) * 24],
+				vid.direct + off, width);
+			memcpy (vid.direct + off,
+				&pbitmap[(i >> repshift)*width],
+				width);
 		}
+	}
 }
 
 
-void
-D_EndDirectRect (int x, int y, int width, int height)
+void D_EndDirectRect (int x, int y, int width, int height)
 {
-	int i, j, k, plane, reps, repshift, offset, vidpage, off;
+	int	i, j, k, plane, reps, repshift, offset, vidpage, off;
 
 	if (vid.aspect > 1.5) {
 		reps = 2;
@@ -178,27 +171,26 @@ D_EndDirectRect (int x, int y, int width, int height)
 	vidpage = 0;
 	aa_setpage();
 
-		for (i=0 ; i<(height << repshift) ; i += reps) {
-			for (j=0 ; j<reps ; j++) {
-				offset = x + ((y << repshift) + i + j)
+	for (i=0 ; i<(height << repshift) ; i += reps) {
+		for (j=0 ; j<reps ; j++) {
+			offset = x + ((y << repshift) + i + j)
 					* vid.rowbytes;
-				off = offset % 0x10000;
-				if ((offset / 0x10000) != vidpage) {
-					vidpage=offset / 0x10000;
-					aa_setpage();
-				}
-				memcpy (vid.direct + off,
-					&backingbuf[(i +j)*24],	width);
+			off = offset % 0x10000;
+			if ((offset / 0x10000) != vidpage) {
+				vidpage=offset / 0x10000;
+				aa_setpage();
 			}
+			memcpy (vid.direct + off,
+			&backingbuf[(i +j)*24],	width);
 		}
+	}
 }
 
 
 #if 0
-static void
-VID_Gamma_f(void)
+static void VID_Gamma_f(void)
 {
-	float	gamma, f, inf;
+	float		gamma, f, inf;
 	unsigned char	palette[768];
 	int		i;
 
@@ -222,14 +214,12 @@ VID_Gamma_f(void)
 #endif
 
 
-static void
-VID_DescribeMode_f(void)
+static void VID_DescribeMode_f(void)
 {
 }
 
 
-static void
-VID_DescribeModes_f(void)
+static void VID_DescribeModes_f(void)
 {
 }
 
@@ -239,52 +229,46 @@ VID_DescribeModes_f(void)
 VID_NumModes
 ================
 */
-static int
-VID_NumModes(void)
-{ return 1;
+static int VID_NumModes(void)
+{
+	return 1;
 }
 
 
-static void
-VID_NumModes_f(void)
+static void VID_NumModes_f(void)
 {
-	Con_Printf("%d modes\n", VID_NumModes());
+	Con_Printf("%i modes\n", VID_NumModes());
 }
 
 
-static void
-VID_Debug_f (void)
+static void VID_Debug_f (void)
 {
-/*	Con_Printf("mode: %d\n",current_mode);
-	Con_Printf("height x width: %d x %d\n",vid.height,vid.width);
-	Con_Printf("bpp: %d\n",modes[current_mode].bytesperpixel*8);
+/*	Con_Printf("mode: %i\n",current_mode);
+	Con_Printf("height x width: %i x %i\n",vid.height,vid.width);
+	Con_Printf("bpp: %i\n",modes[current_mode].bytesperpixel*8);
 	Con_Printf("vid.aspect: %f\n",vid.aspect);
 */
 }
 
 
-void
-VID_Shutdown(void)
+void VID_Shutdown(void)
 {
-
 	aa_close(context);
 	free(buffer);
 }
 
 
-void
-VID_ShiftPalette(unsigned char *p)
+void VID_ShiftPalette(unsigned char *p)
 {
 	VID_SetPalette(p);
 }
 
 
-void
-VID_SetPalette(byte *palette)
+void VID_SetPalette(byte *palette)
 {
-	static int tmppal[256*3];
-	int *tp;
-	int i;
+	static int	tmppal[256*3];
+	int		*tp;
+	int		i;
 
 	memcpy(vid_current_palette, palette, sizeof(vid_current_palette));
 
@@ -300,11 +284,10 @@ VID_SetPalette(byte *palette)
 }
 
 
-int
-VID_SetMode(int modenum, unsigned char *palette)
+int VID_SetMode(int modenum, unsigned char *palette)
 {
-	int bsize, zsize, tsize;
-	int err;
+	int	bsize, zsize, tsize;
+	int	err;
 
 	vid.aspect = ((float)vid.height / (float)vid.width) * (320.0 / 240.0);
 	vid.colormap = (pixel_t *) host_colormap;
@@ -347,7 +330,7 @@ VID_SetMode(int modenum, unsigned char *palette)
 				params->contrast = 100;
 				memset(aa_image(context), 0,
 				aa_imgwidth(context) * aa_imgheight(context));
-				fprintf(stderr,"%d,%d\n",
+				fprintf(stderr,"%i,%i\n",
 					aa_imgwidth(context),
 					aa_imgheight(context));
 				if (aa_imgwidth(context)>=320)
@@ -367,7 +350,7 @@ VID_SetMode(int modenum, unsigned char *palette)
 		} else {
 			fprintf(stderr, "set video failed!\n", x);
 			exit(-1);
-			}
+		}
 
 	VID_SetPalette(palette);
 
@@ -380,18 +363,16 @@ VID_SetMode(int modenum, unsigned char *palette)
 }
 
 
-void
-VID_Init(unsigned char *palette)
+void VID_Init(unsigned char *palette)
 {
-	int w, h, d;
-	int err;
+	int	w, h, d;
+	int	err;
 
 #if 0
 	Cmd_AddCommand ("gamma", VID_Gamma_f);
 #endif
 
 	if (UseDisplay) {
-
 		vid_mode = Cvar_Get ("vid_mode","5",0,"None");
 		vid_redrawfull = Cvar_Get ("vid_redrawfull","0",0,"None");
 		vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",
@@ -432,42 +413,40 @@ VID_Init(unsigned char *palette)
 }
 
 
-void
-VID_Update(vrect_t *rects)
+void VID_Update(vrect_t *rects)
 {
-		int ycount;
-		int offset;
-		int vidpage=0;
+	int	ycount;
+	int	offset;
+	int	vidpage=0;
 
-		vga_setpage();
+	vga_setpage();
 
-		while (rects) {
-			ycount = rects->height;
-			offset = rects->y * vid.rowbytes + rects->x;
-			while (ycount--) {
-				register int i = offset % 0x10000;
+	while (rects) {
+		ycount = rects->height;
+		offset = rects->y * vid.rowbytes + rects->x;
+		while (ycount--) {
+			register int	i = offset % 0x10000;
 
-				if ((offset / 0x10000) != vidpage) {
-					vidpage=offset / 0x10000;
-					aa_setpage();
-				}
-				if (rects->width + i > 0x10000) {
-					memcpy(framebuffer_ptr + i,
-							vid.buffer + offset,
-							0x10000 - i);
-					aa_setpage();
-					memcpy(framebuffer_ptr,
-							vid.buffer + offset + 0x10000 - i,
-							rects->width - 0x10000 + i);
-				} else {
-					memcpy(framebuffer_ptr + i,
-					       vid.buffer + offset,
-					       rects->width);
-				}
-				offset += vid.rowbytes;
+			if ((offset / 0x10000) != vidpage) {
+				vidpage=offset / 0x10000;
+				aa_setpage();
 			}
-			rects = rects->pnext;
+			if (rects->width + i > 0x10000) {
+				memcpy(framebuffer_ptr + i,
+					vid.buffer + offset,
+					0x10000 - i);
+				aa_setpage();
+				memcpy(framebuffer_ptr,
+					vid.buffer + offset + 0x10000 - i,
+					rects->width - 0x10000 + i);
+			} else {
+				memcpy(framebuffer_ptr + i,
+					vid.buffer + offset,
+					rects->width);
+			}
+			offset += vid.rowbytes;
 		}
+		rects = rects->pnext;
 	}
 
 	if (vid_mode->value != current_mode) {
@@ -476,10 +455,9 @@ VID_Update(vrect_t *rects)
 }
 
 
-static int dither = 0;
+static int	dither = 0;
 
-void
-VID_DitherOn(void)
+void VID_DitherOn(void)
 {
 	if (dither == 0) {
 #if 0
@@ -490,8 +468,7 @@ VID_DitherOn(void)
 }
 
 
-void
-VID_DitherOff(void)
+void VID_DitherOff(void)
 {
 	if (dither) {
 #if 0
@@ -507,14 +484,13 @@ VID_DitherOff(void)
 VID_ModeInfo
 ================
 */
-char *
-VID_ModeInfo (int modenum)
+char *VID_ModeInfo (int modenum)
 {
-/*	static char *badmodestr = "Bad mode number";
-	static char  modestr[40];
+/*	static char	*badmodestr = "Bad mode number";
+	static char	modestr[40];
 
 	if (modenum == 0) {
-		snprintf(modestr, sizeof(modestr), "%d x %d, %d bpp",
+		snprintf(modestr, sizeof(modestr), "%i x %i, %i bpp",
 			 vid.width, vid.height, modes[current_mode].bytesperpixel*8);
 		return (modestr);
 	} else {
@@ -523,37 +499,43 @@ VID_ModeInfo (int modenum)
 */
 }
 
-
-void
-VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
-	/* No extra option menu items yet */
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
 }
 
-
-void
-VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
 #if 0
-        switch(option_cursor) {
-        case 1:  // Always start with 1
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
 		break;
-        }
+	}
 #endif
 }
 
 void VID_InitCvars ()
 {
-	// It may not look it, but this is important
+	// It may not look like it, but this is important
 }
 
-void
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

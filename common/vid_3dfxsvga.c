@@ -45,8 +45,8 @@
 #include <GL/fxmesa.h>
 #include <glide/sst1vid.h>
 
-#define WARP_WIDTH              320
-#define WARP_HEIGHT             200
+#define WARP_WIDTH	320
+#define WARP_HEIGHT	200
 
 
 //unsigned short	d_8to16table[256];
@@ -56,14 +56,12 @@ unsigned char	d_15to8table[65536];
 static cvar_t	*vid_mode;
 static cvar_t	*vid_redrawfull;
 static cvar_t	*vid_waitforrefresh;
-cvar_t	*gl_ztrick;
+cvar_t		*gl_ztrick;
 extern cvar_t	*gl_triplebuffer;
 
-static fxMesaContext fc = NULL;
-static int	scr_width, scr_height;
-static qboolean is8bit = 0;
-
-int	VID_options_items = 0;
+static fxMesaContext	fc = NULL;
+static int		scr_width, scr_height;
+static qboolean		is8bit = 0;
 
 /*-----------------------------------------------------------------------*/
 
@@ -76,14 +74,14 @@ int	texture_mode = GL_LINEAR;
 
 int	texture_extension_number = 1;
 
-float		gldepthmin, gldepthmax;
+float	gldepthmin, gldepthmax;
 
-const char *gl_vendor;
-const char *gl_renderer;
-const char *gl_version;
-const char *gl_extensions;
+const char	*gl_vendor;
+const char	*gl_renderer;
+const char	*gl_version;
+const char	*gl_extensions;
 
-qboolean gl_mtexable = false;
+qboolean	gl_mtexable = false;
 
 /*-----------------------------------------------------------------------*/
 void D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
@@ -104,7 +102,7 @@ void VID_Shutdown(void)
 
 void signal_handler(int sig)
 {
-	printf("Received signal %d, exiting...\n", sig);
+	printf("Received signal %i, exiting...\n", sig);
 	Host_Shutdown();
 	abort();
 	//Sys_Quit();
@@ -130,20 +128,20 @@ void VID_ShiftPalette(unsigned char *p)
 //	VID_SetPalette(p);
 }
 
-void	VID_SetPalette (unsigned char *palette)
+void VID_SetPalette (unsigned char *palette)
 {
-	byte	*pal;
-	unsigned r,g,b;
-	unsigned v;
-	int     r1,g1,b1;
+	byte		*pal;
+	unsigned	r,g,b;
+	unsigned	v;
+	int		r1,g1,b1;
 	int		k;
-	unsigned short i;
+	unsigned short	i;
 	unsigned	*table;
 //#ifdef QUAKEWORLD
-	QFile *f;
-	char s[255];
+	QFile		*f;
+	char		s[255];
 //#endif
-	float dist, bestdist;
+	float		dist, bestdist;
 //
 // 8 8 8 encoding
 //
@@ -168,7 +166,7 @@ void	VID_SetPalette (unsigned char *palette)
 	// JACK: 3D distance calcs - k is last closest, l is the distance.
 //#ifdef QUAKEWORLD
 	{
-		static qboolean palflag = false;
+		static qboolean	palflag = false;
 
 		// FIXME: Precalculate this and cache to disk.
 		if (palflag)
@@ -181,7 +179,7 @@ void	VID_SetPalette (unsigned char *palette)
 		Qread(f, d_15to8table, 1<<15);
 		Qclose(f);
 	} else
-//#endif // QUAKEWORLD
+//#endif	// QUAKEWORLD
 	{
 		for (i=0; i < (1<<15); i++) {
 			/* Maps
@@ -214,7 +212,7 @@ void	VID_SetPalette (unsigned char *palette)
 			Qwrite(f, d_15to8table, 1<<15);
 			Qclose(f);
 		}
-//#endif // QUAKEWORLD
+//#endif	// QUAKEWORLD
 	}
 }
 
@@ -268,7 +266,7 @@ void GL_BeginRendering (int *x, int *y, int *width, int *height)
 	*width = scr_width;
 	*height = scr_height;
 
-//    if (!wglMakeCurrent( maindc, baseRC ))
+//	if (!wglMakeCurrent( maindc, baseRC ))
 //		Sys_Error ("wglMakeCurrent failed");
 
 //	glViewport (*x, *y, *width, *height);
@@ -333,14 +331,13 @@ static int resolutions[][3]={
 #define NUM_RESOLUTIONS		(sizeof(resolutions)/(sizeof(int)*3))
 
 
-static int
-findres(int *width, int *height)
+static int findres(int *width, int *height)
 {
 	int i;
 
 	for(i=0; i < NUM_RESOLUTIONS; i++) {
-		if((*width <= resolutions[i][0]) &&
-		   (*height <= resolutions[i][1])) {
+		if((*width <= resolutions[i][0])
+		&& (*height <= resolutions[i][1])) {
 			*width = resolutions[i][0];
 			*height = resolutions[i][1];
 			return resolutions[i][2];
@@ -370,7 +367,7 @@ void VID_Init8bitPalette()
 
 	Con_SafePrintf("8-bit GL extensions enabled.\n");
 	glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
-	oldPalette = (char *) d_8to24table; //d_8to24table3dfx;
+	oldPalette = (char *) d_8to24table;	//d_8to24table3dfx;
 	newPalette = thePalette;
 	for (i=0;i<256;i++) {
 		*newPalette++ = *oldPalette++;
@@ -388,16 +385,16 @@ extern void gl3DfxSetPaletteEXT(GLuint *pal);
 void VID_Init8bitPalette(void)
 {
 	// Check for 8bit Extensions and initialize them.
-	int i;
-	GLubyte table[256][4];
-	char *oldpal;
+	int	i;
+	GLubyte	table[256][4];
+	char	*oldpal;
 
 	if (strstr(gl_extensions, "3DFX_set_global_palette") == NULL)
 		return;
 
 	Con_SafePrintf("8-bit GL extensions enabled.\n");
 	glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
-	oldpal = (char *) d_8to24table; //d_8to24table3dfx;
+	oldpal = (char *) d_8to24table;	//d_8to24table3dfx;
 	for (i=0;i<256;i++) {
 		table[i][2] = *oldpal++;
 		table[i][1] = *oldpal++;
@@ -412,15 +409,15 @@ void VID_Init8bitPalette(void)
 
 void VID_Init(unsigned char *palette)
 {
-	int i;
-	GLint attribs[32];
+	int	i;
+	GLint	attribs[32];
 	char	gldir[MAX_OSPATH];
-	int width = 640, height = 480;
+	int	width = 640, height = 480;
 
 	vid_mode = Cvar_Get ("vid_mode", "5", 0, "None");
 	vid_redrawfull = Cvar_Get ("vid_redrawfull", "0", 0," None");
 	vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh", "0", CVAR_ARCHIVE,
-								   "None");
+								"None");
 	gl_ztrick = Cvar_Get ("gl_ztrick", "0", CVAR_ARCHIVE, "None");
 
 	vid.maxwarpwidth = WARP_WIDTH;
@@ -448,7 +445,7 @@ void VID_Init(unsigned char *palette)
 	else
 		vid.conwidth = 640;
 
-	vid.conwidth &= 0xfff8; // make it a multiple of eight
+	vid.conwidth &= 0xfff8;	// make it a multiple of eight
 
 	if (vid.conwidth < 320)
 		vid.conwidth = 320;
@@ -481,7 +478,7 @@ void VID_Init(unsigned char *palette)
 	vid.aspect = ((float)vid.height / (float)vid.width) * (320.0 / 240.0);
 	vid.numpages = 2;
 
-	InitSig(); // trap evil signals
+	InitSig();	// trap evil signals
 
 	GL_Init();
 
@@ -493,38 +490,48 @@ void VID_Init(unsigned char *palette)
 	// Check for 3DFX Extensions and initialize them.
 	VID_Init8bitPalette();
 
-	Con_SafePrintf ("Video mode %dx%d initialized.\n", width, height);
+	Con_SafePrintf ("Video mode %ix%i initialized.\n", width, height);
 
 	vid.recalc_refdef = 1;				// force a surface cache flush
 }
 
-void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
-/* Port specific Options menu entrys */
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
-/*
-	switch(option_cursor)
-	{
-	case 12:  // Always start with 12
-	break;
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
+#if 0
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
+		break;
 	}
-*/
+#endif
 }
-void VID_InitCvars ()
+
+void VID_InitCvars ( void )
 {
 	gl_triplebuffer = Cvar_Get ("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 }
 
-void
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

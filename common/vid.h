@@ -95,10 +95,10 @@ int VID_SetMode (int modenum, unsigned char *palette);
 void VID_HandlePause (qboolean pause);
 // called only on Win32, when pause happens, so the mouse can be released
 
-void VID_ExtraOptionDraw(unsigned int);
-// draw extra option menu entries
+int VID_ExtraOptionDraw(unsigned int);
+// draw extra option menu entries and return number of drawn menu entries
 
-void VID_ExtraOptionCmd(int options_cursor);
+void VID_ExtraOptionCmd(int options_cursor, int dir);
 // commands for the extra menu options of the target
 
 void VID_InitCvars(void);

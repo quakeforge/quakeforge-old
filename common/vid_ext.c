@@ -40,21 +40,21 @@
 #include <dpmi.h>
 
 #define MODE_SUPPORTED_IN_HW	0x0001
-#define COLOR_MODE				0x0008
-#define GRAPHICS_MODE			0x0010
-#define VGA_INCOMPATIBLE		0x0020
-#define LINEAR_FRAME_BUFFER		0x0080
+#define COLOR_MODE		0x0008
+#define GRAPHICS_MODE		0x0010
+#define VGA_INCOMPATIBLE	0x0020
+#define LINEAR_FRAME_BUFFER	0x0080
 
-#define LINEAR_MODE				0x4000
+#define LINEAR_MODE		0x4000
 
 #define VESA_DONT_WAIT_VSYNC	0		// when page flipping
-#define VESA_WAIT_VSYNC			0x80
+#define VESA_WAIT_VSYNC		0x80
 
-#define MAX_VESA_MODES			30	// we'll just take the first 30 if there
-									//  are more
+#define MAX_VESA_MODES		30		// we'll just take the first 30 if there
+						//  are more
 typedef struct {
-	int			pages[3];			// either 2 or 3 is valid
-	int			vesamode;			// LINEAR_MODE set if linear mode
+	int		pages[3];		// either 2 or 3 is valid
+	int		vesamode;		// LINEAR_MODE set if linear mode
 	void		*plinearmem;		// linear address of start of frame buffer
 	qboolean	vga_incompatible;
 } vesa_extra_t;
@@ -62,58 +62,58 @@ typedef struct {
 static vmode_t		vesa_modes[MAX_VESA_MODES] =
 	{{NULL, NULL, "    ********* VESA modes *********    "}};
 static vesa_extra_t	vesa_extra[MAX_VESA_MODES];
-static char			names[MAX_VESA_MODES][10];
+static char		names[MAX_VESA_MODES][10];
 
-extern regs_t regs;
+extern regs_t	regs;
 
-static int		VID_currentpage;
-static int		VID_displayedpage;
-static int		*VID_pagelist;
-static byte		*VID_membase;
-static int		VID_banked;
+static int	VID_currentpage;
+static int	VID_displayedpage;
+static int	*VID_pagelist;
+static byte	*VID_membase;
+static int	VID_banked;
 
 typedef struct
 {
-	int modenum;
-	int mode_attributes;
+	int	modenum;
+	int	mode_attributes;
 	int	winasegment;
 	int	winbsegment;
-	int	bytes_per_scanline; // bytes per logical scanline (+16)
-	int win; // window number (A=0, B=1)
-	int win_size; // window size (+6)
-	int granularity; // how finely i can set the window in vid mem (+4)
-	int width, height; // displayed width and height (+18, +20)
-	int bits_per_pixel; // er, better be 8, 15, 16, 24, or 32 (+25)
-	int bytes_per_pixel; // er, better be 1, 2, or 4
-	int memory_model; // and better be 4 or 6, packed or direct color (+27)
-	int num_pages; // number of complete frame buffer pages (+29)
-	int red_width; // the # of bits in the red component (+31)
-	int red_pos; // the bit position of the red component (+32)
-	int green_width; // etc.. (+33)
-	int green_pos; // (+34)
-	int blue_width; // (+35)
-	int blue_pos; // (+36)
-	int pptr;
+	int	bytes_per_scanline;	// bytes per logical scanline (+16)
+	int	win;			// window number (A=0, B=1)
+	int	win_size;		// window size (+6)
+	int	granularity;		// how finely i can set the window in vid mem (+4)
+	int	width, height;		// displayed width and height (+18, +20)
+	int	bits_per_pixel;		// er, better be 8, 15, 16, 24, or 32 (+25)
+	int	bytes_per_pixel;	// er, better be 1, 2, or 4
+	int	memory_model;		// and better be 4 or 6, packed or direct color (+27)
+	int	num_pages;		// number of complete frame buffer pages (+29)
+	int	red_width;		// the # of bits in the red component (+31)
+	int	red_pos;		// the bit position of the red component (+32)
+	int	green_width;		// etc.. (+33)
+	int	green_pos;		// (+34)
+	int	blue_width;		// (+35)
+	int	blue_pos;		// (+36)
+	int	pptr;
 	int	pagesize;
 	int	numpages;
 } modeinfo_t;
 
-static modeinfo_t modeinfo;
+static modeinfo_t	modeinfo;
 
 // all bytes to avoid problems with compiler field packing
 typedef struct vbeinfoblock_s {
-     byte			VbeSignature[4];
-     byte			VbeVersion[2];
-     byte			OemStringPtr[4];
-     byte			Capabilities[4];
-     byte			VideoModePtr[4];
-     byte			TotalMemory[2];
-     byte			OemSoftwareRev[2];
-     byte			OemVendorNamePtr[4];
-     byte			OemProductNamePtr[4];
-     byte			OemProductRevPtr[4];
-     byte			Reserved[222];
-     byte			OemData[256];
+	byte	VbeSignature[4];
+	byte	VbeVersion[2];
+	byte	OemStringPtr[4];
+	byte	Capabilities[4];
+	byte	VideoModePtr[4];
+	byte	TotalMemory[2];
+	byte	OemSoftwareRev[2];
+	byte	OemVendorNamePtr[4];
+	byte	OemProductNamePtr[4];
+	byte	OemProductRevPtr[4];
+	byte	Reserved[222];
+	byte	OemData[256];
 } vbeinfoblock_t;
 
 static int	totalvidmem;
@@ -134,7 +134,6 @@ VGA_BankedBeginDirectRect
 void VGA_BankedBeginDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode,
 	int x, int y, byte *pbitmap, int width, int height)
 {
-
 	if (!lvid->direct)
 		return;
 
@@ -160,7 +159,6 @@ VGA_BankedEndDirectRect
 void VGA_BankedEndDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode,
 	int x, int y, int width, int height)
 {
-
 	if (!lvid->direct)
 		return;
 
@@ -186,7 +184,7 @@ VID_SetVESAPalette
 void VID_SetVESAPalette (viddef_t *lvid, vmode_t *pcurrentmode,
 	unsigned char *pal)
 {
-	int		i;
+	int	i;
 	byte	*pp;
 
 	UNUSED(lvid);
@@ -216,8 +214,6 @@ void VID_SetVESAPalette (viddef_t *lvid, vmode_t *pcurrentmode,
 }
 
 
-
-
 /*
 ================
 VID_ExtraFarToLinear
@@ -225,7 +221,7 @@ VID_ExtraFarToLinear
 */
 void *VID_ExtraFarToLinear (void *ptr)
 {
-	int		temp;
+	int	temp;
 
 	temp = (int)ptr;
 	return real2ptr(((temp & 0xFFFF0000) >> 12) + (temp & 0xFFFF));
@@ -251,7 +247,7 @@ VID_ExtraVidLookForState
 */
 qboolean VID_ExtraVidLookForState (unsigned state, unsigned mask)
 {
-	int		i;
+	int	i;
 	double	starttime, time;
 
 	starttime = Sys_DoubleTime ();
@@ -278,7 +274,7 @@ VID_ExtraStateFound
 */
 qboolean VID_ExtraStateFound (unsigned state)
 {
-	int		i, workingstate;
+	int	i, workingstate;
 
 	workingstate = 0;
 
@@ -303,8 +299,8 @@ VID_InitExtra
 */
 void VID_InitExtra (void)
 {
-	int				nummodes;
-	short			*pmodenums;
+	int		nummodes;
+	short		*pmodenums;
 	vbeinfoblock_t	*pinfoblock;
 	__dpmi_meminfo	phys_mem_info;
 
@@ -451,7 +447,7 @@ VID_ExtraGetModeInfo
 qboolean VID_ExtraGetModeInfo(int modenum)
 {
 	char	*infobuf;
-	int		numimagepages;
+	int	numimagepages;
 
 	infobuf = dos_getmemory(256);
 
@@ -558,23 +554,23 @@ qboolean VID_ExtraGetModeInfo(int modenum)
 		printf("  win b attrib = 0x%0x\n", *(unsigned char*)(infobuf+3));
 		printf("  win a seg 0x%0x\n", (int) modeinfo.winasegment);
 		printf("  win b seg 0x%0x\n", (int) modeinfo.winbsegment);
-		printf("  bytes per scanline = %d\n",
+		printf("  bytes per scanline = %i\n",
 				modeinfo.bytes_per_scanline);
-		printf("  width = %d, height = %d\n", modeinfo.width,
+		printf("  width = %i, height = %i\n", modeinfo.width,
 				modeinfo.height);
 		printf("  win = %c\n", 'A' + modeinfo.win);
-		printf("  win granularity = %d\n", modeinfo.granularity);
-		printf("  win size = %d\n", modeinfo.win_size);
-		printf("  bits per pixel = %d\n", modeinfo.bits_per_pixel);
-		printf("  bytes per pixel = %d\n", modeinfo.bytes_per_pixel);
+		printf("  win granularity = %i\n", modeinfo.granularity);
+		printf("  win size = %i\n", modeinfo.win_size);
+		printf("  bits per pixel = %i\n", modeinfo.bits_per_pixel);
+		printf("  bytes per pixel = %i\n", modeinfo.bytes_per_pixel);
 		printf("  memory model = 0x%x\n", modeinfo.memory_model);
-		printf("  num pages = %d\n", modeinfo.num_pages);
-		printf("  red width = %d\n", modeinfo.red_width);
-		printf("  red pos = %d\n", modeinfo.red_pos);
-		printf("  green width = %d\n", modeinfo.green_width);
-		printf("  green pos = %d\n", modeinfo.green_pos);
-		printf("  blue width = %d\n", modeinfo.blue_width);
-		printf("  blue pos = %d\n", modeinfo.blue_pos);
+		printf("  num pages = %i\n", modeinfo.num_pages);
+		printf("  red width = %i\n", modeinfo.red_width);
+		printf("  red pos = %i\n", modeinfo.red_pos);
+		printf("  green width = %i\n", modeinfo.green_width);
+		printf("  green pos = %i\n", modeinfo.green_pos);
+		printf("  blue width = %i\n", modeinfo.blue_width);
+		printf("  blue pos = %i\n", modeinfo.blue_pos);
 		printf("  phys mem = %x\n", modeinfo.pptr);
 #endif
 	}
@@ -593,7 +589,7 @@ VID_ExtraInitMode
 int VID_ExtraInitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 {
 	vesa_extra_t	*pextra;
-	int				pageoffset;
+	int		pageoffset;
 
 	pextra = pcurrentmode->pextradata;
 
@@ -635,10 +631,10 @@ int VID_ExtraInitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 	vsync_exists = VID_ExtraStateFound (0x08);
 	de_exists = VID_ExtraStateFound (0x01);
 
-	if (!pextra->vga_incompatible  &&
-		(lvid->numpages == 3)      &&
-		de_exists                  &&
-		(_vid_wait_override->value == 0.0))
+	if (!pextra->vga_incompatible
+	&&  (lvid->numpages == 3)
+	&&  de_exists
+	&&  (_vid_wait_override->value == 0.0))
 	{
 		vid_wait->value = (float)VID_WAIT_DISPLAY_ENABLE;
 
@@ -799,13 +795,43 @@ void VID_ExtraSwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode,
 	}
 }
 
-void    
-VID_LockBuffer ( void )
-{       
-}       
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+{
+	int	drawn;
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
+	drawn = 0;
 
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
+}
+
+void VID_ExtraOptionCmd(int option_cursor, int dir)
+{
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
+#if 0
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
+		break;
+	}
+#endif
+}
+
+void VID_InitCvars ()
+{
+	// It may not look like it, but this is important
+}
+
+void VID_LockBuffer ( void )
+{
+}
+
+void VID_UnlockBuffer ( void )
+{
+}

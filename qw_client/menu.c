@@ -105,7 +105,7 @@ void M_Search_Key (int key);
 void M_ServerList_Key (int key);
 
 qboolean	m_entersound;		// play after drawing a frame, so
-					//  caching won't disrupt the sound
+					// caching won't disrupt the sound
 qboolean	m_recursiveDraw;
 
 int		m_return_state;
@@ -196,8 +196,7 @@ void M_BuildTranslationTable(int top, int bottom)
 
 void M_DrawTransPicTranslate (int x, int y, qpic_t *pic)
 {
-	Draw_TransPicTranslate (x + ((vid.width - 320)>>1), y, pic,
-			translationTable);
+	Draw_TransPicTranslate (x + ((vid.width - 320)>>1), y, pic, translationTable);
 }
 
 
@@ -390,13 +389,11 @@ void M_Main_Key (int key)
 
 
 #define	SLIDER_RANGE	10
-#define	L_OPTIONS_ITEMS	15
+#define L_OPTIONS_ITEMS	14	// always present items in options menu independent of video system
 
-extern int	VID_options_items;
 static int	options_cursor;
-
-#define 	options_items (L_OPTIONS_ITEMS+VID_options_items)
-
+static int	options_items;
+static int	options_video;		// menu item for video options menu (-1 = none)
 
 void M_Menu_Options_f (void)
 {
@@ -404,74 +401,6 @@ void M_Menu_Options_f (void)
 	m_state = m_options;
 	m_entersound = true;
 }
-
-
-void
-M_AdjustSliders ( int dir )
-{
-	S_LocalSound ("misc/menu3.wav");
-
-	switch (options_cursor) {
-		case 3:	// screen size
-			Cvar_Set(scr_viewsize, va("%d",
-					bound(30, (int)scr_viewsize->value + (dir * 10), 120)));
-			break;
-		case 4:	// gamma
-			Cvar_Set(v_gamma, va("%f",
-					bound(0.5, v_gamma->value - (dir * 0.05), 1)));
-			break;
-		case 5:	// mouse speed
-			Cvar_Set(sensitivity, va("%f",
-					bound(1, sensitivity->value + dir, 25)));
-			break;
-		case 6:	// music volume
-			Cvar_Set(bgmvolume, va("%f",
-#ifdef _WIN32
-					bound(0, bgmvolume->value + dir, 1)));
-#else
-					bound(0, bgmvolume->value + (dir * 0.1), 1)));
-#endif
-			break;
-		case 7:	// sfx volume
-			Cvar_Set(volume, va("%f",	bound(0, volume->value + (dir * 0.1), 1)));
-			break;
-
-		case 8:	// allways run
-			if (cl_forwardspeed->value > 200) {
-				Cvar_Set(cl_forwardspeed, va("%d", 200));
-				Cvar_Set(cl_backspeed, va("%d", 200));
-			} else {
-				Cvar_Set(cl_forwardspeed, va("%d", 400));
-				Cvar_Set(cl_backspeed, va("%d", 400));
-			}
-			break;
-
-		case 9:	// invert mouse
-			Cvar_Set(m_pitch, va("%f", -m_pitch->value));
-			break;
-
-		case 10:	// lookspring
-			Cvar_Set(lookspring, va("%d", !lookspring->value));
-			break;
-
-		case 11:	// lookstrafe
-			Cvar_Set(lookstrafe, va("%d", !lookstrafe->value));
-			break;
-
-		case 12:	// Use old-style sbar
-			Cvar_Set(cl_sbar, va("%d", !cl_sbar->value));
-			break;
-
-		case 13:	// HUD on left side
-			Cvar_Set(cl_hudswap, va("%d", !cl_hudswap->value));
-			break;
-
-		default:
-			//VID_ExtraOptionCmd(options_cursor + 2 - L_OPTIONS_ITEMS);
-			;
-	}
-}
-
 
 void M_DrawSlider (int x, int y, float range)
 {
@@ -531,8 +460,7 @@ void M_Options_Draw (void)
 	M_DrawSlider (220, options_draw_cursor, r);
 
 	M_Print (16, options_draw_cursor+=8, "            Always Run");
-	M_DrawCheckbox (220, options_draw_cursor, cl_forwardspeed->value
-> 200);
+	M_DrawCheckbox (220, options_draw_cursor, cl_forwardspeed->value > 200);
 
 	M_Print (16, options_draw_cursor+=8, "          Invert Mouse");
 	M_DrawCheckbox (220, options_draw_cursor, m_pitch->value < 0);
@@ -549,17 +477,95 @@ void M_Options_Draw (void)
 	M_Print (16, options_draw_cursor+=8, "      HUD on left side");
 	M_DrawCheckbox (220, options_draw_cursor, cl_hudswap->value);
 
-	//VID_ExtraOptionDraw(options_draw_cursor);
-	options_draw_cursor+=VID_options_items*8;
+	options_items = L_OPTIONS_ITEMS;
 
+	options_video = -1;
 	if (vid_menudrawfn) {
 		M_Print (16, options_draw_cursor+=8, "         Video Options");
+		options_video = options_items;
+		options_items++;
 	}
 
+	options_items += VID_ExtraOptionDraw(options_draw_cursor);
+
 	/* cursor */
+	if (options_cursor >= options_items) {
+		options_cursor = 0;
+	}
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
 
+void M_AdjustSliders ( int dir )
+{
+	S_LocalSound ("misc/menu3.wav");
+
+	switch (options_cursor) {
+		case 3:	// screen size
+			Cvar_Set(scr_viewsize, va("%i",
+					bound(30, (int)scr_viewsize->value + (dir * 10), 120)));
+			break;
+		case 4:	// gamma
+			Cvar_Set(v_gamma, va("%f",
+					bound(0.5, v_gamma->value - (dir * 0.05), 1)));
+			break;
+		case 5:	// mouse speed
+			Cvar_Set(sensitivity, va("%f",
+					bound(1, sensitivity->value + dir, 25)));
+			break;
+		case 6:	// music volume
+			Cvar_Set(bgmvolume, va("%f",
+#ifdef _WIN32
+					bound(0, bgmvolume->value + dir, 1)));
+#else
+					bound(0, bgmvolume->value + (dir * 0.1), 1)));
+#endif
+			break;
+		case 7:	// sfx volume
+			Cvar_Set(volume, va("%f",	bound(0, volume->value + (dir * 0.1), 1)));
+			break;
+
+		case 8:	// allways run
+			if (cl_forwardspeed->value > 200) {
+				Cvar_Set(cl_forwardspeed, va("%i", 200));
+				Cvar_Set(cl_backspeed, va("%i", 200));
+			} else {
+				Cvar_Set(cl_forwardspeed, va("%i", 400));
+				Cvar_Set(cl_backspeed, va("%i", 400));
+			}
+			break;
+
+		case 9:	// invert mouse
+			Cvar_Set(m_pitch, va("%f", -m_pitch->value));
+			break;
+
+		case 10:	// lookspring
+			Cvar_Set(lookspring, va("%i", !lookspring->value));
+			break;
+
+		case 11:	// lookstrafe
+			Cvar_Set(lookstrafe, va("%i", !lookstrafe->value));
+			break;
+
+		case 12:	// Use old-style sbar
+			Cvar_Set(cl_sbar, va("%i", !cl_sbar->value));
+			break;
+
+		case 13:	// HUD on left side
+			Cvar_Set(cl_hudswap, va("%i", !cl_hudswap->value));
+			break;
+
+		default:
+			if (options_cursor >= L_OPTIONS_ITEMS && options_cursor != options_video) {
+				int	i;
+				i = options_cursor - L_OPTIONS_ITEMS;
+				if (options_video >= 0) {
+					i--;
+				}
+				VID_ExtraOptionCmd(i, dir);
+			}
+			break;
+	}
+}
 
 void M_Options_Key (int k)
 {
@@ -585,8 +591,10 @@ void M_Options_Key (int k)
 			Cbuf_AddText ("exec default.cfg\n");
 			break;
 		default:
-			if (options_cursor == options_items-1) {
+			if (options_cursor == options_video) {
 				M_Menu_Video_f();
+			} else if (options_cursor >= L_OPTIONS_ITEMS) {
+				M_AdjustSliders(0);
 			} else {
 				M_AdjustSliders(1);
 			}
@@ -776,7 +784,7 @@ void M_Keys_Key (int k)
 		}
 		else if (k != '`')
 		{
-			snprintf(cmd, sizeof(cmd), "bind %s \"%s\"\n", Key_KeynumToString (k), bindnames[keys_cursor][0]);
+			snprintf(cmd, sizeof(cmd), "bind \"%s\" \"%s\"\n", Key_KeynumToString (k), bindnames[keys_cursor][0]);
 			Cbuf_InsertText (cmd);
 		}
 
@@ -834,8 +842,7 @@ void M_Keys_Key (int k)
 /* Default functions */
 #define MAX_COLUMN_SIZE	11
 
-static void
-vid_menudraw(void)
+static void vid_menudraw(void)
 {
 	qpic_t		*p;
 
@@ -847,8 +854,7 @@ vid_menudraw(void)
 	M_Print(9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
 }
 
-static void
-vid_menukey(int key)
+static void vid_menukey(int key)
 {
 	M_Menu_Options_f();
 }

@@ -31,13 +31,10 @@
 #include <quakedef.h>
 #include <d_local.h>
 
-extern viddef_t        vid;                            // global video state
+extern viddef_t		vid;		// global video state
 
 #define	BASEWIDTH	320
 #define	BASEHEIGHT	200
-
-// Number of items in the options menu: none extra is 0
-int	VID_options_items = 0;
 
 byte	vid_buffer[BASEWIDTH*BASEHEIGHT];
 short	zbuffer[BASEWIDTH*BASEHEIGHT];
@@ -46,15 +43,15 @@ byte	surfcache[256*1024];
 unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
 
-void	VID_SetPalette (unsigned char *palette)
+void VID_SetPalette (unsigned char *palette)
 {
 }
 
-void	VID_ShiftPalette (unsigned char *palette)
+void VID_ShiftPalette (unsigned char *palette)
 {
 }
 
-void	VID_Init (unsigned char *palette)
+void VID_Init (unsigned char *palette)
 {
 	vid.maxwarpwidth = vid.width = vid.conwidth = BASEWIDTH;
 	vid.maxwarpheight = vid.height = vid.conheight = BASEHEIGHT;
@@ -69,11 +66,11 @@ void	VID_Init (unsigned char *palette)
 	D_InitCaches (surfcache, sizeof(surfcache));
 }
 
-void	VID_Shutdown (void)
+void VID_Shutdown (void)
 {
 }
 
-void	VID_Update (vrect_t *rects)
+void VID_Update (vrect_t *rects)
 {
 }
 
@@ -96,29 +93,38 @@ void D_EndDirectRect (int x, int y, int width, int height)
 {
 }
 
-void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
-/* Port specific Options menu entrys */
+	int	drawn;
+
+	drawn = 0;
+
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
 }
 
-void VID_ExtraOptionCmd(int option_cursor)
+void VID_ExtraOptionCmd(int option_cursor, int dir)
 {
-/*
-	switch(option_cursor)
-	{
-	case 1:  // Always start with 1
-	break;
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
+#if 0
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
+		break;
 	}
-*/
+#endif
 }
 
-void    
-VID_LockBuffer ( void )
-{       
-}       
+void VID_LockBuffer ( void )
+{
+}
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
-
+void VID_UnlockBuffer ( void )
+{
+}

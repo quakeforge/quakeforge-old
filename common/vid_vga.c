@@ -40,22 +40,22 @@
 
 extern regs_t regs;
 
-int		VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes;
+int	VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes;
 byte	*VGA_pagebase;
 vmode_t	*VGA_pcurmode;
 
-static int		VGA_planar;
-static int		VGA_numpages;
-static int		VGA_buffersize;
+static int	VGA_planar;
+static int	VGA_numpages;
+static int	VGA_buffersize;
 
 void	*vid_surfcache;
-int		vid_surfcachesize;
+int	vid_surfcachesize;
 
-int		VGA_highhunkmark;
+int	VGA_highhunkmark;
 
 #include <vgamodes.h>
 
-#define NUMVIDMODES		(sizeof(vgavidmodes) / sizeof(vgavidmodes[0]))
+#define NUMVIDMODES	(sizeof(vgavidmodes) / sizeof(vgavidmodes[0]))
 
 void VGA_UpdatePlanarScreen (void *srcbuffer);
 
@@ -69,7 +69,7 @@ VGA_BeginDirectRect
 void VGA_BeginDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
 	int y, byte *pbitmap, int width, int height)
 {
-	int		i, j, k, plane, reps, repshift;
+	int	i, j, k, plane, reps, repshift;
 
 	if (!lvid->direct)
 		return;
@@ -140,7 +140,7 @@ VGA_EndDirectRect
 void VGA_EndDirectRect (viddef_t *lvid, struct vmode_s *pcurrentmode, int x,
 	int y, int width, int height)
 {
-	int		i, j, k, plane, reps, repshift;
+	int	i, j, k, plane, reps, repshift;
 
 	if (!lvid->direct)
 		return;
@@ -200,7 +200,7 @@ VGA_Init
 */
 void VGA_Init (void)
 {
-	int		i;
+	int	i;
 
 // link together all the VGA modes
 	for (i=0 ; i<(NUMVIDMODES - 1) ; i++)
@@ -253,7 +253,7 @@ VGA_FreeAndAllocVidbuffer
 */
 qboolean VGA_FreeAndAllocVidbuffer (viddef_t *lvid, int allocnewbuffer)
 {
-	int		tsize, tbuffersize;
+	int	tsize, tbuffersize;
 
 	if (allocnewbuffer)
 	{
@@ -314,10 +314,9 @@ qboolean VGA_FreeAndAllocVidbuffer (viddef_t *lvid, int allocnewbuffer)
 VGA_CheckAdequateMem
 ================
 */
-qboolean VGA_CheckAdequateMem (int width, int height, int rowbytes,
-	int allocnewbuffer)
+qboolean VGA_CheckAdequateMem (int width, int height, int rowbytes, int allocnewbuffer)
 {
-	int		tbuffersize;
+	int	tbuffersize;
 
 	tbuffersize = width * height * sizeof (*d_pzbuffer);
 
@@ -348,7 +347,7 @@ VGA_InitMode
 */
 int VGA_InitMode (viddef_t *lvid, vmode_t *pcurrentmode)
 {
-	vextra_t		*pextra;
+	vextra_t	*pextra;
 
 	pextra = pcurrentmode->pextradata;
 
@@ -417,8 +416,8 @@ VGA_SetPalette
 */
 void VGA_SetPalette(viddef_t *lvid, vmode_t *pcurrentmode, unsigned char *pal)
 {
-	int shiftcomponents=2;
-	int i;
+	int	shiftcomponents=2;
+	int	i;
 
 	UNUSED(lvid);
 	UNUSED(pcurrentmode);
@@ -434,10 +433,8 @@ void VGA_SetPalette(viddef_t *lvid, vmode_t *pcurrentmode, unsigned char *pal)
 VGA_SwapBuffersCopy
 ================
 */
-void VGA_SwapBuffersCopy (viddef_t *lvid, vmode_t *pcurrentmode,
-	vrect_t *rects)
+void VGA_SwapBuffersCopy (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
 {
-
 	UNUSED(pcurrentmode);
 
 // TODO: can write a dword at a time
@@ -483,13 +480,43 @@ void VGA_SwapBuffers (viddef_t *lvid, vmode_t *pcurrentmode, vrect_t *rects)
 	VGA_SwapBuffersCopy (lvid, pcurrentmode, rects);
 }
 
-void    
-VID_LockBuffer ( void )
-{       
-}       
+int VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+{
+	int	drawn;
 
-void
-VID_UnlockBuffer ( void )
-{       
-}       
+	drawn = 0;
 
+/* Port specific Options menu entries */
+#if 0
+	M_Print (16, options_draw_cursor+=8, "                 Dummy");
+	M_DrawCheckbox (220, options_draw_cursor, dummy->value);
+	drawn++;
+#endif
+
+	return drawn;	// return number of drawn menu entries
+}
+
+void VID_ExtraOptionCmd(int option_cursor, int dir)
+{
+/* dir: -1 = LEFT, 0 = ENTER, 1 = RIGHT */
+#if 0
+	switch(option_cursor) {
+	case 0:	// Always start with 0
+		dummy->value = !dummy->value;
+		break;
+	}
+#endif
+}
+
+void VID_InitCvars( void )
+{
+	// It may not look like it, but this is important
+}
+
+void VID_LockBuffer ( void )
+{
+}
+
+void VID_UnlockBuffer ( void )
+{
+}
