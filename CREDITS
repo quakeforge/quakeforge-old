@@ -34,6 +34,9 @@ Autoconf support and portability isues:
   Daniel J. O'Connor <darius@dons.net.au>
   Tim Rowley <tor@cs.brown.edu>
 
+FreeBSD support:
+  Daniel J. O'Connor <darius@dons.net.au>
+
 Makefile fixes:
   Tarjei Skorgenes <tarjei.skorgenes@online.no>
 

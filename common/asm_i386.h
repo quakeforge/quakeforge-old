@@ -25,10 +25,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <config.h>
 
+#ifdef __FreeBSD__
+#include <machine/asm.h>
+#define C(label) CNAME(label)
+#else
 #ifdef HAVE_SYM_PREFIX_UNDERSCORE
 # define C(label) _##label
 #else
 # define C(label) label
+#endif
 #endif
 
 //

@@ -75,6 +75,7 @@ N: Daniel J. O'Connor
 E: darius@dons.net.au
 D: Autoconf support and portability
 D: Corrected failed mmap checking
+D: FreeBSD support
 
 N: Tim Rowley
 E: tor@cs.brown.edu
