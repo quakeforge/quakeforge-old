@@ -128,6 +128,8 @@ cvar_t	*cl_predict_players2;
 cvar_t	*cl_solid_players;
 cvar_t	*cl_verstring;
 
+cvar_t	*cl_talksound;
+
 extern cvar_t	*sys_nostdout;
 
 cvar_t	*localid;
@@ -1744,6 +1746,9 @@ void CL_InitCvars()
 	cl_predict_players2 = Cvar_Get ("cl_predict_players2","1",0,"None");
 	cl_predict_players = Cvar_Get ("cl_predict_players","1",0,"None");
 	cl_solid_players = Cvar_Get ("cl_solid_players","1",0,"None");
+
+	cl_talksound = Cvar_Get ("cl_talksound", "misc/talk.wav", CVAR_NONE,
+			"The sound used for talk messages");
 
 	localid = Cvar_Get ("localid","",0,"None");
 

@@ -611,7 +611,7 @@ void CL_ParseServerMessage (void)
 		case svc_print:
 			ch = MSG_ReadChar ();
 			if (ch == '\x01') {
-				S_LocalSound ("misc/talk.wav");
+				S_LocalSound (cl_talksound->string);
 				con_ormask = 128;
 			}
 			Con_Printf ("%c%s", ch, MSG_ReadString ());

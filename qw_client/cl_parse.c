@@ -1109,7 +1109,7 @@ void CL_ParseServerMessage (void)
 			i = MSG_ReadByte ();
 			if (i == PRINT_CHAT)
 			{
-				S_LocalSound ("misc/talk.wav");
+				S_LocalSound (cl_talksound->string);
 				con_ormask = 128;
 			}
 			Con_Printf ("%s", MSG_ReadString ());
