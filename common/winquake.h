@@ -69,8 +69,6 @@ extern LPDIRECTSOUNDBUFFER pDSBuf;
 extern DWORD gSndBufSize;
 //#define SNDBUFSIZE 65536
 
-void	VID_LockBuffer (void);
-void	VID_UnlockBuffer (void);
 
 #endif
 

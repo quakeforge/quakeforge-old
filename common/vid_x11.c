@@ -801,3 +801,14 @@ void VID_InitCvars ()
 {
 	// It may not look like it, but this is important
 }
+
+void    
+VID_LockBuffer ( void )
+{       
+}       
+
+void
+VID_UnlockBuffer ( void )
+{       
+}       
+

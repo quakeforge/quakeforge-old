@@ -112,3 +112,13 @@ void VID_ExtraOptionCmd(int option_cursor)
 */
 }
 
+void    
+VID_LockBuffer ( void )
+{       
+}       
+
+void
+VID_UnlockBuffer ( void )
+{       
+}       
+

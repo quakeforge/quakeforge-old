@@ -521,3 +521,14 @@ void VID_InitCvars ()
 	gl_triplebuffer = Cvar_Get ("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 	gl_pscale = Cvar_Get ("gl_pscale","1",0,"Sets the size of particles");
 }
+
+void
+VID_LockBuffer ( void )
+{       
+}       
+
+void
+VID_UnlockBuffer ( void )
+{       
+}       
+

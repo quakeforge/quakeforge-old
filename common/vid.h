@@ -106,4 +106,8 @@ void VID_InitCvars(void);
 
 qboolean VID_Is8bit(void);
 
+void VID_LockBuffer (void);
+void VID_UnlockBuffer (void);
+
+
 #endif // _VID_H
