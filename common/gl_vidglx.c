@@ -352,7 +352,9 @@ InitSig(void)
 
 void VID_ShiftPalette(unsigned char *p)
 {
-//	VID_SetPalette(p);
+#ifdef _EXPERIMENTAL_
+	VID_SetPalette(p);
+#endif
 }
 
 void	VID_SetPalette (unsigned char *palette)
