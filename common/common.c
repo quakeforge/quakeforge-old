@@ -41,6 +41,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 char	com_token[1024];
 qboolean		standard_quake = true, rogue, hipnotic;
+qboolean		msg_suppress_1 = 0;
 
 // ClearLink is used for new headnodes
 void ClearLink (link_t *l)

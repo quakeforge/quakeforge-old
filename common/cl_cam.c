@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sbar.h>
 #include <cvar.h>
 #include <console.h>
+#include <world.h>
 
 #define	PM_SPECTATORMAXSPEED	500
 #define	PM_STOPSPEED	100
@@ -48,8 +49,6 @@ static int oldbuttons;
 // track high fragger
 cvar_t cl_hightrack = {"cl_hightrack", "0" };
 
-cvar_t cl_chasecam = {"cl_chasecam", "0"};
-
 //cvar_t cl_camera_maxpitch = {"cl_camera_maxpitch", "10" };
 //cvar_t cl_camera_maxyaw = {"cl_camera_maxyaw", "30" };
 
@@ -59,6 +58,70 @@ double cam_lastviewtime;
 
 int spec_track = 0; // player# of who we are tracking
 int autocam = CAM_NONE;
+
+cvar_t	cl_chasecam 		= {"cl_chasecam", "0", true};
+cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16", true};
+cvar_t	cl_chasecam_back	= {"cl_chasecam_back", "100", true};
+cvar_t	cl_chasecam_right = {"cl_chasecam_right", "0", true};
+
+vec3_t	chase_pos;
+vec3_t	chase_angles;
+
+vec3_t	chase_dest;
+vec3_t	chase_dest_angles;
+
+void Chase_Init (void) {
+	Cvar_RegisterVariable (&cl_chasecam);
+	Cvar_RegisterVariable (&cl_chasecam_up);
+	Cvar_RegisterVariable (&cl_chasecam_back);
+	Cvar_RegisterVariable (&cl_chasecam_right);
+}
+
+void Chase_Reset (void) {
+	// for respawning and teleporting
+	//	start position 12 units behind head
+}
+
+void TraceLine (vec3_t start, vec3_t end, vec3_t impact) {
+	trace_t	trace;
+
+	memset (&trace, 0, sizeof(trace));
+	SV_RecursiveHullCheck (cl.worldmodel->hulls, 0, 0, 1, start, end, &trace);
+
+	VectorCopy (trace.endpos, impact);
+}
+
+void Chase_Update (void) {
+
+	int		i;
+	float	dist;
+	vec3_t	forward, up, right;
+	vec3_t	dest, stop;
+
+	// if can't see player, reset
+	AngleVectors (cl.viewangles, forward, right, up);
+
+	// calc exact destination
+	for (i=0 ; i<3 ; i++)
+		chase_dest[i] = r_refdef.vieworg[i]
+			- forward[i] * cl_chasecam_back.value
+			- right[i] * cl_chasecam_right.value;
+	chase_dest[2] = r_refdef.vieworg[2] + cl_chasecam_up.value;
+
+	// find the spot the player is looking at
+	VectorMA (r_refdef.vieworg, 4096, forward, dest);
+	TraceLine (r_refdef.vieworg, dest, stop);
+
+	// calculate pitch to look at the same spot from camera
+	VectorSubtract (stop, r_refdef.vieworg, stop);
+	dist = DotProduct (stop, forward);
+	if (dist < 1)
+		dist = 1;
+	r_refdef.viewangles[PITCH] = -atan(stop[2] / dist) / M_PI * 180;
+
+	// move towards destination
+	VectorCopy (chase_dest, r_refdef.vieworg);
+}
 
 static void vectoangles(vec3_t vec, vec3_t ang)
 {

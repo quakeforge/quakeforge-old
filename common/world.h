@@ -1,6 +1,8 @@
 /*
 world.h
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,6 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _WORLD_H
 
 #include <model.h>
+#include <progs.h>
 
 typedef struct
 {
@@ -45,6 +48,20 @@ typedef struct
 #define	MOVE_NORMAL		0
 #define	MOVE_NOMONSTERS	1
 #define	MOVE_MISSILE	2
+
+typedef struct areanode_s
+{
+	int		axis;		// -1 = leaf node
+	float	dist;
+	struct areanode_s	*children[2];
+	link_t	trigger_edicts;
+	link_t	solid_edicts;
+} areanode_t;
+
+#define	AREA_DEPTH	4
+#define	AREA_NODES	32
+
+extern	areanode_t	sv_areanodes[AREA_NODES];
 
 
 void SV_ClearWorld (void);
@@ -83,5 +100,7 @@ trace_t SV_Move (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end, int type, e
 // passedict is explicitly excluded from clipping checks (normally NULL)
 
 qboolean SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec3_t p1, vec3_t p2, trace_t *trace);
+
+edict_t	*SV_TestPlayerPosition (edict_t *ent, vec3_t origin);
 
 #endif // _WORLD_H

@@ -199,7 +199,7 @@ CFLAGS       += @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) \
 -I$(COMMON_ODIR) -I$(COMMON_DIR) -DUQUAKE
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
-	   $(SYS_SRC) chasecam.c world.c $(SRV_PR_SRC) \
+	   $(SYS_SRC) world.c $(SRV_PR_SRC) \
 	   $(UQ_NET_SRC) $(UQ_SRV_SRC) \
 	   $(UQ_GENERAL_SRC) $(UQ_SWREND_SRC_PLAT)
 
