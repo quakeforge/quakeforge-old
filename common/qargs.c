@@ -100,7 +100,7 @@ void COM_InitArgv (int argc, char **argv)
 		len += strlen (argv[com_argc]) + 1;
 	}
 
-	com_cmdline = (char*)malloc (len); // len is strlen(com_cmdline)+1 already
+	com_cmdline = (char*)malloc (len+1); // need strlen(com_cmdline)+2
 	com_cmdline[0] = 0;
 	for (i=0; i < argc; i++)
 	{
