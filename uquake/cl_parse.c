@@ -321,8 +321,7 @@ void CL_ParseServerInfo (void)
 
 
 // local state
-	cl_entities[0].model = snd.worldmodel = cl.worldmodel =
-		cl.model_precache[1];
+	cl_entities[0].model = cl.worldmodel = cl.model_precache[1];
 	
 	R_NewMap ();
 
@@ -637,7 +636,7 @@ void CL_ParseServerMessage (void)
 			break;
 			
 		case svc_setview:
-			snd.playernum = cl.playernum = MSG_ReadShort ();
+			cl.playernum = MSG_ReadShort ();
 			cl.playernum--;
 			break;
 					

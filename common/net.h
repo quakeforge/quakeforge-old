@@ -1,6 +1,8 @@
 /*
 net.h - interface to the networking layer
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,12 +21,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifndef _NET_H
-#define _NET_H
+#ifndef __NET_H
+#define __NET_H
 
+
+#include <qtypes.h>
+#include <common.h>
 #include <cvar.h>
 #include <qstructs.h>
-#include <common.h>
+
+#define	PORT_ANY	-1
+
+// Uncomment this line for IPv6 support
+//#define LINUX_IPV6
 
 struct qsockaddr
 {
@@ -33,7 +42,27 @@ struct qsockaddr
 };
 
 
-#define	NET_NAMELEN			64
+typedef struct
+{
+#ifdef LINUX_IPV6
+	unsigned int ip[4];
+#else
+	byte	ip[4];
+#endif
+	unsigned short	port;
+	unsigned short	pad;
+} netadr_t;
+
+extern	netadr_t	net_local_adr;
+extern	netadr_t	net_from;		// address of who sent the packet
+extern	sizebuf_t	net_message;
+
+
+extern	int		net_socket;
+
+#ifdef UQUAKE
+// This ifdef is for clarity, not compilability
+#define	NET_NAMELEN		64
 
 #define NET_MAXMESSAGE		8192
 #define NET_HEADERSIZE		(2 * sizeof(unsigned int))
@@ -42,76 +71,13 @@ struct qsockaddr
 // NetHeader flags
 #define NETFLAG_LENGTH_MASK	0x0000ffff
 #define NETFLAG_DATA		0x00010000
-#define NETFLAG_ACK			0x00020000
-#define NETFLAG_NAK			0x00040000
-#define NETFLAG_EOM			0x00080000
+#define NETFLAG_ACK		0x00020000
+#define NETFLAG_NAK		0x00040000
+#define NETFLAG_EOM		0x00080000
 #define NETFLAG_UNRELIABLE	0x00100000
-#define NETFLAG_CTL			0x80000000
-
+#define NETFLAG_CTL		0x80000000
 
 #define NET_PROTOCOL_VERSION	3
-
-// This is the network info/connection protocol.  It is used to find Quake
-// servers, get info about them, and connect to them.  Once connected, the
-// Quake game protocol (documented elsewhere) is used.
-//
-//
-// General notes:
-//	game_name is currently always "QUAKE", but is there so this same protocol
-//		can be used for future games as well; can you say Quake2?
-//
-// CCREQ_CONNECT
-//		string	game_name				"QUAKE"
-//		byte	net_protocol_version	NET_PROTOCOL_VERSION
-//
-// CCREQ_SERVER_INFO
-//		string	game_name				"QUAKE"
-//		byte	net_protocol_version	NET_PROTOCOL_VERSION
-//
-// CCREQ_PLAYER_INFO
-//		byte	player_number
-//
-// CCREQ_RULE_INFO
-//		string	rule
-//
-//
-//
-// CCREP_ACCEPT
-//		long	port
-//
-// CCREP_REJECT
-//		string	reason
-//
-// CCREP_SERVER_INFO
-//		string	server_address
-//		string	host_name
-//		string	level_name
-//		byte	current_players
-//		byte	max_players
-//		byte	protocol_version	NET_PROTOCOL_VERSION
-//
-// CCREP_PLAYER_INFO
-//		byte	player_number
-//		string	name
-//		long	colors
-//		long	frags
-//		long	connect_time
-//		string	address
-//
-// CCREP_RULE_INFO
-//		string	rule
-//		string	value
-
-//	note:
-//		There are two address forms used above.  The short form is just
-//		a port number.  The address that goes along with the port is
-//		defined as "whatever address you receive this reponse from".
-//		This lets us use the host OS to solve the problem of multiple
-//		host addresses (possibly with no routing between them); the
-//		host will use the right address when we reply to the inbound
-//		connection request.  The long from is a full address and port
-//		in a string.  It is used for returning the address of a server
-//		that is not running locally.
 
 #define CCREQ_CONNECT		0x01
 #define CCREQ_SERVER_INFO	0x02
@@ -123,45 +89,6 @@ struct qsockaddr
 #define CCREP_SERVER_INFO	0x83
 #define CCREP_PLAYER_INFO	0x84
 #define CCREP_RULE_INFO		0x85
-
-typedef struct {
-	qboolean	fatal_error;
-	float		last_received;
-
-	float		frame_latency;
-	float		frame_rate;
-
-	int		drop_count;
-	int		good_count;
-
-#ifdef QUAKEWORLD
-	netadr_t	remote_address;
-	int		qport;
-#endif
-
-	double		cleartime;
-	double		rate;
-
-	int		incoming_sequence;
-	int		incoming_acknowledged;
-	int		incoming_reliable_acknowledged;
-	int		incoming_reliable_sequence;
-
-	int		outgoing_sequence;
-	int		outgoing_reliable;
-	int		last_reliable_sequence;
-
-	sizebuf_t	message;
-	byte		message_bug[MAX_MSGLEN];
-
-	int		reliable_length;
-	byte		reliable_buf[MAX_MSGLEN];
-
-#ifdef QUAKEWORLD
-	int		outgoing_size[MAX_LATENT];
-	int		outgoing_time[MAX_LATENT];
-#endif
-} netchan_t;
 
 typedef struct qsocket_s
 {
@@ -254,7 +181,6 @@ extern int			DEFAULTnet_hostport;
 extern int			net_hostport;
 
 extern int net_driverlevel;
-extern cvar_t		hostname;
 extern char			playername[];
 extern int			playercolor;
 
@@ -262,7 +188,89 @@ extern int		messagesSent;
 extern int		messagesReceived;
 extern int		unreliableMessagesSent;
 extern int		unreliableMessagesReceived;
+#endif // UQUAKE
 
+
+void		NET_Init (int port);
+void		NET_Shutdown (void);
+qboolean	NET_GetPacket (void);
+void		NET_SendPacket (int length, void *data, netadr_t to);
+
+qboolean	NET_CompareAdr (netadr_t a, netadr_t b);
+qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b);
+char		*NET_AdrToString (netadr_t a);
+char		*NET_BaseAdrToString (netadr_t a);
+qboolean	NET_StringToAdr (char *s, netadr_t *a);
+qboolean NET_IsClientLegal(netadr_t *adr);
+
+//============================================================================
+
+#define	OLD_AVG		0.99	// total = oldtotal*OLD_AVG + new*(1-OLD_AVG)
+
+#define	MAX_LATENT	32
+
+typedef struct
+{
+	qboolean	fatal_error;
+
+	float		last_received;		// for timeouts
+
+// the statistics are cleared at each client begin, because
+// the server connecting process gives a bogus picture of the data
+	float		frame_latency;		// rolling average
+	float		frame_rate;
+
+	int		drop_count;		// # dropped/good packets,
+	int		good_count;		//  cleared each level
+
+	netadr_t	remote_address;
+	int		qport;
+
+// bandwidth estimator
+	double		cleartime;		// realtime > nc->cleartime
+						// means we're free to go
+	double		rate;			// seconds / byte
+
+// sequencing variables
+	int		incoming_sequence;
+	int		incoming_acknowledged;
+	int		incoming_reliable_acknowledged;	// single bit
+
+	int		incoming_reliable_sequence;	// single bit, local
+
+	int		outgoing_sequence;
+	int		reliable_sequence;		// single bit
+	int		last_reliable_sequence;		// # of last send
+
+// reliable staging and holding areas
+	sizebuf_t	message;			// write buffer
+	byte		message_buf[MAX_MSGLEN];
+
+	int		reliable_length;
+	byte		reliable_buf[MAX_MSGLEN];	// unacked reliable msg
+
+// time and size data to calculate bandwidth
+	int		outgoing_size[MAX_LATENT];
+	double		outgoing_time[MAX_LATENT];
+} netchan_t;
+
+#ifdef QUAKEWORLD
+extern	int	net_drop;		// packets dropped before this one
+
+void Netchan_Init (void);
+void Netchan_Transmit (netchan_t *chan, int length, byte *data);
+void Netchan_OutOfBand (netadr_t adr, int length, byte *data);
+void Netchan_OutOfBandPrint (netadr_t adr, char *format, ...);
+qboolean Netchan_Process (netchan_t *chan);
+void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport);
+
+qboolean Netchan_CanPacket (netchan_t *chan);
+qboolean Netchan_CanReliable (netchan_t *chan);
+#endif
+
+extern	cvar_t	hostname;
+
+#ifdef UQUAKE
 qsocket_t *NET_NewQSocket (void);
 void NET_FreeQSocket(qsocket_t *);
 double SetNetTime(void);
@@ -363,5 +371,6 @@ extern	qboolean	slistSilent;
 extern	qboolean	slistLocal;
 
 void NET_Slist_f (void);
+#endif // UQUAKE
 
-#endif // _NET_H
+#endif // __NET_H

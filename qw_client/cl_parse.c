@@ -257,7 +257,7 @@ void Model_NextDownload (void)
 	}
 
 	// all done
-	snd.worldmodel = cl.worldmodel = cl.model_precache[1];	
+	cl.worldmodel = cl.model_precache[1];
 	R_NewMap ();
 	Hunk_Check ();		// make sure nothing is hurt
 
@@ -590,8 +590,7 @@ void CL_ParseServerData (void)
 	}
 
 	// parse player slot, high bit means spectator
-	snd.playernum = cl.playernum = MSG_ReadByte ();
-	snd.playernum++;
+	cl.playernum = MSG_ReadByte ();
 	if (cl.playernum & 128)
 	{
 		cl.spectator = true;

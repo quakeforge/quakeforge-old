@@ -1,4 +1,5 @@
 /*
+protocol.h - communications protocol (quake1)
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,7 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// protocol.h -- communications protocols
+
+#ifndef __PROTOCOL_H
+#define __PROTOCOL_H
 
 #define	PROTOCOL_VERSION	15
 
@@ -165,3 +168,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define TE_IMPLOSION		14
 #define TE_RAILTRAIL		15
 #endif
+
+typedef struct usercmd_s
+{
+	byte    msec;
+	vec3_t  angles;
+#ifdef UQUAKE
+	float	forwardmove, sidemove, upmove;
+#elif QUAKEWORLD
+	short   forwardmove, sidemove, upmove;
+#endif
+	byte    buttons;
+	byte    impulse;
+#ifdef QUAKE2
+	byte	lightlevel;
+#endif
+} usercmd_t;
+
+#endif // __PROTOCOL_H

@@ -39,8 +39,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <winquake.h>
 #endif
 
-snd_t	snd;
-
 void S_Play(void);
 void S_PlayVol(void);
 void S_SoundList(void);
@@ -390,7 +388,7 @@ channel_t *SND_PickChannel(int entnum, int entchannel)
 		}
 
 		// don't let monster sounds override player sounds
-		if (channels[ch_idx].entnum == snd.playernum && entnum != snd.playernum && channels[ch_idx].sfx)
+		if (channels[ch_idx].entnum == cl.playernum -1 && entnum != cl.playernum -1 && channels[ch_idx].sfx)
 			continue;
 
 		if (channels[ch_idx].end - paintedtime < life_left)
@@ -424,7 +422,7 @@ void SND_Spatialize(channel_t *ch)
 	sfx_t *sndfx;
 
 // anything coming from the view entity will allways be full volume
-	if (ch->entnum == snd.playernum)
+	if (ch->entnum == cl.playernum -1)
 	{
 		ch->leftvol = ch->master_vol;
 		ch->rightvol = ch->master_vol;
@@ -692,10 +690,10 @@ void S_UpdateAmbientSounds (void)
 		return;
 
 // calc ambient sound levels
-	if (!snd.worldmodel)
+	if (cl.worldmodel == NULL)
 		return;
 
-	l = Mod_PointInLeaf (listener_origin, snd.worldmodel);
+	l = Mod_PointInLeaf (listener_origin, cl.worldmodel);
 	if (!l || !ambient_level.value)
 	{
 		for (ambient_channel = 0 ; ambient_channel< NUM_AMBIENTS ; ambient_channel++)
@@ -1018,7 +1016,7 @@ void S_LocalSound (char *sound)
 		Con_Printf ("S_LocalSound: can't cache %s\n", sound);
 		return;
 	}
-	S_StartSound (snd.playernum, -1, sfx, vec3_origin, 1, 1);
+	S_StartSound (cl.playernum -1, -1, sfx, vec3_origin, 1, 1);
 }
 
 

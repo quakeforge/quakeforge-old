@@ -50,4 +50,5 @@ typedef struct
 	int	percent;			// 0-256
 } cshift_t;
 
+#include <cl_state.h>
 #endif // _QSTRUCTS_H

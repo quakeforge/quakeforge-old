@@ -28,6 +28,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <qdefs.h>
 #include <zone.h>
 #include <cvar.h>
+#include <model.h>
+#include <qstructs.h>
+#include <client.h>
 
 #define DEFAULT_SOUND_PACKET_VOLUME 255
 #define DEFAULT_SOUND_PACKET_ATTENUATION 1.0
@@ -96,12 +99,6 @@ typedef struct
 	int		dataofs;		// chunk starts this many bytes from file start
 } wavinfo_t;
 
-
-typedef struct {
-	int		playernum;
-	struct model_s	*worldmodel;
-} snd_t;
-extern snd_t	snd;
 
 void S_Init (void);
 void S_Startup (void);
