@@ -48,7 +48,7 @@
 #include <console.h>
 #include <cmd.h>
 
-int				com_no_escapes = 0;
+int				com_no_escapes = 1;
 char			com_token[1024];
 qboolean		standard_quake = true, rogue, hipnotic;
 qboolean		msg_suppress_1 = 0;
