@@ -278,6 +278,7 @@ void Draw_Crosshair(void)
 	if (crosshair.value == 2) {
 		x = scr_vrect.x + scr_vrect.width/2 + cl_crossx.value; 
 		y = scr_vrect.y + scr_vrect.height/2 + cl_crossy.value;
+		// FIXME:  Find a better way to do this...
 		Draw_Pixel(x - 1, y, c);
 		Draw_Pixel(x - 3, y, c);
 		Draw_Pixel(x + 1, y, c);
