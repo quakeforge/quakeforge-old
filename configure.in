@@ -14,9 +14,6 @@ AC_DEFINE_UNQUOTED(QSG_STANDARD,"$QSG_STANDARD")
 dnl Set to yes for releases
 RELEASE=no
 
-dnl Set this to no for Id defaults
-NEWSTYLE=yes
-
 AC_CANONICAL_SYSTEM
 AC_LANG_C
 
@@ -111,17 +108,7 @@ if test "x$enable_experimental" = xyes; then
    AC_DEFINE(_EXPERIMENTAL_)
 fi
 
-AC_ARG_ENABLE(newstyle,
-[  --enable-newstyle       compile with defaults a bit different than those
-                          used by Id Software (does not affect gameplay)],
-   NEWSTYLE=$enable_newstyle
-)
-if test "x$NEWSTYLE" = xyes; then
-   AC_DEFINE(NEWSTYLE)
-   AC_DEFINE(GAMENAME, "base")
-else
-   AC_DEFINE(GAMENAME, "id1")
-fi
+AC_DEFINE(GAMENAME, "id1")
 
 AC_ARG_WITH(global-cfg,
 [  --with-global-cfg=FILE  If set will change the name and location of the

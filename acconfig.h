@@ -3,9 +3,6 @@
 #undef VERSION
 #undef QSG_STANDARD
 
-/* Define if you want to use QF-style defaults instead of Id-style */
-#undef NEWSTYLE
-
 /* Define if you want .qz support */
 #undef GENERATIONS
 
