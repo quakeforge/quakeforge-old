@@ -53,12 +53,12 @@ struct qsockaddr
 typedef struct
 {
 #ifdef HAVE_IPV6
-	unsigned int ip[4];
+	u_int32_t ip[4];
 #else
 	byte	ip[4];
 #endif
 	unsigned short	port;
-	unsigned short	pad;
+        unsigned short	family; // used to be pad, before IPV6
 } netadr_t;
 
 extern	netadr_t	net_local_adr;
