@@ -1068,7 +1068,7 @@ R_RenderView ( void ) {
 	// render normal view
 
 /*** Render Volumetric Fog ***/
-
+#if 0
 	if(r_volfog->value)
 	{
 		R_RenderScene ();
@@ -1119,17 +1119,33 @@ R_RenderView ( void ) {
 /*** Regular rendering code ***/
 
 else
+#endif
 	{
+		if (r_fog->value) {
+			glFogi (GL_FOG_MODE, GL_EXP2);
+			glFogfv (GL_FOG_COLOR, colors);
+			glFogf (GL_FOG_DENSITY, (GLfloat) r_fog->value);
+			glEnable (GL_FOG);
+		}
 		R_RenderScene ();
 		R_DrawViewModel ();
-		if (r_wateralpha->value<1.0) {
+		if (r_wateralpha->value<1.0 || r_volfog->value) {
 			glClear(GL_STENCIL_BUFFER_BIT);
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 		}
+		if (r_volfog->value && !r_fog->value) {
+			glFogi (GL_FOG_MODE, GL_EXP2);
+			glFogfv (GL_FOG_COLOR, colors);
+			// fixme: GL_FOG_DENSITY should have r_volfog_density var
+			glFogf (GL_FOG_DENSITY, r_volfog->value);
+			glEnable (GL_FOG);
+		}
 		R_DrawWaterSurfaces ();
+		if (r_volfog->value || r_fog->value)
+			glDisable(GL_FOG);
 		if (r_wateralpha->value<1.0) {
 			glStencilFunc(GL_EQUAL, 1, 1);
 			glStencilMask(GL_FALSE);
