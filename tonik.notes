@@ -1,5 +1,0 @@
-* To those who still don't understand this simple fact:
-We can NOT use _ftime for Win9x, because on Win9x it has 1/18.2 sec resolution!
-If you don't like timeGetTime(), c'mon, use that QueryPerformanceCounter() from
-WinQuake. But _ftime is what simply CANNOT be used.
-_ftime works fine on NT, though...
