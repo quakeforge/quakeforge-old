@@ -383,7 +383,7 @@ V_ParseDamage ( void )
 #ifdef QUAKEWORLD
 	VectorSubtract (from, cl.simorg, from);
 #else
-	ent = &cl_entities[cl.playernum];
+	ent = &cl_entities[cl.playernum + 1];
 
 	VectorSubtract (from, ent->origin, from);
 #endif
@@ -615,7 +615,7 @@ V_BoundOffsets ( void )
 #ifdef UQUAKE
 	entity_t	*ent;
 
-	ent = &cl_entities[cl.playernum];
+	ent = &cl_entities[cl.playernum + 1];
 #endif
 
 #ifdef QUAKEWORLD
@@ -679,7 +679,7 @@ V_CalcViewRoll (void)
 #ifdef QUAKEWORLD
 	side = V_CalcRoll (cl.simangles, cl.simvel);
 #else
-	side = V_CalcRoll (cl_entities[cl.playernum].angles, cl.velocity);
+	side = V_CalcRoll (cl_entities[cl.playernum + 1].angles, cl.velocity);
 #endif
 	r_refdef.viewangles[ROLL] += side;
 
@@ -716,7 +716,7 @@ V_CalcIntermissionRefdef ( void )
 // view is the weapon model
 #ifdef UQUAKE
 // ent is the player model (visible when out of body)
-	ent = &cl_entities[cl.playernum];
+	ent = &cl_entities[cl.playernum + 1];
 // view is the weapon model (only visible from inside body)
 #endif
 	view = &cl.viewent;
@@ -761,7 +761,7 @@ V_CalcRefdef ( void )
 
 #ifdef UQUAKE
 // ent is the player model (visible when out of body)
-	ent = &cl_entities[cl.playernum];
+	ent = &cl_entities[cl.playernum + 1];
 #endif
 // view is the weapon model (only visible from inside body)
 	view = &cl.viewent;

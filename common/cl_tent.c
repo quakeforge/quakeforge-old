@@ -453,11 +453,11 @@ CL_UpdateBeams (void)
 			continue;
 
 	// if coming from the player, update the start position
-		if (b->entity == cl.playernum) {
+		if (b->entity == cl.playernum + 1) {
 #ifdef QUAKEWORLD
 			VectorCopy (cl.simorg, b->start);
 #elif UQUAKE
-			VectorCopy (cl_entities[cl.playernum].origin,
+			VectorCopy (cl_entities[cl.playernum + 1].origin,
 					b->start);
 #endif
 		}
