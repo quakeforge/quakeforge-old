@@ -1,50 +1,55 @@
-README - release notes for QuakeForge
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
-Please see the file "AUTHORS" for a list of contributors.
+<<<<<<< README
+QuakeForge - Release Notes
+Copyright © 1996-1997  Id Software, Inc.
+Copyright © 1999,2000  contributors of the QuakeForge Project
+Please see the file "AUTHORS" for a list of contributors
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published
-by the Free Software Foundation; either version 2 of the License,
-or (at your option) any later version.
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+along with this program; if not, write to:
+
+	Free Software Foundation, Inc.
+	59 Temple Place, Suite 330
+	Boston, MA 02111-1307 USA
 
 See file COPYING for license details.
 
-Quake(R) and QuakeWorld(R) are registered trademarks of Id Software, Inc.
-The NIN logo is a registered trademark licensed to Nothing Interactive, Inc.
-All other trademarks are the property of their respective owners
+Quake(R) and QuakeWorld(R) are registered trademarks of Id Software,
+Inc. The NIN logo is a registered trademark licensed to Nothing
+Interactive, Inc. All other trademarks are the property of their
+respective owners
 
 
 Table of Contents
------------------
+~~~~~~~~~~~~~~~~~
 
-I.	Special Thanks
-II.	System Requirements
-III.	Running and Compiling QuakeForge
-IV.	Operating System Specific Issues
-V.	Errata and Known Bugs
-VI.	Troubleshooting
-VII.	Technical Support
-VIII.	Joystick Notes
-IX.	Tested Systems
+1	Special Thanks
+2	System Requirements
+3	Compiling and Running QuakeForge
+4	Platform-Specific Issues
+5	Errata and Known Bugs
+6	Troubleshooting
+7	Technical Support
+8	Joystick Notes
+9	Tested Systems
 
 
-I. Special Thanks
------------------
+1	Special Thanks
+~~~~~~~~~~~~~~~~~~~~~~
 
 The QuakeForge Project would like to thank Id Software, Inc. for writing
-and releasing Quake under the GNU GPL.  We'd like to thank John Carmack and
-Dave Kirsch in particular for the support they have provided to us and to
-the Free Software community as a whole.
+and releasing Quake under the GNU GPL.  We'd like to thank John Carmack
+and Dave Kirsch in particular for the support they have provided to us
+and to the Free Software community as a whole.
 
 We would also like to thank the following organizations for their
 contributions to QuakeForge:
@@ -53,57 +58,100 @@ contributions to QuakeForge:
    3Dfx Interactive, Inc.
 
 And last but certainly not least, we would like to thank every single
-person who has contributed even one line of code, documentation, or other
-support to the QuakeForge project.
+person who has contributed even one line of code, documentation, or
+other support to the QuakeForge project.
 
 Without all of you, we would not be where we are right now.
 
 Id Software, Inc. thanks MPath Interactive and Gandalf Technology for
 their help and support.
 
-If you'd like to contribute code/hardware/support/suggestion/help to the
-QuakeForge project, contact Nelson Rush at: palisade@quakeforge.net
+If you'd like to contribute in any way to the QuakeForge project, please
+contact our mailing list at quake-devel@lists.sourceforge.net.
 
 
-II. System Requirements
------------------------
+2	System Requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Raster capable display. ;-)
-8MB RAM (16MB required under Win32)
-Floating-point processor (not strictly required but a Good Idea(TM))
-30MB free disk space (shareware version, 80MB for registered version)
+* A Raster capable display. ;-)
+* 8 megabytes of memory beyond operating system footprint. 16 megabytes
+  are required for the QuakeWorld-compatible network client and all
+  executables running on Win32-based systems)
+* A Floating-point processor. While not strictly required, QuakeForge
+  uses a lot of floating-point math, so a FPU is highly recommended.
+* 10MB of free hard disk space to build all targets. In addition to the
+  base system, you will require game data files. For the default game
+  ("Quake"), you will need either the shareware or registered version of
+  Quake.
 
 
-III. Running and Compiling QuakeForge
--------------------------------------
+3	Compiling and Running QuakeForge
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Read the INSTALL file for more information on compiling.
+Please read the INSTALL file for more information on compiling.
 
-Autoconf 2.13 or greater and automake 1.3 or greater required to use
-the bootstrap script.
+Autoconf 2.13 or later and automake 1.3 or later are required to use
+the bootstrap script, which creates the "configure" script.
 
 After you have compiled successfully, you must download the shareware
 version of Quake 1 to play. Insert the proper binaries in the same
 directory as the unpacked shareware files, and run.
 
-We are currently working on a free replacement for this.
+We are currently working on a free replacement for the Quake game data
+files.
 
 
-IV. Operating System Specific Issues
-------------------------------------
+4	Platform-Specific Issues
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section should discuss issues that affect only certain operating
-platforms.  Issues to be discussed include:
+This section discusses issues that affect only certain operating
+platforms.
 
-  * Audio Setup
-  * CD Audio Input
-  * Mouse Setup
-  * Booting "Clean"
+4.1	DOS
 
-Currently this section is unfinished.
+If you experience page faults while running Quarterdeck's QDPMI DPMI
+server, this is caused by a bug in QDPMI.  Workarounds:  Remove QDPMI
+from CONFIG.SYS, issue the command QDPMI OFF before running QuakeForge,
+or get the update patch for QDPMI from Quarterdeck.  You may be running
+QDPMI without knowing it if you have QEMM installed, because it can be
+installed as part of the QEMM installation.
 
-V. Errata and Known Bugs
-------------------------
+4.2	Linux
+
+Some 3Dfx Voodoo-based 3D accelerators may have issues with the way
+QuakeForge uses the "3dfxgl" minidriver to interface to the Glide
+library.
+
+Video boards based on the Riva
+128/128ZX/TNT/TNT2/TNT2 Ultra/Vanta/GeForce 256 chipsets from nVidia
+Corp. using the latest (as of 13 Jan 2000) nVidia OpenGL drivers may
+have problems with transparency. Under some conditions, these drivers
+may lock the X Window System server, possibly rendering the system
+unusable. The currently-recommended drivers for video cards with Riva
+128/128ZX/TNT/TNT2/TNT2 Ultra chipsets are those from the Utah GLX
+project, located at http://glx.on.openprojects.net/ -- for the Vanta
+and GeForce 256 chipsets, there is no suggested hardware-accelerated
+OpenGL alternative at this time. We believe the bug to be in nVidia's
+drivers, because our code seems to work under other OpenGL
+implementations.
+
+4.4	Windows 95/98/Millennium
+
+Currently, we are unable to determine the status of the Windows-based
+targets of QuakeForge. Because of our move to GNU Autoconf and the
+dearth of "proper" GNU tools available on the Windows platform, our
+build system may not work properly on Windows. We are working on
+solutions for this problem.
+
+4.5	Windows NT/2000
+
+For the most part, issues for Windows 9x-based operating environments
+will be similar. However, because of numerous differences in the way
+Windows NT and Windows 9x operate, these systems may have specific
+issues.
+
+5	Errata and Known Bugs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Problem:  The screen flickers once about every other frame when using GL
 Solution: Not all GL implementations support a performance hack used to
@@ -114,30 +162,31 @@ Solution: Not all GL implementations support a performance hack used to
 Problem:  Zombies can sometimes get "stuck" in the ground.  They can be
           heard but not killed making it impossible to get 100% on the
 	  current level.
-Solution: None found.
+Solution: None found yet.
 
 Problem:  It is possible for players to sometimes get stuck in a room or
           wall, much like the zombies mentioned above.
 Solution: The "kill" console command will un-stick you, but it has the
-          unfortunate side effect of killing you in the process (hence the
-	  command's name.)  It is a good idea to save your games often.
+          unfortunate side effect of killing you in the process (hence
+	  the command's name.)  It is a good idea to save your games
+	  often.
 
-Problem:  Sometimes durring a game the player's view will not center
-          properly.  The end result is that the player view is looking up
-	  toward the ceiling while walking.
+Problem:  Sometimes during a game the player's view will not center
+          properly.  The end result is that the player view is looking
+	  up toward the ceiling while walking.
 Solution: Use of freelook (mouse or keyboard) may solve this problem, as
           will exiting the level or the "kill" console command.
 
 
-VI. Troubleshooting
--------------------
+6	Troubleshooting
+~~~~~~~~~~~~~~~~~~~~~~~
 
 If QuakeForge fails to start up, or has problems not addressed elsewhere
-in the documentation, try the -safe command line switch, which disables a 
-number of parts of QuakeForge that can be problems if there are hardware
-or configuration problems.  The -safe command line switch is equivalent to 
--stdvid, -nosound, -nonet, and -nocdaudio together.  Those four switches
-do the following:
+in the documentation, try the -safe command line switch, which disables
+a number of parts of QuakeForge that can be problems if there are
+hardware or configuration problems.  The -safe command line switch is
+equivalent to -stdvid, -nosound, -nonet, and -nocdaudio together.  Those
+four switches do the following:
 
   -stdvid	disables VESA video modes
   -nosound	disables sound card support
@@ -145,24 +194,13 @@ do the following:
   -nocdaudio	disables CD audio support
 
 If -safe makes the problem go away, try using each of the switches
-individually to isolate the area in which you're experiencing the problem,
-then either correct the configuration or hardware problem or play
-QuakeForge with that functionality disabled.
-
-If you still have problems, try booting clean in conjunction with the
--safe command line parameter.  For information on booting clean, refer to 
-"Booting Clean" in section III above.
-
-If you experience page faults while running Quarterdeck's QDPMI DPMI
-server, this is caused by a bug in QDPMI.  Workarounds:  Remove QDPMI from
-CONFIG.SYS, issue the command QDPMI OFF before running QuakeForge, or get
-the update patch for QDPMI from Quarterdeck.  You may be running QDPMI
-without knowing it if you have QEMM installed, because it can be
-installed as part of the QEMM installation.
+individually to isolate the area in which you're experiencing the
+problem, then either correct the configuration or hardware problem or
+play QuakeForge with that functionality disabled.
 
 
-VII. Technical Support
-----------------------
+7	Technical Support
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Please do not contact Id Software, Inc regarding technical support
 issues related to QuakeForge. QuakeForge is heavily modified from the
@@ -175,8 +213,8 @@ support, bugs reports, and help at: http://www.quakeforge.net/
 Thank you.
 
 
-VIII. Joystick notes
---------------------
+8	Joystick notes
+~~~~~~~~~~~~~~~~~~~~~~
 
 Your joystick must be plugged in when QuakeForge is launched.
 
@@ -195,32 +233,40 @@ The "mlook" and "sidestep" commands work with a joystick exactly as they
 do for a mouse, as does the "invert mouse up/down" menu option.
 
 
-IX. Tested Systems
-------------------
+9	Tested Systems
+~~~~~~~~~~~~~~~~~~~~~~
 
 Processors tested:
-   Intel PI
-   Intel PII
-   Intel PIII
-   Athlon
-   K6-2
-   Motorola PowerPC
-   Compaq Alpha
+   AMD Athlon
+   AMD K6-2
+   Apple/IBM/Motorola PowerPC
+   Compaq/Digital Alpha 21x64
+   IBM Power3
+   Intel Pentium
+   Intel Pentium II
+   Intel Pentium III
    Sun UltraSPARC
    SGI Indigo 2
-   Mips R10k
+   MIPS R10000
 
 Operating systems tested:
-   Linux
+   Linux 2.x
    FreeBSD
    Solaris
-   IRIX
-   AIX
-   Digital Unix/TRU64
-   Windows 98	(Hasn't been tested since we switched to autoconf)
+   SGI Irix
+   IBM AIX 4.x
+   Compaq/Digital Tru64 Unix
+
+Video cards tested (On Intel-based systems):
+   Matrox G200 (Linux)
+   Matrox G400 (Linux)
 
 See file "TESTIFY" for user testimonials on what works, where, and why.
 
-email user testimonies to: palisade@quakeforge.net
-Or to our quake-devel mailing list which you can find more information
-about on our website at: http://www.quakeforge.net/
+Please send user testimonials via e-mail to:
+	"Nelson Rush" <palisade@quakeforge.net>
+or to our mailing list, located at:
+	quake-devel@lists.sourceforge.net
+
+You can find more information on our web site, located at:
+	http://www.quakeforge.net/
