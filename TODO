@@ -64,3 +64,5 @@ to quake-devel@lists.sourceforge.net with details.
  * implement a "feign death" action, so that users can play dead
  * allow server admin to adjust air control (ie. in low gravity)
  * bullets leave "holes" in walls, and disappear as threshold is reached
+ * make explosions also leave marks, but dynamic marks, ie. blast can
+   affect multiple surfaces.
