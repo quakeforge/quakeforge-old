@@ -19,6 +19,8 @@ to quake-devel@lists.sourceforge.net with details.
    authors yet.  If your patch was applied and you haven't gotten a line
    in the AUTHORS file yet, please let us know so we can fix it.
  * Makefile.in */Makefile.in: developer-clean target ?
+ * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
+   on systems with XFree86 available
  * Merge SDLQuake (BigM created a patch against an older revision of our
    main tree)
  * Remove TODO entries as they get finished.
