@@ -263,7 +263,7 @@ void R_RotateForEntity (entity_t *e);
 void R_MarkLights (dlight_t *light, int bit, mnode_t *node);
 void R_AnimateLight (void);
 void R_RenderDlights (void);
-int R_LightPoint (vec3_t p);
+int * R_LightPoint (vec3_t p);
 
 //
 // gl_refrag.c

@@ -268,24 +268,33 @@ LIGHT SAMPLING
 
 mplane_t		*lightplane;
 vec3_t			lightspot;
-
-int RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
+static int		myr[4];
+/*
+	RecursiveLightPoint
+*/
+int *
+RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
 {
-	int			r;
+	int		*r = myr;
 	float		front, back, frac;
-	int			side;
+	int		side;
 	mplane_t	*plane;
 	vec3_t		mid;
 	msurface_t	*surf;
-	int			s, t, ds, dt;
-	int			i;
+	int		s, t, ds, dt;
+	int		i;
 	mtexinfo_t	*tex;
 	byte		*lightmap;
 	unsigned	scale;
-	int			maps;
+	int		maps;
 
+	r[0] = r[1] = r[2] = r[3] = 0;
+	
 	if (node->contents < 0)
-		return -1;		// didn't hit anything
+	{
+		r[3] = -1;
+		return r;		// didn't hit anything
+	}
 	
 // calculate mid point
 
@@ -305,11 +314,14 @@ int RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
 	
 // go down front side	
 	r = RecursiveLightPoint (node->children[side], start, mid);
-	if (r >= 0)
+	if (r[3] >= 0)
 		return r;		// hit something
 		
 	if ( (back < 0) == side )
-		return -1;		// didn't hit anuthing
+	{
+		r[3] = -1;
+		return r;		// didn't hit anuthing
+	}
 		
 // check for impact on this node
 	VectorCopy (mid, lightspot);
@@ -337,30 +349,53 @@ int RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
 			continue;
 
 		if (!surf->samples)
-			return 0;
+			return r;
 
 		ds >>= 4;
 		dt >>= 4;
 
 		lightmap = surf->samples;
-		r = 0;
 		if (lightmap)
 		{
+			if (bspver == CBSPVERSION)
+				lightmap += (dt * ((surf->extents[0]>>4)+1)
+						+ ds) * 4;
+			else
+				lightmap += (dt * ((surf->extents[0]>>4)+1)
+						+ ds);
+			
 
-			lightmap += dt * ((surf->extents[0]>>4)+1) + ds;
-
-			for (maps = 0 ; maps < MAXLIGHTMAPS && surf->styles[maps] != 255 ;
+			for (maps = 0 ; (maps < MAXLIGHTMAPS)
+					&& (surf->styles[maps] != 255) ;
 					maps++)
 			{
 				scale = d_lightstylevalue[surf->styles[maps]];
-				r += *lightmap * scale;
-				lightmap += ((surf->extents[0]>>4)+1) *
-						((surf->extents[1]>>4)+1);
+				if (bspver == CBSPVERSION)
+				{
+					// calc color's effect for model
+					r[0] += lightmap[0] * scale;
+					r[1] += lightmap[1] * scale;
+					r[2] += lightmap[2] * scale;
+					r[3] += lightmap[3] * scale;
+					lightmap += (((surf->extents[0]>>4)+1)
+							* ((surf->extents[1]
+							>>4)+1)) * 4;
+				} else {
+					r[3] += *lightmap * scale;
+					lightmap += ((surf->extents[0]>>4)+1)
+						* ((surf->extents[1]>>4)+1);
+				}
 			}
-			
-			r >>= 8;
+			if (bspver == CBSPVERSION)
+			{
+				r[0] = r[1] = r[2] = 0;
+			} else {
+				r[0] >>= 8;
+				r[1] >>= 8;
+				r[2] >>= 8;
+			}
+			r[3] >>= 8;
 		}
-		
 		return r;
 	}
 
@@ -368,13 +403,20 @@ int RecursiveLightPoint (mnode_t *node, vec3_t start, vec3_t end)
 	return RecursiveLightPoint (node->children[!side], mid, end);
 }
 
-int R_LightPoint (vec3_t p)
+/*
+	R_LightPoint
+*/
+int *
+R_LightPoint (vec3_t p)
 {
 	vec3_t		end;
-	int			r;
+	int		*r = myr;
 	
 	if (!cl.worldmodel->lightdata)
-		return 255;
+	{
+		r[0] = r[1] = r[2] = r[3] = 255;
+		return r;
+	}
 	
 	end[0] = p[0];
 	end[1] = p[1];
@@ -382,8 +424,8 @@ int R_LightPoint (vec3_t p)
 	
 	r = RecursiveLightPoint (cl.worldmodel->nodes, p, end);
 	
-	if (r == -1)
-		r = 0;
+	if (r[3] == -1)
+		r[3] = 0;
 
 	return r;
 }
