@@ -152,3 +152,53 @@ clean-$(GLQUAKE):
 	rm -f $(OBJSquake-gl)
 endif
 
+###########################################################################
+#
+# quake-3dfx
+#
+ifneq ($(TDFXQUAKE),)
+OBJSquake-3dfx = $(patsubst %,$(BUILD_DIR)/3dfx/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_TDFX_SRC) .c .s)))
+
+TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
+TDFX_LDFLAGS = $(SVGA_LDFLAGS) @GLIDE_LDFLAGS@ @TDFXGL_LDFLAGS@ -ldl
+# XXX - this is for 3dfxgl
+TDFX_VID_SRC = gl_vidlinux.c
+
+# This can be thought of as a macro that makes sure that the x11
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_3dfx_DIR = @DIR=3dfx; $(MAKE_SURE_DIR)
+
+$(BUILD_DIR)/3dfx/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_3dfx_DIR)
+	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/3dfx/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_3dfx_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_3dfx_DIR)
+	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/3dfx/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_3dfx_DIR)
+	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_gl_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(TDFXQUAKE): $(BUILD_DIR)/bin/$(TDFXQUAKE)
+
+$(BUILD_DIR)/bin/$(TDFXQUAKE): $(OBJSquake-3dfx)
+	$(MAKE_SURE_bin_DIR)
+	$(CC) $(CFLAGS) $(OBJSquake-3dfx) $(TDFX_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(TDFXQUAKE)
+
+# XXX - Can this be automated?
+clean-$(TDFXQUAKE):
+	rm -f $(OBJSquake-3dfx)
+endif
+

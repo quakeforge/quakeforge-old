@@ -192,15 +192,21 @@ AC_ARG_ENABLE(3dfxgl,
 [  --enable-3dfxgl=DIR  Use lib3dfxgl.so found in DIR],
 HAS_TDFXGL=$withval, HAS_TDFXGL=auto
 )
-if test "x$HAS_3DFXGL" != xno; then
-   if test "x$HAS_3DFXGL" != xauto; then
+if test "x$HAS_TDFXGL" != xno; then
+   if test "x$HAS_TDFXGL" != xauto; then
       TDFXGL_LDFLAGS="-L$withval"
    fi
    dnl FIX: is it safe to assume test has -o ?
    if test "x$HAS_GLIDE" != x; then
       if test "x$HAS_OGL" != x; then
          if test "x$HAS_VGA" != x; then
+	    save_LIBS="$LIBS"
+	    LIBS="$TDFXGL_LDFLAGS $LIBS"
 	    AC_CHECK_LIB(3dfxgl, glColor4f, HAS_TDFXGL=yes, HAS_TDFXGL=)
+	    LIBS="$save_LIBS"
+	    if test "x$HAS_TDFXGL" = xyes; then
+	       TDFXGL_LDFLAGS="$TDFXGL_LDFLAGS -l3dfxgl"
+	    fi
 	 fi
       fi
    fi

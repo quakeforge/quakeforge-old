@@ -25,10 +25,11 @@ BIN_PREFIX  = quake
 #
 # Directory specific stuff
 #
-DEFS        = @DEFS@
-CFLAGS      = $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_DIR) -I$(UQ_DIR)/include
-ALL_X11_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(X11_VID_SRC) model.c
-ALL_GL_SRC  = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
+DEFS         = @DEFS@
+CFLAGS       = $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_DIR) -I$(UQ_DIR)/include
+ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(X11_VID_SRC) model.c
+ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
+ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC)
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
 	   $(SYS_SRC) chase.c world.c $(SRV_PR_SRC) \
