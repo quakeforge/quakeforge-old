@@ -18,7 +18,6 @@ to quake-devel@lists.sourceforge.net with details.
  * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
    on systems with XFree86 available
  * Prep Aftershock for a future merge with the main tree
- * Add localized volumetric fog, water, etc
  * Implement a wind (airflow) engine
  * Add a more modern portal engine
  * Add a terrain engine

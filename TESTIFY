@@ -52,8 +52,8 @@ Driver: Mesa 3.1, ancient nvidia glx drivers, Mesa 3.1
 Chip: P133, Celeron 400Mhz
 Distro: Suse 6.1
 Card: 8mb V2, NeoMagic
-Driver: Mesa 3.1
-Target: all, all
+Driver: Mesa 3.1, Software
+Target: all, (x11/svga)
 Extra: at 16bpp
 
 Chip: K6-2 350MHz, K6-2 350Mhz, K6-2 266Mhz
