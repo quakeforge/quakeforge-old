@@ -607,7 +607,8 @@ void R_AliasSetupSkin (void)
 	r_affinetridesc.skinwidth = a_skinwidth;
 	r_affinetridesc.seamfixupX16 =  (a_skinwidth >> 1) << 16;
 	r_affinetridesc.skinheight = pmdl->skinheight;
-
+	
+#ifdef QUAKEWORLD
 	if (currententity->scoreboard)
 	{
 		byte	*base;
@@ -622,6 +623,7 @@ void R_AliasSetupSkin (void)
 			r_affinetridesc.skinheight = 200;
 		}
 	}
+#endif	// QUAKEWORLD
 }
 
 /*
@@ -742,16 +744,17 @@ void R_AliasDrawModel (alight_t *plighting)
 	r_affinetridesc.drawtype = (currententity->trivial_accept == 3) &&
 			r_recursiveaffinetriangles;
 
-	if (r_affinetridesc.drawtype)
-	{
+	if (r_affinetridesc.drawtype)	{
 		D_PolysetUpdateTables ();		// FIXME: precalc...
 	}
+#ifdef QUAKEWORLD 						// FIXME: Is this needed?
+#if id386
 	else
 	{
-#if id386
 		D_Aff8Patch (currententity->colormap);
-#endif
 	}
+#endif
+#endif
 
 	acolormap = currententity->colormap;
 

@@ -32,12 +32,12 @@ unsigned Com_BlockChecksum (void *buffer, int length)
 {
 	int				digest[4];
 	unsigned 		val;
-	struct mdfour	md;
+//	struct mdfour	md;
 
-	mdfour_begin (&md);
-	mdfour_update (&md, (unsigned char *) buffer, length);
-	mdfour_result (&md, (unsigned char *) digest);
-//	mdfour ( (unsigned char *) digest, (unsigned char *) buffer, length );
+//	mdfour_begin (&md);
+//	mdfour_update (&md, (unsigned char *) buffer, length);
+//	mdfour_result (&md, (unsigned char *) digest);
+	mdfour ( (unsigned char *) digest, (unsigned char *) buffer, length );
 	
 	val = digest[0] ^ digest[1] ^ digest[2] ^ digest[3];
 
@@ -46,10 +46,10 @@ unsigned Com_BlockChecksum (void *buffer, int length)
 
 void Com_BlockFullChecksum (void *buffer, int len, unsigned char *outbuf)
 {
-	struct mdfour	md;
+//	struct mdfour	md;
 	
-	mdfour_begin (&md);
-	mdfour_update (&md, (unsigned char *) buffer, len);
-	mdfour_result (&md, outbuf);
-//	mdfour ( outbuf, (unsigned char *) buffer, len );
+//	mdfour_begin (&md);
+//	mdfour_update (&md, (unsigned char *) buffer, len);
+//	mdfour_result (&md, outbuf);
+	mdfour ( outbuf, (unsigned char *) buffer, len );
 }
