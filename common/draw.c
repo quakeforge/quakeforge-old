@@ -614,30 +614,6 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
 }
 
 
-void Draw_CharToConback (int num, byte *dest)
-{
-	int		row, col;
-	byte	*source;
-	int		drawline;
-	int		x;
-
-	row = num>>4;
-	col = num&15;
-	source = draw_chars + (row<<10) + (col<<3);
-
-	drawline = 8;
-
-	while (drawline--)
-	{
-		for (x=0 ; x<8 ; x++)
-			if (source[x])
-				dest[x] = 0x60 + source[x];
-		source += 128;
-		dest += 320;
-	}
-
-}
-
 /*
 ================
 Draw_ConsoleBackground
@@ -646,7 +622,7 @@ Draw_ConsoleBackground
 */
 void Draw_ConsoleBackground (int lines)
 {
-	int				x, y, v;
+	int				i, x, y, v;
 	byte			*src, *dest;
 	unsigned short	*pusdest;
 	int				f, fstep;
@@ -671,8 +647,6 @@ void Draw_ConsoleBackground (int lines)
 	dest = conback->data + 320 - (strlen(ver)*8 + 11) + 320*186;
 
 	memcpy(saveback, conback->data + 320*186, 320*8);
-	for (x=0 ; x<strlen(ver) ; x++)
-		Draw_CharToConback (ver[x], dest+(x<<3));
 	
 // draw the pic
 	if (r_pixbytes == 1)
@@ -730,6 +704,11 @@ void Draw_ConsoleBackground (int lines)
 	}
 	// put it back
 	memcpy(conback->data + 320*186, saveback, 320*8);
+
+	y = lines-14;
+	x = vid.conwidth - (strlen(ver)*8 + 11);
+	for (i=0 ; i<strlen(ver) ; i++)
+		Draw_Character (x + i * 8, y, ver[i] | 0x80);
 }
 
 
