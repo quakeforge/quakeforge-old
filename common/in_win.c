@@ -514,7 +514,7 @@ void IN_Init (void)
 	joy_sidesensitivity = Cvar_Get ("joy_sidesensitivity","-1.0",0,"None");
 	joy_pitchsensitivity = Cvar_Get ("joy_pitchsensitivity","-1.0",0,
 					"None");
-	joy_yawsensitvity = Cvar_Get ("joy_yawsensitivity","-1.0",0,"None");
+	joy_yawsensitivity = Cvar_Get ("joy_yawsensitivity","-1.0",0,"None");
 	joy_wwhack1 = Cvar_Get ("joy_wwhack1","0.0",0,"None");
 	joy_wwhack2 = Cvar_Get ("joy_wwhack2","0.0",0,"None");
 
@@ -918,10 +918,10 @@ void Joy_AdvancedUpdate_f (void)
 	}
 	else
 	{
-		if (Q_strcmp (joy_name.string, "joystick") != 0)
+		if (Q_strcmp (joy_name->string, "joystick") != 0)
 		{
 			// notify user of advanced controller
-			Con_Printf ("\n%s configured\n\n", joy_name.string);
+			Con_Printf ("\n%s configured\n\n", joy_name->string);
 		}
 
 		// advanced initialization here
