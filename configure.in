@@ -551,6 +551,9 @@ QF_maGiC_VALUE
 #endif
     ], AC_DEFINE(USE_BSD_CD))
 )
+AC_HAVE_STRUCT_FIELD(struct ioc_read_toc_single_entry, entry,[
+#include <sys/cdio.h>
+])
 
 
 dnl ========================================================================
