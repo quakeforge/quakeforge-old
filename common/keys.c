@@ -77,6 +77,12 @@ keyname_t keynames[] =
 	{"ESCAPE", K_ESCAPE},
 	{"SPACE", K_SPACE},
 	{"BACKSPACE", K_BACKSPACE},
+
+	{"CAPSLOCK",K_CAPSLOCK},
+	{"PRINTSCR", K_PRNTSCR},
+	{"SCRLCK", K_SCRLCK},
+	{"PAUSE", K_PAUSE},
+
 	{"UPARROW", K_UPARROW},
 	{"DOWNARROW", K_DOWNARROW},
 	{"LEFTARROW", K_LEFTARROW},
@@ -87,9 +93,9 @@ keyname_t keynames[] =
 	{"SHIFT", K_SHIFT},
 	
 	// Keypad stuff..
-	{"KP_NUMLCK", KP_NUMLCK},
-	{"KP_DIVIDE", KP_DIVIDE},
-	{"KP_MULTIPLY", KP_MULTIPLY},
+	{"NUMLOCK", KP_NUMLCK},
+	{"KP_SLASH", KP_DIVIDE},
+	{"KP_STAR", KP_MULTIPLY},
 	{"KP_MINUS", KP_MINUS},
 
 	{"KP_HOME", KP_HOME},
@@ -171,11 +177,6 @@ keyname_t keynames[] =
 	{"AUX30", K_AUX30},
 	{"AUX31", K_AUX31},
 	{"AUX32", K_AUX32},
-
-	{"CAPSLOCK",K_CAPSLOCK},
-	{"PRNTSCR", K_PRNTSCR},
-	{"SCRLCK", K_SCRLCK},
-	{"PAUSE", K_PAUSE},
 
 	{"MWHEELUP", K_MWHEELUP},
 	{"MWHEELDOWN", K_MWHEELDOWN},
@@ -751,6 +752,7 @@ void Key_Init (void)
 	keyshift['\\'] = '|';
 
 	menubound[K_ESCAPE] = true;
+	menubound['~'] = true;	// Tonik
 	for (i=0 ; i<12 ; i++)
 		menubound[K_F1+i] = true;
 
