@@ -55,8 +55,8 @@ D: User documentation
 D: Development design
 D: GL renderer fixes
 D: Driver module support
-D: Skybox implementation
-D: Spinning console implementation
+D: Skybox tutorial implementation
+D: Spinning console tutorial implementation
 
 N: Peter Andreasen
 E: pandr@pandr.dk

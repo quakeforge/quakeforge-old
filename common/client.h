@@ -363,6 +363,8 @@ extern cvar_t	*cl_nolerp;
 extern cvar_t	*cl_warncmd;
 #ifdef QUAKEWORLD
 extern cvar_t	*name;
+extern cvar_t	*topcolor;
+extern cvar_t	*bottomcolor;
 #endif // QUAKEWORLD
 extern cvar_t	*rate;
 extern cvar_t	*host_speeds;

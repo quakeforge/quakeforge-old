@@ -1,4 +1,5 @@
 /*
+screen.c - master for refresh, status bar, console, chat, notify, etc
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -21,10 +22,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-// screen.c -- master for refresh, status bar, console, chat, notify, etc
-
-#include "quakedef.h"
-#include "glquake.h"
+#include <quakedef.h>
+#include <glquake.h>
 #include <qtypes.h>
 #include <sys.h>
 #include <cvar.h>
@@ -300,11 +299,7 @@ static void SCR_CalcRefdef (void)
 	if (scr_fov->value > 170)
 		Cvar_Set ("fov","170");
 
-// intermission is always full screen   
-	if (cl.intermission)
-		size = 120;
-	else
-		size = scr_viewsize->value;
+	size = scr_viewsize->value;
 
 	if (size >= 120)
 		sb_lines = 0;           // no status bar at all

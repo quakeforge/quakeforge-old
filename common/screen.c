@@ -1,4 +1,5 @@
 /*
+screen.c - master for refresh, status bar, console, chat, notify, etc
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,7 +21,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// screen.c -- master for refresh, status bar, console, chat, notify, etc
 
 #include <qtypes.h>
 #include <quakedef.h>
@@ -103,23 +103,14 @@ float		scr_conlines;		// lines of console to display
 
 float		oldscreensize, oldfov;
 float		oldsbar;
-//cvar_t		scr_viewsize = {"viewsize","100", CVAR_ARCHIVE};
 cvar_t	*scr_viewsize;
-//cvar_t		scr_fov = {"fov","90"};	// 10 - 170
 cvar_t	*scr_fov;
-//cvar_t		scr_conspeed = {"scr_conspeed","300"};
 cvar_t	*scr_conspeed;
-//cvar_t		scr_centertime = {"scr_centertime","2"};
 cvar_t	*scr_centertime;
-//cvar_t		scr_showram = {"showram","1"};
 cvar_t	*scr_showram;
-//cvar_t		scr_showturtle = {"showturtle","0"};
 cvar_t	*scr_showturtle;
-//cvar_t		scr_showpause = {"showpause","1"};
 cvar_t	*scr_showpause;
-//cvar_t		scr_printspeed = {"scr_printspeed","8"};
 cvar_t	*scr_printspeed;
-//cvar_t		scr_allowsnap = {"scr_allowsnap", "1"};
 cvar_t	*scr_allowsnap;
 
 qboolean	scr_initialized;		// ready to draw
@@ -397,23 +388,14 @@ void SCR_SizeDown_f (void)
 
 void SCR_InitCvars (void)
 {
-//	Cvar_RegisterVariable (&scr_fov);
 	scr_fov = Cvar_Get ("fov","90",0,"None");
-//	Cvar_RegisterVariable (&scr_viewsize);
 	scr_viewsize = Cvar_Get ("viewsize","100",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&scr_conspeed);
 	scr_conspeed = Cvar_Get ("scr_conspeed","300",0,"None");
-//	Cvar_RegisterVariable (&scr_showram);
 	scr_showram = Cvar_Get ("showram","1",0,"None");
-//	Cvar_RegisterVariable (&scr_showturtle);
 	scr_showturtle = Cvar_Get ("showturtle","0",0,"None");
-//	Cvar_RegisterVariable (&scr_showpause);
 	scr_showpause = Cvar_Get ("showpause","1",0,"None");
-//	Cvar_RegisterVariable (&scr_centertime);
 	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
-//	Cvar_RegisterVariable (&scr_printspeed);
 	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
-//	Cvar_RegisterVariable (&scr_allowsnap);
 	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",0,"None");
 }
 
