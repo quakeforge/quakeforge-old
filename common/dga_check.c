@@ -82,7 +82,6 @@ int
 VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 {
 #if defined(HAS_DGA)
-	XF86VidModeModeInfo **vidmodes;
 	int event_base, error_base;
 	int dummy;
 	
