@@ -462,6 +462,8 @@ SV_ClientThink ( void )
 SV_ReadClientMove
 ===================
 */
+extern qboolean		nouse;	// 1999-10-29 +USE fix by Maddes
+
 void
 SV_ReadClientMove ( usercmd_t *move )
 {
@@ -488,6 +490,12 @@ SV_ReadClientMove ( usercmd_t *move )
 // read buttons
 	bits = MSG_ReadByte ();
 	host_client->edict->v.button0 = bits & 1;
+// 1999-10-29 +USE fix by Maddes  start
+	if (!nouse)
+	{
+		host_client->edict->v.button1 = (bits & 4)>>2;
+	}
+// 1999-10-29 +USE fix by Maddes  end
 	host_client->edict->v.button2 = (bits & 2)>>1;
 
 	i = MSG_ReadByte ();

@@ -58,6 +58,8 @@ char	**com_argv;
 char	*com_cmdline;
 cvar_t	*cmdline;
 
+qboolean	nouse = false;	// 1999-10-29 +USE fix by Maddes
+
 /*
 ================
 COM_CheckParm
@@ -143,6 +145,13 @@ COM_InitArgv ( int argc, char **argv )
 		hipnotic = true;
 		standard_quake = false;
 	}
+
+// 1999-10-29 +USE fix by Maddes  start
+	if (COM_CheckParm ("-nouse"))
+	{
+		nouse = true;
+	}
+// 1999-10-29 +USE fix by Maddes  end
 }
 
 /*

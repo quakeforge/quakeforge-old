@@ -609,6 +609,12 @@ CL_SendMove ( usercmd_t *cmd )
 		bits |= 2;
 	in_jump.state &= ~2;
 
+// 1999-10-29 +USE fix by Maddes  start
+	if (in_use.state & 3)
+		bits |= 4;
+	in_use.state &= ~2;
+// 1999-10-29 +USE fix by Maddes  end
+
 	MSG_WriteByte (&buf, bits);
 
 	MSG_WriteByte (&buf, in_impulse);
