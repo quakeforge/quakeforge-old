@@ -1127,7 +1127,7 @@ M_AdjustSliders ( int dir )
 			break;
 		case 5:	// mouse speed
 			Cvar_Set(sensitivity, va("%f",
-					bound(1, sensitivity->value + (dir * 0.05), 11)));
+					bound(1, sensitivity->value + dir, 11)));
 			break;
 		case 6:	// music volume
 			Cvar_Set(bgmvolume, va("%f",
