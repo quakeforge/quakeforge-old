@@ -1780,6 +1780,9 @@ void Host_Startdemos_f (void)
 {
 	int		i, c;
 
+	if (COM_CheckParm ("-nodemos")) // No demos, please..
+		return;
+	
 	if (cls.state == ca_dedicated)
 	{
 		if (!sv.active)
