@@ -82,6 +82,10 @@ char *svc_strings[] =
 	"svc_cutscene"
 };
 
+int		cl_spikeindex, cl_playerindex, cl_flagindex;
+int	parsecountmod;
+double	parsecounttime;
+
 //=============================================================================
 
 /*
