@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
-#include "sys.h"
+#include <sys.h>
 
 
 #include <quakedef.h>
@@ -914,7 +914,6 @@ typedef struct
 ipfilter_t	ipfilters[MAX_IPFILTERS];
 int			numipfilters;
 
-//cvar_t	filterban = {"filterban", "1"};
 cvar_t	*filterban;
 
 /*
@@ -1436,6 +1435,7 @@ void SV_InitLocal (void)
 
 	Info_SetValueForStarKey (svs.info, "*qf_version", QF_VERSION, MAX_SERVERINFO_STRING);
 	Info_SetValueForStarKey (svs.info, "*version", VERSION, MAX_SERVERINFO_STRING);
+	Info_SetValueForStarKey (svs.info, "*qsg_standard", QSG_STANDARD, MAX_SERVERINFO_STRING);
 
 	// init fraglog stuff
 	svs.logsequence = 1;

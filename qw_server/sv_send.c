@@ -556,7 +556,7 @@ void SV_UpdateClientStats (client_t *client)
 	stats[STAT_ITEMS] = (int)ent->v.items | ((int)pr_global_struct->serverflags << 28);
 
 	// Extensions to the QW 2.40 protocol for MegaTF
-	stats[STAT_VIEWHEIGHT] = (int)ent->v.view_ofs[2] - 22;
+	stats[STAT_VIEWHEIGHT] = (int)ent->v.view_ofs[2];
 	stats[STAT_FLYMODE] = (ent->v.movetype == MOVETYPE_FLY);
 
 	for (i=0 ; i<MAX_CL_STATS ; i++)

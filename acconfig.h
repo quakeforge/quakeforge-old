@@ -1,6 +1,7 @@
 /* Version strings */
 #undef QF_VERSION
 #undef VERSION
+#undef QSG_STANDARD
 
 /* Define if you want to use QF-style defaults instead of Id-style */
 #undef NEWSTYLE

@@ -297,6 +297,7 @@ typedef struct
 	int		playernum;
 	int		gametype;
 	int		maxclients;
+	int		stdver;
 
 // QW specific!
 // all player information

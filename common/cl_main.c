@@ -767,6 +767,14 @@ void CL_FullServerinfo_f (void)
 			Con_Printf("Version %s Server\n", p);
 		server_version = strdup(p);
 	}
+
+	if ((p = Info_ValueForKey(cl.serverinfo, "*qsg_standard")) && *p)
+	{
+		if ((cl.stdver = Q_atoi (p)))
+			Con_Printf("QSG standards version %i\n", cl.stdver);
+		else
+			Con_Printf("Invalid standards version: %s", p);
+	}
 }
 #endif
 
