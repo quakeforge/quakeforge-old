@@ -172,7 +172,6 @@ R_Init
 void R_Init (void)
 {	
 #ifndef QUAKEWORLD
-	extern byte *hunk_base;
 	extern cvar_t gl_finish;
 #endif /* QUAKEWORLD */
 
@@ -186,7 +185,6 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_drawentities);
 	Cvar_RegisterVariable (&r_drawviewmodel);
 	Cvar_RegisterVariable (&r_shadows);
-	Cvar_RegisterVariable (&r_mirroralpha);
 	Cvar_RegisterVariable (&r_wateralpha);
 	Cvar_RegisterVariable (&r_dynamic);
 	Cvar_RegisterVariable (&r_novis);
@@ -584,15 +582,12 @@ void R_NewMap (void)
 
 	// identify sky texture
 	skytexturenum = -1;
-	mirrortexturenum = -1;
 	for (i=0 ; i<cl.worldmodel->numtextures ; i++)
 	{
 		if (!cl.worldmodel->textures[i])
 			continue;
 		if (!Q_strncmp(cl.worldmodel->textures[i]->name,"sky",3) )
 			skytexturenum = i;
-		if (!Q_strncmp(cl.worldmodel->textures[i]->name,"window02_1",10) )
-			mirrortexturenum = i;
  		cl.worldmodel->textures[i]->texturechain = NULL;
 	}
 #ifdef QUAKE2

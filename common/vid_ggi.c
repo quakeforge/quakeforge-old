@@ -226,7 +226,7 @@ void ResetFrameBuffer(void)
 
 void	VID_Init(unsigned char *pal)
 {
-	int pnum, i;
+	int pnum;
 
 	/* Initalize sound */
 	S_Init();
@@ -788,10 +788,6 @@ static int XLateKey(ggi_key_event *ev)
 	return key;
 }
 
-static int config_notify=0;
-static int config_notify_width;
-static int config_notify_height;
-						      
 static void GetEvent(void)
 {
 	ggi_event ev;

@@ -27,7 +27,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "d_local.h"
 
 #include <stdio.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #if defined(HAVE_SYS_IO_H)
 # include <sys/io.h>
 #elif defined(HAVE_ASM_IO_H)

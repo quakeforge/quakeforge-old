@@ -207,7 +207,6 @@ extern	cvar_t	r_waterwarp;
 extern	cvar_t	r_fullbright;
 extern	cvar_t	r_lightmap;
 extern	cvar_t	r_shadows;
-extern	cvar_t	r_mirroralpha;
 extern	cvar_t	r_wateralpha;
 extern	cvar_t	r_dynamic;
 extern	cvar_t	r_novis;
@@ -240,10 +239,6 @@ extern	int		gl_alpha_format;
 
 extern	cvar_t	gl_max_size;
 extern	cvar_t	gl_playermip;
-
-extern	int			mirrortexturenum;	// quake texturenum, not gltexturenum
-extern	qboolean	mirror;
-extern	mplane_t	*mirror_plane;
 
 extern	float	r_world_matrix[16];
 

@@ -33,7 +33,9 @@
 #include <ctype.h>
 #include <errno.h>
 #include <signal.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <sys/time.h>
 #include <sys/types.h>
