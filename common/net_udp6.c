@@ -427,6 +427,7 @@ int UDP_OpenSocket (int port)
 
 	if ((newsocket = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1)
 		Sys_Error ("UDP_OpenSocket: socket:", strerror(errno));
+	// FIONBIO sets non-blocking IO for this socket
 	if (ioctl (newsocket, FIONBIO, (char *)&_true) == -1)
 		Sys_Error ("UDP_OpenSocket: ioctl FIONBIO:", strerror(errno));
 

@@ -33,14 +33,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <stdio.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <net/if.h>
 
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
 #define model_t quakeforgemodel_t
-
-#ifndef INADDR_LOOPBACK
-#define INADDR_LOOPBACK         (u_int32_t)0x7f000001
-#endif
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -64,6 +62,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #ifdef HAVE_SYS_FILIO_H
 # include <sys/filio.h>
+#endif
+
+#ifndef INADDR_LOOPBACK
+#define INADDR_LOOPBACK         (u_int32_t)0x7f000001
 #endif
 
 #undef model_t
@@ -285,7 +287,9 @@ int UDP_OpenSocket (int port)
 	int newsocket;
 	//	struct sockaddr_in address;
 	int _true = 1;
-	//const int false = 0;
+#ifdef IPV6_BINDV6ONLY
+	const int false = 0;
+#endif
 
 //	  if ((newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
 //		  return -1;
