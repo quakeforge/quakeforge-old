@@ -227,7 +227,7 @@ Cbuf_Execute_Sets (void)
 		extract_line (line);
 		// execute the command line
 		if (strncmp(line,"set",3)==0
-			&& isspace(line[3]))
+			&& isspace((int) line[3]))
 			Con_DPrintf("+%s\n",line),
 			Cmd_ExecuteString (line, src_command);
 	}
