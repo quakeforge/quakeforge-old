@@ -64,10 +64,10 @@ binary-arch: build install
 	dh_compress
 	dh_fixperms
 	# need to make -svga and -3dfx bins suid for svgalib
-	chmod 4755 quake-svga/usr/games/quake-svga
-	chmod 4755 quake-svga/usr/games/qw-client-svga
-	chmod 4755 quake-3dfx/usr/games/quake-3dfx
-	chmod 4755 quake-3dfx/usr/games/qw-client-3dfx
+	chmod 4755 debian/quake-svga/usr/games/quake-svga
+	chmod 4755 debian/quake-svga/usr/games/qw-client-svga
+	chmod 4755 debian/quake-3dfx/usr/games/quake-3dfx
+	chmod 4755 debian/quake-3dfx/usr/games/qw-client-3dfx
 	dh_suidregister
 	dh_installdeb
 	dh_shlibdeps

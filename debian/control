@@ -54,7 +54,7 @@ Description: First person shooting game - GL version
 
 Package: quake-3dfx
 Architecture: any
-Depends: ${shlibs:Depends}, mesag3-glide (>= 3.1-1), libglide2, quake-lib (>= 1.06-4) | quake-lib-stub
+Depends: ${shlibs:Depends}, mesag3-glide2 (>= 3.1-1), libglide2, quake-lib (>= 1.06-4) | quake-lib-stub
 Provides: quake
 Replaces: glquake-3dfxgl, quake-common
 Description: First person shooting game - 3dfx GL version
