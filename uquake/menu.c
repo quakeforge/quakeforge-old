@@ -1,6 +1,8 @@
 /*
-Copyright (C) 1996-1997 Id Software, Inc.
-Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1996-1997  Id Software, Inc.
+Copyright (C) 1999-2000  Nelson Rush.
+Copyright (C) 2000       contributors of the QuakeForge project
+Copyright (C) 2000       Marcus Sundberg [mackan@stacken.kth.se]
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -1071,6 +1073,7 @@ static int	options_cursor;
 
 #define 	options_items (L_OPTIONS_ITEMS+VID_options_items)
 
+
 void M_Menu_Options_f (void)
 {
 	key_dest = key_menu;
@@ -1163,7 +1166,7 @@ void M_AdjustSliders (int dir)
 		break;
 
 	default:
-		VID_ExtraOptionCmd(L_OPTIONS_ITEMS-options_cursor);
+		VID_ExtraOptionCmd(options_cursor + 2 - L_OPTIONS_ITEMS);
 	}
 }
 
@@ -1199,16 +1202,15 @@ void M_DrawCheckbox (int x, int y, int on)
 
 void M_Options_Draw (void)
 {
-	float		r;
-	qpic_t	*p;
-
 	unsigned int	options_draw_cursor=32;
+	float		r;
+	qpic_t		*p;
 
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
 	p = Draw_CachePic ("gfx/p_option.lmp");
 	M_DrawPic ( (320-p->width)/2, 4, p);
 
-	M_Print (16, options_draw_cursor, "    Customize controls");
+	M_Print (16, options_draw_cursor,    "    Customize controls");
 	M_Print (16, options_draw_cursor+=8, "         Go to console");
 	M_Print (16, options_draw_cursor+=8, "     Reset to defaults");
 
@@ -1232,7 +1234,7 @@ void M_Options_Draw (void)
 	r = volume.value;
 	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, options_draw_cursor+=8,  "            Always Run");
+	M_Print (16, options_draw_cursor+=8, "            Always Run");
 	M_DrawCheckbox (220, options_draw_cursor, cl_forwardspeed.value
 > 200);
 
@@ -1248,10 +1250,11 @@ void M_Options_Draw (void)
 	VID_ExtraOptionDraw(options_draw_cursor);
 	options_draw_cursor+=VID_options_items*8;
 
-	if (vid_menudrawfn)
+	if (vid_menudrawfn) {
 		M_Print (16, options_draw_cursor+=8, "         Video Options");
+	}
 
-// cursor
+	/* cursor */
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
 
@@ -1316,34 +1319,8 @@ void M_Options_Key (int k)
 		M_AdjustSliders (1);
 		break;
 	}
-
-#ifndef _WIN32
-	if (options_cursor == options_items-1 && vid_menudrawfn == NULL)
-	{
-	    switch (k) {
-		case KP_UPARROW:
-		case K_UPARROW:
-		    options_cursor = options_items-2;
-		    break;
-		default:
-		    options_cursor = 0;
-	    }
-	}
-#else
-	if (options_cursor == options_items-1)
-	{
-	    switch (k) {
-		case KP_UPARROW:
-		case K_UPARROW:
-		    options_cursor = options_items-2;
-		    break;
-		default:
-		    options_cursor = 0;
-	    }
-	}
-#endif
-
 }
+
 
 //=============================================================================
 /* KEYS MENU */
