@@ -376,7 +376,7 @@ void IN_Shutdown (void)
     mouse_avail = 0;
 }
 
-void IN_Commands (void)
+void IN_Frame(void)
 {
     int i;
     int mouse_buttonstate;

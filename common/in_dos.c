@@ -192,11 +192,11 @@ void IN_Shutdown (void)
 
 
 /*
-===========
-IN_Commands
-===========
+========
+IN_Frame
+========
 */
-void IN_Commands (void)
+void IN_Frame(void)
 {
 	int		i;
 

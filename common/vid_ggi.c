@@ -884,7 +884,8 @@ void IN_Frame(void)
 }
 
 
-void IN_Init(void)
+void
+IN_Init(void)
 {
 	Cvar_RegisterVariable(&m_filter);
 	if (COM_CheckParm ("-nomouse")) return;
@@ -893,17 +894,16 @@ void IN_Init(void)
 	mouse_avail = 1;
 }
 
-void IN_Shutdown(void)
+
+void
+IN_Shutdown(void)
 {
 	mouse_avail = 0;
 }
 
-void IN_Commands(void)
-{
-	/* Mouse buttons are sent from GetEvent() */
-}
 
-void IN_Move(usercmd_t *cmd)
+void
+IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail) return;
    
@@ -940,14 +940,18 @@ void IN_Move(usercmd_t *cmd)
 	mouse_x = mouse_y = 0.0;
 }
 
-void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
+
+void
+VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
         M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse.value);
 }
 
-void VID_ExtraOptionCmd(int option_cursor)
+
+void
+VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) {
 	case 1:	// _windowed_mouse

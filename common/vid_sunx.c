@@ -1164,7 +1164,7 @@ IN_Shutdown(void)
 
 
 void
-IN_Commands(void)
+IN_Frame(void)
 {
 	/* Nothing to do here */
 }

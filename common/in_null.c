@@ -19,31 +19,43 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// in_null.c -- for systems without a mouse
+// in_null.c -- for systems without inputs...
 
 #include "quakedef.h"
+#include "input.h"
 
-void IN_Init (void)
+
+void
+IN_Init(void)
 {
 }
 
-void IN_Shutdown (void)
+
+void
+IN_Shutdown(void)
 {
 }
 
-void IN_Commands (void)
+
+void
+IN_Frame(void)
 {
 }
 
-void IN_Move (usercmd_t *cmd)
+
+void
+IN_Move(usercmd_t *cmd)
 {
 }
 
-void IN_ModeChanged (void)
+
+void
+IN_ModeChanged(void)
 {
 }
 
-void IN_ClearStates (void)
+
+void
+IN_ClearStates(void)
 {
 }
-

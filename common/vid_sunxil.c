@@ -1190,12 +1190,16 @@ void IN_Init (void)
    mouse_avail = 1;
 }
 
-void IN_Shutdown (void)
+
+void
+IN_Shutdown(void)
 {
-   mouse_avail = 0;
+	mouse_avail = 0;
 }
 
-void IN_Commands (void)
+
+void
+IN_Frame(void)
 {
 	int i;
    

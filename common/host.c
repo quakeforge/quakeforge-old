@@ -252,12 +252,9 @@ Host_FrameMain ( float time )
 	if ( !Host_FilterTime(time) )
 		return;
 		
-	// get new key events
+	// get new events
 	IN_SendKeyEvents ();
 	IN_Frame();
-
-	// allow mice or other external controllers to add commands
-	IN_Commands ();
 
 	// process console commands
 	Cbuf_Execute ();

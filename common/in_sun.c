@@ -164,11 +164,11 @@ void IN_Shutdown (void)
 	XAutoRepeatOn( x_disp );
 }
 
-//
-// IN_Commands - process buttons
-//
+/*
+  IN_Frame
+*/
 
-void IN_Commands (void)
+void IN_Frame(void)
 {
 	// done in X event handler
 }
@@ -178,7 +178,7 @@ void IN_Commands (void)
 //
 
 void
-IN_Move (usercmd_t *cmd)
+IN_Move(usercmd_t *cmd)
 {
 	static int last_dx, last_dy;
 	static long long last_movement;

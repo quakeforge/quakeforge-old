@@ -27,7 +27,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 int IN_Init();
 void IN_Shutdown();
 void IN_SendKeyEvents();
-void IN_Commands();
 void IN_Move();
 void IN_Frame();
 

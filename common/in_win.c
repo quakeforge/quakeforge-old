@@ -950,11 +950,13 @@ void Joy_AdvancedUpdate_f (void)
 
 
 /*
-===========
-IN_Commands
-===========
+========
+IN_Frame
+========
 */
-void IN_Commands (void)
+
+void
+IN_Frame(void)
 {
 	int		i, key_index;
 	DWORD	buttonstate, povstate;

@@ -261,7 +261,9 @@ static void event_motion(XEvent *event)
 			}
 }
 
-void IN_Frame()
+
+void
+IN_Frame(void)
 {
 	if (old_windowed_mouse != _windowed_mouse.value) {
 		old_windowed_mouse = _windowed_mouse.value;
@@ -277,15 +279,12 @@ void IN_Frame()
 	}
 }
 
-void IN_SendKeyEvents(void)
+
+void
+IN_SendKeyEvents(void)
 {
 	/* Get events from X server. */
 	x11_process_events();
-}
-
-void IN_Commands(void)
-{
-	/* Nothing to do here */
 }
 
 

@@ -291,7 +291,7 @@ void IN_SendKeyEvents(void)
 }
 
 
-void IN_Commands(void)
+void IN_Frame(void)
 {
 #ifdef QUAKEWORLD
 	if (UseMouse)
@@ -378,8 +378,4 @@ void IN_Move(usercmd_t *cmd)
 			cmd->forwardmove -= m_forward.value * mouse_y;
 		}
 	}
-}
-
-void IN_Frame()
-{
 }
