@@ -416,7 +416,7 @@ no_lf:
 						i = MAXCMDLINE-1 - strlen(key_lines[edit_line]);
 					if (i > 0)
 					{	// insert the string
-						memcpy (key_lines[edit_line] + key_linepos + i,
+						memmove (key_lines[edit_line] + key_linepos + i,
 							key_lines[edit_line] + key_linepos, strlen(key_lines[edit_line]) - key_linepos + 1);
 						memcpy (key_lines[edit_line] + key_linepos, textCopied, i);
 						key_linepos += i;
@@ -434,19 +434,14 @@ no_lf:
 	if (key < 32 || key > 127)
 		return;	// non printable
 
-	if (key_linepos < MAXCMDLINE-1)
-	{
-		i = strlen(key_lines[edit_line]) - 1;
-		if (i == MAXCMDLINE-2) i--;
-		for (; i >= key_linepos; i--)
-			key_lines[edit_line][i + 1] = key_lines[edit_line][i];
-		i = key_lines[edit_line][key_linepos];
-		key_lines[edit_line][key_linepos] = key;
-		key_linepos++;
-		if (!i)	// // only null terminate if at the end
-			key_lines[edit_line][key_linepos] = 0;
-	}
+	i = strlen(key_lines[edit_line]);
+	if (i >= MAXCMDLINE-1)
+		return;
 
+	// This also moves the ending \0
+	memmove (key_lines[edit_line]+key_linepos+1, key_lines[edit_line]+key_linepos, i-key_linepos+1);
+	key_lines[edit_line][key_linepos] = key;
+	key_linepos++;
 }
 
 //============================================================================
