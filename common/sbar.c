@@ -69,11 +69,9 @@ qpic_t      *hsb_items[2];
 #endif
 
 #ifdef QUAKEWORLD
-void Sbar_DeathmatchOverlay (int start);
 void Sbar_TeamOverlay (void);
-#else
-void Sbar_DeathmatchOverlay (void);
 #endif
+void Sbar_DeathmatchOverlay (int start);
 void Sbar_MiniDeathmatchOverlay (void);
 
 #ifdef QUAKEWORLD
@@ -328,14 +326,14 @@ Sbar_DrawPic
 */
 void Sbar_DrawPic (int x, int y, qpic_t *pic)
 {
-#ifdef QUAKEWORLD
-	Draw_Pic (x, y + (vid.height-SBAR_HEIGHT), pic);
-#else
-	if (cl.gametype == GAME_DEATHMATCH)
-		Draw_Pic (x, y + (vid.height-SBAR_HEIGHT), pic);
+#ifndef QUAKEWORLD
+	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+			&& (hipnotic || rogue))
+		Draw_Pic (x + ((vid.width - 320)>>1), 
+				y + (vid.height-SBAR_HEIGHT), pic);
 	else
-		Draw_Pic (x + ((vid.width - 320)>>1), y + (vid.height-SBAR_HEIGHT), pic);
-#endif	// QUAKEWORLD
+#endif
+		Draw_Pic (x, y + (vid.height-SBAR_HEIGHT), pic);
 }
 
 /*
@@ -344,17 +342,19 @@ Sbar_DrawSubPic
 =============
 JACK: Draws a portion of the picture in the status bar.
 */
-
-void Sbar_DrawSubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int height) 
+void Sbar_DrawSubPic(int x, int y, qpic_t *pic, 
+		int srcx, int srcy, int width, int height) 
 {
-#ifdef QUAKEWORLD
-	Draw_SubPic (x, y + (vid.height-SBAR_HEIGHT), pic, srcx, srcy, width, height);
-#else
-	if (cl.gametype == GAME_DEATHMATCH)
-		Draw_SubPic (x, y + (vid.height-SBAR_HEIGHT), pic, srcx, srcy, width, height);
+#ifndef QUAKEWORLD
+	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+			&& (hipnotic || rogue))
+		Draw_SubPic (x + ((vid.width - 320)>>1), 
+				y + (vid.height-SBAR_HEIGHT), 
+				pic, srcx, srcy, width, height);
 	else
-		Draw_SubPic (x + ((vid.width - 320)>>1), y + (vid.height-SBAR_HEIGHT), pic, srcx, srcy, width, height);
-#endif	// QUAKEWORLD
+#endif
+		Draw_SubPic (x, y + (vid.height-SBAR_HEIGHT), 
+				pic, srcx, srcy, width, height);
 }
 
 
@@ -365,14 +365,14 @@ Sbar_DrawTransPic
 */
 void Sbar_DrawTransPic (int x, int y, qpic_t *pic)
 {
-#ifdef QUAKEWORLD
-	Draw_TransPic (x, y + (vid.height-SBAR_HEIGHT), pic);
-#else
-	if (cl.gametype == GAME_DEATHMATCH)
-		Draw_TransPic (x, y + (vid.height-SBAR_HEIGHT), pic);
+#ifndef QUAKEWORLD
+	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+			&& (hipnotic || rogue))
+		Draw_TransPic (x + ((vid.width - 320)>>1), 
+				y + (vid.height-SBAR_HEIGHT), pic);
 	else
-		Draw_TransPic (x + ((vid.width - 320)>>1), y + (vid.height-SBAR_HEIGHT), pic);
-#endif	// QUAKEWORLD
+#endif
+		Draw_TransPic (x, y + (vid.height-SBAR_HEIGHT), pic);
 }
 
 /*
@@ -384,14 +384,14 @@ Draws one solid graphics character
 */
 void Sbar_DrawCharacter (int x, int y, int num)
 {
-#ifdef QUAKEWORLD
-	Draw_Character (x + 4, y + (vid.height-SBAR_HEIGHT), num);
-#else
-	if (cl.gametype == GAME_DEATHMATCH)
-		Draw_Character (x + 4, y + (vid.height-SBAR_HEIGHT), num);
+#ifndef QUAKEWORLD
+	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+			&& (hipnotic || rogue))
+		Draw_Character (x + ((vid.width - 320)>>1) + 4, 
+				y + (vid.height-SBAR_HEIGHT), num);
 	else
-		Draw_Character (x + ((vid.width - 320)>>1) + 4, y + (vid.height-SBAR_HEIGHT), num);
-#endif	// QUAKEWORLD
+#endif
+		Draw_Character (x + 4, y + (vid.height-SBAR_HEIGHT), num);
 }
 
 /*
@@ -401,14 +401,14 @@ Sbar_DrawString
 */
 void Sbar_DrawString (int x, int y, char *str)
 {
-#ifdef QUAKEWORLD
-	Draw_String (x, y + (vid.height-SBAR_HEIGHT), str);
-#else
-	if (cl.gametype == GAME_DEATHMATCH)
-		Draw_String (x, y + (vid.height-SBAR_HEIGHT), str);
+#ifndef QUAKEWORLD
+	if ((cl_sbar.value && !cl.gametype == GAME_DEATHMATCH)
+			&& (hipnotic || rogue))
+		Draw_String (x + ((vid.width - 320)>>1), 
+				y + (vid.height-SBAR_HEIGHT), str);
 	else
-		Draw_String (x + ((vid.width - 320)>>1), y + (vid.height-SBAR_HEIGHT), str);
-#endif	// QUAKEWORLD
+#endif
+		Draw_String (x, y + (vid.height-SBAR_HEIGHT), str);
 }
 
 /*
@@ -685,7 +685,7 @@ void Sbar_DrawScoreboard (void)
 #ifndef QUAKEWORLD
 	Sbar_SoloScoreboard ();
 	if (cl.gametype == GAME_DEATHMATCH)
-		Sbar_DeathmatchOverlay ();
+		Sbar_DeathmatchOverlay (0);
 #endif // !QUAKEWORLD
 }
 
@@ -699,28 +699,33 @@ Sbar_DrawInventory
 void Sbar_DrawInventory (void)
 {	
 	int		i;
-	char	num[6];
-	float	time;
+	char		num[6];
+	float		time;
 	int		flashon;
-#ifdef QUAKEWORLD
 	qboolean	headsup;
-	qboolean    hudswap;
+	qboolean    	hudswap;
 
 	headsup = !(cl_sbar.value || scr_viewsize.value<100);
 	hudswap = cl_hudswap.value; // Get that nasty float out :)
 
-	if (!headsup)
-		Sbar_DrawPic (0, -24, sb_ibar);
-#else
+#ifndef QUAKEWORLD
+	if (hipnotic)
+		headsup = false;
+	
 	if (rogue) {
+		headsup = false;
 		if ( cl.stats[STAT_ACTIVEWEAPON] >= RIT_LAVA_NAILGUN )
 			Sbar_DrawPic (0, -24, rsb_invbar[0]);
 		else
 			Sbar_DrawPic (0, -24, rsb_invbar[1]);
 	} else {
-		Sbar_DrawPic (0, -24, sb_ibar);
+		if (!headsup)
+			Sbar_DrawPic (0, -24, sb_ibar);
 	}
-#endif
+#else
+	if (!headsup)
+		Sbar_DrawPic (0, -24, sb_ibar);
+#endif // !QUAKEWORLD
 // weapons
 	for (i=0 ; i<7 ; i++)
 	{
@@ -738,14 +743,12 @@ void Sbar_DrawInventory (void)
 			else
 				flashon = (flashon%5) + 2;
 
-#ifdef QUAKEWORLD
 			if (headsup) {
 				if (i || vid.height>200)
 					Sbar_DrawSubPic ((hudswap) ? 0 : (vid.width-24),-68-(7-i)*16 , sb_weapons[flashon][i],0,0,24,16);
 			
 			} else 
-#endif	// QUAKEWORLD
-			Sbar_DrawPic (i*24, -16, sb_weapons[flashon][i]);
+				Sbar_DrawPic (i*24, -16, sb_weapons[flashon][i]);
 
 			if (flashon > 1)
 				sb_updates = 0;		// force update to remove flash
@@ -812,7 +815,6 @@ void Sbar_DrawInventory (void)
 	for (i=0 ; i<4 ; i++)
 	{
 		snprintf(num, sizeof(num), "%3i",cl.stats[STAT_SHELLS+i] );
-#ifdef QUAKEWORLD		
 		if (headsup) {
 			Sbar_DrawSubPic((hudswap) ? 0 : (vid.width-42), -24 - (4-i)*11, sb_ibar, 3+(i*48), 0, 42, 11);
 			if (num[0] != ' ')
@@ -822,16 +824,13 @@ void Sbar_DrawInventory (void)
 			if (num[2] != ' ')
 				Sbar_DrawCharacter ( (hudswap) ? 19 : (vid.width-23), -24 - (4-i)*11, 18 + num[2] - '0');
 		} else {
-#endif	// QUAKEWORLD
-		if (num[0] != ' ')
-			Sbar_DrawCharacter ( (6*i+1)*8 - 2, -24, 18 + num[0] - '0');
-		if (num[1] != ' ')
-			Sbar_DrawCharacter ( (6*i+2)*8 - 2, -24, 18 + num[1] - '0');
-		if (num[2] != ' ')
-			Sbar_DrawCharacter ( (6*i+3)*8 - 2, -24, 18 + num[2] - '0');
-#ifdef QUAKEWORLD
+			if (num[0] != ' ')
+				Sbar_DrawCharacter ( (6*i+1)*8 - 2, -24, 18 + num[0] - '0');
+			if (num[1] != ' ')
+				Sbar_DrawCharacter ( (6*i+2)*8 - 2, -24, 18 + num[1] - '0');
+			if (num[2] != ' ')
+				Sbar_DrawCharacter ( (6*i+3)*8 - 2, -24, 18 + num[2] - '0');
 		}
-#endif // QUAKEWORLD
 	}
 	
 	flashon = 0;
@@ -1200,6 +1199,9 @@ void Sbar_Draw (void)
 
 	if (scr_con_current == vid.height)
 		return;		// console is full screen
+
+	if (!headsup && sb_lines && vid.width > 320)
+		Draw_TileClear (0, vid.height - sb_lines, vid.width, sb_lines);
 
 #ifndef QUAKEWORLD
 	if (sb_lines > 24)
@@ -1739,7 +1741,7 @@ void Sbar_MiniDeathmatchOverlay (void)
 
 }
 #else
-void Sbar_DeathmatchOverlay (void)
+void Sbar_DeathmatchOverlay (int start)
 {
 	qpic_t			*pic;
 	int				i, k, l;
@@ -1939,7 +1941,7 @@ void Sbar_IntermissionOverlay (void)
 		Sbar_DeathmatchOverlay (0);
 #else
 	if (cl.gametype == GAME_DEATHMATCH) {
-		Sbar_DeathmatchOverlay ();
+		Sbar_DeathmatchOverlay (0);
 		return;
 	}
 
