@@ -76,11 +76,13 @@ dnl Checks for working -lm
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([math library (-lm) appears broken]))
 
 dnl Checks for X11 support
+dnl (XoXus: Since vid_x.c relies on XShm being there, this now disables
+dnl  the X11 video driver if -lXext can't be found)
 AC_PATH_XTRA
 if test "x$no_x" = x; then
    HAS_X11=yes
    AC_CHECK_LIB(Xext, XShmQueryExtension, [X11_SHM_LIB=-lXext],
-     [X11_SHM_LIB=""], [ $X_LIBS -lX11 $X_EXTRA_LIBS ])
+     [HAS_X11="no"], [ $X_LIBS -lX11 $X_EXTRA_LIBS ])
 fi
 
 dnl Check for DGA support

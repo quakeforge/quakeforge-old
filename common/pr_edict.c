@@ -860,7 +860,9 @@ char *ED_ParseEdict (char *data, edict_t *ent)
 	qboolean	anglehack;
 	qboolean	init;
 	char		keyname[256];
+#ifndef QUAKEWORLD
 	int			n;
+#endif
 
 	init = false;
 

@@ -713,9 +713,9 @@ char *PR_GetString(int num)
 
 int PR_SetString(char *s)
 {
+#ifdef QUAKEWORLD		/* XoXus: moved this back to include 'i' */
 	int i;
 
-#ifdef QUAKEWORLD
 	if (s - pr_strings < 0) {
 		for (i = 0; i <= num_prstr; i++)
 			if (pr_strtbl[i] == s)

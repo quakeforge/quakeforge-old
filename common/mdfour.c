@@ -19,6 +19,8 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#include <string.h>		/* XoXus: needed for memset call */
+
 #ifndef _UINT32_H
 #include <uint32.h>
 #endif	// _UINT32_H
