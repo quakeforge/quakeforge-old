@@ -467,6 +467,7 @@ SV_PushMove ( edict_t *pusher, float movetime )
 	int			num_moved;
 	edict_t		*moved_edict[MAX_EDICTS];
 	vec3_t		moved_from[MAX_EDICTS];
+	float		solid_backup;		// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes
 
 	if (!pusher->v.velocity[0] && !pusher->v.velocity[1] && !pusher->v.velocity[2])
 	{
@@ -531,13 +532,29 @@ SV_PushMove ( edict_t *pusher, float movetime )
 		moved_edict[num_moved] = check;
 		num_moved++;
 
-		// try moving the contacted entity
-		pusher->v.solid = SOLID_NOT;
-		SV_PushEntity (check, move);
-		pusher->v.solid = SOLID_BSP;
+// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes  start
+		solid_backup = pusher->v.solid;
+		if ( solid_backup == SOLID_BSP		// everything that blocks: bsp models==map brushes==doors,plats,etc.
+		|| solid_backup == SOLID_BBOX		// normally boxes
+		|| solid_backup == SOLID_SLIDEBOX )	// normally monsters
+		{
+// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes  end
+			// try moving the contacted entity
+			pusher->v.solid = SOLID_NOT;
+			SV_PushEntity (check, move);
+// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes  start
+//			pusher->v.solid = SOLID_BSP;
+			pusher->v.solid = solid_backup;
+// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes  end
 
-	// if it is still inside the pusher, block
-		block = SV_TestEntityPosition (check);
+		// if it is still inside the pusher, block
+			block = SV_TestEntityPosition (check);
+// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes  start
+		}
+		else
+			block = NULL;
+// 1999-10-07 MOVETYPE_PUSH fix by Lord Havoc/Maddes  end
+
 		if (block)
 		{	// fail the move
 			if (check->v.mins[0] == check->v.maxs[0])

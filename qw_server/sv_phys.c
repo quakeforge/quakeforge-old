@@ -462,6 +462,7 @@ SV_Push ( edict_t *pusher, vec3_t move )
 	int			num_moved;
 	edict_t		*moved_edict[MAX_EDICTS];
 	vec3_t		moved_from[MAX_EDICTS];
+	float		solid_save;	// for Lord Havoc's SOLID_BSP fix --KB
 
 	for (i=0 ; i<3 ; i++)
 	{
@@ -488,9 +489,12 @@ SV_Push ( edict_t *pusher, vec3_t move )
 		|| check->v.movetype == MOVETYPE_NOCLIP)
 			continue;
 
+		// Don't assume SOLID_BSP !  --KB
+		solid_save = pusher->v.solid;
 		pusher->v.solid = SOLID_NOT;
 		block = SV_TestEntityPosition (check);
-		pusher->v.solid = SOLID_BSP;
+	//	pusher->v.solid = SOLID_BSP;
+		pusher->v.solid = solid_save;
 		if (block)
 		{
 //			Con_Printf ("blocked..  %i\n", block);
