@@ -378,10 +378,9 @@ void CL_ParseDownload (void)
 		if (strncmp(cls.downloadtempname,"skins/",6))
 			snprintf(name, sizeof(name), "%s/%s", com_gamedir, cls.downloadtempname);
 		else
-			snprintf(name, sizeof(name), "qw/%s", cls.downloadtempname);
+			snprintf(name, sizeof(name), "%s/qw/%s", fs_basepath->string, cls.downloadtempname);
 
 		COM_CreatePath (name);
-
 		cls.download = Qopen (name, "wb");
 		if (!cls.download)
 		{
@@ -429,10 +428,10 @@ void CL_ParseDownload (void)
 				snprintf(oldn, sizeof(oldn), "%s/%s", com_gamedir, cls.downloadtempname);
 				snprintf(newn, sizeof(newn), "%s/%s", com_gamedir, cls.downloadname);
 			} else {
-				snprintf(oldn, sizeof(oldn), "qw/%s", cls.downloadtempname);
-				snprintf(newn, sizeof(newn), "qw/%s", cls.downloadname);
+				snprintf(oldn, sizeof(oldn), "%s/qw/%s", fs_basepath->string, cls.downloadtempname);
+				snprintf(newn, sizeof(newn), "%s/qw/%s", fs_basepath->string, cls.downloadname);
 			}
-			r = rename (oldn, newn);
+			r = Qrename (oldn, newn);
 			if (r)
 				Con_Printf ("failed to rename.\n");
 		}

@@ -52,9 +52,6 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
-#ifndef _WIN32
-#include <pwd.h>
-#endif
 
 #ifdef WIN32
 #include <io.h>
@@ -277,6 +274,10 @@ void
 COM_CreatePath ( char *path )
 {
 	char	*ofs;
+	char	e_path[PATH_MAX];
+
+	Qexpand_squiggle (path, e_path);
+	path = e_path;
 
 	for (ofs = path+1 ; *ofs ; ofs++) {
 		if (*ofs == '/') {	// create the directory
@@ -826,41 +827,18 @@ COM_AddDirectory (char *dir)
 {
 	searchpath_t	*search;
 	char			*p;
+	char			e_dir[PATH_MAX];
 
-	if (strncmp (dir, "~/", 2) == 0) {
-		char *home;
-		char *tmp;
+	Qexpand_squiggle (dir, e_dir);
+	dir = e_dir;
 
-#ifndef _WIN32
-		struct passwd *pwd_ent;
-		if ((pwd_ent = getpwuid (getuid()))) {
-			home = pwd_ent->pw_dir;
-			printf("%p\n",pwd_ent);
-		} else
-#endif
-		
-		home = getenv("HOME");
-
-		if (home)
-		{
-#if !defined(_WIN32)
-			tmp = alloca(strlen(home)+strlen(dir));
-#else
-			tmp = malloc(strlen(home)+strlen(dir));
-#endif
-			strcpy (tmp, home);
-			strcat (tmp, dir+1); // skip leading ~
-			dir=tmp;
-		}
-		//if (pwd_ent)
-		//	free (pwd_ent);
+	if ((p = strrchr(dir, '/')) != NULL) {
+		strcpy (gamedirfile, ++p);
+		strcpy (com_gamedir, dir);
+	} else {
+		strcpy (gamedirfile, dir);
+		strcpy (com_gamedir, va("%s/%s", fs_basepath->string, dir));
 	}
-
-	if ((p = strrchr(dir, '/')) != NULL)
-		strcpy(gamedirfile, ++p);
-	else
-		strcpy(gamedirfile, dir);
-	strcpy (com_gamedir, dir);
 
 //
 // add the directory to the search path
@@ -962,7 +940,7 @@ void COM_Gamedir_f (void)
 
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf ("Current gamedir: %s\n", com_gamedir);
+		Con_Printf ("Current gamedir: %s\n", gamedirfile);
 		return;
 	}
 

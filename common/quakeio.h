@@ -46,6 +46,8 @@ typedef struct {
 #endif
 } QFile;
 
+void Qexpand_squiggle(const char *path, char *dest);
+int Qrename(const char *old, const char *new);
 QFile *Qopen(const char *path, const char *mode);
 QFile *Qdopen(int fd, const char *mode);
 void Qclose(QFile *file);

@@ -54,5 +54,7 @@ extern cvar_t	*r_reportedgeout;
 extern cvar_t	*r_maxedges;
 extern cvar_t	*r_numedges;
 extern cvar_t	*developer;
+extern cvar_t	*fs_basepath;
+extern cvar_t	*fs_sharepath;
 
 #endif /* _CVARS_H */

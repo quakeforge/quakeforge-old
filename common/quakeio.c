@@ -32,19 +32,66 @@
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif
+#include <limits.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <quakeio.h>
+#include <string.h>
 #ifdef WIN32
 #include <io.h>
 #include <fcntl.h>
+#else
+#include <pwd.h>
 #endif
 
-QFile *Qopen(const char *path, const char *mode)
+void
+Qexpand_squiggle(const char *path, char *dest)
+{
+	char *home;
+#ifndef _WIN32
+	struct passwd *pwd_ent;
+#endif
+
+	if (strncmp (path, "~/",2) != 0) {
+		strcpy (dest,path);
+		return;
+	}
+
+#ifndef _WIN32
+	if ((pwd_ent = getpwuid (getuid()))) {
+		home = pwd_ent->pw_dir;
+	} else
+#endif
+		home = getenv("HOME");
+
+	if (home) {
+		strcpy (dest, home);
+		strcat (dest, path+1); // skip leading ~
+	} else
+		strcpy (dest,path);
+}
+
+int
+Qrename(const char *old, const char *new)
+{
+	char e_old[PATH_MAX];
+	char e_new[PATH_MAX];
+
+	Qexpand_squiggle (old, e_old);
+	Qexpand_squiggle (new, e_new);
+	return rename (e_old, e_new);
+}
+
+QFile *
+Qopen(const char *path, const char *mode)
 {
 	QFile *file;
 	char m[80],*p;
 	int zip=0;
+	char e_path[PATH_MAX];
+
+	Qexpand_squiggle (path, e_path);
+	path = e_path;
 
 	for (p=m; *mode && p-m<(sizeof(m)-1); mode++) {
 		if (*mode=='z') {
@@ -77,7 +124,8 @@ QFile *Qopen(const char *path, const char *mode)
 	return file;
 }
 
-QFile *Qdopen(int fd, const char *mode)
+QFile *
+Qdopen(int fd, const char *mode)
 {
 	QFile *file;
 	char m[80],*p;
@@ -118,7 +166,8 @@ QFile *Qdopen(int fd, const char *mode)
 	return file;
 }
 
-void Qclose(QFile *file)
+void
+Qclose(QFile *file)
 {
 	if (file->file)
 		fclose(file->file);
@@ -129,7 +178,8 @@ void Qclose(QFile *file)
 	free(file);
 }
 
-int Qread(QFile *file, void *buf, int count)
+int
+Qread(QFile *file, void *buf, int count)
 {
 	if (file->file)
 		return fread(buf, 1, count, file->file);
@@ -141,7 +191,8 @@ int Qread(QFile *file, void *buf, int count)
 #endif
 }
 
-int Qwrite(QFile *file, void *buf, int count)
+int
+Qwrite(QFile *file, void *buf, int count)
 {
 	if (file->file)
 		return fwrite(buf, 1, count, file->file);
@@ -153,7 +204,8 @@ int Qwrite(QFile *file, void *buf, int count)
 #endif
 }
 
-int Qprintf(QFile *file, const char *fmt, ...)
+int
+Qprintf(QFile *file, const char *fmt, ...)
 {
 	va_list args;
 	int ret=-1;
@@ -180,7 +232,8 @@ int Qprintf(QFile *file, const char *fmt, ...)
 	return ret;
 }
 
-char *Qgets(QFile *file, char *buf, int count)
+char *
+Qgets(QFile *file, char *buf, int count)
 {
 	if (file->file)
 		return fgets(buf, count, file->file);
@@ -192,7 +245,8 @@ char *Qgets(QFile *file, char *buf, int count)
 #endif
 }
 
-int Qgetc(QFile *file)
+int
+Qgetc(QFile *file)
 {
 	if (file->file)
 		return fgetc(file->file);
@@ -204,7 +258,8 @@ int Qgetc(QFile *file)
 #endif
 }
 
-int Qputc(QFile *file, int c)
+int
+Qputc(QFile *file, int c)
 {
 	if (file->file)
 		return fputc(c, file->file);
@@ -216,7 +271,8 @@ int Qputc(QFile *file, int c)
 #endif
 }
 
-int Qseek(QFile *file, long offset, int whence)
+int
+Qseek(QFile *file, long offset, int whence)
 {
 	if (file->file)
 		return fseek(file->file, offset, whence);
@@ -228,7 +284,8 @@ int Qseek(QFile *file, long offset, int whence)
 #endif
 }
 
-long Qtell(QFile *file)
+long
+Qtell(QFile *file)
 {
 	if (file->file)
 		return ftell(file->file);
@@ -240,7 +297,8 @@ long Qtell(QFile *file)
 #endif
 }
 
-int Qflush(QFile *file)
+int
+Qflush(QFile *file)
 {
 	if (file->file)
 		return fflush(file->file);
@@ -252,7 +310,8 @@ int Qflush(QFile *file)
 #endif
 }
 
-int Qeof(QFile *file)
+int
+Qeof(QFile *file)
 {
 	if (file->file)
 		return feof(file->file);
