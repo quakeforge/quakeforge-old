@@ -17,9 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-#if defined(__linux__)
-	#include "cd_linux.c"
-#else
-	#include "cd_null.c"
+#if defined(SDL)
+	#include "cd_sdl.c"
+#else 
+	#if defined(__linux__)
+		#include "cd_linux.c"
+	#else
+		#include "cd_null.c"
+	#endif
 #endif

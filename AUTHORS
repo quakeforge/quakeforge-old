@@ -51,3 +51,7 @@ Math fixes/optimizations:
 Documentation:
   Nelson J. Rush <chesterrr@att.net>
   Joseph Carter <knghtbrd@debian.org>
+
+SDL Support:
+  Sam Lantinga <slouken@devolution.com>
+  Maas van den Berg <email@dds.nl>

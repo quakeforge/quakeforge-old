@@ -27,6 +27,7 @@ HAS_TDFXGL = @HAS_TDFXGL@
 HAS_OGL    = @HAS_OGL@
 HAS_XIL    = @HAS_XIL@
 HAS_X11    = @HAS_X11@
+HAS_SDL    = @HAS_SDL@
 
 MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
                 then \
@@ -62,6 +63,10 @@ ifeq ($(HAS_GGI),yes)
 GGIQUAKE = $(BIN_PREFIX)-ggi
 endif
 
+ifeq ($(HAS_SDL),yes)
+SDLQUAKE = $(BIN_PREFIX)-sdl
+endif
+
 RELEASE = @RELEASE@
 ifeq ($(RELEASE),yes)
 OPTFLAGS = @RELEASE_CFLAGS@
@@ -69,7 +74,7 @@ else
 OPTFLAGS = -g
 endif
 
-targets       = $(GGIQUAKE) $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE)
+targets       = $(GGIQUAKE) $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE) $(SDLQUAKE)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) ($CLEAN_TARGETS)
 
@@ -460,6 +465,54 @@ clean-$(TDFXQUAKE):
 	rm -f $(OBJSquake-3dfx)
 endif
 
+
+###########################################################################
+#
+# qw-client-sdl
+#
+ifneq ($(SDLQUAKE),)
+ALL_SDL_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(SDL_VID_SRC) model.c
+OBJSquake-sdl= $(patsubst %,$(BUILD_DIR)/sdl/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_SDL_SRC) .c .s)))
+
+SDL_CFLAGS  = @SDL_CFLAGS@
+SDL_LDFLAGS = @SDL_LIBS@ -lm
+SDL_VID_SRC = vid_sdl.c
+
+# This can be thought of as a macro that makes sure that the x11
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_sdl_DIR = @DIR=sdl; $(MAKE_SURE_DIR)
+
+$(BUILD_DIR)/sdl/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_sdl_DIR)
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/sdl/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_sdl_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/sdl/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_sdl_DIR)
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/sdl/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_sdl_DIR)
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/sdl/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_sdl_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(SDLQUAKE): $(BUILD_DIR)/../$(SDLQUAKE)
+
+$(BUILD_DIR)/../$(SDLQUAKE): $(OBJSquake-sdl)
+	$(CC) $(CFLAGS) $(OBJSquake-sdl) $(SDL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SDLQUAKE)
+# XXX - Can this be automated?
+clean-$(SDLQUAKE):
+	rm -f $(OBJSquake-sdl)
+endif
 
 ###########################################################################
 #

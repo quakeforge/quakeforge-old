@@ -63,7 +63,6 @@ if test "x$HAS_GGI" != xno; then
    CPPFLAGS="$save_CPPFLAGS"
 fi
 
-
 dnl Checks for SVGALib support
 SVGA_CFLAGS=""
 SVGA_LIBS=""
@@ -83,6 +82,23 @@ if test "x$HAS_SVGA" != xno; then
    if test "x$HAS_SVGA" != xyes; then
         HAS_TDFXGL=no
    fi
+   CPPFLAGS="$save_CPPFLAGS"
+fi
+
+dnl Checks for SDL support
+SDL_CFLAGS=""
+SDL_LIBS=""
+AC_ARG_WITH(sdl,
+[  --with-sdl=DIR       use SDL found in DIR],
+HAS_SDL=$withval, HAS_SDL=auto)
+if test "x$HAS_SDL" != xno; then
+   if test "x$HAS_SDL" != xauto; then
+      SDL_CFLAGS="-I$withval/include"
+      SDL_LIB="-L$withbal/lib"
+   fi
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $SDL_CFLAGS"
+   AC_CHECK_HEADER(SDL/SDL.h, HAS_SDL=yes, HAS_SDL=no)
    CPPFLAGS="$save_CPPFLAGS"
 fi
 
@@ -200,6 +216,26 @@ if test "x$HAS_SVGA" != xyes; then
    SVGA_CFLAGS="" SVGA_LIBS=""
 fi
 
+dnl Make sure -lpthread works (for SDL)
+if test "x$HAS_SDL" = xyes; then
+   AC_CHECK_LIB(pthread, pthread_exit ,SDL_LIBS="$SDL_LIBS -lpthread"
+     HAS_SDL=yes, HAS_SDL=no, [$SDL_LIBS])
+fi
+if test "x$HAS_SDL" != xyes; then
+   SDL_CFLAGS="" SDL_LIBS=""
+fi
+
+dnl Make sure -lSDL works
+if test "x$HAS_SDL" = xyes; then
+   AC_CHECK_LIB(SDL, SDL_Init, SDL_LIBS="$SDL_LIBS -lSDL"
+     HAS_SDL=yes, HAS_SDL=no, [$SDL_LIBS])
+fi
+if test "x$HAS_SDL" != xyes; then
+   SDL_CFLAGS="" SDL_LIBS=""
+fi
+
+
+
 
 dnl Make sure -lglide2x works
 if test "x$HAS_GLIDE" = xyes; then
@@ -292,6 +328,9 @@ AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, HAS_INDEX8)
 AC_SUBST(HAS_TDFXGL)
 AC_SUBST(TDFXGL_CFLAGS)
 AC_SUBST(TDFXGL_LIBS)
+AC_SUBST(HAS_SDL)
+AC_SUBST(SDL_CFLAGS)
+AC_SUBST(SDL_LIBS)
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
