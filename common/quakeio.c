@@ -6,7 +6,23 @@ QFile *Qopen(const char *path, const char *mode)
 {
 	QFile *file;
 	file=calloc(sizeof(*file),1);
+	if (!file)
+		return 0;
 	file->file=fopen(path,mode);
+	if (!file->file)
+		return 0;
+	return file;
+}
+
+QFile *Qdopen(int fd, const char *mode)
+{
+	QFile *file;
+	file=calloc(sizeof(*file),1);
+	if (!file)
+		return 0;
+	file->file=fdopen(fd,mode);
+	if (!file->file)
+		return 0;
 	return file;
 }
 
@@ -68,6 +84,22 @@ char *Qgets(QFile *file, char *buf, int count)
 		return gzgets(file->gzfile,buf,count);
 }
 
+int Qgetc(QFile *file)
+{
+	if (file->file)
+		return fgetc(file->file);
+	else
+		return gzgetc(file->gzfile);
+}
+
+int Qputc(QFile *file, int c)
+{
+	if (file->file)
+		return fputc(c, file->file);
+	else
+		return gzputc(file->gzfile,c);
+}
+
 int Qseek(QFile *file, long offset, int whence)
 {
 	if (file->file)
@@ -90,4 +122,12 @@ int Qflush(QFile *file)
 		return fflush(file->file);
 	else
 		return gzflush(file->gzfile,Z_SYNC_FLUSH);
+}
+
+int Qeof(QFile *file)
+{
+	if (file->file)
+		return feof(file->file);
+	else
+		return gzeof(file->gzfile);
 }

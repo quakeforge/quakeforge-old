@@ -171,7 +171,7 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 
 	va_list argptr; 
 	static char data[1024];
-	FILE *stream;
+	QFile *stream;
 	unsigned char *p;
 	//int fd;
     
@@ -179,11 +179,11 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 	vsnprintf(data, sizeof(data), fmt, argptr);
 	va_end(argptr);
 // fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
-	stream = fopen(file, "a");
+	stream = Qopen(file, "a");
 	for (p = (unsigned char *) data; *p; p++) {
-	    putc(trans_table[*p], stream);
+	    Qputc(stream, trans_table[*p]);
 	}
-	fclose(stream);
+	Qclose(stream);
 	/*
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	write(fd, data, strlen(data));

@@ -473,19 +473,22 @@ void M_ScanSaves (void)
 {
 	int		i, j;
 	char	name[MAX_OSPATH];
-	FILE	*f;
+	QFile	*f;
 	int		version;
+	char buf[100];
 
 	for (i=0 ; i<MAX_SAVEGAMES ; i++)
 	{
 		strcpy (m_filenames[i], "--- UNUSED SLOT ---");
 		loadable[i] = false;
 		snprintf(name, sizeof(name), "%s/s%i.sav", com_gamedir, i);
-		f = fopen (name, "r");
+		f = Qopen (name, "r");
 		if (!f)
 			continue;
-		fscanf (f, "%i\n", &version);
-		fscanf (f, "%79s\n", name);
+		Qgets(f,buf,sizeof(buf));
+		sscanf (buf, "%i\n", &version);
+		Qgets(f,buf,sizeof(buf));
+		sscanf (buf, "%79s\n", name);
 		strncpy (m_filenames[i], name, sizeof(m_filenames[i])-1);
 
 	// change _ back to space
@@ -493,7 +496,7 @@ void M_ScanSaves (void)
 			if (m_filenames[i][j] == '_')
 				m_filenames[i][j] = ' ';
 		loadable[i] = true;
-		fclose (f);
+		Qclose (f);
 	}
 }
 

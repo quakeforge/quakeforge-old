@@ -125,7 +125,7 @@ void Con_Printf (char *fmt, ...)
 
 	Sys_Printf ("%s", msg);	// also echo to debugging console
 	if (sv_logfile)
-		fprintf (sv_logfile, "%s", msg);
+		Qprintf (sv_logfile, "%s", msg);
 }
 
 /*

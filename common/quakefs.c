@@ -86,7 +86,7 @@ typedef struct
 typedef struct pack_s
 {
 	char	filename[MAX_OSPATH];
-	FILE	*handle;
+	QFile	*handle;
 	int		numfiles;
 	packfile_t	*files;
 } pack_t;
@@ -127,24 +127,24 @@ searchpath_t	*com_base_searchpaths;	// without gamedirs
 COM_filelength
 ================
 */
-int COM_filelength (FILE *f)
+int COM_filelength (QFile *f)
 {
 	int		pos;
 	int		end;
 
-	pos = ftell (f);
-	fseek (f, 0, SEEK_END);
-	end = ftell (f);
-	fseek (f, pos, SEEK_SET);
+	pos = Qtell (f);
+	Qseek (f, 0, SEEK_END);
+	end = Qtell (f);
+	Qseek (f, pos, SEEK_SET);
 
 	return end;
 }
 
-int COM_FileOpenRead (char *path, FILE **hndl)
+int COM_FileOpenRead (char *path, QFile **hndl)
 {
-	FILE	*f;
+	QFile	*f;
 
-	f = fopen(path, "rb");
+	f = Qopen(path, "rb");
 	if (!f)
 	{
 		*hndl = NULL;
@@ -186,22 +186,22 @@ The filename will be prefixed by the current game directory
 */
 void COM_WriteFile (char *filename, void *data, int len)
 {
-	FILE	*f;
+	QFile	*f;
 	char	name[MAX_OSPATH];
 	
 	snprintf(name, sizeof(name), "%s/%s", com_gamedir, filename);
 	
-	f = fopen (name, "wb");
+	f = Qopen (name, "wb");
 	if (!f) {
 		Sys_mkdir(com_gamedir);
-		f = fopen (name, "wb");
+		f = Qopen (name, "wb");
 		if (!f)
 			Sys_Error ("Error opening %s", filename);
 	}
 	
 	Sys_Printf ("COM_WriteFile: %s\n", name);
-	fwrite (data, 1, len, f);
-	fclose (f);
+	Qwrite (f, data, len);
+	Qclose (f);
 }
 
 
@@ -238,13 +238,13 @@ needed.  This is for the convenience of developers using ISDN from home.
 */
 void COM_CopyFile (char *netpath, char *cachepath)
 {
-	FILE	*in, *out;
+	QFile	*in, *out;
 	int		remaining, count;
 	char	buf[4096];
 	
 	remaining = COM_FileOpenRead (netpath, &in);		
 	COM_CreatePath (cachepath);	// create directories up to the cache file
-	out = fopen(cachepath, "wb");
+	out = Qopen(cachepath, "wb");
 	if (!out)
 		Sys_Error ("Error opening %s", cachepath);
 	
@@ -254,19 +254,19 @@ void COM_CopyFile (char *netpath, char *cachepath)
 			count = remaining;
 		else
 			count = sizeof(buf);
-		fread (buf, 1, count, in);
-		fwrite (buf, 1, count, out);
+		Qread (in, buf, count);
+		Qwrite (out, buf, count);
 		remaining -= count;
 	}
 
-	fclose (in);
-	fclose (out);
+	Qclose (in);
+	Qclose (out);
 }
 
 
-QFile *COM_gzOpenRead(const char *path, int offs, int len)
+QFile *COM_OpenRead(const char *path, int offs, int len)
 {
-/*	int fd=open(path,O_RDONLY);
+	int fd=open(path,O_RDONLY);
 	unsigned char id[2];
 	unsigned char len_bytes[4];
 	if (fd==-1) {
@@ -290,7 +290,7 @@ QFile *COM_gzOpenRead(const char *path, int offs, int len)
 	}
 	lseek(fd,offs,SEEK_SET);
 	com_filesize=len;
-	return gzdopen(fd,"rb");*/
+	return Qdopen(fd,"rb");
 	return 0;
 }
 
@@ -348,8 +348,8 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 					//	Sys_Error ("Couldn't reopen %s", pak->filename);
 					//fseek (*file, pak->files[i].filepos, SEEK_SET);
 					//com_filesize = pak->files[i].filelen;
-					*gzfile=COM_gzOpenRead(pak->filename,pak->files[i].filepos,
-										   pak->files[i].filelen);
+					*gzfile=COM_OpenRead(pak->filename,pak->files[i].filepos,
+										 pak->files[i].filelen);
 					file_from_pak = 1;
 					return com_filesize;
 				}
@@ -377,7 +377,7 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 
 			//*file = fopen (netpath, "rb");
 			//return COM_filelength (*file);
-			*gzfile=COM_gzOpenRead(netpath,-1,-1);
+			*gzfile=COM_OpenRead(netpath,-1,-1);
 			return com_filesize;
 		}
 		
@@ -497,13 +497,13 @@ pack_t *COM_LoadPackFile (char *packfile)
 	packfile_t		*newfiles;
 	int				numpackfiles;
 	pack_t			*pack;
-	FILE			*packhandle;
+	QFile			*packhandle;
 	dpackfile_t		info[MAX_FILES_IN_PACK];
 
 	if (COM_FileOpenRead (packfile, &packhandle) == -1)
 		return NULL;
 
-	fread (&header, 1, sizeof(header), packhandle);
+	Qread (packhandle, &header, sizeof(header));
 	if (header.id[0] != 'P' || header.id[1] != 'A'
 	|| header.id[2] != 'C' || header.id[3] != 'K')
 		Sys_Error ("%s is not a packfile", packfile);
@@ -517,8 +517,8 @@ pack_t *COM_LoadPackFile (char *packfile)
 
 	newfiles = Z_Malloc (numpackfiles * sizeof(packfile_t));
 
-	fseek (packhandle, header.dirofs, SEEK_SET);
-	fread (info, 1, header.dirlen, packhandle);
+	Qseek (packhandle, header.dirofs, SEEK_SET);
+	Qread (packhandle, info, header.dirlen);
 
 
 // parse the directory
@@ -778,7 +778,7 @@ void COM_Gamedir (char *dir)
 	{
 		if (com_searchpaths->pack)
 		{
-			fclose (com_searchpaths->pack->handle);
+			Qclose (com_searchpaths->pack->handle);
 			Z_Free (com_searchpaths->pack->files);
 			Z_Free (com_searchpaths->pack);
 		}

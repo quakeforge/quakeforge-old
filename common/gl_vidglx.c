@@ -376,7 +376,7 @@ void	VID_SetPalette (unsigned char *palette)
 	int		k;
 	unsigned short i;
 	unsigned	*table;
-	gzFile *f;
+	QFile *f;
 	char s[255];
 	float dist, bestdist;
 	static qboolean palflag = false;
@@ -410,8 +410,8 @@ void	VID_SetPalette (unsigned char *palette)
 
 	COM_FOpenFile("glquake/15to8.pal", &f);
 	if (f) {
-		gzread(f, d_15to8table, 1<<15);
-		gzclose(f);
+		Qread(f, d_15to8table, 1<<15);
+		Qclose(f);
 	} else {
 		for (i=0; i < (1<<15); i++) {
 			/* Maps
@@ -439,9 +439,9 @@ void	VID_SetPalette (unsigned char *palette)
 		snprintf(s, sizeof(s), "%s/glquake", com_gamedir);
  		Sys_mkdir (s);
 		snprintf(s, sizeof(s), "%s/glquake/15to8.pal", com_gamedir);
-		if ((f = gzopen(s, "wb")) != NULL) {
-			gzwrite(f, d_15to8table, 1<<15);
-			gzclose(f);
+		if ((f = Qopen(s, "wb")) != NULL) {
+			Qwrite(f, d_15to8table, 1<<15);
+			Qclose(f);
 		}
 	}
 }

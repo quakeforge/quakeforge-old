@@ -33,9 +33,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define INI_STRING_SIZE 0x100
 
-FILE *ini_fopen(const char *filename, const char *modes);
-int ini_fclose(FILE *f);
-void ini_fgets(FILE *f, const char *section, const char *field, char *s);
+QFile *ini_fopen(const char *filename, const char *modes);
+int ini_fclose(QFile *f);
+void ini_fgets(QFile *f, const char *section, const char *field, char *s);
 
 // Routines for reading from .INI files
 // The read routines are fairly efficient.
@@ -61,7 +61,7 @@ struct field_buffer
    char name[MAX_FIELD_WIDTH+1];
 };
 
-static FILE *current_file=NULL;
+static QFile *current_file=NULL;
 static int   current_section;
 
 static int current_section_buffer=0;
@@ -79,7 +79,7 @@ static char toupper(char c)
    return(c);
 }
 
-static void reset_buffer(FILE *f)
+static void reset_buffer(QFile *f)
 {
    int i;
 
@@ -318,7 +318,7 @@ static void add_field(char *instring, int section, long offset)
 
 // Identical to fgets except the string is trucated at the first ';',
 // carriage return or line feed.
-static char *stripped_fgets(char *s, int n, FILE *f)
+static char *stripped_fgets(char *s, int n, QFile *f)
 {
    int i=0;
 
@@ -336,13 +336,13 @@ static char *stripped_fgets(char *s, int n, FILE *f)
 // Externally accessable routines
 //***************************************************************************
 // Opens an .INI file. Works like fopen
-FILE *ini_fopen(const char *filename, const char *modes)
+QFile *ini_fopen(const char *filename, const char *modes)
 {
    return(fopen(filename,modes));
 }
 
 // Closes a .INI file. Works like fclose
-int ini_fclose(FILE *f)
+int ini_fclose(QFile *f)
 {
    if (f==current_file)
       reset_buffer(NULL);
@@ -352,7 +352,7 @@ int ini_fclose(FILE *f)
 // Puts "field" from "section" from .ini file "f" into "s".
 // If "section" does not exist or "field" does not exist in
 // section then s="";
-void ini_fgets(FILE *f, const char *section, const char *field, char *s)
+void ini_fgets(QFile *f, const char *section, const char *field, char *s)
 {
    int i;
    long start_pos,string_start_pos;
@@ -662,7 +662,7 @@ void ClearGf1Ints(void)
 static qboolean GUS_GetIWData(void)
 {
    char *Interwave,s[INI_STRING_SIZE];
-   FILE *IwFile;
+   QFile *IwFile;
    int  CodecBase,CodecDma,i;
 
    Interwave=getenv("INTERWAVE");

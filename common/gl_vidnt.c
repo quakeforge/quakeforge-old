@@ -706,7 +706,7 @@ void	VID_SetPalette (unsigned char *palette)
 	int		j,k,l,m;
 	unsigned short i;
 	unsigned	*table;
-	FILE *f;
+	QFile *f;
 	char s[255];
 	HWND hDlg, hProgress;
 	float gamma;

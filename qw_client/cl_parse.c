@@ -538,7 +538,7 @@ CL_ParseServerData
 void CL_ParseServerData (void)
 {
 	char	*str;
-	FILE	*f;
+	QFile	*f;
 	char	fn[MAX_OSPATH];
 	qboolean	cflag = false;
 	extern	char	gamedirfile[MAX_OSPATH];
@@ -580,8 +580,8 @@ void CL_ParseServerData (void)
 	//if it exists
 	if (cflag) {
 		snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "config.cfg");
-		if ((f = fopen(fn, "r")) != NULL) {
-			fclose(f);
+		if ((f = Qopen(fn, "r")) != NULL) {
+			Qclose(f);
 			Cbuf_AddText ("cl_warncmd 0\n");
 			Cbuf_AddText("exec config.cfg\n");
 			Cbuf_AddText("exec frontend.cfg\n");

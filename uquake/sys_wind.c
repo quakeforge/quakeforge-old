@@ -35,7 +35,7 @@ FILE IO
 */
 
 #define	MAX_HANDLES		10
-FILE	*sys_handles[MAX_HANDLES];
+QFile	*sys_handles[MAX_HANDLES];
 
 int		findhandle (void)
 {
@@ -53,7 +53,7 @@ int		findhandle (void)
 filelength
 ================
 */
-int filelength (FILE *f)
+int filelength (QFile *f)
 {
 	int		pos;
 	int		end;
@@ -68,7 +68,7 @@ int filelength (FILE *f)
 
 int Sys_FileOpenRead (char *path, int *hndl)
 {
-	FILE	*f;
+	QFile	*f;
 	int		i;
 	
 	i = findhandle ();
@@ -87,7 +87,7 @@ int Sys_FileOpenRead (char *path, int *hndl)
 
 int Sys_FileOpenWrite (char *path)
 {
-	FILE	*f;
+	QFile	*f;
 	int		i;
 	
 	i = findhandle ();

@@ -84,7 +84,7 @@ FILE IO
 filelength
 ================
 */
-int filelength (FILE *f)
+int filelength (QFile *f)
 {
 	int		pos;
 	int		end;

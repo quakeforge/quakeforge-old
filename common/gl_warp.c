@@ -358,7 +358,7 @@ byte	*pcx_rgb;
 	LoadPCX
 */
 void
-LoadPCX (gzFile *f) {
+LoadPCX (QFile *f) {
 
 	pcx_t	*pcx, pcxbuf;
 	byte	palette[768];
@@ -370,7 +370,7 @@ LoadPCX (gzFile *f) {
 /*
 	Parse PCX file
 */
-	gzread (f, &pcxbuf, sizeof(pcxbuf));
+	Qread (f, &pcxbuf, sizeof(pcxbuf));
 
 	pcx = &pcxbuf;
 
@@ -382,10 +382,10 @@ LoadPCX (gzFile *f) {
 	}
 
 	// seek to palette
-	gzseek (f, -768, SEEK_END);
-	gzread (f, palette, 768);
+	Qseek (f, -768, SEEK_END);
+	Qread (f, palette, 768);
 
-	gzseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
+	Qseek (f, sizeof(pcxbuf) - 4, SEEK_SET);
 
 	count = (pcx->xmax+1) * (pcx->ymax+1);
 	pcx_rgb = malloc( count * 4);
@@ -393,11 +393,11 @@ LoadPCX (gzFile *f) {
 	for (y=0 ; y<=pcx->ymax ; y++) {
 		pix = pcx_rgb + 4*y*(pcx->xmax+1);
 		for (x=0 ; x<=pcx->ymax ; ) {
-			dataByte = gzgetc(f);
+			dataByte = Qgetc(f);
 
 			if((dataByte & 0xC0) == 0xC0) {
 				runLength = dataByte & 0x3F;
-				dataByte = gzgetc(f);
+				dataByte = Qgetc(f);
 			}
 			else
 				runLength = 1;
@@ -430,25 +430,25 @@ TargaHeader		targa_header;
 byte			*targa_rgba;
 
 int
-gzgetLittleShort ( gzFile *f ) {
+QgetLittleShort ( QFile *f ) {
 
 	byte	b1, b2;
 
-	b1 = gzgetc(f);
-	b2 = gzgetc(f);
+	b1 = Qgetc(f);
+	b2 = Qgetc(f);
 
 	return (short)(b1 + b2*256);
 }
 
 int
-gzgetLittleLong (gzFile *f) {
+QgetLittleLong (QFile *f) {
 
 	byte	b1, b2, b3, b4;
 
-	b1 = gzgetc(f);
-	b2 = gzgetc(f);
-	b3 = gzgetc(f);
-	b4 = gzgetc(f);
+	b1 = Qgetc(f);
+	b2 = Qgetc(f);
+	b3 = Qgetc(f);
+	b4 = Qgetc(f);
 
 	return b1 + (b2<<8) + (b3<<16) + (b4<<24);
 }
@@ -457,25 +457,25 @@ gzgetLittleLong (gzFile *f) {
 	LoadTGA
 */
 void
-LoadTGA (gzFile *fin) {
+LoadTGA (QFile *fin) {
 
 	int		columns, rows, numPixels;
 	byte	*pixbuf;
 	int		row, column;
 
-	targa_header.id_length = gzgetc(fin);
-	targa_header.colormap_type = gzgetc(fin);
-	targa_header.image_type = gzgetc(fin);
+	targa_header.id_length = Qgetc(fin);
+	targa_header.colormap_type = Qgetc(fin);
+	targa_header.image_type = Qgetc(fin);
 	
-	targa_header.colormap_index = gzgetLittleShort(fin);
-	targa_header.colormap_length = gzgetLittleShort(fin);
-	targa_header.colormap_size = gzgetc(fin);
-	targa_header.x_origin = gzgetLittleShort(fin);
-	targa_header.y_origin = gzgetLittleShort(fin);
-	targa_header.width = gzgetLittleShort(fin);
-	targa_header.height = gzgetLittleShort(fin);
-	targa_header.pixel_size = gzgetc(fin);
-	targa_header.attributes = gzgetc(fin);
+	targa_header.colormap_index = QgetLittleShort(fin);
+	targa_header.colormap_length = QgetLittleShort(fin);
+	targa_header.colormap_size = Qgetc(fin);
+	targa_header.x_origin = QgetLittleShort(fin);
+	targa_header.y_origin = QgetLittleShort(fin);
+	targa_header.width = QgetLittleShort(fin);
+	targa_header.height = QgetLittleShort(fin);
+	targa_header.pixel_size = Qgetc(fin);
+	targa_header.attributes = Qgetc(fin);
 
 	if (targa_header.image_type!=2 && targa_header.image_type!=10) 
 		Sys_Error ("LoadTGA: Only type 2 and 10 targa RGB images supported\n");
@@ -492,7 +492,7 @@ LoadTGA (gzFile *fin) {
 	targa_rgba = malloc (numPixels*4);
 	
 	if (targa_header.id_length != 0)
-		gzseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
+		Qseek(fin, targa_header.id_length, SEEK_CUR);  // skip TARGA image comment
 	
 	if (targa_header.image_type==2) {  // Uncompressed, RGB images
 		for(row=rows-1; row>=0; row--) {
@@ -502,19 +502,19 @@ LoadTGA (gzFile *fin) {
 				switch (targa_header.pixel_size) {
 					case 24:
 							
-							blue = gzgetc(fin);
-							green = gzgetc(fin);
-							red = gzgetc(fin);
+							blue = Qgetc(fin);
+							green = Qgetc(fin);
+							red = Qgetc(fin);
 							*pixbuf++ = red;
 							*pixbuf++ = green;
 							*pixbuf++ = blue;
 							*pixbuf++ = 255;
 							break;
 					case 32:
-							blue = gzgetc(fin);
-							green = gzgetc(fin);
-							red = gzgetc(fin);
-							alphabyte = gzgetc(fin);
+							blue = Qgetc(fin);
+							green = Qgetc(fin);
+							red = Qgetc(fin);
+							alphabyte = Qgetc(fin);
 							*pixbuf++ = red;
 							*pixbuf++ = green;
 							*pixbuf++ = blue;
@@ -529,21 +529,21 @@ LoadTGA (gzFile *fin) {
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = targa_rgba + row*columns*4;
 			for(column=0; column<columns; ) {
-				packetHeader=gzgetc(fin);
+				packetHeader=Qgetc(fin);
 				packetSize = 1 + (packetHeader & 0x7f);
 				if (packetHeader & 0x80) {        // run-length packet
 					switch (targa_header.pixel_size) {
 						case 24:
-								blue = gzgetc(fin);
-								green = gzgetc(fin);
-								red = gzgetc(fin);
+								blue = Qgetc(fin);
+								green = Qgetc(fin);
+								red = Qgetc(fin);
 								alphabyte = 255;
 								break;
 						case 32:
-								blue = gzgetc(fin);
-								green = gzgetc(fin);
-								red = gzgetc(fin);
-								alphabyte = gzgetc(fin);
+								blue = Qgetc(fin);
+								green = Qgetc(fin);
+								red = Qgetc(fin);
+								alphabyte = Qgetc(fin);
 								break;
 					}
 	
@@ -567,19 +567,19 @@ LoadTGA (gzFile *fin) {
 					for(j=0;j<packetSize;j++) {
 						switch (targa_header.pixel_size) {
 							case 24:
-									blue = gzgetc(fin);
-									green = gzgetc(fin);
-									red = gzgetc(fin);
+									blue = Qgetc(fin);
+									green = Qgetc(fin);
+									red = Qgetc(fin);
 									*pixbuf++ = red;
 									*pixbuf++ = green;
 									*pixbuf++ = blue;
 									*pixbuf++ = 255;
 									break;
 							case 32:
-									blue = gzgetc(fin);
-									green = gzgetc(fin);
-									red = gzgetc(fin);
-									alphabyte = gzgetc(fin);
+									blue = Qgetc(fin);
+									green = Qgetc(fin);
+									red = Qgetc(fin);
+									alphabyte = Qgetc(fin);
 									*pixbuf++ = red;
 									*pixbuf++ = green;
 									*pixbuf++ = blue;
@@ -601,7 +601,7 @@ LoadTGA (gzFile *fin) {
 			breakOut:;
 		}
 	}
-	gzclose(fin);
+	Qclose(fin);
 	// fclose(fin);
 }
 
@@ -614,7 +614,7 @@ void
 R_LoadSkys ( void ) {
 
 	int		i;
-	gzFile	*f;
+	QFile	*f;
 	char	name[64];
 
 	for (i=0 ; i<6 ; i++) {

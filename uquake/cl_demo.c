@@ -57,7 +57,7 @@ void CL_StopPlayback (void)
 	if (!cls.demoplayback)
 		return;
 
-	gzclose (cls.demofile);
+	Qclose (cls.demofile);
 	cls.demoplayback = false;
 	cls.demofile = NULL;
 	cls.state = ca_disconnected;
@@ -80,14 +80,14 @@ void CL_WriteDemoMessage (void)
 	float	f;
 
 	len = LittleLong (net_message.cursize);
-	gzwrite (cls.demofile, &len, 4);
+	Qwrite (cls.demofile, &len, 4);
 	for (i=0 ; i<3 ; i++)
 	{
 		f = LittleFloat (cl.viewangles[i]);
-		gzwrite (cls.demofile, &f, 4);
+		Qwrite (cls.demofile, &f, 4);
 	}
-	gzwrite (cls.demofile, net_message.data, net_message.cursize);
-	gzflush (cls.demofile, Z_SYNC_FLUSH);
+	Qwrite (cls.demofile, net_message.data, net_message.cursize);
+	Qflush (cls.demofile);
 }
 
 /*
@@ -124,18 +124,18 @@ int CL_GetMessage (void)
 		}
 		
 	// get the next message
-		gzread (cls.demofile, &net_message.cursize, 4);
+		Qread (cls.demofile, &net_message.cursize, 4);
 		VectorCopy (cl.mviewangles[0], cl.mviewangles[1]);
 		for (i=0 ; i<3 ; i++)
 		{
-			r = gzread (cls.demofile, &f, 4);
+			r = Qread (cls.demofile, &f, 4);
 			cl.mviewangles[0][i] = LittleFloat (f);
 		}
 		
 		net_message.cursize = LittleLong (net_message.cursize);
 		if (net_message.cursize > MAX_MSGLEN)
 			Sys_Error ("Demo message > MAX_MSGLEN");
-		r = gzread (cls.demofile, net_message.data, net_message.cursize);
+		r = Qread (cls.demofile, net_message.data, net_message.cursize);
 		if (r != net_message.cursize)
 		{
 			CL_StopPlayback ();
@@ -190,7 +190,7 @@ void CL_Stop_f (void)
 	CL_WriteDemoMessage ();
 
 // finish up
-	gzclose (cls.demofile);
+	Qclose (cls.demofile);
 	cls.demofile = NULL;
 	cls.demorecording = false;
 	Con_Printf ("Completed demo\n");
@@ -254,7 +254,7 @@ void CL_Record_f (void)
 	COM_DefaultExtension (name, ".dem");
 
 	Con_Printf ("recording to %s.\n", name);
-	cls.demofile = gzopen (name, "wb");
+	cls.demofile = Qopen (name, "wb");
 	if (!cls.demofile)
 	{
 		Con_Printf ("ERROR: couldn't open.\n");
@@ -262,7 +262,7 @@ void CL_Record_f (void)
 	}
 
 	cls.forcetrack = track;
-	gzprintf (cls.demofile, "%i\n", cls.forcetrack);
+	Qprintf (cls.demofile, "%i\n", cls.forcetrack);
 	
 	cls.demorecording = true;
 }
@@ -314,7 +314,7 @@ void CL_PlayDemo_f (void)
 	cls.state = ca_connected;
 	cls.forcetrack = 0;
 
-	while ((c = gzgetc(cls.demofile)) != '\n')
+	while ((c = Qgetc(cls.demofile)) != '\n')
 		if (c == '-')
 			neg = true;
 		else

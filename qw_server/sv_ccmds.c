@@ -102,14 +102,14 @@ void SV_Logfile_f (void)
 	if (sv_logfile)
 	{
 		Con_Printf ("File logging off.\n");
-		fclose (sv_logfile);
+		Qclose (sv_logfile);
 		sv_logfile = NULL;
 		return;
 	}
 
 	snprintf(name, sizeof(name), "%s/qconsole.log", com_gamedir);
 	Con_Printf ("Logging text to %s.\n", name);
-	sv_logfile = fopen (name, "w");
+	sv_logfile = Qopen (name, "w");
 	if (!sv_logfile)
 		Con_Printf ("failed.\n");
 }
@@ -128,7 +128,7 @@ void SV_Fraglogfile_f (void)
 	if (sv_fraglogfile)
 	{
 		Con_Printf ("Frag file logging off.\n");
-		fclose (sv_fraglogfile);
+		Qclose (sv_fraglogfile);
 		sv_fraglogfile = NULL;
 		return;
 	}
@@ -137,15 +137,15 @@ void SV_Fraglogfile_f (void)
 	for (i=0 ; i<1000 ; i++)
 	{
 		snprintf(name, sizeof(name), "%s/frag_%i.log", com_gamedir, i);
-		sv_fraglogfile = fopen (name, "r");
+		sv_fraglogfile = Qopen (name, "r");
 		if (!sv_fraglogfile)
 		{	// can't read it, so create this one
-			sv_fraglogfile = fopen (name, "w");
+			sv_fraglogfile = Qopen (name, "w");
 			if (!sv_fraglogfile)
 				i=1000;	// give error
 			break;
 		}
-		fclose (sv_fraglogfile);
+		Qclose (sv_fraglogfile);
 	}
 	if (i==1000)
 	{
@@ -331,7 +331,7 @@ void SV_Map_f (void)
 		Con_Printf ("Can't find %s\n", expanded);
 		return;
 	}
-	gzclose (f);
+	Qclose (f);
 
 	SV_BroadcastCommand ("changing\n");
 	SV_SendMessagesToAll ();

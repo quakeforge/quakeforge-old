@@ -131,7 +131,7 @@ int Sys_FileTime (char *path)
 	
 	if (stat(path, &buf) == 0) ret = buf.st_mtime;
 #else /* HAVE_STAT */
-	FILE	*f;
+	QFile	*f;
 #if defined(_WIN32) && !defined(SERVERONLY)
 	int t = VID_ForceUnlockedAndReturnState();
 #endif

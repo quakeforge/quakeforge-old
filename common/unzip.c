@@ -88,7 +88,7 @@ typedef struct
 	uLong crc32_wait;           /* crc32 we must obtain after decompress all */
 	uLong rest_read_compressed; /* number of byte to be decompressed */
 	uLong rest_read_uncompressed;/*number of byte to be obtained after decomp*/
-	FILE* file;                 /* io structore of the zipfile */
+	QFile* file;                 /* io structore of the zipfile */
 	uLong compression_method;   /* compression method (0==store) */
 	uLong byte_before_the_zipfile;/* byte before the zipfile, (>0 for sfx)*/
 } file_in_zip_read_info_s;
@@ -98,7 +98,7 @@ typedef struct
 */
 typedef struct
 {
-	FILE* file;                 /* io structore of the zipfile */
+	QFile* file;                 /* io structore of the zipfile */
 	unz_global_info gi;       /* public global information */
 	uLong byte_before_the_zipfile;/* byte before the zipfile, (>0 for sfx)*/
 	uLong num_file;             /* number of the current file in the zipfile*/
@@ -125,7 +125,7 @@ typedef struct
 
 
 local int unzlocal_getByte(fin,pi)
-	FILE *fin;
+	QFile *fin;
 	int *pi;
 {
     unsigned char c;
@@ -149,7 +149,7 @@ local int unzlocal_getByte(fin,pi)
    Reads a long in LSB order from the given gz_stream. Sets 
 */
 local int unzlocal_getShort (fin,pX)
-	FILE* fin;
+	QFile* fin;
     uLong *pX;
 {
     uLong x ;
@@ -171,7 +171,7 @@ local int unzlocal_getShort (fin,pX)
 }
 
 local int unzlocal_getLong (fin,pX)
-	FILE* fin;
+	QFile* fin;
     uLong *pX;
 {
     uLong x ;
@@ -266,7 +266,7 @@ extern int ZEXPORT unzStringFileNameCompare (fileName1,fileName2,iCaseSensitivit
     the global comment)
 */
 local uLong unzlocal_SearchCentralDir(fin)
-	FILE *fin;
+	QFile *fin;
 {
 	unsigned char* buf;
 	uLong uSizeFile;
@@ -336,7 +336,7 @@ extern unzFile ZEXPORT unzOpen (path)
 	unz_s us;
 	unz_s *s;
 	uLong central_pos,uL;
-	FILE * fin ;
+	QFile * fin ;
 
 	uLong number_disk;          /* number of the current dist, used for 
 								   spaning ZIP, unsupported, always 0*/

@@ -189,7 +189,7 @@ typedef struct client_s
 
 	qboolean		upgradewarn;		// did we warn him?
 
-	FILE			*upload;
+	QFile			*upload;
 	char			uploadfn[MAX_QPATH];
 	netadr_t		snap_from;
 	qboolean		remote_snap;
@@ -355,8 +355,8 @@ extern	char		localmodels[MAX_MODELS][5];	// inline model names for precache
 extern	char		localinfo[MAX_LOCALINFO_STRING+1];
 
 extern	int			host_hunklevel;
-extern	FILE		*sv_logfile;
-extern	FILE		*sv_fraglogfile;
+extern	QFile		*sv_logfile;
+extern	QFile		*sv_fraglogfile;
 
 //===========================================================
 
