@@ -144,7 +144,7 @@ int COM_FileOpenRead (char *path, QFile **hndl)
 {
 	QFile	*f;
 
-	f = Qopen(path, "rb");
+	f = Qopen(path, "rbz");
 	if (!f)
 	{
 		*hndl = NULL;
@@ -290,7 +290,7 @@ QFile *COM_OpenRead(const char *path, int offs, int len)
 	}
 	lseek(fd,offs,SEEK_SET);
 	com_filesize=len;
-	return Qdopen(fd,"rb");
+	return Qdopen(fd,"rbz");
 	return 0;
 }
 

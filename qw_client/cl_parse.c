@@ -580,7 +580,7 @@ void CL_ParseServerData (void)
 	//if it exists
 	if (cflag) {
 		snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "config.cfg");
-		if ((f = Qopen(fn, "r")) != NULL) {
+		if ((f = Qopen(fn, "rz")) != NULL) {
 			Qclose(f);
 			Cbuf_AddText ("cl_warncmd 0\n");
 			Cbuf_AddText("exec config.cfg\n");

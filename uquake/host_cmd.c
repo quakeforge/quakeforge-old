@@ -609,7 +609,7 @@ void Host_Loadgame_f (void)
 //	SCR_BeginLoadingPlaque ();
 
 	Con_Printf ("Loading game from %s...\n", name);
-	f = Qopen (name, "r");
+	f = Qopen (name, "rz");
 	if (!f)
 	{
 		Con_Printf ("ERROR: couldn't open.\n");

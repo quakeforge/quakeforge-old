@@ -482,7 +482,7 @@ void M_ScanSaves (void)
 		strcpy (m_filenames[i], "--- UNUSED SLOT ---");
 		loadable[i] = false;
 		snprintf(name, sizeof(name), "%s/s%i.sav", com_gamedir, i);
-		f = Qopen (name, "r");
+		f = Qopen (name, "rz");
 		if (!f)
 			continue;
 		Qgets(f,buf,sizeof(buf));

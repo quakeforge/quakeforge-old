@@ -5,24 +5,68 @@
 QFile *Qopen(const char *path, const char *mode)
 {
 	QFile *file;
+	char m[80],*p;
+	int zip=0;
+
+	for (p=m; *mode && p-m<(sizeof(m)-1); mode++) {
+		if (*mode=='z') {
+			zip=1;
+			continue;
+		}
+		p++;
+	}
+	*p=0;
+
 	file=calloc(sizeof(*file),1);
 	if (!file)
 		return 0;
-	file->file=fopen(path,mode);
-	if (!file->file)
-		return 0;
+	if (zip) {
+		file->gzfile=gzopen(path,m);
+		if (!file->gzfile) {
+			free(file);
+			return 0;
+		}
+	} else {
+		file->file=fopen(path,m);
+		if (!file->file) {
+			free(file);
+			return 0;
+		}
+	}
 	return file;
 }
 
 QFile *Qdopen(int fd, const char *mode)
 {
 	QFile *file;
+	char m[80],*p;
+	int zip=0;
+
+	for (p=m; *mode && p-m<(sizeof(m)-1); mode++) {
+		if (*mode=='z') {
+			zip=1;
+			continue;
+		}
+		*p++=*mode;
+	}
+	*p=0;
+
 	file=calloc(sizeof(*file),1);
 	if (!file)
 		return 0;
-	file->file=fdopen(fd,mode);
-	if (!file->file)
-		return 0;
+	if (zip) {
+		file->gzfile=gzdopen(fd,m);
+		if (!file->gzfile) {
+			free(file);
+			return 0;
+		}
+	} else {
+		file->file=fdopen(fd,m);
+		if (!file->file) {
+			free(file);
+			return 0;
+		}
+	}
 	return file;
 }
 
