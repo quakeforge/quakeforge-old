@@ -11,7 +11,7 @@ cd ${temp_dir}/quakeforge-${version}
 ./bootstrap
 ./configure
 make distclean
-find . -name '.#*' -print | xargs rm
+find . -name '.#*' -o -name '#*#' -print | xargs rm
 cd ${temp_dir}
 tar zcf ${dest_dir}/quakeforge-${version}.tar.gz quakeforge-${version}
 cd ${dest_dir}
