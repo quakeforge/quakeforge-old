@@ -106,6 +106,13 @@ float Q_atof (char *str)
 	int		c;
 	int		decimal, total;
 
+// 1999-12-27 ATOF problems with leading spaces fix by Maddes  start
+	while ((*str) && (*str<=' '))
+	{
+		str++;
+	}
+// 1999-12-27 ATOF problems with leading spaces fix by Maddes  end
+
 	if (*str == '-')
 	{
 		sign = -1;
