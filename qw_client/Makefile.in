@@ -144,7 +144,7 @@ endif
 
 SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 
-SYS_SRC        = @SYS_SRC@
+SYS_SRC        = @QW_CL_SYS_SRC@
 
 # Networking source files
 # FIXME: Should not assume UNIX

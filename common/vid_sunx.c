@@ -217,7 +217,7 @@ PIXEL24 xlib_rgb24(int r,int g,int b)
 
 void st2_fixup( XImage *framebuf, int x, int y, int width, int height)
 {
-	int xi,yi;
+	int yi;
 	unsigned char *src;
 	PIXEL16 *dest;
 	register int count, n;
@@ -253,7 +253,7 @@ void st2_fixup( XImage *framebuf, int x, int y, int width, int height)
 
 void st3_fixup( XImage *framebuf, int x, int y, int width, int height)
 {
-	int xi,yi;
+	int yi;
 	unsigned char *src;
 	PIXEL24 *dest;
 	register int count, n;
@@ -491,9 +491,6 @@ void ResetSharedFrameBuffers(void)
 void VID_MenuDraw( void )
 {
     qpic_t		*p;
-    char		*ptr;
-    int			i, j, column, row, dup;
-    char		temp[100];
 
     p = Draw_CachePic ("gfx/vidmodes.lmp");
     M_DrawPic ( (320-p->width)/2, 4, p);
@@ -571,6 +568,8 @@ void	VID_Init (unsigned char *palette)
 	XVisualInfo template;
 	int num_visuals;
 	int template_mask;
+
+	S_Init();	// sound is initialized here
 
 	Cmd_AddCommand ("gamma", VID_Gamma_f);
 	for (i=0 ; i<256 ; i++)
@@ -847,7 +846,7 @@ void	VID_Shutdown (void)
 		XUngrabPointer(x_disp, CurrentTime);
 		XUndefineCursor(x_disp, x_win);
 	}
-	XCloseDisplay(x_disp);
+        if (x_disp) XCloseDisplay(x_disp);
 }
 
 int XLateKey(XKeyEvent *ev)
@@ -973,9 +972,12 @@ void GetEvent(void)
 		case Expose:	
 			sb_updates = 0;
 			break;
+// Host_Quit_f only available in uquake
+#ifndef QUAKEWORLD
 		case ClientMessage:
 			if (x_event.xclient.data.l[0] == aWMDelete) Host_Quit_f();
 			break;
+#endif
 		case EnterNotify:
 			mouse_in_window = true;
 			break;
