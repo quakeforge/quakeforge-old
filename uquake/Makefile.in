@@ -3,10 +3,12 @@
 # Quake general stuff
 #
 
+PROJECT_DIR = @top_srcdir@
+SRC_DIR     = @srcdir@
+BIN_PREFIX  = quake
+
 COMMON_DIR=$(PROJECT_DIR)/common
-ifeq ($(BUILD_DIR),)
-BUILD_DIR = .
-endif
+BUILD_DIR = $(PROJECT_DIR)/targets/uquake
 
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
@@ -34,11 +36,6 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
 MAKE_SURE_bin_DIR = @DIR=bin; \
 	 $(MAKE_SURE_DIR)
 
-
-PROJECT_DIR = @top_srcdir@
-SRC_DIR     = @srcdir@
-UQ_DIR      = $(SRC_DIR)
-BIN_PREFIX  = quake
 
 ########################################################################
 #
@@ -84,9 +81,6 @@ all: $(targets)
 # Source files
 #
 
-# **** Note - two apps may appear to share source, but they may just share
-# source file *names*
-
 ifeq ($(INTEL_ARCH),yes)
 # Source file the Intel archictecture only
 UQ_GENERAL_SRC         = worlda.s
@@ -103,30 +97,40 @@ endif
 #
 # System specific source files
 #
-CD_AUDIO_SRC   = @CD_AUDIO_SRC@
 
-MACH_SND_SRC   = @SND_SRC@
+CD_AUDIO_SRC = cd_wrapper.c
+
+# sound
+
+SND_STYLE      = @SND_STYLE@
+SND_SRC        = snd_null.c
+
+ifeq ($(SND_STYLE),Linux)
+SND_SRC = snd_dma.c snd_linux.c snd_mixa.s
+endif
+ifeq ($(SND_STYLE),Solaris)
+SND_SRC = snd_dma.c snd_sun.c
+endif
+
+SND_SRC        += snd_mem.c snd_mix.c
+
+# x11 vid
 
 X11_VID_SRC    = @X11_VID_SRC@
-QW_X11_VID_SRC = vid_x.c
 
 SYS_SRC        = @SYS_SRC@
-QW_CL_SYS_SRC  = @QW_CL_SYS_SRC@
-QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
 
 #
 # Networking source files
 #
 # XXX - Should not assume UNIX
 NET_SRC        = net_bsd.c net_udp.c
-QW_NET_SRC     = net_udp.c md4.c
 UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
 #
 # Common source files
 #
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c
-SND_SRC        = snd_mem.c snd_mix.c $(MACH_SND_SRC)
 
 #
 # Rendering source files
@@ -135,7 +139,6 @@ SND_SRC        = snd_mem.c snd_mix.c $(MACH_SND_SRC)
 # OpenGL
 GL_REND_SRC = gl_screen.c gl_model.c gl_draw.c gl_mesh.c gl_refrag.c \
               gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_test.c gl_warp.c
-QW_GL_REND_SRC = gl_ngraph.c
 
 # Software source
 SW_REND_SRC = screen.c $(SWREND_SRC_PLAT) draw.c \
@@ -148,7 +151,6 @@ SW_REND_SRC = screen.c $(SWREND_SRC_PLAT) draw.c \
 # Client source files
 #
 CL_SRC    = cl_demo.c cl_input.c cl_main.c cl_parse.c cl_tent.c 
-QW_CL_SRC = cl_cam.c cl_ents.c cl_pred.c 
 CL_GUI_SRC= console.c sbar.c view.c keys.c menu.c
 
 #
@@ -156,14 +158,10 @@ CL_GUI_SRC= console.c sbar.c view.c keys.c menu.c
 #
 # Server-related source used by all
 SRV_SRC     = sv_main.c sv_user.c sv_move.c sv_phys.c 
-# Server-related source used just by QW server
-QW_SRV_SRC  = sv_ccmds.c sv_ents.c sv_init.c sv_send.c sv_nchan.c world.c
 # Server-related source used just by UQ
 UQ_SRV_SRC  = host.c host_cmd.c $(SRV_SRC)
 SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c
 
-
-QW_GENERAL_SRC = pmove.c pmovetst.c
 
 # Source common to both UQ and QW-client
 CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
@@ -175,7 +173,7 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 # Directory specific stuff
 #
 DEFS         = @DEFS@
-CFLAGS       = $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_DIR) -I$(UQ_DIR)/include
+CFLAGS       = $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_DIR) -I$(SRC_DIR)/include
 ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(X11_VID_SRC) model.c
 ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC)
@@ -220,12 +218,6 @@ $(BUILD_DIR)/x11/%.o: $(SRC_DIR)/%.s
 $(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.c
 	$(MAKE_SURE_x11_DIR)
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
-
-ifneq ($(QW_COMMON_DIR),)
-$(BUILD_DIR)/x11/%.o: $(QW_COMMON_DIR)/%.c
-	$(MAKE_SURE_x11_DIR)
-	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
-endif
 
 $(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_x11_DIR)
@@ -275,12 +267,6 @@ $(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.c
 	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
 
-ifneq ($(QW_COMMON_DIR),)
-$(BUILD_DIR)/svga/%.o: $(QW_COMMON_DIR)/%.c
-	$(MAKE_SURE_svga_DIR)
-	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
-endif
-
 $(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
@@ -325,12 +311,6 @@ $(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.c
 	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
-ifneq ($(QW_COMMON_DIR),)
-$(BUILD_DIR)/gl/%.o: $(QW_COMMON_DIR)/%.c
-	$(MAKE_SURE_gl_DIR)
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-endif
-
 $(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
@@ -374,12 +354,6 @@ $(BUILD_DIR)/3dfx/%.o: $(SRC_DIR)/%.s
 $(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.c
 	$(MAKE_SURE_3dfx_DIR)
 	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
-
-ifneq ($(QW_COMMON_DIR),)
-$(BUILD_DIR)/3dfx/%.o: $(QW_COMMON_DIR)/%.c
-	$(MAKE_SURE_3dfx_DIR)
-	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
-endif
 
 $(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.s
 	$(MAKE_SURE_gl_DIR)

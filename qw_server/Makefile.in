@@ -3,10 +3,12 @@
 # Quake general stuff
 #
 
+PROJECT_DIR  = @top_srcdir@
+SRC_DIR      = @srcdir@
+
 COMMON_DIR=$(PROJECT_DIR)/common
-ifeq ($(BUILD_DIR),)
-BUILD_DIR = .
-endif
+QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
+BUILD_DIR = $(PROJECT_DIR)/targets/qw_server
 
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
@@ -16,13 +18,6 @@ INTEL_ARCH = @INTEL_ARCH@
 ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
-
-HAS_VGA    = @HAS_VGA@
-HAS_GLIDE  = @HAS_GLIDE@
-HAS_TDFXGL = @HAS_TDFXGL@
-HAS_OGL    = @HAS_OGL@
-HAS_XIL    = @HAS_XIL@
-HAS_X11    = @HAS_X11@
 
 MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
                 then \
@@ -36,81 +31,23 @@ MAKE_SURE_bin_DIR = @DIR=bin; \
 
 
 
-PROJECT_DIR  = @top_srcdir@
-SRC_DIR      = @srcdir@
-QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
-
 ########################################################################
 #
 # Source files
 #
 
-# **** Note - two apps may appear to share source, but they may just share
-# source file *names*
-
-ifeq ($(INTEL_ARCH),yes)
-# Source file the Intel archictecture only
-UQ_GENERAL_SRC         = worlda.s
-UQ_SWREND_SRC_PLAT     = dosasm.s
-CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
-SWREND_SRC_PLAT = d_copy.s d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
-	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
-	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
-else
-# Source files for non-Intel platforms
-SWREND_SRC_PLAT = nonintel.c
-endif
-
 #
 # System specific source files
 #
-CD_AUDIO_SRC   = @CD_AUDIO_SRC@
 
-MACH_SND_SRC   = @SND_SRC@
-
-X11_VID_SRC    = @X11_VID_SRC@
-QW_X11_VID_SRC = vid_x.c
-
-SYS_SRC        = @SYS_SRC@
-QW_CL_SYS_SRC  = @QW_CL_SYS_SRC@
 QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
 
 #
 # Networking source files
 #
 # XXX - Should not assume UNIX
-NET_SRC        = net_bsd.c net_udp.c
 QW_NET_SRC     = net_udp.c md4.c
-UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
-#
-# Common source files
-#
-MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c
-SND_SRC        = snd_mem.c snd_mix.c $(MACH_SND_SRC)
-
-#
-# Rendering source files
-#
-
-# OpenGL
-GL_REND_SRC = gl_screen.c gl_model.c gl_draw.c gl_mesh.c gl_refrag.c \
-              gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_test.c gl_warp.c
-QW_GL_REND_SRC = gl_ngraph.c
-
-# Software source
-SW_REND_SRC = screen.c $(SWREND_SRC_PLAT) draw.c \
-	d_edge.c d_fill.c d_init.c d_modech.c d_part.c d_polyse.c d_scan.c \
-	d_sky.c d_sprite.c d_surf.c d_vars.c d_zpoint.c r_aclip.c r_alias.c \
-	r_bsp.c r_draw.c r_edge.c r_efrag.c r_light.c r_main.c r_misc.c \
-	r_sky.c r_sprite.c r_surf.c r_vars.c
-
-#
-# Client source files
-#
-CL_SRC    = cl_demo.c cl_input.c cl_main.c cl_parse.c cl_tent.c 
-QW_CL_SRC = cl_cam.c cl_ents.c cl_pred.c 
-CL_GUI_SRC= console.c sbar.c view.c keys.c menu.c
 
 #
 # Server source files
@@ -120,15 +57,10 @@ SRV_SRC     = sv_main.c sv_user.c sv_move.c sv_phys.c
 # Server-related source used just by QW server
 QW_SRV_SRC  = sv_ccmds.c sv_ents.c sv_init.c sv_send.c sv_nchan.c world.c
 # Server-related source used just by UQ
-UQ_SRV_SRC  = host.c host_cmd.c $(SRV_SRC)
 SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c
 
 
 QW_GENERAL_SRC = pmove.c pmovetst.c
-
-# Source common to both UQ and QW-client
-CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
-	$(CL_ADDITIONAL_GENERAL_SRC) $(SND_SRC) $(CD_AUDIO_SRC) r_part.c
 
 
 ########################################################################
@@ -144,9 +76,8 @@ targets = $(SRVQUAKE)
 
 GENERAL_SRC = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c \
 	$(QW_NET_SRC) net_chan.c $(SRV_SRC) $(QW_SRV_SRC) \
-        $(SRV_PR_SRC) $(QW_SRV_SYS_SRC) $(ADDITIONAL_GENERAL_SRC) \
-	$(QW_GENERAL_SRC)
-ALL_QW_SRV_SRC = $(GENERAL_SRC) $(SRV_VID_SRC) model.c
+        $(SRV_PR_SRC) $(QW_SRV_SYS_SRC) $(QW_GENERAL_SRC)
+ALL_QW_SRV_SRC = $(GENERAL_SRC) model.c
 # XXX - add dos/win specifc source
 
 x: Makefile

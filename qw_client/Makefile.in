@@ -3,10 +3,13 @@
 # Quake general stuff
 #
 
+PROJECT_DIR  = @top_srcdir@
+SRC_DIR      = @srcdir@
+QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
 COMMON_DIR=$(PROJECT_DIR)/common
-ifeq ($(BUILD_DIR),)
-BUILD_DIR = .
-endif
+BIN_PREFIX   = qw-client
+
+BUILD_DIR = $(PROJECT_DIR)/targets/qw_client
 
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
@@ -35,10 +38,6 @@ MAKE_SURE_bin_DIR = @DIR=bin; \
 	 $(MAKE_SURE_DIR)
 
 
-PROJECT_DIR  = @top_srcdir@
-SRC_DIR      = @srcdir@
-QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
-BIN_PREFIX   = qw-client
 
 ########################################################################
 #
@@ -104,9 +103,21 @@ endif
 #
 # System specific source files
 #
-CD_AUDIO_SRC   = @CD_AUDIO_SRC@
+CD_AUDIO_SRC   = cd_wrapper.c
 
-MACH_SND_SRC   = @SND_SRC@
+# sound
+ 
+SND_STYLE      = @SND_STYLE@
+SND_SRC = snd_null.c
+
+ifeq ($(SND_STYLE),Linux)
+SND_SRC = snd_dma.c snd_linux.c snd_mixa.s
+endif
+ifeq ($(SND_STYLE),Solaris)
+SND_SRC = snd_dma.c snd_sun.c
+endif
+
+SND_SRC        += snd_mem.c snd_mix.c
 
 X11_VID_SRC    = @X11_VID_SRC@
 QW_X11_VID_SRC = vid_x.c
@@ -127,7 +138,6 @@ UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 # Common source files
 #
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c
-SND_SRC        = snd_mem.c snd_mix.c $(MACH_SND_SRC)
 
 #
 # Rendering source files

@@ -272,26 +272,6 @@ AC_SUBST(INTEL_ARCH)
 
 ##########################################################
 #
-# CD audio available?
-#
-AC_MSG_CHECKING(for CD audio support)
-case "${target}" in
-changequote(,)dnl
-   i[34567]86-*-linux-gnu*)
-changequote([,])dnl
-      CD_AUDIO_SRC="cd_linux.c" ;;
-   *)
-      CD_AUDIO_SRC="cd_null.c" ;;
-esac
-if test "x$CD_AUDIO_SRC" = xcd_null.c; then
-AC_MSG_RESULT(no)
-else
-AC_MSG_RESULT(yes ($CD_AUDIO_SRC))
-fi
-AC_SUBST(CD_AUDIO_SRC)
-
-##########################################################
-#
 # Sound available?
 #
 AC_MSG_CHECKING(for sound support)
@@ -299,21 +279,19 @@ case "${target}" in
 changequote(,)dnl
    i[34567]86-*-linux-gnu*)
 changequote([,])dnl
-      SND_SRC="snd_dma.c snd_linux.c snd_mixa.s" ;;
+      SND_STYLE="Linux" ;;
    *-solaris*) 
-      SND_SRC="snd_dma.c snd_sun.c" ;;
-   *-sgi*)
-      SND_SRC="snd_null.c" ;;
+      SND_STYLE="Solaris" ;;
    *)
-      SND_SRC="snd_null.c" ;;
+      SND_STYLE="Null" ;;
 # XXX - need to add dos, Windows
 esac
-if test "x$SND_SRC" = xsnd_null.c; then
+if test "x$SND_STYLE" = xNull; then
 AC_MSG_RESULT(no)
 else
-AC_MSG_RESULT(yes ($SND_SRC))
+AC_MSG_RESULT(yes ($SND_STYLE style))
 fi
-AC_SUBST(SND_SRC)
+AC_SUBST(SND_STYLE)
 
 ##########################################################
 #
