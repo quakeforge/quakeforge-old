@@ -161,3 +161,7 @@ N: Andrew "Slade" Alexander
 E: slade@quakelives.com
 D: Reworking of the heart beat, and ping taking code on the server side.
 D: sv_maxrate support..
+
+A: Nye "nyet" Liu
+E: nyet@nbase.com
+D: game dir fixes

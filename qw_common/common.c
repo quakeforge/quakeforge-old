@@ -1637,7 +1637,7 @@ void COM_AddGameDirectory (char *dir)
 	if ((p = strrchr(dir, '/')) != NULL)
 		strcpy(gamedirfile, ++p);
 	else
-		strcpy(gamedirfile, p);
+		strcpy(gamedirfile, dir);
 	strcpy (com_gamedir, dir);
 
 //
@@ -1762,7 +1762,7 @@ void COM_InitFilesystem (void)
 //
 // start up with GAMENAME by default
 //
-	COM_AddGameDirectory (va("%s" GAMENAME, com_basedir) );
+	COM_AddGameDirectory (va("%s/" GAMENAME, com_basedir) );
 	COM_AddGameDirectory (va("%s/qw", com_basedir) );
 
 	// any set gamedirs will be freed up to here
