@@ -41,6 +41,10 @@
 # include <sys/timeb.h>
 #endif
 
+#ifdef _WIN32
+#include <limits.h>		// LONG_MAX
+#include <windows.h>		// timeGetTime()
+#endif
 
 int nostdout = 0;
 //cvar_t	sys_nostdout = {"sys_nostdout","0"};
@@ -151,6 +155,31 @@ int Sys_FileTime (char *path)
 }
 
 
+#ifdef _WIN32
+double Sys_DoubleTime (void)
+{
+	static DWORD starttime;
+	static qboolean first = true;
+	DWORD now;
+
+	now = timeGetTime();
+
+	if (first) {
+		first = false;
+		starttime = now;
+		return 0.0;
+	}
+
+	if (now < starttime) // wrapped?
+		return (now / 1000.0) + (LONG_MAX - starttime / 1000.0);
+
+	if (now - starttime == 0)
+		return 0.0;
+
+	return (now - starttime) / 1000.0;
+}
+
+#else
 /*
 ================
 Sys_DoubleTime
@@ -187,3 +216,5 @@ double Sys_DoubleTime(void)
 	
 	return (secs - starttime) + usecs/1000000.0;
 }
+
+#endif
