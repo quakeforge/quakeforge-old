@@ -508,6 +508,9 @@ R_LoadSkys ( void ) {
 	byte	*skyimage = NULL;
 	char	name[64];
 
+	if (!r_sky->value)
+		return;
+
 	for (i=0 ; i<6 ; i++) {
 		GL_Bind (SKY_TEX + i);
 		snprintf(name, sizeof(name), "env/%s%s.tga",
