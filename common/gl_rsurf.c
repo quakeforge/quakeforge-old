@@ -181,7 +181,7 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	lightmap = surf->samples;
 
 // set to full bright if no light data
-	if (r_fullbright->value || !cl.worldmodel->lightdata)
+	if (/*r_fullbright->value ||*/ !cl.worldmodel->lightdata)
 	{
 		for (i=0 ; i<size ; i++)
 			cblocklights[0][i] =
