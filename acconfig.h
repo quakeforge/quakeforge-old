@@ -1,5 +1,5 @@
 /* Version string */
-#define        VERSION         "0.1.0-pre"
+#undef VERSION
 
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA

@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(common/crc.h)
 
 # Version of this release
-QF_VERSION="0.1.0"
+AC_DEFINE(VERSION,"0.1.0-pre")
 
 AC_CANONICAL_SYSTEM
 AC_LANG_C
@@ -414,7 +414,6 @@ AC_OBJEXT
 # Output files
 #
 
-AC_DEFINE_UNQUOTED(VERSION,"$QF_VERSION")
 AC_CONFIG_HEADER(common/config.h)
 AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
 

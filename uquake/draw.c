@@ -549,17 +549,17 @@ void Draw_ConsoleBackground (int lines)
 
 // hack the version number directly into the pic
 #ifdef _WIN32
-	sprintf (ver, "QuakeForge (WinUQuake) v" VERSION);
+	sprintf (ver, "QuakeForge (WinUQuake) v%s" VERSION);
 	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
 #elif defined(X11)
-	sprintf (ver, "QuakeForge (X11 UQuake) v" VERSION);
+	sprintf (ver, "QuakeForge (X11 UQuake) v%s" VERSION);
 	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
 #elif defined(__linux__)
-	sprintf (ver, "QuakeForge (Linux UQuake) v" VERSION);
+	sprintf (ver, "QuakeForge (Linux UQuake) v%s" VERSION);
 	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
 #else
 	dest = conback->data + 320 - 43 + 320*186;
-	sprintf (ver, "QuakeForge (Unknown UQuake) v" VERSION);
+	sprintf (ver, "QuakeForge (Unknown UQuake) v%s" VERSION);
 #endif
 
 	for (x=0 ; x<strlen(ver) ; x++)

@@ -410,9 +410,9 @@ void Draw_Init (void)
 
 	// hack the version number directly into the pic
 #if defined(__linux__)
-	sprintf (ver, "QuakeForge (Linux GL) v", VERSION);
+	sprintf (ver, "QuakeForge (Linux GL) v%s", VERSION);
 #else
-	sprintf (ver, "QuakeForge (Unkown GL) v", VERSION);
+	sprintf (ver, "QuakeForge (Unkown GL) v%s", VERSION);
 #endif
 	dest = cb->data + 320*186 + 320 - 11 - 8*strlen(ver);
 	y = strlen(ver);
