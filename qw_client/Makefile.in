@@ -3,19 +3,21 @@
 # Quake general stuff
 #
 
-PROJECT_DIR  = @top_srcdir@
-SRC_DIR      = @srcdir@
-QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
-COMMON_DIR   = $(PROJECT_DIR)/common
-BIN_PREFIX   = qw-client
+PROJECT_DIR	= @top_srcdir@
+PROJECT_ODIR	= ..
+SRC_DIR		= @srcdir@
+QW_COMMON_DIR	= $(PROJECT_DIR)/qw_common
+COMMON_DIR	= $(PROJECT_DIR)/common
+COMMON_ODIR	= $(PROJECT_ODIR)/common
+BIN_PREFIX	= qw-client
 
-DESTDIR      =
+DESTDIR		=
 
-prefix      = @prefix@
-bindir      = @bindir@
-mandir      = @mandir@
+prefix		= @prefix@
+bindir		= @bindir@
+mandir		= @mandir@
 
-BUILD_DIR    = ../targets/qw_client
+BUILD_DIR	= $(PROJECT_ODIR)/targets/qw_client
 
 LDFLAGS = @LDFLAGS@ @SND_LIBS@ -lm
 LIBS = @LIBS@
@@ -209,7 +211,7 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 #
 DEFS = @DEFS@
 CFLAGS = @CFLAGS@ -Wall -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. \
-$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
+$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
 ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(QW_X11_VID_SRC) model.c
 ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC) $(QW_GL_REND_SRC) 
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC) $(QW_GL_REND_SRC) 
