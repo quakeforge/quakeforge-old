@@ -80,6 +80,7 @@ Misc Code Fixes:
 
 Cheat/exploit fixes:
   Mads Bondo Dydensborg <madsdyd@challenge.dk>
+  Zephaniah E. Hull <warp@whitestar.soark.net>
 
 Win32 support:
   Marcus Sundberg <mackan@stacken.kth.se>
@@ -92,3 +93,6 @@ CD-ROM support/optimizations:
 AIX/IRIX/Sun support:
   Loring Holden <lsh@cs.brown.edu>
   Tim Rowley <tor@cs.brown.edu>
+
+Network code fixes/cleanups:
+  Roger Sen Montero <rogersm@tau.uab.es>

@@ -192,7 +192,7 @@ qboolean NET_IsClientLegal(netadr_t *adr)
 	NetadrToSockadr (adr, &sadr);
 
 	if ((newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-		Sys_Error ("NET_IsClientLegal: socket:", strerror(errno));
+		Sys_Error ("NET_IsClientLegal: socket: %s", strerror(errno));
 
 	sadr.sin_port = 0;
 
@@ -299,9 +299,9 @@ int UDP_OpenSocket (int port)
 	int i;
 
 	if ((newsocket = socket (PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
-		Sys_Error ("UDP_OpenSocket: socket:", strerror(errno));
+		Sys_Error ("UDP_OpenSocket: socket: %s", strerror(errno));
 	if (ioctl (newsocket, FIONBIO, &_true) == -1)
-		Sys_Error ("UDP_OpenSocket: ioctl FIONBIO:", strerror(errno));
+		Sys_Error ("UDP_OpenSocket: ioctl FIONBIO: %s", strerror(errno));
 	address.sin_family = AF_INET;
 //ZOID -- check for interface binding option
 	if ((i = COM_CheckParm("-ip")) != 0 && i < com_argc) {
@@ -326,14 +326,15 @@ void NET_GetLocalAddress (void)
 	struct sockaddr_in	address;
 	int		namelen;
 
-	gethostname(buff, MAXHOSTNAMELEN);
+	if (gethostname(buff, MAXHOSTNAMELEN) == -1)
+	        Sys_Error ("Net_GetLocalAddress: gethostname: %s", strerror(errno));
 	buff[MAXHOSTNAMELEN-1] = 0;
 
 	NET_StringToAdr (buff, &net_local_adr);
 
 	namelen = sizeof(address);
 	if (getsockname (net_socket, (struct sockaddr *)&address, &namelen) == -1)
-		Sys_Error ("NET_Init: getsockname:", strerror(errno));
+		Sys_Error ("NET_GetLocalAddress: getsockname: %s", strerror(errno));
 	net_local_adr.port = address.sin_port;
 
 	Con_Printf("IP address %s\n", NET_AdrToString (net_local_adr) );
