@@ -25,24 +25,20 @@
 	USA.
 */
 
-#include <unistd.h>
-#include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/stat.h>
 #include <string.h>
 #include <ctype.h>
-#include <sys/wait.h>
-#include <sys/mman.h>
 #include <errno.h>
+#include <signal.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 
 #include "quakedef.h"
 
@@ -63,50 +59,61 @@ cvar_t  sys_linerefresh = {"sys_linerefresh","0"};// set for entity display
 // General routines
 // =======================================================================
 
-void Sys_DebugNumber(int y, int val) {
+void
+Sys_DebugNumber(int y, int val)
+{
 }
 
-void Sys_Quit (void) {
+
+void
+Sys_Quit(void)
+{
 	Host_Shutdown();
-    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~O_NDELAY);
 	exit(0);
 }
 
-void Sys_Init(void) {
+
+void
+Sys_Init(void)
+{
 #if id386
 	Sys_SetFPCW();
 #endif
 }
 
-void Sys_Error (char *error, ...) { 
-    va_list     argptr;
-    char        string[1024];
 
-// change stdin to non blocking
-    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~O_NDELAY);
-    
-    va_start (argptr, error);
-    vsnprintf (string, sizeof(string), error, argptr);
-    va_end (argptr);
+void
+Sys_Error(char *error, ...)
+{
+	va_list     argptr;
+	char        string[1024];
+
+	va_start (argptr, error);
+	vsnprintf (string, sizeof(string), error, argptr);
+	va_end (argptr);
 	fprintf(stderr, "Error: %s\n", string);
 
 	Host_Shutdown ();
 	exit (1);
-
 } 
 
-void Sys_Warn (char *warning, ...) { 
-    va_list     argptr;
-    char        string[1024];
-    
-    va_start (argptr, warning);
-    vsnprintf (string, sizeof(string), warning, argptr);
-    va_end (argptr);
+
+void
+Sys_Warn(char *warning, ...)
+{
+	va_list     argptr;
+	char        string[1024];
+
+	va_start (argptr, warning);
+	vsnprintf (string, sizeof(string), warning, argptr);
+	va_end (argptr);
 	fprintf(stderr, "Warning: %s", string);
-} 
+}
 
-int Sys_FileOpenRead (char *path, int *handle) {
 
+int
+Sys_FileOpenRead(char *path, int *handle)
+{
 	int	h;
 	struct stat	fileinfo;
 
@@ -121,12 +128,14 @@ int Sys_FileOpenRead (char *path, int *handle) {
 	return fileinfo.st_size;
 }
 
-int Sys_FileOpenWrite (char *path) {
 
+int
+Sys_FileOpenWrite(char *path)
+{
 	int	handle;
 
 	umask (0);
-	
+
 	handle = open(path,O_RDWR | O_CREAT | O_TRUNC, 0666);
 
 	if (handle == -1)
@@ -287,13 +296,10 @@ int main (int c, char **v) {
 //	parms.cachedir = cachedir;
 
 	noconinput = COM_CheckParm("-noconinput");
-	if (!noconinput)
-		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | O_NDELAY);
 
 	if (COM_CheckParm("-nostdout")) {
 		nostdout = 1;
 	} else {
-		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | O_NDELAY);
 #ifdef QUAKEWORLD
 		printf ("QuakeForge (QW Client) v%s\n", QF_VERSION);
 #else
