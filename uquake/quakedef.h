@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // quakedef.h -- primary header for client
 
+#ifndef _UQUAKE_QUAKEDEF_H
+#define _UQUAKE_QUAKEDEF_H
+
 #define	GAMENAME	"id1"		// directory to look in by default
 
 #if defined(_WIN32) && !defined(WINDED)
@@ -211,3 +214,5 @@ extern	cvar_t	cl_chasecam;
 void Chase_Init (void);
 void Chase_Reset (void);
 void Chase_Update (void);
+
+#endif /* _UQUAKE_QUAKEDEF_H */

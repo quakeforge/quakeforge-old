@@ -19,6 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // quakedef.h -- primary header for client
 
+#ifndef _QW_COMMON_QUAKEDEF_H
+#define _QW_COMMON_QUAKEDEF_H
+
 #include <common_quakedef.h>
 
 #include "bothdefs.h"
@@ -27,3 +30,5 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 extern	cvar_t	password;
 
 qboolean Host_SimulationTime(float time);
+
+#endif /* _QW_COMMON_QUAKEDEF_H */
