@@ -725,13 +725,17 @@ COM_LoadGameDirectory(char *dir)
 	pack_t			*pak;
 	DIR				*dir_ptr;
 	struct dirent	*dirent;
-	char			**pakfiles;
+	char			**pakfiles = NULL;
 	int				i = 0, bufsize = 0, count = 0;
 
-	pakfiles = calloc(1, FBLOCK_SIZE);
+	pakfiles = malloc(FBLOCK_SIZE * sizeof(char *));
 	bufsize += FBLOCK_SIZE;
 	if (!pakfiles)
 		goto COM_LoadGameDirectory_free;
+
+	for (i = count; i < bufsize; i++) {
+		pakfiles[i] = NULL;
+	}
 	
 	dir_ptr = opendir(dir);
 	if (!dir_ptr)
@@ -741,12 +745,13 @@ COM_LoadGameDirectory(char *dir)
 		if (!fnmatch("*.pak", dirent->d_name, FNMATCH_FLAGS)) {
 			if (count >= bufsize) {
 				bufsize += FBLOCK_SIZE;
-				pakfiles = realloc(pakfiles, bufsize);
+				pakfiles = realloc(pakfiles, bufsize * sizeof(char *));
 				if (!pakfiles)
 					goto COM_LoadGameDirectory_free;
 				for (i = count; i < bufsize; i++)
 					pakfiles[i] = NULL;
 			}
+
 			pakfiles[count] = malloc(FNAME_SIZE);
 			snprintf(pakfiles[count], FNAME_SIZE - 1, "%s/%s", dir,
 					dirent->d_name);
@@ -756,8 +761,8 @@ COM_LoadGameDirectory(char *dir)
 	}
 	closedir(dir_ptr);
 
-	qsort(pakfiles, count, FNAME_SIZE, 
-			(int (*)(const void *, const void *)) Q_qstrcmp);
+	qsort(pakfiles, count - 1, sizeof(char *), 
+			(int (*)(const void *, const void *)) strcmp);
 
 	for (i = 0; i < count; i++) {
 		pak = COM_LoadPackFile(pakfiles[i]);
