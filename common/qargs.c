@@ -22,7 +22,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include <malloc.h>
+#include "config.h"
+#ifdef HAVE_MALLOC_H /* QF being compiled with -Werror */
+# include <malloc.h> /* causes OpenBSD's build to fail here */
+#endif
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>

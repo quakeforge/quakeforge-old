@@ -1,4 +1,7 @@
+#include "config.h"
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#endif
 #include <stdarg.h>
 #include <stdlib.h>
 #include "quakeio.h"
