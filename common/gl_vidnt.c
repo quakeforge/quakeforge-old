@@ -124,7 +124,7 @@ glvert_t glv;
 
 HWND WINAPI InitializeWindow (HINSTANCE hInstance, int nCmdShow);
 
-viddef_t	vid;				// global video state
+extern viddef_t        vid;                    // global video state
 
 unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
