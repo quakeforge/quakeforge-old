@@ -1,5 +1,9 @@
 /*
+gl_cl_parse.c - parse a message received from the server (GL renderer)
 Copyright (C) 1996-1997 Id Software, Inc.
+Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,7 +21,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl_parse.c  -- parse a message received from the server
 
 #include "quakedef.h"
 #include "glquake.h"
@@ -38,6 +41,7 @@ relinked.  Other attributes can change without relinking.
 */
 int	bitcounts[16];
 
+#ifdef UQUAKE
 void CL_ParseUpdate (int bits)
 {
 	model_t		*model;
@@ -183,6 +187,7 @@ if (bits&(1<<i))
 		ent->forcelink = true;
 	}
 }
+#endif
 /*
 =====================
 CL_NewTranslation
@@ -190,6 +195,12 @@ CL_NewTranslation
 */
 void CL_NewTranslation (int slot)
 {
+#ifdef QUAKEWORLD
+	if (slot > MAX_CLIENTS)
+		Sys_Error ("CL_NewTranslation: slot > MAX_CLIENTS");
+
+	R_TranslatePlayerSkin(slot);
+#else
 	int		i, j;
 	int		top, bottom;
 	byte	*dest, *source;
@@ -217,4 +228,5 @@ void CL_NewTranslation (int slot)
 			for (j=0 ; j<16 ; j++)
 				dest[BOTTOM_RANGE+j] = source[bottom+15-j];		
 	}
+#endif
 }
