@@ -59,3 +59,7 @@ to quake-devel@lists.sourceforge.net with details.
  * port to MacOS (this has already been done as a seperate project, ala
    the author does not wish to help merge his changes to our tree, so
    until then... no mac port)
+ * add something like qstat to the multiplayer menu in qw so that we can
+   just select servers to play on while in the game.
+ * implement a "feign death" action, so that users can play dead
+ * allow server admin to adjust air control (ie. in low gravity)
