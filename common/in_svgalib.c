@@ -101,7 +101,7 @@ void Force_CenterView_f(void)
 }
 
 
-void S_IN_Init(void)
+int S_IN_Init(void)
 {
 	if (COM_CheckParm("-nokbd")) UseKeyboard = 0;
 	if (COM_CheckParm("-nomouse")) UseMouse = 0;
@@ -112,6 +112,7 @@ void S_IN_Init(void)
 		IN_init_mouse();
 
 	in_svgalib_inited = 1;
+	return 1;
 }
 
 static void IN_init_kb()
