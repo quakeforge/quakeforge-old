@@ -480,9 +480,14 @@ R_DrawAliasModel (entity_t *e) {
 				ambientlight += add;
 				// ZOID: models should be affected by
 				//       dlights as well
-				shadelight[0] += cl_dlights[lnum].color[0];
-				shadelight[1] += cl_dlights[lnum].color[1];
-				shadelight[2] += cl_dlights[lnum].color[2];
+				if (r_dynamic->value) {
+					shadelight[0] +=
+						cl_dlights[lnum].color[0];
+					shadelight[1] +=
+						cl_dlights[lnum].color[1];
+					shadelight[2] +=
+						cl_dlights[lnum].color[2];
+				}
 				shadelight[3] += add;
 			}
 		}
