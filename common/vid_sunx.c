@@ -55,7 +55,7 @@ int p_mouse_x;
 int p_mouse_y;
 qboolean	mouse_grabbed = false; // we grab it when console is up
 
-int     options_items = 14;
+int     VID_options_items = 1;
 
 // The following X property format is defined in Motif 1.1's
 // Xm/MwmUtils.h, but QUAKE should not depend on that header
@@ -1247,15 +1247,14 @@ void IN_Move (usercmd_t *cmd)
 void VID_ExtraOptionDraw(void)
 {
 	// Windowed Mouse
-        M_Print (16, 128, "             Use Mouse");
-        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+	M_Print (16, 128, "             Use Mouse");
+	M_DrawCheckbox (220, 128, _windowed_mouse.value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
-	case 12:	// _windowed_mouse
+	switch(option_cursor) {
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 

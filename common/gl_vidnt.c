@@ -101,7 +101,7 @@ static qboolean fullsbardraw = false;
 
 static float vid_gamma = 1.0;
 
-int 	options_items = 14;
+int 	VID_options_items = 1;
 
 HGLRC	baseRC;
 HDC		maindc;
@@ -1954,9 +1954,8 @@ void VID_ExtraOptionDraw(void)
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
-	case 12:	// _windowed_mouse
+	switch(option_cursor) {
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 

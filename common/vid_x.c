@@ -93,7 +93,7 @@ static XShmSegmentInfo	x_shminfo[2];
 
 static int verbose=0;
 
-int     options_items = 14;
+int     VID_options_items = 1;
 
 static byte current_palette[768];
 
@@ -1092,14 +1092,14 @@ void VID_ExtraOptionDraw(void)
 {
 	// Windowed Mouse
         M_Print (16, 128, "             Use Mouse");
-        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+        M_DrawCheckbox(220, 128, _windowed_mouse.value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor)
 	{
-	case 12:	// _windowed_mouse
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 

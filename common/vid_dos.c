@@ -58,7 +58,7 @@ cvar_t		block_switch = {"block_switch","0", true};
 cvar_t		vid_window_x = {"vid_window_x", "0", true};
 cvar_t		vid_window_y = {"vid_window_y", "0", true};
 
-int     options_items = 13;
+int	VID_options_items = 0;
 
 int	d_con_indirect = 0;
 
@@ -791,9 +791,8 @@ void VID_ExtraOptionCmd(int option_cursor)
 /*
 	switch(option_cursor)
 	{
-	case 12:  // Always start with 12
+	case 1:  // Always start with 1
 	break;
 	}
 */
 }
-

@@ -40,7 +40,7 @@ unsigned short  d_8to16table[256];
 int    VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes = 0;
 byte    *VGA_pagebase;
 
-int	options_items = 14;
+int	VID_options_items = 0;
 
 static SDL_Surface *screen = NULL;
 
@@ -424,12 +424,10 @@ void VID_ExtraOptionDraw(void)
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
-	case 12:	// _windowed_mouse
+	switch(option_cursor) {
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
 	}
 }
-

@@ -132,7 +132,7 @@ Window				x_win, x_root_win;
 qboolean			x_focus = true;
 int				global_dx, global_dy;
 
-int     options_items = 14;
+int     VID_options_items = 1;
 
 static Colormap			x_cmap;
 static GC			x_gc;
@@ -1268,15 +1268,14 @@ void IN_Move (usercmd_t *cmd)
 void VID_ExtraOptionDraw(void)
 {
 	// Windowed Mouse
-        M_Print (16, 128, "             Use Mouse");
-        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+	M_Print (16, 128, "             Use Mouse");
+	M_DrawCheckbox (220, 128, _windowed_mouse.value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
-	case 12:	// _windowed_mouse
+	switch(option_cursor) {
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 

@@ -29,8 +29,8 @@ viddef_t	vid;				// global video state
 #define	BASEWIDTH	320
 #define	BASEHEIGHT	200
 
-// Number of items in the options menu: none extra is 13
-int     options_items = 13;
+// Number of items in the options menu: none extra is 0
+int	VID_options_items = 0;
 
 byte	vid_buffer[BASEWIDTH*BASEHEIGHT];
 short	zbuffer[BASEWIDTH*BASEHEIGHT];
@@ -99,7 +99,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 /*
 	switch(option_cursor)
 	{
-	case 12:  // Always start with 12
+	case 1:  // Always start with 1
 	break;
 	}
 */

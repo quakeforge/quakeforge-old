@@ -63,6 +63,8 @@ static byte     backingbuf[48*24];
 int	VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
 byte	*VGA_pagebase;
 
+int	VID_options_items = 0;
+
 
 void
 D_BeginDirectRect (int x, int y, byte *pbitmap, int width, int height)
@@ -654,12 +656,11 @@ VID_ExtraOptionDraw(void)
 void
 VID_ExtraOptionCmd(int option_cursor)
 {
-/*
-        switch(option_cursor)
-        {
-        case 12:  // Always start with 12
-        break;
+#if 0
+        switch(option_cursor) {
+        case 1:  // Always start with 1
+		break;
         }
-*/
+#endif
 }
 

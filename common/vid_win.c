@@ -36,7 +36,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define MAX_MODE_LIST	30
 #define VID_ROW_SIZE	3
-#define OPTIONS_ITEMS	3
 
 qboolean	dibonly;
 
@@ -145,7 +144,7 @@ int		aPage;					// Current active display page
 int		vPage;					// Current visible display page
 int		waitVRT = true;			// True to wait for retrace on flip
 
-int     options_items = 14;
+int     VID_options_items = 1;
 
 static vmode_t	badmode;
 
@@ -3395,8 +3394,7 @@ void VID_MenuKey (int key)
 
 void VID_ExtraOptionDraw(void)
 {
-	if(modestate == MS_WINDOWED)
-	{
+	if (modestate == MS_WINDOWED) {
 		// Windowed Mouse
         	M_Print (16, 128, "             Use Mouse");
         	M_DrawCheckbox (220, 128, _windowed_mouse.value);
@@ -3405,9 +3403,8 @@ void VID_ExtraOptionDraw(void)
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
-	case 12:	// _windowed_mouse
+	switch(option_cursor) {
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 

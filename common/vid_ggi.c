@@ -69,7 +69,7 @@ static long GGI_highhunkmark, GGI_buffersize;
 static int	vid_surfcachesize;
 static void	*vid_surfcache;
 
-int     options_items = 14;
+int	VID_options_items = 1;
 
 static void
 do_scale8(int xsize, int ysize, uint8 *dest, uint8 *src)
@@ -936,12 +936,10 @@ void VID_ExtraOptionDraw(void)
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor)
-	{
-	case 12:	// _windowed_mouse
+	switch(option_cursor) {
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
 	}
 }
-
