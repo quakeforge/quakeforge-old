@@ -39,7 +39,7 @@ void GL_EndRendering (void);
 		not including it... here's what his "new" code looks like:
 
 -#ifndef APIENTRY
--/* Mesa defines APIENTRY, but other versions of OpenGL do not */
+- Mesa defines APIENTRY, but other versions of OpenGL do not 
 -#ifdef GLAPIENTRY
 -#define APIENTRY GLAPIENTRY
 -#else
