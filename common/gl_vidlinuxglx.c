@@ -38,6 +38,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/extensions/xf86dga.h>
 #endif
 
+#ifdef XMESA
+#include <GL/xmesa.h>
+
+#define OPTIONS_ITEMS	15
+#else
+#define OPTIONS_ITEMS   14
+#endif
 
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
@@ -61,6 +68,10 @@ unsigned char	d_15to8table[65536];
 
 cvar_t	_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t	vid_mode = {"vid_mode","0",false};
+
+#ifdef XMESA
+cvar_t  vid_mesa_mode = {"vid_mesa_mode", "0"};
+#endif
  
 static float   mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
@@ -784,4 +795,41 @@ void IN_MouseMove (usercmd_t *cmd)
 void IN_Move (usercmd_t *cmd)
 {
 	IN_MouseMove(cmd);
+}
+
+void VID_ExtraOptionDraw()
+{
+
+	// Windowed Mouse
+        M_Print (16, 128, "             Use Mouse");
+        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+
+
+#ifdef XMESA
+	// Mesa has a fullscreen / windowed glx hack.
+
+        M_Print (16, 134, "            Fullscreen");
+        M_DrawCheckbox (220, 136, vid_mesa_mode.value);
+#endif
+
+}
+
+void VID_ExtraOptionCmd(int option_cursor)
+{
+	switch(option_cursor)
+	{
+	case 12:	// _windowed_mouse
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		break;
+
+#ifdef XMESA
+	case 13:
+		Cvar_SetValue ("vid_mesa_mode",!vid_mesa_mode.value);
+		XMesaSetFXmode(vid_mesa_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW);
+                break;
+	
+#endif
+
+
+	}
 }

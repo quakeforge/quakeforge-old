@@ -1241,3 +1241,22 @@ void IN_Move (usercmd_t *cmd)
 	}
 	mouse_x = mouse_y = 0.0;
 }
+
+void VID_ExtraOptionDraw()
+{
+	// Windowed Mouse
+        M_Print (16, 128, "             Use Mouse");
+        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+}
+
+void VID_ExtraOptionCmd(int option_cursor)
+{
+	switch(option_cursor)
+	{
+	case 12:	// _windowed_mouse
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		break;
+
+	}
+}
+

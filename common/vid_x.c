@@ -42,6 +42,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "d_local.h"
 
+#define OPTIONS_ITEMS	14
+
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};
 float old_windowed_mouse;
@@ -1085,3 +1087,22 @@ void IN_Move (usercmd_t *cmd)
 	}
 	mouse_x = mouse_y = 0.0;
 }
+
+void VID_ExtraOptionDraw()
+{
+	// Windowed Mouse
+        M_Print (16, 128, "             Use Mouse");
+        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+}
+
+void VID_ExtraOptionCmd(int option_cursor)
+{
+	switch(option_cursor)
+	{
+	case 12:	// _windowed_mouse
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		break;
+
+	}
+}
+

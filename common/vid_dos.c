@@ -779,3 +779,19 @@ void VID_MenuKey (int key)
 	}
 }
 
+void VID_ExtraOptionDraw()
+{
+/* Port specific Options menu entrys */
+}
+
+void VID_ExtraOptionCmd(int option_cursor)
+{
+/*
+	switch(option_cursor)
+	{
+	case 12:  // Always start with 12
+	break;
+	}
+*/
+}
+

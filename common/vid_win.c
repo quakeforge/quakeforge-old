@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define MAX_MODE_LIST	30
 #define VID_ROW_SIZE	3
+#define OPTIONS_ITEMS	3
 
 qboolean	dibonly;
 
@@ -3389,3 +3390,25 @@ void VID_MenuKey (int key)
 		break;
 	}
 }
+
+void VID_ExtraOptionDraw()
+{
+	if(modestate == MS_WINDOWED)
+	{
+		// Windowed Mouse
+        	M_Print (16, 128, "             Use Mouse");
+        	M_DrawCheckbox (220, 128, _windowed_mouse.value);
+	}
+}
+
+void VID_ExtraOptionCmd(int option_cursor)
+{
+	switch(option_cursor)
+	{
+	case 12:	// _windowed_mouse
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		break;
+
+	}
+}
+

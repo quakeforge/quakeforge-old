@@ -85,6 +85,12 @@ int VID_SetMode (int modenum, unsigned char *palette);
 void VID_HandlePause (qboolean pause);
 // called only on Win32, when pause happens, so the mouse can be released
 
+void VID_ExtraOptionDraw();
+// draw extra option menu entries
+
+void VID_ExtraOptionCmd(int options_cursor);
+// commands for the extra menu options of the target
+
 #ifdef GLQUAKE
 qboolean VID_Is8bit(void);
 #endif

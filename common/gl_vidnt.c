@@ -40,6 +40,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define NO_MODE					(MODE_WINDOWED - 1)
 #define MODE_FULLSCREEN_DEFAULT	(MODE_WINDOWED + 1)
 
+#define OPTIONS_ITEMS	14
+
 typedef struct {
 	modestate_t	type;
 	int			width;
@@ -1942,3 +1944,22 @@ void VID_MenuKey (int key)
 		break;
 	}
 }
+
+void VID_ExtraOptionDraw()
+{
+	// Windowed Mouse
+        M_Print (16, 128, "             Use Mouse");
+        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+}
+
+void VID_ExtraOptionCmd(int option_cursor)
+{
+	switch(option_cursor)
+	{
+	case 12:	// _windowed_mouse
+		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		break;
+
+	}
+}
+

@@ -827,3 +827,14 @@ void IN_Move (usercmd_t *cmd)
 {
 	IN_MouseMove(cmd);
 }
+
+void VID_ExtraOptionDraw() 
+{
+// No extra option menu items yet
+}
+
+void VID_ExtraOptionCmd() 
+{
+// Read the previous function
+}
+
