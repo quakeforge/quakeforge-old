@@ -67,7 +67,7 @@ all: $(targets)
 # Source files
 #
 
-ifneq ($(NO_ASMOPT),yes)
+ifeq ($(ASM_ARCH),i386)
 # Source file the Intel archictecture only
 CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s worlda.s
 SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
