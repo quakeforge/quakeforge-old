@@ -3,58 +3,13 @@
 # Quake general stuff
 #
 
-PROJECT_DIR	= @top_srcdir@
-PROJECT_ODIR	= ..
-SRC_DIR		= @srcdir@
-COMMON_DIR	= $(PROJECT_DIR)/common
-COMMON_ODIR	= $(PROJECT_ODIR)/common
-BIN_PREFIX	= uquake
+PROJECT_DIR	:= @top_srcdir@
+BIN_PREFIX	:= uquake
+SRC_DIR		:= @srcdir@
+MODULE		:= uquake
+OBJ_PATTERN	= $(BUILD_DIR)/common_lib/%.@OBJEXT@ $(BUILD_DIR)/%.@OBJEXT@
 
-DESTDIR		=
-
-prefix		= @prefix@
-exec_prefix	= @exec_prefix@
-bindir		= @bindir@
-libdir		= @libdir@
-mandir		= @mandir@
-
-TARGET_DIR	= $(PROJECT_ODIR)/targets
-BUILD_DIR	= $(TARGET_DIR)/uquake
-
-LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
-LIBS = @LIBS@
-CC = @CC@
-INTEL_ARCH = @INTEL_ARCH@
-NO_ASMOPT = @NO_ASMOPT@
-GENERATIONS = @GENERATIONS@
-
-ifneq ($(SRC_DIR),.)
-SRC_DIR_INC = -I$(SRC_DIR)
-endif
-
-HAS_DGA    = @HAS_DGA@
-HAS_VGA    = @HAS_VGA@
-HAS_MGL    = @HAS_MGL@
-HAS_GGI    = @HAS_GGI@
-HAS_SVGA   = @HAS_SVGA@
-HAS_GLIDE  = @HAS_GLIDE@
-HAS_TDFXGL = @HAS_TDFXGL@
-HAS_OGL    = @HAS_OGL@
-HAS_XIL    = @HAS_XIL@
-HAS_X11    = @HAS_X11@
-HAS_SDL    = @HAS_SDL@
-
-HAVE_WSOCK	= @HAVE_WSOCK@
-HAVE_UDP	= @HAVE_UDP@
-
-MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
-                then \
-                   true; \
-                else \
-		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
-		   mkdir -p $(BUILD_DIR)/$$DIR; \
-                fi
-
+include $(PROJECT_DIR)/Rules.mk
 
 ########################################################################
 #
@@ -95,19 +50,12 @@ ifeq ($(HAS_SDL),yes)
 SDLQUAKE = $(BIN_PREFIX)-sdl
 endif
 
-RELEASE = @RELEASE@
-ifeq ($(RELEASE),yes)
-OPTFLAGS = @RELEASE_CFLAGS@
-else
-OPTFLAGS = -g
-endif
-
 soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(MGLQUAKE) \
 	$(VGAQUAKE)
 gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
 lib_targets   = $(COMMON_LIB)
 targets       = $(lib_targets) $(gl_targets) $(soft_targets)
-CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
+CLEAN_TARGETS = $(patsubst %,clean-%, $(gl_targets) $(soft_targets))
 .PHONY: $(targets) $(CLEAN_TARGETS) clean-soft clean-gl
 
 all: $(targets)
@@ -117,11 +65,8 @@ all: $(targets)
 # Source files
 #
 
-ifneq ($(NO_ASMOPT),yes)
-
+ifeq ($(ASM_ARCH),i386)
 # Source file the Intel archictecture only
-
-CFLAGS = -Did386=1
 UQ_GENERAL_SRC         = worlda.s
 UQ_SWREND_SRC_PLAT     = dosasm.s
 CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
@@ -129,10 +74,7 @@ SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
 	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
 	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
 else
-
 # Source files for non-Intel platforms
-
-CFLAGS = -Did386=0
 SWREND_SRC_PLAT = nonintel.c
 endif
 
@@ -199,9 +141,8 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 #
 # Directory specific stuff
 #
-DEFS         = @DEFS@
-CFLAGS       += @CFLAGS@ -DUQUAKE -DLIBDIR=\"$(libdir)\" $(OPTFLAGS) \
-$(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_ODIR) -I$(COMMON_DIR)
+CFLAGS		+= -DUQUAKE
+LDFLAGS		+= @SOUND_LIBS@
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
 	   $(SYS_SRC) world.c $(SRV_PR_SRC) \
@@ -212,53 +153,6 @@ GENERAL_SRC = $(CL_COMMON_SRC) \
 
 ###########################################################################
 #
-# Compilation rules
-#
-
-# Common lib targets.
-
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/common_lib/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-# Software targets
-
-$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-# GL targets
-
-$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-###########################################################################
-#
 # Specific target rules
 #
 
@@ -266,10 +160,7 @@ $(BUILD_DIR)/%.@OBJEXT@: $(COMMON_DIR)/%.s
 ALL_COMMON_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix \
 			  .@OBJEXT@, $(basename $(GENERAL_SRC) .c .s)))
 
-common_lib_DIR:
-	@DIR=common_lib; $(MAKE_SURE_DIR)
-
-$(COMMON_LIB): common_lib_DIR $(BUILD_DIR)/common_lib.a
+$(COMMON_LIB): $(BUILD_DIR)/common_lib.a
 
 $(BUILD_DIR)/common_lib.a: $(ALL_COMMON_LIB_OBJS)
 	ar cru $@ $(ALL_COMMON_LIB_OBJS)
@@ -510,11 +401,8 @@ distclean: clean
 $(CLEAN_TARGETS):
 	rm -f $(BUILD_DIR)/../$(subst clean-,,$@)
 
-clean-soft clean-gl clean-common_lib:
-	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
-
-clean: clean-soft clean-gl clean-common_lib $(CLEAN_TARGETS)
-	-rm -f $(BUILD_DIR)/*
+clean: $(CLEAN_TARGETS)
+	-rm -rf $(BUILD_DIR)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)

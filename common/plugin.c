@@ -35,7 +35,6 @@
 #include <dlfcn.h>
 #include <sys/param.h>
 #else
-#define LIBDIR ""
 #include "input.h"
 #endif
 
@@ -46,6 +45,9 @@
 #include <plugin.h>
 #include <cvar.h>
 
+#ifndef LIBDIR
+#define LIBDIR
+#endif
 
 //cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
 cvar_t	*fs_drvpath;

@@ -3,34 +3,13 @@
 # Quake general stuff
 #
 
-PROJECT_DIR	= @top_srcdir@
-PROJECT_ODIR	= ..
-SRC_DIR		= @srcdir@
-QW_COMMON_DIR	= $(PROJECT_DIR)/qw_common
-COMMON_DIR	= $(PROJECT_DIR)/common
-COMMON_ODIR	= $(PROJECT_ODIR)/common
-BIN_PREFIX	= qw-server
+PROJECT_DIR	:= @top_srcdir@
+BIN_PREFIX	:= qw-server
+SRC_DIR		:= @srcdir@
+MODULE		:= qw_server
+OBJ_PATTERN	= $(BUILD_DIR)/%.@OBJEXT@
 
-DESTDIR		=
-
-prefix		= @prefix@
-exec_prefix	= @exec_prefix@
-bindir		= @bindir@
-libdir		= @libdir@
-mandir		= @mandir@
-
-BUILD_DIR	= $(PROJECT_ODIR)/targets/qw_server
-
-LDFLAGS = @LDFLAGS@ @NET_LIBS@ -lm
-LIBS = @LIBS@
-CC = @CC@
-INTEL_ARCH = @INTEL_ARCH@
-GENERATIONS = @GENERATIONS@
-
-ifneq ($(SRC_DIR),.)
-SRC_DIR_INC = -I$(SRC_DIR)
-endif
-
+include $(PROJECT_DIR)/Rules.mk
 
 ########################################################################
 #
@@ -58,9 +37,7 @@ QW_GENERAL_SRC = pmove.c pmovetst.c
 #
 # Directory specific stuff
 #
-CFLAGS = @CFLAGS@ -DQUAKEWORLD -DSERVERONLY $(OPTFLAGS) $(DEFS) -I. \
-$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
-DEFS = @DEFS@
+CFLAGS	+= -DQUAKEWORLD -DSERVERONLY
 
 SRVQUAKE = qw-server
 targets = $(SRVQUAKE)
@@ -93,25 +70,7 @@ SRV_CFLAGS = -DSRV -DLIBDIR=\"$(libdir)\" $(X_CFLAGS)
 # FIXME: Don't use X_EXTRA_LIBS below
 SRV_LDFLAGS = @X_EXTRA_LIBS@
 
-srv_DIR:
-	mkdir -p $(BUILD_DIR)
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/%.o: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.o: $(QW_COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/%.o: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(SRVQUAKE): srv_DIR $(BUILD_DIR)/../$(SRVQUAKE)
+$(SRVQUAKE): $(BUILD_DIR)/../$(SRVQUAKE)
 
 $(BUILD_DIR)/../$(SRVQUAKE): $(ALL_SRV_OBJS)
 	$(CC) $(CFLAGS) $(ALL_SRV_OBJS) $(SRV_LDFLAGS) $(LDFLAGS) $(LIBS) \
@@ -130,7 +89,7 @@ clean-qw-server:
 	rm -f $(BUILD_DIR)/../qw-server
 
 clean: clean-qw-server
-	-rm -f $(BUILD_DIR)/*
+	-rm -rf $(BUILD_DIR)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)

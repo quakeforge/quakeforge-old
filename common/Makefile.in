@@ -4,61 +4,14 @@
 #
 
 PROJECT_DIR	:= @top_srcdir@
-PROJECT_ODIR	:= ..
-SRC_DIR		:= @srcdir@
-COMMON_DIR	:= $(PROJECT_DIR)/common
-COMMON_ODIR	:= $(PROJECT_ODIR)/common
 BIN_PREFIX	:= common
+SRC_DIR		:= @srcdir@
+MODULE		:= common
+OBJ_PATTERN	= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
 
-DESTDIR		:=
-
-prefix		:= @prefix@
-exec_prefix	:= @exec_prefix@
-bindir		:= @bindir@
-libdir		:= @libdir@
-mandir		:= @mandir@
-
-TARGET_DIR	:= $(PROJECT_ODIR)/targets
-BUILD_DIR	:= $(TARGET_DIR)/common
-OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
+include $(PROJECT_DIR)/Rules.mk
 
 SOUND_LIB	:= sound_lib.a
-
-LDFLAGS = @LDFLAGS@ -lm
-LIBS = @LIBS@
-CC = @CC@
-INTEL_ARCH = @INTEL_ARCH@
-
-ifneq ($(SRC_DIR),.)
-SRC_DIR_INC = -I$(SRC_DIR)
-endif
-
-HAS_MGL    = @HAS_MGL@
-HAS_GGI    = @HAS_GGI@
-HAS_SVGA   = @HAS_SVGA@
-HAS_GLIDE  = @HAS_GLIDE@
-HAS_TDFXGL = @HAS_TDFXGL@
-HAS_OGL    = @HAS_OGL@
-HAS_XIL    = @HAS_XIL@
-HAS_X11    = @HAS_X11@
-HAS_SDL    = @HAS_SDL@
-
-MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
-                then \
-                   true; \
-                else \
-		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
-		   mkdir -p $(BUILD_DIR)/$$DIR; \
-                fi
-
-
-
-RELEASE = @RELEASE@
-ifeq ($(RELEASE),yes)
-OPTFLAGS = @RELEASE_CFLAGS@
-else
-OPTFLAGS = -g
-endif
 
 lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB)
 targets       = $(lib_targets)
@@ -71,14 +24,9 @@ all: $(targets)
 # Source files
 #
 
-ifeq ($(INTEL_ARCH),yes)
-
+ifeq ($(ASM_ARCH),i386)
 # Source file the Intel archictecture only
-
 SOUND_SRC += snd_mixa.s
-else
-
-# Source files for non-Intel platforms
 endif
 
 # System specific source files
@@ -118,26 +66,6 @@ QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 #QW_NET_SRC	= net_udp6.c net_com.c mdfour.c
 
 
-########################################################################
-#
-# Directory specific stuff
-#
-DEFS = @DEFS@
-CFLAGS = @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. \
-$(SRC_DIR_INC) -I$(COMMON_ODIR) -I$(COMMON_DIR)
-
-
-###########################################################################
-#
-# Compilation rules
-#
-
-$(OBJ_PATTERN): $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(OBJ_PATTERN): $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
 ###########################################################################
 #
 # Specific target rules
@@ -148,10 +76,7 @@ $(OBJ_PATTERN): $(SRC_DIR)/%.s
 SOUND_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/sound_lib/%,$(addsuffix \
 			  .@OBJEXT@, $(basename $(SOUND_SRC) .c .s)))
 
-sound_lib_DIR:
-	@DIR=sound_lib; $(MAKE_SURE_DIR)
-
-$(SOUND_LIB): sound_lib_DIR $(TARGET_DIR)/sound_lib.a
+$(SOUND_LIB): $(TARGET_DIR)/sound_lib.a
 
 $(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
 	ar cru $@ $(SOUND_LIB_OBJS)
@@ -166,13 +91,10 @@ distclean: clean
 	rm -f Makefile
 
 $(CLEAN_TARGETS):
-	rm -f $(BUILD_DIR)/../$(subst clean-,,$@)
+	rm -f $(TARGET_DIR)/$(subst clean-,,$@)
 
-clean-sound_lib:
-	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
-
-clean: clean-sound_lib $(CLEAN_TARGETS)
-	-rmdir $(BUILD_DIR)
+clean: $(CLEAN_TARGETS)
+	-rm -rf $(BUILD_DIR)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)

@@ -17,7 +17,7 @@ all:
 	done
 
 distclean:
-	rm -f config.cache config.log config.status Makefile
+	rm -f config.cache config.log config.status Makefile Rules.mk
 	rm -f common/config.h
 	rm -f build_rpm quakeforge-*.tar.gz quakeforge.spec
 	find . -name \*~ | xargs rm -f
