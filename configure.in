@@ -3,8 +3,14 @@ AC_PREREQ(2.13)
 AC_INIT(common/crc.h)
 
 dnl Version of this release
-AC_DEFINE(QF_VERSION,"0.1.0-pre")
+AC_DEFINE(QF_VERSION,"0.1-pre")
 AC_DEFINE(VERSION,"2.40")
+
+dnl Set to yes for releases
+RELEASE=no
+
+dnl At some point this might be set to yes by default
+NEWSTYLE=no
 
 AC_CANONICAL_SYSTEM
 AC_LANG_C
@@ -52,12 +58,21 @@ AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
 	ftime _ftime fcntl stat putenv select socket strerror strstr \
 	snprintf _snprintf vsnprintf _vsnprintf)
 
+NEWSTYLE=no
+AC_ARG_ENABLE(newstyle,
+[  --enable-newstyle       compile with defaults a bit different than those
+                          used by Id Software (does not affect gameplay)],
+   NEWSTYLE=$enable_newstyle
+)
+if test "x$NEWSTYLE" = xyes; then
+   AC_DEFINE(NEWSTYLE)
+fi
+
 AC_ARG_ENABLE(release,
 [  --enable-release        compile release (with optimization)],
        RELEASE=$enable_release
 )
 
-dnl FIXME: Remove next line when ALSA support is added
 AC_ARG_ENABLE(alsa,
 [  --enable-alsa           enable alsa support],
 )	

@@ -1,6 +1,9 @@
-/* Version string */
+/* Version strings */
 #undef QF_VERSION
 #undef VERSION
+
+/* Define if you want to use QF-style defaults instead of Id-style */
+#undef NEWSTYLE
 
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA
