@@ -58,6 +58,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "world.h"
 #include "pmove.h"
 
+#ifndef max
+# define max(a,b) ((a) > (b) ? (a) : (b))
+# define min(a,b) ((a) < (b) ? (a) : (b))
+#endif
+
 /* Win32 have these underscored... */
 #if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
 # define snprintf _snprintf
