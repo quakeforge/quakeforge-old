@@ -238,6 +238,15 @@ static void event_button(XEvent *event)
 		case 2:
 		case 3:
 			Key_Event(K_MOUSE1 + but - 1, event->type == ButtonPress);
+			break;
+		case 4:
+			Key_Event(K_MWHEELUP, 1);
+			Key_Event(K_MWHEELUP, 0);
+			break;
+		case 5:
+			Key_Event(K_MWHEELDOWN, 1);
+			Key_Event(K_MWHEELDOWN, 0);
+			break;
 	}
 }
 
