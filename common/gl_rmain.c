@@ -95,7 +95,11 @@ cvar_t	r_netgraph = {"r_netgraph","0"};
 // _reduced_ visability shouldn't be considered cheating :)
 cvar_t  r_fog = {"r_fog", "0"};
 cvar_t  r_volfog = {"r_volfog", "0"};
-cvar_t  r_waterwarp = {"r_waterwarp", "1"};
+
+// Waterwarp should be completely disabled for release 
+// since we are too lazy to actually fix it ;)
+cvar_t  r_waterwarp = {"r_waterwarp", "0"};
+
 cvar_t  r_waterripple = {"r_waterripple", "0"};
 
 cvar_t	gl_finish = {"gl_finish","0"};
