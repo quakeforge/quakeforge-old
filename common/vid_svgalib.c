@@ -3,6 +3,7 @@ Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999-2000  contributors of the QuakeForge project
 Copyright (C) 1999-2000  Nelson Rush.
 Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
+Copyright (C) 1999-2000  XoXus [xoxus@usa.net]
 
 Please see the file "AUTHORS" for a list of contributors
 
@@ -386,6 +387,7 @@ int
 VID_SetMode(int modenum, unsigned char *palette)
 {
 	int bsize, zsize, tsize;
+	int err;
 
 	if ((modenum >= num_modes) || (modenum < 0) || !modes[modenum].width){
 		Cvar_SetValue ("vid_mode", (float)current_mode);
@@ -446,7 +448,11 @@ VID_SetMode(int modenum, unsigned char *palette)
 	D_InitCaches (vid_surfcache, tsize);
 
 	/* get goin' */
-	vga_setmode(current_mode);
+	/* XoXus: need to check return values! */
+	err = vga_setmode(current_mode);
+	if (err) {
+		Sys_Error("Video mode failed: %d\n",modenum);
+	}
 	VID_SetPalette(palette);
 
 	VGA_pagebase = vid.direct = framebuffer_ptr = (char *) vga_getgraphmem();
@@ -466,7 +472,7 @@ VID_SetMode(int modenum, unsigned char *palette)
 	/* Force a surface cache flush */
 	vid.recalc_refdef = 1;
 
-	return 0;
+	return 1;
 }
 
 
@@ -474,6 +480,7 @@ void
 VID_Init(unsigned char *palette)
 {
 	int w, h, d;
+	int err;
 
 	/* Sound gets initialized here */
 	S_Init();
@@ -485,7 +492,10 @@ VID_Init(unsigned char *palette)
 #endif
 
 	if (UseDisplay) {
-		vga_init();
+		/* XoXus: return values need to be checked! */
+		err = vga_init();
+		if (err)
+			Sys_Error("SVGALib failed to allocate a new VC\n");
 
 		VID_InitModes();
 
@@ -526,7 +536,8 @@ VID_Init(unsigned char *palette)
 		VID_SetPalette(palette);
 
 		/* We do want to run in the background when switched away */
-		vga_runinbackground(1);	
+		/* XoXus: Running in background is just plain bad... */
+		vga_runinbackground(0);
 	}
 }
 
