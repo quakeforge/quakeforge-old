@@ -279,30 +279,6 @@ qpic_t	*Draw_CachePic (char *path)
 }
 
 
-void Draw_CharToConback (int num, byte *dest)
-{
-	int		row, col;
-	byte	*source;
-	int		drawline;
-	int		x;
-
-	row = num>>4;
-	col = num&15;
-	source = draw_chars + (row<<10) + (col<<3);
-
-	drawline = 8;
-
-	while (drawline--)
-	{
-		for (x=0 ; x<8 ; x++)
-			if (source[x] != 255)
-				dest[x] = 0x60 + source[x];
-		source += 128;
-		dest += 320;
-	}
-
-}
-
 typedef struct
 {
 	char *name;
@@ -414,10 +390,12 @@ void Draw_Init (void)
 		Sys_Error ("Couldn't load gfx/conback.lmp");
 	SwapPic (cb);
 
+#ifdef SCALEVER
 	sprintf (ver, VERSION);
 	dest = cb->data + 320 + 320*186 - 11 - 8*strlen(ver);
 	for (x=0 ; x<strlen(ver) ; x++)
 		Draw_CharToConback (ver[x], dest+(x<<3));
+#endif
 
 #if 0
 	conback->width = vid.conwidth;
@@ -558,6 +536,7 @@ void Draw_Alt_String (int x, int y, char *str)
 	}
 }
 
+#ifdef QUAKEWORLD
 void Draw_Crosshair(void)
 {
 	int x, y;
@@ -590,6 +569,7 @@ void Draw_Crosshair(void)
 			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy.value, 
 			'+');
 }
+#endif
 
 
 /*
@@ -791,18 +771,11 @@ void Draw_ConsoleBackground (int lines)
 		Draw_AlphaPic (0, lines - vid.height, conback, (float)(1.2 * lines)/y);
 
 	// hack the version number directly into the pic
-//	y = lines-186;
 	y = lines-14;
-	if (!cls.download) {
-#ifdef __linux__
-		sprintf (ver, "QuakeForge (LinuxGL QuakeWorld) " VERSION);
-#else
-		sprintf (ver, "QuakeForge (GL QuakeWorld) " VERSION);
-#endif
-		x = vid.conwidth - (strlen(ver)*8 + 11) - (vid.conwidth*8/320)*7;
-		for (i=0 ; i<strlen(ver) ; i++)
-			Draw_Character (x + i * 8, y, ver[i] | 0x80);
-	}
+	sprintf (ver, "QuakeForge (GL) " VERSION);
+	x = vid.conwidth - (strlen(ver)*8 + 11);
+	for (i=0 ; i<strlen(ver) ; i++)
+		Draw_Character (x + i * 8, y, ver[i] | 0x80);
 }
 
 

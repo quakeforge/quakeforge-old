@@ -16,13 +16,14 @@ QW/Q1 tree merging:
   Bill Currie <bill@taniwha.org>
   Nelson J. Rush <chesterrr@att.net>
   Eric Windisch <windisch@nni.com>
+  Joseph Carter <knghtbrd@debian.org>
 
 Autoconf support:
   Loring Holden <lsh@cs.brown.edu>
   Joseph Carter <knghtbrd@debian.org>
   Bill Currie <bill@taniwha.org>
   Cesar Eduardo Barros <cesarb@web4u.com.br>
-  Marcus Sundber <mackan@stacken.kth.se>
+  Marcus Sundberg <mackan@stacken.kth.se>
   Peter Andreasen <pandr@pandr.dk>
 
 Sound cleanups:
