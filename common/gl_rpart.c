@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern particle_t	*active_particles, *free_particles;
 extern int			ramp1[8], ramp2[8], ramp3[8];
+extern cvar_t		*gl_pscale;
 
 /*
 ===============
@@ -112,9 +113,9 @@ void R_DrawParticles (void)
 			+ (p->org[1] - r_origin[1])*vpn[1]
 			+ (p->org[2] - r_origin[2])*vpn[2];
 		if (scale < 20)
-			scale = 1;
+			scale = gl_pscale->value;
 		else
-			scale = 1 + scale * 0.004;
+			scale = gl_pscale->value + scale * 0.004;
 #if 0 // was in uquake, but give it a go
 		glColor3ubv ((byte *)&d_8to24table[(int)p->color]);
 #else
