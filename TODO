@@ -32,7 +32,7 @@ to quake-devel@lists.sourceforge.net with details.
  * Make every object depend on dead-reckoning for network play, ie. no
    "moving entities"
  * Add XInput stuff
- * Allow any charcell .pcf to be used as console font
+ * Allow any size console font to be used
  * Use dynamic memory
  * Remove arbitrary limits such as max number of players
  * Fixes for various exploits/cheats
@@ -45,7 +45,6 @@ to quake-devel@lists.sourceforge.net with details.
  * Fix oversized packet QW server crash
  * DOS/Win support in autoconf
  * Backport QW's HUD stuff to UQuake
- * Sanitize the makefiles to cut down unnecessary builds
  * Implement colored lighting
  * Implement mp3 player
  * Implement mod/s3m/it/xm/etc player
@@ -53,3 +52,4 @@ to quake-devel@lists.sourceforge.net with details.
  * Finish Volumetric fog
  * Colored lighting for common tasks such as emitting a blue dynamic light
    from players with quad damage..
+ * C equivalents of the SVGALib target's asm (Linux Alpha has SVGALib)
