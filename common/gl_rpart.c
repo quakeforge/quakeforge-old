@@ -198,10 +198,13 @@ void R_DrawParticles (void)
 				p->vel[2] -= grav;
 				break;
 			case pt_grav:
-//ifdef QUAKE2
-				p->vel[2] -= grav * 20;
-				break;
-//endif
+				// This causes some particles to fall to the
+				// ground.  It's been reported as a bug,
+				// so for now it's being fixed.
+				// We can implement it as a feature, but it's
+				// not all that cool.
+//				p->vel[2] -= grav * 20;
+//				break;
 			case pt_slowgrav:
 				p->vel[2] -= grav;
 				break;
