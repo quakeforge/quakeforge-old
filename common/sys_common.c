@@ -146,9 +146,9 @@ int Sys_FileTime (char *path)
 	int t = VID_ForceUnlockedAndReturnState();
 #endif
 
-	f = fopen(path, "rb");
+	f = Qopen(path, "rb");
 	if (f) {
-		fclose(f);
+		Qclose(f);
 		ret = 1;
 	}
 #if defined(_WIN32) && !defined(SERVERONLY)

@@ -774,7 +774,7 @@ void errorexit (void)
 }
 
 
-tokenstat whitespace (char c)
+tokenstat whitespace (int c)
 {
 	if (c == '\n')
 		return LINE_DONE;

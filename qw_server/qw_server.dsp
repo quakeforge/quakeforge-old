@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /GX /O2 /I "../common" /I "../qw_common" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "QUAKEWORLD" /D "SERVERONLY" /YX /FD /c
+# ADD CPP /nologo /WX /GX /O2 /I "../common" /I "../qw_common" /I "../qw_server" /I "../winsup" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "QUAKEWORLD" /D "SERVERONLY" /YX /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
 # ADD RSC /l 0x419 /d "NDEBUG"
@@ -67,7 +67,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /Gm /GX /ZI /Od /I "../common" /I "../qw_common" /I "../qw_server" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "QUAKEWORLD" /D "SERVERONLY" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../common" /I "../qw_common" /I "../qw_server" /I "../winsup" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "QUAKEWORLD" /D "SERVERONLY" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x419 /d "_DEBUG"
 # ADD RSC /l 0x419 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -101,6 +101,14 @@ SOURCE=..\common\crc.c
 # Begin Source File
 
 SOURCE=..\common\cvar.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\dirent.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\fnmatch.c
 # End Source File
 # Begin Source File
 

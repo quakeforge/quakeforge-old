@@ -47,16 +47,14 @@
 #include <strings.h>
 #endif
 
-#if defined(_WIN32) && !defined(WINDED) && !defined(GLQUAKE)
-void	VID_LockBuffer (void);
-void	VID_UnlockBuffer (void);
-#else
-#define	VID_LockBuffer()
-#define	VID_UnlockBuffer()
-#endif
-
 #include <qtypes.h>
 #include <qstructs.h>
+
+#ifdef _WIN32
+#define FNMATCH_FLAGS FNM_CASEFOLD
+#else
+#define FNMATCH_FLAGS 0
+#endif
 
 
 #ifndef max

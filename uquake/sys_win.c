@@ -144,10 +144,10 @@ int wfilelength (QFile *f)
 
 	t = VID_ForceUnlockedAndReturnState ();
 
-	pos = ftell (f);
-	fseek (f, 0, SEEK_END);
-	end = ftell (f);
-	fseek (f, pos, SEEK_SET);
+	pos = Qtell (f);
+	Qseek (f, 0, SEEK_END);
+	end = Qtell (f);
+	Qseek (f, pos, SEEK_SET);
 
 	VID_ForceLockState (t);
 
@@ -164,7 +164,7 @@ int Sys_FileOpenRead (char *path, int *hndl)
 
 	i = findhandle ();
 
-	f = fopen(path, "rb");
+	f = Qopen(path, "rb");
 
 	if (!f)
 	{
@@ -193,7 +193,7 @@ int Sys_FileOpenWrite (char *path)
 
 	i = findhandle ();
 
-	f = fopen(path, "wb");
+	f = Qopen(path, "wb");
 	if (!f)
 		Sys_Error ("Error opening %s: %s", path,strerror(errno));
 	sys_handles[i] = f;
@@ -208,7 +208,7 @@ void Sys_FileClose (int handle)
 	int		t;
 
 	t = VID_ForceUnlockedAndReturnState ();
-	fclose (sys_handles[handle]);
+	Qclose (sys_handles[handle]);
 	sys_handles[handle] = NULL;
 	VID_ForceLockState (t);
 }
@@ -218,7 +218,7 @@ void Sys_FileSeek (int handle, int position)
 	int		t;
 
 	t = VID_ForceUnlockedAndReturnState ();
-	fseek (sys_handles[handle], position, SEEK_SET);
+	Qseek (sys_handles[handle], position, SEEK_SET);
 	VID_ForceLockState (t);
 }
 
@@ -227,7 +227,7 @@ int Sys_FileRead (int handle, void *dest, int count)
 	int		t, x;
 
 	t = VID_ForceUnlockedAndReturnState ();
-	x = fread (dest, 1, count, sys_handles[handle]);
+	x = Qread (sys_handles[handle], dest, count);
 	VID_ForceLockState (t);
 	return x;
 }
@@ -237,7 +237,7 @@ int Sys_FileWrite (int handle, void *data, int count)
 	int		t, x;
 
 	t = VID_ForceUnlockedAndReturnState ();
-	x = fwrite (data, 1, count, sys_handles[handle]);
+	x = Qwrite (sys_handles[handle], data, count);
 	VID_ForceLockState (t);
 	return x;
 }

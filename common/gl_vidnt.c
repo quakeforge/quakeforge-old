@@ -1993,3 +1993,13 @@ void VID_InitCvars()
 {
 	// It may not look it, but this is important
 }
+
+void	VID_LockBuffer (void)
+{
+	// need empty function, because the #define method was just silly
+}
+
+void	VID_UnlockBuffer (void)
+{
+	// need empty function, because the #define method was just silly
+}

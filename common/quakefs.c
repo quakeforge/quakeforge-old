@@ -44,10 +44,8 @@
 #include <common.h>
 #include <draw.h>
 
-#ifndef _WIN32	// Tonik
 #include <dirent.h>
 #include <fnmatch.h>
-#endif
 
 #ifdef WIN32
 #include <io.h>
@@ -192,6 +190,13 @@ void COM_Path_f (void)
 	}
 }
 
+/*
+============
+COM_Maplist_f
+
+============
+*/
+
 void COM_Maplist_f (void)
 {
 	searchpath_t	*search;
@@ -217,8 +222,8 @@ void COM_Maplist_f (void)
 			if (!dir_ptr)
 				continue;
 			while ((dirent = readdir (dir_ptr)))
-				if (!fnmatch ("*.bsp", dirent->d_name, 0)
-					|| !fnmatch ("*.bsp.gz", dirent->d_name, 0))
+				if (!fnmatch ("*.bsp", dirent->d_name, FNMATCH_FLAGS)
+					|| !fnmatch ("*.bsp.gz", dirent->d_name, FNMATCH_FLAGS))
 					Con_Printf ("%s\n", dirent->d_name);
 			closedir (dir_ptr);
 		}
@@ -710,60 +715,6 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 }
 #endif
 
-#ifdef _WIN32
-// Yes i know, but at least the project does compile for Win32!
-// Let's wait until someone implements Sys_FindFirst(),
-// Sys_FindNext(), Sys_FindClose() for every platform.
-//
-// I wonder why didn't Mercury like the pak*.pak system?
-//
-// Or maybe taniwha will kindly mail me dirent.h and maybe
-// i will port opendir etc to Win32?
-//                                       -- Tonik
-void
-COM_LoadGameDirectory(char *dir)
-{
-	int 			i;
-	searchpath_t	*search;
-	pack_t			*pak;
-	char			pakfile[MAX_OSPATH];
-	qboolean 		done = false;
-
-	for ( i=0 ; !done ; i++ ) {	// Load all Pak1 files
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
-
-		pak = COM_LoadPackFile(pakfile);
-
-		if( !pak ) {
-			done = true;
-		} else {
-			search = Z_Malloc (sizeof(searchpath_t));
-			search->pack = pak;
-			search->next = com_searchpaths;
-			com_searchpaths = search;
-		}
-	}
-
-#ifdef GENERATIONS
-	for (done=false, i=0 ; !done ; i++ ) {	// Load all Pak3 files.
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.qz", dir, i);
-
-		pak = COM_LoadPackZipFile(pakfile);
-
-		if(!pak) {
-			done = true;
-		} else {
-			search = Hunk_Alloc (sizeof(searchpath_t));
-			search->pack = pak;
-			search->next = com_searchpaths;
-			com_searchpaths = search;
-         	}
-	}
-#endif
-}
-
-#else	// !_WIN32
-
 void
 COM_LoadGameDirectory(char *dir)
 {
@@ -778,7 +729,7 @@ COM_LoadGameDirectory(char *dir)
 		return;
 
 	while ((dirent = readdir(dir_ptr))) {
-		if (!fnmatch("*.pak", dirent->d_name, 0)) {
+		if (!fnmatch("*.pak", dirent->d_name, FNMATCH_FLAGS)) {
 			snprintf(pakfile, sizeof(pakfile), "%s/%s", dir, dirent->d_name);
 
 			pak = COM_LoadPackFile(pakfile);
@@ -812,8 +763,6 @@ COM_LoadGameDirectory(char *dir)
 	}
 #endif
 }
-#endif	// !_WIN32
-
 
 /*
 ================
