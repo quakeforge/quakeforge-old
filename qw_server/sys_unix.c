@@ -21,15 +21,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <sys/types.h>
 
+#include "config.h"
 #ifdef NeXT
 #include <libc.h>
 #endif
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h>
+#endif
+
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+
 // FIXME: use autoconf
 #if defined(unix) || defined(_AIX)
-#include <sys/stat.h>
-#include <unistd.h>
-#include <sys/time.h>
 #include <errno.h>
 #else
 #include <sys/dir.h>
@@ -38,6 +48,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
+#ifdef HAVE_STRING_H
+#include <string.h>
+#endif
+#include <stdlib.h>
 #include <stdarg.h>
 #include <malloc.h>
 
