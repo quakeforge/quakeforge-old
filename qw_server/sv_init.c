@@ -276,6 +276,8 @@ unsigned SV_CheckModel(char *mdl)
 //	int len;
 
 	buf = (byte *)COM_LoadStackFile (mdl, stackbuf, sizeof(stackbuf));
+	if (!buf)
+		SV_Error ("SV_CheckModel: %s not found", mdl);
 	crc = CRC_Block(buf, com_filesize);
 //	for (len = com_filesize; len; len--, buf++)
 //		CRC_ProcessByte(&crc, *buf);

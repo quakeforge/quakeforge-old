@@ -327,6 +327,12 @@ $(BUILD_DIR)/$(addsuffix .@OBJEXT@,$(basename @X11_VID_SRC@ .c)):\
 $(COMMON_DIR)/@X11_VID_SRC@
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
+$(BUILD_DIR)/in_x11.@OBJEXT@: $(COMMON_DIR)/in_x11.c
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/context_x11.@OBJEXT@: $(COMMON_DIR)/context_x11.c
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+
 $(X11QUAKE): $(BUILD_DIR)/../$(X11QUAKE)
 
 $(BUILD_DIR)/../$(X11QUAKE): $(ALL_X11_OBJS)
