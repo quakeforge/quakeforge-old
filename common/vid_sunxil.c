@@ -1,26 +1,33 @@
 /*
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
-Please see the file "AUTHORS" for a list of contributors
+	vid_sunxil.c
+	
+	uses X to setup windows and XIL to copy images (scaled as needed)
+	to screen
+	
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-See the GNU General Public License for more details.
+	See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
 
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
-// vid_sunxil.c -- uses X to setup windows and XIL to copy images (scaled as needed)
-// 		   to screen
 
 #define _BSD
 #define BYTE_DEFINED 1
@@ -44,16 +51,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/keysym.h>
 #include <xil/xil.h>
 
-#include "quakedef.h"
-#include "d_local.h"
+#include <quakedef.h>
+#include <d_local.h>
 #include <context_x11.h>
 
 #define MIN_WIDTH 320
 #define MIN_HEIGHT 200
 
-//cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t	*_windowed_mouse;
-//cvar_t		m_filter = {"m_filter","0", true};
 cvar_t	*m_filter;
 float old_windowed_mouse;
 
@@ -153,7 +158,6 @@ static int verbose=1;
 
 static byte current_palette[768];
 
-//cvar_t pixel_multiply = {"pixel_multiply", "2", true};
 cvar_t	*pixel_multiply;
 int current_pixel_multiply = 2;
 
@@ -1283,3 +1287,4 @@ void VID_InitCvars ()
 {
 	// It may not look like it, but this is important
 }
+

@@ -4,8 +4,8 @@
 	Linux-style Unix system driver.
 
 	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999,2000  Nelson Rush.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
-	Portions Copyright (C) 1999,2000  Nelson Rush.
 	Please see the file "AUTHORS" for a list of contributors
 
 	This program is free software; you can redistribute it and/or
@@ -20,9 +20,13 @@
 	See the GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
-	USA.
+	along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
 #include <quakedef.h>
@@ -355,3 +359,4 @@ void Sys_MakeCodeWriteable (unsigned long startaddr, unsigned long length) {
     		Sys_Error("Protection change failed\n");
 
 }
+

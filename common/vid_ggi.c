@@ -1,23 +1,32 @@
 /*
-vid_ggi.c - general LibGGI video driver
-Copyright (C) 1999       Marcus Sundberg [mackan@stacken.kth.se]
-Portions Copyright (C) 1996-1997  Id Software, Inc.
+	vid_ggi.c
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	general LibGGI video driver
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999       Marcus Sundberg [mackan@stacken.kth.se]
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 
-See the GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+	See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
 #define _BSD
@@ -43,9 +52,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];
 
-//cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t	*_windowed_mouse;
-//cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
 cvar_t	*m_filter;
 
 #define NUM_STDBUTTONS	3
@@ -902,7 +909,8 @@ void IN_Frame(void)
 void
 IN_Init(void)
 {
-	_windowed_mouse = Cvar_Get("_windowed_mouse", "0", CVAR_ARCHIVE, "None");
+	_windowed_mouse = Cvar_Get("_windowed_mouse", "0", CVAR_ARCHIVE,
+			"None");
 	old_windowed_mouse = -1; /* Force update */
 	m_filter = Cvar_Get("m_filter","0",CVAR_ARCHIVE, "None");
 	if (COM_CheckParm ("-nomouse")) return;
@@ -982,3 +990,4 @@ void VID_InitCvars ()
 {
 	// It may not look it, but this is important
 }
+

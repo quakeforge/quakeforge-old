@@ -1,25 +1,32 @@
 /*
-vid_win.c - Win32 video driver
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
-Portions Copyright (C) 1999,2000  Nelson Rush.
-Please see the file "AUTHORS" for a list of contributors
+	vid_win.c
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	Win32 video driver
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999,2000  Nelson Rush.
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 
-See the GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+	See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
 #include <quakedef.h>
@@ -89,37 +96,22 @@ viddef_t	vid;				// global video state
 #define MODE_FULLSCREEN_DEFAULT	(MODE_WINDOWED + 3)
 
 // Note that 0 is MODE_WINDOWED
-//cvar_t		vid_mode = {"vid_mode","0", CVAR_NONE};
 cvar_t	*vid_mode;
 // Note that 0 is MODE_WINDOWED
-//cvar_t		_vid_default_mode = {"_vid_default_mode","0", CVAR_ARCHIVE};
 cvar_t	*_vid_default_mode;
 // Note that 3 is MODE_FULLSCREEN_DEFAULT
-//cvar_t		_vid_default_mode_win = {"_vid_default_mode_win","3", CVAR_ARCHIVE};
 cvar_t	*_vid_default_mode_win;
-//cvar_t		vid_wait = {"vid_wait","0"};
 cvar_t	*vid_wait;
-//cvar_t		vid_nopageflip = {"vid_nopageflip","0", CVAR_ARCHIVE};
 cvar_t	*vid_nopageflip;
-//cvar_t		_vid_wait_override = {"_vid_wait_override", "0", CVAR_ARCHIVE};
 cvar_t	*_vid_wait_override;
-//cvar_t		vid_config_x = {"vid_config_x","800", CVAR_ARCHIVE};
 cvar_t	*vid_config_x;
-//cvar_t		vid_config_y = {"vid_config_y","600", CVAR_ARCHIVE};
 cvar_t	*vid_config_y;
-//cvar_t		vid_stretch_by_2 = {"vid_stretch_by_2","1", CVAR_ARCHIVE};
 cvar_t	*vid_stretch_by_2;
-//cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t	*_windowed_mouse;
-//cvar_t		vid_fullscreen_mode = {"vid_fullscreen_mode","3", CVAR_ARCHIVE};
 cvar_t	*vid_fullscreen_mode;
-//cvar_t		vid_windowed_mode = {"vid_windowed_mode","0", CVAR_ARCHIVE};
 cvar_t	*vid_windowed_mode;
-//cvar_t		block_switch = {"block_switch","0", CVAR_ARCHIVE};
 cvar_t	*block_switch;
-//cvar_t		vid_window_x = {"vid_window_x", "0", CVAR_ARCHIVE};
 cvar_t	*vid_window_x;
-//cvar_t		vid_window_y = {"vid_window_y", "0", CVAR_ARCHIVE};
 cvar_t	*vid_window_y;
 
 typedef struct {
@@ -3493,3 +3485,4 @@ void VID_InitCvars()
 {
 	// It may not look like it, but this is important
 }
+

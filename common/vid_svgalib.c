@@ -1,26 +1,34 @@
 /*
-vid_svgalib.c - Linux SVGALib video routines
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999-2000  contributors of the QuakeForge project
-Please see the file "AUTHORS" for a list of contributors
-Copyright (C) 1999-2000  Nelson Rush.
-Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
-Copyright (C) 1999-2000  XoXus [xoxus@usa.net]
+	vid_svgalib.c
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	inux SVGALib video routines
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999-2000  Nelson Rush.
+	Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
+	Copyright (C) 1999-2000  XoXus [xoxus@usa.net]
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 
-See the GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+	See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
 #include <quakedef.h>
@@ -61,11 +69,8 @@ static byte vid_current_palette[768];
 static int	svgalib_inited=0;
 static int	UseDisplay = 1;
 
-//static cvar_t	vid_mode = {"vid_mode","5",false};
 static cvar_t	*vid_mode;
-// static cvar_t	vid_redrawfull = {"vid_redrawfull","0",false};
 static cvar_t	*vid_redrawfull;
-//static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
 static cvar_t	*vid_waitforrefresh;
 
 static char	*framebuffer_ptr;
@@ -510,11 +515,8 @@ VID_Init(unsigned char *palette)
 
 		VID_InitModes();
 
-//		Cvar_RegisterVariable (&vid_mode);
 		vid_mode = Cvar_Get ("vid_mode","5",0,"None");
-//		Cvar_RegisterVariable (&vid_redrawfull);
 		vid_redrawfull = Cvar_Get ("vid_redrawfull","0",0,"None");
-//		Cvar_RegisterVariable (&vid_waitforrefresh);
 		vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",
 						CVAR_ARCHIVE,"None");
 
@@ -695,3 +697,4 @@ void VID_InitCvars ()
 {
 	// It may not look like it, but this is important
 }
+
