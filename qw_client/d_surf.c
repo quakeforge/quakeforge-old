@@ -137,12 +137,12 @@ surfcache_t     *D_SCAlloc (int width, int size)
 	if ((size <= 0) || (size > 0x10000))
 		Sys_Error ("D_SCAlloc: bad cache size %d\n", size);
 	
-#ifdef __alpha__
-	size = (int)((long)&((surfcache_t *)0)->data[size]);
-#else
-	size = (int)&((surfcache_t *)0)->data[size];
-#endif
-	size = (size + 3) & ~3;
+	/* This adds the offset of data[0] in the surfcache_t struct. */
+	size += (int)((surfcache_t *)0)->data;
+
+#define SIZE_ALIGN	(sizeof(surfcache_t*)-1)
+	size = (size + SIZE_ALIGN) & ~SIZE_ALIGN;
+#undef SIZE_ALIGN
 	if (size > sc_size)
 		Sys_Error ("D_SCAlloc: %i > cache size",size);
 
