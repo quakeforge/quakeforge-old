@@ -51,6 +51,10 @@ client_t	*host_client;			// current client
 
 jmp_buf 	host_abortserver;
 
+cvar_t	show_fps = {"show_fps","0"};			// set for running times
+
+int			fps_count;
+
 byte		*host_basepal;
 byte		*host_colormap;
 
@@ -233,6 +237,8 @@ void Host_InitLocal (void)
 
 	Cvar_RegisterVariable (&temp1);
 	Cvar_RegisterVariable (&sv_filter);
+
+	Cvar_RegisterVariable (&show_fps);
 
 	Host_FindMaxClients ();
 	
@@ -728,6 +734,7 @@ void _Host_Frame (float time)
 	}
 	
 	host_framecount++;
+	fps_count++;
 }
 
 void Host_Frame (float time)

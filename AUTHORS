@@ -167,3 +167,7 @@ D: sv_maxrate support..
 A: Nye "nyet" Liu
 E: nyet@nbase.com
 D: game dir fixes
+
+N: Jules Bean
+E: jules@debian.org
+D: Q1/QW tree merging

@@ -1,3 +1,31 @@
+quakeforge (0.1-20000117-1) frozen unstable; urgency=HIGH
+
+  * "0.0.9-1" was actually "0.1-20000103-1"
+  * Fixed the sig4's in the SVGALib-using targets
+  * replaced qwprogs.dat, no longer segfaults (Closes: #54152)
+  * -ip will let you bind a specific IP (Closes: #14445)  (I hope)
+  * quake-svga is suid root like other svgalib apps now (Closes: #47954)
+  * quake-x11 restores repeat properly on normal exit (Closes: #48018)
+  * If /dev/dsp can't be opened, just don't use sound (Closes: #53533)
+  * The return of the wrapper scripts..  They've been rewritten a bit for
+    dealing with unpacked pak files.  A new quake-lib-stub is needed if your
+    pak files are not all lowercase.  (Closes: #54153, #54221, #54634)
+  * svgalib targets are i386 only at the moment  =<  (Closes: #54451)
+  * Built with newer libsdl  (Closes: #54488)
+  * README now notes the gl_ztrick issue..  Essentially ztrick is a hack
+    Id used to keep from clearing the Z buffer, it worked with older Mesa
+    and with the 3dfx GL MCD.  Mesa 3+ flicker madly, so it defaults to off
+    in the -gl target.  You still have to disable it by hand for the -3dfx
+    target (since it's intended to be used with the 3dfx GL MCD..)  If set
+    once to 0 it will be saved in that state.  (Closes: #54530)
+  * If you want to start -svga and -3dfx from X, use open.  Documented this
+    in the README.  (Closes: #54595)
+  * Package relationships updated/fixed.  (Closes: #54747, #54868)
+  * docs are now installed more sanely.  (Closes: #54749)
+  * bins and data owned by games isn't going to happen  (Closes: #54742)
+
+ -- Joseph Carter <knghtbrd@debian.org>  Sun, 16 Jan 2000 13:26:24 -0800
+
 quakeforge (0.0.9-1) unstable; urgency=low
 
   * Major new upstream version--Quake is GPL!
