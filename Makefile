@@ -1,4 +1,4 @@
-SUBDIRS = qw_client qw_server standalone	#standalone isn't done merging yet
+SUBDIRS = qw_client qw_server uquake
 
 all %:
 	for dir in $(SUBDIRS); do \

@@ -34,7 +34,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "GL/fxmesa.h"
-#include <glide/sst1vid.h>
 
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
