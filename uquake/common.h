@@ -68,6 +68,19 @@ void InsertLinkAfter (link_t *l, link_t *after);
 #define	STRUCT_FROM_LINK(l,t,m) ((t *)((byte *)l - (int)&(((t *)0)->m)))
 
 //============================================================================
+// Pak 3 loading support:
+/*
+pack_t *COM_LoadQ3PackFile (char *packfile);
+uint_t COM_pak3_getlen(unzFile *pak);
+int COM_pak3_open(unzFile *pak, const char *path);
+uint_t COM_pak3_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf);
+int COM_pak3_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb);
+int COM_pak3_checkfile(unzFile *pak, const char *path);
+*/
+
+
+// End Pak3 support.
+//============================================================================
 
 #ifndef NULL
 #define NULL ((void *)0)

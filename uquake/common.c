@@ -23,6 +23,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include <string.h>
 
+
+/* Begin Generations */
+#ifdef _EXPERIMENTAL_
+#include "unzip.h"
+#endif
+
+typedef unsigned char byte_t;
+
+#ifndef _AIX
+typedef unsigned int uint_t;
+typedef unsigned short ushort_t;
+#endif
+/* End Generations */
+
 #define NUM_SAFE_ARGVS  7
 
 static char     *largv[MAX_NUM_ARGVS + NUM_SAFE_ARGVS + 1];
@@ -1553,6 +1567,7 @@ pack_t *COM_LoadPackFile (char *packfile)
 //              Con_Printf ("Couldn't open %s\n", packfile);
 		return NULL;
 	}
+
 	Sys_FileRead (packhandle, (void *)&header, sizeof(header));
 	if (header.id[0] != 'P' || header.id[1] != 'A'
 	|| header.id[2] != 'C' || header.id[3] != 'K')
@@ -1598,6 +1613,147 @@ pack_t *COM_LoadPackFile (char *packfile)
 	return pack;
 }
 
+int
+COM_pak3_checkfile(unzFile *pak, const char *path)
+{
+    int status;
+        
+    status = unzLocateFile(pak, path, 2);
+    return (status == UNZ_OK);
+}
+
+void
+COM_pak3_closepak(unzFile *pak)
+{
+    if (pak)
+        unzClose(pak);
+    pak = NULL;
+}
+
+void
+COM_pak3_close(unzFile *pak)
+{
+    unzCloseCurrentFile(pak);
+}
+
+
+
+int
+COM_pak3_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb)
+{
+    int len;
+   
+    len = unzReadCurrentFile(pak, buf, size * nmemb);
+    return len / size;
+}
+
+int
+COM_pak3_open(unzFile *pak, const char *path)
+{
+   if (unzLocateFile(pak, path, 2) != UNZ_OK)
+       return 0;
+   if (unzOpenCurrentFile(pak) != UNZ_OK)
+       return 0;
+   return 1;
+}
+
+uint_t
+COM_pak3_getlen(unzFile *pak)
+{
+    unz_file_info info;
+    
+    if (unzGetCurrentFileInfo(pak, &info, NULL, 0, NULL, 0, NULL, 0)
+        != UNZ_OK)
+        return 0;
+    return info.uncompressed_size;
+}
+
+uint_t
+COM_pak3_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
+{
+    uint_t len;
+   
+    if (!COM_pak3_open(pak,path))
+        return 0;
+    
+    if ((len = COM_pak3_getlen(pak)) != 0)
+    {
+        if (COM_pak3_read(pak, (void*)buf, 1, len) != len)
+            len = 0;
+    }
+    COM_pak3_close(pak);
+    return len;
+}
+
+
+// Todo: Make This work! :)
+#if defined _EXPERIMENTAL_ && GENERATIONS 
+pack_t *COM_LoadQ3PackFile (char *packfile)
+{
+
+	int                             i;
+	packfile_t              	*newfiles;
+	float                  		numpackfiles;
+	unzFile            		*pak;
+	pack_t 				*pack_old;
+	int 				status;
+//	int                           packhandle;
+	dpackfile_t            		info[MAX_FILES_IN_PACK];
+//	unz_file_info		fileInfo;
+	char szCurrentFileName[UNZ_MAXFILENAMEINZIP+1];
+//	int err;
+
+	pak = unzOpen(packfile);
+
+//	numpackfiles = header.dirlen / sizeof(dpackfile_t);
+//	numpackfiles = COM_pak3_getlen(*pak)/sizeof(unzFile);	
+	numpackfiles = 0;
+//= COM_pak3_getlen(pak)/sizeof(unzFile);
+	Con_Printf ("Assigned Numpackfiles\n");
+
+	if (!pak)
+		return NULL;
+
+	newfiles = Hunk_AllocName (numpackfiles * sizeof(unzFile), "packfile");
+
+	status=unzGoToFirstFile(pak);
+
+	while(status == UNZ_OK) {
+//	for (i=0 ; i<numpackfiles ; i++)
+//	{	
+		unzGetCurrentFileInfo(pak,NULL,&szCurrentFileName,64,NULL,0,NULL,0);
+
+		if(strcmp(newfiles[i].name, szCurrentFileName)==0)
+			break;
+
+		strcpy (newfiles[i].name, szCurrentFileName);
+		Con_Printf ("strcpy'ed %s into newfiles[%i].name Ok\n",szCurrentFileName, i);
+
+		newfiles[i].filepos = LittleLong(unztell(pak));
+//		newfiles[i].filelen = LittleLong(COM_pak3_readfile(pak,packfile,64,64));
+
+		Con_Printf ("Added File\n");
+		status=unzGoToNextFile(pak);
+		++numpackfiles;
+		++i;
+	}
+
+	Con_Printf ("Added files in %s to game data Ok\n", packfile);
+
+	pack_old = Hunk_Alloc (sizeof (pack_t));
+	strcpy (pack_old->filename, packfile);
+	//pack_old->handle = unzGetLocalExtrafield(packfile, NULL, NULL);
+	pack_old->numfiles = numpackfiles;
+	pack_old->files = newfiles;
+	
+	Con_Printf ("Added packfile %s (%.0f files)\n", packfile, numpackfiles);
+
+	COM_pak3_close(pak);
+	return pack_old;
+}
+#endif 
+
+
 
 /*
 ================
@@ -1629,15 +1785,27 @@ void COM_AddGameDirectory (char *dir)
 //
 	for (i=0 ; ; i++)
 	{
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
-		pak = COM_LoadPackFile (pakfile);
-		if (!pak)
-			break;
-		search = Hunk_Alloc (sizeof(searchpath_t));
-		search->pack = pak;
-		search->next = com_searchpaths;
-		com_searchpaths = search;               
-	}
+#if defined _EXPERIMENTAL_ && GENERATIONS
+		if (COM_CheckParm ("-aftershock"))
+		{
+			snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pk3", dir, i);			
+			pak = COM_LoadQ3PackFile (pakfile);
+		} else {
+#endif
+			snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
+			pak = COM_LoadPackFile (pakfile);
+
+#if defined _EXPERIMENTAL_ && GENERATIONS			
+		}
+#endif 		
+			
+			if (!pak)
+				break;
+			search = Hunk_Alloc (sizeof(searchpath_t));
+			search->pack = pak;
+			search->next = com_searchpaths;
+			com_searchpaths = search;               
+		}
 
 //
 // add the contents of the parms.txt file to the end of the command line
