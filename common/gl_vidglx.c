@@ -23,23 +23,39 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 
+#ifndef _EXPERIMENTAL_
+# undef HAS_DGA
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <signal.h>
+
+#ifdef HAVE_DLFCN_H
+# include <dlfcn.h>
+#endif
+#ifndef RTLD_LAZY
+# ifdef DL_LAZY
+#  define RTLD_LAZY	DL_LAZY
+# else
+#  define RTLD_LAZY	0
+# endif
+#endif
 
 #include <GL/glx.h>
 
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
-#include <X11/extensions/xf86dga.h>
-#include <X11/extensions/xf86vmode.h>
+#ifdef HAS_DGA
+# include <X11/extensions/xf86dga.h>
+# include <X11/extensions/xf86vmode.h>
 #endif
 #include "dga_check.h"
 
 #ifdef XMESA
-#include <GL/xmesa.h>
+# include <GL/xmesa.h>
 #endif
 
 #define WARP_WIDTH              320
@@ -54,7 +70,6 @@ static GLXContext	ctx = NULL;
 #define KEY_MASK (KeyPressMask | KeyReleaseMask)
 #define MOUSE_MASK (ButtonPressMask | ButtonReleaseMask | \
 		    PointerMotionMask)
-
 #define X_MASK (KEY_MASK | MOUSE_MASK | VisibilityChangeMask | \
 	StructureNotifyMask)
 
@@ -74,10 +89,10 @@ static float	old_mouse_x, old_mouse_y;
 static int	mouse_grabbed = 0;
 #define	mouse_shouldgrab ((int)vid_glx_fullscreen.value ||(int)_windowed_mouse.value)
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 static int	nummodes;
 static XF86VidModeModeInfo **vidmodes;
-static int	hasdga = 0, hasdgavideo = 0, hasvidmode = 0;
+static int	hasdgavideo = 0, hasvidmode = 0;
 static int	dgamouse = 0;
 static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", true};
 #endif
@@ -86,9 +101,16 @@ static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", true};
 static int	xmesafullscreen = 0;
 #endif
 
+#ifdef HAVE_DLOPEN
+static void	*dlhand = NULL;
+#endif
+static int	hasdga = 0;
+static GLboolean (*QF_XMesaSetFXmode)(GLint mode) = NULL;
+
+
 static int scr_width, scr_height;
 
-#if defined(XMESA) || (defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(XMESA) || defined(HAS_DGA)
 int VID_options_items = 2;
 #else
 int VID_options_items = 1;
@@ -171,7 +193,7 @@ do_grabs(int grab)
 		XGrabKeyboard(dpy, win, False, GrabModeAsync, GrabModeAsync,
 			      CurrentTime);
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 		if (hasdga) {
 			XF86DGADirectVideo(dpy, screen, XF86DGADirectMouse);
 			dgamouse = 1;
@@ -186,7 +208,7 @@ do_grabs(int grab)
 		/*
 		  Release grab
 		*/
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 		if (dgamouse) {
 			XF86DGADirectVideo(dpy, screen, 0);
 			dgamouse = 0;
@@ -205,21 +227,24 @@ do_fullscreen(int full)
 	if (full == fullscreen) return;
 
 #ifdef XMESA
-	if (XMesaSetFXmode(full ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW)) {
-		fullscreen = full;
-		xmesafullscreen = full;
-		return;
-	}
-	if (xmesafullscreen) {
-		/* We are in XMesa fullscren mode and couldn't switch back
-		   to windowed mode ??? */
-		Cvar_SetValue("vid_glx_fullscreen", fullscreen);
-		do_grabs(mouse_shouldgrab);
-		return;
+	if (QF_XMesaSetFXmode) {
+		if (QF_XMesaSetFXmode(full ? XMESA_FX_FULLSCREEN
+				      : XMESA_FX_WINDOW)) {
+			fullscreen = full;
+			xmesafullscreen = full;
+			return;
+		}
+		if (xmesafullscreen) {
+			/* We are in XMesa fullscren mode and couldn't switch
+			   back to windowed mode ??? */
+			Cvar_SetValue("vid_glx_fullscreen", fullscreen);
+			do_grabs(mouse_shouldgrab);
+			return;
+		}
 	}
 #endif
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
-	if (hasvidmode) {
+#ifdef HAS_DGA
+	if (hasdga && hasvidmode) {
 		static int prev_x = 0, prev_y = 0, prev_w = 640, prev_h = 480;
 
 		if (full) {
@@ -280,7 +305,7 @@ VID_Shutdown(void)
 
 	glXDestroyContext(dpy, ctx);
 	ctx = NULL;
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 	if (hasvidmode) {
 		int i;
 
@@ -288,6 +313,12 @@ VID_Shutdown(void)
 			if (vidmodes[i]->private) XFree(vidmodes[i]->private);
 		}
 		XFree(vidmodes);
+	}
+#endif
+#ifdef HAVE_DLOPEN
+	if (dlhand) {
+		dlclose(dlhand);
+		dlhand = NULL;
 	}
 #endif
 
@@ -537,7 +568,7 @@ void VID_Init(unsigned char *palette)
 	Cvar_RegisterVariable(&gl_ztrick);
 	Cvar_RegisterVariable(&_windowed_mouse);
         Cvar_RegisterVariable(&vid_glx_fullscreen);
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 	Cvar_RegisterVariable(&vid_dga_mouseaccel);
 #endif
 
@@ -546,9 +577,10 @@ void VID_Init(unsigned char *palette)
 	vid.colormap = host_colormap;
 	vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
 
-// interpret command-line params
+	/* Interpret command-line params
+	 */
 
-// set vid parameters
+	/* Set vid parameters */
 	if ((i = COM_CheckParm("-width")) != 0)
 		width = atoi(com_argv[i+1]);
 	if ((i = COM_CheckParm("-height")) != 0)
@@ -582,11 +614,11 @@ void VID_Init(unsigned char *palette)
 
 	visinfo = glXChooseVisual(dpy, screen, attrib);
 	if (!visinfo) {
-		fprintf(stderr, "qkHack: Error couldn't get an RGB, Double-buffered, Depth visual\n");
+		fprintf(stderr, "Error couldn't get an RGB, Double-buffered, Depth visual\n");
 		exit(1);
 	}
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 	{
 		int maj_ver;
 
@@ -604,6 +636,38 @@ void VID_Init(unsigned char *palette)
 		}
 	}
 #endif
+#ifdef HAVE_DLOPEN
+	dlhand = dlopen(NULL, RTLD_LAZY);
+	if (dlhand) {
+		QF_XMesaSetFXmode = dlsym(dlhand, "XMesaSetFXmode");
+		if (!QF_XMesaSetFXmode) {
+			QF_XMesaSetFXmode = dlsym(dlhand,
+						  "_XMesaSetFXmode");
+		}
+	} else {
+		QF_XMesaSetFXmode = NULL;
+	}
+#else
+#ifdef XMESA
+	QF_XMesaSetFXmode = XMesaSetFXmode;
+#endif
+#endif
+	if (QF_XMesaSetFXmode) {
+#ifdef XMESA
+		const char *str = getenv("MESA_GLX_FX");
+		if (*str && *str != 'd') {
+			if (tolower(*str) == 'w') {
+				Cvar_SetValue("vid_glx_fullscreen", 0);
+			} else {
+				Cvar_SetValue("vid_glx_fullscreen", 1);
+			}
+		}
+#endif
+		/* Glide uses DGA internally, so we don't want to
+		   mess with it. */
+		hasdga = 0;
+	}
+
 	/* window attributes */
 	attr.background_pixel = 0;
 	attr.border_pixel = 0;
@@ -820,7 +884,7 @@ GetEvent(void)
 		break;
 
 	case MotionNotify:
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
+#ifdef HAS_DGA
 		if (dgamouse) {
 			mouse_x += (float)x_event.xmotion.x_root
 				* vid_dga_mouseaccel.value;
@@ -976,11 +1040,13 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
         M_Print(16, options_draw_cursor+=8, "             Use Mouse");
         M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse.value);
 
-
-#if defined(XMESA) || (defined(HAS_DGA) && defined(_EXPERIMENTAL_))
-	/* Mesa has a fullscreen / windowed glx hack. */
-        M_Print(16, options_draw_cursor+=8, "            Fullscreen");
-        M_DrawCheckbox(220, options_draw_cursor, vid_glx_fullscreen.value);
+#if defined(XMESA) || defined(HAS_DGA)
+	if (hasdga || QF_XMesaSetFXmode) {
+		/* Mesa has a fullscreen / windowed glx hack. */
+		M_Print(16, options_draw_cursor+=8, "            Fullscreen");
+		M_DrawCheckbox(220, options_draw_cursor,
+			       vid_glx_fullscreen.value);
+	}
 #endif
 
 }
@@ -992,9 +1058,12 @@ void VID_ExtraOptionCmd(int option_cursor)
 		Cvar_SetValue("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
-#if defined(XMESA) || (defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(XMESA) || defined(HAS_DGA)
 	case 2:
-		Cvar_SetValue ("vid_glx_fullscreen",!vid_glx_fullscreen.value);
+		if (hasdga || QF_XMesaSetFXmode) {
+			Cvar_SetValue("vid_glx_fullscreen",
+				      !vid_glx_fullscreen.value);
+		}
 		break;
 #endif
 	}
