@@ -285,8 +285,8 @@ endif
 # SVGALib software target
 
 ifneq ($(SVGAQUAKE),)
-ALL_SVGA_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) vid_svgalib.c\
-               d_copy.s model.c
+ALL_SVGA_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) \
+		vid_svgalib.c in_svgalib.c d_copy.s model.c
 ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_SVGA_SRC) .c .s)))
 
@@ -407,10 +407,10 @@ endif
 # 3Dfx GL MCD target
 
 ifneq ($(TDFXQUAKE),)
-ALL_TDFX_SRC  = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(GL_REND_SRC)\
-                gl_vidlinux_3dfx.c
+ALL_TDFX_SRC  = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(GL_REND_SRC) \
+		gl_vidlinux_3dfx.c in_svgalib.c
 ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
-                $(basename $(ALL_TDFX_SRC) .c .s)))
+		$(basename $(ALL_TDFX_SRC) .c .s)))
 
 TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
