@@ -206,3 +206,6 @@
 
 /* Define if you have the m library (-lm).  */
 #undef HAVE_LIBM
+
+/* Define if you want the QSG standards */
+#define QSG_STANDARD "1"
