@@ -17,13 +17,14 @@ all:
 distclean:
 	rm -f config.cache config.log config.status Makefile
 	rm -f common/config.h
-	rm -f build_rpm quakeforge-*.tar.gz quakeforge.spec
+	rm -f rpm/{rpmmacros,build_rpm,quakeforge-*.tar.gz,quakeforge.spec}
 	find . -name \*~ | xargs rm -f
 	find . -name \*.bak | xargs rm -f
 	find . -name '.#*' | xargs rm -f
 	find . -name '#*#' | xargs rm -f
 	find . -name core -type f | xargs rm -f
 	rm -rf targets
+	rm -rf rpm/{BUILD,SPECS,RPMS,SOURCES,SRPMS}
 	for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
 	done
