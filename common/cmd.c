@@ -627,6 +627,7 @@ void Cmd_ForwardToServer (void)
 	if (cls.demoplayback)
 		return;		// not really connected
 
+#ifdef QUAKEWORLD
 	MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 	SZ_Print (&cls.netchan.message, Cmd_Argv(0));
 	if (Cmd_Argc() > 1)
@@ -634,6 +635,7 @@ void Cmd_ForwardToServer (void)
 		SZ_Print (&cls.netchan.message, " ");
 		SZ_Print (&cls.netchan.message, Cmd_Args());
 	}
+#endif
 }
 
 // don't forward the first argument
@@ -655,8 +657,10 @@ void Cmd_ForwardToServer_f (void)
 
 	if (Cmd_Argc() > 1)
 	{
+#ifdef QUAKEWORLD
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		SZ_Print (&cls.netchan.message, Cmd_Args());
+#endif
 	}
 }
 #else
