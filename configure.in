@@ -11,26 +11,22 @@ AC_PROG_MAKE_SET
 dnl checks for compiler characteristics
 AC_C_BIGENDIAN
 
-AC_ARG_WITH(optimize,
-[  --with-optimize         Compile with optimization],
-	RELEASE=$with_optimize
-)
-
 AC_ARG_ENABLE(release,
-[  --enable-release        Compile release (with optimization)],
+[  --enable-release        compile release (with optimization)],
        RELEASE=$enable_release
 )
 AC_SUBST(RELEASE)
 
 dnl Checks for OGL support
-AC_ARG_ENABLE(OpenGLLIB,
-[  --enable-OpenGLLIB=DIR  Use OpenGL - the libraries are in DIR],
+AC_ARG_WITH(opengl,
+[  --with-opengl=DIR       use OpenGL with libraries found in DIR],
 [HAS_OGL_LIB=yes; OGL_LIB_PATH=$enable_OpenGLLIB;
    OGL_LDFLAGS=-L$enable_OpenGLLIB])
 AC_SUBST(OGL_LDFLAGS)
 
-AC_ARG_ENABLE(OpenGLINC,
-[  --enable-OpenGLINC=DIR  Use OpenGL - the header files are in DIR],
+AC_ARG_WITH(opengl-includes,
+[  --with-opengl-includes=DIR
+                          use OpenGL with header files found in DIR],
 HAS_OGL_INC=yes; OGL_INC_PATH=$enable_OpenGLINC; OGL_CFLAGS=-I$enable_OpenGLINC)
 AC_SUBST(OGL_CFLAGS)
 
@@ -156,8 +152,8 @@ dnl Checks for GLIDE support
 dnl this rule lifted almost wholesale from Mesa
 GLIDE_CFLAGS=""
 GLIDE_LDFLAGS=""
-AC_ARG_ENABLE(glide,
-[  --enable-glide=DIR  Use glide with header files found in DIR],
+AC_ARG_WITH(glide,
+[  --with-glide=DIR        use the GLIDE 2.x SDK found in DIR],
 HAS_GLIDE=$withval, HAS_GLIDE=auto
 )
 if test "x$HAS_GLIDE" != xno; then
@@ -189,8 +185,8 @@ AC_SUBST(GLIDE_CFLAGS)
 AC_SUBST(GLIDE_LDFLAGS)
 
 TDFXGL_LDFLAGS=""
-AC_ARG_ENABLE(3dfxgl,
-[  --enable-3dfxgl=DIR  Use lib3dfxgl.so found in DIR],
+AC_ARG_WITH(3dfxgl,
+[  --with-3dfxgl=DIR       use 3Dfx MiniGL library found in DIR],
 HAS_TDFXGL=$withval, HAS_TDFXGL=auto
 )
 if test "x$HAS_TDFXGL" != xno; then
@@ -387,26 +383,7 @@ AC_PATH_XTRA
 
 ##########################################################
 #
-# make Makefile.header, Makefile.tail
-#
-
-dnl AC_SUBST_FILE(MAKEFILE_HEADER)
-dnl MAKEFILE_HEADER=pre
-
-dnl AC_SUBST_FILE(MAKEFILE_TAIL)
-dnl MAKEFILE_TAIL=post
-
-dnl AC_SUBST_FILE(CLIENT_TARGETS)
-dnl CLIENT_TARGETS=client
-
-dnl AC_SUBST_FILE(SRCFILES)
-dnl SRCFILES=srcfiles
-
-dnl AC_SUBST_FILE(COMP_RULES)
-dnl COMP_RULES=rules
-
-##########################################################
-#
 # Output files
 #
 AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
+
