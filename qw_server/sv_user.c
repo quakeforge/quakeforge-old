@@ -1413,6 +1413,8 @@ SV_PreRunCmd ( void )
 /*
 	SV_RunCmd
 */
+extern qboolean		nouse;	// 1999-10-29 +USE fix by Maddes
+
 void
 SV_RunCmd ( usercmd_t *ucmd, qboolean inside )
 {
@@ -1464,6 +1466,12 @@ SV_RunCmd ( usercmd_t *ucmd, qboolean inside )
 		VectorCopy (ucmd->angles, sv_player->v.v_angle);
 
 	sv_player->v.button0 = ucmd->buttons & 1;
+// 1999-10-29 +USE fix by Maddes  start
+	if (!nouse)
+	{
+		sv_player->v.button1 = (ucmd->buttons & 4)>>2;
+	}
+// 1999-10-29 +USE fix by Maddes  end
 	sv_player->v.button2 = (ucmd->buttons & 2)>>1;
 	if (ucmd->impulse)
 		sv_player->v.impulse = ucmd->impulse;
