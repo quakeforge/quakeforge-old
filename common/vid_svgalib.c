@@ -492,7 +492,7 @@ VID_Init(unsigned char *palette)
 	int w, h, d;
 	int err;
 
-	plugin_load("./in_svgalib.so");
+	plugin_load("in_svgalib.so");
 	IN->Init();
 	/* Sound gets initialized here */
 	S_Init();

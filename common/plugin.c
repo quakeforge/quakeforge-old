@@ -49,7 +49,7 @@ int plugin_load(char *filename)
 	void *h;
 	void *(*gpi) (void);
 
-	if ((h = dlopen(filename, RTLD_LAZY))) {
+	if ((h = dlopen(va("./%s", filename), RTLD_LAZY))) {
 		if ((gpi = dlsym(h, "get_input_plugin_info"))) {
 			input_pi *p;
 
