@@ -84,7 +84,6 @@ cvar_t	r_mirroralpha = {"r_mirroralpha","1"};
 cvar_t	r_wateralpha = {"r_wateralpha","1"};
 cvar_t	r_dynamic = {"r_dynamic","1"};
 cvar_t	r_novis = {"r_novis","0"};
-cvar_t  r_fog = {"r_fog", "0"};
 
 cvar_t	gl_finish = {"gl_finish","0"};
 cvar_t	gl_clear = {"gl_clear","0"};
@@ -289,9 +288,15 @@ GL_DrawAliasFrame
 */
 void GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 {
+	float	s, t;
 	float 	l;
-	trivertx_t	*verts;
+	int		i, j;
+	int		index;
+	trivertx_t	*v, *verts;
+	int		list;
 	int		*order;
+	vec3_t	point;
+	float	*normal;
 	int		count;
 
 lastposenum = posenum;
@@ -341,9 +346,14 @@ extern	vec3_t			lightspot;
 
 void GL_DrawAliasShadow (aliashdr_t *paliashdr, int posenum)
 {
-	trivertx_t	*verts;
+	float	s, t, l;
+	int		i, j;
+	int		index;
+	trivertx_t	*v, *verts;
+	int		list;
 	int		*order;
 	vec3_t	point;
+	float	*normal;
 	float	height, lheight;
 	int		count;
 
@@ -435,14 +445,16 @@ R_DrawAliasModel
 */
 void R_DrawAliasModel (entity_t *e)
 {
-	int			i;
+	int			i, j;
 	int			lnum;
 	vec3_t		dist;
 	float		add;
 	model_t		*clmodel;
 	vec3_t		mins, maxs;
 	aliashdr_t	*paliashdr;
-	float		an;
+	trivertx_t	*verts, *v;
+	int			index;
+	float		s, t, an;
 	int			anim;
 
 	clmodel = currententity->model;
@@ -797,6 +809,10 @@ R_SetupFrame
 */
 void R_SetupFrame (void)
 {
+	int				edgecount;
+	vrect_t			vrect;
+	float			w, h;
+
 // don't allow cheats in multiplayer
 	if (cl.maxclients > 1)
 		Cvar_Set ("r_fullbright", "0");
@@ -848,7 +864,8 @@ R_SetupGL
 void R_SetupGL (void)
 {
 	float	screenaspect;
-	//float	yfov;
+	float	yfov;
+	int		i;
 	extern	int glwidth, glheight;
 	int		x, x2, y2, y, w, h;
 
@@ -1086,14 +1103,7 @@ r_refdef must be set before the first call
 */
 void R_RenderView (void)
 {
-//<<<<<<< gl_rmain.c
-//	double	time1, time2;
-//=======
-	double	time1 = 0, time2 = 0;
-//	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.20};
-//>>>>>>> 1.3
-
-	// Fixme: the last argument should be a cvar... r_fog_gamma
+	double	time1, time2;
 	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.10};
 
 	if (r_norefresh.value)
@@ -1105,7 +1115,7 @@ void R_RenderView (void)
 	if (r_speeds.value)
 	{
 		glFinish ();
-		time1 = Sys_DoubleTime ();
+		time1 = Sys_FloatTime ();
 		c_brush_polys = 0;
 		c_alias_polys = 0;
 	}
@@ -1127,28 +1137,21 @@ void R_RenderView (void)
 	glEnable(GL_FOG);
 ********************************************/
 
-/* 
-Eric Windisch: I basicly rewrote what carmack had here to
-display _much_ prettier. small hack
-*/ 
+// Eric Windisch: I basicly rewrote what carmack had here to
+// display _much_ prettier.
 
-if(r_fog.value) {
-        
-	// fixme: would be nice if the user could select what fogmode... (r_fog_mode)
-	// and if they want fog or not... (r_fog)
-        glFogi (GL_FOG_MODE, GL_EXP2);
-        glFogfv (GL_FOG_COLOR, colors);
-	// fixme: GL_FOG_DENSITY should have r_fog_density cvar
-        glFogf (GL_FOG_DENSITY, .0005); 
-        glEnable(GL_FOG);
-}
+	glFogi (GL_FOG_MODE, GL_EXP2);
+	glFogfv (GL_FOG_COLOR, colors);
+	glFogf (GL_FOG_DENSITY, .0005); // defaults to .0005
+	glEnable(GL_FOG);
+
 
 	R_RenderScene ();
 	R_DrawViewModel ();
 	R_DrawWaterSurfaces ();
 
 //  More fog right here :)
-	glDisable(GL_FOG);
+//	glDisable(GL_FOG);
 //  End of all fog code...
 
 	// render mirror view
@@ -1159,7 +1162,7 @@ if(r_fog.value) {
 	if (r_speeds.value)
 	{
 //		glFinish ();
-		time2 = Sys_DoubleTime ();
+		time2 = Sys_FloatTime ();
 		Con_Printf ("%3i ms  %4i wpoly %4i epoly\n", (int)((time2-time1)*1000), c_brush_polys, c_alias_polys); 
 	}
 }

@@ -50,6 +50,8 @@ glRect_t	lightmap_rectchange[MAX_LIGHTMAPS];
 
 int			allocated[MAX_LIGHTMAPS][BLOCK_WIDTH];
 
+cvar_t r_waterwarp = {"r_waterwarp", "1"};
+
 // the lightmap texture data needs to be kept in
 // main memory so texsubimage can update properly
 byte		lightmaps[4*MAX_LIGHTMAPS*BLOCK_WIDTH*BLOCK_HEIGHT];
@@ -319,7 +321,8 @@ void R_DrawSequentialPoly (msurface_t *s)
 	//
 	// normal lightmaped poly
 	//
-	if (! (s->flags & (SURF_DRAWSKY|SURF_DRAWTURB|SURF_UNDERWATER) ) )
+	if (! (s->flags &
+(SURF_DRAWSKY|SURF_DRAWTURB|(SURF_UNDERWATER*!(int)!r_waterwarp.value)) ) )
 	{
 		p = s->polys;
 
@@ -419,7 +422,8 @@ void R_DrawSequentialPoly (msurface_t *s)
 	// normal lightmaped poly
 	//
 
-	if (! (s->flags & (SURF_DRAWSKY|SURF_DRAWTURB|SURF_UNDERWATER) ) )
+	if (! (s->flags &
+(SURF_DRAWSKY|SURF_DRAWTURB|(SURF_UNDERWATER*!(int)!r_waterwarp.value)) ) )
 	{
 		R_RenderDynamicLightmaps (s);
 		if (gl_mtexable) {
