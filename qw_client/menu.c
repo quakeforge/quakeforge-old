@@ -442,7 +442,7 @@ M_AdjustSliders ( int dir )
 			break;
 
 		case 9:	// invert mouse
-			Cvar_Set("m_pitch", va("%d", -m_pitch->value));
+			Cvar_Set("m_pitch", va("%f", -m_pitch->value));
 			break;
 
 		case 10:	// lookspring
