@@ -198,6 +198,7 @@ EmitWaterPolys ( msurface_t *fa ) {
 	float		*v;
 	int			i;
 	float		s, t, os, ot;
+	vec3_t		nv;
 
 	for (p=fa->polys ; p ; p=p->next) {
 		glBegin (GL_POLYGON);
@@ -212,7 +213,18 @@ EmitWaterPolys ( msurface_t *fa ) {
 			t *= (1.0/64);
 
 			glTexCoord2f (s, t);
-			glVertex3fv (v);
+
+			nv[0] = v[0]; //+ 8*sin(v[1]*0.05+realtime)*sin(v[2]*0.05+realtime);
+			nv[1] = v[1]; //+ 8*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
+		
+			if(r_waterripple.value)
+			{
+				nv[2] = v[2] + 8*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
+			} else {
+				nv[2] = v[2];
+			}
+
+			glVertex3fv (nv);
 		}
 		glEnd ();
 	}
