@@ -3,6 +3,8 @@ SRC_DIR = @srcdir@
 
 DESTDIR =
 
+ANONCVS=:pserver:anonymous@cvs.quake.sourceforge.net:/cvsroot/quake
+
 all:
 	@for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
@@ -24,8 +26,12 @@ clean-autoconf mrproper: distclean
 %:
 	@for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
-	done
-
+	
+	
+changelog:
+	@echo "CVS will ask for a passwd, press enter"
+	cvs -d$(ANONCVS) login
+	./tools/cvs2cl/cvs2cl.pl -g -d$(ANONCVS)
 
 # Code to automatically re-configure, only runs if you are compiling in the
 # source directory
@@ -46,3 +52,4 @@ qw_server/Makefile: qw_server/Makefile.in configure
 uquake/Makefile: uquake/Makefile.in configure
 	./configure
 endif
+
