@@ -579,7 +579,7 @@ void Sys_Quit (void)
 		memcpy (screen, d, sizeof(screen));
 
 // write the version number directly to the end screen
-	sprintf (ver, " v%4.2f", VERSION);
+	sprintf (ver, " v" VERSION);
 	for (i=0 ; i<6 ; i++)
 		screen[0*80*2 + 72*2 + i*2] = ver[i];
 
@@ -889,7 +889,7 @@ int main (int c, char **v)
 	extern void (*dos_error_func)(char *, ...);
 	static	char	cwd[1024];
 
-	printf ("Quake v%4.2f\n", VERSION);
+	printf ("Quake v%s\n", VERSION);
 	
 // make sure there's an FPU
 	signal(SIGNOFP, Sys_NoFPUExceptionHandler);

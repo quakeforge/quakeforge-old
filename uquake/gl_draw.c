@@ -410,9 +410,9 @@ void Draw_Init (void)
 
 	// hack the version number directly into the pic
 #if defined(__linux__)
-	sprintf (ver, "QuakeForge (Linux GL) Version %4.2f", (float)VERSION);
+	sprintf (ver, "QuakeForge (Linux GL) v", VERSION);
 #else
-	sprintf (ver, "QuakeForge (GL) Version %4.2f", (float)VERSION);
+	sprintf (ver, "QuakeForge (Unkown GL) v", VERSION);
 #endif
 	dest = cb->data + 320*186 + 320 - 11 - 8*strlen(ver);
 	y = strlen(ver);
@@ -1146,11 +1146,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 		if (!mipmap)
 		{
 // FIXME - what if this extension is available at compile but not run time?
-#ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX , GL_UNSIGNED_BYTE, data);
-#else
-                        Sys_Printf("Warning: GL_COLOR_INDEX8_EXT not supported\n");
-#endif
 			goto done;
 		}
 		memcpy (scaled, data, width*height);
@@ -1159,11 +1155,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 		GL_Resample8BitTexture (data, width, height, scaled, scaled_width, scaled_height);
 
 // FIXME - what if this extension is available at compile but not run time?
-#ifdef HAVE_GL_COLOR_INDEX8_EXT
 	glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
-#else
-        Sys_Printf("Warning: GL_COLOR_INDEX8_EXT not supported\n");
-#endif
 	if (mipmap)
 	{
 		int		miplevel;
@@ -1180,9 +1172,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 				scaled_height = 1;
 			miplevel++;
 // FIXME - what if this extension is available at compile but not run time?
-#ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, miplevel, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
-#endif
 		}
 	}
 done: ;
