@@ -341,13 +341,8 @@ fi
 if test "x$HAS_OGL" != xyes; then
    OGL_CFLAGS="" OGL_LIBS=""
 else
-<<<<<<< configure.in
-   if test "x$HAS_XMESA" = xyes; then
-      AC_DEFINE(XMESA,1)
-=======
    if test "x$HAS_XMESA" = xyes; then
       AC_DEFINE(XMESA)
->>>>>>> 1.50
    fi
 fi
 
