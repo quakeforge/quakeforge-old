@@ -80,10 +80,7 @@ frame_t		*view_frame;
 player_state_t		*view_message;
 
 /*
-===============
-V_CalcRoll
-
-===============
+	V_CalcRoll
 */
 float V_CalcRoll (vec3_t angles, vec3_t velocity)
 {
@@ -110,10 +107,7 @@ float V_CalcRoll (vec3_t angles, vec3_t velocity)
 
 
 /*
-===============
-V_CalcBob
-
-===============
+	V_CalcBob
 */
 float V_CalcBob (void)
 {
@@ -180,17 +174,17 @@ void V_StopPitchDrift (void)
 }
 
 /*
-===============
-V_DriftPitch
+	V_DriftPitch
 
-Moves the client pitch angle towards cl.idealpitch sent by the server.
+	Moves the client pitch angle towards cl.idealpitch sent by the
+	server.
 
-If the user is adjusting pitch manually, either with lookup/lookdown,
-mlook and mouse, or klook and keyboard, pitch drifting is constantly stopped.
+	If the user is adjusting pitch manually, either with lookup/lookdown,
+	mlook and mouse, or klook and keyboard, pitch drifting is constantly
+	stopped.
 
-Drifting is enabled when the center view key is hit, mlook is released and
-lookspring is non 0, or when 
-===============
+	Drifting is enabled when the center view key is hit, mlook is
+	released and lookspring is non 0, or when 
 */
 void V_DriftPitch (void)
 {
@@ -257,9 +251,7 @@ void V_DriftPitch (void)
 
 /*
 ============================================================================== 
- 
-						PALETTE FLASHES 
- 
+				PALETTE FLASHES 
 ============================================================================== 
 */ 
  
@@ -300,9 +292,7 @@ void BuildGammaTable (float g)
 }
 
 /*
-=================
-V_CheckGamma
-=================
+	V_CheckGamma
 */
 qboolean V_CheckGamma (void)
 {
@@ -321,9 +311,7 @@ qboolean V_CheckGamma (void)
 
 
 /*
-===============
-V_ParseDamage
-===============
+	V_ParseDamage
 */
 void V_ParseDamage (void)
 {
@@ -389,9 +377,7 @@ void V_ParseDamage (void)
 
 
 /*
-==================
-V_cshift_f
-==================
+	V_cshift_f
 */
 void V_cshift_f (void)
 {
@@ -403,11 +389,9 @@ void V_cshift_f (void)
 
 
 /*
-==================
-V_BonusFlash_f
+	V_BonusFlash_f
 
-When you run over an item, the server sends this command
-==================
+	When you run over an item, the server sends this command
 */
 void V_BonusFlash_f (void)
 {
@@ -418,11 +402,9 @@ void V_BonusFlash_f (void)
 }
 
 /*
-=============
-V_SetContentsColor
+	V_SetContentsColor
 
-Underwater, lava, etc each has a color shift
-=============
+	Underwater, lava, etc each has a color shift
 */
 void V_SetContentsColor (int contents)
 {
@@ -449,9 +431,7 @@ void V_SetContentsColor (int contents)
 }
 
 /*
-=============
-V_CalcPowerupCshift
-=============
+	V_CalcPowerupCshift
 */
 void V_CalcPowerupCshift (void)
 {
@@ -489,9 +469,7 @@ void V_CalcPowerupCshift (void)
 
 
 /*
-=============
-V_CalcBlend
-=============
+	V_CalcBlend
 */
 void V_CalcBlend (void)
 {
@@ -533,9 +511,7 @@ void V_CalcBlend (void)
 
 /* 
 ============================================================================== 
- 
-						VIEW RENDERING 
- 
+				VIEW RENDERING 
 ============================================================================== 
 */ 
 
@@ -548,9 +524,7 @@ float angledelta (float a)
 }
 
 /*
-==================
-CalcGunAngle
-==================
+	CalcGunAngle
 */
 void CalcGunAngle (void)
 {	
@@ -602,9 +576,7 @@ void CalcGunAngle (void)
 }
 
 /*
-==============
-V_BoundOffsets
-==============
+	V_BoundOffsets
 */
 void V_BoundOffsets (void)
 {
@@ -626,11 +598,9 @@ void V_BoundOffsets (void)
 }
 
 /*
-==============
-V_AddIdle
+	V_AddIdle
 
-Idle swaying
-==============
+	Idle swaying
 */
 void V_AddIdle (void)
 {
@@ -645,11 +615,9 @@ void V_AddIdle (void)
 
 
 /*
-==============
-V_CalcViewRoll
+	V_CalcViewRoll
 
-Roll is induced by movement and damage
-==============
+	Roll is induced by movement and damage
 */
 void V_CalcViewRoll (void)
 {
@@ -669,10 +637,7 @@ void V_CalcViewRoll (void)
 
 
 /*
-==================
-V_CalcIntermissionRefdef
-
-==================
+	V_CalcIntermissionRefdef
 */
 void V_CalcIntermissionRefdef (void)
 {
@@ -694,18 +659,17 @@ void V_CalcIntermissionRefdef (void)
 }
 
 /*
-==================
-V_CalcRefdef
-
-==================
+	V_CalcRefdef
 */
 void V_CalcRefdef (void)
 {
 	entity_t	*view;
-	int			i;
+	int		h, i;
 	vec3_t		forward, right, up;
 	float		bob;
 	static float oldz = 0;
+
+	h = cl.qfserver ? cl.stats[STAT_VIEWHEIGHT] : 22;
 
 	V_DriftPitch ();
 
@@ -735,9 +699,9 @@ void V_CalcRefdef (void)
 	else if (view_message->flags & PF_DEAD)
 		r_refdef.vieworg[2] -= 16;	// corpse view height
 	else
-		r_refdef.vieworg[2] += 22;	// view height
+		r_refdef.vieworg[2] += h;	// view height
 
-	if (view_message->flags & PF_DEAD)		// PF_GIB will also set PF_DEAD
+	if (view_message->flags & PF_DEAD)	// PF_GIB also sets PF_DEAD
 		r_refdef.viewangles[ROLL] = 80;	// dead view angle
 
 
@@ -750,7 +714,7 @@ void V_CalcRefdef (void)
 	CalcGunAngle ();
 
 	VectorCopy (cl.simorg, view->origin);
-	view->origin[2] += 22;
+	view->origin[2] += h;
 
 	for (i=0 ; i<3 ; i++)
 	{
@@ -801,9 +765,7 @@ void V_CalcRefdef (void)
 }
 
 /*
-=============
-DropPunchAngle
-=============
+	DropPunchAngle
 */
 void DropPunchAngle (void)
 {
@@ -813,12 +775,10 @@ void DropPunchAngle (void)
 }
 
 /*
-==================
-V_RenderView
+	V_RenderView
 
-The player's clipping box goes from (-16 -16 -24) to (16 16 32) from
-the entity origin, so any view position inside that will be valid
-==================
+	The player's clipping box goes from (-16 -16 -24) to (16 16 32) from
+	the entity origin, so any view position inside that will be valid
 */
 extern vrect_t scr_vrect;
 
@@ -854,9 +814,7 @@ cl.simangles[ROLL] = 0;	// FIXME @@@
 //============================================================================
 
 /*
-=============
-V_Init
-=============
+	V_Init
 */
 void V_Init (void)
 {

@@ -1,4 +1,5 @@
 /*
+sv_send.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,7 +20,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sv_main.c -- server main program
 
 #include <ctype.h>
 #include <quakedef.h>
@@ -554,6 +554,10 @@ void SV_UpdateClientStats (client_t *client)
 		stats[STAT_ACTIVEWEAPON] = ent->v.weapon;
 	// stuff the sigil bits into the high bits of items for sbar
 	stats[STAT_ITEMS] = (int)ent->v.items | ((int)pr_global_struct->serverflags << 28);
+
+	// Extensions to the QW 2.40 protocol for MegaTF
+	stats[STAT_VIEWHEIGHT] = (int)ent->v.view_ofs[2];
+	stats[STAT_FLYMODE] = (ent->v.movetype == MOVETYPE_FLY);
 
 	for (i=0 ; i<MAX_CL_STATS ; i++)
 		if (stats[i] != client->stats[i])

@@ -1,4 +1,5 @@
 /*
+pmove.h
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -23,10 +24,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __PMOVE_H
 #define __PMOVE_H
 
-#include "pmove_simple.h"
-#include "model.h"
-#include "net.h"
-#include "protocol.h"
+#include <pmove_simple.h>
+#include <model.h>
+#include <net.h>
+#include <protocol.h>
 
 typedef struct
 {
@@ -48,6 +49,7 @@ typedef struct
 	int		oldbuttons;
 	float		waterjumptime;
 	qboolean	dead;
+	qboolean	flying;
 	int		spectator;
 
 	// world state

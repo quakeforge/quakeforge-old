@@ -1,4 +1,5 @@
 /*
+cl_pred.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,36 +21,34 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include "qtypes.h"
-#include "quakedef.h"
-#include "winquake.h"
-#include "cvar.h"
-#include "client.h"
-#include "console.h"
-#include "mathlib.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <winquake.h>
+#include <cvar.h>
+#include <client.h>
+#include <console.h>
+#include <mathlib.h>
 
-//cvar_t	cl_nopred = {"cl_nopred","0"};
 cvar_t	*cl_nopred;
-//cvar_t	cl_pushlatency = {"pushlatency","-999"};
 cvar_t	*cl_pushlatency;
 
 extern	frame_t		*view_frame;
 
 /*
-=================
-CL_NudgePosition
+	CL_NudgePosition
 
-If pmove.origin is in a solid position,
-try nudging slightly on all axis to
-allow for the cut precision of the net coordinates
-=================
+	If pmove.origin is in a solid position,
+	try nudging slightly on all axis to
+	allow for the cut precision of the net coordinates
 */
-void CL_NudgePosition (void)
+void
+CL_NudgePosition (void)
 {
 	vec3_t	base;
 	int		x, y;
 
-	if (PM_HullPointContents (&cl.model_precache[1]->hulls[1], 0, pmove.origin) == CONTENTS_EMPTY)
+	if (PM_HullPointContents (&cl.model_precache[1]->hulls[1], 0,
+				pmove.origin) == CONTENTS_EMPTY)
 		return;
 
 	VectorCopy (pmove.origin, base);
@@ -66,12 +65,13 @@ void CL_NudgePosition (void)
 	Con_DPrintf ("CL_NudgePosition: stuck\n");
 }
 
+
 /*
-==============
-CL_PredictUsercmd
-==============
+	CL_PredictUsercmd
 */
-void CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u, qboolean spectator)
+void
+CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u,
+		qboolean spectator)
 {
 	// split up very long moves
 	if (u->msec > 50)
@@ -97,6 +97,7 @@ void CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u, 
 	pmove.dead = cl.stats[STAT_HEALTH] <= 0;
 	pmove.spectator = spectator;
 
+	pmove.flying = cl.stats[STAT_FLYMODE];
 	pmove.cmd = *u;
 
 	PlayerMove ();
@@ -115,11 +116,10 @@ void CL_PredictUsercmd (player_state_t *from, player_state_t *to, usercmd_t *u, 
 
 
 /*
-==============
-CL_PredictMove
-==============
+	CL_PredictMove
 */
-void CL_PredictMove (void)
+void
+CL_PredictMove (void)
 {
 	int			i;
 	float		f;
@@ -178,9 +178,11 @@ void CL_PredictMove (void)
 	for (i=1 ; i<UPDATE_BACKUP-1 && cls.netchan.incoming_sequence+i <
 			cls.netchan.outgoing_sequence; i++)
 	{
-		to = &cl.frames[(cls.netchan.incoming_sequence+i) & UPDATE_MASK];
-		CL_PredictUsercmd (&from->playerstate[cl.playernum]
-			, &to->playerstate[cl.playernum], &to->cmd, cl.spectator);
+		to = &cl.frames[(cls.netchan.incoming_sequence+i) 
+				& UPDATE_MASK];
+		CL_PredictUsercmd (&from->playerstate[cl.playernum],
+				&to->playerstate[cl.playernum], &to->cmd,
+				cl.spectator);
 		if (to->senttime >= cl.time)
 			break;
 		from = to;
@@ -196,42 +198,43 @@ void CL_PredictMove (void)
 		f = 0;
 	else
 	{
-		f = (cl.time - from->senttime) / (to->senttime - from->senttime);
+		f = (cl.time - from->senttime) / (to->senttime 
+				- from->senttime);
 
-		if (f < 0)
-			f = 0;
-		if (f > 1)
-			f = 1;
+		f = max(0, min(f, 1));
 	}
 
 	for (i=0 ; i<3 ; i++)
-		if ( fabs(from->playerstate[cl.playernum].origin[i] - to->playerstate[cl.playernum].origin[i]) > 128)
+		if ( fabs(from->playerstate[cl.playernum].origin[i]
+				- to->playerstate[cl.playernum].origin[i])
+				> 128)
 		{	// teleported, so don't lerp
-			VectorCopy (to->playerstate[cl.playernum].velocity, cl.simvel);
-			VectorCopy (to->playerstate[cl.playernum].origin, cl.simorg);
+			VectorCopy (to->playerstate[cl.playernum].velocity,
+					cl.simvel);
+			VectorCopy (to->playerstate[cl.playernum].origin,
+					cl.simorg);
 			return;
 		}
 		
 	for (i=0 ; i<3 ; i++)
 	{
 		cl.simorg[i] = from->playerstate[cl.playernum].origin[i] 
-			+ f*(to->playerstate[cl.playernum].origin[i] - from->playerstate[cl.playernum].origin[i]);
+				+ f*(to->playerstate[cl.playernum].origin[i]
+				- from->playerstate[cl.playernum].origin[i]);
 		cl.simvel[i] = from->playerstate[cl.playernum].velocity[i] 
-			+ f*(to->playerstate[cl.playernum].velocity[i] - from->playerstate[cl.playernum].velocity[i]);
+				+ f*(to->playerstate[cl.playernum].velocity[i] 
+				- from->playerstate[cl.playernum].velocity[i]);
 	}		
 }
 
 
 /*
-==============
-CL_InitPrediction
-==============
+	CL_InitPrediction
 */
-void CL_InitPrediction (void)
+void
+CL_InitPrediction (void)
 {
-//	Cvar_RegisterVariable (&cl_pushlatency);
-	cl_pushlatency = Cvar_Get ("cl_pushlatency","0",0,"None");
-//	Cvar_RegisterVariable (&cl_nopred);
-	cl_nopred = Cvar_Get ("cl_nopred","0",0,"None");
+	cl_pushlatency = Cvar_Get ("cl_pushlatency","0",CVAR_NONE,"None");
+	cl_nopred = Cvar_Get ("cl_nopred","0",CVAR_NONE,"None");
 }
 

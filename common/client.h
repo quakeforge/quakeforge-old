@@ -293,6 +293,7 @@ typedef struct
 
 // QW specific!
 // all player information
+	qboolean	qfserver;
 	player_info_t	players[MAX_CLIENTS];
 	int		servercount;	// server identification for prespawns
 
