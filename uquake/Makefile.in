@@ -28,6 +28,7 @@ ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
 
+HAS_DGA    = @HAS_DGA@
 HAS_VGA    = @HAS_VGA@
 HAS_MGL    = @HAS_MGL@
 HAS_GGI    = @HAS_GGI@
@@ -428,7 +429,7 @@ ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s)))
 
 GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
-GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@
 
 $(BUILD_DIR)/gl/vid_linuxglx.o: $(COMMON_DIR)/vid_linuxglx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
