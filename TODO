@@ -48,4 +48,7 @@ to quake-devel@lists.sourceforge.net with details.
  * DOS/Win support in autoconf
  * Backport QW's HUD stuff to UQuake
  * Sanitize the makefiles to cut down unnecessary builds
- 
+ * Implement colored lighting
+ * Implement mp3 player
+ * Implement mod/s3m/it/xm/etc player
+ * Implement fullbright textures
