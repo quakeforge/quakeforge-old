@@ -183,7 +183,7 @@ CL_GUI_SRC= console.c sbar.c view.c keys.c menu.c
 
 SRV_SRC     = sv_main.c sv_user.c sv_move.c sv_phys.c 
 UQ_SRV_SRC  = host.c host_cmd.c $(SRV_SRC)
-SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c
+SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c pmove.c 
 
 # Source common to QW/UQuake
 CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
