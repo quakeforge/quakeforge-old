@@ -477,8 +477,10 @@ void M_AdjustSliders (int dir)
 	case 13:
 		Cvar_SetValue ("cl_hudswap", !cl_hudswap.value);
 
+		/*
 	default:
 		VID_ExtraOptionCmd(options_cursor + 2 - L_OPTIONS_ITEMS);
+		*/
 
 	}
 }
@@ -566,7 +568,7 @@ void M_Options_Draw (void)
 	M_Print (16, options_draw_cursor+=8, "      HUD on left side");
 	M_DrawCheckbox (220, options_draw_cursor, cl_hudswap.value);
 
-	VID_ExtraOptionDraw(options_draw_cursor);
+	//VID_ExtraOptionDraw(options_draw_cursor);
 	options_draw_cursor+=VID_options_items*8;
 
 	if (vid_menudrawfn) {

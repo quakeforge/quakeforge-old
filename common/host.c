@@ -579,7 +579,7 @@ Host_Init ( quakeparms_t *parms)
 		if (!host_colormap)
 			Sys_Error ("Couldn't load gfx/colormap.lmp");
 
-		plugin_load("./in_svgalib.so");
+		plugin_load("./in_x11.so");
 		IN->Init();
 		VID_Init(host_basepal);
 		Draw_Init();
