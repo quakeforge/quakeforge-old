@@ -672,12 +672,12 @@ void SVC_DirectConnect (void)
 	}
 
 	// if at server limits, refuse connection
-	if ( maxclients->value > MAX_CLIENTS )
-		maxclients->value = MAX_CLIENTS;
+	if (maxclients->value > MAX_CLIENTS)
+		Cvar_Set(maxclients, va("%i", MAX_CLIENTS));
 	if (maxspectators->value > MAX_CLIENTS)
-		maxspectators->value = MAX_CLIENTS;
-	if (maxspectators->value + maxclients->value > MAX_CLIENTS)
-		maxspectators->value = (MAX_CLIENTS - maxspectators->value + maxclients->value);
+		Cvar_Set(maxspectators, va("%i", MAX_CLIENTS));
+	if (maxspectators->value + maxclients->value > MAX_CLIENTS )
+		Cvar_Set(maxspectators, va("%i", MAX_CLIENTS - (int)maxclients->value));
 	if ( (spectator && spectators >= (int)maxspectators->value)
 		|| (!spectator && clients >= (int)maxclients->value) )
 	{
