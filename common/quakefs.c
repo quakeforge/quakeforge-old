@@ -1,4 +1,5 @@
 /*
+quakefs.c - virtual filesystem functions
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,17 +21,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// common.c -- misc functions used in client and server
 
 #include <ctype.h>
-#include "qtypes.h"
-#include "quakefs.h"
-#include "sys.h"
-#include "console.h"
-#include "common_quakedef.h"
-#include "zone.h"
-#include "common.h"
-#include "draw.h"
+#include <qtypes.h>
+#include <quakefs.h>
+#include <sys.h>
+#include <console.h>
+#include <common_quakedef.h>
+#include <zone.h>
+#include <common.h>
+#include <draw.h>
 
 /*
 All of Quake's data access is through a hierchal file system, but the contents of the file system can be transparently merged from several sources.
@@ -635,16 +635,17 @@ void COM_LoadGameDirectory(char *dir)
         pack_t                  *pak;
         char                    pakfile[MAX_OSPATH];
         char                    *p;
+	int		foundall = 0;
 	
 	// Load all Pak1 files:
-        for (i=0 ; ; i++)
+        for (i=0; foundall; i++)
         {
              
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
 		
 		pak = COM_LoadPackFile(pakfile);                
 		if(!pak)
-			break;
+			foundall = 1;
 
                 search = Hunk_Alloc (sizeof(searchpath_t));
                 search->pack = pak;
