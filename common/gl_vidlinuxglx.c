@@ -509,7 +509,6 @@ GL_Init
 void GL_Init (void)
 {
 
-        Cvar_RegisterVariable (&vid_glx_mode);
 	
 
 	gl_vendor = glGetString (GL_VENDOR);
@@ -633,6 +632,7 @@ void VID_Init(unsigned char *palette)
 	Cvar_RegisterVariable (&vid_mode);
 	Cvar_RegisterVariable (&gl_ztrick);
 	Cvar_RegisterVariable (&_windowed_mouse);
+        Cvar_RegisterVariable (&vid_glx_mode);
 	
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
