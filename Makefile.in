@@ -17,7 +17,7 @@ all:
 	done
 
 distclean:
-	rm -f config.cache config.log config.status Makefile Rules.mk
+	rm -f config.cache config.log config.status Makefile
 	rm -f common/config.h
 	rm -f build_rpm quakeforge-*.tar.gz quakeforge.spec
 	find . -name \*~ | xargs rm -f
@@ -31,7 +31,7 @@ distclean:
 	done
 
 clean-autoconf mrproper: distclean
-	rm -f common/config.h.in
+	rm -f common/config.h.in Rules.mk
 	rm -f configure
 
 %:
