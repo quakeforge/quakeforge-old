@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static float old_windowed_mouse = 0;
 
+cvar_t	_windowed_mouse = {"_windowed_mouse","0",CVAR_ARCHIVE};
+
 viddef_t    vid;                // global video state
 unsigned short  d_8to16table[256];
 
@@ -88,8 +90,7 @@ void    VID_Init (unsigned char *palette)
     //Uint16 video_w, video_h;
     Uint32 flags;
 
-    S_Init();
-
+    S_Init(); 
     // Load the SDL library
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_CDROM)<0) //|SDL_INIT_AUDIO|SDL_INIT_CDROM) < 0)
         Sys_Error("VID: Couldn't load SDL: %s", SDL_GetError());
@@ -363,8 +364,11 @@ void Sys_SendKeyEvents(void)
 
 void IN_Init (void)
 {
+    fprintf(stderr,"IN_Init started\n");
     if ( COM_CheckParm("-nomouse") && !_windowed_mouse.value)
         return;
+
+    Cvar_RegisterVariable(&_windowed_mouse);
     mouse_x = mouse_y = 0.0;
     mouse_avail = 1;
 }
@@ -372,6 +376,10 @@ void IN_Init (void)
 void IN_Shutdown (void)
 {
     mouse_avail = 0;
+}
+void IN_SendKeyEvents (void)
+{
+    Sys_SendKeyEvents ();
 }
 
 void IN_Frame(void)
