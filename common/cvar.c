@@ -266,6 +266,27 @@ void Cvar_Set_f(void)
 				"User created cvar");
 	}	
 }
+
+void Cvar_Toggle_f (void)
+{
+	cvar_t *var;
+
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("toggle <cvar> : toggle a cvar on/off\n");
+		return;
+	}
+
+	var = Cvar_FindVar (Cmd_Argv(1));
+	if (!var)
+	{
+		Con_Printf ("Unknown variable \"%s\"\n", Cmd_Argv(1));
+		return;
+	}
+
+	Cvar_Set (var->name, var->value ? "0" : "1");
+}
+
 void Cvar_Help_f (void)
 {
 	char *cvar_name;
@@ -300,6 +321,7 @@ void Cvar_CvarList_f (void)
 void Cvar_Init()
 {
 	Cmd_AddCommand ("set", Cvar_Set_f);
+	Cmd_AddCommand ("toggle", Cvar_Toggle_f);
 	Cmd_AddCommand ("help",Cvar_Help_f);
 	Cmd_AddCommand ("cvarlist",Cvar_CvarList_f);
 }
