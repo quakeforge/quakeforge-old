@@ -145,7 +145,7 @@ if test "x$HAS_SVGA" != xno; then
       SVGA_CFLAGS="$SVGA_CFLAGS= -I$withval/include"
       SVGA_LIBS="$SVGA_LIBS -L$withval/lib"
    dnl The default system location is /usr/include or /usr/local/include
-   dnl and we (obviously) don't need to set CFLAGS for that
+   dnl and we (obviously) do not need to set CFLAGS for that
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $SVGA_CFLAGS"
