@@ -61,7 +61,7 @@ AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
 	snprintf _snprintf vsnprintf _vsnprintf)
 
 AC_ARG_ENABLE(experimental,
-[  --enable-experiemental  compile with experimental code. Use at your
+[  --enable-experimental  compile with experimental code. Use at your
                           own risk]
 )
 if test "x$enable_experimental" = xyes; then
