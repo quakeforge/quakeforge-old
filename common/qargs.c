@@ -100,18 +100,21 @@ void COM_InitArgv (int argc, char **argv)
 		largv[com_argc] = argv[com_argc];
 		if ((argv[com_argc]) && !Q_strcmp ("-safe", argv[com_argc]))
 			safe = true;
-		len += strlen (argv[com_argc]) + 1;
+		if (com_argc)
+			len += strlen (argv[com_argc]) + 1;
 	}
 
 	com_cmdline = (char*)malloc (len+1); // need strlen(com_cmdline)+2
 	com_cmdline[0] = 0;
-	for (i=0; i < argc; i++)
-	{
-		strncat (com_cmdline, argv[i], len);
-		assert(len - strlen(com_cmdline) > 0);
-		strcat (com_cmdline, " ");
+	if (len) {
+		for (i=1; i < argc; i++)
+		{
+			strncat (com_cmdline, argv[i], len);
+			assert(len - strlen(com_cmdline) > 0);
+			strcat (com_cmdline, " ");
+		}
+		com_cmdline[len - 1] = '\0';
 	}
-	com_cmdline[len - 1] = '\0';
 
 	if (safe)
 	{

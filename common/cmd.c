@@ -29,6 +29,7 @@
 */
 
 #include <common.h>
+#include <qargs.h>
 #include <cmd.h>
 #include <console.h>
 #include <cvar.h>
@@ -230,29 +231,11 @@ void Cmd_StuffCmds_f (void)
 {
 	int		i, j;
 	int		s;
-	char	*text, *build, c;
+	char	*build, c;
 
-// build the combined string to parse from
-	s = 0;
-	for (i=1 ; i<com_argc ; i++)
-	{
-		if (!com_argv[i])
-			continue;		// NEXTSTEP nulls out -NXHost
-		s += Q_strlen (com_argv[i]) + 1;
-	}
+	s = strlen (com_cmdline);
 	if (!s)
 		return;
-
-	text = Z_Malloc (s+1);
-	text[0] = 0;
-	for (i=1 ; i<com_argc ; i++)
-	{
-		if (!com_argv[i])
-			continue;		// NEXTSTEP nulls out -NXHost
-		Q_strcat (text,com_argv[i]);
-		if (i != com_argc-1)
-			Q_strcat (text, " ");
-	}
 
 // pull out the commands
 	build = Z_Malloc (s+1);
@@ -260,27 +243,30 @@ void Cmd_StuffCmds_f (void)
 
 	for (i=0 ; i<s-1 ; i++)
 	{
-		if (text[i] == '+')
+		if (com_cmdline[i] == '+')
 		{
 			i++;
 
-			for (j=i ; (text[j] != '+') && (text[j] != '-') && (text[j] != 0) ; j++)
+			for (j=i ; ((com_cmdline[j] != '+')
+						&& (com_cmdline[j] != '-')
+						&& (com_cmdline[j] != 0)) ; j++)
 				;
 
-			c = text[j];
-			text[j] = 0;
+			c = com_cmdline[j];
+			com_cmdline[j] = 0;
 
-			Q_strcat (build, text+i);
+			Q_strcat (build, com_cmdline+i);
 			Q_strcat (build, "\n");
-			text[j] = c;
+			com_cmdline[j] = c;
 			i = j-1;
 		}
 	}
 
+	//Con_Printf("[\n%s]\n",build);
+
 	if (build[0])
 		Cbuf_InsertText (build);
 
-	Z_Free (text);
 	Z_Free (build);
 }
 

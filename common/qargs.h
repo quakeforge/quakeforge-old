@@ -35,6 +35,7 @@
 
 extern	int		com_argc;
 extern	char	**com_argv;
+extern	char	*com_cmdline;
 
 int COM_CheckParm (char *parm);
 void COM_AddParm (char *parm);
