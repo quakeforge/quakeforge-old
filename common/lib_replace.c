@@ -174,7 +174,8 @@ float Q_atof (char *str)
 }
 
 // Note, this is /NOT/ a work-alike strcmp, this groups numbers sanely.
-int Q_qstrcmp(const char *val, const char *ref)
+//int Q_qstrcmp(const char *val, const char *ref)
+int Q_qstrcmp(const char *ref, const char *val)
 {
 	int vc, rc;
 	long vl, rl;

@@ -62,6 +62,7 @@ vec3_t	player_maxs = {16, 16, 32};
 
 void PM_InitBoxHull (void);
 void PM_CategorizePosition (void);
+void PM_Accelerate (vec3_t, float, float);
 
 void Pmove_Init (void)
 {
@@ -240,6 +241,56 @@ int PM_FlyMove (void)
 	return blocked;
 }
 
+
+/*
+   PM_FlymodeMove
+
+   Pre-PM_FlyMove function for MOVETYPE_FLY players.  We can't put any of
+   this into PM_FlyMode because of the overhead hits.  Originally did the
+   flymode stuff as part of PM_GroundMove but Tonik's jump fix screwed
+   altered the physics.  I should have done this the first time.
+
+   We'll also borrow some stuff from swimming physics because the original
+   quake flymode sucked and swimming physics fit in better.	--KB
+*/
+void
+PM_FlymodeMove ( void )
+{
+	vec3_t		start, dest;
+	pmtrace_t	trace;
+	vec3_t		pmvel, pmtmp;
+	float		pmspeed;
+
+	pmvel[0] = forward[0]*pmove.cmd.forwardmove +
+		right[0]*pmove.cmd.sidemove;
+	pmvel[1] = forward[1]*pmove.cmd.forwardmove +
+		right[1]*pmove.cmd.sidemove;
+	pmvel[2] = forward[2]*pmove.cmd.forwardmove +
+		right[2]*pmove.cmd.sidemove + pmove.cmd.upmove;
+
+	VectorCopy (pmvel, pmtmp);
+	pmspeed = VectorNormalize(pmtmp);	// don't alter pmvel
+
+	if (pmspeed > movevars.maxspeed)	// there IS a spoon, Neo..
+	{
+		VectorScale (pmvel, movevars.maxspeed / pmspeed, pmvel);
+		pmspeed = movevars.maxspeed;
+	}
+	PM_Accelerate (pmtmp, pmspeed, movevars.wateraccelerate);
+
+	VectorMA (pmove.origin, frametime, pmove.velocity, dest);
+	VectorCopy (dest, start);
+	start[2] += STEPSIZE + 1;
+	trace = PM_PlayerMove (start, dest);
+	if (!trace.startsolid && !trace.allsolid)
+	{
+		VectorCopy (trace.endpos, pmove.origin);
+		return;				// just step up
+	}
+
+	PM_FlyMove ();				// NOW we fly.
+}
+
 /*
 =============
 PM_GroundMove
@@ -345,7 +396,7 @@ Handles both ground friction and water friction
 void PM_Friction (void)
 {
 	float	*vel;
-	float	speed, newspeed, control;
+	float	speed, newspeed; //, control;
 	float	friction;
 	float	drop;
 	vec3_t	start, stop;
@@ -384,11 +435,10 @@ void PM_Friction (void)
 
 	if (waterlevel >= 2) // apply water friction
 		drop += speed*movevars.waterfriction*waterlevel*frametime;
+	else if (pmove.flying)
+		drop += max(movevars.stopspeed, speed) * friction * frametime;
 	else if (onground != -1) // apply ground friction
-	{
-		control = speed < movevars.stopspeed ? movevars.stopspeed : speed;
-		drop += control*friction*frametime;
-	}
+		drop += max(movevars.stopspeed, speed) * friction * frametime;
 
 
 // scale the velocity
@@ -565,9 +615,11 @@ void PM_AirMove (void)
 		PM_Accelerate (wishdir, wishspeed, movevars.accelerate);
 		pmove.velocity[2] -= movevars.entgravity * movevars.gravity * frametime;
 		PM_GroundMove ();
-	}
-	else
-	{	// not on ground, so little effect on velocity
+	} else if (pmove.flying)
+	{
+		PM_AirAccelerate (wishdir, wishspeed, movevars.accelerate);
+		PM_FlyMove ();
+	} else {	// not on ground, so little effect on velocity
 		PM_AirAccelerate (wishdir, wishspeed, movevars.accelerate);
 
 		// add gravity
@@ -729,7 +781,7 @@ void CheckWaterJump (void)
 	int		cont;
 	vec3_t	flatforward;
 
-	if (pmove.waterjumptime)
+	if (pmove.waterjumptime || pmove.flying)
 		return;
 
 	// ZOID, don't hop out if we just jumped in
@@ -927,6 +979,8 @@ void PlayerMove (void)
 
 	if (waterlevel >= 2)
 		PM_WaterMove ();
+	else if (pmove.flying)
+		PM_FlymodeMove ();
 	else
 		PM_AirMove ();
 

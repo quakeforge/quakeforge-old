@@ -52,26 +52,16 @@ solid_edge items only clip against bsp models.
 
 */
 
-//cvar_t	sv_maxvelocity = {"sv_maxvelocity","2000"};
 cvar_t	*sv_maxvelocity;
 
-//cvar_t	sv_gravity			 = { "sv_gravity", "800"};
 cvar_t	*sv_gravity;
-//cvar_t	sv_stopspeed		 = { "sv_stopspeed", "100"};
 cvar_t	*sv_stopspeed;
-//cvar_t	sv_maxspeed			 = { "sv_maxspeed", "320"};
 cvar_t	*sv_maxspeed;
-//cvar_t	sv_spectatormaxspeed = { "sv_spectatormaxspeed", "500"};
 cvar_t	*sv_spectatormaxspeed;
-//cvar_t	sv_accelerate		 = { "sv_accelerate", "10"};
 cvar_t	*sv_accelerate;
-//cvar_t	sv_airaccelerate	 = { "sv_airaccelerate", "0.7"};
 cvar_t	*sv_airaccelerate;
-//cvar_t	sv_wateraccelerate	 = { "sv_wateraccelerate", "10"};
 cvar_t	*sv_wateraccelerate;
-//cvar_t	sv_friction			 = { "sv_friction", "4"};
 cvar_t	*sv_friction;
-//cvar_t	sv_waterfriction	 = { "sv_waterfriction", "4"};
 cvar_t	*sv_waterfriction;
 
 
@@ -878,11 +868,15 @@ void SV_RunEntity (edict_t *ent)
 	case MOVETYPE_STEP:
 		SV_Physics_Step (ent);
 		break;
+#if 0
 	case MOVETYPE_FLY:
 		if (!SV_RunThink (ent))
 			return;
 		SV_FlyMove (ent, host_frametime, NULL);
 		break;
+#else
+	case MOVETYPE_FLY:
+#endif
 	case MOVETYPE_TOSS:
 	case MOVETYPE_BOUNCE:
 	case MOVETYPE_FLYMISSILE:
