@@ -426,12 +426,29 @@ void CL_ConnectionlessPacket (void)
 
 		Con_Printf ("client command\n");
 
-		if ((*(unsigned *)net_from.ip != *(unsigned *)net_local_adr.ip
-			&& *(unsigned *)net_from.ip != htonl(INADDR_LOOPBACK)) )
-		{
-			Con_Printf ("Command packet from remote host.  Ignored.\n");
-			return;
-		}
+#ifndef HAVE_IPV6
+               if ((*(unsigned *)net_from.ip != *(unsigned *)net_local_adr.ip
+                       && *(unsigned *)net_from.ip != htonl(INADDR_LOOPBACK)) )
+               {
+                       Con_Printf ("Command packet from remote host.  Ignored.\n");
+                       return;
+               }
+
+#else
+
+		if (memcmp(net_from.ip, net_local_adr.ip, sizeof(net_from.ip)) == 0)
+		  ;
+		else if (IN6_IS_ADDR_LOOPBACK((struct in6_addr *)net_from.ip))
+		  ;
+		else if (IN6_IS_ADDR_V4MAPPED((struct in6_addr *)net_from.ip) && 
+			 ((struct in_addr *)&net_from.ip[3])->s_addr == htonl(INADDR_LOOPBACK))
+		  ;
+		else {
+ 			Con_Printf ("Command packet from remote host.  Ignored.\n");
+ 			return;
+ 		}
+#endif
+
 #ifdef _WIN32
 		ShowWindow (mainwindow, SW_RESTORE);
 		SetForegroundWindow (mainwindow);
