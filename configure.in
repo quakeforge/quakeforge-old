@@ -123,6 +123,29 @@ else
    AC_DEFINE(GAMENAME, "id1")
 fi
 
+AC_ARG_WITH(global-cfg-file,
+[  --with-global-cfg-file=FILE
+                          define the default global config file. defaults to
+                          /etc/quakeforge.conf or
+                          /usr/local/etc/quakeforge.conf, depending on
+                          \${prefix}.],
+  AC_DEFINE_UNQUOTED(GLOBAL_CFG_FILE, "$withval"),
+  if test "x$prefix" = xNONE; then
+     if test "${ac_default_prefix}" = /usr; then
+        AC_DEFINE_UNQUOTED(GLOBAL_CFG_FILE, "/etc/quakeforge.conf")
+     else
+        AC_DEFINE_UNQUOTED(GLOBAL_CFG_FILE,
+                           "${ac_default_prefix}/etc/quakeforge.conf")
+     fi
+  else
+     if test "${prefix}" = /usr; then
+        AC_DEFINE_UNQUOTED(GLOBAL_CFG_FILE, "/etc/quakeforge.conf")
+     else
+        AC_DEFINE_UNQUOTED(GLOBAL_CFG_FILE, "${prefix}/etc/quakeforge.conf")
+     fi
+  fi
+)
+
 AC_ARG_ENABLE(basepath,
 [  --enable-basepath       use \${prefix}/games/quakeforge instead of . for game
                           data],

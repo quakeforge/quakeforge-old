@@ -81,6 +81,7 @@ cvar_t	*coop;
 cvar_t	*fraglimit;
 cvar_t	*skill;
 cvar_t	*timelimit;
+cvar_t	*global_cfg_file;
 
 #ifdef UQUAKE
 client_t	*host_client;			// current client
@@ -553,14 +554,39 @@ Host_Init (quakeparms_t *parms)
 	Cmd_StuffCmds_f ();
 	Cbuf_Execute_Sets ();
 
+	// execute the global configuration file if it exists
+	// would have been nice if Cmd_Exec_f could have been used, but it only
+	// reads from within the quake file system, and changing that is probably
+	// Not A Good Thing (tm).
+	global_cfg_file = Cvar_Get("global_cfg_file", GLOBAL_CFG_FILE,
+							   CVAR_ROM, "global configuration file");
+	if ((globalcfg = Qopen (global_cfg_file->string, "r")) != NULL) {
+		char *f;
+		int mark;
+		int len;
+		char	base[32];
+
+		// extract the filename base name for hunk tag
+		COM_FileBase (global_cfg_file->string, base);
+		len = COM_filelength (globalcfg);
+		mark = Hunk_LowMark ();
+		f = (char *)Hunk_AllocName (len+1, base);
+		if (f) {
+			f[len] = 0;
+			Qread (globalcfg, f, len);
+			Qclose (globalcfg);
+			Cbuf_InsertText (f);
+		}
+		Hunk_FreeToLowMark (mark);
+		if (f)
+			// FIXME: just sets, or other commands as well?
+			Cbuf_Execute_Sets ();
+	}
+
+
 	CL_InitCvars ();
 	SCR_InitCvars ();
 	VID_InitCvars ();
-
-	if ((globalcfg = Qopen ("/etc/quakeforge.conf", "r")) != NULL)
-	{
-		Cbuf_InsertText ((char *)globalcfg);
-	}
 
 	// reparse the command line for + commands other than set (sets still done,
 	// but it doesn't matter)
@@ -586,12 +612,6 @@ Host_Init (quakeparms_t *parms)
 	Key_Init ();
 	Con_Init ();
 	M_Init ();
-
-	if (globalcfg != NULL)
-	{
-		Cbuf_InsertText ((char *)globalcfg);
-		Qclose (globalcfg);
-	}
 
 #ifdef UQUAKE
 	PR_Init ();
