@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "QUAKEWORLD" /YX /FD /c
+# ADD CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "QUAKEWORLD" /D "id386" /YX /FD /c
 # SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -889,58 +889,6 @@ SOURCE=..\common\zone.c
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=..\qw_common\bothdefs.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\bspfile.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\client.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\cmd.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\common.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\console.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\cvar.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\model.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\net.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\pmove.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\protocol.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\quakedef.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\qw_common\screen.h
-# End Source File
 # End Group
 # Begin Group "Resource Files"
 

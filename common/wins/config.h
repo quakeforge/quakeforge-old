@@ -26,10 +26,21 @@
 #undef WORDS_BIGENDIAN
 
 /* Define if the X Window System is missing or not being used.  */
-#undef X_DISPLAY_MISSING
+#define X_DISPLAY_MISSING
 
 /* Version string */
-#undef VERSION
+#define VERSION "0.1.0-pre"
+#define QF_VERSION "0.1.0-pre"
+
+/* Define if you want to use QF-style defaults instead of Id-style */
+#undef NEWSTYLE
+
+/* Define this to the subdirectory name of the default game */
+#ifdef NEWSTYLE
+#	define GAMENAME "base"
+#else
+#	define GAMENAME "id1"
+#endif
 
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA
@@ -89,7 +100,7 @@
 #undef HAVE_GETWD
 
 /* Define if you have the mkdir function.  */
-#undef HAVE_MKDIR
+#define HAVE_MKDIR
 
 /* Define if you have the putenv function.  */
 #undef HAVE_PUTENV
@@ -196,27 +207,4 @@
 /* Define if you have the m library (-lm).  */
 #undef HAVE_LIBM
 
-#define VERSION "0.1.0-pre"
-#define QF_VERSION "0.1.0-pre"
-#define HAVE_FCNTL_H 1
-#define HAVE_SYS_IOCTL_H 1
-#define HAVE_SYS_MMAN_H 1
-#define HAVE_SYS_STAT_H 1
-#define HAVE_SYS_SOCKET_H 1
-#define HAVE_NETINET_IN_H 1
-#define HAVE_NETDB_H 1
-#define HAVE_ARPA_INET_H 1
-#define TIME_WITH_SYS_TIME 1
-#define HAVE_SYM_PREFIX_UNDERSCORE 1
-#define HAVE_GETPAGESIZE 1
-#define HAVE_VPRINTF 1
-#define HAVE_GETWD 1
-#define HAVE_MKDIR 1
-#define HAVE_FCNTL 1
-#define HAVE_STAT 1
-#define HAVE_PUTENV 1
-#define HAVE_STRERROR 1
-#define HAVE_STRSTR 1
-#define HAVE_LIBM 1
-#define X_DISPLAY_MISSING 1
-#define HAVE_GL_COLOR_INDEX8_EXT 1
+#define snprintf _snprintf
