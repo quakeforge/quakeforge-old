@@ -1103,6 +1103,21 @@ SOURCE=..\common\r_misc.c
 # Begin Source File
 
 SOURCE=..\common\r_part.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -1235,26 +1250,6 @@ SOURCE=..\common\snd_win.c
 # Begin Source File
 
 SOURCE=.\sw_cl_parse.c
-
-!IF  "$(CFG)" == "qw_client - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=..\common\sw_rpart.c
 
 !IF  "$(CFG)" == "qw_client - Win32 Release"
 

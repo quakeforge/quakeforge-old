@@ -1055,6 +1055,21 @@ SOURCE=..\common\r_misc.c
 # Begin Source File
 
 SOURCE=..\common\r_part.c
+
+!IF  "$(CFG)" == "uquake - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+# PROP Exclude_From_Build 1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -1199,26 +1214,6 @@ SOURCE=.\sv_user.c
 # Begin Source File
 
 SOURCE=.\sw_cl_parse.c
-
-!IF  "$(CFG)" == "uquake - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "uquake - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
-
-# PROP BASE Exclude_From_Build 1
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=..\common\sw_rpart.c
 
 !IF  "$(CFG)" == "uquake - Win32 Release"
 
