@@ -458,9 +458,9 @@ AC_ARG_WITH(3dfx,
                           is specified it will be used as the GL wrapper lib
                           for glide.],
    HAS_3dfx=$withval, HAS_3dfx=auto)
-if test "x$HAS_3dfx" != "xno" -a "x$HAS_SVGA" = "xyes" \
-	-a "x$HAS_GLIDE" = "xyes"; then
-   if test "x$HAS_3dfx" != xauto; then
+if test "x$HAS_3dfx" != "xno" -a "x$HAS_SVGA" != "xno" \
+	-a "x$HAS_GLIDE" != "xno"; then
+   if test "x$HAS_3dfx" != "xauto" -a "x$HAS_3dfx" != "xyes"; then
       TDFXGL_NAME="$HAS_3dfx"
    fi
    if test -z "$TDFXGL_NAME"; then
