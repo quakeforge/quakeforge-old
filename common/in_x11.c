@@ -55,7 +55,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <draw.h>
 #include <console.h>
 #include <client.h>
-#include <plugin.h>
+#include <context_x11.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -63,159 +63,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
+#ifdef HAS_DGA
+qboolean		dgamouse = 0;
+static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", CVAR_ARCHIVE};
+#endif
 
 static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
 static int	p_mouse_x, p_mouse_y;
-static qboolean	mouse_in_window = false;
 static float	old_windowed_mouse;
 
-static Display		*x_disp = NULL;
-static Window		x_win;
-static Atom		aWMDelete = 0;
+#define KEY_MASK (KeyPressMask | KeyReleaseMask)
+#define MOUSE_MASK (ButtonPressMask | ButtonReleaseMask | PointerMotionMask)
+#define INPUT_MASK (KEY_MASK | MOUSE_MASK)
 
-
-int XShmQueryExtension(Display *);
-int XShmGetEventBase(Display *);
-
-static qboolean		doShm;
-static int		x_shmeventtype;
-
-static qboolean		oktodraw = false;
-
-static int verbose = 0;
-
-int	VID_options_items = 1;
-
-#define STD_EVENT_MASK \
-	(KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask \
-	 | PointerMotionMask | EnterWindowMask | LeaveWindowMask \
-	 | VisibilityChangeMask | ExposureMask | StructureNotifyMask)
-
-
-// ========================================================================
-// makes a null cursor
-// ========================================================================
-
-static Cursor CreateNullCursor(Display *display, Window root)
-{
-    Pixmap cursormask; 
-    XGCValues xgc;
-    GC gc;
-    XColor dummycolour;
-    Cursor cursor;
-
-    cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
-    xgc.function = GXclear;
-    gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
-    XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
-    dummycolour.pixel = 0;
-    dummycolour.red = 0;
-    dummycolour.flags = 04;
-    cursor = XCreatePixmapCursor(display, cursormask, cursormask,
-          &dummycolour,&dummycolour, 0,0);
-    XFreePixmap(display,cursormask);
-    XFreeGC(display,gc);
-    return cursor;
-}
-
-// ========================================================================
-// Tragic death handler
-// ========================================================================
-
-static void TragicDeath(int signal_num)
-{
-	XAutoRepeatOn(x_disp);
-	XCloseDisplay(x_disp);
-	Sys_Error("This death brought to you by the number %d\n", signal_num);
-}
-
-
-static int X_IN_Init (unsigned char *palette)
-{
-	int template_mask;
-	int screen;
-
-	srandom(getpid());
-
-	verbose=COM_CheckParm("-verbose");
-
-// open the display
-	x_disp = XOpenDisplay(NULL);
-	if (!x_disp)
-	{
-		if (getenv("DISPLAY"))
-			Sys_Error("IN: Could not open display [%s]\n",
-				getenv("DISPLAY"));
-		else
-			Sys_Error("IN: Could not open local display\n");
-	}
-
-// catch signals so i can turn on auto-repeat
-
-	{
-		struct sigaction sa;
-		sigaction(SIGINT, 0, &sa);
-		sa.sa_handler = TragicDeath;
-		sigaction(SIGINT, &sa, 0);
-		sigaction(SIGTERM, &sa, 0);
-	}
-
-	XAutoRepeatOff(x_disp);
-
-// for debugging only
-	XSynchronize(x_disp, True);
-
-
-	template_mask = 0;
-
-	screen = XDefaultScreen(x_disp);
-
-	/* Setup attributes for main window */
-	{
-		int attribmask = CWEventMask | CWBorderPixel;
-		XSetWindowAttributes attribs;
-
-		attribs.event_mask = STD_EVENT_MASK;
-		attribs.border_pixel = 0;
-
-		/* Create the main window */
-		x_win = XCreateWindow(x_disp,
-			      XRootWindow(x_disp, screen),
-			      0, 0, 300, 200,
-			      0, /* borderwidth	*/
-			      0, InputOutput, CopyFromParent,
-			      attribmask, &attribs);
-
-		/* Give it a title */
-		XStoreName(x_disp, x_win, "QF X11 Input");
-
-		/* Make window respond to Delete events */
-		aWMDelete = XInternAtom(x_disp, "WM_DELETE_WINDOW", False);
-		XSetWMProtocols(x_disp, x_win, &aWMDelete, 1);
-	}
-
-	XDefineCursor(x_disp, x_win, CreateNullCursor(x_disp, x_win));
-
-// map the window
-	XMapWindow(x_disp, x_win);
-
-//	XSynchronize(x_disp, False);
-
-	Cvar_RegisterVariable(&_windowed_mouse);
-	Cvar_RegisterVariable(&m_filter);
-	if (COM_CheckParm("-nomouse")) return 1;
-	mouse_x = mouse_y = 0.0;
-	mouse_avail = 1;
-
-	return 1;
-}
 
 /*
   Called at shutdown
 */
-static void X_IN_Shutdown(void)
+void IN_Shutdown(void)
 {
 	Con_Printf("IN_Shutdown\n");
 	mouse_avail = 0;
@@ -226,7 +93,7 @@ static void X_IN_Shutdown(void)
 }
 
 
-static int XLateKey(XKeyEvent *ev)
+int XLateKey(XKeyEvent *ev)
 {
 	int key = 0;
 	char buf[64];
@@ -348,89 +215,53 @@ static int XLateKey(XKeyEvent *ev)
 	return key;
 }
 
-static void GetEvent(void)
+static void event_key(XEvent *event)
 {
-	XEvent x_event;
+	Key_Event(XLateKey(&event->xkey), event->type == KeyPress);
+}
+
+static void event_button(XEvent *event)
+{
 	int but;
 
-	XNextEvent(x_disp, &x_event);
-	switch(x_event.type) {
-	case KeyPress:
-		Key_Event(XLateKey(&x_event.xkey), true);
-		break;
-
-	case KeyRelease:
-		Key_Event(XLateKey(&x_event.xkey), false);
-		break;
-
-	case ButtonPress:
-		but = x_event.xbutton.button;
-		if (but == 2) but = 3;
-		else if (but == 3) but = 2;
-		switch(but) {
+	but = event->xbutton.button;
+	if (but == 2) but = 3;
+	else if (but == 3) but = 2;
+	switch(but) {
 		case 1:
 		case 2:
 		case 3:
-			Key_Event(K_MOUSE1 + but - 1, true);
-		}
-		break;
-
-	case ButtonRelease:
-		but = x_event.xbutton.button;
-		if (but == 2) but = 3;
-		else if (but == 3) but = 2;
-		switch(but) {
-		case 1:
-		case 2:
-		case 3:
-			Key_Event(K_MOUSE1 + but - 1, false);
-		}
-		break;
-
-	case MotionNotify:
-		if (_windowed_mouse.value) {
-			mouse_x = (float) ((int)x_event.xmotion.x - (int)(vid.width/2));
-			mouse_y = (float) ((int)x_event.xmotion.y - (int)(vid.height/2));
-//printf("m: x=%d,y=%d, mx=%3.2f,my=%3.2f\n", 
-//	x_event.xmotion.x, x_event.xmotion.y, mouse_x, mouse_y);
-
-			/* move the mouse to the window center again */
-			XSelectInput(x_disp,x_win,StructureNotifyMask|KeyPressMask
-				|KeyReleaseMask|ExposureMask
-				|ButtonPressMask
-				|ButtonReleaseMask);
-			XWarpPointer(x_disp,None,x_win,0,0,0,0, 
-				(vid.width/2),(vid.height/2));
-			XSelectInput(x_disp,x_win,StructureNotifyMask|KeyPressMask
-				|KeyReleaseMask|ExposureMask
-				|PointerMotionMask|ButtonPressMask
-				|ButtonReleaseMask);
-		} else {
-			mouse_x = (float) (x_event.xmotion.x-p_mouse_x);
-			mouse_y = (float) (x_event.xmotion.y-p_mouse_y);
-			p_mouse_x=x_event.xmotion.x;
-			p_mouse_y=x_event.xmotion.y;
-		}
-		break;
-
-	case EnterNotify:
-		mouse_in_window = true;
-		break;
-	case LeaveNotify:
-		mouse_in_window = false;
-		break;
-/* Host_Quit_f only available in uquake */
-#ifdef UQUAKE
-	case ClientMessage:
-		if (x_event.xclient.data.l[0] == aWMDelete) Host_Quit_f();
-		break;
-#endif
-
-	default:
-		if (doShm && x_event.type == x_shmeventtype)
-			oktodraw = true;
+			Key_Event(K_MOUSE1 + but - 1, event->type == ButtonPress);
 	}
-   
+}
+
+static void event_motion(XEvent *event)
+{
+#ifdef HAS_DGA
+		if (dgamouse) {
+			mouse_x += event->xmotion.x_root * vid_dga_mouseaccel.value;
+			mouse_y += event->xmotion.y_root * vid_dga_mouseaccel.value;
+		} else
+#endif
+			if (_windowed_mouse.value) {
+				mouse_x = (float) ((int) event->xmotion.x - ((int) vid.width / 2));
+				mouse_y = (float) ((int) event->xmotion.y - ((int) vid.height / 2));
+
+				/* move the mouse to the window center again */
+				XSelectInput(x_disp, x_win, INPUT_MASK & ~PointerMotionMask);
+				XWarpPointer(x_disp, None, x_win, 0, 0, 0, 0,
+						(vid.width / 2), (vid.height / 2));
+				XSelectInput(x_disp, x_win, INPUT_MASK);
+			} else {
+				mouse_x = (event->xmotion.x - p_mouse_x);
+				mouse_y = (event->xmotion.y - p_mouse_y);
+				p_mouse_x = event->xmotion.x;
+				p_mouse_y = event->xmotion.y;
+			}
+}
+
+void IN_Frame()
+{
 	if (old_windowed_mouse != _windowed_mouse.value) {
 		old_windowed_mouse = _windowed_mouse.value;
 
@@ -440,28 +271,24 @@ static void GetEvent(void)
 		} else {
 			/* grab the pointer */
 			XGrabPointer(x_disp,x_win,True,0,GrabModeAsync,
-				GrabModeAsync,x_win,None,CurrentTime);
+					GrabModeAsync,x_win,None,CurrentTime);
 		}
 	}
 }
 
-static void X_IN_SendKeyEvents(void)
+void IN_SendKeyEvents(void)
 {
 	/* Get events from X server. */
-	if (x_disp) {
-		while (XPending(x_disp)) {
-			GetEvent();
-		}
-	}
+	x11_process_events();
 }
 
-static void X_IN_Commands(void)
+void IN_Commands(void)
 {
 	/* Nothing to do here */
 }
 
 
-static void X_IN_Move(usercmd_t *cmd)
+void IN_Move(usercmd_t *cmd)
 {
 	if (!mouse_avail)
 		return;
@@ -500,14 +327,14 @@ static void X_IN_Move(usercmd_t *cmd)
 }
 
 /*
-static void X_IN_ExtraOptionDraw(unsigned int options_draw_cursor)
+static void IN_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
 	M_Print(16, options_draw_cursor+=8, "             Use Mouse");
 	M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse.value);
 }
 
-static void X_IN_ExtraOptionCmd(int option_cursor)
+static void IN_ExtraOptionCmd(int option_cursor)
 {
 	switch (option_cursor) {
 	case 1:	// _windowed_mouse
@@ -517,20 +344,38 @@ static void X_IN_ExtraOptionCmd(int option_cursor)
 }
 */
 
-static input_pi x11_ip =
+int IN_Init ()
 {
-	NULL,
-	NULL,
-	"X11 input module",
-	X_IN_Init,
-	X_IN_Shutdown,
-	X_IN_Commands,
-	X_IN_SendKeyEvents,
-	X_IN_Move,
-};
+// open the display
+	if (!x_disp)
+		Sys_Error("IN: No display!!\n");
+	if (!x_win)
+		Sys_Error("IN: No window!!\n");
 
-input_pi *get_input_plugin_info()
-{
-	return &x11_ip;
+	{
+		int attribmask = CWEventMask;
+		XWindowAttributes attribs_1;
+		XSetWindowAttributes attribs_2;
+
+		XGetWindowAttributes(x_disp, x_win, &attribs_1);
+
+		attribs_2.event_mask = attribs_1.your_event_mask | INPUT_MASK;
+
+		XChangeWindowAttributes(x_disp, x_win, attribmask, &attribs_2);
+	}
+
+	Cvar_RegisterVariable(&_windowed_mouse);
+	Cvar_RegisterVariable(&m_filter);
+	Cvar_RegisterVariable(&vid_dga_mouseaccel);
+	if (COM_CheckParm("-nomouse")) return 1;
+	mouse_x = mouse_y = 0.0;
+	mouse_avail = 1;
+
+	x11_add_event(KeyPress, &event_key);
+	x11_add_event(KeyRelease, &event_key);
+	x11_add_event(ButtonPress, &event_button);
+	x11_add_event(ButtonRelease, &event_button);
+	x11_add_event(MotionNotify, &event_motion);
+
+	return 1;
 }
-

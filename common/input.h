@@ -1,5 +1,5 @@
 /*
-plugin.h
+input.h
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -21,13 +21,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifndef __MODULES__
-#define __MODULES__
+#ifndef __INPUT_H__
+#define __INPUT_H__
 
-#include <net.h>
+int IN_Init();
+void IN_Shutdown();
+void IN_SendKeyEvents();
+void IN_Commands();
+void IN_Move();
+void IN_Frame();
 
-int plugin_load(char *filename);
-void plugin_unload(void *handle);
-
-
-#endif	// __MODULES__
+#endif	// __INPUT_H__

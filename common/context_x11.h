@@ -1,5 +1,5 @@
 /*
-plugin.h
+input.h
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -21,13 +21,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifndef __MODULES__
-#define __MODULES__
+#ifndef __CONTEXT_X11_H__
+#define __CONTEXT_X11_H__
 
-#include <net.h>
+#include <qtypes.h>
+#include <X11/Xlib.h>
 
-int plugin_load(char *filename);
-void plugin_unload(void *handle);
+void GetEvent();
 
+extern Display	*x_disp;
+extern Window	x_win;
+extern qboolean	doShm;
+extern int	x_shmeventtype;
+extern qboolean	oktodraw;
 
-#endif	// __MODULES__
+extern qboolean x11_add_event(int event, void (*event_handler)(XEvent *));
+extern qboolean x11_del_event(int event, void (*event_handler)(XEvent *));
+extern void x11_process_event(void);
+extern void x11_process_events(void);
+
+#endif	// __CONTEXT_X11_H__

@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <draw.h>
 #include <cmd.h>
 #include <sys.h>
-#include <plugin.h>
+#include <input.h>
 
 int			con_ormask;
 console_t	con_main;
@@ -675,7 +675,7 @@ void Con_NotifyBox (char *text)
 	{
 		t1 = Sys_DoubleTime ();
 		SCR_UpdateScreen ();
-		IN->SendKeyEvents ();
+		IN_SendKeyEvents ();
 		t2 = Sys_DoubleTime ();
 		realtime += t2-t1;		// make the cursor blink
 	} while (key_count < 0);

@@ -311,7 +311,7 @@ $(BUILD_DIR)/common_lib.a: $(BUILD_DIR)/common_lib $(ALL_COMMON_LIB_OBJS)
 ifneq ($(X11QUAKE),)
 
 ALL_X11_SRC  = $(SW_REND_SRC) @X11_VID_SRC@\
-               model.c
+               model.c in_x11.c context_x11.c
 ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                           $(basename $(ALL_X11_SRC) .c .s))) \
 			  $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
@@ -443,7 +443,7 @@ endif
 
 ifneq ($(GLQUAKE),)
 
-GLX_GL_SRC = gl_vidglx.c dga_check.c
+GLX_GL_SRC = gl_vidglx.c dga_check.c in_x11.c context_x11.c
 ALL_GL_SRC = $(GL_REND_SRC) $(GLX_GL_SRC)
 
 GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
@@ -478,7 +478,7 @@ endif
 ifneq ($(TDFXQUAKE),)
 
 ALL_TDFX_SRC  = $(GL_REND_SRC) \
-		gl_vidlinux_3dfx.c
+		gl_vidlinux_3dfx.c in_svgalib.c
 ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 		$(basename $(ALL_TDFX_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a

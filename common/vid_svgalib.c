@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <sys.h>
 #include <console.h>
-#include <plugin.h>
+#include <input.h>
 
 #include <stdio.h>
 #ifdef HAVE_UNISTD_H
@@ -492,8 +492,7 @@ VID_Init(unsigned char *palette)
 	int w, h, d;
 	int err;
 
-	plugin_load("in_svgalib.so");
-	IN->Init();
+	//plugin_load("in_svgalib.so");
 	/* Sound gets initialized here */
 	S_Init();
 	
@@ -551,6 +550,7 @@ VID_Init(unsigned char *palette)
 		/* XoXus: Running in background is just plain bad... */
 		vga_runinbackground(0);
 	}
+	IN_Init();
 }
 
 

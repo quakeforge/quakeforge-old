@@ -43,8 +43,6 @@
 
 cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
 
-input_pi *IN;
-
 void *_plugin_load(const char *filename)
 {
 	void *h;
@@ -76,6 +74,7 @@ int plugin_load(char *filename)
 
 	if ((h=_plugin_load(filename))) {
 		if ((gpi = dlsym(h, "get_input_plugin_info"))) {
+			/*
 			input_pi *p;
 			
 			p = (input_pi *) gpi();
@@ -83,7 +82,6 @@ int plugin_load(char *filename)
 			p->filename = filename;
 			
 			IN = p;
-			/*
 		} else if (gpi = dlsym(h, "get_sound_plugin_info")) {
 			  sound_pi *p;
 

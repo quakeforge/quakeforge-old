@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <setjmp.h>
 
-#include <plugin.h>
+#include <input.h>
 #include <net.h>
 #include <console.h>
 #include <quakedef.h>
@@ -253,10 +253,11 @@ Host_FrameMain ( float time )
 		return;
 		
 	// get new key events
-	IN->SendKeyEvents ();
+	IN_SendKeyEvents ();
+	IN_Frame();
 
 	// allow mice or other external controllers to add commands
-	IN->Commands ();
+	IN_Commands ();
 
 	// process console commands
 	Cbuf_Execute ();
@@ -580,9 +581,9 @@ Host_Init ( quakeparms_t *parms)
 			Sys_Error ("Couldn't load gfx/colormap.lmp");
 
 //		plugin_load("./in_x11.so");
-//		IN->Init();
 //			Not the best place to load the plugin...
 		VID_Init(host_basepal);
+		IN_Init();
 		// DDOI - I made this so host.c wouldn't try to unload a plugin
 		// that it hasn't loaded.  Could be done better I'm sure.
 		vid_initialized = true;
@@ -649,8 +650,8 @@ Host_Shutdown( void )
 	S_Shutdown();
 	// Don't unload what hasn't been loaded!
 	if (vid_initialized == true) {
-		IN->Shutdown();
-		plugin_unload(IN->handle);
+		IN_Shutdown();
+		//plugin_unload(IN->handle);
 	}
 
 #if QUAKEWORLD		

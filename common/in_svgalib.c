@@ -39,7 +39,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <vga.h>
 #include <vgakeyboard.h>
 #include <vgamouse.h>
-#include <plugin.h>
 
 
 static int	UseKeyboard = 1;
@@ -101,7 +100,7 @@ void Force_CenterView_f(void)
 }
 
 
-int S_IN_Init(void)
+int IN_Init(void)
 {
 	if (COM_CheckParm("-nokbd")) UseKeyboard = 0;
 	if (COM_CheckParm("-nomouse")) UseMouse = 0;
@@ -274,7 +273,7 @@ static void IN_init_mouse()
 	}
 }
 
-void S_IN_Shutdown(void)
+void IN_Shutdown(void)
 {
 	if (UseMouse) mouse_close();
 	if (UseKeyboard) keyboard_close();
@@ -282,17 +281,17 @@ void S_IN_Shutdown(void)
 }
 
 
-void S_IN_SendKeyEvents(void)
+void IN_SendKeyEvents(void)
 {
 	if (!in_svgalib_inited) return;
 
 	if (UseKeyboard) {
-		while (keyboard_update());
+		while ((keyboard_update()));
 	}
 }
 
 
-void S_IN_Commands(void)
+void IN_Commands(void)
 {
 #ifdef QUAKEWORLD
 	if (UseMouse)
@@ -331,7 +330,7 @@ void S_IN_Commands(void)
 }
 
 
-void S_IN_Move(usercmd_t *cmd)
+void IN_Move(usercmd_t *cmd)
 {
 	if (!UseMouse) return;
 
@@ -379,21 +378,4 @@ void S_IN_Move(usercmd_t *cmd)
 			cmd->forwardmove -= m_forward.value * mouse_y;
 		}
 	}
-}
-
-input_pi svgalib_ip = 
-{
-	NULL,
-	NULL,
-	"svgalib input module",
-	S_IN_Init,
-	S_IN_Shutdown,
-	S_IN_Commands,
-	S_IN_SendKeyEvents,
-	S_IN_Move,
-};
-
-input_pi *get_input_plugin_info()
-{
-	return &svgalib_ip;
 }

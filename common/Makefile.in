@@ -20,8 +20,7 @@ mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
 BUILD_DIR	:= $(TARGET_DIR)/common
-OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o \
-		   $(BUILD_DIR)/input_libs/%.o
+OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
 
 SOUND_LIB	:= sound_lib.a
 
@@ -61,15 +60,7 @@ else
 OPTFLAGS = -g
 endif
 
-ifeq ($(HAS_SVGA),yes)
-IN_SVGALIB_LIB	:= in_svgalib.so
-endif
-
-ifeq ($(HAS_X11),yes)
-IN_X11_LIB	:= in_x11.so
-endif
-
-lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB) $(IN_SVGALIB_LIB) $(IN_X11_LIB)
+lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB)
 targets       = $(lib_targets)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) $(CLEAN_TARGETS)
@@ -167,31 +158,6 @@ $(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
 	ar cru $@ $(SOUND_LIB_OBJS)
 	@RANLIB@ $@
 
-# Input lib targets..
-
-in_input_DIR:
-	@DIR=input_libs; $(MAKE_SURE_DIR)
-
-ifneq ($(IN_SVGALIB_LIB),)
-
-IN_SVGALIB_OBJS	= $(BUILD_DIR)/input_libs/in_svgalib.@OBJEXT@
-
-$(IN_SVGALIB_LIB): in_input_DIR $(TARGET_DIR)/$(IN_SVGALIB_LIB)
-
-$(TARGET_DIR)/$(IN_SVGALIB_LIB): $(IN_SVGALIB_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) @SHARED@ -o $@ @USE_SHARED_LIBS@ $(IN_SVGALIB_OBJS) 
-endif
-
-ifneq ($(IN_X11_LIB),)
-
-IN_X11_OBJS	= $(BUILD_DIR)/input_libs/in_x11.@OBJEXT@
-
-$(IN_X11_LIB): in_input_DIR $(TARGET_DIR)/$(IN_X11_LIB)
-
-$(TARGET_DIR)/$(IN_X11_LIB): $(IN_X11_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) @SHARED@ @USE_SHARED_LIBS@ -o $@ $(IN_X11_OBJS) 
-endif
-
 ###########################################################################
 #
 # Misc targets
@@ -206,10 +172,7 @@ $(CLEAN_TARGETS):
 clean-sound_lib:
 	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
 
-clean-input_libs:
-	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
-
-clean: clean-sound_lib clean-input_libs $(CLEAN_TARGETS)
+clean: clean-sound_lib $(CLEAN_TARGETS)
 	-rmdir $(BUILD_DIR)
 
 install: $(targets)

@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <console.h>
 #include <net.h>
 #include <protocol.h>
-#include <plugin.h>
+#include <input.h>
 
 cvar_t	cl_nodelta = {"cl_nodelta","0"};
 
@@ -437,7 +437,7 @@ void CL_SendCmd (void)
 	CL_BaseMove (cmd);
 
 	// allow mice or other external controllers to add to the move
-	IN->Move (cmd);
+	IN_Move (cmd);
 
 	// if we are spectator, try autocam
 	if (cl.spectator)

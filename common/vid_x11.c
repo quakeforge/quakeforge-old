@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _BSD
 #include <config.h>
 
+#include <context_x11.h>
 #include <ctype.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -56,7 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <draw.h>
 #include <console.h>
 #include <client.h>
-#include <plugin.h>
+#include <input.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -65,8 +66,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];
 
-static Display		*x_disp = NULL;
-static Window		x_win;
+Display		*x_disp = NULL;
+Window		x_win;
 static Colormap		x_cmap;
 static GC		x_gc;
 static Visual		*x_vis;
@@ -77,11 +78,8 @@ static Atom		aWMDelete = 0;
 int XShmQueryExtension(Display *);
 int XShmGetEventBase(Display *);
 
-static qboolean		doShm;
-static int		x_shmeventtype;
+qboolean		doShm;
 static XShmSegmentInfo	x_shminfo[2];
-
-static qboolean		oktodraw = false;
 
 static int		current_framebuffer;
 static XImage		*x_framebuffer[2] = { 0, 0 };
@@ -103,9 +101,7 @@ static unsigned long r_mask,g_mask,b_mask;
 static long X11_highhunkmark;
 
 #define STD_EVENT_MASK \
-	(KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask \
-	 | PointerMotionMask | EnterWindowMask | LeaveWindowMask \
-	 | VisibilityChangeMask | ExposureMask | StructureNotifyMask)
+			( VisibilityChangeMask | ExposureMask | StructureNotifyMask)
 
 
 static void
@@ -293,6 +289,16 @@ void VID_Gamma_f (void)
 }
 
 // ========================================================================
+// Tragic death handler
+// ========================================================================
+
+static void TragicDeath(int signal_num)
+{
+	XCloseDisplay(x_disp);
+	Sys_Error("This death brought to you by the number %d\n", signal_num);
+}
+
+// ========================================================================
 // makes a null cursor
 // ========================================================================
 
@@ -461,6 +467,12 @@ ResetSharedFrameBuffers(void)
 
 }
 
+static void event_shm(XEvent *event)
+{
+    if (doShm)
+		oktodraw = true;
+}
+
 // Called at startup to set up translation tables, takes 256 8 bit RGB values
 // the palette data will go away after the call, so it must be copied off if
 // the video driver will need it again
@@ -472,8 +484,7 @@ void VID_Init (unsigned char *palette)
 	int num_visuals;
 	int template_mask;
 
-	plugin_load("in_x11.so");
-	IN->Init();
+	//plugin_load("in_x11.so");
 	S_Init();	// sound is initialized here
 
 	Cmd_AddCommand("gamma", VID_Gamma_f);
@@ -502,6 +513,15 @@ void VID_Init (unsigned char *palette)
 				getenv("DISPLAY"));
 		else
 			Sys_Error("VID: Could not open local display\n");
+	}
+
+// catch signals
+	{
+		struct sigaction sa;
+		sigaction(SIGINT, 0, &sa);
+		sa.sa_handler = TragicDeath;
+		sigaction(SIGINT, &sa, 0);
+		sigaction(SIGTERM, &sa, 0);
 	}
 
 // for debugging only
@@ -645,6 +665,7 @@ void VID_Init (unsigned char *palette)
 
 // even if MITSHM is available, make sure it's a local connection
 	if (XShmQueryExtension(x_disp))
+	//if (0)
 	{
 		char *displayname;
 		doShm = true;
@@ -678,7 +699,7 @@ void VID_Init (unsigned char *palette)
 	vid.aspect = ((float)vid.height / (float)vid.width) * (320.0 / 240.0);
 
 //	XSynchronize(x_disp, False);
-
+	x11_add_event(x_shmeventtype, event_shm);
 }
 
 
@@ -735,43 +756,6 @@ static int config_notify=0;
 static int config_notify_width;
 static int config_notify_height;
 
-static void
-GetEvent(void)
-{
-	XEvent x_event;
-
-	XNextEvent(x_disp, &x_event);
-	switch(x_event.type) {
-	case KeyPress:
-	case KeyRelease:
-	case ButtonPress:
-	case ButtonRelease:
-	case MotionNotify:
-	case EnterNotify:
-	case LeaveNotify:
-		break;
-	case ConfigureNotify:
-		config_notify_width = x_event.xconfigure.width;
-		config_notify_height = x_event.xconfigure.height;
-		if (config_notify_width != vid.width ||
-		    config_notify_height != vid.height) {
-			config_notify = 1;
-		}
-		break;
-/* Host_Quit_f only available in uquake */
-#ifdef UQUAKE
-	case ClientMessage:
-		if (x_event.xclient.data.l[0] == aWMDelete) Host_Quit_f();
-		break;
-#endif
-
-	default:
-		if (doShm && x_event.type == x_shmeventtype)
-			oktodraw = true;
-	}
-}
-
-
 /*
   Flushes the given rectangles from the view buffer to the screen.
 */
@@ -819,7 +803,7 @@ VID_Update(vrect_t *rects)
 				Sys_Error("VID_Update: XShmPutImage failed\n");
 			}
 			oktodraw = false;
-			while (!oktodraw) GetEvent();
+			while (!oktodraw) x11_process_event();
 			rects = rects->pnext;
 		}
 		current_framebuffer = !current_framebuffer;
