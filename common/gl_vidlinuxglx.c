@@ -27,6 +27,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdio.h>
 #include <signal.h>
 
+#include <config.h>
+
 #include "quakedef.h"
 
 #include <GL/glx.h>
@@ -34,7 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
-#ifdef USE_DGA
+#ifdef HAS_DGA
 #include <X11/extensions/xf86dga.h>
 #endif
 
@@ -65,9 +67,7 @@ unsigned char	d_15to8table[65536];
 cvar_t	_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t	vid_mode = {"vid_mode","0",false};
 
-#ifdef XMESA
-cvar_t  vid_mesa_mode = {"vid_mesa_mode", "0"};
-#endif
+cvar_t  vid_glx_mode = {"vid_mesa_mode", "0"};
  
 static float   mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
@@ -276,7 +276,7 @@ static void install_grabs(void)
 				 cursor,
 				 CurrentTime);
 	
-#ifdef USE_DGA
+#ifdef HAS_DGA
 	XF86DGADirectVideo(dpy, DefaultScreen(dpy), XF86DGADirectMouse);
 	dgamouse = 1;
 #else
@@ -295,7 +295,7 @@ static void install_grabs(void)
 
 static void uninstall_grabs(void)
 {
-#ifdef USE_DGA
+#ifdef HAS_DGA
 	XF86DGADirectVideo(dpy, DefaultScreen(dpy), 0);
 	dgamouse = 0;
 #endif
@@ -323,7 +323,7 @@ static void GetEvent(void)
 		break;
 
 	case MotionNotify:
-#ifdef USE_DGA
+#ifdef HAS_DGA
 		if (dgamouse && _windowed_mouse.value) {
 			mouse_x = event.xmotion.x_root;
 			mouse_y = event.xmotion.y_root;
@@ -503,9 +503,7 @@ GL_Init
 void GL_Init (void)
 {
 
-#ifdef XMESA
-        Cvar_RegisterVariable (&vid_mesa_mode);
-#endif
+        Cvar_RegisterVariable (&vid_glx_mode);
 	
 
 	gl_vendor = glGetString (GL_VENDOR);
@@ -813,7 +811,7 @@ void VID_ExtraOptionDraw(void)
         M_DrawCheckbox (220, 128, _windowed_mouse.value);
 
 
-#ifdef XMESA
+#if defined(XMESA) && defined(DGA)
 	// Mesa has a fullscreen / windowed glx hack.
 
         M_Print (16, 134, "            Fullscreen");
@@ -831,19 +829,19 @@ void VID_ExtraOptionCmd(int option_cursor)
 		break;
 
 	case 13:
-		Cvar_SetValue ("vid_mesa_mode",!vid_mesa_mode.value);
+		Cvar_SetValue ("vid_glx_mode",!vid_glx_mode.value);
 #ifdef XMESA
-		if(XMesaSetFXmode(vid_mesa_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW))
+		if(XMesaSetFXmode(vid_glx_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW))
    		{
 			break;
 		} else {
 #endif
 
-#ifdef USE_DGA                    
-       			 XF86DGADirectVideo(dpy, DefaultScreen(dpy), vid_mesa_mode.value);
-       			dgamouse = vid_mesa_mode.value;
+#ifdef HAS_DGA                    
+       			 XF86DGADirectVideo(dpy, DefaultScreen(dpy), vid_glx_mode.value);
+       			dgamouse = vid_glx_mode.value;
  			
-			if(vid_mesa_mode.value)
+			if(vid_glx_mode.value)
 			{
 		        	XGrabPointer(dpy, CurrentTime);
 				XGrabKeyboard(dpy, CurrentTime);
