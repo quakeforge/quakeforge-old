@@ -21,9 +21,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "winquake.h"
-#include "errno.h"
 #include "resource.h"
-#include "conproc.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <limits.h>
 
 #define MINIMUM_WIN_MEMORY		0x0880000
 #define MAXIMUM_WIN_MEMORY		0x1000000
@@ -108,6 +109,7 @@ int		findhandle (void)
 	return -1;
 }
 
+#if 0
 /*
 ================
 filelength
@@ -130,6 +132,7 @@ int filelength (FILE *f)
 
 	return end;
 }
+#endif
 
 int Sys_FileOpenRead (char *path, int *hndl)
 {
@@ -304,6 +307,7 @@ void Sys_Init (void)
 	MaskExceptions ();
 	Sys_SetFPCW ();
 
+#if 0
 	if (!QueryPerformanceFrequency (&PerformanceFreq))
 		Sys_Error ("No hardware timer available");
 
@@ -324,6 +328,7 @@ void Sys_Init (void)
 	pfreq = 1.0 / (double)lowpart;
 
 	Sys_InitFloatTime ();
+#endif
 
 	vinfo.dwOSVersionInfoSize = sizeof(vinfo);
 
@@ -459,6 +464,7 @@ void Sys_Quit (void)
 }
 
 
+#if 0
 /*
 ================
 Sys_DoubleTime
@@ -550,7 +556,31 @@ void Sys_InitFloatTime (void)
 
 	lastcurtime = curtime;
 }
+#endif
 
+double Sys_DoubleTime (void)
+{
+	static DWORD starttime;
+	static qboolean first = true;
+	DWORD now;
+	double t;
+
+	now = timeGetTime();
+
+	if (first) {
+		first = false;
+		starttime = now;
+		return 0.0;
+	}
+	
+	if (now < starttime) // wrapped?
+		return (now / 1000.0) + (LONG_MAX - starttime / 1000.0);
+
+	if (now - starttime == 0)
+		return 0.0;
+
+	return (now - starttime) / 1000.0;
+}
 
 char *Sys_ConsoleInput (void)
 {
