@@ -251,7 +251,7 @@ $(BUILD_DIR)/../$(X11QUAKE): $(OBJSquake-x11)
 	$(CC) $(CFLAGS) $(OBJSquake-x11) $(X11_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(X11QUAKE)
 # XXX - Can this be automated?
 clean-$(X11QUAKE):
-	rm -f $(OBJSquake-x11)
+	rm -rf $(BUILD_DIR)/x11
 endif
 
 
@@ -294,7 +294,7 @@ $(BUILD_DIR)/../$(SVGAQUAKE): $(OBJSquake-svga)
 	$(CC) $(CFLAGS) $(OBJSquake-svga) $(SVGA_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SVGAQUAKE)
 # XXX - Can this be automated?
 clean-$(SVGAQUAKE):
-	rm -f $(OBJSquake-svga)
+	rm -rf $(BUILD_DIR)/svga
 endif
 
 
@@ -335,7 +335,7 @@ $(BUILD_DIR)/../$(GGIQUAKE): $(OBJSquake-ggi)
 	$(CC) $(CFLAGS) $(OBJSquake-ggi) $(GGI_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(GGIQUAKE)
 # XXX - Can this be automated?
 clean-$(GGIQUAKE):
-	rm -f $(OBJSquake-ggi)
+	rm -rf $(BUILD_DIR)/ggi
 endif
 
 
@@ -380,7 +380,7 @@ $(BUILD_DIR)/../$(MGLQUAKE): $(OBJSquake-mgl)
 	$(CC) $(CFLAGS) $(OBJSquake-mgl) $(MGL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(MGLQUAKE)
 # XXX - Can this be automated?
 clean-$(MGLQUAKE):
-	rm -f $(OBJSquake-mgl)
+	rm -rf $(BUILD_DIR)/mgl
 endif
 
 
@@ -420,7 +420,7 @@ $(BUILD_DIR)/../$(GLQUAKE): $(OBJSquake-gl)
 
 # XXX - Can this be automated?
 clean-$(GLQUAKE):
-	rm -f $(OBJSquake-gl)
+	rm -rf $(BUILD_DIR)/gl
 endif
 
 
@@ -459,7 +459,7 @@ $(BUILD_DIR)/../$(TDFXQUAKE): $(OBJSquake-3dfx)
 
 # XXX - Can this be automated?
 clean-$(TDFXQUAKE):
-	rm -f $(OBJSquake-3dfx)
+	rm -rf $(BUILD_DIR)/3dfx
 endif
 
 
@@ -498,7 +498,7 @@ $(BUILD_DIR)/../$(SDLQUAKE): $(OBJSquake-sdl)
 	$(CC) $(CFLAGS) $(OBJSquake-sdl) $(SDL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SDLQUAKE)
 # XXX - Can this be automated?
 clean-$(SDLQUAKE):
-	rm -f $(OBJSquake-sdl)
+	rm -rf $(BUILD_DIR)/sdl
 endif
 
 
@@ -513,6 +513,7 @@ clean: $(CLEAN_TARGETS)
 	for i in $(targets); do \
 	  rm -f $(BUILD_DIR)/../$$i; \
 	done
+	-rmdir $(BUILD_DIR)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)

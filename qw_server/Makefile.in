@@ -127,7 +127,7 @@ $(BUILD_DIR)/../$(SRVQUAKE): $(OBJSqw-server)
 	$(CC) $(CFLAGS) $(OBJSqw-server) $(SRV_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SRVQUAKE)
 # XXX - Can this be automated?
 clean-$(SRVQUAKE):
-	rm -f $(OBJSqw-server)
+	rm -rf $(BUILD_DIR)/srv
 
 clean: clean-$(SRVQUAKE)
 
@@ -149,6 +149,7 @@ install: $(targets)
 	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
 	     $(DESTDIR)$(prefix)$(bindir)/$$i; \
 	done
+	-rmdir $(BUILD_DIR)
 
 check:
 	@echo check not implemented
