@@ -146,3 +146,11 @@ N: David Symonds
 E: xoxus@usa.net
 D: svgalib fixes
 D: warnings cleanup and XShm checking
+
+N: Tarjei Skorgenes
+E: tarjei.skorgenes@online.no
+D: Makefile fixes
+
+N: Andrew Coles
+E: andycole123@ic24.net
+D: CD-ROM support/fixes

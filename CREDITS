@@ -11,14 +11,14 @@ Website design:
   Chase Hargraves <absolutek@quakeforge.net>
 
 Administration and project management:
-  Nelson J. Rush <chesterrr@att.net>
+  Nelson J. Rush <palisade@quakeforge.net>
 
 QW/Q1 tree merging:
   Jeff Teunissen <d2deek@pmail.net>
   Zephaniah E. Hull <warp@whitestar.soark.net>
   Marcus Sundberg <mackan@stacken.kth.se>
   Bill Currie <bill@taniwha.org>
-  Nelson J. Rush <chesterrr@att.net>
+  Nelson J. Rush <palisade@quakeforge.net>
   Eric Windisch <windisch@nni.com>
   Joseph Carter <knghtbrd@debian.org>
   Peter Andreasen <pandr@pandr.dk>
@@ -55,13 +55,13 @@ Input handling fixes/optimizations:
 
 Math fixes/optimizations:
   Zinx Verituse <zinx@linuxfreak.com>
-  Nelson J. Rush <chesterrr@att.net>
+  Nelson J. Rush <palisade@quakeforge.net>
 
 Buffer overflow fixes:
-  Nelson J. Rush <chesterrr@att.net>
+  Nelson J. Rush <palisade@quakeforge.net>
 
 Documentation:
-  Nelson J. Rush <chesterrr@att.net>
+  Nelson J. Rush <palisade@quakeforge.net>
   Joseph Carter <knghtbrd@debian.org>
 
 Svgalib fixes/optimizations:
@@ -111,6 +111,5 @@ Network code fixes/cleanups:
   Roger Sen Montero <rogersm@tau.uab.es>
   Marcus Sundberg <mackan@stacken.kth.se>
 
-IPv6 support (not complete)
-------------
+IPv6 support (not complete):
   Pontus Lidman <pontus@lysator.liu.se>

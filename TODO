@@ -14,19 +14,16 @@ to quake-devel@lists.sourceforge.net with details.
  * Audio support for more platforms
  * Add OpenGL multi-pass texturing replacement for when multi-texturing
    extension isn't available
- * README: add tested platforms and results
  * Remove dependency on GNU make or migrate to automake
  * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
    on systems with XFree86 available
- * Add currently removed documentation to the README, and also add more
-   information to explain things that we've done, or broken
  * Prep Aftershock for a future merge with the main tree
  * Add localized volumetric fog, water, etc
  * Implement a wind (airflow) engine
  * Add a more modern portal engine
  * Add a terrain engine
  * Add cloudy skies, using the wind and fog engines
- * Add some flags to the setup menu, ie. gl_ztrick and +mlook
+ * Add some options to the setup menu, ie. gl_ztrick and +mlook
  * Allow more video and bpp modes
  * Support for camera rooms ala Unreal
  * Make every object depend on dead-reckoning for network play, ie. no
@@ -55,3 +52,10 @@ to quake-devel@lists.sourceforge.net with details.
  * C equivalents of the SVGALib target's asm (Linux Alpha has SVGALib)
  * Wheel mouse support (make it bindable so that it can be bound to
    anything, ie. previous weapon/next weapon)
+ * add threading support
+ * add tty target (text quake) someone mentioned there is a text svgalib
+ * add walls that emit light
+ * port to Amiga (someone is working on this)
+ * port to MacOS (this has already been done as a seperate project, ala
+   the author does not wish to help merge his changes to our tree, so
+   until then... no mac port)
