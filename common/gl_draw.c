@@ -41,7 +41,7 @@
 #include <lib_replace.h>
 
 extern unsigned char d_15to8table[65536];
-extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor, *crosshairalpha;
+extern cvar_t *crosshair, *cl_crossx, *cl_crossy, *crosshaircolor;
 
 cvar_t	*gl_nobind;
 cvar_t	*gl_max_size;
@@ -49,6 +49,7 @@ cvar_t	*gl_picmip;
 cvar_t	*gl_conspin;
 cvar_t	*gl_conalpha;
 cvar_t	*gl_constretch;
+cvar_t	*gl_crosshairalpha;
 
 byte		*draw_chars;			// 8*8 graphic characters
 qpic_t		*draw_disc;
@@ -409,6 +410,9 @@ void Draw_Init (void)
 	gl_constretch = Cvar_Get ("gl_constretch", "0", CVAR_NONE,
 			"If set to 1 will stretch the console image instead "
 			"of sliding it up and down. (default 0)");
+	gl_crosshairalpha  = Cvar_Get ("gl_crosshairalpha", "1.0",
+		CVAR_ARCHIVE, "Crosshair Alpha");
+
 
 	// 3dfx can only handle 256 wide textures
 	if (!Q_strncasecmp ((char *)gl_renderer, "3dfx",4) ||
@@ -544,7 +548,7 @@ Draw_Crosshair(void)
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 		
 		uColor = d_8to24table[(byte) crosshaircolor->value] & 0x00ffffff;
-		uColor |= ((unsigned)crosshairalpha->value & 0xff) << 24;
+		uColor |= ((unsigned)(gl_crosshairalpha->value*255.0) & 0xff) << 24;
 		glColor4ubv((unsigned char *)&uColor);
 
 		GL_Bind (cs_texture3);
@@ -576,7 +580,7 @@ Draw_Crosshair(void)
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 		
 		uColor = d_8to24table[(byte) crosshaircolor->value] & 0x00ffffff;
-		uColor |= ((unsigned)crosshairalpha->value & 0xff) << 24;
+		uColor |= ((unsigned)(gl_crosshairalpha->value*255.0) & 0xff) << 24;
 		glColor4ubv((unsigned char *)&uColor);
 
 		GL_Bind (cs_texture);

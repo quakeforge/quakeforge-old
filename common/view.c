@@ -79,7 +79,6 @@ cvar_t	*v_idlescale;
 
 cvar_t	*crosshair;
 cvar_t	*crosshaircolor;
-cvar_t	*crosshairalpha;
 
 cvar_t	*cl_crossx;
 cvar_t	*cl_crossy;
@@ -1073,7 +1072,6 @@ V_Init ( void )
 
 	v_idlescale 	= Cvar_Get ("v_idlescale", "0", CVAR_NONE, "None");
 	crosshaircolor	= Cvar_Get ("crosshaircolor", "79", CVAR_ARCHIVE, "Crosshair Color");
-	crosshairalpha  = Cvar_Get ("crosshairalpha", "255", CVAR_ARCHIVE, "Crosshair Alpha");
 	crosshair		= Cvar_Get ("crosshair", "0", CVAR_ARCHIVE, "Crosshair selection");
 	cl_crossx		= Cvar_Get ("cl_crossx", "0", CVAR_ARCHIVE, "Crosshair X location");
 	cl_crossy		= Cvar_Get ("cl_crossy", "0", CVAR_ARCHIVE, "Crosshair Y location");
