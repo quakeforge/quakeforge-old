@@ -57,6 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <client.h>
 #include <input.h>
+#include <context_x11.h>
 
 //cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t	*_windowed_mouse;
@@ -70,7 +71,6 @@ static qboolean	mouse_in_window = false;
 static qboolean	mouse_grabbed = false; // we grab it when console is up
 
 /* Also in vid_x11.c - referenced by in_x11.c */
-Display		*x_disp = NULL;
 Window		x_win;
 
 typedef struct
@@ -941,7 +941,7 @@ static int config_notify=0;
 static int config_notify_width;
 static int config_notify_height;
 
-static void
+void
 GetEvent(void)
 {
 	XEvent x_event;

@@ -46,6 +46,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "d_local.h"
+#include <context_x11.h>
 
 #define MIN_WIDTH 320
 #define MIN_HEIGHT 200
@@ -128,7 +129,6 @@ int		vid_buffersize;
 )
 
 qboolean			x_fullscreen = true;
-Display				*x_disp = NULL;
 int				x_screen, x_screen_width, x_screen_height;
 int				x_center_width, x_center_height;
 int				x_std_event_mask = STD_EVENT_MASK;
