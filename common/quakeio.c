@@ -43,6 +43,9 @@
 #else
 #include <pwd.h>
 #endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 void
 Qexpand_squiggle(const char *path, char *dest)
