@@ -41,6 +41,7 @@
 #include <cmd.h>
 #include <sys.h>
 #include <input.h>
+#include <cvars.h>
 
 int			con_ormask;
 console_t	con_main;

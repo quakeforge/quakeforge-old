@@ -43,6 +43,7 @@
 #include <zone.h>
 #include <common.h>
 #include <draw.h>
+#include <cvars.h>
 
 #include <dirent.h>
 #include <fnmatch.h>

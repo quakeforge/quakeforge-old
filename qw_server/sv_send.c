@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <phys.h>
 #include <mathlib.h>
 #include <world.h>
+#include <cvars.h>
 
 #define CHAN_AUTO   0
 #define CHAN_WEAPON 1
