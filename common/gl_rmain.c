@@ -1081,12 +1081,12 @@ R_RenderView ( void ) {
 		//glEnable(GL_STENCIL_TEST);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-	                glFogi (GL_FOG_MODE, GL_EXP2);
-        	        glFogfv (GL_FOG_COLOR, colors);
+		glFogi (GL_FOG_MODE, GL_EXP2);
+		glFogfv (GL_FOG_COLOR, colors);
 // fixme: GL_FOG_DENSITY should have r_volfog_density var
-			glFogf (GL_FOG_DENSITY, r_volfog->value);
+		glFogf (GL_FOG_DENSITY, r_volfog->value);
 
-                glEnable(GL_FOG);
+		glEnable(GL_FOG);
 		R_DrawWaterSurfaces();
 		glDisable(GL_FOG);
 
@@ -1122,7 +1122,19 @@ else
 	{
 		R_RenderScene ();
 		R_DrawViewModel ();
+		if (r_wateralpha->value<1.0) {
+			glClear(GL_STENCIL_BUFFER_BIT);
+			glStencilFunc(GL_ALWAYS, 1, 1);
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LESS);
+		}
 		R_DrawWaterSurfaces ();
+		if (r_wateralpha->value<1.0) {
+			glStencilFunc(GL_EQUAL, 1, 1);
+			glStencilMask(GL_FALSE);
+			glDisable(GL_DEPTH_TEST);
+		}
 	}
 
 	R_PolyBlend ();
