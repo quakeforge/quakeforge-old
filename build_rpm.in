@@ -1,0 +1,18 @@
+#!/bin/sh -x
+
+version=@QF_VERSION@
+temp_dir=/var/tmp
+
+rm -rf ${temp_dir}/quakeforge-${version}
+cp -a @srcdir@ ${temp_dir}/quakeforge-${version}
+dest_dir=$PWD
+cd ${temp_dir}/quakeforge-${version}
+# this is needed to ensure there is a makefile
+./bootstrap
+./configure
+make distclean
+find . -name '.#*' -print | xargs rm
+cd ${temp_dir}
+tar zcf ${dest_dir}/quakeforge-${version}.tar.gz quakeforge-${version}
+cd ${dest_dir}
+rm -rf ${temp_dir}/quakeforge-${version}

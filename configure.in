@@ -60,6 +60,14 @@ AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
 	ftime _ftime fcntl stat putenv select socket strerror strstr \
 	snprintf _snprintf vsnprintf _vsnprintf)
 
+AC_ARG_ENABLE(experimental,
+[  --enable-experiemental  compile with experimental code. Use at your
+                          own risk]
+)
+if test "x$enable_experimental" = xyes; then
+   AC_DEFINE(_EXPERIMENTAL_)
+fi
+
 NEWSTYLE=no
 AC_ARG_ENABLE(newstyle,
 [  --enable-newstyle       compile with defaults a bit different than those
@@ -719,4 +727,13 @@ AC_SUBST(QF_VERSION)
 
 dnl Output files
 AC_CONFIG_HEADER(common/config.h)
-AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile quakeforge.spec)
+AC_OUTPUT(
+	qw_client/Makefile
+	qw_server/Makefile
+	uquake/Makefile
+	Makefile
+	quakeforge.spec
+	build_rpm
+	,
+	chmod +x build_rpm
+)
