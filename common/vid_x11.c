@@ -745,7 +745,7 @@ VID_SetPalette(unsigned char *palette)
 void
 VID_Shutdown(void)
 {
-	Con_Printf("VID_Shutdown\n");
+	Sys_Printf("VID_Shutdown\n");
 	if (x_disp) {
 		XAutoRepeatOn(x_disp);
 		XCloseDisplay(x_disp);
