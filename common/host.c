@@ -191,7 +191,7 @@ void Host_GetConsoleCommands (void)
 	Returns false if the time is too short to run a frame
 */
 qboolean
-Host_FilterTime ( float time )
+Host_FilterTime ( double time )
 {
 	float	fps;
 
