@@ -317,7 +317,6 @@ void R_DrawSequentialPoly (msurface_t *s)
 	float		*v;
 	int		i;
 	texture_t	*t;
-<<<<<<< gl_rsurf.c
 
 	//
 	// normal lightmaped poly
@@ -418,12 +417,7 @@ void R_DrawSequentialPoly (msurface_t *s)
 	float		*v;
 	int			i;
 	texture_t	*t;
-	vec3_t		nv, dir;
-	float		ss, ss2, length;
-	float		s1, t1;
-=======
 	vec3_t		nv;
->>>>>>> 1.5
 	glRect_t	*theRect;
 
 	//
