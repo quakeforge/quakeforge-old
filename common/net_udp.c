@@ -113,6 +113,11 @@ void SockadrToNetadr (struct sockaddr_in *s, netadr_t *a)
 	a->port = s->sin_port;
 }
 
+qboolean        NET_AdrIsLoopback (netadr_t a)
+{
+  return *(unsigned *)a.ip == htonl(INADDR_LOOPBACK);
+}
+
 qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b)
 {
 	if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3])

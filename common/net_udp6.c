@@ -130,6 +130,17 @@ void SockadrToNetadr (struct sockaddr_in6 *s, netadr_t *a)
  	a->family = s->sin6_family;
 }
 
+qboolean        NET_AdrIsLoopback (netadr_t a)
+{
+	if (IN6_IS_ADDR_LOOPBACK((struct in6_addr *)&a.ip))
+		return true;
+	else if (IN6_IS_ADDR_V4MAPPED((struct in6_addr *)&a.ip) && 
+		 ((struct in_addr *)&a.ip[3])->s_addr == htonl(INADDR_LOOPBACK))
+		return true;
+	
+	return false;
+}
+
 qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b)
 {
         if (a.ip[0] == b.ip[0] && a.ip[1] == b.ip[1] && a.ip[2] == b.ip[2] && a.ip[3] == b.ip[3])
