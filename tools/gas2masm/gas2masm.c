@@ -413,8 +413,7 @@ void emitonejumpdata (void)
 				break;
 			}
 		}
-		if (tokens[1][0]=='*')
-			memmove(&tokens[1][0],&tokens[1][1],strlen(tokens[1]));
+		memmove(&tokens[1][0],&tokens[1][1],strlen(tokens[1]));
 		if ( !isaddr ) {
 			//printf (" dword ptr [%s]", &tokens[1][1]);
 			printf (" dword ptr [");
