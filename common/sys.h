@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1996-1997  Id Software, Inc.
+Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
 
@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 // sys.h -- non-portable functions
+
+int	Sys_FileTime (char *path);
 
 //
 // file IO
@@ -55,10 +57,9 @@ void Sys_Printf (char *fmt, ...);
 // send text to the console
 
 void Sys_Quit (void);
-
 double Sys_DoubleTime (void);
-
 char *Sys_ConsoleInput (void);
+void Sys_Init (void);
 
 void Sys_Sleep (void);
 
