@@ -526,6 +526,8 @@ Host_InitDisplay ()
 }
 
 extern cvar_t	*fs_basepath;
+extern cvar_t	*fs_sharepath;
+extern cvar_t	*fs_basegame;
 
 /*
 	Host_Init
@@ -583,6 +585,8 @@ Host_Init (quakeparms_t *parms)
 			"the location of your game directories");
 	fs_sharepath = Cvar_Get ("fs_sharepath", fs_sharepath->string,
 			CVAR_ROM, "read-only game directories");
+	fs_basegame = Cvar_Get ("fs_basegame", fs_basegame->string,
+			CVAR_ROM, "the default gamedir");
 
 	V_Init ();
 	Chase_Init ();

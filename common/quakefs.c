@@ -88,6 +88,7 @@ char    gamedirfile[MAX_OSPATH];
 
 cvar_t	*fs_basepath;
 cvar_t	*fs_sharepath;
+cvar_t	*fs_basegame;
 
 #ifdef GENERATIONS
 #include <unzip.h>
@@ -929,7 +930,7 @@ COM_Gamedir (char *dir)
 	//
 	Cache_Flush ();
 
-	if (strcmp (dir, GAMENAME) == 0)
+	if (strcmp (dir, fs_basegame->string) == 0)
 		return;
 #ifdef QUAKEWORLD
 	if (strcmp (dir, "qw") == 0)
@@ -992,12 +993,15 @@ COM_InitFilesystem ( void )
 			"the location of your game directories");
 	fs_sharepath = Cvar_Get ("fs_sharepath", fs_basepath->string,
 			CVAR_NONE, "read-only game directories");
+	fs_basegame = Cvar_Get ("fs_basegame", GAMENAME,
+			CVAR_NONE, "the default gamedir");
+
 	Cmd_AddCommand ("gamedir", COM_Gamedir_f);
 
 /*
-	start up with GAMENAME by default
+	start up with fs_basegame by default
 */
-	COM_AddGameDirectory (GAMENAME);
+	COM_AddGameDirectory (fs_basegame->string);
 	if (hipnotic)
 		COM_AddGameDirectory ("hipnotic");
 	if (rogue)
