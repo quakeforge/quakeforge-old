@@ -148,6 +148,7 @@ extern	int			total_channels;
 
 extern qboolean 		fakedma;
 extern int 			fakedma_updates;
+extern int		soundtime;
 extern int		paintedtime;
 extern vec3_t listener_origin;
 extern vec3_t listener_forward;
