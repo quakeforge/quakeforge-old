@@ -223,7 +223,8 @@ User testimonies:
    Linux, Debian Potato, PII 266 CPU, 3Dfx Voodoo3 3000 AGP, Mesa 3.1   
    Linux, Debian Potato, K6-2, TNT1, ancient nvida glx drivers
    Linux, Debian Potato, PIII-450, 3dfx Voodoo3 3000 AGP, Mesa 3.1
-   Linux, Suse 6.1 Pentium-133, 8meg V2, with all targets at 16bpp; Mesa 3.1 
+   Linux, Suse 6.1 Pentium-133, 8meg V2, with all applicable targets at 16bpp; Mesa 3.1
+   Linux, Suse 6.1 Celeron 400, Neomagic; all software targets.
    Linux 2.2, k6-2-350, quake-x11 -bpp 16
    Linux 2.2, k6-2-350, quake-gl mesa 3.1 glide2x voodoo2 8M
    Linux 2.0, k6-2-266, quake-x11 -bpp 16
