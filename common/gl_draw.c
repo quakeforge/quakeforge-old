@@ -48,8 +48,9 @@ cvar_t	*gl_max_size;
 cvar_t	*gl_picmip;
 cvar_t	*gl_conspin;
 cvar_t	*gl_conalpha;
+cvar_t	*gl_constretch;
 
-byte		*draw_chars;				// 8*8 graphic characters
+byte		*draw_chars;			// 8*8 graphic characters
 qpic_t		*draw_disc;
 qpic_t		*draw_backtile;
 
@@ -395,16 +396,19 @@ Draw_Init
 void Draw_Init (void)
 {
 	int		i;
-//	qpic_t	*cb;
-//	glpic_t	*gl;
-//	int start;
-//	byte    *ncdata;
 
 	gl_nobind = Cvar_Get ("gl_nobind","0",0,"None");
 	gl_max_size = Cvar_Get ("gl_max_size","1024",0,"None");
 	gl_picmip = Cvar_Get ("gl_picmip","0",0,"None");
-	gl_conspin = Cvar_Get ("gl_conspin", "0", CVAR_NONE, "None");
-	gl_conalpha = Cvar_Get ("gl_conalpha", "0.6", CVAR_NONE, "None");
+	gl_conspin = Cvar_Get ("gl_conspin", "0", CVAR_NONE,
+			"The speed at which the console background spins "
+			"around.  0 to disable.  (default 0)");
+	gl_conalpha = Cvar_Get ("gl_conalpha", "0.6", CVAR_NONE,
+			"Transparency for the console background.  Set to "
+			"1 for opaque, 0 for transparent.  (default 0.6)");
+	gl_constretch = Cvar_Get ("gl_constretch", "0", CVAR_NONE,
+			"If set to 1 will stretch the console image instead "
+			"of sliding it up and down. (default 0)");
 
 	// 3dfx can only handle 256 wide textures
 	if (!Q_strncasecmp ((char *)gl_renderer, "3dfx",4) ||
@@ -811,7 +815,10 @@ void Draw_ConsoleBackground (int lines)
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
 
-	ofs = (vid.height - lines)/(float)vid.height;
+	if (gl_constretch->value)
+		ofs = 0;
+	else
+		ofs = (vid.height - lines)/(float)vid.height;
 
 	glBegin (GL_QUADS);
 	glTexCoord2f (gl->sl, gl->tl + ofs);

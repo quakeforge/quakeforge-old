@@ -724,6 +724,63 @@ ClipSkyPolygon (int nump, vec3_t vecs, int stage) {
 	ClipSkyPolygon (newc[1], newv[1][0], stage+1);
 }
 
+#if 0
+void
+EmitSkyboxPolys ( msurface_t *fa )
+{
+	glpoly_t	*p;
+	float		*v;
+	int			i, axis, nump;
+	float	s, t;
+	vec3_t	dir, av, vp;
+	float	length;
+//	vec3_t	verts[MAX_CLIP_VERTS];
+
+	for (p=fa->polys ; p ; p=p->next)
+	{
+		v=p->verts[0] ;
+		nump = p->numverts;
+		
+		// decide which face it maps to
+		for (i=0, vp=vecs ; i<nump ; i++, vp+=3) {
+			VectorAdd (vp, v, v);
+		}
+		av[0] = fabs(v[0]);
+		av[1] = fabs(v[1]);
+		av[2] = fabs(v[2]);
+		if (av[0] > av[1] && av[0] > av[2]) {
+			axis = (v[0] < 0) ? 1 : 0;
+		} else if (av[1] > av[2] && av[1] > av[0]) {
+			axis = (v[1] < 0) ? 3 : 2;
+		} else {
+			axis = (v[2] < 0) ? 5 : 4;
+		}
+
+		glBegin (GL_POLYGON);
+		for (i=0,v=p->verts[0] ; i<p->numverts ; i++, v+=VERTEXSIZE)
+		{
+			VectorSubtract (v, r_origin, dir);
+			dir[2] *= 3;	// flatten the sphere
+
+			length = dir[0]*dir[0] + dir[1]*dir[1] + dir[2]*dir[2];
+			length = sqrt (length);
+			length = 6*63/length;
+
+			dir[0] *= length;
+			dir[1] *= length;
+
+			s = (speedscale + dir[0]) * (1.0/128);
+			t = (speedscale + dir[1]) * (1.0/128);
+
+			glTexCoord2f (s, t);
+			glVertex3fv (v);
+		}
+		glEnd ();
+	}
+}
+#endif
+
+
 /*
 	R_DrawSkyChain
 */
@@ -837,6 +894,12 @@ R_DrawSkyBox ( void )
 	glColor4f (1,1,1,0.5);
 	glDisable (GL_DEPTH_TEST);
 #endif
+
+	// make sure skybox is always "infinite distance" from camera, maybe
+	//  makes some of the ClipSkyPolygon stuff need to go away.  --KB
+	glDepthRange (1.0, 1.0);
+
+			glDepthRange (1.0, 1.0);
 	for (i=0 ; i<6 ; i++)
 	{
 		if (skymins[0][i] >= skymaxs[0][i]
@@ -857,6 +920,9 @@ R_DrawSkyBox ( void )
 		MakeSkyVec (skymaxs[0][i], skymins[1][i], i);
 		glEnd ();
 	}
+
+	glDepthRange (0.0, 1.0);	// we need our depth buffer !  --KB
+
 #if 0
 	glDisable (GL_BLEND);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
