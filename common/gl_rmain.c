@@ -970,6 +970,7 @@ R_RenderScene ( void ) {
 	GL_DisableMultitexture();
 
 	R_RenderDlights ();
+	R_DrawFireballs ();
 	R_DrawParticles ();
 
 #ifdef GLTEST

@@ -105,8 +105,6 @@ extern	PROC glTexturePointerEXT;
 extern	PROC glVertexPointerEXT;
 #endif
 
-// r_local.h -- private refresh defs
-
 #define ALIAS_BASE_SIZE_RATIO		(1.0 / 11.0)
 					// normalizing factor so player model works out to about
 					//  1 pixel per triangle
@@ -243,6 +241,24 @@ void GL_DisableMultitexture(void);
 void GL_EnableMultitexture(void);
 
 //
+// gl_rpart.c
+//
+typedef struct {
+	int	key;			// allows reusability
+	vec3_t	origin, owner;
+	float	size;
+	float	die, decay;		// duration settings
+	float	minlight;		// lighting threshold
+	float	color[4];		// RGBA
+} fball_t;
+
+void R_FireballTrail (vec3_t, vec3_t);
+fball_t *R_AllocFireball (int);
+void R_DrawFireball (fball_t *);
+void R_DrawFireballs (void);
+
+
+//
 // gl_warp.c
 //
 void GL_SubdivideSurface (msurface_t *fa);
@@ -269,6 +285,8 @@ void R_RotateForEntity (entity_t *e);
 //
 // gl_rlight.c
 //
+extern float bubble_sintable[17], bubble_costable[17];
+
 void R_MarkLights (dlight_t *light, int bit, mnode_t *node);
 void R_AnimateLight (void);
 void R_RenderDlights (void);
@@ -295,4 +313,9 @@ void GL_BuildLightmaps (void);
 // gl_ngraph.c
 //
 void R_NetGraph (void);
+
+//
+// gl_rlight.c
+//
+void AddLightBlend (float, float, float, float);
 #endif // _GLQUAKE_H

@@ -37,10 +37,9 @@
 #include <console.h>
 #include <server.h>
 
-#define MAX_PARTICLES			2048	// default max # of particles at one
-										//  time
-#define ABSOLUTE_MIN_PARTICLES	512		// no fewer than this no matter what's
-										//  on the command line
+#define MAX_PARTICLES			2048	// max particles at once
+#define ABSOLUTE_MIN_PARTICLES		512	// min particle clamp
+#define MAX_FIREBALLS			128	// rocket flames
 
 int		ramp1[8] = {0x6f, 0x6d, 0x6b, 0x69, 0x67, 0x65, 0x63, 0x61};
 int		ramp2[8] = {0x6f, 0x6e, 0x6d, 0x6c, 0x6b, 0x6a, 0x68, 0x66};
@@ -55,6 +54,8 @@ vec3_t			r_pright, r_pup, r_ppn;
 
 
 extern cvar_t		*gl_particles;
+
+fball_t		r_fireballs[MAX_FIREBALLS];
 
 /*
 ===============
@@ -611,6 +612,7 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 
 		switch (type) {
 			case 0:		// rocket trail
+				R_FireballTrail (start, end);
 				p->ramp = (rand()&3);
 				p->color = ramp3[(int)p->ramp];
 				p->type = pt_fire;
@@ -859,5 +861,166 @@ void R_DrawParticles (void)
 			glEnable(GL_ALPHA_TEST);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	} // if (gl_particles->value)
+}
+
+
+/*
+	R_FireballTrail
+
+	Nifty ball of fire GL effect.  Kinda a meshing of the dlight and
+	particle engine code.
+*/
+void
+R_FireballTrail (vec3_t start, vec3_t end)
+{
+	float		len;
+	fball_t		*f;
+	vec3_t		vec;
+
+	VectorSubtract (end, start, vec);
+	len = VectorNormalize (vec);
+
+	if (len)
+	{
+		f = R_AllocFireball (0);
+		VectorCopy (end, f->origin);
+		VectorCopy (start, f->owner);
+		f->size = 20;
+		f->die = cl.time + 0.5;
+		f->decay = -1;
+		f->color[0] = 0.9;
+		f->color[1] = 0.7;
+		f->color[2] = 0.3;
+		f->color[3] = 1.0;
+	}
+}
+
+/*
+	R_AllocFireball
+
+	Clears out and returns a new fireball
+*/
+fball_t *
+R_AllocFireball (int key)
+{
+	int		i;
+	fball_t		*f;
+
+	if (key)	// first try to find/reuse a keyed spot
+	{
+		f = r_fireballs;
+		for (i = 0; i < MAX_FIREBALLS; i++, f++)
+			if (f->key == key)
+			{
+				memset (f, 0, sizeof(*f));
+				f->key = key;
+				return f;
+			}
+	}
+
+	f = r_fireballs;	// no match, look for a free spot
+	for (i = 0; i < MAX_FIREBALLS; i++, f++)
+	{
+		if (f->die > cl.time)
+		{
+			memset (f, 0, sizeof(*f));
+			f->key = key;
+			return f;
+		}
+	}
+
+	f = &r_fireballs[0];
+	memset (f, 0, sizeof(*f));
+	f->key = key;
+	return f;	
+}
+
+/*
+	R_DrawFireball
+
+	draws one fireball - probably never need to call this directly
+*/
+void
+R_DrawFireball (fball_t *f)
+{
+	int		i, j;
+	vec3_t		vec;
+	float		radius;
+	float		*b_sin, *b_cos;
+
+	b_sin = bubble_sintable;
+	b_cos = bubble_costable;
+
+	radius = f->size + 0.35;
+
+	// figure out if we're inside the area of effect
+	VectorSubtract (f->origin, r_origin, vec);
+	if (Length (vec) < radius)
+	{
+		AddLightBlend (1, 0.5, 0, f->size * 0.0003);	// we are
+		return;
+	}
+
+	// we're not - draw it
+	glBegin (GL_TRIANGLE_FAN);
+	glColor4fv (f->color);
+	for (i=0 ; i<3 ; i++)
+		vec[i] = f->origin[i] - vpn[i] * radius;
+	glVertex3fv (vec);
+	glColor3f (0.0, 0.0, 0.0);
+
+	// don't panic, this just draws a bubble...
+	for (i=16 ; i>=0 ; i--)
+	{
+		for (j=0 ; j<3 ; j++)
+			vec[j] = f->origin[j] + (*b_cos * vright[j]
+				+ vup[j]*(*b_sin)) * radius;
+		glVertex3fv (vec);
+
+		for (j=0 ; j<3 ; j++)
+			vec[j] = f->owner[j] + (*b_cos * vright[j]
+				+ vup[j]*(*b_sin)) * radius;
+		glVertex3fv (vec);
+
+		b_sin++;
+		b_cos++;
+	}
+	glEnd ();
+}
+
+/*
+	R_DrawFireballs
+
+	Draws each fireball in sequence
+*/
+void
+R_DrawFireballs (void)
+{
+	int		i;
+	fball_t		*f;
+
+	f = r_fireballs;
+
+	glDepthMask (0);
+	glDisable (GL_TEXTURE_2D);
+	glShadeModel (GL_SMOOTH);
+	glEnable (GL_BLEND);
+	glBlendFunc (GL_ONE, GL_ONE);
+
+	for (i = 0; i < MAX_FIREBALLS; i++)
+	{
+		if (f->die < cl.time || !f->size)
+			continue;
+
+		f->size += f->decay;
+		f->color[3] /= 2.0;
+		R_DrawFireball (f);
+	}
+
+	glColor3f (1.0, 1.0, 1.0);
+	glDisable (GL_BLEND);
+	glEnable (GL_TEXTURE_2D);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask (1);
 }
 
