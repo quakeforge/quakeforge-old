@@ -35,6 +35,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void GL_BeginRendering (int *x, int *y, int *width, int *height);
 void GL_EndRendering (void);
 
+	/* Mesa pre-3.1 defines APIENTRY instead of GLAPIENTRY */
+#ifndef GLAPIENTRY
+#	ifdef APIENTRY
+	/* Create compatible GLAPIENTRY definition from APIENTRY */
+#		define GLAPIENTRY APIENTRY
+#	else
+#		define GLAPIENTRY
+#	endif
+#endif
 
 #ifdef _WIN32
 // Function prototypes for the Texture Object Extension routines
@@ -239,10 +248,6 @@ void GL_Bind (int texnum);
 // Multitexture
 #define    TEXTURE0_SGIS				0x835E
 #define    TEXTURE1_SGIS				0x835F
-
-#ifndef _WIN32
-#define GLAPIENTRY /* */
-#endif
 
 typedef void (GLAPIENTRY *lpMTexFUNC) (GLenum, GLfloat, GLfloat);
 typedef void (GLAPIENTRY *lpSelTexFUNC) (GLenum);

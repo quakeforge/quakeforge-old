@@ -102,7 +102,7 @@ cvar_t	gl_playermip = {"gl_playermip","0"};
 cvar_t	gl_nocolors = {"gl_nocolors","0"};
 #ifdef QUAKEWORLD
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","1"};
-cvar_t	gl_reporttjunctions = {"gl_reporttjunctions","0"};
+//cvar_t	gl_reporttjunctions = {"gl_reporttjunctions","0"};
 #else
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","0"};
 cvar_t	gl_doubleeyes = {"gl_doubleeys", "1"};
@@ -511,7 +511,8 @@ void R_DrawAliasModel (entity_t *e)
 	if (!strcmp(clmodel->name, "progs/player.mdl")) {
 #else
 	i = currententity - cl_entities;
-	if (i >= 1 && i<=cl.maxclients /* && !strcmp (currententity->model->name, "progs/player.mdl") */)
+//	if (i >= 1 && i <= cl.maxclients && !strcmp (currententity->model->name, "progs/player.mdl")) {
+	if (i >= 1 && i <= cl.maxclients) {
 #endif
 		if (ambientlight < 8)
 			ambientlight = shadelight = 8;
@@ -549,7 +550,7 @@ void R_DrawAliasModel (entity_t *e)
 #ifdef QUAKEWORLD
 	if (!strcmp (clmodel->name, "progs/eyes.mdl") ) {
 #else
-	if (!strcmp (clmodel->name, "progs/eyes.mdl" && gl_doubleeyes.value) ) {
+	if (!strcmp (clmodel->name, "progs/eyes.mdl") && gl_doubleeyes.value) {
 #endif
 		glTranslatef (paliashdr->scale_origin[0], paliashdr->scale_origin[1], paliashdr->scale_origin[2] - (22 + 8));
 		// double size of eyes, since they are really hard to see in gl

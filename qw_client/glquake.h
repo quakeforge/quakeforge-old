@@ -33,31 +33,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void GL_BeginRendering (int *x, int *y, int *width, int *height);
 void GL_EndRendering (void);
 
-/* palisade -	i didn't add loring's 1999/12/30 patch directly, i edited it
-		by hand because he was behind on the updates...
-		it looks like he might have fudged the following, so i'm
-		not including it... here's what his "new" code looks like:
-
--#ifndef APIENTRY
-- Mesa defines APIENTRY, but other versions of OpenGL do not 
--#ifdef GLAPIENTRY
--#define APIENTRY GLAPIENTRY
--#else
--#define APIENTRY
--#endif
--#endif
-
-	note: the rest of his patch is further down /loring
-*/
 	/* Mesa pre-3.1 defines APIENTRY instead of GLAPIENTRY */
 #ifndef GLAPIENTRY
-#ifdef APIENTRY
+#	ifdef APIENTRY
 	/* Create compatible GLAPIENTRY definition from APIENTRY */
-#define GLAPIENTRY APIENTRY
-#else
-	/* Error out -- it's pathological and we don't know what to do */
-#error "I don't know what data type GLAPIENTRY is on this system."
-#endif
+#		define GLAPIENTRY APIENTRY
+#	else
+#		define GLAPIENTRY
+#	endif
 #endif
 
 /*	continuation of loring's patch, he just #ifdef'd and #endif'd _WIN32
