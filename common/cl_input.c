@@ -340,7 +340,9 @@ void CL_BaseMove (usercmd_t *cmd)
 	}
 
 #ifdef QUAKE2
+/* This is broken, atm
 	cmd->lightlevel = cl.light_level;
+*/
 #endif
 }
 

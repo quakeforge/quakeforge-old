@@ -689,7 +689,7 @@ COM_LoadGameDirectory(char *dir)
 	}
 
 #ifdef GENERATIONS
-	for (done=false, i=0 ; !done ; i++ ) {	// Load all Pak3 files.
+	for (done=false, i=0 ; !done ; i++ ) {	
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.qz", dir, i);
 		
 		pak = COM_LoadPackZipFile(pakfile);

@@ -152,6 +152,16 @@ novelty features
 These are some rendering tricks that were easy to do in glquake.  They aren't 
 very robust, but they are pretty cool to look at.
 
+
+r_waterripple 5
+Produces waves in the water surfaces.
+
+r_waterwarp 0
+Turns waterwarp effect off underwater
+
+r_fog .0005
+Makes fog based on the Exp2 equation.
+
 r_shadows 1
 This causes every object to cast a shadow.
 
@@ -165,7 +175,6 @@ can set "r_novis 1", but that will make things go very slow.  When I get a
 chance, I will probably release some maps that have been processed properly 
 for this.
 
-r_mirroralpha 0.3
-This changes one particular texture (the stained glass texture in the EASY 
-start hall) into a mirror.  The value is the opacity of the mirror surface.
-
+r_mirroralpha 
+Has been removed in Quakeforge until has been rewritten, due to poor
+implimentation.
