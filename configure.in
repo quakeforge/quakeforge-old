@@ -58,7 +58,7 @@ AC_FUNC_MMAP
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gethostname gethostbyname connect gettimeofday getwd mkdir \
 	ftime _ftime fcntl stat putenv select socket strerror strstr \
-	snprintf _snprintf vsnprintf _vsnprintf)
+	snprintf _snprintf vsnprintf _vsnprintf strsep)
 
 AC_ARG_ENABLE(experimental,
 [  --enable-experimental  compile with experimental code. Use at your
