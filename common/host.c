@@ -562,6 +562,8 @@ Host_Init (quakeparms_t *parms)
 		Cbuf_InsertText ((char *)globalcfg);
 	}
 
+	// reparse the command line for + commands other than set (sets still done,
+	// but it doesn't matter)
 	Cmd_StuffCmds_f ();
 	Cbuf_Execute ();
 
