@@ -2132,6 +2132,18 @@ void VID_ForceMode_f (void)
 }
 
 
+void VID_Gamma_f (void)
+{
+	if (Cmd_Argc() == 1)
+	{
+		Con_Printf ("\"gamma\" is \"%s\"\n", v_gamma->string);
+		return;
+	}
+
+	Cvar_Set ("v_gamma", Cmd_Argv(1));
+}
+
+
 void	VID_Init (unsigned char *palette)
 {
 	int	i, bestmatchmetric, t, dr, dg, db, bestmatch = 0;
@@ -2170,6 +2182,7 @@ void	VID_Init (unsigned char *palette)
 	Cmd_AddCommand ("vid_windowed", VID_Windowed_f);
 	Cmd_AddCommand ("vid_fullscreen", VID_Fullscreen_f);
 	Cmd_AddCommand ("vid_minimize", VID_Minimize_f);
+	Cmd_AddCommand ("gamma", VID_Gamma_f);
 
 	if (COM_CheckParm ("-dibonly"))
 		dibonly = true;
@@ -3161,7 +3174,7 @@ void VID_MenuDraw (void)
 	modedesc_t	tmodedesc;
 
 	p = Draw_CachePic("gfx/vidmodes.lmp");
-	M_Draw((320-p->width)/2,4,p);
+	M_DrawPic ((320-p->width)/2,4, p);
 
 	for (i=0 ; i<3 ; i++)
 	{
