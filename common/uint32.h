@@ -3,7 +3,8 @@
 	
 	Definitions for portable (?) unsigned int
 	
-	Copyright (C) 2000 The QuakeForge Project
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 	
 	Author: Jeff Teunissen	<d2deek@pmail.net>
 	Date: 01 Jan 2000
