@@ -41,6 +41,7 @@
 #include <ctype.h>
 #include <net.h>
 #include <common_quakedef.h>
+#include <cvars.h>
 
 void Cmd_ForwardToServer (void);
 
