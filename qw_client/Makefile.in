@@ -45,19 +45,19 @@ BIN_PREFIX   = qw-client
 # Client targets
 #
 
-ifneq ($(HAS_OGL),)
+ifeq ($(HAS_OGL),yes)
 GLQUAKE   =$(BIN_PREFIX)-gl
 endif
 
-ifneq ($(HAS_TDFXGL),)
+ifeq ($(HAS_TDFXGL),yes)
 TDFXQUAKE= $(BIN_PREFIX)-3dfx
 endif
 
-ifneq ($(HAS_X11),)
+ifeq ($(HAS_X11),yes)
 X11QUAKE  = $(BIN_PREFIX)-x11
 endif
 
-ifneq ($(HAS_VGA),)
+ifeq ($(HAS_VGA),yes)
 SVGAQUAKE = $(BIN_PREFIX)-svga
 endif
 

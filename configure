@@ -2499,7 +2499,7 @@ fi
 	    if test "x$HAS_TDFXGL" = xyes; then
 	       TDFXGL_LDFLAGS="$TDFXGL_LDFLAGS -l3dfxgl"
 	    else
-	        HAVE_TDFXGL="no"
+	        HAS_TDFXGL="no"
 	    fi
 	 fi
       fi

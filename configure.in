@@ -199,14 +199,14 @@ if test "x$HAS_TDFXGL" != xno; then
 	    LIBS="$TDFXGL_LDFLAGS $LIBS"
 	    AC_CHECK_LIB(3dfxgl, glColor4f, HAS_TDFXGL=yes, HAS_TDFXGL=)
 	    LIBS="$save_LIBS"
-	    if test "x$HAS_TDFXGL" = xyes; then
-	       TDFXGL_LDFLAGS="$TDFXGL_LDFLAGS -l3dfxgl"
-	    else
-	        HAVE_TDFXGL="no"
-	    fi
 	 fi
       fi
    fi
+fi
+if test "x$HAS_TDFXGL" = xyes; then
+   TDFXGL_LDFLAGS="$TDFXGL_LDFLAGS -l3dfxgl"
+else
+   HAS_TDFXGL="no"
 fi
 AC_SUBST(HAS_TDFXGL)
 AC_SUBST(TDFXGL_LDFLAGS)
