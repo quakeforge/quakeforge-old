@@ -97,7 +97,7 @@ void CL_ClearState (void)
 	memset (cl_dlights, 0, sizeof(cl_dlights));
 	memset (cl_lightstyle, 0, sizeof(cl_lightstyle));
 	memset (cl_temp_entities, 0, sizeof(cl_temp_entities));
-	memset (cl_beams, 0, sizeof(cl_beams));
+	CL_ClearTEnts ();
 
 //
 // allocate the efrags and chain together into a free list
