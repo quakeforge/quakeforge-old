@@ -309,7 +309,7 @@ void CDAudio_Update(void)
 		subchnl.data_format	= CD_CURRENT_POSITION;
 		subchnl.track		= 0;
 		subchnl.data_len	= sizeof(subchnldata);
-		subchnl.data		= &subchnl;
+		subchnl.data		= &subchnldata;
 #endif
 		if (ioctl(cdfile, CDROMSUBCHNL, &subchnl) == -1 ) {
 			Con_DPrintf("CD subcchannel ioctl failed\n");
