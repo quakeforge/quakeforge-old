@@ -73,6 +73,15 @@ typedef struct mplane_s
 	byte	pad[2];
 } mplane_t;
 
+// Neal White III - 12-28-1999 - new texture flags
+#define FLAG_FAR_SKY_STOPPED	0x0001	// for non-moving stars
+#define FLAG_SKY_SLOWER			0x0002	// sky moves at 1/2 speed
+#define FLAG_SKY_FASTER			0x0004	// sky moves at 2x speed
+#define FLAG_SKY_TRANS			0x0008	// near sky is semi-transparent
+#define FLAG_HAS_GLOWMAP		0x0010	// used for fullbright bugfix
+// Neal White III - 12-28-1999 - END
+
+
 typedef struct texture_s
 {
 	char		name[16];
@@ -84,6 +93,12 @@ typedef struct texture_s
 	struct texture_s *anim_next;		// in the animation sequence
 	struct texture_s *alternate_anims;	// bmodels in frmae 1 use these
 	unsigned	offsets[MIPLEVELS];		// four mip maps stored
+	//
+	// Neal White III - 12-28-1999 - OpenGL fullbright bugfix
+	int			gl_glowtexnum;
+	unsigned	flags;				// FLAG_HAS_GLOWMAP
+	unsigned	glowoffsets[MIPLEVELS];		// four mip maps stored
+	// Neal White III - 12-28-1999 - END
 } texture_t;
 
 

@@ -142,7 +142,8 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	int			i, j, size;
 	byte		*lightmap;
 	unsigned	scale;
-	int			maps;
+	int		maps;
+	int		lightadj[4];
 	unsigned	*bl;
 
 	surf->cached_dlight = (surf->dlightframe == r_framecount);
@@ -153,7 +154,7 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	lightmap = surf->samples;
 
 // set to full bright if no light data
-	if (/* r_fullbright.value || */ !cl.worldmodel->lightdata)
+	if (r_fullbright.value || !cl.worldmodel->lightdata)
 	{
 		for (i=0 ; i<size ; i++)
 			blocklights[i] = 255*256;
@@ -300,107 +301,6 @@ void GL_EnableMultitexture(void)
 	}
 }
 
-#ifndef _WIN32
-/*
-================
-R_DrawSequentialPoly
-
-Systems that have fast state and texture changes can
-just do everything as it passes with no need to sort
-================
-*/
-void R_DrawSequentialPoly (msurface_t *s)
-{
-	glpoly_t	*p;
-	float		*v;
-	int			i;
-	texture_t	*t;
-
-	//
-	// normal lightmaped poly
-	//
-//	if ((!(s->flags & (SURF_DRAWSKY|SURF_DRAWTURB)))
-//		&& ((r_viewleaf->contents!=CONTENTS_EMPTY && (s->flags & SURF_UNDERWATER)) ||
-//		(r_viewleaf->contents==CONTENTS_EMPTY && !(s->flags & SURF_UNDERWATER))))
-	if (0)
-	{
-		p = s->polys;
-
-		t = R_TextureAnimation (s->texinfo->texture);
-		GL_Bind (t->gl_texturenum);
-		glBegin (GL_POLYGON);
-		v = p->verts[0];
-		for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
-		{
-			glTexCoord2f (v[3], v[4]);
-			glVertex3fv (v);
-		}
-		glEnd ();
-
-		GL_Bind (lightmap_textures + s->lightmaptexturenum);
-		glEnable (GL_BLEND);
-		glBegin (GL_POLYGON);
-		v = p->verts[0];
-		for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
-		{
-			glTexCoord2f (v[5], v[6]);
-			glVertex3fv (v);
-		}
-		glEnd ();
-
-		glDisable (GL_BLEND);
-
-		return;
-	}
-
-	//
-	// subdivided water surface warp
-	//
-	if (s->flags & SURF_DRAWTURB)
-	{
-		GL_Bind (s->texinfo->texture->gl_texturenum);
-		EmitWaterPolys (s);
-		return;
-	}
-
-	//
-	// subdivided sky warp
-	//
-	if (s->flags & SURF_DRAWSKY)
-	{
-		GL_Bind (solidskytexture);
-		speedscale = realtime*8;
-		speedscale -= (int)speedscale;
-
-		EmitSkyPolys (s);
-
-		glEnable (GL_BLEND);
-		glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GL_Bind (alphaskytexture);
-		speedscale = realtime*16;
-		speedscale -= (int)speedscale;
-		EmitSkyPolys (s);
-		if (gl_lightmap_format == GL_LUMINANCE)
-			glBlendFunc (GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
-
-		glDisable (GL_BLEND);
-	}
-
-	//
-	// underwater warped with lightmap
-	//
-	p = s->polys;
-
-	t = R_TextureAnimation (s->texinfo->texture);
-	GL_Bind (t->gl_texturenum);
-	DrawGLWaterPoly (p);
-
-	GL_Bind (lightmap_textures + s->lightmaptexturenum);
-	glEnable (GL_BLEND);
-	DrawGLWaterPolyLightmap (p);
-	glDisable (GL_BLEND);
-}
-#else
 /*
 ================
 R_DrawSequentialPoly
@@ -461,6 +361,34 @@ void R_DrawSequentialPoly (msurface_t *s)
 				glVertex3fv (v);
 			}
 			glEnd ();
+
+			// Neal White III - 12-29-1999 - render the glow map
+
+			if (t->flags & FLAG_HAS_GLOWMAP)
+			{
+				GL_DisableMultitexture();
+				GL_Bind (t->gl_glowtexnum);
+
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+				glEnable (GL_BLEND);
+				glBlendFunc (GL_ONE, GL_ONE);
+
+				glBegin (GL_POLYGON);
+				v = p->verts[0];
+				for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
+				{
+					glTexCoord2f (v[3], v[4]);
+					glVertex3fv (v);
+				}
+				glEnd ();
+
+				// restore it to Quake's default
+				glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+				glDisable (GL_BLEND);
+			}
+			// Neal White III - 12-29-1999 - END
 			return;
 		} else {
 			p = s->polys;
@@ -569,6 +497,44 @@ void R_DrawSequentialPoly (msurface_t *s)
 		}
 		glEnd ();
 
+		// Neal White III - 12-31-1999 - render the glow map
+
+		if (t->flags & FLAG_HAS_GLOWMAP)
+		{
+			GL_DisableMultitexture();
+			GL_Bind (t->gl_glowtexnum);
+
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+			glEnable (GL_BLEND);
+			glBlendFunc (GL_ONE, GL_ONE);
+
+			glBegin (GL_POLYGON);
+			v = p->verts[0];
+			for (i=0 ; i<p->numverts ; i++, v+= VERTEXSIZE)
+			{
+				glTexCoord2f (v[3], v[4]);
+
+				// Neal - DON'T DELETE - leaves unmoving glowmap on top
+				// I think this is a clue to the "underwater cracks" bug
+				//
+				//glVertex3fv (v);
+
+				nv[0] = v[0] + 8*sin(v[1]*0.05+realtime)*sin(v[2]*0.05+realtime);
+				nv[1] = v[1] + 8*sin(v[0]*0.05+realtime)*sin(v[2]*0.05+realtime);
+				nv[2] = v[2];
+
+				glVertex3fv (nv);
+			}
+			glEnd ();
+
+			// restore it to Quake's default
+			glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glDisable (GL_BLEND);
+		}
+		// Neal White III - 12-31-1999 - END
+
 	} else {
 		p = s->polys;
 
@@ -582,7 +548,6 @@ void R_DrawSequentialPoly (msurface_t *s)
 		glDisable (GL_BLEND);
 	}
 }
-#endif
 
 
 /*
