@@ -417,7 +417,7 @@ M_AdjustSliders ( int dir )
 			break;
 		case 5:	// mouse speed
 			Cvar_Set(sensitivity, va("%f",
-					bound(1, sensitivity->value + dir, 11)));
+					bound(1, sensitivity->value + dir, 25)));
 			break;
 		case 6:	// music volume
 			Cvar_Set(bgmvolume, va("%f",
@@ -514,7 +514,7 @@ void M_Options_Draw (void)
 	M_DrawSlider (220, options_draw_cursor, r);
 
 	M_Print (16, options_draw_cursor+=8, "           Mouse Speed");
-	r = (sensitivity->value - 1)/10;
+	r = (sensitivity->value - 1)/24;
 	M_DrawSlider (220, 72, r);
 
 	M_Print (16, options_draw_cursor+=8, "       CD Music Volume");
