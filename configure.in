@@ -33,7 +33,8 @@ AC_CHECK_HEADERS(unistd.h fcntl.h dlfcn.h windows.h sys/ioctl.h sys/mman.h \
 	sys/socket.h netinet/in.h netdb.h arpa/inet.h sys/filio.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
 	dsound.h mmsystem.h initguid.h mme/mmsystem.h mme/mme_public.h \
-	sys/asoundlib.h string.h strings.h memory.h malloc.h)
+	sys/asoundlib.h string.h strings.h memory.h malloc.h \
+        errno.h sys/dir.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_PROG_GCC_TRADITIONAL
