@@ -154,7 +154,6 @@ sound_lib_DIR:
 $(SOUND_LIB): sound_lib_DIR $(TARGET_DIR)/sound_lib.a
 
 $(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
-	#gcc -Wall @SHARED@ -o $@ $(SOUND_LIB_OBJS)
 	ar cru $@ $(SOUND_LIB_OBJS)
 	@RANLIB@ $@
 
