@@ -260,6 +260,7 @@ Operating systems tested:
 Video cards tested (On Intel-based systems):
    Matrox G200 (Linux)
    Matrox G400 (Linux)
+   Voodoo2 (Linux)
 
 See file "TESTIFY" for user testimonials on what works, where, and why.
 
