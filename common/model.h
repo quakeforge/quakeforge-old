@@ -1,5 +1,7 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,6 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef __MODEL__
 #define __MODEL__
 
+#include "render.h"
 #include "modelgen.h"
 #include "spritegn.h"
 
@@ -30,6 +33,17 @@ d*_t structures are on-disk representations
 m*_t structures are in-memory
 
 */
+
+// entity effects
+
+#define	EF_BRIGHTFIELD			1
+#define	EF_MUZZLEFLASH 			2
+#define	EF_BRIGHTLIGHT 			4
+#define	EF_DIMLIGHT 			8
+#define	EF_FLAG1	 			16
+#define	EF_FLAG2	 			32
+#define EF_BLUE					64
+#define EF_RED					128
 
 /*
 ==============================================================================
@@ -69,6 +83,8 @@ typedef struct texture_s
 {
 	char		name[16];
 	unsigned	width, height;
+	int			gl_texturenum;
+	struct msurface_s	*texturechain;	// for gl_texsort drawing
 	int			anim_total;				// total tenths in sequence ( 0 = no)
 	int			anim_min, anim_max;		// time for this frame min <=time< max
 	struct texture_s *anim_next;		// in the animation sequence
@@ -83,6 +99,8 @@ typedef struct texture_s
 #define SURF_DRAWTURB		0x10
 #define SURF_DRAWTILED		0x20
 #define SURF_DRAWBACKGROUND	0x40
+#define SURF_UNDERWATER		0x80
+#define SURF_DONTWARP		0x100
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct
@@ -99,12 +117,20 @@ typedef struct
 	int			flags;
 } mtexinfo_t;
 
+#define	VERTEXSIZE	7
+
+typedef struct glpoly_s
+{
+	struct	glpoly_s	*next;
+	struct	glpoly_s	*chain;
+	int		numverts;
+	int		flags;			// for SURF_UNDERWATER
+	float	verts[4][VERTEXSIZE];	// variable sized (xyz s1t1 s2t2)
+} glpoly_t;
+
 typedef struct msurface_s
 {
 	int			visframe;		// should be drawn when node is crossed
-
-	int			dlightframe;
-	int			dlightbits;
 
 	mplane_t	*plane;
 	int			flags;
@@ -112,16 +138,26 @@ typedef struct msurface_s
 	int			firstedge;	// look up in model->surfedges[], negative numbers
 	int			numedges;	// are backwards edges
 	
-// surface generation data
 	struct surfcache_s	*cachespots[MIPLEVELS];
 
 	short		texturemins[2];
 	short		extents[2];
 
+	int			light_s, light_t;	// gl lightmap coordinates
+
+	glpoly_t	*polys;				// multiple if warped
+	struct	msurface_s	*texturechain;
+
 	mtexinfo_t	*texinfo;
 	
 // lighting info
+	int			dlightframe;
+	int			dlightbits;
+
+	int			lightmaptexturenum;
 	byte		styles[MAXLIGHTMAPS];
+	int			cached_light[MAXLIGHTMAPS];	// values currently used in lightmap
+	qboolean	cached_dlight;				// true if dynamic light in cache
 	byte		*samples;		// [numstyles*surfsize]
 } msurface_t;
 
@@ -131,7 +167,7 @@ typedef struct mnode_s
 	int			contents;		// 0, to differentiate from leafs
 	int			visframe;		// node needs to be traversed if current
 	
-	short		minmaxs[6];		// for bounding box culling
+	float		minmaxs[6];		// for bounding box culling
 
 	struct mnode_s	*parent;
 
@@ -151,7 +187,7 @@ typedef struct mleaf_s
 	int			contents;		// wil be a negative contents number
 	int			visframe;		// node needs to be traversed if current
 
-	short		minmaxs[6];		// for bounding box culling
+	float		minmaxs[6];		// for bounding box culling
 
 	struct mnode_s	*parent;
 
@@ -190,9 +226,9 @@ typedef struct mspriteframe_s
 {
 	int		width;
 	int		height;
-	void	*pcachespot;			// remove?
 	float	up, down, left, right;
 	byte	pixels[4];
+	int		gl_texturenum;
 } mspriteframe_t;
 
 typedef struct
@@ -232,6 +268,9 @@ Alias models are position independent, so the cache manager can move them.
 typedef struct
 {
 	aliasframetype_t	type;
+	int					firstpose;
+	int					numposes;
+	float				interval;
 	trivertx_t			bboxmin;
 	trivertx_t			bboxmax;
 	int					frame;
@@ -241,7 +280,6 @@ typedef struct
 typedef struct
 {
 	aliasskintype_t		type;
-	void				*pcachespot;
 	int					skin;
 } maliasskindesc_t;
 
@@ -272,13 +310,45 @@ typedef struct mtriangle_s {
 	int					vertindex[3];
 } mtriangle_t;
 
+
+#define	MAX_SKINS	32
 typedef struct {
-	int					model;
-	int					stverts;
-	int					skindesc;
-	int					triangles;
+	int			ident;
+	int			version;
+	vec3_t		scale;
+	vec3_t		scale_origin;
+	float		boundingradius;
+	vec3_t		eyeposition;
+	int			numskins;
+	int			skinwidth;
+	int			skinheight;
+	int			numverts;
+	int			numtris;
+	int			numframes;
+	synctype_t	synctype;
+	int			flags;
+	float		size;
+
+	int			numposes;
+	int			poseverts;
+	int			posedata;	// numposes*poseverts trivert_t
+	int			commands;	// gl command list with embedded s/t
+	int			gl_texturenum[MAX_SKINS][4];
+	int			model;
+	int			stverts;
+	int			skindesc;
+	int			triangles;
+	int			texels[MAX_SKINS];  // only for player skins
 	maliasframedesc_t	frames[1];
 } aliashdr_t;
+
+#define	MAXALIASVERTS	1024
+#define	MAXALIASFRAMES	256
+#define	MAXALIASTRIS	2048
+extern	aliashdr_t	*pheader;
+extern	stvert_t	stverts[MAXALIASVERTS];
+extern	mtriangle_t	triangles[MAXALIASTRIS];
+extern	trivertx_t	*poseverts[MAXALIASFRAMES];
 
 //===================================================================
 
@@ -309,10 +379,16 @@ typedef struct model_s
 	int			flags;
 
 //
-// volume occupied by the model
+// volume occupied by the model graphics
 //		
 	vec3_t		mins, maxs;
 	float		radius;
+
+//
+// solid volume for clipping 
+//
+	qboolean	clipbox;
+	vec3_t		clipmins, clipmaxs;
 
 //
 // brush model
@@ -360,6 +436,9 @@ typedef struct model_s
 	byte		*visdata;
 	byte		*lightdata;
 	char		*entities;
+
+	unsigned	checksum;
+	unsigned	checksum2;
 
 //
 // additional model data

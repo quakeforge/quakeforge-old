@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // client.h
 
+#ifndef _CLIENT_H
+#define _CLIENT_H
 typedef struct
 {
 	vec3_t	viewangles;
@@ -375,3 +377,4 @@ void V_CalcBlend (void);
 //
 void CL_InitTEnts (void);
 void CL_SignonReply (void);
+#endif // _CLIENT_H

@@ -25,6 +25,7 @@
 	USA.
 */
 
+#include "quakedef.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -42,7 +43,6 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-#include "quakedef.h"
 
 #ifndef QUAKEWORLD
 qboolean	isDedicated;
@@ -282,11 +282,7 @@ int main (int c, char **v) {
 	parms.argc = com_argc;
 	parms.argv = com_argv;
 
-#ifdef GLQUAKE
 	parms.memsize = 16*1024*1024;
-#else
-	parms.memsize = 8*1024*1024;
-#endif
 
 	j = COM_CheckParm("-mem");
 	if (j)

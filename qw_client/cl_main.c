@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "winquake.h"
+#include "pmove_simple.h"
 
 #ifdef __sun
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */

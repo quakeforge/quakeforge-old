@@ -1283,26 +1283,35 @@ void * Mod_LoadAliasFrame (void * pin, maliasframedesc_t *frame)
 	int				i;
 	daliasframe_t	*pdaliasframe;
 	
+	printf("pheader->numverts: %d\n", pheader->numverts);
 	pdaliasframe = (daliasframe_t *)pin;
 
 	strcpy (frame->name, pdaliasframe->name);
 	frame->firstpose = posenum;
 	frame->numposes = 1;
 
+	printf("pheader->numverts: %d\n", pheader->numverts);
 	for (i=0 ; i<3 ; i++)
 	{
 	// these are byte values, so we don't have to worry about
 	// endianness
 		frame->bboxmin.v[i] = pdaliasframe->bboxmin.v[i];
+		printf("1 pheader->numverts: %d\n", pheader->numverts);
 		frame->bboxmin.v[i] = pdaliasframe->bboxmax.v[i];
+		printf("2 pheader->numverts: %d\n", pheader->numverts);
 	}
+	printf("pheader->numverts: %d\n", pheader->numverts);
 
 	pinframe = (trivertx_t *)(pdaliasframe + 1);
+	printf("pinframe: %p, ", pinframe);
 
 	poseverts[posenum] = pinframe;
 	posenum++;
 
 	pinframe += pheader->numverts;
+	printf("pinframe: %p, ", pinframe);
+	printf("pheader: %p, ", pheader);
+	printf("pheader->numverts: %d\n", pheader->numverts);
 
 	return (void *)pinframe;
 }
@@ -1649,9 +1658,14 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	posenum = 0;
 	pframetype = (daliasframetype_t *)&pintriangles[pheader->numtris];
 
+	printf("loadmodel->name: '%s'\n", loadmodel->name);
+
 	for (i=0 ; i<numframes ; i++)
 	{
 		aliasframetype_t	frametype;
+
+		printf("i: %d, pframetype: %p, pframetype->type: %d\n", i, pframetype,
+				pframetype->type);
 
 		frametype = LittleLong (pframetype->type);
 
@@ -1666,6 +1680,7 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 					Mod_LoadAliasGroup (pframetype + 1, &pheader->frames[i]);
 		}
 	}
+	printf("Done\n");
 
 	pheader->numposes = posenum;
 

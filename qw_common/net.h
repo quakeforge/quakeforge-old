@@ -19,6 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+
+#ifndef _NET_H
+#define _NET_H
+
 // net.h -- quake's interface to the networking layer
 
 #define	PORT_ANY	-1
@@ -119,3 +123,4 @@ void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport);
 qboolean Netchan_CanPacket (netchan_t *chan);
 qboolean Netchan_CanReliable (netchan_t *chan);
 
+#endif // _NET_H

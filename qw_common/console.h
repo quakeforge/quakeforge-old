@@ -20,6 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifndef _CONSOLE_H
+#define _CONSOLE_H
+
 //
 // console
 //
@@ -60,3 +63,4 @@ void Con_ToggleConsole_f (void);
 
 void Con_NotifyBox (char *text);	// during startup for sound / cd warnings
 
+#endif // _CONSOLE_H

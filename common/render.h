@@ -20,6 +20,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifndef _RENDER_H
+#define _RENDER_H
+
+#include "vid.h"
+#include "model.h"
+
 // refresh.h -- public interface to refresh functions
 
 #define	MAXCLIPPLANES	11
@@ -118,7 +124,7 @@ extern	int		reinit_surfcache;
 extern	refdef_t	r_refdef;
 extern vec3_t	r_origin, vpn, vright, vup;
 
-extern	struct texture_s	*r_notexture_mip;
+extern  struct texture_s        *r_notexture_mip;
 
 extern entity_t	r_worldentity;
 
@@ -169,3 +175,4 @@ void R_InitParticles (void);
 void R_ClearParticles (void);
 void R_DrawParticles (void);
 void R_DrawWaterSurfaces (void);
+#endif // _RENDER_H

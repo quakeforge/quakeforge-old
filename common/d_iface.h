@@ -21,10 +21,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // d_iface.h: interface header file for rasterization driver modules
 
+#ifndef _D_IFACE_H
+#define _D_IFACE_H
+
 #define WARP_WIDTH		320
 #define WARP_HEIGHT		200
 
 #define MAX_LBM_HEIGHT	200
+
+#include "model.h"
+#include "glquake.h"
 
 typedef struct
 {
@@ -229,3 +235,4 @@ extern vrect_t	scr_vrect;
 
 extern byte		*r_warpbuffer;
 
+#endif // _D_IFACE_H

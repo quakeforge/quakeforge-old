@@ -41,7 +41,7 @@ byte	mod_novis[MAX_MAP_LEAFS/8];
 model_t	mod_known[MAX_MOD_KNOWN];
 int		mod_numknown;
 
-texture_t	r_notexture_mip;
+texture_t	sv_r_notexture_mip;
 
 unsigned *model_checksum;
 
@@ -609,7 +609,7 @@ void Mod_LoadTexinfo (lump_t *l)
 	
 		if (!loadmodel->textures)
 		{
-			out->texture = &r_notexture_mip;	// checkerboard texture
+			out->texture = &sv_r_notexture_mip;	// checkerboard texture
 			out->flags = 0;
 		}
 		else
@@ -619,7 +619,7 @@ void Mod_LoadTexinfo (lump_t *l)
 			out->texture = loadmodel->textures[miptex];
 			if (!out->texture)
 			{
-				out->texture = &r_notexture_mip; // texture not found
+				out->texture = &sv_r_notexture_mip; // texture not found
 				out->flags = 0;
 			}
 		}

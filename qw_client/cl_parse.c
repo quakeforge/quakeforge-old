@@ -23,6 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl_parse.c  -- parse a message received from the server
 
 #include "quakedef.h"
+#include "model.h"
+#include "pmove.h"
+#include "glquake.h"
 
 char *svc_strings[] =
 {
@@ -866,71 +869,6 @@ void CL_ParseClientdata (void)
 }
 
 /*
-=====================
-CL_NewTranslation
-=====================
-*/
-void CL_NewTranslation (int slot)
-{
-#ifdef GLQUAKE
-	if (slot > MAX_CLIENTS)
-		Sys_Error ("CL_NewTranslation: slot > MAX_CLIENTS");
-
-	R_TranslatePlayerSkin(slot);
-#else
-
-	int		i, j;
-	int		top, bottom;
-	byte	*dest, *source;
-	player_info_t	*player;
-	char s[512];
-
-	if (slot > MAX_CLIENTS)
-		Sys_Error ("CL_NewTranslation: slot > MAX_CLIENTS");
-
-	player = &cl.players[slot];
-
-	strcpy(s, Info_ValueForKey(player->userinfo, "skin"));
-	COM_StripExtension(s, s);
-	if (player->skin && !stricmp(s, player->skin->name))
-		player->skin = NULL;
-
-	if (player->_topcolor != player->topcolor ||
-		player->_bottomcolor != player->bottomcolor || !player->skin) {
-		player->_topcolor = player->topcolor;
-		player->_bottomcolor = player->bottomcolor;
-
-		dest = player->translations;
-		source = vid.colormap;
-		memcpy (dest, vid.colormap, sizeof(player->translations));
-		top = player->topcolor;
-		if (top > 13 || top < 0)
-			top = 13;
-		top *= 16;
-		bottom = player->bottomcolor;
-		if (bottom > 13 || bottom < 0)
-			bottom = 13;
-		bottom *= 16;
-
-		for (i=0 ; i<VID_GRADES ; i++, dest += 256, source+=256)
-		{
-			if (top < 128)	// the artists made some backwards ranges.  sigh.
-				memcpy (dest + TOP_RANGE, source + top, 16);
-			else
-				for (j=0 ; j<16 ; j++)
-					dest[TOP_RANGE+j] = source[top+15-j];
-					
-			if (bottom < 128)
-				memcpy (dest + BOTTOM_RANGE, source + bottom, 16);
-			else
-				for (j=0 ; j<16 ; j++)
-					dest[BOTTOM_RANGE+j] = source[bottom+15-j];		
-		}
-	}
-#endif
-}
-
-/*
 ==============
 CL_UpdateUserinfo
 ==============
@@ -1064,11 +1002,9 @@ void CL_MuzzleFlash (void)
 	if ((unsigned)(i-1) >= MAX_CLIENTS)
 		return;
 
-#ifdef GLQUAKE
 	// don't draw our own muzzle flash in gl if flashblending
 	if (i-1 == cl.playernum && gl_flashblend.value)
 		return;
-#endif
 
 	pl = &cl.frames[parsecountmod].playerstate[i-1];
 

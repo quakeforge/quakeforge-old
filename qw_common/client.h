@@ -21,6 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // client.h
 
+#ifndef _CLIENT_H
+#define _CLIENT_H
 
 typedef struct
 {
@@ -515,3 +517,5 @@ void	Skin_NextDownload (void);
 
 #define RSSHOT_WIDTH 320
 #define RSSHOT_HEIGHT 200
+
+#endif // _CLIENT_H

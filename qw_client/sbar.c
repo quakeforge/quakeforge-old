@@ -832,7 +832,6 @@ void Sbar_Draw (void)
 	else if (sb_showteamscores)
 		Sbar_TeamOverlay();
 
-#ifdef GLQUAKE
 	if (sb_showscores || sb_showteamscores || 
 		cl.stats[STAT_HEALTH] <= 0)
 		sb_updates = 0;
@@ -850,7 +849,6 @@ void Sbar_Draw (void)
 #endif
 	if (vid.width > 320 && !headsup)
 		Draw_TileClear (320, vid.height - sb_lines, vid.width - 320, sb_lines);
-#endif
 
 	if (sb_lines > 0)
 		Sbar_MiniDeathmatchOverlay ();

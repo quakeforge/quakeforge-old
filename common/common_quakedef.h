@@ -19,6 +19,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
+#ifndef _COMMON_QUAKEDEF_H
+#define _COMMON_QUAKEDEF_H
+
 // quakedef.h -- primary header for client
 
 #define	QUAKE_GAME			// as opposed to utilities
@@ -56,15 +59,11 @@ void	VID_UnlockBuffer (void);
 #include "cmd.h"
 #include "sbar.h"
 #include "sound.h"
-#include "render.h"
-#include "client.h"
 
-#ifdef GLQUAKE
-#include "gl_model.h"
-#else
 #include "model.h"
 #include "d_iface.h"
-#endif
+#include "render.h"
+#include "client.h"
 
 #include "input.h"
 #include "keys.h"
@@ -78,9 +77,7 @@ void	VID_UnlockBuffer (void);
 #include "crc.h"
 #include "cdaudio.h"
 
-#ifdef GLQUAKE
 #include "glquake.h"
-#endif
 
 #ifndef max
 #define max(a,b) ((a) > (b) ? (a) : (b))
@@ -156,3 +153,4 @@ void Host_ShutdownServer (qboolean crash);
 extern qboolean	msg_suppress_1;	
 // suppresses resolution and cache size console output
 //  an fullscreen DIB focus gain/loss
+#endif // _COMMON_QUAKEDEF_H

@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define SURFCACHE_SIZE_AT_320X200	600*1024
 
+/*
 typedef struct surfcache_s
 {
 	struct surfcache_s	*next;
@@ -49,6 +50,7 @@ typedef struct surfcache_s
 	struct texture_s	*texture;	// checked for animating textures
 	byte				data[4];	// width*height elements
 } surfcache_t;
+*/
 
 // !!! if this is changed, it must be changed in asm_draw.h too !!!
 typedef struct sspan_s
