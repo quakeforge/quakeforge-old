@@ -12,6 +12,26 @@ be addressed as sonn as possible, we make no promises for things listed
 here.  Do keep in mind however that many of these things we want ourselves
 so this file serves as a sort of to-do list.
 
+Ambush
+ - v_idlescale and force_centerview can mess with MegaTF concussion effects
+ - gl_polyblend 0 can undo a flash grenade effect
+ - binary sanity check
+ - MOVETYPE_FLY in QW
+ - view offset in QW
+ - Software skyboxes
+ - full 256 colors for particles in QW
+ - alpha particles
+ - resizable dlights
+ - GL fullbrights
+ - Beams ala Half-Life
+ - EFFECT bit for entities (ie smoke trail for player on fire)
+ - lens flares
+ - MIDI engine
+ - 16 channel sound
+ - ability to play stereo sounds (dedicated channel for that maybe?)
+ - positional audio allowing eg rocket flybys
+ - allow mp3 sounds to reduce pak sizes [cache them to wav's maybe?]
+
 DarkAngel <bhunn@zipworld.com.au>
  - 32 bit texture support
  - skeletal animations
