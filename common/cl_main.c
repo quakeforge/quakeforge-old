@@ -1739,8 +1739,8 @@ void CL_InitCvars()
 //
 // register our cvars
 //
-	show_fps = Cvar_Get ("show_fps","0",0,"None");
 	host_speeds = Cvar_Get ("host_speeds","0",0,"None");
+	show_fps = Cvar_Get ("show_fps","0",0,"None");
 	developer = Cvar_Get ("developer","0",0,"None");
 	sys_nostdout = Cvar_Get ("sys_nostdout","0",0,"None");
 

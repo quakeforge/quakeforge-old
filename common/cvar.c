@@ -30,10 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <client.h>
 #include <stdlib.h>
-#ifdef UQUAKE
-#include <server.h>
-#endif
-#if defined(QUAKEWORLD) && defined(SERVERONLY)
+#if defined(UQUAKE) || defined(SERVERONLY)
 #include <server.h>
 #endif
 #include <string.h>
@@ -269,10 +266,30 @@ void Cvar_Set_f(void)
 				"User created cvar");
 	}	
 }
+void Cvar_Help_f (void)
+{
+	char *cvar_name;
+	cvar_t	*var;
 
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("usage: cvarhelp <cvar>\n");
+		return;
+	}
+
+	cvar_name = Cmd_Argv (1);
+	if((var = Cvar_FindVar(cvar_name)) != NULL)
+	{
+		Con_Printf ("%s\n",var->description);
+		return;
+	}
+	Con_Printf ("variable not found\n");
+}
+	
 void Cvar_Init()
 {
 	Cmd_AddCommand ("set", Cvar_Set_f);
+	Cmd_AddCommand ("cvarhelp",Cvar_Help_f);
 }
 
 void Cvar_Shutdown (void)
@@ -319,5 +336,6 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 	}
 	// Cvar does exist, so we update the flags and return.
 	v->flags |= cvarflags;
+	v->flags ^= CVAR_USER_CREATED;
 	return v;
 }

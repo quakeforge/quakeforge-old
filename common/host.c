@@ -560,8 +560,9 @@ Host_Init (quakeparms_t *parms)
 	CL_InitCvars();
 	SCR_InitCvars();
 	VID_InitCvars ();
-	Cbuf_Init ();
+	Cbuf_Init (); 
 	Cmd_Init ();
+	Cvar_Init ();
 	V_Init ();
 	
 #ifdef QUAKEWORLD

@@ -1740,6 +1740,7 @@ void SV_Init (quakeparms_t *parms)
 	SV_InitCvars ();
 	Cbuf_Init ();
 	Cmd_Init ();	
+	Cvar_Init ();
 
 	COM_Init ();
 	
