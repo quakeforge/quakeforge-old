@@ -374,7 +374,7 @@ void	VID_SetPalette (unsigned char *palette)
 //
 // 8 8 8 encoding
 //
-	Con_Printf("Converting 8to24\n");
+//	Con_Printf("Converting 8to24\n");
 
 	pal = palette;
 	table = d_8to24table;
