@@ -1070,8 +1070,8 @@ again:
 
 extern int	VID_options_items;
 static int	options_cursor;
-static int	local_options_items = 13;
-#define options_items	(local_options_items + VID_options_items)
+#define 	LOCAL_OPTIONS_ITEMS 13
+static int	options_items=(LOCAL_OPTIONS_ITEMS + VID_options_items);
 
 void M_Menu_Options_f (void)
 {
