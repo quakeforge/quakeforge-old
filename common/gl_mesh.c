@@ -330,10 +330,10 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		byte sig[2];
 		long cachecrc;
 
-		Qread (f, sig, sizeof(sig));
+		Qread (f, sig,sizeof(sig));
 		Qread (f, &cachecrc, sizeof(cachecrc));
 
-		if ((memcmp(sig, "QF", sizeof("QF")) != 0) ||
+		if ((memcmp(sig, "QF", sizeof(sig)) != 0) ||
 			cachecrc != modelcrc)
 			{
 			Con_Printf ("Mismatched mesh on model %s\n",m->name);			
@@ -376,7 +376,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		if (f)
 		{
 			byte sig[2];
-			memcpy(sig, "QF", sizeof("QF"));
+			memcpy(sig, "QF",2);
 			Qwrite(f, sig, sizeof(sig));
 			Qwrite(f, &modelcrc, sizeof(modelcrc));			
 			Qwrite(f, &numcommands, 4);
