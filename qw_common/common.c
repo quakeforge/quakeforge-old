@@ -2022,10 +2022,10 @@ void Info_SetValueForStarKey (char *s, char *key, char *value, int maxsize)
 
 	// this next line is kinda trippy
 	if (*(v = Info_ValueForKey(s, key))) {
-		// key exists, make sure we have enough room for new value, if we don't,
-		// don't change it!
+		// key exists, make sure we have enough room for new value,
+		// if we don't, don't change it!
 		if (strlen(value) - strlen(v) + strlen(s) > maxsize) {
-			Con_Printf ("Info string length exceeded\n");
+			Con_Printf ("Info 1 string length exceeded\n");
 			return;
 		}
 	}
@@ -2037,7 +2037,7 @@ void Info_SetValueForStarKey (char *s, char *key, char *value, int maxsize)
 
 	if ((int)(strlen(new) + strlen(s)) > maxsize)
 	{
-		Con_Printf ("Info string length exceeded\n");
+		Con_Printf ("Info 2 string length exceeded\n");
 		return;
 	}
 
