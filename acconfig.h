@@ -1,4 +1,5 @@
 /* Version string */
+#undef QF_VERSION
 #undef VERSION
 
 /* Define if you have the XFree86 DGA extension */

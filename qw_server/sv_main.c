@@ -1380,6 +1380,7 @@ void SV_InitLocal (void)
 	for (i=0 ; i<MAX_MODELS ; i++)
 		snprintf(localmodels[i], sizeof(localmodels[i]), "*%i", i);
 
+	Info_SetValueForStarKey (svs.info, "*qf_version", QF_VERSION, MAX_SERVERINFO_STRING);
 	Info_SetValueForStarKey (svs.info, "*version", VERSION, MAX_SERVERINFO_STRING);
 
 	// init fraglog stuff
@@ -1701,7 +1702,7 @@ void SV_Init (quakeparms_t *parms)
 	Con_Printf ("Exe: "__TIME__" "__DATE__"\n");
 	Con_Printf ("%4.1f megabyte heap\n",parms->memsize/ (1024*1024.0));	
 
-	Con_Printf ("\nServer Version %s\n\n", VERSION);
+	Con_Printf ("\nServer Version %s\n\n", QF_VERSION);
 
 	Con_Printf ("======== QuakeWorld Initialized ========\n");
 	

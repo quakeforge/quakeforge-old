@@ -810,9 +810,9 @@ Draw_ConsoleBackground
 void Draw_ConsoleBackground (int lines)
 {
 #ifdef QUAKEWORLD
-	char ver[] = "QuakeForge (GL QW) " VERSION;
+	char ver[] = "QuakeForge (GL QW) " QF_VERSION;
 #else
-	char ver[] = "QuakeForge (GL UQ) " VERSION;
+	char ver[] = "QuakeForge (GL UQ) " QF_VERSION;
 #endif
 	int x, i;
 	int y;

@@ -145,7 +145,7 @@ jmp_buf 	host_abort;
 
 void Master_Connect_f (void);
 
-float	server_version = 0;	// version of server we connected to
+char	*server_version = NULL;	// version of server we connected to
 
 char emodel_name[] = 
 	{ 'e' ^ 0xff, 'm' ^ 0xff, 'o' ^ 0xff, 'd' ^ 0xff, 'e' ^ 0xff, 'l' ^ 0xff, 0 };
@@ -184,7 +184,7 @@ CL_Version_f
 */
 void CL_Version_f (void)
 {
-	Con_Printf ("Version %s\n", VERSION);
+	Con_Printf ("Version %s\n", QF_VERSION);
 	Con_Printf ("Exe: "__TIME__" "__DATE__"\n");
 }
 
@@ -592,12 +592,17 @@ void CL_FullServerinfo_f (void)
 
 	strcpy (cl.serverinfo, Cmd_Argv(1));
 
-	if ((p = Info_ValueForKey(cl.serverinfo, "*version")) && *p) {
-		v = Q_atof(p);
+	if ((p = Info_ValueForKey(cl.serverinfo, "*qf_version")) && *p) {
 		if (v) {
 			if (!server_version)
-				Con_Printf("Version %1.2f Server\n", v);
-			server_version = v;
+				Con_Printf("QuakeForge Version %s Server\n", p);
+			server_version = strdup(p);
+		}
+	} else if ((p = Info_ValueForKey(cl.serverinfo, "*version")) && *p) {
+		if (v) {
+			if (!server_version)
+				Con_Printf("Version %s Server\n", p);
+			server_version = strdup(p);
 		}
 	}
 }
@@ -1082,6 +1087,7 @@ void CL_Init (void)
 	Info_SetValueForKey (cls.userinfo, "bottomcolor", "0", MAX_INFO_STRING);
 	Info_SetValueForKey (cls.userinfo, "rate", "2500", MAX_INFO_STRING);
 	Info_SetValueForKey (cls.userinfo, "msg", "1", MAX_INFO_STRING);
+	Info_SetValueForStarKey(cls.userinfo, "*qf_ver", QF_VERSION, MAX_INFO_STRING);
 	Info_SetValueForStarKey(cls.userinfo, "*ver", VERSION, MAX_INFO_STRING);
 
 	CL_InitInput ();
@@ -1503,7 +1509,7 @@ void Host_Init (quakeparms_t *parms)
 
 	host_initialized = true;
 
-	Con_Printf ("\nClient Version %s\n\n", VERSION);
+	Con_Printf ("\nClient Version %s\n\n", QF_VERSION);
 
 	Con_Printf ("ÄÅÅÅÅÅÅ QuakeWorld Initialized ÅÅÅÅÅÅÇ\n");	
 }

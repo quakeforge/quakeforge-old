@@ -3,7 +3,8 @@ AC_PREREQ(2.13)
 AC_INIT(common/crc.h)
 
 dnl Version of this release
-AC_DEFINE(VERSION,"0.1.0-pre")
+AC_DEFINE(QF_VERSION,"0.1.0-pre")
+AC_DEFINE(VERSION,"2.40")
 
 AC_CANONICAL_SYSTEM
 AC_LANG_C

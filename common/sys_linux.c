@@ -295,9 +295,9 @@ int main (int c, char **v) {
 	} else {
 		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | O_NDELAY);
 #ifdef QUAKEWORLD
-		printf ("QuakeForge (QW Client) v%s\n", VERSION);
+		printf ("QuakeForge (QW Client) v%s\n", QF_VERSION);
 #else
-		printf ("QuakeForge (UQuake) v%s\n", VERSION);
+		printf ("QuakeForge (UQuake) v%s\n", QF_VERSION);
 #endif
 	}
 
