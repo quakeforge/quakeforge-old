@@ -577,12 +577,17 @@ void CL_ParseServerData (void)
 	//if it exists
 	if (cflag) {
 		snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "config.cfg");
-		if ((f = Qopen(fn, "rz")) != NULL) {
+		if ((f = Qopen(fn, "r")) != NULL) {
 			Qclose(f);
 			Cbuf_AddText ("cl_warncmd 0\n");
-			Cbuf_AddText("exec config.cfg\n");
-			Cbuf_AddText("exec frontend.cfg\n");
-			Cbuf_AddText("exec autoexec.cfg\n");
+			Cbuf_AddText ("exec config.cfg\n");
+			Cbuf_AddText ("cl_warncmd 1\n");
+		}
+		snprintf(fn, sizeof(fn), "%s/%s", com_gamedir, "frontend.cfg");
+		if ((f = Qopen(fn, "r")) != NULL) {
+			Qclose(f);
+			Cbuf_AddText ("cl_warncmd 0\n");
+			Cbuf_AddText ("exec frontend.cfg\n");
 			Cbuf_AddText ("cl_warncmd 1\n");
 		}
 	}
