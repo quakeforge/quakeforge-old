@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <X11/Xlib.h>
 
-#ifdef HAS_DGA
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 #include <X11/extensions/xf86dga.h>
 #include <X11/extensions/xf86vmode.h>
 #endif
