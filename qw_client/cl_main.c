@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef _WIN32
 #include "winsock.h"
 #else
+#include <sys/types.h>
 #include <netinet/in.h>
 #endif
 
@@ -39,6 +40,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #undef model_t
 #endif
 
+#ifdef __FreeBSD__
+#if !defined (__FreeBSD_version) || (__FreeBSD_version < 300000)
+#define INADDR_LOOPBACK         (u_int32_t)0x7f000001
+#endif
+#endif
 
 // we need to declare some mouse variables here, because the menu system
 // references them even when on a unix system.
