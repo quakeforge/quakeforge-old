@@ -177,7 +177,11 @@ void COM_StripExtension (char *in, char *out);
 void COM_FileBase (char *in, char *out);
 void COM_DefaultExtension (char *path, char *extension);
 
+#ifdef __GNUC__
+char	*va(char *format, ...) __attribute__((format (printf, 1, 2)));
+#else
 char	*va(char *format, ...);
+#endif
 // does a varargs printf into a temp buffer
 
 

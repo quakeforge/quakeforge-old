@@ -595,7 +595,7 @@ R_SetupAliasBlendedFrame (int frame, aliashdr_t *paliashdr, entity_t *e)
 	{
 		e->frame_interval = paliashdr->frames[frame].interval;
 		pose += (int)(cl.time / e->frame_interval) % numposes;
-		Con_DPrintf ("0x%x\n", e);
+		Con_DPrintf ("%p\n", e);
 		Con_DPrintf ("1st: pose = %i  pose2 = %i  pose1 = %i\n",
 				pose, e->pose2, e->pose1);
 	} else

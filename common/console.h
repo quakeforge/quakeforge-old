@@ -62,9 +62,15 @@ void Con_CheckResize (void);
 void Con_Init (void);
 void Con_DrawConsole (int lines);
 void Con_Print (char *txt);
+#ifdef __GNUC__
+void Con_Printf (char *fmt, ...) __attribute__((format (printf, 1, 2)));
+void Con_DPrintf (char *fmt, ...) __attribute__((format (printf, 1, 2)));
+void Con_SafePrintf (char *fmt, ...) __attribute__((format (printf, 1, 2)));
+#else
 void Con_Printf (char *fmt, ...);
 void Con_DPrintf (char *fmt, ...);
 void Con_SafePrintf (char *fmt, ...);
+#endif
 void Con_Clear_f (void);
 void Con_DrawNotify (void);
 void Con_ClearNotify (void);
