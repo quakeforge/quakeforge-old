@@ -70,6 +70,30 @@ keyname_t keynames[] =
 	{"CTRL", K_CTRL},
 	{"SHIFT", K_SHIFT},
 	
+	// Keypad stuff..
+	{"KP_NUM", KP_NUM},
+	{"KP_DIVIDE", KP_DIVIDE},
+	{"KP_MULTIPLY", KP_MULTIPLY},
+	{"KP_MINUS", KP_MINUS},
+
+	{"KP_HOME", KP_HOME},
+	{"KP_UPARROW", KP_UPARROW},
+	{"KP_PGUP", KP_PGUP},
+	{"KP_PLUS", KP_PLUS},
+
+	{"KP_LEFTARROW", KP_LEFTARROW},
+	{"KP_5", KP_5},
+	{"KP_RIGHTARROW", KP_RIGHTARROW},
+
+	{"KP_END", KP_END},
+	{"KP_DOWNARROW", KP_DOWNARROW},
+	{"KP_PGDN", KP_PGDN},
+
+	{"KP_INS", KP_INS},
+	{"KP_DEL", KP_DEL},
+	{"KP_ENTER", KP_ENTER},
+
+
 	{"F1", K_F1},
 	{"F2", K_F2},
 	{"F3", K_F3},
@@ -212,8 +236,10 @@ void Key_Console (int key)
 	char	*clipText, *textCopied;
 #endif
 	
-	if (key == K_ENTER)
-	{	// backslash text are commands, else chat
+	switch (key) {
+	    case KP_ENTER:
+	    case K_ENTER:
+		// backslash text are commands, else chat
 		if (key_lines[edit_line][1] == '\\' || key_lines[edit_line][1] == '/')
 			Cbuf_AddText (key_lines[edit_line]+2);	// skip the >
 		else if (CheckForCommand())
@@ -235,23 +261,22 @@ void Key_Console (int key)
 			SCR_UpdateScreen ();	// force an update, because the command
 									// may take some time
 		return;
-	}
-
-	if (key == K_TAB)
-	{	// command completion
+		break;
+	    case K_TAB:
+		// command completion
 		CompleteCommand ();
 		return;
-	}
+		break;
 	
-	if (key == K_BACKSPACE || key == K_LEFTARROW)
-	{
+	    case K_BACKSPACE:
+	    case KP_LEFTARROW:
+	    case K_LEFTARROW:
 		if (key_linepos > 1)
 			key_linepos--;
 		return;
-	}
-
-	if (key == K_UPARROW)
-	{
+		break;
+	    case KP_UPARROW:
+	    case K_UPARROW:
 		do
 		{
 			history_line = (history_line - 1) & 31;
@@ -262,10 +287,9 @@ void Key_Console (int key)
 		Q_strcpy(key_lines[edit_line], key_lines[history_line]);
 		key_linepos = Q_strlen(key_lines[edit_line]);
 		return;
-	}
-
-	if (key == K_DOWNARROW)
-	{
+		break;
+	    case KP_DOWNARROW:
+	    case K_DOWNARROW:
 		if (history_line == edit_line) return;
 		do
 		{
@@ -284,34 +308,36 @@ void Key_Console (int key)
 			key_linepos = Q_strlen(key_lines[edit_line]);
 		}
 		return;
-	}
-
-	if (key == K_PGUP || key==K_MWHEELUP)
-	{
+		break;
+	    case K_MWHEELUP:
+	    case KP_PGUP:
+	    case K_PGUP:
 		con->display -= 2;
 		return;
-	}
+		break;
 
-	if (key == K_PGDN || key==K_MWHEELDOWN)
-	{
+	    case K_MWHEELDOWN:
+	    case KP_PGDN:
+	    case K_PGDN:
 		con->display += 2;
 		if (con->display > con->current)
 			con->display = con->current;
 		return;
-	}
+		break;
 
-	if (key == K_HOME)
-	{
+	    case KP_HOME:
+	    case K_HOME:
 		con->display = con->current - con_totallines + 10;
 		return;
-	}
+		break;
 
-	if (key == K_END)
-	{
+	    case KP_END:
+	    case K_END:
 		con->display = con->current;
 		return;
+		break;
+
 	}
-	
 #ifdef _WIN32
 	if ((key=='V' || key=='v') && GetKeyState(VK_CONTROL)<0) {
 		if (OpenClipboard(NULL)) {
@@ -361,7 +387,7 @@ int			chat_bufferlen = 0;
 void Key_Message (int key)
 {
 
-	if (key == K_ENTER)
+	if (key == K_ENTER || key == KP_ENTER)
 	{
 		if (chat_team)
 			Cbuf_AddText ("say_team \"");
@@ -610,6 +636,16 @@ void Key_Init (void)
 //
 	for (i=32 ; i<128 ; i++)
 		consolekeys[i] = true;
+	consolekeys[KP_ENTER] = true;
+	consolekeys[KP_LEFTARROW] = true;
+	consolekeys[KP_RIGHTARROW] = true;
+	consolekeys[KP_UPARROW] = true;
+	consolekeys[KP_DOWNARROW] = true;
+	consolekeys[KP_HOME] = true;
+	consolekeys[KP_END] = true;
+	consolekeys[KP_PGUP] = true;
+	consolekeys[KP_PGDN] = true;
+
 	consolekeys[K_ENTER] = true;
 	consolekeys[K_TAB] = true;
 	consolekeys[K_LEFTARROW] = true;

@@ -672,7 +672,7 @@ void VID_Init(unsigned char *palette)
 		scantokey[ 52] = '.';
 		scantokey[ 53] = '/';
 		scantokey[ 54] = K_SHIFT; //right
-		scantokey[ 55] = '*'; //keypad
+		scantokey[ 55] = KP_MULTIPLY; //keypad
 		scantokey[ 56] = K_ALT; //left
 		scantokey[ 57] = ' ';
 		// 58 caps lock
@@ -688,26 +688,26 @@ void VID_Init(unsigned char *palette)
 		scantokey[ 68] = K_F10;
 		// 69 numlock
 		// 70 scrollock
-		scantokey[ 71] = K_HOME;
-		scantokey[ 72] = K_UPARROW;
-		scantokey[ 73] = K_PGUP;
-		scantokey[ 74] = '-';
-		scantokey[ 75] = K_LEFTARROW;
-		scantokey[ 76] = '5';
-		scantokey[ 77] = K_RIGHTARROW;
-		scantokey[ 79] = K_END;
-		scantokey[ 78] = '+';
-		scantokey[ 80] = K_DOWNARROW;
-		scantokey[ 81] = K_PGDN;
-		scantokey[ 82] = K_INS;
-		scantokey[ 83] = K_DEL;
+		scantokey[ 71] = KP_HOME;
+		scantokey[ 72] = KP_UPARROW;
+		scantokey[ 73] = KP_PGUP;
+		scantokey[ 74] = KP_MINUS;
+		scantokey[ 75] = KP_LEFTARROW;
+		scantokey[ 76] = KP_5;
+		scantokey[ 77] = KP_RIGHTARROW;
+		scantokey[ 79] = KP_END;
+		scantokey[ 78] = KP_PLUS;
+		scantokey[ 80] = KP_DOWNARROW;
+		scantokey[ 81] = KP_PGDN;
+		scantokey[ 82] = KP_INS;
+		scantokey[ 83] = KP_DEL;
 		// 84 to 86 not used
 		scantokey[ 87] = K_F11;
 		scantokey[ 88] = K_F12;
 		// 89 to 95 not used
-		scantokey[ 96] = K_ENTER; //keypad enter
+		scantokey[ 96] = KP_ENTER; //keypad enter
 		scantokey[ 97] = K_CTRL; //right
-		scantokey[ 98] = '/';
+		scantokey[ 98] = KP_DIVIDE;
 		scantokey[ 99] = K_F12; // print screen, bind to screenshot by default
 		scantokey[100] = K_ALT; // right
 

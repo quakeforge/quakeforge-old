@@ -796,10 +796,10 @@ int XLateKey(XKeyEvent *ev)
 		case XK_F33: key = K_END; break;
 		case XK_F35: key = K_PGDN; break;
 		case XK_Insert:
-		case XK_KP_Insert: key = K_INS; break;
+		case XK_KP_Insert: key = KP_INS; break;
 		case XK_F24: key = '-'; break;
-		case XK_KP_Add: key = '+'; break;
-		case XK_KP_Subtract: key = '-'; break;
+		case XK_KP_Add: key = KP_PLUS; break;
+		case XK_KP_Subtract: key = KP_MINUS; break;
 		case XK_F25: key = '/'; break;
 		case XK_F26: key = '*'; break;
 

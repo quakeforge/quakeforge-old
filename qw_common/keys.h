@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	K_UPARROW		128
 #define	K_DOWNARROW		129
 #define	K_LEFTARROW		130
-#define	K_RIGHTARROW	131
+#define	K_RIGHTARROW		131
 
 #define	K_ALT			132
 #define	K_CTRL			133
@@ -55,6 +55,32 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	K_PGUP			150
 #define	K_HOME			151
 #define	K_END			152
+
+//
+// Keypad stuff..
+//
+
+#define KP_NUM			153
+#define KP_DIVIDE		154
+#define KP_MULTIPLY		155
+
+#define	KP_HOME			156
+#define	KP_UPARROW		157
+#define	KP_PGUP			158
+#define KP_MINUS		159
+
+#define	KP_LEFTARROW		160
+#define	KP_5			161
+#define	KP_RIGHTARROW		162
+#define KP_PLUS 		163
+
+#define	KP_END			164
+#define	KP_DOWNARROW		165
+#define	KP_PGDN			166
+
+#define	KP_INS			167
+#define	KP_DEL			168
+#define	KP_ENTER		169
 
 #define K_PAUSE			255
 

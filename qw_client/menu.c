@@ -316,18 +316,21 @@ void M_Main_Key (int key)
 			CL_NextDemo ();
 		break;
 		
+	case KP_DOWNARROW:
 	case K_DOWNARROW:
 		S_LocalSound ("misc/menu1.wav");
 		if (++m_main_cursor >= MAIN_ITEMS)
 			m_main_cursor = 0;
 		break;
 
+	case KP_UPARROW:
 	case K_UPARROW:
 		S_LocalSound ("misc/menu1.wav");
 		if (--m_main_cursor < 0)
 			m_main_cursor = MAIN_ITEMS - 1;
 		break;
 
+	case KP_ENTER:
 	case K_ENTER:
 		m_entersound = true;
 
@@ -570,6 +573,7 @@ void M_Options_Key (int k)
 		M_Menu_Main_f ();
 		break;
 		
+	case KP_ENTER:
 	case K_ENTER:
 		m_entersound = true;
 		switch (options_cursor)
@@ -593,6 +597,7 @@ void M_Options_Key (int k)
 		}
 		return;
 	
+	case KP_UPARROW:
 	case K_UPARROW:
 		S_LocalSound ("misc/menu1.wav");
 		options_cursor--;
@@ -600,6 +605,7 @@ void M_Options_Key (int k)
 			options_cursor = OPTIONS_ITEMS-1;
 		break;
 
+	case KP_DOWNARROW:
 	case K_DOWNARROW:
 		S_LocalSound ("misc/menu1.wav");
 		options_cursor++;
@@ -607,10 +613,12 @@ void M_Options_Key (int k)
 			options_cursor = 0;
 		break;	
 
+	case KP_LEFTARROW:
 	case K_LEFTARROW:
 		M_AdjustSliders (-1);
 		break;
 
+	case KP_RIGHTARROW:
 	case K_RIGHTARROW:
 		M_AdjustSliders (1);
 		break;
@@ -630,7 +638,7 @@ void M_Options_Key (int k)
 #endif
 	)
 	{
-		if (k == K_UPARROW)
+		if ((k == K_UPARROW) || (k == KP_UPARROW))
 			options_cursor = 14;
 		else
 			options_cursor = 0;
@@ -800,6 +808,8 @@ void M_Keys_Key (int k)
 		M_Menu_Options_f ();
 		break;
 
+	case KP_LEFTARROW:
+	case KP_UPARROW:
 	case K_LEFTARROW:
 	case K_UPARROW:
 		S_LocalSound ("misc/menu1.wav");
@@ -808,6 +818,8 @@ void M_Keys_Key (int k)
 			keys_cursor = NUMCOMMANDS-1;
 		break;
 
+	case KP_DOWNARROW:
+	case KP_RIGHTARROW:
 	case K_DOWNARROW:
 	case K_RIGHTARROW:
 		S_LocalSound ("misc/menu1.wav");
@@ -816,6 +828,7 @@ void M_Keys_Key (int k)
 			keys_cursor = 0;
 		break;
 
+	case KP_ENTER:		// go into bind mode
 	case K_ENTER:		// go into bind mode
 		M_FindKeysForCommand (bindnames[keys_cursor][0], keys);
 		S_LocalSound ("misc/menu2.wav");
@@ -825,6 +838,7 @@ void M_Keys_Key (int k)
 		break;
 
 	case K_BACKSPACE:		// delete bindings
+	case KP_DEL:				// delete bindings
 	case K_DEL:				// delete bindings
 		S_LocalSound ("misc/menu2.wav");
 		M_UnbindCommand (bindnames[keys_cursor][0]);
@@ -885,6 +899,8 @@ void M_Help_Key (int key)
 		M_Menu_Main_f ();
 		break;
 		
+	case KP_UPARROW:
+	case KP_RIGHTARROW:
 	case K_UPARROW:
 	case K_RIGHTARROW:
 		m_entersound = true;
@@ -892,6 +908,8 @@ void M_Help_Key (int key)
 			help_page = 0;
 		break;
 
+	case KP_DOWNARROW:
+	case KP_LEFTARROW:
 	case K_DOWNARROW:
 	case K_LEFTARROW:
 		m_entersound = true;
@@ -1018,7 +1036,7 @@ void M_SinglePlayer_Draw (void) {
 }
 
 void M_SinglePlayer_Key (key) {
-	if (key == K_ESCAPE || key==K_ENTER)
+	if (key == K_ESCAPE || key==K_ENTER || key == KP_ENTER)
 		m_state = m_main;
 }
 
@@ -1046,7 +1064,7 @@ void M_MultiPlayer_Draw (void) {
 }
 
 void M_MultiPlayer_Key (key) {
-	if (key == K_ESCAPE || key==K_ENTER)
+	if (key == K_ESCAPE || key==K_ENTER || key==KP_ENTER)
 		m_state = m_main;
 }
 

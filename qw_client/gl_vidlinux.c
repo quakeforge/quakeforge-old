@@ -362,15 +362,33 @@ void Init_KBD(void)
 		for (i=0 ; i<128 ; i++)
 			scantokey[i] = ' ';
 
+		scantokey[69] = KP_NUM;
+		scantokey[98] = KP_DIVIDE;
+		scantokey[55] = KP_MULTIPLY;
+
+		scantokey[71] = KP_HOME;
+		scantokey[72] = KP_UPARROW;
+		scantokey[73] = KP_PGUP;
+		scantokey[74] = KP_MINUS;
+
+		scantokey[75] = KP_LEFTARROW;
+		scantokey[76] = KP_5;
+		scantokey[77] = KP_RIGHTARROW;
+		scantokey[78] = KP_PLUS;
+
+		scantokey[79] = KP_END;
+		scantokey[80] = KP_DOWNARROW;
+		scantokey[81] = KP_PGDN;
+
+		scantokey[82] = KP_INS;
+		scantokey[83] = KP_DEL;
+		scantokey[96] = KP_ENTER;
+
 		scantokey[42] = K_SHIFT;
 		scantokey[54] = K_SHIFT;
-		scantokey[72] = K_UPARROW;
 		scantokey[103] = K_UPARROW;
-		scantokey[80] = K_DOWNARROW;
 		scantokey[108] = K_DOWNARROW;
-		scantokey[75] = K_LEFTARROW;
 		scantokey[105] = K_LEFTARROW;
-		scantokey[77] = K_RIGHTARROW;
 		scantokey[106] = K_RIGHTARROW;
 		scantokey[29] = K_CTRL;
 		scantokey[97] = K_CTRL;
@@ -378,12 +396,6 @@ void Init_KBD(void)
 		scantokey[100] = K_ALT;
 //		scantokey[58] = JK_CAPS;
 //		scantokey[69] = JK_NUM_LOCK;
-		scantokey[71] = K_HOME;
-		scantokey[73] = K_PGUP;
-		scantokey[79] = K_END;
-		scantokey[81] = K_PGDN;
-		scantokey[82] = K_INS;
-		scantokey[83] = K_DEL;
 		scantokey[1 ] = K_ESCAPE;
 		scantokey[28] = K_ENTER;
 		scantokey[15] = K_TAB;
@@ -459,8 +471,6 @@ void Init_KBD(void)
 		scantokey[21] = 'y';       
 		scantokey[44] = 'z';       
 
-		scantokey[78] = '+';
-		scantokey[74] = '-';
 
 		if (keyboard_init())
 			Sys_Error("keyboard_init() failed");
