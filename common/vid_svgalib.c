@@ -1,12 +1,12 @@
 /*
 	vid_svgalib.c
 
-	inux SVGALib video routines
+	Linux SVGALib video routines
 
 	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999-2000  Nelson Rush.
 	Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
-	Copyright (C) 1999-2000  XoXus [xoxus@usa.net]
+	Copyright (C) 1999-2000  David Symonds [xoxus@usa.net]
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
@@ -466,7 +466,6 @@ VID_SetMode(int modenum, unsigned char *palette)
 	D_InitCaches (vid_surfcache, tsize);
 
 	/* get goin' */
-	/* XoXus: need to check return values! */
 	err = vga_setmode(current_mode);
 	if (err) {
 		Sys_Error("Video mode failed: %d\n",modenum);
@@ -509,7 +508,6 @@ VID_Init(unsigned char *palette)
 #endif
 
 	if (UseDisplay) {
-		/* XoXus: return values need to be checked! */
 		err = vga_init();
 		if (err)
 			Sys_Error("SVGALib failed to allocate a new VC\n");
@@ -553,11 +551,12 @@ VID_Init(unsigned char *palette)
 
 		VID_SetPalette(palette);
 
-		/* We do want to run in the background when switched away */
 		/* XoXus: Running in background is just plain bad... */
 		vga_runinbackground(0);
 	}
-	IN_Init();
+
+	/* XoXus: Why was input initialised here?!? */
+	/* IN_Init(); */
 }
 
 

@@ -216,10 +216,11 @@ D: CD-ROM support/optimizations
 D: DGA/XMESA support.
 D: On-the-fly resizing of window in *-gl versions.
 
-N: David Symonds
+N: David Symonds (XoXus)
 E: xoxus@usa.net
 D: svgalib fixes
 D: warnings cleanup and XShm checking
+D: fix for svgalib failing to de-init keyboard
 
 N: Jeff Teunissen (Deek)
 E: deek@quakeforge.net
