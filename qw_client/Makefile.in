@@ -57,6 +57,11 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
 
 COMMON_LIB=common_lib.a
 
+SOUND_STYLE      = @SOUND_STYLE@
+ifeq ($(SOUND_STYLE),ALSA)
+LIBS += -lasound
+endif
+
 ifeq ($(HAS_OGL),yes)
 GLQUAKE   =$(BIN_PREFIX)-gl
 endif
@@ -206,6 +211,18 @@ $(OBJ_PATTERN): $(COMMON_DIR)/%.c
 $(OBJ_PATTERN): $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
+$(BUILD_DIR)/client/gl/%.o: $(COMMON_DIR)/%.c
+	$(CC) $(GL_CFLAGS) $(CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/client/gl/%.o: $(COMMON_DIR)/%.s
+	$(CC) $(GL_CFLAGS) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/client/gl/%.o: $(SRC_DIR)/%.c
+	$(CC) $(GL_CFLAGS) $(CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/client/gl/%.o: $(SRC_DIR)/%.s
+	$(CC) $(GL_CFLAGS) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
 $(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
@@ -217,7 +234,7 @@ client_DIR:
 # GL targets
 
 gl_DIR:
-	@DIR=client; $(MAKE_SURE_DIR)
+	@DIR=client/gl; $(MAKE_SURE_DIR)
 
 ###########################################################################
 #
@@ -375,7 +392,7 @@ endif
 ifneq ($(GLQUAKE),)
 ALL_GL_SRC  = $(GL_REND_SRC) \
 	gl_vidglx.c dga_check.c
-ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/client/%,$(addsuffix .@OBJEXT@,\
+ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/client/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s))) \
 	      $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
 
@@ -388,7 +405,7 @@ $(BUILD_DIR)/client/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
 $(BUILD_DIR)/client/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
-$(GLQUAKE): client_DIR $(BUILD_DIR)/../$(GLQUAKE)
+$(GLQUAKE): client_DIR gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
 
 $(BUILD_DIR)/../$(GLQUAKE): $(ALL_GL_OBJS)
 	$(CC) $(CFLAGS) $(ALL_GL_OBJS) $(GL_LDFLAGS) $(LDFLAGS) $(LIBS) \

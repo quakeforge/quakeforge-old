@@ -54,7 +54,7 @@ QUAKE FILESYSTEM
 */
 
 /* Begin Generations */
-#ifdef _EXPERIMENTAL_
+#if defined(_EXPERIMENTAL_) && defined(GENERATIONS)
 #include "unzip.h"
 #endif
 
@@ -479,7 +479,7 @@ pack_t *COM_LoadPackFile (char *packfile)
 	return pack;
 }
 
-#ifdef _EXPERIMENTAL_
+#if defined(_EXPERIMENTAL_) && defined(GENERATIONS)
 int
 COM_pak3_checkfile(unzFile *pak, const char *path)
 {
