@@ -53,7 +53,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #include <stdlib.h>
 #include <stdarg.h>
+#ifdef HAVE_MALLOC_H
 #include <malloc.h>
+#endif
 
 #include <cvar.h>
 #include <qstructs.h>
