@@ -278,12 +278,11 @@ void Key_Console (int key)
 				SCR_UpdateScreen ();	// force an update, because the command
 										// may take some time
 			return;
-			break;
-	    case K_TAB:
+
+		case K_TAB:
 			// command completion
 			CompleteCommand ();
 			return;
-			break;
 	
 		case K_BACKSPACE:
 			if (key_linepos > 1)
@@ -292,29 +291,18 @@ void Key_Console (int key)
 				key_linepos--;
 			}
 			return;
-			break;
 
 		case KP_RIGHTARROW:
 		case K_RIGHTARROW:
-			if (strlen(key_lines[edit_line]) == key_linepos)
-			{
-				if (strlen(key_lines[(edit_line + 31) & 31]) <= key_linepos)
-					return;	// no character to get
-				key_lines[edit_line][key_linepos] = key_lines[(edit_line + 31) & 31][key_linepos];
-				key_linepos++;
-				key_lines[edit_line][key_linepos] = 0;
-			}		
-			else
+			if (key_linepos < strlen(key_lines[edit_line]))
 				key_linepos++;
 			return;	
-			break;
 
 		case KP_LEFTARROW:
 	    case K_LEFTARROW:
 			if (key_linepos > 1)
 				key_linepos--;
 			return;
-			break;
 
 	    case KP_UPARROW:
 	    case K_UPARROW:
@@ -327,7 +315,7 @@ void Key_Console (int key)
 			Q_strcpy(key_lines[edit_line], key_lines[history_line]);
 			key_linepos = Q_strlen(key_lines[edit_line]);
 			return;
-			break;
+
 	    case KP_DOWNARROW:
 	    case K_DOWNARROW:
 			if (history_line == edit_line) return;
@@ -344,13 +332,12 @@ void Key_Console (int key)
 				key_linepos = Q_strlen(key_lines[edit_line]);
 			}
 			return;
-			break;
+			
 	    case K_MWHEELUP:
 	    case KP_PGUP:
 	    case K_PGUP:
 			con->display -= 2;
 			return;
-			break;
 
 	    case K_MWHEELDOWN:
 	    case KP_PGDN:
@@ -359,20 +346,16 @@ void Key_Console (int key)
 			if (con->display > con->current)
 				con->display = con->current;
 			return;
-			break;
 
 	    case KP_HOME:
 	    case K_HOME:
 			con->display = con->current - con_totallines + 10;
 			return;
-			break;
 
 	    case KP_END:
 	    case K_END:
 			con->display = con->current;
 			return;
-			break;
-
 	}
 #ifdef _WIN32
 	if ((key=='V' || key=='v') && GetKeyState(VK_CONTROL)<0) {
@@ -407,15 +390,14 @@ void Key_Console (int key)
 		
 	if (key_linepos < MAXCMDLINE-1)
 	{
-// Tonik -->
 		i = strlen(key_lines[edit_line]) - 1;			
 		if (i == MAXCMDLINE-2) i--;
 		for (; i >= key_linepos; i--)
 			key_lines[edit_line][i + 1] = key_lines[edit_line][i];
-// <-- Tonik
+		i = key_lines[edit_line][key_linepos];
 		key_lines[edit_line][key_linepos] = key;
 		key_linepos++;
-		if (!i)	// FIXME
+		if (!i)	// // only null terminate if at the end
 			key_lines[edit_line][key_linepos] = 0;
 	}
 
