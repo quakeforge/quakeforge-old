@@ -1161,7 +1161,7 @@ void CL_RelinkEntities (void)
 // interpolate player info
 //
 	for (i=0 ; i<3 ; i++)
-		cl.simvel[i] = cl.mvelocity[1][i] + 
+		cl.velocity[i] = cl.mvelocity[1][i] + 
 			frac * (cl.mvelocity[0][i] - cl.mvelocity[1][i]);
 
 	if (cls.demoplayback)

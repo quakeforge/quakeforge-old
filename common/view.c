@@ -35,6 +35,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern int	onground;
 
+/*
+
+The view is allowed to move slightly from it's true position for bobbing,
+but if it exceeds 8 pixels linear distance (spherical, not box), the list of
+entities sent from the server may not include everything in the pvs, especially
+when crossing a water boudnary.
+
+*/
+
 cvar_t	*lcd_x;			// FIXME: make this work sometime...
 cvar_t	*lcd_yaw;
 
@@ -82,10 +91,7 @@ player_state_t		*view_message;
 /*
 	V_CalcRoll
 
-	The view is allowed to move slightly from it's true position for
-	bobbing, but if it exceeds 8 pixels linear distance (spherical, not
-	box), the list of entities sent from the server may not include
-	everything in the pvs, especially when crossing a water boudnary.
+	(desc)
 */
 float
 V_CalcRoll (vec3_t angles, vec3_t velocity)
@@ -117,11 +123,14 @@ V_CalcRoll (vec3_t angles, vec3_t velocity)
 
 	(desc)
 */
-float
-V_CalcBob ( void )
+float V_CalcBob (void)
 {
-	static double	bobtime;
+#ifdef QUAKEWORLD
+	static	double	bobtime;
 	static float	bob;
+#else
+	float	bob;
+#endif
 	float	cycle;
 	
 #ifdef QUAKEWORLD
@@ -130,22 +139,31 @@ V_CalcBob ( void )
 
 	if (onground == -1)
 		return bob;		// just use old value
-#endif
 
 	bobtime += host_frametime;
 	cycle = bobtime - (int)(bobtime/cl_bobcycle->value)*cl_bobcycle->value;
+#else
+	cycle = cl.time - (int)(cl.time/cl_bobcycle->value)*cl_bobcycle->value;
+#endif
 	cycle /= cl_bobcycle->value;
 	if (cycle < cl_bobup->value)
 		cycle = M_PI * cycle / cl_bobup->value;
 	else
 		cycle = M_PI + M_PI*(cycle-cl_bobup->value)/(1.0 - cl_bobup->value);
 
-	// bob is proportional to simulated velocity in the xy plane
-	// (don't count Z, or jumping messes it up)
+// bob is proportional to [simulated] velocity in the xy plane
+// (don't count Z, or jumping messes it up)
 
+#ifdef QUAKEWORLD
 	bob = sqrt(cl.simvel[0]*cl.simvel[0] + cl.simvel[1]*cl.simvel[1]) * cl_bob->value;
+#else
+	bob = sqrt(cl.velocity[0]*cl.velocity[0] + cl.velocity[1]*cl.velocity[1]) * cl_bob->value;
+#endif
 	bob = bob*0.3 + bob*0.7*sin(cycle);
-	bob = bound( -7, bob, 4);
+	if (bob > 4)
+		bob = 4;
+	else if (bob < -7)
+		bob = -7;
 	return bob;
 	
 }
@@ -184,7 +202,7 @@ V_StopPitchDrift (void)
 
 	Move client pitch angle towards cl.idealpitch sent by the server.
 
-	If user is adjusting pitch manually, either with lookup/lookdown,
+	If the user is adjusting pitch manually, either with lookup/lookdown,
 	mlook and mouse, or klook and keyboard, pitch drifting is constantly
 	stopped.
 
@@ -194,11 +212,11 @@ V_StopPitchDrift (void)
 void
 V_DriftPitch ( void )
 {
-	float	delta, move;
+	float		delta, move;
 
 #ifdef QUAKEWORLD
 	if (view_message->onground == -1 || cls.demoplayback ) {
-#elif UQUAKE
+#else
 	if (noclip_anglehack || !cl.onground || cls.demoplayback ) {
 #endif
 		cl.driftmove = 0;
@@ -210,7 +228,7 @@ V_DriftPitch ( void )
 	if ( cl.nodrift ) {
 #ifdef QUAKEWORLD
 		if ( fabs(cl.frames[(cls.netchan.outgoing_sequence-1)&UPDATE_MASK].cmd.forwardmove) < 200)
-#elif UQUAKE
+#else
 		if ( fabs(cl.cmd.forwardmove) < cl_forwardspeed->value)
 #endif
 			cl.driftmove = 0;
@@ -324,6 +342,9 @@ V_ParseDamage ( void )
 	vec3_t	from;
 	int		i;
 	vec3_t	forward, right, up;
+#ifdef UQUAKE
+	entity_t	*ent;
+#endif
 	float	side;
 	float	count;
 	
@@ -355,10 +376,20 @@ V_ParseDamage ( void )
 	}
 
 	// calculate view angle kicks
+#ifdef QUAKEWORLD
 	VectorSubtract (from, cl.simorg, from);
+#else
+	ent = &cl_entities[cl.playernum + 1];
+	
+	VectorSubtract (from, ent->origin, from);
+#endif
 	VectorNormalize (from);
 	
+#ifdef QUAKEWORLD
 	AngleVectors (cl.simangles, forward, right, up);
+#else
+	AngleVectors (ent->angles, forward, right, up);
+#endif
 
 	side = DotProduct (from, right);
 	v_dmg_roll = count*side*v_kickroll->value;
@@ -378,10 +409,9 @@ V_ParseDamage ( void )
 void
 V_cshift_f ( void )
 {
-	int i;
-	
-	for ( i=0 ; i<3 ; i++ )
-		cshift_empty.destcolor[i] = atoi(Cmd_Argv(i+1));
+	cshift_empty.destcolor[0] = atoi(Cmd_Argv(1));
+	cshift_empty.destcolor[1] = atoi(Cmd_Argv(2));
+	cshift_empty.destcolor[2] = atoi(Cmd_Argv(3));
 	cshift_empty.percent = atoi(Cmd_Argv(4));
 }
 
@@ -408,27 +438,31 @@ V_BonusFlash_f ( void )
 void
 V_SetContentsColor (int contents)
 {
+#ifdef QUAKEWORLD
 	if (!v_contentblend->value) {
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
 		return;
 	}
-
-	switch (contents) {
-		case CONTENTS_EMPTY:
-			cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
-			break;
-		case CONTENTS_LAVA:
-			cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
-			break;
-		case CONTENTS_SOLID:
-#ifdef UQUAKE
-			cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
 #endif
-		case CONTENTS_SLIME:
-			cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
-			break;
-		default:
-			cl.cshifts[CSHIFT_CONTENTS] = cshift_water;
+	switch (contents)
+	{
+	case CONTENTS_SOLID:
+#ifdef QUAKEWORLD
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
+#else
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
+#endif
+	case CONTENTS_EMPTY:
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
+		break;
+	case CONTENTS_LAVA:
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
+		break;
+	case CONTENTS_SLIME:
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
+		break;
+	default:
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_water;
 	}
 }
 
@@ -479,11 +513,15 @@ V_CalcBlend ( void )
 	b = 0;
 	a = 0;
 
-	for (j=0 ; j<NUM_CSHIFTS ; j++) {
+	for (j=0 ; j<NUM_CSHIFTS ; j++)	
+	{
 		if (!gl_cshiftpercent->value)
 			continue;
 
 		a2 = ((cl.cshifts[j].percent * gl_cshiftpercent->value) / 100.0) / 255.0;
+
+//		a2 = (cl.cshifts[j].percent/2)/255.0;	// from qw
+//		a2 = cl.cshifts[j].percent/255.0;		// from uq
 
 		if (!a2)
 			continue;
@@ -534,11 +572,15 @@ CalcGunAngle ( void )
 	pitch = -r_refdef.viewangles[PITCH];
 
 	yaw = angledelta(yaw - r_refdef.viewangles[YAW]) * 0.4;
-	yaw = bound(-10, yaw, 10);
-
+	if (yaw > 10)
+		yaw = 10;
+	if (yaw < -10)
+		yaw = -10;
 	pitch = angledelta(-pitch - r_refdef.viewangles[PITCH]) * 0.4;
-	pitch = bound(-10, pitch, 10);
-
+	if (pitch > 10)
+		pitch = 10;
+	if (pitch < -10)
+		pitch = -10;
 	move = host_frametime*20;
 	if ( yaw > oldyaw ) {
 		if (oldyaw + move < yaw)
@@ -561,8 +603,12 @@ CalcGunAngle ( void )
 
 	cl.viewent.angles[YAW] = r_refdef.viewangles[YAW] + yaw;
 	cl.viewent.angles[PITCH] = - (r_refdef.viewangles[PITCH] + pitch);
+#ifdef UQUAKE
+	cl.viewent.angles[ROLL] -= v_idlescale->value * sin(cl.time*v_iroll_cycle->value) * v_iroll_level->value;
+	cl.viewent.angles[PITCH] -= v_idlescale->value * sin(cl.time*v_ipitch_cycle->value) * v_ipitch_level->value;
+	cl.viewent.angles[YAW] -= v_idlescale->value * sin(cl.time*v_iyaw_cycle->value) * v_iyaw_level->value;
+#endif
 }
-
 
 /*
 	V_BoundOffsets
@@ -573,6 +619,15 @@ CalcGunAngle ( void )
 void
 V_BoundOffsets ( void )
 {
+#ifdef UQUAKE
+	entity_t	*ent;
+	
+	ent = &cl_entities[cl.playernum + 1];
+#endif
+// absolutely bound refresh reletive to entity clipping hull
+// so the view can never be inside a solid wall
+
+#ifdef QUAKEWORLD
 	if (r_refdef.vieworg[0] < cl.simorg[0] - 14)
 		r_refdef.vieworg[0] = cl.simorg[0] - 14;
 	else if (r_refdef.vieworg[0] > cl.simorg[0] + 14)
@@ -585,8 +640,21 @@ V_BoundOffsets ( void )
 		r_refdef.vieworg[2] = cl.simorg[2] - 22;
 	else if (r_refdef.vieworg[2] > cl.simorg[2] + 30)
 		r_refdef.vieworg[2] = cl.simorg[2] + 30;
+#else
+	if (r_refdef.vieworg[0] < ent->origin[0] - 14)
+		r_refdef.vieworg[0] = ent->origin[0] - 14;
+	else if (r_refdef.vieworg[0] > ent->origin[0] + 14)
+		r_refdef.vieworg[0] = ent->origin[0] + 14;
+	if (r_refdef.vieworg[1] < ent->origin[1] - 14)
+		r_refdef.vieworg[1] = ent->origin[1] - 14;
+	else if (r_refdef.vieworg[1] > ent->origin[1] + 14)
+		r_refdef.vieworg[1] = ent->origin[1] + 14;
+	if (r_refdef.vieworg[2] < ent->origin[2] - 22)
+		r_refdef.vieworg[2] = ent->origin[2] - 22;
+	else if (r_refdef.vieworg[2] > ent->origin[2] + 30)
+		r_refdef.vieworg[2] = ent->origin[2] + 30;
+#endif
 }
-
 
 /*
 	V_AddIdle
@@ -599,10 +667,11 @@ V_AddIdle ( void )
 	r_refdef.viewangles[ROLL] += v_idlescale->value * sin(cl.time*v_iroll_cycle->value) * v_iroll_level->value;
 	r_refdef.viewangles[PITCH] += v_idlescale->value * sin(cl.time*v_ipitch_cycle->value) * v_ipitch_level->value;
 	r_refdef.viewangles[YAW] += v_idlescale->value * sin(cl.time*v_iyaw_cycle->value) * v_iyaw_level->value;
-
+#ifdef QUAKEWORLD
 	cl.viewent.angles[ROLL] -= v_idlescale->value * sin(cl.time*v_iroll_cycle->value) * v_iroll_level->value;
 	cl.viewent.angles[PITCH] -= v_idlescale->value * sin(cl.time*v_ipitch_cycle->value) * v_ipitch_level->value;
 	cl.viewent.angles[YAW] -= v_idlescale->value * sin(cl.time*v_iyaw_cycle->value) * v_iyaw_level->value;
+#endif
 }
 
 
@@ -616,7 +685,11 @@ V_CalcViewRoll (void)
 {
 	float		side;
 		
+#ifdef QUAKEWORLD
 	side = V_CalcRoll (cl.simangles, cl.simvel);
+#else
+	side = V_CalcRoll (cl_entities[cl.playernum + 1].angles, cl.velocity);
+#endif
 	r_refdef.viewangles[ROLL] += side;
 
 	if (v_dmg_time > 0) {
@@ -644,22 +717,34 @@ void
 V_CalcIntermissionRefdef ( void )
 {
 	entity_t	*view;
+#ifdef UQUAKE
+	entity_t	*ent;
+#endif
 	float		old;
 
-	// view is the weapon model
+// view is the weapon model
+#ifdef UQUAKE
+// ent is the player model (visible when out of body)
+	ent = &cl_entities[cl.playernum + 1];
+// view is the weapon model (only visible from inside body)
+#endif
 	view = &cl.viewent;
 
+#ifdef QUAKEWORLD
 	VectorCopy (cl.simorg, r_refdef.vieworg);
 	VectorCopy (cl.simangles, r_refdef.viewangles);
+#else
+	VectorCopy (ent->origin, r_refdef.vieworg);
+	VectorCopy (ent->angles, r_refdef.viewangles);
+#endif
 	view->model = NULL;
 
-	// allways idle in intermission
+// allways idle in intermission
 	old = v_idlescale->value;
 	v_idlescale->value = 1;
 	V_AddIdle ();
 	v_idlescale->value = old;
 }
-
 
 /*
 	V_CalcRefdef
@@ -669,54 +754,72 @@ V_CalcIntermissionRefdef ( void )
 void
 V_CalcRefdef ( void )
 {
-	entity_t		*view;
-	int				i;
-	vec3_t			forward, right, up;
-#ifdef UQUAKE
-	vec3_t			angles;
-#endif
-	float			bob;
-	static float	oldz = 0;
-	int 			vh;
-
-	// Set up view height
+	entity_t	*view;
 #ifdef QUAKEWORLD
-	vh = cl.qfserver ? cl.stats[STAT_VIEWHEIGHT] : 22;
-#elif UQUAKE
-	vh = cl.viewheight;
+	int			h;
+#else
+	entity_t	*ent;
+	vec3_t		angles;
 #endif
+	int			i;
+	vec3_t		forward, right, up;
+	float		bob;
+	static float oldz = 0;
 
+#ifdef QUAKEWORLD
+	h = cl.qfserver ? cl.stats[STAT_VIEWHEIGHT] : 22;
+#endif
 	V_DriftPitch ();
 
-	// view is the weapon model (only visible from inside body)
+#ifdef UQUAKE
+// ent is the player model (visible when out of body)
+	ent = &cl_entities[cl.playernum + 1];
+#endif
+// view is the weapon model (only visible from inside body)
 	view = &cl.viewent;
 
+#ifdef UQUAKE
+// transform the view offset by the model's matrix to get the offset from
+// model origin for the view
+	ent->angles[YAW] = cl.viewangles[YAW];	// the model should face
+										// the view dir
+	ent->angles[PITCH] = -cl.viewangles[PITCH];	// the model should face
+										// the view dir
+										
+	
+#endif
 	bob = V_CalcBob ();
 	
-	// refresh position from simulated origin
+#ifdef QUAKEWORLD
+// refresh position from simulated origin
 	VectorCopy (cl.simorg, r_refdef.vieworg);
-#ifdef QUAKEWORLD
+
 	r_refdef.vieworg[2] += bob;
-#elif UQUAKE
-	r_refdef.vieworg[2] += vh + bob;
+#else
+// refresh position
+	VectorCopy (ent->origin, r_refdef.vieworg);
+	r_refdef.vieworg[2] += cl.viewheight + bob;
 #endif
 
-	/*
-		never let it sit exactly on a node line, because a water plane can
-		dissapear when viewed with the eye exactly on it. the server protocol
-		only specifies to 1/N pixel, so add VIEWORG_PIXADJUST in each axis
-	*/
+// never let it sit exactly on a node line, because a water plane can
+// dissapear when viewed with the eye exactly on it.
 #ifdef QUAKEWORLD
-#define VIEWORG_PIXADJUST	16
-#elif UQUAKE
-#define VIEWORG_PIXADJUST	32
+// the server protocol only specifies to 1/8 pixel, so add 1/16 in each axis
+	r_refdef.vieworg[0] += 1.0/16;
+	r_refdef.vieworg[1] += 1.0/16;
+	r_refdef.vieworg[2] += 1.0/16;
+#else
+// the server protocol only specifies to 1/16 pixel, so add 1/32 in each axis
+	r_refdef.vieworg[0] += 1.0/32;
+	r_refdef.vieworg[1] += 1.0/32;
+	r_refdef.vieworg[2] += 1.0/32;
 #endif
 
-	for ( i = 0 ; i < 3 ; i++ ) {
-		r_refdef.vieworg[i] += 1.0/VIEWORG_PIXADJUST;
-	}
-	
+#ifdef QUAKEWORLD
 	VectorCopy (cl.simangles, r_refdef.viewangles);
+#else
+	VectorCopy (cl.viewangles, r_refdef.viewangles);
+#endif
 	V_CalcViewRoll ();
 	V_AddIdle ();
 
@@ -727,38 +830,55 @@ V_CalcRefdef ( void )
 	else if (view_message->flags & PF_DEAD)
 		r_refdef.vieworg[2] -= 16;	// corpse view height
 	else
-		r_refdef.vieworg[2] += vh;	// view height
+		r_refdef.vieworg[2] += h;	// view height
 
 	if (view_message->flags & PF_DEAD)		// PF_GIB will also set PF_DEAD
 		r_refdef.viewangles[ROLL] = 80;	// dead view angle
+#else
+// offsets
+	angles[PITCH] = -ent->angles[PITCH];	// because entity pitches are
+											//  actually backward
+	angles[YAW] = ent->angles[YAW];
+	angles[ROLL] = ent->angles[ROLL];
+#endif
 
-	AngleVectors ( cl.simangles, forward, right, up );
-#elif UQUAKE
-	angles[PITCH] = -cl.simangles[PITCH];	// because entity pitches are
-											//  actually backward FIXME?
-	angles[YAW] = cl.simangles[YAW];
-	angles[ROLL] = cl.simangles[ROLL];
-
+#ifdef UQUAKE
 	AngleVectors (angles, forward, right, up);
-	
-	for (i=0 ; i<3 ; i++) {
+#endif
+
+#ifdef QUAKEWORLD
+// offsets
+	AngleVectors (cl.simangles, forward, right, up);
+#else
+	for (i=0 ; i<3 ; i++)
 		r_refdef.vieworg[i] += scr_ofsx->value*forward[i]
 			+ scr_ofsy->value*right[i]
 			+ scr_ofsz->value*up[i];
-	}
-
+	
+#endif
+	
+#ifdef UQUAKE
 	V_BoundOffsets ();
 #endif
-
-	// set up gun position
+// set up gun position
+#ifdef QUAKEWORLD
 	VectorCopy (cl.simangles, view->angles);
+#else
+	VectorCopy (cl.viewangles, view->angles);
+#endif
 	
 	CalcGunAngle ();
 
+#ifdef QUAKEWORLD
 	VectorCopy (cl.simorg, view->origin);
-	view->origin[2] += vh;
+	view->origin[2] += h;
+#else
+	VectorCopy (ent->origin, view->origin);
+	view->origin[2] += cl.viewheight;
+#endif
 
-	for ( i=0 ; i<3 ; i++ ) {
+	for (i=0 ; i<3 ; i++)
+	{
 		view->origin[i] += forward[i]*bob*0.4;
 //		view->origin[i] += right[i]*bob*0.4;
 //		view->origin[i] += up[i]*bob*0.8;
@@ -782,7 +902,7 @@ V_CalcRefdef ( void )
  	else
 		view->model = cl.model_precache[cl.stats[STAT_WEAPON]];
 	view->frame = view_message->weaponframe;
-#elif UQUAKE
+#else
 	view->model = cl.model_precache[cl.stats[STAT_WEAPON]];
 	view->frame = cl.stats[STAT_WEAPONFRAME];
 #endif
@@ -794,15 +914,13 @@ V_CalcRefdef ( void )
 	// smooth out stair step ups
 #ifdef QUAKEWORLD
 	if ( (view_message->onground != -1) && (cl.simorg[2] - oldz > 0) ) {
-#elif UQUAKE
-	if ( cl.onground && (cl.simorg[2] - oldz > 0) ) {
-#endif
 		float steptime;
 		
 		steptime = host_frametime;
-	
+
 		oldz += steptime * 80;
-		oldz = min(oldz, cl.simorg[2]);
+		if (oldz > cl.simorg[2])
+			oldz = cl.simorg[2];
 		if (cl.simorg[2] - oldz > 12)
 			oldz = cl.simorg[2] - 12;
 		r_refdef.vieworg[2] += oldz - cl.simorg[2];
@@ -810,8 +928,26 @@ V_CalcRefdef ( void )
 	} else {
 		oldz = cl.simorg[2];
 	}
-#ifdef UQUAKE
-	if ( cl_chasecam->value )
+#else
+	if (cl.onground && ent->origin[2] - oldz > 0) {
+		float steptime;
+
+		steptime = cl.time - cl.oldtime;
+		if (steptime < 0)
+//FIXME		I_Error ("steptime < 0");
+			steptime = 0;
+
+		oldz += steptime * 80;
+		if (oldz > ent->origin[2])
+			oldz = ent->origin[2];
+		if (ent->origin[2] - oldz > 12)
+			oldz = ent->origin[2] - 12;
+		r_refdef.vieworg[2] += oldz - ent->origin[2];
+		view->origin[2] += oldz - ent->origin[2];
+	}
+
+	oldz = ent->origin[2];
+	if (cl_chasecam->value)
 		Chase_Update ();
 #endif
 }
@@ -823,7 +959,7 @@ V_CalcRefdef ( void )
 */
 #ifdef QUAKEWORLD
 void
-DropPunchAngle ( void )
+DropPunchAngle (void)
 {
 	cl.punchangle -= 10*host_frametime;
 	cl.punchangle = max(cl.punchangle, 0);
@@ -838,24 +974,23 @@ DropPunchAngle ( void )
 */
 extern vrect_t scr_vrect;
 
-void 
-V_RenderView ( void )
+void V_RenderView (void)
 {
 #ifdef QUAKEWORLD
-	if (cl.simangles[ROLL])
-		Sys_Printf ("cl.simangles[ROLL] != 0");	// DEBUG
-	cl.simangles[ROLL] = 0;	// FIXME
+//	if (cl.simangles[ROLL])
+//		Sys_Error ("cl.simangles[ROLL]");	// DEBUG
+cl.simangles[ROLL] = 0;	// FIXME
 #endif
-
 	if (cls.state != ca_active)
 		return;
 
 #ifdef QUAKEWORLD
 	view_frame = &cl.frames[cls.netchan.incoming_sequence & UPDATE_MASK];
 	view_message = &view_frame->playerstate[cl.playernum];
-#elif UQUAKE
+#else
 	// don't allow cheats in multiplayer
-	if (cl.maxclients > 1) {
+	if (cl.maxclients > 1)
+	{
 		Cvar_Set ("scr_ofsx", "0");
 		Cvar_Set ("scr_ofsy", "0");
 		Cvar_Set ("scr_ofsz", "0");
@@ -967,3 +1102,5 @@ V_Init ( void )
 
 	BuildGammaTable (v_gamma->value);	// no gamma yet
 }
+
+
