@@ -60,7 +60,6 @@ void CL_StopPlayback (void)
 	cls.demoplayback = 0;
 	cls.demofile = NULL;
 	cls.state = ca_disconnected;
-	cl.paused = false;
 
 	if (cls.timedemo)
 		CL_FinishTimeDemo ();
@@ -104,8 +103,6 @@ int CL_GetMessage(void)
 
 	if	(cls.demoplayback)
 	{
-		if (cl.paused)
-			return 0;
 	// decide if it is time to grab the next message
 		if (cls.signon == SIGNONS)	// allways grab until fully connected
 		{

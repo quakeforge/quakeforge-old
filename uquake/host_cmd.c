@@ -1248,12 +1248,6 @@ Host_Pause_f
 */
 void Host_Pause_f (void)
 {
-	if (cls.demoplayback)
-	{
-		cl.paused = !cl.paused;
-		return;
-	}
-
 	if (cmd_source == src_command)
 	{
 		Cmd_ForwardToServer ();
