@@ -24,17 +24,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <windows.h>
 
-#ifndef SERVERONLY
-#include <ddraw.h>
+/* Server need this too for timeGetTime() */
 #ifdef HAVE_MMSYSTEM_H
 # include <mmsystem.h>
 #endif
+
+#ifndef SERVERONLY
+#include <ddraw.h>
 #ifdef HAVE_DSOUND_H
 # include <dsound.h>
 # define HAVE_DSOUND
-#endif
-#ifndef GLQUAKE
-//#include <mgraph.h>
 #endif
 #endif
 
@@ -70,7 +69,7 @@ typedef enum {MS_WINDOWED, MS_FULLSCREEN, MS_FULLDIB, MS_UNINIT} modestate_t;
 
 extern modestate_t	modestate;
 
-extern HWND			mainwindow;
+extern HWND		mainwindow;
 extern qboolean		ActiveApp, Minimized;
 
 extern qboolean	WinNT;
@@ -88,11 +87,11 @@ void IN_MouseEvent (int mstate);
 
 extern qboolean	winsock_lib_initialized;
 
-extern int		window_center_x, window_center_y;
-extern RECT		window_rect;
+extern int	window_center_x, window_center_y;
+extern RECT	window_rect;
 
 extern qboolean	mouseinitialized;
-extern HWND		hwnd_dialog;
+extern HWND	hwnd_dialog;
 
 extern HANDLE	hinput, houtput;
 
