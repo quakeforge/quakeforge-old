@@ -152,11 +152,10 @@ Cbuf_Execute
 */
 void Cbuf_Execute (void)
 {
-	int		i, li;
+	int		i;//, li;
 	char	*text;
 	char	line[1024] = {0};
 	int	quotes;
-	qboolean escape;
 	
 	while (cmd_text.cursize)
 	{
@@ -164,31 +163,18 @@ void Cbuf_Execute (void)
 		text = (char *)cmd_text.data;
 
 		quotes = 0;
-		escape = false;
-		li = 0;
 		for (i=0 ; i< cmd_text.cursize ; i++)
 		{
-			if (escape) {
-				escape = false;
-				line[li] = text[i];
-				li++;
-			} else if (text[i] == '\\') {
-				escape = true;
-			} else if (text[i] == '"') {
+			if (text[i] == '"')
 				quotes++;
-				line[li] = text[li];
-				li++;
-			} else if ( !(quotes&1) &&  text[i] == ';')
+			if ( !(quotes&1) &&  text[i] == ';')
 				break;	// don't break if inside a quoted string
-			else if (text[i] == '\n' || text[i] == '\r')
+			if (text[i] == '\n' || text[i] == '\r')
 				break;
-			else {
-				line[i] = text[i];
-				li++;
-			}
 		}
-			
-		line[li] = '\0';
+		
+		memcpy (line, text, i);
+		line[i] = '\0';
 		
 // delete the text from the command buffer and move remaining commands down
 // this is necessary because commands (exec, alias) can insert data at the
