@@ -646,11 +646,13 @@ void COM_LoadGameDirectory(char *dir)
 		pak = COM_LoadPackFile(pakfile);                
 		if(!pak)
 			foundall = 1;
-
-                search = Hunk_Alloc (sizeof(searchpath_t));
-                search->pack = pak;
-                search->next = com_searchpaths;
-                com_searchpaths = search;
+		else
+		{
+	                search = Hunk_Alloc (sizeof(searchpath_t));
+        	        search->pack = pak;
+	                search->next = com_searchpaths;
+        	        com_searchpaths = search;
+		}
         }
 
 #if defined _EXPERIMENTAL_ && GENERATIONS
