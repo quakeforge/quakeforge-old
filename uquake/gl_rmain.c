@@ -1086,7 +1086,7 @@ r_refdef must be set before the first call
 void R_RenderView (void)
 {
 	double	time1 = 0, time2 = 0;
-	//GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.20};
+//	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.20};
 
 	if (r_norefresh.value)
 		return;
