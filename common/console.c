@@ -444,19 +444,21 @@ void Con_DrawInput (void)
 	int		y;
 	int		i;
 	char	*text;
+	char	temp[MAXCMDLINE];
 
 	if (key_dest != key_console && cls.state == ca_active)
 		return;		// don't draw anything (allways draw if not active)
 
-	text = key_lines[edit_line];
-	
-// add the cursor frame
-	text[key_linepos] = 10+((int)(realtime*con_cursorspeed)&1);
-	
+	text = strcpy (temp, key_lines[edit_line]);
+
 // fill out remainder with spaces
-	for (i=key_linepos+1 ; i< con_linewidth ; i++)
+	for (i=strlen(text) ; i < MAXCMDLINE ; i++)
 		text[i] = ' ';
-		
+
+// add the cursor frame
+	if ( (int)(realtime*con_cursorspeed) & 1 )
+		text[key_linepos] = 11;
+
 //	prestep if horizontally scrolling
 	if (key_linepos >= con_linewidth)
 		text += 1 + key_linepos - con_linewidth;
@@ -466,9 +468,6 @@ void Con_DrawInput (void)
 
 	for (i=0 ; i<con_linewidth ; i++)
 		Draw_Character ( (i+1)<<3, con_vislines - 22, text[i]);
-
-// remove cursor
-	key_lines[edit_line][key_linepos] = 0;
 }
 
 
@@ -557,8 +556,10 @@ void Con_DrawConsole (int lines)
 	int				rows;
 	char			*text;
 	int				row;
+#ifdef QUAKEWORLD
 	int				j, n;
 	char			dlbar[1024];
+#endif
 	
 	if (lines <= 0)
 		return;
@@ -599,6 +600,7 @@ void Con_DrawConsole (int lines)
 			Draw_Character ( (x+1)<<3, y, text[x]);
 	}
 
+#ifdef QUAKEWORLD
 	// draw the download bar
 	// figure out width
 	if (cls.download) {
@@ -641,6 +643,8 @@ void Con_DrawConsole (int lines)
 		for (i = 0; i < strlen(dlbar); i++)
 			Draw_Character ( (i+1)<<3, y, dlbar[i]);
 	}
+#endif
+
 
 // draw the input prompt, user text, and cursor if desired
 	Con_DrawInput ();
