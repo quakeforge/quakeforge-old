@@ -13,6 +13,7 @@ BIN_PREFIX	= quake
 DESTDIR		=
 
 prefix		= @prefix@
+exec_prefix	= @exec_prefix@
 bindir		= @bindir@
 mandir		= @mandir@
 
@@ -482,10 +483,10 @@ clean: clean-soft clean-gl $(CLEAN_TARGETS)
 	-rmdir $(BUILD_DIR)
 
 install: $(targets)
-	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)
+	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)
 	for i in $(targets); do \
 	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
-	     $(DESTDIR)$(prefix)$(bindir)/$$i; \
+	     $(DESTDIR)/$(bindir)/$$i; \
 	done
 
 check:
