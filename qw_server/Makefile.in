@@ -28,41 +28,23 @@ ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
 
-MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
-                then \
-                   true; \
-                else \
-		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
-		   mkdir -p $(BUILD_DIR)/$$DIR; \
-                fi
-
 
 ########################################################################
 #
 # Source files
 #
 
-#
-# System specific source files
-#
-
 QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
 
-#
 # Networking source files
-#
-# XXX - Should not assume UNIX
+# FIXME: Should not assume UNIX
+
 QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 
-
-#
 # Server source files
-#
-# Server-related source used by all
+
 SRV_SRC     = sv_main.c sv_user.c sv_move.c sv_phys.c 
-# Server-related source used just by QW server
 QW_SRV_SRC  = sv_ccmds.c sv_ents.c sv_init.c sv_send.c sv_nchan.c world.c
-# Server-related source used just by UQ
 SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c
 
 
@@ -86,70 +68,67 @@ GENERAL_SRC = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c \
         $(SRV_PR_SRC) $(QW_SRV_SYS_SRC) $(QW_GENERAL_SRC) \
 	register_check.c
 ALL_QW_SRV_SRC = $(GENERAL_SRC) model.c
-# XXX - add dos/win specifc source
+# FIXME: add dos/win specifc source
 
 
 all: $(targets)
 
+
 ###########################################################################
 #
-# qw-server
+# QuakeWorld server target
 #
-OBJSqw-server = $(patsubst %,$(BUILD_DIR)/srv/%, \
-        $(addsuffix .@OBJEXT@, $(basename $(ALL_QW_SRV_SRC) .c .s)))
+
+ALL_SRV_OBJS = $(patsubst %,$(BUILD_DIR)/%, $(addsuffix .@OBJEXT@,\
+               $(basename $(ALL_QW_SRV_SRC) .c .s)))
 
 SRV_CFLAGS = -DSRV $(X_CFLAGS)
-# XXX - Don't use X_EXTRA_LIBS below
+# FIXME: Don't use X_EXTRA_LIBS below
 SRV_LDFLAGS = @X_EXTRA_LIBS@
 
 srv_DIR:
-	@DIR=srv; $(MAKE_SURE_DIR)
+	mkdir -p $(BUILD_DIR)
 
-
-$(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.s
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.c
+$(BUILD_DIR)/%.o: $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/srv/%.o: $(QW_COMMON_DIR)/%.c
+$(BUILD_DIR)/%.o: $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
-$(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.s
+$(BUILD_DIR)/%.o: $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(SRVQUAKE): srv_DIR $(BUILD_DIR)/../$(SRVQUAKE)
 
-$(BUILD_DIR)/../$(SRVQUAKE): $(OBJSqw-server)
-	$(CC) $(CFLAGS) $(OBJSqw-server) $(SRV_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SRVQUAKE)
-# XXX - Can this be automated?
-clean-$(SRVQUAKE):
-	rm -rf $(BUILD_DIR)/srv
+$(BUILD_DIR)/../$(SRVQUAKE): $(ALL_SRV_OBJS)
+	$(CC) $(CFLAGS) $(ALL_SRV_OBJS) $(SRV_LDFLAGS) $(LDFLAGS) \
+	-o $(BUILD_DIR)/../$(SRVQUAKE)
 
-clean: clean-$(SRVQUAKE)
 
 ###########################################################################
 #
-# cleaning (clean, distclean)
+# Misc Targets
 #
+
 distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
-clean: $(CLEAN_TARGETS)
-	for i in $(targets); do \
-	  rm -f $(BUILD_DIR)/../$$i; \
-	done
-  
+clean: clean-soft clean-gl $(CLEAN_TARGETS)
+	rm -r $(BUILD_DIR)
+
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)
 	for i in $(targets); do \
 	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
 	     $(DESTDIR)$(prefix)$(bindir)/$$i; \
 	done
-	-rmdir $(BUILD_DIR)
 
 check:
 	@echo check not implemented
+
