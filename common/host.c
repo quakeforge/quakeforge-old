@@ -64,6 +64,7 @@ int			fps_count;
 int 		vcrFile = -1;
 double		host_time;
 
+cvar_t	sys_ticrate		= {"sys_ticrate","0.05"};
 cvar_t	serverprofile	= {"serverprofile", "0"};
 cvar_t	host_framerate	= {"host_framerate", "0"};	// set for slow motion
 cvar_t	samelevel		= {"samelevel", "0"};
@@ -761,5 +762,25 @@ void	Host_FindMaxClients (void)
 		Cvar_SetValue ("deathmatch", 1.0);
 	else
 		Cvar_SetValue ("deathmatch", 0.0);
+}
+
+/*
+=================
+Host_ClientCommands
+
+Send text over to the client to be executed
+=================
+*/
+void Host_ClientCommands (char *fmt, ...)
+{
+	va_list		argptr;
+	char		string[1024];
+	
+	va_start (argptr, fmt);
+	vsnprintf (string, sizeof(string), fmt, argptr);
+	va_end (argptr);
+	
+	MSG_WriteByte (&host_client->message, svc_stufftext);
+	MSG_WriteString (&host_client->message, string);
 }
 #endif
