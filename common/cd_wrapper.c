@@ -1,35 +1,43 @@
 /*
-Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
-Please see the file "AUTHORS" for a list of contributors
+	cd_wrapper.c
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+	(description)
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	Copyright (C) 1996-1997  Id Software, Inc.
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Please see the file "AUTHORS" for a list of contributors
 
-See the GNU General Public License for more details.
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+	See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
-#include "quakedef.h"
+#include <quakedef.h>
 #include <lib_replace.h>
 
 #if defined(USE_LINUX_CD) || defined(USE_BSD_CD)
 static void CD_f(void);
-# include "cd_linux.c"
+# include <cd_linux.c>
 #elif defined(_WIN32)
-# include "cd_win.c"
+# include <cd_win.c>
 #else
-# include "cd_null.c"
+# include <cd_null.c>
 #endif
 
 #ifndef CD_f_DEFINED
