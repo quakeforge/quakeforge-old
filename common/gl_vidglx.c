@@ -41,7 +41,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #include <ctype.h>
 #include <signal.h>
-#include <plugin.h>
 
 #ifdef HAVE_DLFCN_H
 # include <dlfcn.h>
@@ -575,9 +574,6 @@ void VID_Init(unsigned char *palette)
 	Window root;
 	XVisualInfo *visinfo;
 
-	plugin_load("./in_x11.so");
-	IN->Init();
-
 	S_Init();
 
 	Cvar_RegisterVariable(&vid_mode);
@@ -608,19 +604,17 @@ void VID_Init(unsigned char *palette)
 		vid.conwidth = width;
 
 	vid.conwidth &= 0xfff8; // make it a multiple of eight
-
-	if (vid.conwidth < 320)
-		vid.conwidth = 320;
+	vid.conwidth = min(vid.conwidth, 320);
 
 	// pick a conheight that matches with correct aspect
-	vid.conheight = vid.conwidth*3 / 4;
+	vid.conheight = vid.conwidth * 3 / 4;
 
-	if ((i = COM_CheckParm("-conheight")) != 0)
-		vid.conheight = Q_atoi(com_argv[i+1]);
-	if (vid.conheight < 200)
-		vid.conheight = 200;
+	i = COM_CheckParm ("-conheight");
+	if ( i != 0 )	// Set console height, but no smaller than 200 px
+		vid.conheight = min(Q_atoi(com_argv[i+1]), 200);
 
-	if (!(dpy = XOpenDisplay(NULL))) {
+	dpy = XOpenDisplay(NULL);
+	if ( !dpy ) {
 		fprintf(stderr, "Error couldn't open the X display\n");
 		exit(1);
 	}
@@ -719,7 +713,7 @@ void VID_Init(unsigned char *palette)
 
 	GL_Init();
 
-	snprintf(gldir, sizeof(gldir), "%s/OpenGL", com_gamedir);
+	snprintf(gldir, sizeof(gldir), "%s/glquake", com_gamedir);
 	Sys_mkdir (gldir);
 
 	VID_SetPalette(palette);

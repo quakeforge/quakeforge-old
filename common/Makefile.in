@@ -190,7 +190,7 @@ IN_X11_OBJS	= $(BUILD_DIR)/input_libs/in_x11.@OBJEXT@
 $(IN_X11_LIB): in_input_DIR $(TARGET_DIR)/$(IN_X11_LIB)
 
 $(TARGET_DIR)/$(IN_X11_LIB): $(IN_X11_OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -lvga -shared -rdynamic -o $@ $(IN_X11_OBJS) 
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared -rdynamic -o $@ $(IN_X11_OBJS) 
 
 endif
 

@@ -143,7 +143,7 @@ static int X_IN_Init (unsigned char *palette)
 	verbose=COM_CheckParm("-verbose");
 
 // open the display
-	x_disp = XOpenDisplay(0);
+	x_disp = XOpenDisplay(NULL);
 	if (!x_disp)
 	{
 		if (getenv("DISPLAY"))
