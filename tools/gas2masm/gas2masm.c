@@ -396,6 +396,10 @@ void emitonecalldata (void)
 
 void emitonejumpdata (void)
 {
+	/*jmp  *Ljmptab(,%eax,4)
+	  jmp dword ptr[Ljmptab(,%eax,4)]
+	  jmp dword ptr[Ljmptab+eax*4]
+	*/
 	int	i, isaddr, len;
 
 	isaddr = 0;
@@ -409,8 +413,13 @@ void emitonejumpdata (void)
 				break;
 			}
 		}
+		if (tokens[1][0]=='*')
+			memmove(&tokens[1][0],&tokens[1][1],strlen(tokens[1]));
 		if ( !isaddr ) {
-			printf (" dword ptr [%s]", &tokens[1][1]);
+			//printf (" dword ptr [%s]", &tokens[1][1]);
+			printf (" dword ptr [");
+			emitanoperand (1, "", 1);
+			printf ("]");
 		} else {
 			emitanoperand (1, " dword ptr", 1);
 		}
@@ -772,7 +781,7 @@ tokenstat whitespace (char c)
 		return LINE_DONE;
 
 	if ((c <= ' ') ||
-		(c > 127) ||
+		//(c > 127) ||
 		(c == ','))
 	{
 		return WHITESPACE;
@@ -1022,7 +1031,7 @@ tokenstat parseline (void)
 }
 
 
-void main (int argc, char **argv)
+int main (int argc, char **argv)
 {
 	tokenstat	stat;
 
@@ -1045,14 +1054,14 @@ void main (int argc, char **argv)
 				printf ("_DATA ENDS\n");
 
 			printf (" END\n");
-			exit (0);
+			return 0;
 
 		case PARSED_OKAY:
 			break;
 
 		default:
 			fprintf (stderr, "Error: unknown tokenstat %d\n", stat);
-			exit (0);
+			return 1;
 		}
 	}
 }
