@@ -155,7 +155,12 @@ VID_Shutdown(void)
 {
 	Con_Printf("VID_Shutdown\n");
 
-	glXDestroyContext(x_disp, ctx);
+	if(x_disp && ctx)
+	{
+		glXDestroyContext(x_disp, ctx);
+		ctx = NULL;
+	}
+
 #ifdef HAS_DGA
 	if (hasvidmode) {
 		int i;
@@ -174,8 +179,6 @@ VID_Shutdown(void)
 #endif
 	x11_close_display();
 }
-
-
 static void
 signal_handler(int sig)
 {
