@@ -472,7 +472,7 @@ void	VID_Init (unsigned char *palette)
 	int num_visuals;
 	int template_mask;
 
-	plugin_load("./in_x11.so");
+	plugin_load("in_x11.so");
 	IN->Init();
 	S_Init();	// sound is initialized here
 
