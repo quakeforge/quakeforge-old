@@ -3,8 +3,42 @@ NEWS for the QuakeForge project
 
 QuakeForge 0.2
 
+08 Mar 2000 - Massive news updates
+	The engine is actually working and working well for perhaps the
+	first time since we branched off stable.  A long overdue news
+	update is in order.  These things have been added to GL targets:
+
+	Skyboxes
+		Put a a Quake2 skybox in mydir/gfx/env and -game mydir,
+		set r_skyname to the base name of the sky (for the one
+		released on the MegaTF website, use r_skyname night for
+		example), load a map with a sky in it, and set r_sky 1.
+
+		You must reload a map for a new r_skyname to take effect.
+		The software renderer WILL support this hopefully soon.
+
+	Volumetric fog
+		For testing only.  As implemented now it uses the stencil
+		buffer (very slow for most of us) and borrows the water
+		brush since we don't have a fog brush yet.  raptor suggests
+		r_volfog 0.0009 and r_wateralpha 0.3 to test.  You'll need
+		watervis'd maps.
+
+	Water Ripples
+		We reported earlier that setting r_waterripple to 1 made a
+		wave effect.  Actually, if you want a wave effect you can
+		see, you'd better set it at least to 5.  Looks good with
+		the volfog settings mentioned above.  raptor plans to put
+		r_waterripple into the software renderer.
+
+	Rodents with wheels
+		If you've got one, you'll be pleased to hear that -x11 and
+		-glx now support them the same way -svga does.  You need to
+		have ZAxisMapping set in your XF86Config properly.
+
 26 Jan 2000 - Waterwarp bug fixed
 	The waterwarp bug has been fixed, set r_waterwarp 1 to use it.
+
 
 QuakeForge 0.1.0
 

@@ -1,3 +1,26 @@
+quakeforge (0.2-20000308-1) frozen unstable; urgency=low
+
+  * Unstable CVS snapshot
+  * quake-* binaries are now named uquake-*
+  * -gl targets are now more properly named -glx
+  * Some minor annoyances with the status bar fixed in 0.1.1 have not been
+    fixed in 0.2-d yet.  You won't see them, unless you play hip/rogue and
+    they aren't really critical.
+  * Sorry, no ~/.quake handling internally yet.
+
+ -- Joseph Carter <knghtbrd@debian.org>  Wed,  8 Mar 2000 01:21:04 -0800
+
+quakeforge (0.1.1-1) frozen unstable; urgency=medium
+
+  * New upstream bugfix for people on Quack!
+  * Fixed two nasty segfaults that could hose a box under SVGALib
+  * Made UQuake statusbar behave sanely with cl_sbar 1 again
+  * cl_sbar ignored properly in rogue/hipnotic--always assumed to be 1
+  * default gl_clear to 1 so noclip doesn't do strange things onscreen
+  * changed glClearColor to black so gl_clear 1 doesn't look like crap
+
+ -- Joseph Carter <knghtbrd@debian.org>  Sun, 27 Feb 2000 03:31:31 -0800
+
 quakeforge (0.1.0-1) frozen unstable; urgency=HIGH
 
   * "0.0.9-1" was actually "0.1-20000103-1"

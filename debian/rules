@@ -39,6 +39,9 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
+	# Make sure changelog is up to date
+	$(MAKE) changelog
+
 	$(MAKE) install DESTDIR=$(PWD)/debian/tmp
 
 	for i in debian/tmp/usr/games/*; do \
@@ -71,9 +74,9 @@ binary-arch: build install
 	dh_compress
 	dh_fixperms
 	# need to make -svga and -3dfx bins suid for svgalib
-	chmod 4755 debian/quake-svga/usr/games/quake-svga.real
+	chmod 4755 debian/quake-svga/usr/games/uquake-svga.real
 	chmod 4755 debian/quake-svga/usr/games/qw-client-svga.real
-	chmod 4755 debian/quake-3dfx/usr/games/quake-3dfx.real
+	chmod 4755 debian/quake-3dfx/usr/games/uquake-3dfx.real
 	chmod 4755 debian/quake-3dfx/usr/games/qw-client-3dfx.real
 	dh_suidregister
 	dh_installdeb

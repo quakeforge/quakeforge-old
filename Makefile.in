@@ -9,8 +9,6 @@ endif
 
 DESTDIR =
 
-ANONCVS=:pserver:anonymous@cvs.quake.sourceforge.net:/cvsroot/quake
-
 all:
 	@for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
@@ -41,9 +39,7 @@ clean-autoconf mrproper: distclean
 
 
 changelog:
-	@echo "CVS will ask for a passwd, press enter"
-	cvs -d$(ANONCVS) login
-	./tools/cvs2cl/cvs2cl.pl -g -d$(ANONCVS)
+	./tools/cvs2cl/cvs2cl.pl
 
 # Code to automatically re-configure, only runs if you are compiling in the
 # source directory
