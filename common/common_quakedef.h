@@ -50,13 +50,6 @@
 #include <qtypes.h>
 #include <qstructs.h>
 
-#ifdef _WIN32
-#define FNMATCH_FLAGS FNM_CASEFOLD
-#else
-#define FNMATCH_FLAGS 0
-#endif
-
-
 #ifndef max
 #define max(a,b) ((a) > (b) ? (a) : (b))
 #define min(a,b) ((a) < (b) ? (a) : (b))
