@@ -1166,13 +1166,12 @@ Sbar_DeathmatchOverlay
 */
 void Sbar_MiniDeathmatchOverlay (void)
 {
-	qpic_t			*pic;
-	int				i, k, l;
-	int				top, bottom;
-	int				x, y, f;
-	char			num[12];
+	int		i, k, l;
+	int		top, bottom;
+	int		x, y, f;
+	char		num[12];
 	scoreboard_t	*s;
-	int				numlines;
+	int		numlines;
 
 	if (vid.width < 512 || !sb_lines)
 		return;

@@ -419,7 +419,7 @@ if (bits&(1<<i))
 	if (bits & U_SKIN)
 		skin = MSG_ReadByte();
 	else
-		skin = ent->baseline.skinnum;
+		skin = ent->baseline.skin;
 	if (skin != ent->skinnum) {
 		ent->skinnum = skin;
 		if (num > 0 && num <= cl.maxclients)
@@ -431,7 +431,7 @@ if (bits&(1<<i))
 	if (bits & U_SKIN)
 		ent->skinnum = MSG_ReadByte();
 	else
-		ent->skinnum = ent->baseline.skinnum;
+		ent->skinnum = ent->baseline.skin;
 #endif
 
 	if (bits & U_EFFECTS)
@@ -495,7 +495,7 @@ void CL_ParseBaseline (entity_t *ent)
 	ent->baseline.modelindex = MSG_ReadByte ();
 	ent->baseline.frame = MSG_ReadByte ();
 	ent->baseline.colormap = MSG_ReadByte();
-	ent->baseline.skinnum = MSG_ReadByte();
+	ent->baseline.skin = MSG_ReadByte();
 	for (i=0 ; i<3 ; i++)
 	{
 		ent->baseline.origin[i] = MSG_ReadCoord ();
@@ -681,7 +681,7 @@ void CL_ParseStatic (void)
 	ent->model = cl.model_precache[ent->baseline.modelindex];
 	ent->frame = ent->baseline.frame;
 	ent->colormap = vid.colormap;
-	ent->skinnum = ent->baseline.skinnum;
+	ent->skinnum = ent->baseline.skin;
 	ent->effects = ent->baseline.effects;
 
 	VectorCopy (ent->baseline.origin, ent->origin);

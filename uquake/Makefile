@@ -35,13 +35,13 @@ else
 RELEASE_CFLAGS=$(BASE_CFLAGS) -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations
 endif
-GL_CFLAGS=-DGLQUAKE -I$(X11_DIR)/include
+GL_CFLAGS=-DGLQUAKE -I$(X11_DIR)/include -I/usr/include/glide
 
 LDFLAGS=-lm
 SVGA_LDFLAGS=$(LDFLAGS) -lvga
 X11_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lX11 -lXext
-GL_X11_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lGL -lX11 -lXext
-GL_SVGA_LDFLAGS=-L$(X11_DIR)/lib -lvga -lMesaGL -lglide2x -lX11 -lXext
+GL_GLX_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lGL -lX11 -lXext
+GL_GLIDE_LDFLAGS=-L$(X11_DIR)/lib -lvga -lMesaGL -lglide2x -lX11 -lXext -ldl
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_AS=$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
@@ -57,7 +57,7 @@ DO_O_CC=$(CC) -O $(CFLAGS) -o $@ -c $<
 
 SOFT_TARGETS=$(OBJ_DIR)/quake-svga \
 	$(OBJ_DIR)/quake-x
-GL_TARGETS=$(OBJ_DIR)/quake-gl \
+GL_TARGETS=$(OBJ_DIR)/quake-glx \
 	$(OBJ_DIR)/quake-glide
 
 debug:		debug-soft #debug-gl
@@ -492,3 +492,267 @@ $(OBJ_DIR)/soft_obj/vid_svgalib.o: $(COMMON_DIR)/vid_svgalib.c
 
 $(OBJ_DIR)/soft_obj/vid_x.o:	$(COMMON_DIR)/vid_x.c
 	$(DO_CC)
+
+
+# ---------------------------------------------------------------------------
+# GL Stuff..
+# ---------------------------------------------------------------------------
+
+GL_OBJS =\
+	$(OBJ_DIR)/gl_obj/cl_demo.o \
+	$(OBJ_DIR)/gl_obj/cl_input.o \
+	$(OBJ_DIR)/gl_obj/cl_main.o \
+	$(OBJ_DIR)/gl_obj/cl_parse.o \
+	$(OBJ_DIR)/gl_obj/cl_tent.o \
+	$(OBJ_DIR)/gl_obj/chase.o \
+	$(OBJ_DIR)/gl_obj/cmd.o \
+	$(OBJ_DIR)/gl_obj/common.o \
+	$(OBJ_DIR)/gl_obj/console.o \
+	$(OBJ_DIR)/gl_obj/crc.o \
+	$(OBJ_DIR)/gl_obj/cvar.o \
+	\
+	$(OBJ_DIR)/gl_obj/gl_draw.o \
+	$(OBJ_DIR)/gl_obj/gl_mesh.o \
+	$(OBJ_DIR)/gl_obj/gl_model.o \
+	$(OBJ_DIR)/gl_obj/gl_refrag.o \
+	$(OBJ_DIR)/gl_obj/gl_rlight.o \
+	$(OBJ_DIR)/gl_obj/gl_rmain.o \
+	$(OBJ_DIR)/gl_obj/gl_rmisc.o \
+	$(OBJ_DIR)/gl_obj/gl_rsurf.o \
+	$(OBJ_DIR)/gl_obj/gl_screen.o \
+	$(OBJ_DIR)/gl_obj/gl_test.o \
+	$(OBJ_DIR)/gl_obj/gl_warp.o \
+	\
+	$(OBJ_DIR)/gl_obj/host.o \
+	$(OBJ_DIR)/gl_obj/host_cmd.o \
+	$(OBJ_DIR)/gl_obj/keys.o \
+	$(OBJ_DIR)/gl_obj/menu.o \
+	$(OBJ_DIR)/gl_obj/mathlib.o \
+	$(OBJ_DIR)/gl_obj/net_dgrm.o \
+	$(OBJ_DIR)/gl_obj/net_loop.o \
+	$(OBJ_DIR)/gl_obj/net_main.o \
+	$(OBJ_DIR)/gl_obj/net_vcr.o \
+	$(OBJ_DIR)/gl_obj/net_udp.o \
+	$(OBJ_DIR)/gl_obj/net_bsd.o \
+	$(OBJ_DIR)/gl_obj/pr_cmds.o \
+	$(OBJ_DIR)/gl_obj/pr_edict.o \
+	$(OBJ_DIR)/gl_obj/pr_exec.o \
+	$(OBJ_DIR)/gl_obj/r_part.o \
+	$(OBJ_DIR)/gl_obj/sbar.o \
+	$(OBJ_DIR)/gl_obj/sv_main.o \
+	$(OBJ_DIR)/gl_obj/sv_phys.o \
+	$(OBJ_DIR)/gl_obj/sv_move.o \
+	$(OBJ_DIR)/gl_obj/sv_user.o \
+	$(OBJ_DIR)/gl_obj/zone.o   \
+	$(OBJ_DIR)/gl_obj/view.o   \
+	$(OBJ_DIR)/gl_obj/wad.o \
+	$(OBJ_DIR)/gl_obj/world.o \
+	$(OBJ_DIR)/gl_obj/cd_linux.o \
+	$(OBJ_DIR)/gl_obj/sys_linux.o \
+	$(OBJ_DIR)/gl_obj/snd_dma.o \
+	$(OBJ_DIR)/gl_obj/snd_mem.o \
+	$(OBJ_DIR)/gl_obj/snd_mix.o \
+	$(OBJ_DIR)/gl_obj/snd_linux.o
+
+GL_AS_OBJS =\
+	$(OBJ_DIR)/gl_obj/math.o \
+	$(OBJ_DIR)/gl_obj/worlda.o \
+	$(OBJ_DIR)/gl_obj/snd_mixa.o \
+	$(OBJ_DIR)/gl_obj/sys_dosa.o
+
+GL_GLX_OBJS = $(OBJ_DIR)/gl_obj/gl_vidlinuxglx.o
+GL_GLIDE_OBJS = $(OBJ_DIR)/gl_obj/gl_vidlinux.o
+
+$(OBJ_DIR)/quake-glx:	$(GL_OBJS) $(GL_AS_OBJS) $(GL_GLX_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_AS_OBJS) $(GL_GLX_OBJS) $(GL_GLX_LDFLAGS)
+
+$(OBJ_DIR)/quake-glide:	$(GL_OBJS) $(GL_AS_OBJS) $(GL_GLIDE_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_AS_OBJS) $(GL_GLIDE_OBJS) $(GL_GLIDE_LDFLAGS)
+
+$(OBJ_DIR)/gl_obj/cl_demo.o :      $(UQ_DIR)/cl_demo.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cl_input.o :     $(UQ_DIR)/cl_input.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cl_main.o :      $(UQ_DIR)/cl_main.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cl_parse.o :     $(UQ_DIR)/cl_parse.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cl_tent.o :      $(UQ_DIR)/cl_tent.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/chase.o :        $(UQ_DIR)/chase.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cmd.o :          $(UQ_DIR)/cmd.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/common.o :       $(UQ_DIR)/common.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/console.o :      $(UQ_DIR)/console.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/crc.o :          $(UQ_DIR)/crc.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cvar.o :         $(UQ_DIR)/cvar.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_draw.o :      $(UQ_DIR)/gl_draw.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_mesh.o :      $(UQ_DIR)/gl_mesh.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_model.o :     $(UQ_DIR)/gl_model.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_refrag.o :    $(UQ_DIR)/gl_refrag.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_rlight.o :    $(UQ_DIR)/gl_rlight.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_rmain.o :     $(UQ_DIR)/gl_rmain.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_rmisc.o :     $(UQ_DIR)/gl_rmisc.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_rsurf.o :     $(UQ_DIR)/gl_rsurf.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_screen.o :    $(UQ_DIR)/gl_screen.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_test.o :      $(UQ_DIR)/gl_test.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_vidlinux.o :  $(UQ_DIR)/gl_vidlinux.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_vidlinuxglx.o :  $(COMMON_DIR)/gl_vidlinuxglx.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/gl_warp.o :      $(UQ_DIR)/gl_warp.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/host.o :         $(UQ_DIR)/host.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/host_cmd.o :     $(UQ_DIR)/host_cmd.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/keys.o :         $(UQ_DIR)/keys.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/menu.o :         $(UQ_DIR)/menu.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/mathlib.o :      $(COMMON_DIR)/mathlib.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/net_dgrm.o :     $(UQ_DIR)/net_dgrm.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/net_loop.o :     $(UQ_DIR)/net_loop.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/net_main.o :     $(UQ_DIR)/net_main.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/net_vcr.o :      $(UQ_DIR)/net_vcr.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/net_udp.o :      $(UQ_DIR)/net_udp.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/net_bsd.o :      $(UQ_DIR)/net_bsd.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/pr_cmds.o :      $(UQ_DIR)/pr_cmds.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/pr_edict.o :     $(UQ_DIR)/pr_edict.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/pr_exec.o :      $(UQ_DIR)/pr_exec.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/r_part.o :       $(UQ_DIR)/r_part.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/sbar.o :         $(UQ_DIR)/sbar.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/sv_main.o :      $(UQ_DIR)/sv_main.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/sv_phys.o :      $(UQ_DIR)/sv_phys.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/sv_move.o :      $(UQ_DIR)/sv_move.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/sv_user.o :      $(UQ_DIR)/sv_user.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/zone.o :        $(COMMON_DIR)/zone.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/view.o :        $(UQ_DIR)/view.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/wad.o :          $(COMMON_DIR)/wad.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/world.o :        $(UQ_DIR)/world.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/cd_linux.o :     $(COMMON_DIR)/cd_linux.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/sys_linux.o :    $(UQ_DIR)/sys_linux.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/snd_dma.o :      $(COMMON_DIR)/snd_dma.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/snd_mem.o :      $(COMMON_DIR)/snd_mem.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/snd_mix.o :      $(COMMON_DIR)/snd_mix.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/snd_linux.o :    $(COMMON_DIR)/snd_linux.c
+	$(DO_GL_CC)
+
+$(OBJ_DIR)/gl_obj/math.o :         $(COMMON_DIR)/math.s
+	$(DO_GL_AS)
+
+$(OBJ_DIR)/gl_obj/worlda.o :       $(UQ_DIR)/worlda.s
+	$(DO_GL_AS)
+
+$(OBJ_DIR)/gl_obj/snd_mixa.o :     $(COMMON_DIR)/snd_mixa.s
+	$(DO_GL_AS)
+
+$(OBJ_DIR)/gl_obj/sys_dosa.o :     $(UQ_DIR)/sys_dosa.s
+	$(DO_GL_AS)
+
+#############################################################################
+# MISC
+#############################################################################
+
+clean: clean-debug clean-release
+	@echo Done.
+
+clean-debug:
+	-rm -rf $(BUILD_DEBUG_DIR)
+
+clean-release:
+	-rm -rf $(BUILD_RELEASE_DIR)
+

@@ -146,11 +146,10 @@ can be done reasonably.
 void GL_SubdivideSurface (msurface_t *fa)
 {
 	vec3_t		verts[64];
-	int			numverts;
-	int			i;
-	int			lindex;
+	int		numverts;
+	int		i;
+	int		lindex;
 	float		*vec;
-	texture_t	*t;
 
 	warpface = fa;
 
@@ -273,10 +272,6 @@ will have them chained together.
 */
 void EmitBothSkyLayers (msurface_t *fa)
 {
-	int			i;
-	int			lindex;
-	float		*vec;
-
 	GL_DisableMultitexture();
 
 	GL_Bind (solidskytexture);
@@ -1039,7 +1034,6 @@ void R_InitSky (texture_t *mt)
 	unsigned	transpix;
 	int			r, g, b;
 	unsigned	*rgba;
-	extern	int			skytexturenum;
 
 	src = (byte *)mt + mt->offsets[0];
 
