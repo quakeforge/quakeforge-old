@@ -79,16 +79,16 @@ void Cvar_Display (cvar_t *var)
 		}
 		else if (var->rangecheck == 2)	// integer
 		{
-			Con_Printf (" (int: %d-%d)", (int)var->minvalue, (int)var->maxvalue);
+			Con_Printf (" (int: %i-%i)", (int)var->minvalue, (int)var->maxvalue);
 		}
 		else
 		{
 			char	val[32];
 			int	i;
 
-			if (var->rangecheck == (int)var->minvalue)
+			if (var->minvalue == (int)var->minvalue)
 			{
-				sprintf (val, "%d", (int)var->minvalue);
+				sprintf (val, "%i", (int)var->minvalue);
 			}
 			else
 			{
@@ -102,7 +102,7 @@ void Cvar_Display (cvar_t *var)
 
 			if (var->maxvalue == (int)var->maxvalue)
 			{
-				sprintf (val, "%d", (int)var->maxvalue);
+				sprintf (val, "%i", (int)var->maxvalue);
 			}
 			else
 			{
@@ -342,7 +342,7 @@ void Cvar_Set (cvar_t *var, char *value)
 
 		if (newvalue == (int)newvalue)
 		{
-			sprintf (val, "%d", (int)newvalue);
+			sprintf (val, "%i", (int)newvalue);
 		}
 		else
 		{
@@ -537,7 +537,7 @@ void Cvar_CvarList_f (void)
 	for (var=cvar_vars, i=0 ; var ; var=var->next, i++)
 	{
 // 2000-06-22 Partial selection for CvarList command by Maddes  start
-		if (partial && Q_strncmp (partial,var->name, len))
+		if (partial && Q_strncmp (partial, var->name, len))
 		{
 			continue;
 		}
@@ -550,9 +550,9 @@ void Cvar_CvarList_f (void)
 	Con_Printf ("------------\n");
 	if (partial)
 	{
-		Con_Printf ("%d beginning with \"%s\" out of ", count, partial);
+		Con_Printf ("%i beginning with \"%s\" out of ", count, partial);
 	}
-	Con_Printf ("%d variables\n", i);
+	Con_Printf ("%i variables\n", i);
 // 2000-06-22 Partial selection for CvarList command by Maddes  end
 }
 
