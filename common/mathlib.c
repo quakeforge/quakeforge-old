@@ -315,12 +315,8 @@ void AngleVectors (vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 
 int VectorCompare (vec3_t v1, vec3_t v2)
 {
-	int		i;
-	
 
-	for (i=0 ; i<3 ; i++)
-		if (v1[i] != v2[i])
-			return 0;
+	if (v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2]) return 0;
 			
 	return 1;
 }
