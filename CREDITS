@@ -72,6 +72,7 @@ GGI support:
 SDL support:
   Sam Lantinga <slouken@devolution.com>
   Maas van den Berg <email@dds.nl>
+  Ricardo Veguilla <r_veguilla_pr@yahoo.com>
 
 X11 software renderer fixes:
   Justin A. McCright <jam@qIj.damogran.org>

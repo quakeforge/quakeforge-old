@@ -132,3 +132,7 @@ D: Network code fixes/cleanups
 N: Theo van Klaveren
 E: havoc@phoenix.student.utwente.nl
 D: CD-ROM support/optimizations
+
+N: Ricardo Veguilla
+E: r_veguilla_pr@yahoo.com
+D: Fix for SDL _windowed_mouse
