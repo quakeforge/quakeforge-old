@@ -1,0 +1,89 @@
+================================================================
+Title         : GPLed QuakeC source v1.06
+Date          : 2000-06-25
+Author        : id Software
+                Matthias "Maddes" Buecher
+Email Address : maddes@bigfoot.com
+Homepage      : id Software
+                http://www.idsoftware.com/
+                Quake Info Pool
+                http://www.bigfoot.com/~maddes (redirection)
+
+Description   : This an 'inofficially' GPLed version of the QuakeC
+                source v1.06.
+                It also includes some small fixes to the original
+                id Software code, to make it work like intended
+                and as written in the manual.
+                Read COPYING for information about the GPL.
+
+                If you want a totally fixed Quake gameplay then
+                check out the Ultimate Regular Quake patch on
+                the Quake Info Pool homepage.
+================================================================
+
+* What has been fixed *
+
+#1 Changed occasional unix new lines into dos newlines
+   Now all lines end with 0x0D 0x0A
+
+#2 Added GPL header to all files besides progs.src
+
+#3 Added fix for walkframe leak bug in player_run() of player.qc
+   Changed (self.walkframe == 6) into (self.walkframe >= 6) according to
+   player_stand1
+
+#4 Fixed typo in misc_fireball() of misc.qc
+   Changed self.speed == 1000 into self.speed = 1000
+
+#5 Added fix for fishes counted twice in monsters.qc
+   Removed total_monsters line in swimmonster_start_go()
+
+#6 The spawn function of the Shalrath calls "walkmonster_start()" not directly
+   like the other monsters
+   Replaced self.think/self.nextthink lines with call of walkmonster_start()
+
+#7 Added fix for incorrect setting of nextthink (to v1.06 only)
+   In some functions .nextthink is not set correctly, so sometimes monster stop
+   or even do not ever start to walk.
+   Always use the current time to set ".nextthink", also always add a constant
+   value to it as the "random()" function can also return a zero (0 * x = 0!)
+   Fly and swim monsters can be affected by gravity, so they have to be made
+   gravity-resistant in the start function.
+   misc_fireball() in misc.qc
+   monster_start() and monster_start_go() in monsters.qc
+   ogre_smash11() in ogre.qc
+   sham_magic3() in shambler.qc
+   zombie_paine11() in zombie.qc
+
+#8 Added fix for "NoExit" variable recognized SinglePlayer/Coop
+   Check for deathmatch in changelevel_touch() of client.qc
+
+#9 Added fix for "TimeLimit" and "FragLimit" variables recognized SinglePlayer/Coop
+   Check for deathmatch in CheckRules() of client.qc
+
+#10 Added fix Teamplay 1 mode, so players can hurt themselves
+    Check for attacker, player class and door in T_Damage() of combat.qc
+
+#11 Corrected other non-code typos...
+    allready -> already
+    chagnelevel -> changelevel
+    Super Nailgun -> Perforator (in items.qc, according to the Quake manual)
+
+#12 Added missing parameter on some function calls (for Mr. Elusive's MeQCC)
+    - DropToFloor(0,0) calls in items.qc, misc.qc, monsters.qc
+    - MakeStatic(self) call in misc.qc
+    - ai_charge(0) call in ogre.qc
+
+#13 Corrected size of "info_teleport_destination" entity for QuakeED
+    and other editors (e.g. StoneLess, QEradiant)
+
+#14 Removed all empty lines at end of files
+
+
+* Shameless Plug *
+
+Find out more about bugs in Quake and QuakeWorld on the Quake Info Pool.
+
+
+Have Fun
+Matthias "Maddes" Buecher
