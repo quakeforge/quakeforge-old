@@ -7,6 +7,4 @@ config.log
 config.status
 build-stamp
 ChangeLog
-quakeforge.spec
-build_rpm
 quakeforge-*.tar.gz
