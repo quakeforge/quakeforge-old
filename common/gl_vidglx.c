@@ -346,7 +346,7 @@ do_fullscreen(int full)
 		/* We are in XMesa fullscren mode and couldn't switch back
 		   to windowed mode ??? */
 		Cvar_SetValue("vid_glx_fullscreen", fullscreen);
-		do_grab(mouse_shouldgrab);
+		do_grabs(mouse_shouldgrab);
 		return;
 	}
 #endif

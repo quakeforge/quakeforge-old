@@ -2,7 +2,9 @@
 #undef VERSION
 
 /* Define if you have the XFree86 DGA extension */
-#undef HAS_DGA
+#ifndef HAS_DGA
+#define HAS_DGA
+#endif
 
 /* If your version of OpenGL uses APIENTRY, define GLAPIENTRY to be APIENTRY*/
 #undef GLAPIENTRY
@@ -26,7 +28,9 @@
 #undef USE_BSD_CD
 
 /* Define this to use experimental code */
-#undef _EXPERIMENTAL_
+#ifndef _EXPERIMENTAL_
+#define _EXPERIMENTAL_
+#endif
 
 #if defined(X11)
 #   define OUTPUT_STR	"X11"
