@@ -62,7 +62,7 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
 COMMON_LIB=common_lib.a
 
 ifeq ($(HAS_OGL),yes)
-GLQUAKE   =$(BIN_PREFIX)-gl
+GLQUAKE   =$(BIN_PREFIX)-glx
 endif
 
 ifeq ($(HAS_TDFXGL),yes)
@@ -284,7 +284,7 @@ X11_CFLAGS  = -DX11 @X_CFLAGS@
 X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@
 
 # FIXME: This rule is pathological because of the seperate sunx driver,
-#    either merge it into vid_x.c or make a seperate sun target.  In either
+#    either merge it into vid_x11.c or make a seperate sun target.  In either
 #    case, find the moro^wpeople responsible for this and other stupidities
 #    in Solaris and "educate" them.
 $(BUILD_DIR)/$(addsuffix .@OBJEXT@,$(basename @X11_VID_SRC@ .c)):\

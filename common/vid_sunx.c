@@ -1,4 +1,5 @@
 /*
+vid_sunx.c - sun x11 video driver
 Copyright (C) 1996-1997	Id Software, Inc.
 Copyright (C) 1999-2000	contributors of the QuakeForge project
 Copyright (C) 2000	Marcus Sundberg [mackan@stacken.kth.se]
@@ -20,10 +21,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// vid_x.c -- general x video driver
 
 #define _BSD
-#include "config.h"
+#include <config.h>
 
 #include <ctype.h>
 #include <sys/time.h>
@@ -44,18 +44,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/extensions/XShm.h>
 #include <errno.h>
 
-#include "quakedef.h"
-#include "d_local.h"
-#include "keys.h"
-#include "console.h"
-#include "sound.h"
-#include "cvar.h"
-#include "draw.h"
-#include "cmd.h"
-#include "lib_replace.h"
-#include "common.h"
-#include "sys.h"
-#include "client.h"
+#include <quakedef.h>
+#include <d_local.h>
+#include <keys.h>
+#include <console.h>
+#include <sound.h>
+#include <cvar.h>
+#include <draw.h>
+#include <cmd.h>
+#include <lib_replace.h>
+#include <common.h>
+#include <sys.h>
+#include <client.h>
 
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};

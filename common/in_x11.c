@@ -1,5 +1,5 @@
 /*
-vid_x.c - general x video driver
+in_x11.c - general x11 input driver
 Copyright (C) 1996-1997	Id Software, Inc.
 Copyright (C) 1999-2000	contributors of the QuakeForge project
 Copyright (C) 2000	Marcus Sundberg [mackan@stacken.kth.se]

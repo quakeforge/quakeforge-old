@@ -152,7 +152,7 @@ fi
 fi
 
 dnl Checks for X11 support
-dnl (XoXus: Since vid_x.c relies on XShm being there, this now disables
+dnl (XoXus: Since vid_x11.c relies on XShm being there, this now disables
 dnl  the X11 video driver if -lXext can not be found)
 AC_PATH_XTRA
 if test "x$no_x" = x; then
@@ -730,7 +730,7 @@ case "${target}" in
       X11_VID_SRC="vid_sunx.c" ;;
    *)
       if test "x$HAS_X11"; then
-         X11_VID_SRC="vid_x.c";
+         X11_VID_SRC="vid_x11.c";
       else
          X11_VID_SRC=
       fi
