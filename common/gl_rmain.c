@@ -1202,21 +1202,23 @@ Eric Windisch: I basicly rewrote what carmack had here to
 display _much_ prettier. small hack
 */ 
 
+/*
 	// The volume fog probally will not work yet :)
 	if(r_volfog.value) 
 	{
        
 		gl_Clear(GL_STENCIL_BUFFER_BIT);
-		gl_ColorMask();
-		glEnable(GL_STENCIL_TEST);
+		gl_ColorMask(GL_FALSE);
 		glStencilFunc(GL_ALWAYS, 1, 1);
-		glStencilOp(GL_KEEP, GL_ZERO, GL_REPLACE);
-
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		//glEnable(GL_STENCIL_TEST);
+		glEnable(GL_DEPTH_TEST);
+		gl_DepthFunc(GL_LESS);
 	                glFogi (GL_FOG_MODE, GL_EXP2);
         	        glFogfv (GL_FOG_COLOR, colors);
         	// fixme: GL_FOG_DENSITY should have r_volfog_density var
                		 glFogf (GL_FOG_DENSITY, 1);
-
+		
                 glEnable(GL_FOG);
 		//R_RenderScene ();
 
@@ -1227,7 +1229,7 @@ display _much_ prettier. small hack
 		glStencilMask(GL_FALSE);
 		glDisable(GL_DEPTH_TEST);
 	}
-
+*/
 	if(r_fog.value)
 	{
 
