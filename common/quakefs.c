@@ -815,6 +815,7 @@ void COM_AddGameDirectory (char *dir)
 	else
 		strcpy(gamedirfile, dir);
 	strcpy (com_gamedir, dir);
+	Con_Printf ("com_gamedir changed to %s\n", com_gamedir);
 
 //
 // add the directory to the search path

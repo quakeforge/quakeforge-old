@@ -127,7 +127,8 @@ SW_REND_SRC = screen.c $(SWREND_SRC_PLAT) draw.c \
 	d_edge.c d_fill.c d_init.c d_modech.c d_part.c d_polyse.c d_scan.c \
 	d_sky.c d_sprite.c d_surf.c d_vars.c d_zpoint.c r_aclip.c r_alias.c \
 	r_bsp.c r_draw.c r_edge.c r_efrag.c r_light.c r_main.c r_misc.c \
-	r_sky.c r_sprite.c r_surf.c r_vars.c sw_cl_parse.c sw_rpart.c sw_view.c
+	r_part.c r_sky.c r_sprite.c r_surf.c r_vars.c sw_cl_parse.c \
+	sw_view.c
 
 # Client source files
 
@@ -143,7 +144,7 @@ SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c pmove.c pmovetst.c
 
 # Source common to QW/UQuake
 CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
-	$(CL_ADDITIONAL_GENERAL_SRC) r_part.c
+	$(CL_ADDITIONAL_GENERAL_SRC)
 
 
 ########################################################################

@@ -499,7 +499,7 @@ void VID_Init(unsigned char *palette)
 	if (QF_XMesaSetFXmode) {
 #ifdef XMESA
 		const char *str = getenv("MESA_GLX_FX");
-		if (str != NULL && *str != 'f') {
+		if (str != NULL && *str != 'd') {
 			if (tolower(*str) == 'w') {
 				vid_glx_fullscreen->value = 0;
 			} else {

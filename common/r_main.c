@@ -40,6 +40,8 @@
 #include <console.h>
 #include <cvars.h>
 
+int R_LightPoint (vec3_t p);	// FIXME: belongs in r_local.h
+
 //#define	PASSAGES
 
 void		*colormap;
