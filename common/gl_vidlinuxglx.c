@@ -838,17 +838,12 @@ void VID_ExtraOptionCmd(int option_cursor)
 #endif
 
 #ifdef HAS_DGA                    
-       			 XF86DGADirectVideo(dpy, DefaultScreen(dpy), vid_glx_mode.value);
-       			dgamouse = vid_glx_mode.value;
- 			
 			if(vid_glx_mode.value)
 			{
-		        	XGrabPointer(dpy, CurrentTime);
-				XGrabKeyboard(dpy, CurrentTime);
+				install_grabs();
 			} else {
-				XUngrabPointer(dpy, CurrentTime);
-				XUngrabKeyboard(dpy, CurrentTime);
-
+				uninstall_grabs();
+			}
 			break;
 #endif
 
