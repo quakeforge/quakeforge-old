@@ -673,12 +673,7 @@ clean:	clean-soft clean-gl
 	@echo Done.
 
 clean-soft:
-	@-rm -f $(SOFT_TARGETS)
-	@-rm -f $(SOFT_OBJS)
-	@-rmdir $(BUILD_DIR)/soft_qw_obj
+	@-rm -f $(SOFT_TARGETS) $(BUILD_DIR)/soft_qw_obj
 
 clean-gl:
-	@-rm -f $(GL_TARGETS)
-	@-rm -f $(GL_OBJS)
-	@-rmdir $(BUILD_DIR)/gl_qw_obj
-
+	@-rm -f $(GL_TARGETS) $(BUILD_DIR)/gl_qw_obj

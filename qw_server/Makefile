@@ -185,9 +185,7 @@ $(BUILD_DIR)/server_obj/pmovetst.o:	$(QW_COMMON_DIR)/pmovetst.c
 #############################################################################
 
 clean:
-	@-rm $(TARGETS)
-	@-rm $(SERVER_OBJS)
-	@-rmdir $(BUILD_DIR)/server_obj
+	@-rm $(TARGETS) $(BUILD_DIR)/server_obj
 	@-rmdir $(BUILD_DIR)
 	@echo Done.
 
