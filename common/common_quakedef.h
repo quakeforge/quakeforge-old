@@ -57,7 +57,7 @@ void	VID_UnlockBuffer (void);
 #endif
 
 #ifndef bound
-#define bound(a,b,c) (max(a, min(b, c))
+#define bound(a,b,c) (max(a, min(b, c)))
 #endif
 
 /* This fixes warnings when compiling with -pedantic */
