@@ -66,7 +66,7 @@ jmp_buf 	host_abort;
 
 double		realtime;				// without any filtering or bounding
 double		oldrealtime;			// last frame run
-
+qboolean	isDedicated;
 int			fps_count;
 int vcrFile = -1;
 
@@ -505,5 +505,34 @@ Host_Shutdown( void )
 	if (cls.state != ca_dedicated) {
 #endif
 		VID_Shutdown();
+	}
+}
+
+/*
+===============
+Host_WriteConfiguration
+
+Writes key bindings and archived cvars to config.cfg
+===============
+*/
+void Host_WriteConfiguration (void)
+{
+	QFile	*f;
+
+// dedicated servers initialize the host but don't parse and set the
+// config.cfg cvars
+	if (host_initialized & !isDedicated)
+	{
+		f = Qopen (va("%s/config.cfg",com_gamedir), "w");
+		if (!f)
+		{
+			Con_Printf ("Couldn't write config.cfg.\n");
+			return;
+		}
+		
+		Key_WriteBindings (f);
+		Cvar_WriteVariables (f);
+
+		Qclose (f);
 	}
 }
