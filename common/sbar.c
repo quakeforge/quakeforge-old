@@ -1101,7 +1101,7 @@ Sbar_DrawNormal
 */
 void Sbar_DrawNormal (void)
 {
-	if (cl_sbar->value || scr_viewsize->value<100)
+	if (cl_sbar->value || scr_viewsize->value<100 || rogue || hipnotic)
 	Sbar_DrawPic (0, 0, sb_sbar);
 
 #ifdef UQUAKE
