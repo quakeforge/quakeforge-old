@@ -24,4 +24,4 @@ dsl0199.netquest.net       Clan Arena
 
 130.194.225.165:27500      AP's quakeforge server no speed cheats
 
-quake.orc.ru:27504         Teamplay/Duel
+quake.orc.ru:27504         ORC TP/Duel
