@@ -56,7 +56,7 @@ FILE IO
 ===============================================================================
 */
 
-#define MAX_HANDLES             10
+#define MAX_HANDLES             64	// 1999-12-23 More PAK files support by Maddes
 
 typedef struct
 {
