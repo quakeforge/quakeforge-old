@@ -582,7 +582,6 @@ Sent by server when serverinfo changes
 void CL_FullServerinfo_f (void)
 {
 	char *p;
-	float v;
 
 	if (Cmd_Argc() != 2)
 	{
@@ -593,17 +592,13 @@ void CL_FullServerinfo_f (void)
 	strcpy (cl.serverinfo, Cmd_Argv(1));
 
 	if ((p = Info_ValueForKey(cl.serverinfo, "*qf_version")) && *p) {
-		if (v) {
-			if (!server_version)
-				Con_Printf("QuakeForge Version %s Server\n", p);
-			server_version = strdup(p);
-		}
+		if (!server_version)
+			Con_Printf("QuakeForge Version %s Server\n", p);
+		server_version = strdup(p);
 	} else if ((p = Info_ValueForKey(cl.serverinfo, "*version")) && *p) {
-		if (v) {
-			if (!server_version)
-				Con_Printf("Version %s Server\n", p);
-			server_version = strdup(p);
-		}
+		if (!server_version)
+			Con_Printf("Version %s Server\n", p);
+		server_version = strdup(p);
 	}
 }
 
