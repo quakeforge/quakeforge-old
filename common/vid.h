@@ -61,6 +61,8 @@ extern	unsigned	d_8to24table[256];
 extern void (*vid_menudrawfn)(void);
 extern void (*vid_menukeyfn)(int key);
 
+extern unsigned int	options_draw_cursor;
+
 void	VID_SetPalette (unsigned char *palette);
 // called at startup and after any gamma correction
 
@@ -85,7 +87,7 @@ int VID_SetMode (int modenum, unsigned char *palette);
 void VID_HandlePause (qboolean pause);
 // called only on Win32, when pause happens, so the mouse can be released
 
-void VID_ExtraOptionDraw(void);
+void VID_ExtraOptionDraw(unsigned int);
 // draw extra option menu entries
 
 void VID_ExtraOptionCmd(int options_cursor);

@@ -1945,11 +1945,11 @@ void VID_MenuKey (int key)
 	}
 }
 
-void VID_ExtraOptionDraw(void)
+void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
-        M_Print (16, 128, "             Use Mouse");
-        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+        M_Print (16, options_draw_cursor+=8, "             Use Mouse");
+        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse.value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)

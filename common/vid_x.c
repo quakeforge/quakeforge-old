@@ -1091,8 +1091,8 @@ void IN_Move (usercmd_t *cmd)
 void VID_ExtraOptionDraw(void)
 {
 	// Windowed Mouse
-        M_Print (16, 128, "             Use Mouse");
-        M_DrawCheckbox(220, 128, _windowed_mouse.value);
+        M_Print (16, options_draw_cursor+=8, "             Use Mouse");
+        M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse.value);
 }
 
 void VID_ExtraOptionCmd(int option_cursor)

@@ -647,7 +647,7 @@ VID_ModeInfo (int modenum)
 
 
 void
-VID_ExtraOptionDraw(void)
+VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	/* No extra option menu items yet */
 }

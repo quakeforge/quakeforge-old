@@ -781,7 +781,7 @@ void VID_MenuKey (int key)
 	}
 }
 
-void VID_ExtraOptionDraw(void)
+void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 /* Port specific Options menu entrys */
 }

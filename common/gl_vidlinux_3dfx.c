@@ -443,7 +443,7 @@ void VID_Init(unsigned char *palette)
 	vid.recalc_refdef = 1;				// force a surface cache flush
 }
 
-void VID_ExtraOptionDraw(void)
+void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 /* Port specific Options menu entrys */
 }

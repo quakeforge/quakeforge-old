@@ -1064,10 +1064,12 @@ again:
 
 
 #define	SLIDER_RANGE	10
+#define L_OPTIONS_ITEMS	13
 
 extern int	VID_options_items;
 static int	options_cursor;
-#define options_items	15
+
+#define 	options_items (L_OPTIONS_ITEMS+VID_options_items)
 
 void M_Menu_Options_f (void)
 {
@@ -1200,49 +1202,54 @@ void M_Options_Draw (void)
 	float		r;
 	qpic_t	*p;
 
+	unsigned int	options_draw_cursor=32;
+
 	M_DrawTransPic (16, 4, Draw_CachePic ("gfx/qplaque.lmp") );
 	p = Draw_CachePic ("gfx/p_option.lmp");
 	M_DrawPic ( (320-p->width)/2, 4, p);
 
-	M_Print (16, 32, "    Customize controls");
-	M_Print (16, 40, "         Go to console");
-	M_Print (16, 48, "     Reset to defaults");
+	M_Print (16, options_draw_cursor, "    Customize controls");
+	M_Print (16, options_draw_cursor+=8, "         Go to console");
+	M_Print (16, options_draw_cursor+=8, "     Reset to defaults");
 
-	M_Print (16, 56, "           Screen size");
+	M_Print (16, options_draw_cursor+=8, "           Screen size");
 	r = (scr_viewsize.value - 30) / (120 - 30);
-	M_DrawSlider (220, 56, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 64, "            Brightness");
+	M_Print (16, options_draw_cursor+=8, "            Brightness");
 	r = (1.0 - v_gamma.value) / 0.5;
-	M_DrawSlider (220, 64, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 72, "           Mouse Speed");
+	M_Print (16, options_draw_cursor+=8, "           Mouse Speed");
 	r = (sensitivity.value - 1)/10;
 	M_DrawSlider (220, 72, r);
 
-	M_Print (16, 80, "       CD Music Volume");
+	M_Print (16, options_draw_cursor+=8, "       CD Music Volume");
 	r = bgmvolume.value;
-	M_DrawSlider (220, 80, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 88, "          Sound Volume");
+	M_Print (16, options_draw_cursor+=8, "          Sound Volume");
 	r = volume.value;
-	M_DrawSlider (220, 88, r);
+	M_DrawSlider (220, options_draw_cursor, r);
 
-	M_Print (16, 96,  "            Always Run");
-	M_DrawCheckbox (220, 96, cl_forwardspeed.value > 200);
+	M_Print (16, options_draw_cursor+=8,  "            Always Run");
+	M_DrawCheckbox (220, options_draw_cursor, cl_forwardspeed.value
+> 200);
 
-	M_Print (16, 104, "          Invert Mouse");
-	M_DrawCheckbox (220, 104, m_pitch.value < 0);
+	M_Print (16, options_draw_cursor+=8, "          Invert Mouse");
+	M_DrawCheckbox (220, options_draw_cursor, m_pitch.value < 0);
 
-	M_Print (16, 112, "            Lookspring");
-	M_DrawCheckbox (220, 112, lookspring.value);
+	M_Print (16, options_draw_cursor+=8, "            Lookspring");
+	M_DrawCheckbox (220, options_draw_cursor, lookspring.value);
 
-	M_Print (16, 120, "            Lookstrafe");
-	M_DrawCheckbox (220, 120, lookstrafe.value);
+	M_Print (16, options_draw_cursor+=8, "            Lookstrafe");
+	M_DrawCheckbox (220, options_draw_cursor, lookstrafe.value);
 
-	if (vid_menudrawfn) M_Print (16, 144, "         Video Options");
+	VID_ExtraOptionDraw(options_draw_cursor);
+	options_draw_cursor+=VID_options_items*8;
 
-	VID_ExtraOptionDraw();
+	if (vid_menudrawfn)
+		M_Print (16, options_draw_cursor+=8, "         Video Options");
 
 // cursor
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
@@ -1323,7 +1330,7 @@ void M_Options_Key (int k)
 	    }
 	}
 #else
-	if ((options_cursor == options_items-1) && (modestate != MS_WINDOWED))
+	if (options_cursor == options_items-1)
 	{
 	    switch (k) {
 		case KP_UPARROW:
