@@ -939,6 +939,8 @@ GetEvent(void)
 
 	case ButtonPress:
 		but = x_event.xbutton.button;
+		if (but == 2) but = 3;
+		else if (but == 3) but = 2;
 		switch(but) {
 		case 1:
 		case 2:
@@ -949,6 +951,8 @@ GetEvent(void)
 
 	case ButtonRelease:
 		but = x_event.xbutton.button;
+		if (but == 2) but = 3;
+		else if (but == 3) but = 2;
 		switch(but) {
 		case 1:
 		case 2:
