@@ -10,7 +10,7 @@ BIN_PREFIX  = quake
 COMMON_DIR=$(PROJECT_DIR)/common
 BUILD_DIR = $(PROJECT_DIR)/targets/uquake
 
-LDFLAGS = @LDFLAGS@
+LDFLAGS = @LDFLAGS@ @SND_LIBS@
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
@@ -108,6 +108,9 @@ SND_SRC = snd_dma.c snd_linux.c snd_mixa.s
 endif
 ifeq ($(SND_STYLE),Solaris)
 SND_SRC = snd_dma.c snd_sun.c
+endif
+ifeq ($(SND_STYLE),MME)
+SND_SRC = snd_dma.c snd_mme.c
 endif
 
 SND_SRC        += snd_mem.c snd_mix.c

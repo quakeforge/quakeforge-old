@@ -302,17 +302,22 @@ AC_SUBST(INTEL_ARCH)
 #
 # Sound available?
 #
+SND_LIBS=""
 AC_MSG_CHECKING(for sound support)
 case "${target}" in
 changequote(,)dnl
    i[34567]86-*-linux-gnu*)
-changequote([,])dnl
       SND_STYLE="Linux" ;;
    *-solaris*) 
       SND_STYLE="Solaris" ;;
+   *-dec-osf[34]*)                                                             
+      SND_STYLE="MME"                                            
+      SND_LIBS="-lmme"                                                         
+       ;;          
    *)
       SND_STYLE="Null" ;;
 # XXX - need to add dos, Windows
+changequote([,])dnl
 esac
 if test "x$SND_STYLE" = xNull; then
 AC_MSG_RESULT(no)
@@ -320,6 +325,7 @@ else
 AC_MSG_RESULT(yes ($SND_STYLE style))
 fi
 AC_SUBST(SND_STYLE)
+AC_SUBST(SND_LIBS)
 
 ##########################################################
 #
