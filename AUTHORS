@@ -117,6 +117,7 @@ D: GL fullbright support
 N: Dan Nelson
 E: dnelson@emsphone.com
 D: Typo fix
+D: Help with the speed cheat fix
 
 N: Dan Olson
 E: theoddone@quakefiles.com
@@ -155,3 +156,8 @@ D: Makefile fixes
 N: Andrew Coles
 E: andycole123@ic24.net
 D: CD-ROM support/fixes
+
+N: Andrew "Slade" Alexander
+E: slade@quakelives.com
+D: Reworking of the heart beat, and ping taking code on the server side.
+D: sv_maxrate support..

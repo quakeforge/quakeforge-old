@@ -1362,6 +1362,12 @@ void SV_PreRunCmd(void)
 	memset(playertouch, 0, sizeof(playertouch));
 }
 	
+/* how many packets to average the ideal 'msec' value over */
+#define MSECSIZE 100
+
+/* maximum msec offset we will allow before penalizing the player */
+#define POOLMAX 150
+
 /*
 ===========
 SV_RunCmd
@@ -1370,40 +1376,68 @@ SV_RunCmd
 void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 {
 	edict_t	*ent;
-	int		i, n, oldmsec;
+	int		i, n, oldmsec, idealmsec;
 	double	tmp_time;
 
-	// To prevent a infinate loop
+	// To prevent a infinite loop
 	if (!inside) {
 		oldmsec = ucmd->msec;
-		// Calculate the real msec.
+		// Calculate the ideal msec.
 		tmp_time = realtime - host_client->frame_time;
-		ucmd->msec = tmp_time * 1000;
+		idealmsec = tmp_time * 1000;
 
 		if (loss)
-			ucmd->msec /= (loss + 1);
+			idealmsec /= (loss + 1);
 
 		// Cap it at a max of 250 msec though..
-		ucmd->msec = min(ucmd->msec, 250);
-		ucmd->msec = max(ucmd->msec, 10);
+		idealmsec = min(idealmsec, 250);
+		idealmsec = max(idealmsec, 10);
 
-		if (host_client->msecs[host_client->msec_head])
-			host_client->msec_total-=host_client->msecs[host_client->msec_head];
+		host_client->msec_total -= host_client->msecs[host_client->msec_head];
+		host_client->msec_total += idealmsec;
 
-		host_client->msec_total += ucmd->msec;
-		host_client->msecs[host_client->msec_head] = ucmd->msec;
-		host_client->msec_head = (host_client->msec_head + 1) % 100;
-		host_client->msec_count = min(100, host_client->msec_count + 1);
+		host_client->msecs[host_client->msec_head] = idealmsec;
+		host_client->msec_head = (host_client->msec_head + 1) % MSECSIZE;
+		host_client->msec_count = min(MSECSIZE, host_client->msec_count + 1);
 
-		ucmd->msec = host_client->msec_total / host_client->msec_count;
+		host_client->msec_pool += idealmsec - oldmsec;
 
-		// If were more then 10 msecs off what the client tells us, report it.
-		if (abs(oldmsec - ucmd->msec) > 10) {
-			printf("tmp_time: %f, realtime: %f, frame_time: %f\n",
-					tmp_time, realtime, host_client->frame_time);
-			printf("oldmsec: '%d', msec: '%d'\n", oldmsec, 
-					ucmd->msec);
+		if (abs(host_client->msec_pool) > POOLMAX)
+		{
+			printf("tmp_t: %f, realt: %f, frame_t: %f, loss: %d, total: %d\n",
+					tmp_time, realtime, host_client->frame_time, loss,
+					host_client->msec_total);
+/*
+			printf("%3d %3d %3d %3d %3d   ",
+				host_client->msecs[0],
+				host_client->msecs[1],
+				host_client->msecs[2],
+				host_client->msecs[3],
+				host_client->msecs[4]);
+*/
+			if (abs(host_client->msec_pool) > POOLMAX)
+				printf("*** ");
+			else
+				printf("    ");
+			
+			printf("oldmsec: %d, msec: %d, pool: %d\n", oldmsec, 
+					idealmsec, host_client->msec_pool);
 		}
+		
+		if (abs(host_client->msec_pool) > POOLMAX)
+		{
+			/* if our pool exceeds POOLMAX msec, empty it into msec.  This
+			   should cause the client to 'jitter' back a bit as his
+			   position is reset. */
+			ucmd->msec = oldmsec - host_client->msec_pool;
+			host_client->msec_pool = 0;
+		} else
+		{
+			/* trust the client - if he's cheating, his pool will overflow
+			   anyway within a couple of packets. */
+			ucmd->msec = oldmsec;
+		}
+
 		host_client->frame_time = realtime;
 	}
 

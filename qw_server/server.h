@@ -193,7 +193,7 @@ typedef struct client_s
 	int				delta_sequence;		// -1 = no compression
 	int				ping;
 	netchan_t		netchan;
-	int				msecs[MAX_MSECS], msec_count, msec_head, msec_total;
+	int				msecs[MAX_MSECS], msec_count, msec_head, msec_total, msec_pool;
 	double			frame_time;
 } client_t;
 
