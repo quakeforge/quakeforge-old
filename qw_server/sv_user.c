@@ -1373,13 +1373,12 @@ void SV_PreRunCmd(void)
 	memset(playertouch, 0, sizeof(playertouch));
 }
 	
-/* how many packets to average the ideal 'msec' value over */
-#define MSECSIZE 100
-
-/* maximum msec offset we will allow before penalizing the player */
-#define POOLMAX 150
-
+// Over how long do we make the checks?
 #define CHECK_TIME 30
+
+// How many failed checks before we boot the guy?
+#define CHECK_LIMIT 3
+
 /*
 ===========
 SV_RunCmd
@@ -1396,18 +1395,19 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 		host_client->msecs += ucmd->msec;
 
 		if ((tmp_time = realtime - host_client->last_check) >= CHECK_TIME) {
-			tmp_time *= 1100;
+			tmp_time *= 1010;
 		    if (host_client->msecs > (int) (tmp_time + 0.5)) {
 				host_client->msec_cheating++;
 				SV_BroadcastPrintf(PRINT_HIGH, 
-						va("Err, %s may be CHEATING! %d %f %d\n",
-							host_client->name, host_client->msecs, tmp_time,
-							host_client->msec_cheating));
+					va("%s thinks %d msecs pass in %f msecs. (Strike %d/%d)\n" 
+						host_client->name, host_client->msecs, tmp_time,
+						host_client->msec_cheating, CHECK_LIMIT));
 
-				if (host_client->msec_cheating >= 2) {
+				if (host_client->msec_cheating >= CHECK_LIMIT) {
 					SV_BroadcastPrintf(PRINT_HIGH, 
-							va("*WHACK* %s (%s) has been caught cheating!\n", 
-								host_client->name, NET_AdrToString(host_client->netchan.remote_address)));
+							va("Strike %d for %s!!\n", 
+								host_client->msec_cheating, host_client->name));
+					SV_BroadcastPrintf(PRINT_HIGH, "Please see http://www.quakeforge.net/speed_cheat.html for infomation on the cheat detection, and to explain how some may be cheating without knowing it.\n");
 					SV_DropClient(host_client);
 				}
 		    }
