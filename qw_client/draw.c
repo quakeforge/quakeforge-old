@@ -659,14 +659,14 @@ void Draw_ConsoleBackground (int lines)
 	//sprintf (ver, "start commands with a \\ character %4.2f", VERSION);
 
 	if (cls.download) {
-		sprintf (ver, "%4.2f", VERSION);
+		sprintf (ver, "%s", VERSION);
 		dest = conback->data + 320 + 320*186 - 11 - 8*strlen(ver);
 	} else {
 #if defined(__linux__)
 		//sprintf (ver, "Linux (%4.2f) QuakeWorld %4.2f", LINUX_VERSION, VERSION);
-		sprintf (ver, "QuakeForge (Linux QuakeWorld) Version %4.2f", VERSION);
+		sprintf (ver, "QuakeForge (Linux QuakeWorld) Version %s", VERSION);
 #else
-		sprintf (ver, "QuakeForge (QuakeWorld) %4.2f", VERSION);
+		sprintf (ver, "QuakeForge (QuakeWorld) %s", VERSION);
 #endif
 		dest = conback->data + 320 - (strlen(ver)*8 + 11) + 320*186;
 	}

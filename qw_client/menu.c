@@ -1073,9 +1073,9 @@ void M_Quit_Draw (void)
 #define VSTR(x) #x
 #define VSTR2(x) VSTR(x)
 	char *cmsg[] = {
-//    0123456789012345678901234567890123456789
+//	 0123456789012345678901234567890123456789
 	"0            QuakeWorld",
-	"1    version " VSTR2(VERSION) " by id Software",
+	"1    version " VERSION " by id Software",
 	"0Programming",
 	"1 John Carmack    Michael Abrash",
 	"1 John Cash       Christian Antkow",
@@ -1083,7 +1083,7 @@ void M_Quit_Draw (void)
 	"1 Dave 'Zoid' Kirsch",
 	"1 Jack 'morbid' Mathews",
 	"0Id Software is not responsible for",
-    "0providing technical support for",
+	"0providing technical support for",
 	"0QUAKEWORLD(tm). (c)1996 Id Software,",
 	"0Inc.  All Rights Reserved.",
 	"0QUAKEWORLD(tm) is a trademark of Id",

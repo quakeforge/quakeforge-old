@@ -21,9 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define	QUAKE_GAME			// as opposed to utilities
 
-//#define	PARANOID			// speed sapping error checking
-
-#define	VERSION				0.1
+#include <config/config.h>
 
 #include <math.h>
 #include <string.h>
@@ -32,7 +30,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #include <setjmp.h>
 #include <time.h>
-
 
 #if defined(_WIN32) && !defined(WINDED)
 void	VID_LockBuffer (void);

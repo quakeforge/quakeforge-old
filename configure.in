@@ -27,7 +27,7 @@ AC_SUBST(OGL_LDFLAGS)
 AC_ARG_WITH(opengl-includes,
 [  --with-opengl-includes=DIR
                           use OpenGL with header files found in DIR],
-HAS_OGL_INC=yes; OGL_INC_PATH=$enable_OpenGLINC; OGL_CFLAGS=-I$enable_OpenGLINC)
+HAS_OGL_INC=yes; OGL_INC_PATH=$enable_OpenGLINC; OGL_CFLAGS=-Wall -I$enable_OpenGLINC)
 AC_SUBST(OGL_CFLAGS)
 
 dnl Check for X first...
@@ -85,7 +85,7 @@ if test "x$HAS_OGL_INC" = x; then
          AC_MSG_CHECKING(for $x_includes/GL/gl.h)
 	 if test -f "$x_includes"/GL/gl.h; then
 	    HAS_OGL_INC=yes
-	    OGL_CFLAGS=-I$x_includes
+	    OGL_CFLAGS=-Wall -I$x_includes
 	    OGL_INC_PATH=$x_includes
 	    AC_MSG_RESULT(yes)
 	 else
@@ -93,7 +93,7 @@ if test "x$HAS_OGL_INC" = x; then
             AC_MSG_CHECKING(for $POSS_OGL_CFLAGS/GL/gl.h)
 	    if test -f "$POSS_OGL_CFLAGS/GL/gl.h"; then
 	       HAS_OGL_INC=yes
-	       OGL_CFLAGS=-I$POSS_OGL_CFLAGS
+	       OGL_CFLAGS=-Wall -I$POSS_OGL_CFLAGS
 	       OGL_INC_PATH=$POSS_OGL_CFLAGS
 	       AC_MSG_RESULT(yes)
             else
@@ -107,38 +107,67 @@ fi
 
 AC_MSG_CHECKING(for OpenGL support)
 if test "x$HAS_OGL_INC" != x; then
-   if test "x$HAS_OGL_LIB" != x; then
-      HAS_OGL=yes
-      if test "x$OGL_CFLAGS" != x; then
-         AC_MSG_RESULT([yes, libraries $OGL_LDFLAGS, headers $OGL_CFLAGS])
-      else
-         AC_MSG_RESULT(yes)
-      fi
-      if test "x$OGL_LDFLAGS" = x-L; then
-         AC_MSG_ERROR(OpenGL LDFLAGS is -L with no directory)
-      fi
-      AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT)
-      if test "x$OGL_INC_PATH" != x; then
-	 OGL_INC_PATH_TO_GL="$OGL_INC_PATH/GL/gl.h"
-      else
-	 OGL_INC_PATH_TO_GL="GL/gl.h"
-      fi
-      AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
-                     [ int x = (int) GL_COLOR_INDEX8_EXT;],
-                     HAS_GL_COLOR_INDEX8_EXT=yes,
-                     HAS_GL_COLOR_INDEX8_EXT=no)
-      if test "x$HAS_GL_COLOR_INDEX8_EXT" != xno; then
-         AC_MSG_RESULT(yes)
-	 AC_DEFINE(HAS_GL_COLOR_INDEX8_EXT, 1)
-      fi
- 
-   else
-      AC_MSG_RESULT(no)
-   fi
-   else
-      AC_MSG_RESULT(no)
+    if test "x$HAS_OGL_LIB" != x; then
+	HAS_OGL=yes
+	if test "x$OGL_CFLAGS" != x; then
+	    AC_MSG_RESULT([yes, libraries $OGL_LDFLAGS, headers $OGL_CFLAGS])
+	else
+	    AC_MSG_RESULT(yes)
+	fi
+	if test "x$OGL_LDFLAGS" = x-L; then
+	    AC_MSG_ERROR(OpenGL LDFLAGS is -L with no directory)
+	fi
+	if test "x$OGL_INC_PATH" != x; then
+	    OGL_INC_PATH_TO_GL="$OGL_INC_PATH/GL/gl.h"
+	else
+	    OGL_INC_PATH_TO_GL="GL/gl.h"
+	fi
+	AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT)
+	AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
+			[ int x = (int) GL_COLOR_INDEX8_EXT;],
+			HAVE_GL_COLOR_INDEX8_EXT=yes,
+			HAVE_GL_COLOR_INDEX8_EXT=no)
+	if test "x$HAVE_GL_COLOR_INDEX8_EXT" != xno; then
+	    AC_MSG_RESULT(yes)
+	    AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, 1)
+	else
+	    AC_MSG_RESULT(no)
+	    AC_MSG_ERROR(Error, HAVE_GL_COLOR_INDEX8_EXT not found.)
+	fi
+
+	AC_MSG_CHECKING(for GLAPIENTRY)
+	AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
+			[ int x = GLAPIENTRY printf("");],
+			HAS_GLAPIENTRY=yes,
+			HAS_GLAPIENTRY=no)
+	if test "x$HAS_GLAPIENTRY" != xno; then
+	    AC_MSG_RESULT(yes)
+	else
+	    AC_MSG_RESULT(no)
+
+	    AC_MSG_CHECKING(for APIENTRY)
+	    AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
+			    [ int x = APIENTRY printf("");],
+			    HAS_APIENTRY=yes,
+			    HAS_APIENTRY=no)
+	    if test "x$HAS_APIENTRY" != xno; then
+		AC_MSG_RESULT(yes)
+		AC_DEFINE(GLAPIENTRY_IS_APIENTRY, 1)
+	    else
+		AC_MSG_RESULT(no)
+		AC_MSG_ERROR(Error, neither GLAPIENTRY nor APIENTRY are defined)
+	    fi
+	fi
+
+    else
+	AC_MSG_RESULT(no)
+    fi
+else
+    AC_MSG_RESULT(no)
 fi
 AC_SUBST(HAS_OGL)
+AC_SUBST(HAS_APIENTRY)
+AC_SUBST(HAS_GLAPIENTRY)
 
 dnl Check for other libraries
 AC_CHECK_LIB(vga, vga_getmousetype, [HAS_VGA=yes], [HAS_VGA=])
@@ -196,9 +225,7 @@ if test "x$HAS_TDFXGL" != xno; then
       if test "x$HAS_OGL" != x; then
          if test "x$HAS_VGA" != x; then
 	    save_LIBS="$LIBS"
-	    LIBS="$TDFXGL_LDFLAGS $LIBS"
-	    AC_CHECK_LIB(3dfxgl, glColor4f, HAS_TDFXGL=yes, HAS_TDFXGL=)
-	    LIBS="$save_LIBS"
+	    AC_CHECK_LIB(3dfxgl, glColor4f, HAS_TDFXGL=yes, HAS_TDFXGL=, -lglide2x)
 	 fi
       fi
    fi
@@ -226,7 +253,7 @@ AC_SUBST(STRICMP_DEF)
 if test "x$RELEASE" = xyes; then
    if test "x$GCC" = xyes; then
       AC_MSG_CHECKING(for special release compiler settings)
-      BASE_RELEASE_CFLAGS="-O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
+      BASE_RELEASE_CFLAGS="-Wall -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
 dnl FIX:  Someone PLEASE be so kind as to make this -mcpu stuff sane?
       case "${target}" in
          changequote(,)dnl
@@ -363,5 +390,6 @@ AC_PATH_XTRA
 #
 # Output files
 #
+AC_CONFIG_HEADER(common/config/config.h)
 AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
 

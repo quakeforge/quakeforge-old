@@ -20,9 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // quakedef.h -- primary header for server
 
 #define	QUAKE_GAME			// as opposed to utilities
-#define VERSION 0.1
+#define VERSION				"0.1.0"
 
-//define	PARANOID			// speed sapping error checking
+//define	PARANOID		// speed sapping error checking
 
 #ifdef _WIN32
 #pragma warning( disable : 4244 4127 4201 4214 4514 4305 4115 4018)

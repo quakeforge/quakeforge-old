@@ -414,7 +414,7 @@ void Draw_Init (void)
 		Sys_Error ("Couldn't load gfx/conback.lmp");
 	SwapPic (cb);
 
-	sprintf (ver, "%4.2f", VERSION);
+	sprintf (ver, VERSION);
 	dest = cb->data + 320 + 320*186 - 11 - 8*strlen(ver);
 	for (x=0 ; x<strlen(ver) ; x++)
 		Draw_CharToConback (ver[x], dest+(x<<3));
@@ -795,9 +795,9 @@ void Draw_ConsoleBackground (int lines)
 	y = lines-14;
 	if (!cls.download) {
 #ifdef __linux__
-		sprintf (ver, "QuakeForge (LinuxGL QuakeWorld) %4.2f", VERSION);
+		sprintf (ver, "QuakeForge (LinuxGL QuakeWorld) " VERSION);
 #else
-		sprintf (ver, "QuakeForge (GL QuakeWorld) %4.2f", VERSION);
+		sprintf (ver, "QuakeForge (GL QuakeWorld) " VERSION);
 #endif
 		x = vid.conwidth - (strlen(ver)*8 + 11) - (vid.conwidth*8/320)*7;
 		for (i=0 ; i<strlen(ver) ; i++)
@@ -1242,9 +1242,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 		if (!mipmap)
 		{
 // FIXME - what if this extension isn't available?
-#ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX , GL_UNSIGNED_BYTE, data);
-#endif
 			goto done;
 		}
 		memcpy (scaled, data, width*height);
@@ -1253,9 +1251,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 		GL_Resample8BitTexture (data, width, height, scaled, scaled_width, scaled_height);
 
 // FIXME - what if this extension isn't available?
-#ifdef HAVE_GL_COLOR_INDEX8_EXT
 	glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
-#endif
 	if (mipmap)
 	{
 		int		miplevel;
@@ -1272,9 +1268,7 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 				scaled_height = 1;
 			miplevel++;
 // FIXME - what if this extension isn't available?
-#ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, miplevel, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
-#endif
 		}
 	}
 done: ;

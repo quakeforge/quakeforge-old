@@ -142,7 +142,8 @@ MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c
 
 # OpenGL
 GL_REND_SRC = gl_screen.c gl_model.c gl_draw.c gl_mesh.c gl_refrag.c \
-              gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_test.c gl_warp.c
+              gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_warp.c nonintel.c
+#              gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_test.c gl_warp.c
 QW_GL_REND_SRC = gl_ngraph.c
 
 # Software source
@@ -182,7 +183,7 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 # Directory specific stuff
 #
 DEFS = @DEFS@ @STRICMP_DEF@
-CFLAGS = -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
+CFLAGS = -Wall -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
 ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(QW_X11_VID_SRC) model.c
 ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC) $(QW_GL_REND_SRC) 
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC) $(QW_GL_REND_SRC) 
