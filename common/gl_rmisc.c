@@ -39,7 +39,7 @@
 
 void R_InitBubble();
 
-void R_FireColor_f();
+void R_FireColor_f(void);
 
 extern cvar_t *r_clearcolor;
 

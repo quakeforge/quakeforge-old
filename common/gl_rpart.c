@@ -1039,7 +1039,7 @@ R_UpdateFires (void)
 }
 
 void
-R_FireColor_f()
+R_FireColor_f(void)
 {
 	int i;
 
