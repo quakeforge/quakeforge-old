@@ -175,7 +175,7 @@ SW_REND_SRC = screen.c $(SWREND_SRC_PLAT) draw.c \
 
 # Client source files
 
-CL_SRC    = cl_demo.c cl_input.c cl_main.c cl_parse.c cl_tent.c
+CL_SRC    = cl_demo.c cl_input.c cl_main.c cl_parse.c cl_tent.c cl_ents.c
 CL_GUI_SRC= console.c sbar.c view.c keys.c menu.c
 
 # Server source files
