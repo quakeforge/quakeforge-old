@@ -295,7 +295,7 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	int			*cmds;
 	trivertx_t	*verts;
 	char	cache[MAX_QPATH], fullpath[MAX_OSPATH];
-	FILE	*f;
+	gzFile	*f;
 
 	aliasmodel = m;
 	paliashdr = hdr;	// (aliashdr_t *)Mod_Extradata (m);
@@ -310,11 +310,11 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 	COM_FOpenFile (cache, &f);	
 	if (f)
 	{
-		fread (&numcommands, 4, 1, f);
-		fread (&numorder, 4, 1, f);
-		fread (commands, numcommands * sizeof(commands[0]), 1, f);
-		fread (vertexorder, numorder * sizeof(vertexorder[0]), 1, f);
-		fclose (f);
+		gzread (f, &numcommands, 4);
+		gzread (f, &numorder, 4);
+		gzread (f, commands, numcommands * sizeof(commands[0]));
+		gzread (f, vertexorder, numorder * sizeof(vertexorder[0]));
+		gzclose (f);
 	}
 	else
 	{
