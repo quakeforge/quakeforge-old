@@ -151,6 +151,10 @@ R_CullBox (vec3_t mins, vec3_t maxs) {
 	return false;
 }
 
+#ifdef EXPERIMENTAL
+/*
+	R_BlendedRotateForEntity
+*/
 void
 R_BlendedRotateForEntity (entity_t *e)
 {
@@ -216,6 +220,7 @@ R_BlendedRotateForEntity (entity_t *e)
 	glRotatef (-e->angles1[0] + (-blend * d[0]),  0, 1, 0);
 	glRotatef ( e->angles1[2] + ( blend * d[2]),  1, 0, 0);
 }
+#endif
 
 void
 R_RotateForEntity (entity_t *e)
@@ -414,7 +419,7 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 	}
 }
 
-
+#ifdef EXPERIMENTAL
 /*
 	GL_DrawAliasBlendedFrame
 */
@@ -432,8 +437,7 @@ GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
 	lastposenum0 = pose1;
 	lastposenum = pose2;
 
-	verts1 = (trivertx_t *)((byte *)paliashdr +
-			paliashdr->posedata);
+	verts1 = (trivertx_t *)((byte *)paliashdr + paliashdr->posedata);
 	verts2 = verts1;
 	
 	verts1 += pose1 * paliashdr->poseverts;
@@ -485,7 +489,7 @@ GL_DrawAliasBlendedFrame (aliashdr_t *paliashdr, int pose1, int pose2,
 		glEnd ();
 	}
 }
-
+#endif
 
 
 /*
@@ -573,6 +577,7 @@ R_SetupAliasFrame (int frame, aliashdr_t *paliashdr)
 }
 
 
+#ifdef EXPERIMENTAL
 /*
 	R_SetupAliasBlendedFrame
 */
@@ -620,6 +625,8 @@ R_SetupAliasBlendedFrame (int frame, aliashdr_t *paliashdr, entity_t *e)
 
 	GL_DrawAliasBlendedFrame (paliashdr, e->pose1, e->pose2, blend);
 }
+#endif
+
 
 /*
 	R_DrawAliasModel
@@ -736,9 +743,11 @@ R_DrawAliasModel (entity_t *e)
 	GL_DisableMultitexture();
 	glPushMatrix ();
 
+#ifdef EXPERIMENTAL
 	if (r_interptransform->value)
 		R_BlendedRotateForEntity (e);
 	else
+#endif
 		R_RotateForEntity (e);
 
 	if (!strcmp (clmodel->name, "progs/eyes.mdl") &&
@@ -789,10 +798,12 @@ R_DrawAliasModel (entity_t *e)
 	if (gl_affinemodels->value)
 		glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
+#ifdef EXPERIMENTAL
 	if (r_interpanimation->value)
 		R_SetupAliasBlendedFrame (currententity->frame, paliashdr,
 				currententity);
 	else
+#endif
 		R_SetupAliasFrame (currententity->frame, paliashdr);
 
 

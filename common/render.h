@@ -78,20 +78,22 @@ typedef struct entity_s
 	vec3_t			msg_origins[2];	// last 2 updates (0 is newest)
 	vec3_t			msg_angles[2];	// last 2 updates (0 is newest)
 	int			effects;	// light, particles, etc
-	float			translate_start_time;
-	vec3_t			origin1;
-	vec3_t			origin2;
 	vec3_t			origin;
-	float			rotate_start_time;
-	vec3_t			angles1;
-	vec3_t			angles2;
 	vec3_t			angles;
 	struct model_s		*model;		// NULL = no model
 	struct efrag_s		*efrag;		// linked list of efrags
 	int			frame;
+#ifdef EXPERIMENTAL
+	float			translate_start_time;
+	vec3_t			origin1;
+	vec3_t			origin2;
+	float			rotate_start_time;
+	vec3_t			angles1;
+	vec3_t			angles2;
 	float			frame_start_time;
 	float			frame_interval;
 	int			pose1, pose2;
+#endif
 	float			syncbase;	// for client-side animations
 	byte			*colormap;
 	int			skinnum;	// for Alias models
