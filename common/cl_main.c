@@ -1809,12 +1809,12 @@ void CL_Init (void)
 #ifdef QUAKEWORLD
 	Cvar_RegisterVariable (&baseskin);
 	Cvar_RegisterVariable (&noskins);
-#endif
 
 	//
 	// info mirrors
 	//
 	Cvar_RegisterVariable (&name);
+#endif
 	Cvar_RegisterVariable (&password);
 	Cvar_RegisterVariable (&spectator);
 	Cvar_RegisterVariable (&skin);
@@ -1826,7 +1826,6 @@ void CL_Init (void)
 	Cvar_RegisterVariable (&noaim);
 
 
-	Cmd_AddCommand ("version", CL_Version_f);
 
 	Cmd_AddCommand ("changing", CL_Changing_f);
 //	Cvar_RegisterVariable (&cl_autofire);
@@ -1836,6 +1835,7 @@ void CL_Init (void)
 	Cmd_AddCommand ("disconnect", CL_Disconnect_f);
 	Cmd_AddCommand ("record", CL_Record_f);
 #ifdef QUAKEWORLD
+	Cmd_AddCommand ("version", CL_Version_f);
 	Cmd_AddCommand ("rerecord", CL_ReRecord_f);
 #endif
 	Cmd_AddCommand ("stop", CL_Stop_f);
@@ -1845,16 +1845,11 @@ void CL_Init (void)
 #ifdef QUAKEWORLD
 	Cmd_AddCommand ("skins", Skin_Skins_f);
 	Cmd_AddCommand ("allskins", Skin_AllSkins_f);
-#endif
-
 	Cmd_AddCommand ("quit", CL_Quit_f);
 
-#ifdef QUAKEWORLD
 	Cmd_AddCommand ("connect", CL_Connect_f);
-#endif
 	Cmd_AddCommand ("reconnect", CL_Reconnect_f);
 
-#ifdef QUAKEWORLD
 	Cmd_AddCommand ("rcon", CL_Rcon_f);
 	Cmd_AddCommand ("packet", CL_Packet_f);
 	Cmd_AddCommand ("user", CL_User_f);
@@ -1869,14 +1864,14 @@ void CL_Init (void)
 
 	Cmd_AddCommand ("nextul", CL_NextUpload);
 	Cmd_AddCommand ("stopul", CL_StopUpload);
-#endif
-//
-// forward to server commands
-//
 	Cmd_AddCommand ("kill", NULL);
 	Cmd_AddCommand ("pause", NULL);
 	Cmd_AddCommand ("say", NULL);
 	Cmd_AddCommand ("say_team", NULL);
+#endif
+//
+// forward to server commands
+//
 	Cmd_AddCommand ("serverinfo", NULL);
 
 //

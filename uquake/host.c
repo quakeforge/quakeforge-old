@@ -73,8 +73,6 @@ client_t	*host_client;			// current client
 
 jmp_buf 	host_abortserver;
 
-//cvar_t	show_fps = {"show_fps","0"};			// set for running times
-extern cvar_t show_fps;
 
 
 int			fps_count;
@@ -83,7 +81,6 @@ byte		*host_basepal;
 byte		*host_colormap;
 
 cvar_t	host_framerate = {"host_framerate","0"};	// set for slow motion
-//cvar_t	host_speeds = {"host_speeds","0"};			// set for running times
 extern cvar_t host_speeds;
 
 cvar_t	sys_ticrate = {"sys_ticrate","0.05"};
@@ -95,12 +92,6 @@ cvar_t	teamplay = {"teamplay","0",false,true};
 
 cvar_t	samelevel = {"samelevel","0"};
 cvar_t	noexit = {"noexit","0",false,true};
-
-#ifdef QUAKE2
-cvar_t	developer = {"developer","1"};	// should be 0 for release!
-#else
-extern cvar_t	developer;// = {"developer","0"};
-#endif
 
 cvar_t	skill = {"skill","1"};						// 0 - 3
 cvar_t	deathmatch = {"deathmatch","0"};			// 0, 1, or 2
@@ -243,7 +234,6 @@ void Host_InitLocal (void)
 	Host_InitCommands ();
 	
 	Cvar_RegisterVariable (&host_framerate);
-	Cvar_RegisterVariable (&host_speeds);
 
 	Cvar_RegisterVariable (&sys_ticrate);
 	Cvar_RegisterVariable (&serverprofile);
@@ -254,7 +244,6 @@ void Host_InitLocal (void)
 	Cvar_RegisterVariable (&samelevel);
 	Cvar_RegisterVariable (&noexit);
 	Cvar_RegisterVariable (&skill);
-	Cvar_RegisterVariable (&developer);
 	Cvar_RegisterVariable (&deathmatch);
 	Cvar_RegisterVariable (&coop);
 
@@ -263,7 +252,6 @@ void Host_InitLocal (void)
 	Cvar_RegisterVariable (&temp1);
 	Cvar_RegisterVariable (&sv_filter);
 
-	Cvar_RegisterVariable (&show_fps);
 
 	Host_FindMaxClients ();
 	
