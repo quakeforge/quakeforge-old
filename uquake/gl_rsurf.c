@@ -50,7 +50,6 @@ glRect_t	lightmap_rectchange[MAX_LIGHTMAPS];
 
 int			allocated[MAX_LIGHTMAPS][BLOCK_WIDTH];
 
-cvar_t r_waterwarp = {"r_waterwarp", "1"};
 
 // the lightmap texture data needs to be kept in
 // main memory so texsubimage can update properly
