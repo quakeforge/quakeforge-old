@@ -190,7 +190,8 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 	close(fd);
 	*/
 }
-
+/* 
+This function isn't used.
 void Sys_EditFile(char *filename) {
 
 	char cmd[256];
@@ -211,7 +212,7 @@ void Sys_EditFile(char *filename) {
 		system(cmd);
 	}
 }
-
+*/
 // =======================================================================
 // Sleeps for microseconds
 // =======================================================================
