@@ -210,6 +210,9 @@ void S_Init (void)
 
 	S_Startup ();
 
+	if (sound_started == 0)  // sound startup failed? Bail out.
+		return;
+
 	SND_InitScaletable ();
 
 	known_sfx = Hunk_AllocName (MAX_SFX*sizeof(sfx_t), "sfx_t");
