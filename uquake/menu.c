@@ -1065,16 +1065,13 @@ again:
 //=============================================================================
 /* OPTIONS MENU */
 
-/*
-ifndef options_items
-define options_items   13
-endif 
-*/
-
 
 #define	SLIDER_RANGE	10
 
-int		options_cursor;
+extern int	VID_options_items;
+static int	options_cursor;
+static int	local_options_items = 13;
+#define options_items	(local_options_items + VID_options_items)
 
 void M_Menu_Options_f (void)
 {
@@ -1168,9 +1165,7 @@ void M_AdjustSliders (int dir)
 		break;
 
 	default:
-		VID_ExtraOptionCmd(options_cursor);
-
-
+		VID_ExtraOptionCmd(options_cursor-11);
 	}
 }
 
