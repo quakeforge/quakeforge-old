@@ -36,6 +36,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # define MAP_FAILED ((void*)-1)
 #endif
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 qboolean			isDedicated;
 
 /*
@@ -299,7 +307,7 @@ void Sys_Init(void)
 int main (int argc, char **argv)
 {
     static quakeparms_t    parms;
-    float time, oldtime, newtime;
+    float oldtime, newtime;
     
     parms.memsize = 16*1024*1024;
     parms.membase = malloc (parms.memsize);

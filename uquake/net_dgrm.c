@@ -64,6 +64,10 @@ unsigned long inet_addr(const char *cp);
 #include <screen.h>
 #include <keys.h>
 
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 // these two macros are to make the code more readable
 #define sfunc	net_landrivers[sock->landriver]
 #define dfunc	net_landrivers[net_landriverlevel]
