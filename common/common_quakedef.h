@@ -56,6 +56,10 @@ void	VID_UnlockBuffer (void);
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+#ifndef bound
+#define bound(a,b,c) (max(a, min(b, c))
+#endif
+
 /* This fixes warnings when compiling with -pedantic */
 #if defined(__GNUC__) && !defined(inline)
 # define inline __inline__
