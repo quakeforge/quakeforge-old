@@ -122,7 +122,7 @@ static void
 TragicDeath(int signal_num)
 {
 	//XCloseDisplay(x_disp);
-	VID_Shutdown();
+	//VID_Shutdown();
 	Sys_Error("This death brought to you by the number %d\n", signal_num);
 }
 
