@@ -126,138 +126,6 @@ void D_EndDirectRect (int x, int y, int width, int height)
 {
 }
 
-static int XLateKey(XKeyEvent *ev)
-{
-
-	int key;
-	char buf[64];
-	KeySym keysym;
-
-	key = 0;
-
-	XLookupString(ev, buf, sizeof buf, &keysym, 0);
-
-	switch(keysym)
-	{
-		case XK_KP_Page_Up:	 key = KP_PGUP; break;
-		case XK_Page_Up:	 key = K_PGUP; break;
-
-		case XK_KP_Page_Down:	 key = KP_PGDN; break;
-		case XK_Page_Down:	 key = K_PGDN; break;
-
-		case XK_KP_Home: key = KP_HOME; break;
-		case XK_Home:	 key = K_HOME; break;
-
-		case XK_KP_End:	 key = KP_END; break;
-		case XK_End:	 key = K_END; break;
-
-		case XK_KP_Left: key = KP_LEFTARROW; break;
-		case XK_Left:	 key = K_LEFTARROW; break;
-
-		case XK_KP_Right: key = KP_RIGHTARROW;		break;
-		case XK_Right:	key = K_RIGHTARROW;		break;
-
-		case XK_KP_Down: key = KP_DOWNARROW; break;
-		case XK_Down:	 key = K_DOWNARROW; break;
-
-		case XK_KP_Up:		 key = KP_UPARROW;	 break;
-		case XK_Up:		 key = K_UPARROW;	 break;
-
-		case XK_Escape: key = K_ESCAPE;		break;
-
-		case XK_KP_Enter: key = KP_ENTER;	 break;
-		case XK_Return: key = K_ENTER;		 break;
-
-		case XK_Tab:		key = K_TAB;			 break;
-
-		case XK_F1:		 key = K_F1;				break;
-
-		case XK_F2:		 key = K_F2;				break;
-
-		case XK_F3:		 key = K_F3;				break;
-
-		case XK_F4:		 key = K_F4;				break;
-
-		case XK_F5:		 key = K_F5;				break;
-
-		case XK_F6:		 key = K_F6;				break;
-
-		case XK_F7:		 key = K_F7;				break;
-
-		case XK_F8:		 key = K_F8;				break;
-
-		case XK_F9:		 key = K_F9;				break;
-
-		case XK_F10:		key = K_F10;			 break;
-
-		case XK_F11:		key = K_F11;			 break;
-
-		case XK_F12:		key = K_F12;			 break;
-
-		case XK_BackSpace: key = K_BACKSPACE; break;
-
-		case XK_KP_Delete: key = KP_DEL; break;
-		case XK_Delete: key = K_DEL; break;
-
-		case XK_Pause:	key = K_PAUSE;		 break;
-
-		case XK_Shift_L:
-		case XK_Shift_R:	key = K_SHIFT;		break;
-
-		case XK_Execute: 
-		case XK_Control_L: 
-		case XK_Control_R:	key = K_CTRL;		 break;
-
-		case XK_Mode_switch:
-		case XK_Alt_L:	
-		case XK_Meta_L: 
-		case XK_Alt_R:	
-		case XK_Meta_R: key = K_ALT;			break;
-
-		case XK_KP_Begin: key = K_AUX30;	break;
-
-		case XK_Insert: key = K_INS; break;
-		case XK_KP_Insert: key = KP_INS; break;
-
-		case XK_KP_Multiply: key = KP_MULTIPLY; break;
-		case XK_KP_Add: key = KP_PLUS; break;
-		case XK_KP_Subtract: key = KP_MINUS; break;
-		case XK_KP_Divide: key = KP_DIVIDE; break;
-
-#if 0
-		case 0x021: key = '1';break;/* [!] */
-		case 0x040: key = '2';break;/* [@] */
-		case 0x023: key = '3';break;/* [#] */
-		case 0x024: key = '4';break;/* [$] */
-		case 0x025: key = '5';break;/* [%] */
-		case 0x05e: key = '6';break;/* [^] */
-		case 0x026: key = '7';break;/* [&] */
-		case 0x02a: key = '8';break;/* [*] */
-		case 0x028: key = '9';;break;/* [(] */
-		case 0x029: key = '0';break;/* [)] */
-		case 0x05f: key = '-';break;/* [_] */
-		case 0x02b: key = '=';break;/* [+] */
-		case 0x07c: key = '\'';break;/* [|] */
-		case 0x07d: key = '[';break;/* [}] */
-		case 0x07b: key = ']';break;/* [{] */
-		case 0x022: key = '\'';break;/* ["] */
-		case 0x03a: key = ';';break;/* [:] */
-		case 0x03f: key = '/';break;/* [?] */
-		case 0x03e: key = '.';break;/* [>] */
-		case 0x03c: key = ',';break;/* [<] */
-#endif
-
-		default:
-			key = *(unsigned char*)buf;
-			if (key >= 'A' && key <= 'Z')
-				key = key - 'A' + 'a';
-//			fprintf(stdout, "case 0x0%x: key = ___;break;/* [%c] */\n", keysym);
-			break;
-	} 
-
-	return key;
-}
-
 
 static void
 blank_cursor(void)
@@ -402,109 +270,6 @@ do_fullscreen(int full)
 #endif
 	/* Failed to change anything */
 	Cvar_SetValue("vid_glx_fullscreen", fullscreen);
-}
-
-
-static void
-GetEvent(void)
-{
-	XEvent x_event;
-	int b;
-
-	if (!dpy) return;
-
-	XNextEvent(dpy, &x_event);
-
-	switch (x_event.type) {
-	case KeyPress:
-	case KeyRelease:
-		Key_Event(XLateKey(&x_event.xkey), x_event.type == KeyPress);
-		break;
-
-	case MotionNotify:
-#ifdef HAS_DGA
-		if (dgamouse) {
-			mouse_x += (float)x_event.xmotion.x_root
-				* vid_dga_mouseaccel.value;
-			mouse_y += (float)x_event.xmotion.y_root
-				* vid_dga_mouseaccel.value;
-		} else
-#endif
-		{
-			if (_windowed_mouse.value) {
-				mouse_x += (float) ((int)x_event.xmotion.x
-						    - (int)(vid.width/2));
-				mouse_y += (float) ((int)x_event.xmotion.y 
-						    - (int)(vid.height/2));
-
-				/* move the mouse to the window center again */
-				XSelectInput(dpy, win, X_MASK & ~PointerMotionMask);
-				XWarpPointer(dpy, None, win, 0, 0, 0, 0, 
-					(vid.width/2), (vid.height/2));
-				XSelectInput(dpy, win, X_MASK);
-			}
-		}
-		break;
-
-	case ButtonPress:
-		b=-1;
-		if (x_event.xbutton.button == 1)
-			b = 0;
-		else if (x_event.xbutton.button == 2)
-			b = 2;
-		else if (x_event.xbutton.button == 3)
-			b = 1;
-		if (b>=0)
-			Key_Event(K_MOUSE1 + b, true);
-		break;
-
-	case ButtonRelease:
-		b=-1;
-		if (x_event.xbutton.button == 1)
-			b = 0;
-		else if (x_event.xbutton.button == 2)
-			b = 2;
-		else if (x_event.xbutton.button == 3)
-			b = 1;
-		if (b>=0)
-			Key_Event(K_MOUSE1 + b, false);
-		break;
-	case ConfigureNotify:
-		if (scr_width == x_event.xconfigure.width &&
-		    scr_height == x_event.xconfigure.height) {
-			break;
-		}
-		scr_width = x_event.xconfigure.width;
-		scr_height = x_event.xconfigure.height;
-
-		if (scr_width < 320) scr_width = 320;
-		if (scr_height < 200) scr_height = 200;
-
-		scr_width &= ~7; /* make it a multiple of eight */
-
-		XResizeWindow(dpy, win, scr_width, scr_height);
-
-		vid.width = vid.conwidth = scr_width;
-		vid.height = scr_height;
-
-		/* pick a conheight that matches with correct aspect */
-		vid.conheight = vid.conwidth*3 / 4;
-
-		vid.aspect = ((float)vid.height / (float)vid.width)
-			* (320.0 / 240.0);
-
-		vid.recalc_refdef = 1;	/* force a surface cache flush */
-		Con_CheckResize();
-		Con_Clear_f();
-		break;
-	}
-
-	if (mouse_shouldgrab != mouse_grabbed) {
-		do_grabs(mouse_shouldgrab);
-	}
-	if (vid_glx_fullscreen.value != fullscreen) {
-		do_fullscreen(vid_glx_fullscreen.value);
-	}
 }
 
 
@@ -883,6 +648,232 @@ void VID_Init(unsigned char *palette)
 
 	do_grabs(mouse_shouldgrab);
 }
+
+
+static int
+XLateKey(XKeyEvent *ev)
+{
+	int key = 0;
+	char buf[64];
+	KeySym keysym;
+
+	XLookupString(ev, buf, sizeof(buf), &keysym, 0);
+
+	switch(keysym) {
+		case XK_KP_Page_Up:	key = KP_PGUP; break;
+		case XK_Page_Up:	key = K_PGUP; break;
+
+		case XK_KP_Page_Down:	key = KP_PGDN; break;
+		case XK_Page_Down:	key = K_PGDN; break;
+
+		case XK_KP_Home:	key = KP_HOME; break;
+		case XK_Home:		key = K_HOME; break;
+
+		case XK_KP_End:		key = KP_END; break;
+		case XK_End:		key = K_END; break;
+
+		case XK_KP_Left:	key = KP_LEFTARROW; break;
+		case XK_Left:		key = K_LEFTARROW; break;
+
+		case XK_KP_Right:	key = KP_RIGHTARROW; break;
+		case XK_Right:		key = K_RIGHTARROW; break;
+
+		case XK_KP_Down:	key = KP_DOWNARROW; break;
+		case XK_Down:		key = K_DOWNARROW; break;
+
+		case XK_KP_Up:		key = KP_UPARROW; break;
+		case XK_Up:		key = K_UPARROW; break;
+
+		case XK_Escape:		key = K_ESCAPE; break;
+
+		case XK_KP_Enter:	key = KP_ENTER; break;
+		case XK_Return:		key = K_ENTER; break;
+
+		case XK_Tab:		key = K_TAB; break;
+
+		case XK_F1:		key = K_F1; break;
+		case XK_F2:		key = K_F2; break;
+		case XK_F3:		key = K_F3; break;
+		case XK_F4:		key = K_F4; break;
+		case XK_F5:		key = K_F5; break;
+		case XK_F6:		key = K_F6; break;
+		case XK_F7:		key = K_F7; break;
+		case XK_F8:		key = K_F8; break;
+		case XK_F9:		key = K_F9; break;
+		case XK_F10:		key = K_F10; break;
+		case XK_F11:		key = K_F11; break;
+		case XK_F12:		key = K_F12; break;
+
+		case XK_BackSpace:	key = K_BACKSPACE; break;
+
+		case XK_KP_Delete:	key = KP_DEL; break;
+		case XK_Delete:		key = K_DEL; break;
+
+		case XK_Pause:		key = K_PAUSE; break;
+
+		case XK_Shift_L:
+		case XK_Shift_R:	key = K_SHIFT; break;
+
+		case XK_Execute: 
+		case XK_Control_L: 
+		case XK_Control_R:	key = K_CTRL; break;
+
+		case XK_Mode_switch:
+		case XK_Alt_L:	
+		case XK_Meta_L: 
+		case XK_Alt_R:	
+		case XK_Meta_R:		key = K_ALT; break;
+
+		case XK_KP_Begin:	key = K_AUX30; break;
+
+		case XK_Insert:		key = K_INS; break;
+		case XK_KP_Insert:	key = KP_INS; break;
+
+		case XK_KP_Multiply:	key = KP_MULTIPLY; break;
+		case XK_KP_Add:		key = KP_PLUS; break;
+		case XK_KP_Subtract:	key = KP_MINUS; break;
+		case XK_KP_Divide:	key = KP_DIVIDE; break;
+
+		/* For Sun keyboards */
+		case XK_F27:		key = K_HOME; break;
+		case XK_F29:		key = K_PGUP; break;
+		case XK_F33:		key = K_END; break;
+		case XK_F35:		key = K_PGDN; break;
+
+#if 0
+		case 0x021: key = '1';break;/* [!] */
+		case 0x040: key = '2';break;/* [@] */
+		case 0x023: key = '3';break;/* [#] */
+		case 0x024: key = '4';break;/* [$] */
+		case 0x025: key = '5';break;/* [%] */
+		case 0x05e: key = '6';break;/* [^] */
+		case 0x026: key = '7';break;/* [&] */
+		case 0x02a: key = '8';break;/* [*] */
+		case 0x028: key = '9';;break;/* [(] */
+		case 0x029: key = '0';break;/* [)] */
+		case 0x05f: key = '-';break;/* [_] */
+		case 0x02b: key = '=';break;/* [+] */
+		case 0x07c: key = '\'';break;/* [|] */
+		case 0x07d: key = '[';break;/* [}] */
+		case 0x07b: key = ']';break;/* [{] */
+		case 0x022: key = '\'';break;/* ["] */
+		case 0x03a: key = ';';break;/* [:] */
+		case 0x03f: key = '/';break;/* [?] */
+		case 0x03e: key = '.';break;/* [>] */
+		case 0x03c: key = ',';break;/* [<] */
+#endif
+		default:
+			key = *(unsigned char*)buf;
+			if (key >= 'A' && key <= 'Z') {
+				key = key + ('a' - 'A');
+			}
+			break;
+	} 
+
+	return key;
+}
+
+
+static void
+GetEvent(void)
+{
+	XEvent x_event;
+	int but;
+
+	if (!dpy) return;
+
+	XNextEvent(dpy, &x_event);
+
+	switch (x_event.type) {
+	case KeyPress:
+	case KeyRelease:
+		Key_Event(XLateKey(&x_event.xkey), x_event.type == KeyPress);
+		break;
+
+	case ButtonPress:
+		but = x_event.xbutton.button;
+		switch(but) {
+		case 1:
+		case 2:
+		case 3:
+			Key_Event(K_MOUSE1 + but - 1, true);
+		}
+		break;
+
+	case ButtonRelease:
+		but = x_event.xbutton.button;
+		switch(but) {
+		case 1:
+		case 2:
+		case 3:
+			Key_Event(K_MOUSE1 + but - 1, false);
+		}
+		break;
+
+	case MotionNotify:
+#ifdef HAS_DGA
+		if (dgamouse) {
+			mouse_x += (float)x_event.xmotion.x_root
+				* vid_dga_mouseaccel.value;
+			mouse_y += (float)x_event.xmotion.y_root
+				* vid_dga_mouseaccel.value;
+		} else
+#endif
+		{
+			if (_windowed_mouse.value) {
+				mouse_x += (float) ((int)x_event.xmotion.x
+						    - (int)(vid.width/2));
+				mouse_y += (float) ((int)x_event.xmotion.y 
+						    - (int)(vid.height/2));
+
+				/* move the mouse to the window center again */
+				XSelectInput(dpy, win, X_MASK & ~PointerMotionMask);
+				XWarpPointer(dpy, None, win, 0, 0, 0, 0, 
+					(vid.width/2), (vid.height/2));
+				XSelectInput(dpy, win, X_MASK);
+			}
+		}
+		break;
+
+	case ConfigureNotify:
+		if (scr_width == x_event.xconfigure.width &&
+		    scr_height == x_event.xconfigure.height) {
+			break;
+		}
+		scr_width = x_event.xconfigure.width;
+		scr_height = x_event.xconfigure.height;
+
+		if (scr_width < 320) scr_width = 320;
+		if (scr_height < 200) scr_height = 200;
+
+		scr_width &= ~7; /* make it a multiple of eight */
+
+		XResizeWindow(dpy, win, scr_width, scr_height);
+
+		vid.width = vid.conwidth = scr_width;
+		vid.height = scr_height;
+
+		/* pick a conheight that matches with correct aspect */
+		vid.conheight = vid.conwidth*3 / 4;
+
+		vid.aspect = ((float)vid.height / (float)vid.width)
+			* (320.0 / 240.0);
+
+		vid.recalc_refdef = 1;	/* force a surface cache flush */
+		Con_CheckResize();
+		Con_Clear_f();
+		break;
+	}
+
+	if (mouse_shouldgrab != mouse_grabbed) {
+		do_grabs(mouse_shouldgrab);
+	}
+	if (vid_glx_fullscreen.value != fullscreen) {
+		do_fullscreen(vid_glx_fullscreen.value);
+	}
+}
+
+
 
 
 void Sys_SendKeyEvents(void)
