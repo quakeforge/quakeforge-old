@@ -143,12 +143,10 @@ void Draw_Character (int x, int y, int num)
 	if (y <= -8)
 		return;			// totally off screen
 
-#ifdef PARANOID
 	if (y > vid.height - 8 || x < 0 || x > vid.width - 8)
-		Sys_Error ("Con_DrawCharacter: (%i, %i)", x, y);
+		return;
 	if (num < 0 || num > 255)
-		Sys_Error ("Con_DrawCharacter: char %i", num);
-#endif
+		return;
 
 	row = num>>4;
 	col = num&15;
@@ -238,6 +236,67 @@ void Draw_String (int x, int y, char *str)
 
 /*
 ================
+Draw_Alt_String
+================
+*/
+void Draw_Alt_String (int x, int y, char *str)
+{
+	while (*str)
+	{
+		Draw_Character (x, y, (*str) | 0x80);
+		str++;
+		x += 8;
+	}
+}
+
+void Draw_Pixel(int x, int y, byte color)
+{
+	byte			*dest;
+	unsigned short	*pusdest;
+
+	if (r_pixbytes == 1)
+	{
+		dest = vid.conbuffer + y*vid.conrowbytes + x;
+		*dest = color;
+	}
+	else
+	{
+	// FIXME: pre-expand to native format?
+		pusdest = (unsigned short *)
+				((byte *)vid.conbuffer + y*vid.conrowbytes + (x<<1));
+		*pusdest = d_8to16table[color];
+	}
+}
+
+#ifdef QUAKEWORLD
+void Draw_Crosshair(void)
+{
+	int x, y;
+	extern cvar_t crosshair, cl_crossx, cl_crossy, crosshaircolor;
+	extern vrect_t		scr_vrect;
+	byte c = (byte)crosshaircolor.value;
+
+	if (crosshair.value == 2) {
+		x = scr_vrect.x + scr_vrect.width/2 + cl_crossx.value; 
+		y = scr_vrect.y + scr_vrect.height/2 + cl_crossy.value;
+		Draw_Pixel(x - 1, y, c);
+		Draw_Pixel(x - 3, y, c);
+		Draw_Pixel(x + 1, y, c);
+		Draw_Pixel(x + 3, y, c);
+		Draw_Pixel(x, y - 1, c);
+		Draw_Pixel(x, y - 3, c);
+		Draw_Pixel(x, y + 1, c);
+		Draw_Pixel(x, y + 3, c);
+	} else if (crosshair.value)
+		Draw_Character (
+			scr_vrect.x + scr_vrect.width/2-4 + cl_crossx.value, 
+			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy.value, 
+			'+');
+}
+#endif
+
+/*
+================
 Draw_DebugChar
 
 Draws a single character directly to the upper right corner of the screen.
@@ -319,6 +378,57 @@ void Draw_Pic (int x, int y, qpic_t *pic)
 		for (v=0 ; v<pic->height ; v++)
 		{
 			for (u=0 ; u<pic->width ; u++)
+			{
+				pusdest[u] = d_8to16table[source[u]];
+			}
+
+			pusdest += vid.rowbytes >> 1;
+			source += pic->width;
+		}
+	}
+}
+
+
+/*
+=============
+Draw_SubPic
+=============
+*/
+void Draw_SubPic(int x, int y, qpic_t *pic, int srcx, int srcy, int width, int height)
+{
+	byte			*dest, *source;
+	unsigned short	*pusdest;
+	int				v, u;
+
+	if ((x < 0) ||
+		(x + width > vid.width) ||
+		(y < 0) ||
+		(y + height > vid.height))
+	{
+		Sys_Error ("Draw_Pic: bad coordinates");
+	}
+
+	source = pic->data + srcy * pic->width + srcx;
+
+	if (r_pixbytes == 1)
+	{
+		dest = vid.buffer + y * vid.rowbytes + x;
+
+		for (v=0 ; v<height ; v++)
+		{
+			Q_memcpy (dest, source, width);
+			dest += vid.rowbytes;
+			source += pic->width;
+		}
+	}
+	else
+	{
+	// FIXME: pretranslate at load time?
+		pusdest = (unsigned short *)vid.buffer + y * (vid.rowbytes >> 1) + x;
+
+		for (v=0 ; v<height ; v++)
+		{
+			for (u=srcx ; u<(srcx+width) ; u++)
 			{
 				pusdest[u] = d_8to16table[source[u]];
 			}
@@ -542,27 +652,25 @@ void Draw_ConsoleBackground (int lines)
 	int				f, fstep;
 	qpic_t			*conback;
 	char			ver[100];
+	static			char saveback[320*8];
 
 	conback = Draw_CachePic ("gfx/conback.lmp");
 
 // hack the version number directly into the pic
 #ifdef _WIN32
-	sprintf (ver, "QuakeForge (WinUQuake) v%s" VERSION);
-	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
+	sprintf (ver, "QuakeForge (Win32) v%s", VERSION);
 #elif defined(X11)
-	sprintf (ver, "QuakeForge (X11 UQuake) v%s" VERSION);
-	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
+	sprintf (ver, "QuakeForge (X11) v%s", VERSION);
 #elif defined(GGI)
-	sprintf (ver, "QuakeForge (GGI UQuake) v%s" VERSION);
-	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
+	sprintf (ver, "QuakeForge (GGI) v%s", VERSION);
 #elif defined(__linux__)
-	sprintf (ver, "QuakeForge (Linux UQuake) v%s" VERSION);
-	dest = conback->data + 320*186 + 320 - 11 - 8*strlen(ver);
+	sprintf (ver, "QuakeForge (Linux) v%s", VERSION);
 #else
-	dest = conback->data + 320 - 43 + 320*186;
-	sprintf (ver, "QuakeForge (Unknown UQuake) v%s" VERSION);
+	sprintf (ver, "QuakeForge (Unknown) v%s", VERSION);
 #endif
+	dest = conback->data + 320 - (strlen(ver)*8 + 11) + 320*186;
 
+	memcpy(saveback, conback->data + 320*186, 320*8);
 	for (x=0 ; x<strlen(ver) ; x++)
 		Draw_CharToConback (ver[x], dest+(x<<3));
 	
@@ -620,6 +728,8 @@ void Draw_ConsoleBackground (int lines)
 			}
 		}
 	}
+	// put it back
+	memcpy(conback->data + 320*186, saveback, 320*8);
 }
 
 
@@ -816,6 +926,13 @@ void Draw_Fill (int x, int y, int w, int h, int c)
 	unsigned short	*pusdest;
 	unsigned		uc;
 	int				u, v;
+
+	if (x < 0 || x + w > vid.width ||
+		y < 0 || y + h > vid.height) {
+		Con_Printf("Bad Draw_Fill(%d, %d, %d, %d, %c)\n",
+			x, y, w, h, c);
+		return;
+	}
 
 	if (r_pixbytes == 1)
 	{
