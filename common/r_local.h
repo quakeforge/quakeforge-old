@@ -129,7 +129,6 @@ void R_DrawPolyList (void);
 extern	qboolean		insubmodel;
 extern	vec3_t			r_worldmodelorg;
 
-
 void R_DrawSprite (void);
 void R_RenderFace (msurface_t *fa, int clipflags);
 void R_RenderPoly (msurface_t *fa, int clipflags);
@@ -248,8 +247,9 @@ qboolean R_AliasCheckBBox (void);
 //=========================================================
 // particle stuff
 
-void R_DrawParticles (void);
-void R_InitParticles (void);
+void D_StartParticles(void);
+void D_DrawParticles (void);
+void R_EndParticles (void);
 void R_ClearParticles (void);
 void R_ReadPointFile_f (void);
 void R_SurfacePatch (void);
