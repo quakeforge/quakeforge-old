@@ -282,18 +282,13 @@ void CL_ClearState (void)
 
 	S_StopAllSounds (true);
 
-	Con_DPrintf ("Clearing memory\n");
-	D_FlushCaches ();
-	Mod_ClearAll ();
-	if (host_hunklevel)	// FIXME: check this...
-		Hunk_FreeToLowMark (host_hunklevel);
-
-	CL_ClearTEnts ();
-
-#ifdef UQUAKE
+#ifdef QUAKEWORLD
+	Host_ClearMemory ();
+#elif UQUAKE
 	if (!sv.active)
 		Host_ClearMemory ();
 #endif
+	CL_ClearTEnts ();
 
 // wipe the entire cl structure
 	memset (&cl, 0, sizeof(cl));
