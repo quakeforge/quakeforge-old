@@ -22,6 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <windows.h>
 #include "conproc.h"
 #include "quakedef.h"
+#include <ctype.h>
 
 HANDLE	heventDone;
 HANDLE	hfileBuffer;
@@ -44,8 +45,6 @@ BOOL SetConsoleCXCY(HANDLE hStdout, int cx, int cy);
 void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
 {
 	DWORD	dwID;
-	CONSOLE_SCREEN_BUFFER_INFO	info;
-	int		wheight, wwidth;
 
 // ignore if we don't have all the events.
 	if (!hFile || !heventParent || !heventChild)
