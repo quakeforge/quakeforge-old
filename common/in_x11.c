@@ -171,6 +171,7 @@ int XLateKey(XKeyEvent *ev)
 		case XK_Alt_R:	
 		case XK_Meta_R:		key = K_ALT; break;
 
+		case XK_Caps_Lock:	key = K_CAPSLOCK; break;
 		case XK_KP_Begin:	key = K_AUX30; break;
 
 		case XK_Insert:		key = K_INS; break;
@@ -376,12 +377,9 @@ int IN_Init ()
 		XChangeWindowAttributes(x_disp, x_win, attribmask, &attribs_2);
 	}
 
-//	Cvar_RegisterVariable(&_windowed_mouse);
 	_windowed_mouse = Cvar_Get ("_windowed_mouse","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable(&m_filter);
 	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
 #ifdef HAS_DGA
-//	Cvar_RegisterVariable(&vid_dga_mouseaccel);
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
 	XF86DGASetViewPort(x_disp, x_win, 0, 0);

@@ -182,7 +182,7 @@ static void IN_init_kb()
 	scantokey[ 55] = KP_MULTIPLY;
 	scantokey[ 56] = K_ALT;		/*left */
 	scantokey[ 57] = ' ';
-	/* 58 caps lock */
+	scantokey[ 58] = K_CAPSLOCK;	
 	scantokey[ 59] = K_F1;
 	scantokey[ 60] = K_F2;
 	scantokey[ 61] = K_F3;

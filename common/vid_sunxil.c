@@ -777,6 +777,7 @@ int XLateKey(XKeyEvent *ev)
 		case XK_Meta_L: 
 		case XK_Alt_R:	
 		case XK_Meta_R: key = K_ALT;			break;
+		case XK_Caps_Lock:	key = K_CAPSLOCK; break;
 			// various other keys on the keyboard
 				   case XK_F27: key = K_HOME; break;
 		case XK_F29: key = K_PGUP; break;

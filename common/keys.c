@@ -170,6 +170,7 @@ keyname_t keynames[] =
 	{"AUX31", K_AUX31},
 	{"AUX32", K_AUX32},
 
+	{"CAPSLOCK",K_CAPSLOCK},
 	{"PRNTSCR", K_PRNTSCR},
 	{"SCRLCK", K_SCRLCK},
 	{"PAUSE", K_PAUSE},

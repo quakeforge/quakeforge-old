@@ -765,6 +765,7 @@ static int XLateKey(ggi_key_event *ev)
 	case GIIK_AltGr:
 	case GIIK_ModeSwitch:	key = K_ALT; break;
 
+	case GIIK_Caps:		key = K_CAPSLOCK; break;
 	case GIIK_PrintScreen:	key = K_PRNTSCR; break;
 	case GIIK_ScrollLock:	key = K_SCRLCK; break;
 	case GIIK_Pause:	key = K_PAUSE; break;

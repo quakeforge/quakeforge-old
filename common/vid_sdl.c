@@ -274,6 +274,7 @@ void Sys_SendKeyEvents(void)
                    case SDLK_LCTRL: sym = K_CTRL; break;
                    case SDLK_RALT:
                    case SDLK_LALT: sym = K_ALT; break;
+		   case SDLK_CAPSLOCK:	sym = K_CAPSLOCK; break;
                    case SDLK_KP0: 
                        if(modstate & KMOD_NUM) sym = K_INS; 
                        else sym = SDLK_0;
