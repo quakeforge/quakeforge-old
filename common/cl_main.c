@@ -140,9 +140,7 @@ cvar_t	*localid;
 
 #ifdef QUAKEWORLD
 static qboolean allowremotecmd = true;
-#endif
 // Need this defined here for server list loading
-#ifdef QUAKEWORLD
 extern cvar_t *fs_basepath;
 #endif
 
@@ -667,14 +665,12 @@ void CL_Download_f (void)
 	snprintf(cls.downloadname, sizeof(cls.downloadname), "%s/%s", com_gamedir, Cmd_Argv(1));
 
 	p = cls.downloadname;
-	for (;;) {
-		if ((q = strchr(p, '/')) != NULL) {
-			*q = 0;
-			Sys_mkdir(cls.downloadname);
-			*q = '/';
-			p = q + 1;
-		} else
-			break;
+	while ((q = strchr(p, '/')) != NULL)
+	{
+		*q = 0;
+		Sys_mkdir(cls.downloadname);
+		*q = '/';
+		p = q + 1;
 	}
 
 	strcpy(cls.downloadtempname, cls.downloadname);
@@ -723,7 +719,6 @@ CL_FullInfo_f
 
 Allow clients to change userinfo
 ==================
-Casey was here :)
 */
 void CL_FullInfo_f (void)
 {
