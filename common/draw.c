@@ -635,15 +635,11 @@ void Draw_ConsoleBackground (int lines)
 	int			f, fstep;
 	qpic_t			*conback;
 	static			char saveback[320*8];
-#ifdef QUAKEWORLD
-	char ver[] = "QuakeForge (QW client) " QF_VERSION;
-#else
-	char ver[] = "QuakeForge (UQuake) " QF_VERSION;
-#endif
 
 	conback = Draw_CachePic ("gfx/conback.lmp");
 
-	dest = conback->data + 320 - (strlen(ver)*8 + 11) + 320*186;
+	dest = conback->data + 320 - (strlen(cl_verstring->string)*8 + 11)
+		+ 320*186;
 
 	memcpy(saveback, conback->data + 320*186, 320*8);
 	
@@ -704,7 +700,8 @@ void Draw_ConsoleBackground (int lines)
 	// put it back
 	memcpy(conback->data + 320*186, saveback, 320*8);
 
-	Draw_Alt_String (vid.conwidth - strlen(ver)*8 - 11, lines-14, ver);
+	Draw_Alt_String (vid.conwidth - strlen(cl_verstring->string)*8 - 11,
+			lines-14, cl_verstring->string);
 }
 
 

@@ -1,52 +1,43 @@
-N: Nelson Rush
-E: palisade@quakeforge.net
-D: QuakeForge Project Maintainer
-D: Website Design
-D: QW/Q1 tree merging
-D: Math fixes/optimizations
-D: Buffer overflow fixes
-D: Documentation
+QuakeForge Authors
+------------------
 
-N: Chase Hargraves
-E: absolutek@quakeforge.net
-D: Irc logging
-D: Website design
+This file should contain a listing of every single person who has worked
+on or submitted code to the QuakeForge project.  Unfortunately, we must
+admit that this listing is probably far from complete.  It is probably not
+possible to list every single person who has had a positive impact on the
+development of QuakeForge, but we're going to try anyway.
 
-N: Jeff Teunissen
-E: d2deek@pmail.net
-D: QW/Q1 tree merging
-D: IRC Info bot
-D: Website design
+Every contribution is important, even the ones that don't seem like it at
+the time.  If you've made a contribution to QuakeForge and aren't listed
+here, you should be!  Please accept our apologies and let us know right
+away and we'll see to it that you get the credit you deserve.
 
-N: Zephaniah E. Hull
-E: warp@whitestar.soark.net
-D: QW/Q1 tree merging
-D: GL renderer fixes/optimizations
-D: Input handling fixes/optimizations
-D: Cheat/exploit fixes
+N: Aaron Alcock (SaRcaZm)
+E: epca@powerup.com.au
+D: RGBA colored lightmaps (static/dynamic)
 
-N: Marcus Sundberg
-E: mackan@stacken.kth.se
+N: Andrew Alexander (Slade)
+E: slade@quakelives.com
+D: Reworking of the heart beat, and ping taking code on the server side.
+D: sv_maxrate support..
+
+N: Peter Andreasen
+E: pandr@pandr.dk
 D: QW/Q1 tree merging
 D: Autoconf support and portability
-D: Sound cleanups
-D: Input handling fixes/optimizations
-D: GGI support
-D: mingw32 Win32 support
-D: CD-ROM support/optimizations
-D: DGA/XMESA support.
-D: On-the-fly resizing of window in *-gl versions.
 
-N: Bill Currie
-E: bill@taniwha.org
-D: QW/Q1 tree merging
+N: Cesar Eduardo Barros
+E: cesarb@web4u.com.br
 D: Autoconf support and portability
-D: ALSA sound support
 
-N: Eric Windisch
-E: windisch@nni.com
+N: Jules Bean
+E: jules@debian.org
+D: show_fps merge into UQuake
+
+N: Maas van den Berg
+E: email@dds.nl
 D: QW/Q1 tree merging
-D: GL renderer fixes/optimizations
+D: SDL support
 
 N: Joseph Carter (Knghtbrd)
 E: knghtbrd@debian.org
@@ -62,15 +53,41 @@ D: Skybox implementation (several mods to existing tutorial)
 D: Made RGBA lightmaps actually work
 D: Statusbar fixes
 
-N: Peter Andreasen
-E: pandr@pandr.dk
+N: Andrew Coles
+E: andycole123@ic24.net
+D: CD-ROM support/fixes
+
+N: Bill Currie
+E: bill@taniwha.org
 D: QW/Q1 tree merging
 D: Autoconf support and portability
+D: ALSA sound support
 
-N: Maas van den Berg
-E: email@dds.nl
-D: QW/Q1 tree merging
-D: SDL support
+N: Sam Dennis
+E: sdennis101@geocities.com
+D: UQuake patch for segfault in net_udp.c
+
+N: Mads Bondo Dydensborg
+E: madsdyd@challenge.dk
+D: Cheat/exploit fixes
+
+N: Robert S. Elsner
+E: sockman@ngfc.com
+D: Sound cleanups
+
+N: Anton Gavrilov
+E: tonik@quake.ru
+D: VC Win32 support
+D: Console editing
+
+N: Ryan C. Gordon
+E: ryan_gorden@hotmail.com
+D: Sound cleanups
+
+N: Chase Hargraves
+E: absolutek@quakeforge.net
+D: Irc logging
+D: Website design
 
 N: Loring Holden
 E: lsh@cv.brown.edu
@@ -78,9 +95,46 @@ D: Autoconf support and portability
 D: CD-ROM support/optimizations
 D: AIX/IRIX/Sun Support
 
-N: Cesar Eduardo Barros
-E: cesarb@web4u.com.br
-D: Autoconf support and portability
+N: Zephaniah E. Hull
+E: warp@whitestar.soark.net
+D: QW/Q1 tree merging
+D: GL renderer fixes/optimizations
+D: Input handling fixes/optimizations
+D: Cheat/exploit fixes
+
+N: Theo van Klaveren
+E: havoc@phoenix.student.utwente.nl
+D: CD-ROM support/optimizations
+
+N: Sam Lantinga
+E: slouken@devolution.com
+D: SDL support
+
+N: Pontus Lidman
+E: <pontus@lysator.liu.se>
+D: adding IPv6 support
+
+N: Nye Liu (nyet)
+E: nyet@nbase.com
+D: game dir fixes
+
+N: Justin A. McCright
+E: jam@qIj.damogran.org
+D: Svgalib fixes/optimizations
+
+N: Roger Sen Montero
+E: rogersm@tau.uab.es
+D: Cheat/exploit fixes
+D: Network code fixes/cleanups
+
+N: Dan Nelson
+E: dnelson@emsphone.com
+D: Typo fix
+D: Help with the speed cheat fix
+
+N: Jason Nelson
+E: jason_nelson@email.msn.com
+D: VC win32 support.
 
 N: Daniel J. O'Connor
 E: darius@dons.net.au
@@ -88,18 +142,14 @@ D: Autoconf support and portability
 D: Corrected failed mmap checking
 D: FreeBSD support
 
-N: Tim Rowley
-E: tor@cs.brown.edu
-D: Autoconf support and portability
-D: AIX/IRIX/Sun support
+N: Dan Olson
+E: theoddone@quakefiles.com
+D: Misc. code fixes
+D: Driver modules
 
-N: Ryan C. Gordon
-E: ryan_gorden@hotmail.com
-D: Sound cleanups
-
-N: Robert S. Elsner
-E: sockman@ngfc.com
-D: Sound cleanups
+N: Tane Piper
+E: descent@barrysworld.com
+D: GL skybox tutorial
 
 N: Michael Pujos
 E: mpujos@mail.dotcom.fr
@@ -109,82 +159,23 @@ N: Filip Van Raemdonck
 E: filipvr@xs4all.be
 D: Input handling fixes/optimizations
 
-N: Zinx Verituse
-E: zinx@linuxfreak.com
+N: Tim Rowley
+E: tor@cs.brown.edu
+D: Autoconf support and portability
+D: AIX/IRIX/Sun support
+
+N: Nelson Rush (Palisade)
+E: palisade@quakeforge.net
+D: Project Administration
+D: Website Design
+D: QW/Q1 tree merging
 D: Math fixes/optimizations
-
-N: Justin A. McCright
-E: jam@qIj.damogran.org
-D: Svgalib fixes/optimizations
-
-N: Sam Lantinga
-E: slouken@devolution.com
-D: SDL support
-
-N: Neal White III
-E: nwhite@softblox.com
-D: GL fullbright support (removed temporarily)
-
-N: Dan Nelson
-E: dnelson@emsphone.com
-D: Typo fix
-D: Help with the speed cheat fix
-
-N: Dan Olson
-E: theoddone@quakefiles.com
-D: Misc. code fixes
-D: Driver modules
-
-N: Mads Bondo Dydensborg
-E: madsdyd@challenge.dk
-D: Cheat/exploit fixes
-
-N: Roger Sen Montero
-E: rogersm@tau.uab.es
-D: Cheat/exploit fixes
-D: Network code fixes/cleanups
-
-N: Theo van Klaveren
-E: havoc@phoenix.student.utwente.nl
-D: CD-ROM support/optimizations
-
-N: Ricardo Veguilla
-E: r_veguilla_pr@yahoo.com
-D: Fix for SDL _windowed_mouse
-
-N: Pontus Lidman
-E: <pontus@lysator.liu.se>
-D: adding IPv6 support
-
-N: David Symonds
-E: xoxus@usa.net
-D: svgalib fixes
-D: warnings cleanup and XShm checking
+D: Buffer overflow fixes
+D: Documentation
 
 N: Tarjei Skorgenes
 E: tarjei.skorgenes@online.no
 D: Makefile fixes
-
-N: Andrew Coles
-E: andycole123@ic24.net
-D: CD-ROM support/fixes
-
-N: Andrew Alexander (Slade)
-E: slade@quakelives.com
-D: Reworking of the heart beat, and ping taking code on the server side.
-D: sv_maxrate support..
-
-N: Nye "nyet" Liu
-E: nyet@nbase.com
-D: game dir fixes
-
-N: Jules Bean
-E: jules@debian.org
-D: show_fps merge into UQuake
-
-N: Jason Nelson
-E: jason_nelson@email.msn.com
-D: VC win32 support.
 
 N: Jukka Sorjonen
 E: jukka.sorjonen@asikkala.fi
@@ -192,19 +183,47 @@ D: Bug squasher (see below).
 D: QW network protocol fixes.
 D: Found out why our VERSION was messing things up..
 
-N: Tane Piper
-E: descent@barrysworld.com
-D: GL skybox tutorial
+N: Marcus Sundberg
+E: mackan@stacken.kth.se
+D: QW/Q1 tree merging
+D: Autoconf support and portability
+D: Sound cleanups
+D: Input handling fixes/optimizations
+D: GGI support
+D: mingw32 Win32 support
+D: CD-ROM support/optimizations
+D: DGA/XMESA support.
+D: On-the-fly resizing of window in *-gl versions.
 
-N: Nawfel Tricha
+N: David Symonds
+E: xoxus@usa.net
+D: svgalib fixes
+D: warnings cleanup and XShm checking
+
+N: Jeff Teunissen (Deek)
+E: d2deek@pmail.net
+D: QW/Q1 tree merging
+D: IRC Info bot
+D: Website design
+
+N: Nawfel Tricha (Topaz)
 E: topaz@endorproductions.com
 D: GL spinning console
 
-N: Aaron Alcock (SaRcaZm)
-E: epca@powerup.com.au
-D: RGBA colored lightmaps (static/dynamic)
+N: Ricardo Veguilla
+E: r_veguilla_pr@yahoo.com
+D: Fix for SDL _windowed_mouse
 
-N: Anton Gavrilov
-E: tonik@quake.ru
-D: VC Win32 support
-D: Console editing
+N: Zinx Verituse
+E: zinx@linuxfreak.com
+D: Math fixes/optimizations
+
+N: Neal White III
+E: nwhite@softblox.com
+D: GL fullbright support (removed temporarily)
+
+N: Eric Windisch
+E: windisch@nni.com
+D: QW/Q1 tree merging
+D: GL renderer fixes/optimizations
+

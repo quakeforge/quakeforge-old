@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sbar.h>
 #include <sys.h>
 #include <cmd.h>
+#include <client.h>
 #include <lib_replace.h>
 
 extern unsigned char d_15to8table[65536];
@@ -760,11 +761,6 @@ Draw_ConsoleBackground
 */
 void Draw_ConsoleBackground (int lines)
 {
-#ifdef QUAKEWORLD
-	char		ver[] = "QuakeForge (QW client) " QF_VERSION;
-#else
-	char		ver[] = "QuakeForge (UQuake) " QF_VERSION;
-#endif
 	int 		y;
 	qpic_t		*conback;
 	glpic_t		*gl;
@@ -836,7 +832,8 @@ void Draw_ConsoleBackground (int lines)
 		glPopMatrix ();
 	}
 
-	Draw_Alt_String (vid.conwidth - strlen(ver)*8 - 11, lines-14, ver);
+	Draw_Alt_String (vid.conwidth - strlen(cl_verstring->string)*8 - 11,
+			lines-14, cl_verstring->string);
 }
 
 

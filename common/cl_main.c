@@ -119,6 +119,7 @@ cvar_t	*entlatency;
 cvar_t	*cl_predict_players;
 cvar_t	*cl_predict_players2;
 cvar_t	*cl_solid_players;
+cvar_t	*cl_verstring;
 
 extern cvar_t	*sys_nostdout;
 
@@ -454,7 +455,7 @@ void CL_ConnectionlessPacket (void)
 			Con_Printf("===========================\n");
 			Con_Printf("Invalid localid on command packet received from local host. "
 				"\n|%s| != |%s|\n"
-				"You may need to reload your server browser and QuakeWorld.\n",
+				"You may need to reload your server browser and QuakeForge.\n",
 				s, localid->string);
 			Con_Printf("===========================\n");
 			Cvar_Set("localid", "");
@@ -1713,6 +1714,13 @@ void CL_InitCvars()
 	cl_hudswap = Cvar_Get ("cl_hudswap","1",CVAR_ARCHIVE,"None");
 	cl_maxfps = Cvar_Get ("cl_maxfps","0",CVAR_ARCHIVE,"None");
 	cl_timeout = Cvar_Get ("cl_timeout","60",0,"None");
+	cl_verstring = Cvar_Get ("cl_verstring",
+#ifdef QUAKEWORLD
+			"QuakeForge (QW client) " QF_VERSION,
+#else
+			"QuakeForge (UQuake) " QF_VERSION,
+#endif
+			CVAR_NONE, "Console version string");
 	lookspring = Cvar_Get ("lookspring","0",CVAR_ARCHIVE,"None");
 	lookstrafe = Cvar_Get ("lookstrafe","0",CVAR_ARCHIVE,"None");
 	sensitivity = Cvar_Get ("sensitivity","3",CVAR_ARCHIVE,"None");

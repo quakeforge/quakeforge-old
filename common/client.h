@@ -373,6 +373,7 @@ extern cvar_t	*cl_sbar;
 extern cvar_t	*cl_hudswap;
 
 extern cvar_t	*cl_pitchdriftspeed;
+extern cvar_t	*cl_verstring;
 extern cvar_t	*lookspring;
 extern cvar_t	*lookstrafe;
 extern cvar_t	*sensitivity;
