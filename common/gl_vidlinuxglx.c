@@ -817,7 +817,7 @@ void VID_ExtraOptionDraw(void)
         M_DrawCheckbox (220, 128, _windowed_mouse.value);
 
 
-#if defined(XMESA) && defined(HAS_DGA)
+#if defined(XMESA)
 	// Mesa has a fullscreen / windowed glx hack.
         M_Print (16, 136, "            Fullscreen");
         M_DrawCheckbox (220, 136, vid_glx_mode.value);
@@ -829,11 +829,11 @@ void VID_ExtraOptionCmd(int option_cursor)
 {
 	switch(option_cursor) 
 	{
-	case 12:	// _windowed_mouse
+	case 1:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
-	case 13:
+	case 2:
 		Cvar_SetValue ("vid_glx_mode",!vid_glx_mode.value);
 #ifdef XMESA
 		if(XMesaSetFXmode(vid_glx_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW))
