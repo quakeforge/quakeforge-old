@@ -628,48 +628,46 @@ pack_t *COM_LoadQ3PackFile (char *packfile)
 }
 #endif 
 
-void COM_LoadGameDirectory(char *dir)
+void
+COM_LoadGameDirectory(char *dir)
 {
-        int                             i;
-        searchpath_t    *search;
-        pack_t                  *pak;
-        char                    pakfile[MAX_OSPATH];
-        char                    *p;
-	int		foundall = 0;
+	int 			i;
+	searchpath_t	*search;
+	pack_t			*pak;
+	char			pakfile[MAX_OSPATH];
+	qboolean 		done = false;
 	
-	// Load all Pak1 files:
-        for (i=0; !foundall; i++)
-        {
-             
+	for ( i=0 ; !done ; i++ ) {	// Load all Pak1 files
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
-		
+
 		pak = COM_LoadPackFile(pakfile);                
-		if(!pak)
-			foundall = 1;
-		else
-		{
-	                search = Hunk_Alloc (sizeof(searchpath_t));
-        	        search->pack = pak;
-	                search->next = com_searchpaths;
-        	        com_searchpaths = search;
+		
+		if( !pak ) {
+			done = true;
+		} else {
+			search = Hunk_Alloc (sizeof(searchpath_t));
+			search->pack = pak;
+			search->next = com_searchpaths;
+			com_searchpaths = search;
 		}
-        }
+	}
 
 #if defined _EXPERIMENTAL_ && GENERATIONS
-	// Load all Pak3 files.
-        for (i=0 ; ; i++)
-        {
+	done = false;
+	for ( i=0 ; !done ; i++ ) {	// Load all Pak3 files.
 		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak3", dir, i);
-                pak = COM_LoadPak3File(pakfile);
+		
+		pak = COM_LoadPak3File(pakfile);
  
-                if(!pak)
-                        break;
-
-                search = Hunk_Alloc (sizeof(searchpath_t));
-                search->pack = pak;
-                search->next = com_searchpaths;
-                com_searchpaths = search;
+		if(!pak) {
+			done = true;
+		} else {
+			search = Hunk_Alloc (sizeof(searchpath_t));
+			search->pack = pak;
+			search->next = com_searchpaths;
+			com_searchpaths = search;
         }
+	}
 #endif
 }
 
@@ -684,10 +682,7 @@ then loads and adds pak1.pak pak2.pak ...
 */
 void COM_AddGameDirectory (char *dir)
 {
-	int				i;
 	searchpath_t	*search;
-	pack_t			*pak;
-	char			pakfile[MAX_OSPATH];
 	char			*p;
 
 	if ((p = strrchr(dir, '/')) != NULL)
@@ -721,9 +716,6 @@ Sets the gamedir and path to a different directory.
 void COM_Gamedir (char *dir)
 {
 	searchpath_t	*search, *next;
-	int				i;
-	pack_t			*pak;
-	char			pakfile[MAX_OSPATH];
 
 	if (strstr(dir, "..") || strstr(dir, "/")
 		|| strstr(dir, "\\") || strstr(dir, ":") )
@@ -775,7 +767,6 @@ void COM_Gamedir (char *dir)
 	//
 
 	COM_LoadGameDirectory(dir);
-	//}
 }
 
 /*
@@ -802,6 +793,12 @@ void COM_InitFilesystem (void)
 //
 	COM_AddGameDirectory (va("%s/" GAMENAME, com_basedir) );
 	COM_AddGameDirectory (va("%s/qw", com_basedir) );
+	if ( hipnotic ) {
+		COM_AddGameDirectory (va("%s/hipnotic", com_basedir) );
+	}
+	if ( rogue ) {
+		COM_AddGameDirectory (va("%s/rogue", com_basedir) );
+	}
 
 	// any set gamedirs will be freed up to here
 	com_base_searchpaths = com_searchpaths;
