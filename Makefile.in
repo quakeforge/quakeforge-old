@@ -1,4 +1,6 @@
 srcdir = @srcdir@
+top_builddir = .
+
 HAVE_UDP = @HAVE_UDP@
 
 ifeq ($(HAVE_UDP),yes)
@@ -9,10 +11,20 @@ endif
 
 DESTDIR =
 
-all:
+all: Makefile
 	@for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
 	done
+
+Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+config.status: $(srcdir)/configure
+	$(SHELL) ./config.status --recheck
+
+$(srcdir)/configure: $(srcdir)/configure.in
+		(cd $(srcdir) && autoconf || true)
 
 distclean:
 	rm -f config.cache config.log config.status Makefile
