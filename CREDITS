@@ -34,6 +34,9 @@ Autoconf support and portability isues:
   Daniel J. O'Connor <darius@dons.net.au>
   Tim Rowley <tor@cs.brown.edu>
 
+Makefile fixes:
+  Tarjei Skorgenes <tarjei.skorgenes@online.no>
+
 Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
   Marcus Sundberg <mackan@stacken.kth.se>
@@ -93,10 +96,13 @@ CD-ROM support/optimizations:
   Marcus Sundberg <mackan@stacken.kth.se>
   Loring Holden <lsh@cs.brown.edu>
   Theo van Klaveren <havoc@phoenix.student.utwente.nl>
+  Andrew Coles <andycole123@ic24.net>
 
 AIX/IRIX/Sun support:
   Loring Holden <lsh@cs.brown.edu>
   Tim Rowley <tor@cs.brown.edu>
+  Marcus Sundberg <mackan@stacken.kth.se>
 
 Network code fixes/cleanups:
   Roger Sen Montero <rogersm@tau.uab.es>
+  Marcus Sundberg <mackan@stacken.kth.se>
