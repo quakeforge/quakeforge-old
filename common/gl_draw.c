@@ -1428,17 +1428,18 @@ int GL_LoadTexture (char *identifier, int width, int height, byte *data, qboolea
 		{
 			if (!strcmp (identifier, glt->identifier))
 			{
-//				if (width != glt->width 
-//						|| height != glt->height)
-//					Sys_Error ("GL_LoadTexture: cache mismatch");
-				glt->width = width;
-				glt->height = height;
-				glt->mipmap = mipmap;
+				if (width != glt->width 
+						|| height != glt->height)
+				{
+					glt->width = width;
+					glt->height = height;
+					glt->mipmap = mipmap;
 				
-				GL_Bind (glt->texnum);
+					GL_Bind (glt->texnum);
 
-				GL_Upload8 (data, width, height, mipmap, alpha);
-					
+					GL_Upload8 (data, width, height,
+							mipmap, alpha);
+				}
 				return gltextures[i].texnum;
 			}
 		}
