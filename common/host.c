@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <setjmp.h>
 
+#include <plugin.h>
 #include <net.h>
 #include <console.h>
 #include <quakedef.h>
@@ -252,10 +253,10 @@ Host_FrameMain ( float time )
 		return;
 		
 	// get new key events
-	Sys_SendKeyEvents ();
+	IN->SendKeyEvents ();
 
 	// allow mice or other external controllers to add commands
-	IN_Commands ();
+	IN->Commands ();
 
 	// process console commands
 	Cbuf_Execute ();
@@ -578,8 +579,9 @@ Host_Init ( quakeparms_t *parms)
 		if (!host_colormap)
 			Sys_Error ("Couldn't load gfx/colormap.lmp");
 
+		plugin_load("./in_svgalib.so");
+		IN->Init();
 		VID_Init(host_basepal);
-		IN_Init();
 		Draw_Init();
 		SCR_Init();
 		R_Init();
@@ -640,7 +642,8 @@ Host_Shutdown( void )
 	CDAudio_Shutdown ();
 	NET_Shutdown ();
 	S_Shutdown();
-	IN_Shutdown ();
+	IN->Shutdown();
+	plugin_unload(IN->handle);
 
 #if QUAKEWORLD		
 	if (host_basepal) {

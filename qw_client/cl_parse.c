@@ -1090,6 +1090,8 @@ void CL_ParseServerMessage (void)
 		switch (cmd)
 		{
 		default:
+			Con_Printf("cmd: %x\n", cmd);
+
 			Host_EndGame ("CL_ParseServerMessage: Illegible server message");
 			break;
 			

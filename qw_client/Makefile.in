@@ -6,9 +6,10 @@
 PROJECT_DIR	:= @top_srcdir@
 PROJECT_ODIR	:= ..
 SRC_DIR		:= @srcdir@
+QW_COMMON_DIR	:= $(PROJECT_DIR)/qw_common
 COMMON_DIR	:= $(PROJECT_DIR)/common
 COMMON_ODIR	:= $(PROJECT_ODIR)/common
-BIN_PREFIX	:= common
+BIN_PREFIX	:= qw-client
 
 DESTDIR		:=
 
@@ -18,15 +19,18 @@ bindir		:= @bindir@
 mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
-BUILD_DIR	:= $(TARGET_DIR)/common
-OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
+BUILD_DIR	:= $(TARGET_DIR)/qw_client
+OBJ_PATTERN	:= $(BUILD_DIR)/common_lib/%.@OBJEXT@ \
+                   $(BUILD_DIR)/%.@OBJEXT@
+DEP_PATTERN	:= $(BUILD_DIR)/%.d $(BUILD_DIR)/common_lib/%.d
+GL_OBJ_PATTERN	:= $(BUILD_DIR)/gl/%.@OBJEXT@
+GL_DEP_PATTERN	:= $(BUILD_DIR)/gl/%.d
 
-SOUND_LIB	:= sound_lib.a
-
-LDFLAGS = @LDFLAGS@ -lm
+LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm -rdynamic
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
+NO_ASMOPT = @NO_ASMOPT@
 
 ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
@@ -51,6 +55,40 @@ MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
                 fi
 
 
+########################################################################
+#
+# Client targets
+#
+
+COMMON_LIB=common_lib.a
+
+ifeq ($(HAS_SVGA),yes)
+SVGAQUAKE = $(BIN_PREFIX)-svga
+endif
+
+ifeq ($(HAS_GGI),yes)
+GGIQUAKE = $(BIN_PREFIX)-ggi
+endif
+
+ifeq ($(HAS_SDL),yes)
+SDLQUAKE = $(BIN_PREFIX)-sdl
+endif
+
+ifeq ($(HAS_X11),yes)
+X11QUAKE  = $(BIN_PREFIX)-x11
+endif
+
+ifeq ($(HAS_MGL),yes)
+MGLQUAKE = $(BIN_PREFIX)-mgl
+endif
+
+ifeq ($(HAS_OGL),yes)
+GLQUAKE   =$(BIN_PREFIX)-gl
+endif
+
+ifeq ($(HAS_TDFXGL),yes)
+TDFXQUAKE= $(BIN_PREFIX)-3dfx
+endif
 
 RELEASE = @RELEASE@
 ifeq ($(RELEASE),yes)
@@ -59,10 +97,13 @@ else
 OPTFLAGS = -g
 endif
 
-lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB)
-targets       = $(lib_targets)
+soft_targets  = $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(X11QUAKE) $(MGLQUAKE)
+gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
+lib_targets   = $(COMMON_LIB)
+targets       = $(lib_targets) $(soft_targets) $(gl_targets)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
-.PHONY: $(targets) $(CLEAN_TARGETS)
+.PHONY: $(targets) $(CLEAN_TARGETS) clean-soft clean-gl clean-common_lib \
+        clean-client
 
 all: $(targets)
 ########################################################################
@@ -70,51 +111,71 @@ all: $(targets)
 # Source files
 #
 
-ifeq ($(INTEL_ARCH),yes)
+ifneq ($(NO_ASMOPT),yes)
 
 # Source file the Intel archictecture only
 
-SOUND_SRC += snd_mixa.s
+CFLAGS = -Did386=1
+CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s worlda.s
+SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
+	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
+	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
 else
 
 # Source files for non-Intel platforms
+
+CFLAGS = -Did386=0
+SWREND_SRC_PLAT = nonintel.c
 endif
 
 # System specific source files
 
 CD_AUDIO_SRC   = cd_wrapper.c
 
-# Sound source
-
-SOUND_STYLE      = @SOUND_STYLE@
-
-ifeq ($(SOUND_STYLE),ALSA)
-SOUND_SRC += snd_dma.c snd_alsa.c
-endif
-ifeq ($(SOUND_STYLE),OSS)
-SOUND_SRC += snd_dma.c snd_oss.c
-endif
-ifeq ($(SOUND_STYLE),Solaris)
-SOUND_SRC += snd_dma.c snd_sun.c
-endif
-ifeq ($(SOUND_STYLE),MME)
-SOUND_SRC += snd_dma.c snd_mme.c
-endif
-ifeq ($(SOUND_STYLE),Windows)
-SOUND_SRC += snd_dma.c snd_win.c
-endif
-ifeq ($(SOUND_STYLE),NULL)
-SOUND_SRC += snd_null.c
-endif
-
-SOUND_SRC        += snd_mem.c snd_mix.c
+SYS_SRC        = sys_common.c @QW_CL_SYS_SRC@
 
 # Networking source files
-#
-# Uncomment the second line to add IPv6 support
 
-QW_NET_SRC     = net_udp.c net_com.c mdfour.c
-#QW_NET_SRC	= net_udp6.c net_com.c mdfour.c
+QW_NET_SRC     = @NET_SOURCE@ net_com.c mdfour.c
+
+# Common source files
+
+MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
+                 wad.c zone.c cvars.c qendian.c lib_replace.c quakefs.c \
+		 quakeio.c qargs.c plugin.c
+
+# GL renderer source
+
+GL_REND_SRC = gl_screen.c gl_model.c gl_draw.c gl_mesh.c gl_refrag.c \
+              gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_warp.c \
+	      nonintel.c gl_ngraph.c gl_view.c gl_rpart.c gl_cl_parse.c
+
+# Software renderer source
+
+SW_REND_SRC = screen.c $(SWREND_SRC_PLAT) draw.c \
+	d_edge.c d_fill.c d_init.c d_modech.c d_part.c d_polyse.c d_scan.c \
+	d_sky.c d_sprite.c d_surf.c d_vars.c d_zpoint.c r_aclip.c r_alias.c \
+	r_bsp.c r_draw.c r_edge.c r_efrag.c r_light.c r_main.c r_misc.c \
+	r_sky.c r_sprite.c r_surf.c r_vars.c sw_view.c sw_rpart.c sw_cl_parse.c
+
+# Client source files
+
+CL_SRC    = cl_demo.c cl_input.c cl_main.c cl_parse.c cl_tent.c
+QW_CL_SRC = cl_cam.c cl_ents.c cl_pred.c host.c world.c
+CL_GUI_SRC= console.c sbar.c view.c keys.c menu.c
+
+# Server source files
+
+SRV_SRC     = sv_main.c sv_user.c sv_move.c sv_phys.c 
+QW_SRV_SRC  = sv_ccmds.c sv_ents.c sv_init.c sv_send.c sv_nchan.c world.c
+SRV_PR_SRC  = pr_cmds.c pr_edict.c pr_exec.c
+
+
+QW_GENERAL_SRC = pmove.c pmovetst.c
+
+# Source common to QW/UQuake
+CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
+	$(CL_ADDITIONAL_GENERAL_SRC) $(CD_AUDIO_SRC) r_part.c
 
 
 ########################################################################
@@ -122,9 +183,59 @@ QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 # Directory specific stuff
 #
 DEFS = @DEFS@
-CFLAGS = @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. \
-$(SRC_DIR_INC) -I$(COMMON_ODIR) -I$(COMMON_DIR)
+CFLAGS += @CFLAGS@ -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. \
+$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
 
+GENERAL_SRC = $(CL_COMMON_SRC) \
+	   $(QW_CL_SRC) $(QW_NET_SRC) net_chan.c skin.c \
+	   $(SYS_SRC) $(QW_GENERAL_SRC)
+
+# FIXME: add dos/win specifc source
+
+###########################################################################
+#
+# Dependency Rules
+#
+
+$(DEP_PATTERN): $(SRC_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(SRC_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(COMMON_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(COMMON_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(QW_COMMON_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(QW_COMMON_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(GL_DEP_PATTERN): $(COMMON_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $(GL_CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(GL_DEP_PATTERN): $(COMMON_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
 
 ###########################################################################
 #
@@ -137,25 +248,253 @@ $(OBJ_PATTERN): $(SRC_DIR)/%.c
 $(OBJ_PATTERN): $(SRC_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
+$(OBJ_PATTERN): $(COMMON_DIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(COMMON_DIR)/%.s
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(SRC_DIR)/%.s
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.c
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.s
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+client_DIR:
+	@DIR=client; $(MAKE_SURE_DIR)
+
+gl_DIR:
+	@DIR=gl; $(MAKE_SURE_DIR)
+
 ###########################################################################
 #
 # Specific target rules
 #
 
 # Lib Software targets
+ALL_COMMON_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix \
+			.@OBJEXT@, $(basename $(GENERAL_SRC) .c .s)))
 
-SOUND_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/sound_lib/%,$(addsuffix \
-			  .@OBJEXT@, $(basename $(SOUND_SRC) .c .s)))
+ALL_COMMON_LIB_DEPS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix .d,\
+			$(basename $(GENERAL_SRC) .c .s)))
 
-sound_lib_DIR:
-	@DIR=sound_lib; $(MAKE_SURE_DIR)
+$(BUILD_DIR)/common_lib:
+	@DIR=common_lib; $(MAKE_SURE_DIR)
 
-$(SOUND_LIB): sound_lib_DIR $(TARGET_DIR)/sound_lib.a
+$(COMMON_LIB): $(BUILD_DIR)/common_lib $(BUILD_DIR)/common_lib.a
 
-$(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
-	#gcc -Wall -shared -o $@ $(SOUND_LIB_OBJS)
-	ar cru $@ $(SOUND_LIB_OBJS)
+$(BUILD_DIR)/common_lib.a: $(BUILD_DIR)/common_lib $(ALL_COMMON_LIB_OBJS)
+	ar cru $@ $(ALL_COMMON_LIB_OBJS)
 	@RANLIB@ $@
+
+# X11 Software target
+
+ifneq ($(X11QUAKE),)
+
+ALL_X11_SRC  = $(SW_REND_SRC) @X11_VID_SRC@\
+               model.c
+ALL_X11_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+                          $(basename $(ALL_X11_SRC) .c .s))) \
+			  $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+X11_CFLAGS  = -DX11 @X_CFLAGS@
+X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@
+
+# FIXME: This rule is pathological because of the seperate sunx driver,
+#    either merge it into vid_x.c or make a seperate sun target.  In either
+#    case, find the moro^wpeople responsible for this and other stupidities
+#    in Solaris and "educate" them.
+$(BUILD_DIR)/$(addsuffix .@OBJEXT@,$(basename @X11_VID_SRC@ .c)):\
+$(COMMON_DIR)/@X11_VID_SRC@
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+
+$(X11QUAKE): $(BUILD_DIR)/../$(X11QUAKE)
+
+$(BUILD_DIR)/../$(X11QUAKE): $(ALL_X11_OBJS)
+	$(CC) $(CFLAGS) $(ALL_X11_OBJS) $(X11_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(X11QUAKE)
+
+endif
+
+# SVGALib software target
+
+ifneq ($(SVGAQUAKE),)
+ALL_SVGA_SRC = $(SW_REND_SRC) \
+		vid_svgalib.c d_copy.s model.c
+ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+                $(basename $(ALL_SVGA_SRC) .c .s))) \
+		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+SVGA_CFLAGS  = @SVGA_CFLAGS@
+SVGA_LDFLAGS = @SVGA_LIBS@
+
+# Not sure why this -O is needed, but it is...
+$(BUILD_DIR)/vid_svgalib.@OBJEXT@: $(COMMON_DIR)/vid_svgalib.c
+	$(CC) -O $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/d_copy.@OBJEXT@: $(COMMON_DIR)/d_copy.s
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(SVGAQUAKE): $(BUILD_DIR)/../$(SVGAQUAKE)
+
+$(BUILD_DIR)/../$(SVGAQUAKE): $(ALL_SVGA_OBJS)
+	$(CC) $(CFLAGS) $(ALL_SVGA_OBJS) $(SVGA_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(SVGAQUAKE)
+
+endif
+
+# GGI software target
+
+ifneq ($(GGIQUAKE),)
+
+# Map the list of source files into a list of object files
+ALL_GGI_SRC   = $(SW_REND_SRC) vid_ggi.c\
+                model.c
+ALL_GGI_OBJS  = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+                $(basename $(ALL_GGI_SRC) .c .s))) \
+		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+GGI_SRC     = vid_ggi.c
+GGI_CFLAGS  = -DGGI @GGI_CFLAGS@
+GGI_LDFLAGS = @GGI_LIBS@
+
+$(BUILD_DIR)/vid_ggi.@OBJEXT@: $(COMMON_DIR)/vid_ggi.c
+	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
+
+$(GGIQUAKE): $(BUILD_DIR)/../$(GGIQUAKE)
+
+$(BUILD_DIR)/../$(GGIQUAKE): $(ALL_GGI_OBJS)
+	$(CC) $(CFLAGS) $(ALL_GGI_OBJS) $(GGI_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(GGIQUAKE)
+
+endif
+
+# SDL software target
+
+ifneq ($(SDLQUAKE),)
+ALL_SDL_SRC  = $(SW_REND_SRC) $(SDL_SRC) vid_sdl.c cd_sdl.c\
+               model.c
+ALL_SDL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+               $(basename $(ALL_SDL_SRC) .c .s))) \
+	       $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+SDL_CFLAGS  = @SDL_CFLAGS@ -DSDL
+SDL_LDFLAGS = @SDL_LIBS@
+
+$(BUILD_DIR)/vid_sdl.@OBJEXT@: $(COMMON_DIR)/vid_sdl.c
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/cd_sdl.@OBJEXT@: $(COMMON_DIR)/cd_sdl.c
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
+
+$(SDLQUAKE): $(BUILD_DIR)/../$(SDLQUAKE)
+
+$(BUILD_DIR)/../$(SDLQUAKE): $(ALL_SDL_OBJS)
+	$(CC) $(CFLAGS) $(ALL_SDL_OBJS) $(SDL_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(SDLQUAKE)
+
+endif
+
+# MGL software target
+
+ifneq ($(MGLQUAKE),)
+
+# Map the list of source files into a list of object files
+ALL_MGL_SRC = $(SW_REND_SRC) \
+	vid_win.c model.c
+ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+               $(basename $(ALL_MGL_SRC) .c .s))) \
+	       $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+MGL_CFLAGS  = -DMGL @MGL_CFLAGS@
+MGL_LDFLAGS = @MGL_LIBS@ -lm
+
+$(BUILD_DIR)/vid_mgl.@OBJEXT@: $(COMMON_DIR)/vid_mgl.c
+	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
+
+$(MGLQUAKE): $(BUILD_DIR)/../$(MGLQUAKE)
+
+$(BUILD_DIR)/../$(MGLQUAKE): $(ALL_MGL_OBJS)
+	$(CC) $(CFLAGS) $(ALL_MGL_OBJS) $(MGL_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(MGLQUAKE)
+
+endif
+
+# X11 GL target
+
+ifneq ($(GLQUAKE),)
+
+GLX_GL_SRC = gl_vidglx.c dga_check.c
+ALL_GL_SRC = $(GL_REND_SRC) $(GLX_GL_SRC)
+
+GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
+              $(basename $(GL_REND_SRC) .c .s)))
+
+GLX_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+              $(basename $(GLX_GL_SRC) .c .s)))
+	      
+ALL_GL_OBJS = $(GLX_GL_OBJS) $(GL_REND_OBJS) \
+	      $(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+GL_CFLAGS  = @OGL_CFLAGS@
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
+
+$(BUILD_DIR)/gl_vidglx.@OBJEXT@: $(COMMON_DIR)/gl_vidglx.c
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+
+$(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
+
+$(BUILD_DIR)/../$(GLQUAKE): $(ALL_GL_OBJS)
+	$(CC) $(CFLAGS) $(ALL_GL_OBJS) $(GL_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(GLQUAKE)
+
+endif
+
+
+# 3Dfx GL MCD target
+
+ifneq ($(TDFXQUAKE),)
+
+ALL_TDFX_SRC  = $(GL_REND_SRC) \
+		gl_vidlinux_3dfx.c
+ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
+		$(basename $(ALL_TDFX_SRC) .c .s))) \
+		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
+
+TDFX_CFLAGS  = @OGL_CFLAGS@ @GLIDE_CFLAGS@
+TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
+
+$(BUILD_DIR)/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
+	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
+
+$(TDFXQUAKE): gl_DIR $(BUILD_DIR)/../$(TDFXQUAKE)
+
+$(BUILD_DIR)/../$(TDFXQUAKE): $(ALL_TDFX_OBJS)
+	$(CC) $(CFLAGS) $(ALL_TDFX_OBJS) $(TDFX_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(TDFXQUAKE)
+
+endif
 
 
 ###########################################################################
@@ -169,16 +508,16 @@ distclean: clean
 $(CLEAN_TARGETS):
 	rm -f $(BUILD_DIR)/../$(subst clean-,,$@)
 
-clean-sound_lib:
+clean-soft clean-gl clean-client clean-common_lib:
 	rm -rf $(BUILD_DIR)/$(subst clean-,,$@)
 
-clean: clean-sound_lib $(CLEAN_TARGETS)
+clean: clean-client clean-common_lib $(CLEAN_TARGETS)
 	-rmdir $(BUILD_DIR)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)
 	for i in $(targets); do \
-	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	   $(PROJECT_DIR)/install-sh -m 755 $(TARGET_DIR)/$$i \
 	     $(DESTDIR)/$(bindir)/$$i; \
 	done
 

@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <vga.h>
 #include <vgakeyboard.h>
 #include <vgamouse.h>
+#include <plugin.h>
 
 
 static int	UseKeyboard = 1;
@@ -67,36 +68,7 @@ static cvar_t mouse_button_commands[3] =
 };
 
 
-#if 0
-static void
-vtswitch(int newconsole)
-{
-	int fd;
-	struct vt_stat x;
-
-	/* switch consoles and wait until reactivated */
-	fd = open("/dev/console", O_RDONLY);
-	ioctl(fd, VT_GETSTATE, &x);
-	ioctl(fd, VT_ACTIVATE, newconsole);
-	ioctl(fd, VT_WAITACTIVE, x.v_active);
-	close(fd);
-}
-
-static int
-matchmouse(int mouse, char *name)
-{
-	int i;
-
-	for (i=0 ; i < NUM_MICE ; i++) {
-		if (!strcmp(mice[i].name, name)) return i;
-	}
-	return mouse;
-}
-#endif
-
-
-static void
-keyhandler(int scancode, int state)
+static void keyhandler(int scancode, int state)
 {
 	int sc;
 
@@ -123,14 +95,13 @@ static void mousehandler(int buttonstate, int dx, int dy, int dz, int drx, int d
 }
 
 
-void
-Force_CenterView_f(void)
+void Force_CenterView_f(void)
 {
 	cl.viewangles[PITCH] = 0;
 }
 
 
-void IN_Init(void)
+void S_IN_Init(void)
 {
 	if (COM_CheckParm("-nokbd")) UseKeyboard = 0;
 	if (COM_CheckParm("-nomouse")) UseMouse = 0;
@@ -302,8 +273,7 @@ static void IN_init_mouse()
 	}
 }
 
-void
-IN_Shutdown(void)
+void S_IN_Shutdown(void)
 {
 	if (UseMouse) mouse_close();
 	if (UseKeyboard) keyboard_close();
@@ -311,8 +281,7 @@ IN_Shutdown(void)
 }
 
 
-void
-Sys_SendKeyEvents(void)
+void S_IN_SendKeyEvents(void)
 {
 	if (!in_svgalib_inited) return;
 
@@ -322,8 +291,7 @@ Sys_SendKeyEvents(void)
 }
 
 
-void
-IN_Commands(void)
+void S_IN_Commands(void)
 {
 #ifdef QUAKEWORLD
 	if (UseMouse)
@@ -362,8 +330,7 @@ IN_Commands(void)
 }
 
 
-void
-IN_Move(usercmd_t *cmd)
+void S_IN_Move(usercmd_t *cmd)
 {
 	if (!UseMouse) return;
 
@@ -411,4 +378,21 @@ IN_Move(usercmd_t *cmd)
 			cmd->forwardmove -= m_forward.value * mouse_y;
 		}
 	}
+}
+
+input_pi svgalib_ip = 
+{
+	NULL,
+	NULL,
+	"svgalib input module",
+	S_IN_Init,
+	S_IN_Shutdown,
+	S_IN_Commands,
+	S_IN_SendKeyEvents,
+	S_IN_Move,
+};
+
+input_pi *get_input_plugin_info()
+{
+	return &svgalib_ip;
 }

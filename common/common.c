@@ -641,7 +641,7 @@ skipwhite:
 	}
 
 // parse single characters
-	if (c=='{' || c=='}'|| c==')'|| c=='(' || c=='\'' || c==':')
+	if (c=='{' || c=='}'|| c==')'|| c=='(' || c=='\'')
 	{
 		com_token[len] = c;
 		len++;
@@ -656,7 +656,7 @@ skipwhite:
 		data++;
 		len++;
 		c = *data;
-	if (c=='{' || c=='}'|| c==')'|| c=='(' || c=='\'' || c==':')
+	if (c=='{' || c=='}'|| c==')'|| c=='(' || c=='\'')
 			break;
 	} while (c>32);
 	

@@ -19,7 +19,8 @@ mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
 BUILD_DIR	:= $(TARGET_DIR)/common
-OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
+OBJ_PATTERN	:= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o \
+		   $(BUILD_DIR)/input_libs/%.o
 
 SOUND_LIB	:= sound_lib.a
 
@@ -57,6 +58,10 @@ ifeq ($(RELEASE),yes)
 OPTFLAGS = @RELEASE_CFLAGS@
 else
 OPTFLAGS = -g
+endif
+
+ifeq ($(HAS_SVGA),yes)
+IN_SVGALIB_LIB	:= in_svgalib.so
 endif
 
 lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB)
@@ -142,7 +147,7 @@ $(OBJ_PATTERN): $(SRC_DIR)/%.s
 # Specific target rules
 #
 
-# Lib Software targets
+# Sound lib targets..
 
 SOUND_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/sound_lib/%,$(addsuffix \
 			  .@OBJEXT@, $(basename $(SOUND_SRC) .c .s)))
@@ -157,6 +162,21 @@ $(TARGET_DIR)/sound_lib.a: $(SOUND_LIB_OBJS)
 	ar cru $@ $(SOUND_LIB_OBJS)
 	@RANLIB@ $@
 
+# Input lib targets..
+
+ifneq ($(IN_SVGALIB_LIB),)
+
+IN_SVGALIB_OBJS	= $(BUILD_DIR)/input_libs/in_svgalib.@OBJEXT@
+
+in_svgalib_DIR:
+	@DIR=input_libs; $(MAKE_SURE_DIR)
+
+$(IN_SVGALIB_LIB): in_svgalib_DIR $(TARGET_DIR)/$(IN_SVGALIB_LIB)
+
+$(TARGET_DIR)/$(IN_SVGALIB_LIB): $(IN_SVGALIB_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -lvga -shared -rdynamic -o $@ $(IN_SVGALIB_OBJS) 
+
+endif
 
 ###########################################################################
 #

@@ -105,10 +105,6 @@ AC_ARG_ENABLE(ipv6,
 	NET_SOURCE=net_udp.c
 )
 
-AC_ARG_ENABLE(alsa,
-[  --enable-alsa           enable alsa support],
-)	
-
 AC_ARG_ENABLE(zlib,
 [  --disable-zlib          disable zlib support],
 )
@@ -126,7 +122,7 @@ fi
 
 dnl Check for dlopen
 if test "x$ac_cv_func_dlopen" = "xno"; then
-  AC_CHECK_LIB(dl, dlopen, DYN_LIBS="$DYN_LIBS -ldl"
+  AC_CHECK_LIB(dl, dlopen, LIBS="$LIBS -ldl"
     have_dynload=yes
     AC_DEFINE(HAVE_DLOPEN))
 else
@@ -548,17 +544,15 @@ AC_CHECK_LIB(mme,waveOutOpen,HAVE_LIBMME=yes)
 SOUND_LIBS=""
 SOUND_STYLE=""
 AC_MSG_CHECKING(for sound support)
-if test "x$enable_alsa" = "xyes"; then
-   if test -z "$SOUND_STYLE" -a "x$ac_cv_header_sys_asoundlib_h" = "xyes"; then
-      AC_EGREP_CPP([QF_maGiC_VALUE],[
+if test -z "$SOUND_STYLE" -a "x$ac_cv_header_sys_asoundlib_h" = "xyes"; then
+    AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <sys/asoundlib.h>
 #if defined(SND_LIB_MAJOR) && defined(SND_LIB_MINOR)
 #if SND_LIB_MAJOR>0 || (SND_LIB_MAJOR==0 && SND_LIB_MINOR>=5)
 QF_maGiC_VALUE
 #endif
 #endif
-      ],[ SOUND_STYLE="ALSA" SOUND_LIBS="-lasound"])
-   fi
+    ],[ SOUND_STYLE="ALSA" SOUND_LIBS="-lasound"])
 fi
 
 if test -z "$SOUND_STYLE" -a "x$ac_cv_header_sys_soundcard_h" = "xyes"; then
@@ -783,7 +777,7 @@ AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
 AC_SUBST(SOUND_STYLE)
 AC_SUBST(SOUND_LIBS)
-AC_SUBST(DYN_LIBS)
+AC_SUBST(LIBS)
 AC_SUBST(INTEL_ARCH)
 AC_SUBST(NO_ASMOPT)
 AC_SUBST(NET_LIBS)

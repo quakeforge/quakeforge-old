@@ -386,11 +386,7 @@ typedef struct usercmd_s
 {
 	byte    msec;
 	vec3_t  angles;
-#ifdef UQUAKE
-	float	forwardmove, sidemove, upmove;
-#elif QUAKEWORLD
 	short   forwardmove, sidemove, upmove;
-#endif
 	byte    buttons;
 	byte    impulse;
 #ifdef QUAKE2

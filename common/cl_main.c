@@ -361,8 +361,11 @@ void CL_Connect_f (void)
 {
 	char	*server;
 
-	if (Cmd_Argc() != 2)
-	{
+	Con_Printf("Cmd_Argc(): %d\n", Cmd_Argc());
+	Con_Printf("Args: ");
+	Cmd_Echo_f();
+
+	if (Cmd_Argc() != 2) {
 		Con_Printf ("usage: connect <server>\n");
 		return;	
 	}
@@ -1397,7 +1400,8 @@ void CL_SendCmd (void)
 		CL_BaseMove (&cmd);
 	
 	// allow mice or other external controllers to add to the move
-		IN_Move (&cmd);
+		//(*IN_Move) (&cmd);
+		IN->Move(&cmd);
 	
 	// send the unreliable message
 		CL_SendMove (&cmd);

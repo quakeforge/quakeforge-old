@@ -255,103 +255,97 @@ void Key_Console (int key)
 	switch (key) {
 	    case KP_ENTER:
 	    case K_ENTER:
-		// backslash text are commands, else chat
-		if (key_lines[edit_line][1] == '\\' || key_lines[edit_line][1] == '/')
-			Cbuf_AddText (key_lines[edit_line]+2);	// skip the >
-		else if (CheckForCommand())
-			Cbuf_AddText (key_lines[edit_line]+1);	// valid command
-		else
-		{	// convert to a chat message
-			if (cls.state >= ca_connected)
-				Cbuf_AddText ("say ");
-			Cbuf_AddText (key_lines[edit_line]+1);	// skip the >
-		}
+			// backslash text are commands, else chat
+			if (key_lines[edit_line][1] == '\\' || key_lines[edit_line][1] == '/')
+				Cbuf_AddText (key_lines[edit_line]+2);	// skip the >
+			else if (CheckForCommand())
+				Cbuf_AddText (key_lines[edit_line]+1);	// valid command
+			else {	// convert to a chat message
+				if (cls.state >= ca_connected)
+					Cbuf_AddText ("say ");
+				Cbuf_AddText (key_lines[edit_line]+1);	// skip the >
+			}
 
-		Cbuf_AddText ("\n");
-		Con_Printf ("%s\n",key_lines[edit_line]);
-		edit_line = (edit_line + 1) & 31;
-		history_line = edit_line;
-		key_lines[edit_line][0] = ']';
-		key_linepos = 1;
-		if (cls.state == ca_disconnected)
-			SCR_UpdateScreen ();	// force an update, because the command
-									// may take some time
-		return;
-		break;
+			Cbuf_AddText ("\n");
+			Con_Printf ("%s\n",key_lines[edit_line]);
+			edit_line = (edit_line + 1) & 31;
+			history_line = edit_line;
+			key_lines[edit_line][0] = ']';
+			key_linepos = 1;
+			if (cls.state == ca_disconnected)
+				SCR_UpdateScreen ();	// force an update, because the command
+										// may take some time
+			return;
+			break;
 	    case K_TAB:
-		// command completion
-		CompleteCommand ();
-		return;
-		break;
+			// command completion
+			CompleteCommand ();
+			return;
+			break;
 	
 	    case K_BACKSPACE:
 	    case KP_LEFTARROW:
 	    case K_LEFTARROW:
-		if (key_linepos > 1)
-			key_linepos--;
-		return;
-		break;
+			if (key_linepos > 1)
+				key_linepos--;
+			return;
+			break;
 	    case KP_UPARROW:
 	    case K_UPARROW:
-		do
-		{
-			history_line = (history_line - 1) & 31;
-		} while (history_line != edit_line
-				&& !key_lines[history_line][1]);
-		if (history_line == edit_line)
-			history_line = (edit_line+1)&31;
-		Q_strcpy(key_lines[edit_line], key_lines[history_line]);
-		key_linepos = Q_strlen(key_lines[edit_line]);
-		return;
-		break;
-	    case KP_DOWNARROW:
-	    case K_DOWNARROW:
-		if (history_line == edit_line) return;
-		do
-		{
-			history_line = (history_line + 1) & 31;
-		}
-		while (history_line != edit_line
-			&& !key_lines[history_line][1]);
-		if (history_line == edit_line)
-		{
-			key_lines[edit_line][0] = ']';
-			key_linepos = 1;
-		}
-		else
-		{
+			do {
+				history_line = (history_line - 1) & 31;
+			} while (history_line != edit_line
+					&& !key_lines[history_line][1]);
+			if (history_line == edit_line)
+				history_line = (edit_line+1)&31;
 			Q_strcpy(key_lines[edit_line], key_lines[history_line]);
 			key_linepos = Q_strlen(key_lines[edit_line]);
-		}
-		return;
-		break;
+			return;
+			break;
+	    case KP_DOWNARROW:
+	    case K_DOWNARROW:
+			if (history_line == edit_line) return;
+			do {
+				history_line = (history_line + 1) & 31;
+			} while (history_line != edit_line
+				&& !key_lines[history_line][1]);
+
+			if (history_line == edit_line) {
+				key_lines[edit_line][0] = ']';
+				key_linepos = 1;
+			} else {
+				Q_strcpy(key_lines[edit_line], key_lines[history_line]);
+				key_linepos = Q_strlen(key_lines[edit_line]);
+			}
+			return;
+			break;
 	    case K_MWHEELUP:
 	    case KP_PGUP:
 	    case K_PGUP:
-		con->display -= 2;
-		return;
-		break;
+			con->display -= 2;
+			return;
+			break;
 
 	    case K_MWHEELDOWN:
 	    case KP_PGDN:
 	    case K_PGDN:
-		con->display += 2;
-		if (con->display > con->current)
-			con->display = con->current;
-		return;
-		break;
+			con->display += 2;
+			if (con->display > con->current)
+				con->display = con->current;
+			return;
+			break;
 
 	    case KP_HOME:
 	    case K_HOME:
-		con->display = con->current - con_totallines + 10;
-		return;
-		break;
+			con->display = con->current - con_totallines + 10;
+			return;
+			break;
 
 	    case KP_END:
 	    case K_END:
-		con->display = con->current;
-		return;
-		break;
+			con->display = con->current;
+			return;
+			break;
 
 	}
 #ifdef _WIN32
@@ -780,18 +774,18 @@ void Key_Event (int key, qboolean down)
 			return;
 		switch (key_dest)
 		{
-		case key_message:
-			Key_Message (key);
-			break;
-		case key_menu:
-			M_Keydown (key);
-			break;
-		case key_game:
-		case key_console:
-			M_ToggleMenu_f ();
-			break;
-		default:
-			Sys_Error ("Bad key_dest");
+			case key_message:
+				Key_Message (key);
+				break;
+			case key_menu:
+				M_Keydown (key);
+				break;
+			case key_game:
+			case key_console:
+				M_ToggleMenu_f ();
+				break;
+			default:
+				Sys_Error ("Bad key_dest");
 		}
 		return;
 	}
