@@ -68,3 +68,6 @@ SDL Support:
 
 X11 software renderer fixes:
   Justin A. McCright <jam@qIj.damogran.org>
+
+GL Fullbright Support:
+  Neal White III <nwhite@softblox.com>
