@@ -27,6 +27,7 @@ ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
 
+HAS_VGA    = @HAS_VGA@
 HAS_MGL    = @HAS_MGL@
 HAS_GGI    = @HAS_GGI@
 HAS_SVGA   = @HAS_SVGA@
@@ -36,6 +37,9 @@ HAS_OGL    = @HAS_OGL@
 HAS_XIL    = @HAS_XIL@
 HAS_X11    = @HAS_X11@
 HAS_SDL    = @HAS_SDL@
+
+HAVE_WSOCK	= @HAVE_WSOCK@
+HAVE_UDP	= @HAVE_UDP@
 
 MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
                 then \
@@ -67,6 +71,10 @@ ifeq ($(HAS_SVGA),yes)
 SVGAQUAKE = $(BIN_PREFIX)-svga
 endif
 
+ifeq ($(HAS_VGA),yes)
+VGAQUAKE = $(BIN_PREFIX)-vga
+endif
+
 ifeq ($(HAS_MGL),yes)
 MGLQUAKE = $(BIN_PREFIX)-mgl
 endif
@@ -86,7 +94,8 @@ else
 OPTFLAGS = -g
 endif
 
-soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(MGLQUAKE)
+soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(MGLQUAKE) \
+	$(VGAQUAKE)
 gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
 targets       = $(gl_targets) $(soft_targets)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
@@ -147,9 +156,16 @@ SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 SYS_SRC        = sys_common.c @SYS_SRC@
 
 # Networking source files
-# FIXME: Should not assume UNIX
 
-NET_SRC        = net_bsd.c net_udp.c
+ifeq ($(HAVE_WSOCK),yes)
+NET_SRC    = net_win.c net_wins.c net_wipx.c
+else
+ifeq ($(HAVE_UDP),yes)
+NET_SRC	   = net_bsd.c net_udp.c
+else
+NET_SRC    = net_dos.c net_bw.c net_ipx.c net_mp.c net_ser.c
+endif
+endif
 UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
 # Common source files
@@ -354,7 +370,7 @@ ifneq ($(MGLQUAKE),)
 
 # Map the list of source files into a list of object files
 ALL_MGL_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) \
-	vid_win.c in_win.c model.c
+	vid_win.c in_win.c conproc.c model.c
 ALL_MGL_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
                $(basename $(ALL_MGL_SRC) .c .s)))
 
@@ -372,6 +388,34 @@ $(MGLQUAKE): soft_DIR $(BUILD_DIR)/../$(MGLQUAKE)
 $(BUILD_DIR)/../$(MGLQUAKE): $(ALL_MGL_OBJS)
 	$(CC) $(CFLAGS) $(ALL_MGL_OBJS) $(MGL_LDFLAGS) $(LDFLAGS) $(LIBS) \
 	-o $(BUILD_DIR)/../$(MGLQUAKE)
+
+endif
+
+# VGA software target
+
+ifneq ($(VGAQUAKE),)
+
+# Map the list of source files into a list of object files
+ALL_VGA_SRC = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(SW_REND_SRC) $(DOS_NET_SRC) \
+	vid_vga.c vid_ext.c vid_dos.c vregset.c in_dos.c dos_v2.c \
+	d_copy.s model.c
+ALL_VGA_OBJS = $(patsubst %,$(BUILD_DIR)/soft/%,$(addsuffix .@OBJEXT@,\
+               $(basename $(ALL_VGA_SRC) .c .s)))
+
+VGA_CFLAGS  = @VGA_CFLAGS@ -DVGA
+VGA_LDFLAGS = @VGA_LIBS@
+
+$(BUILD_DIR)/soft/vid_win.@OBJEXT@: $(COMMON_DIR)/vid_win.c
+	$(CC) $(CFLAGS) $(VGA_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/soft/in_win.@OBJEXT@: $(COMMON_DIR)/in_win.c
+	$(CC) $(CFLAGS) $(VGA_CFLAGS) -o $@ -c $<
+
+$(VGAQUAKE): soft_DIR $(BUILD_DIR)/../$(VGAQUAKE)
+
+$(BUILD_DIR)/../$(VGAQUAKE): $(ALL_VGA_OBJS)
+	$(CC) $(CFLAGS) $(ALL_VGA_OBJS) $(VGA_LDFLAGS) $(LDFLAGS) $(LIBS) \
+	-o $(BUILD_DIR)/../$(VGAQUAKE)
 
 endif
 
