@@ -3,13 +3,11 @@
 
 	Dynamic shared object loader
 
-	Copyright (C) 1999, 2000 contributors of the QuakeForge project
+	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
 	Author: Zephaniah E. Hull	<mwarp@whitestar.soark.net>
 	Date:	11 Feb 2000
-
-	This file is part of the QuakeForge Core system.
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -25,9 +23,11 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to:
 
-	Free Software Foundation, Inc.
-	59 Temple Place - Suite 330
-	Boston, MA  02111-1307, USA.
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 #include <string.h>
 #include <stdio.h>
@@ -35,7 +35,7 @@
 #include <dlfcn.h>
 #include <sys/param.h>
 #else
-#include "input.h"
+#include <input.h>
 #endif
 
 #include <stdlib.h>
@@ -49,7 +49,6 @@
 #define LIBDIR
 #endif
 
-//cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
 cvar_t	*fs_drvpath;
 
 input_pi *IN;
