@@ -589,7 +589,7 @@ void CL_FullServerinfo_f (void)
 
 	strcpy (cl.serverinfo, Cmd_Argv(1));
 
-	if ((p = Info_ValueForKey(cl.serverinfo, "*vesion")) && *p) {
+	if ((p = Info_ValueForKey(cl.serverinfo, "*version")) && *p) {
 		v = Q_atof(p);
 		if (v) {
 			if (!server_version)

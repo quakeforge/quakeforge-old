@@ -73,6 +73,10 @@ X11 software renderer fixes:
 GL fullbright Support:
   Neal White III <nwhite@softblox.com>
 
+Misc Code Fixes:
+  Daniel O'Connor <doconnor@gsoft.com.au> -- Correct failed mmap checking.
+  Dan Nelson <dnelson@emsphone.com> -- Typo fix..
+
 Cheat/exploit fixes:
   Mads Bondo Dydensborg <madsdyd@challenge.dk>
 
