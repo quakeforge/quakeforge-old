@@ -4,6 +4,7 @@ The original Quake, QuakeWorld, and QuakeWorld server:
 Project hosting and server resources:
   VA Linux Systems, Inc  http://www.valinux.com
   AbsoluteK <absolutek@quakeforge.net>
+  Chad Fowler <chadfowler@quakeforge.net>
 
 Administration and project management:
   Nelson J. Rush <chesterrr@att.net>
@@ -13,6 +14,7 @@ QW/Q1 tree merging:
   Zephaniah E. Hull <warp@whitestar.soark.net>
   Marcus Sundberg <mackan@stacken.kth.se>
   Bill Currie <bill@taniwha.org>
+  Nelson J. Rush <chesterrr@att.net>
 
 Autoconf support:
   Loring Holden <lsh@cs.brown.edu>
