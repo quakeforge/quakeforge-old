@@ -1080,7 +1080,12 @@ R_RenderView ( void ) {
 		glFogi (GL_FOG_MODE, GL_EXP2);
 		glFogfv (GL_FOG_COLOR, colors);
 		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog->value); 
-		glEnable(GL_FOG);
+//		glFogi (GL_FOG_MODE, GL_LINEAR);
+//		glFogfv (GL_FOG_COLOR, colors);
+//		glFogf (GL_FOG_START, 300.0);
+//		glFogf (GL_FOG_END, 1500.0);
+//		glFogf (GL_FOG_DENSITY, 0.2);
+		glEnable (GL_FOG);
 
 		R_RenderScene ();
 	        R_DrawViewModel ();

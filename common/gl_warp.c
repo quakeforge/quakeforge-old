@@ -27,11 +27,12 @@
 	Boston, MA  02111-1307, USA
 */
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "glquake.h"
-#include "mathlib.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <glquake.h>
+#include <mathlib.h>
 #include <sys.h>
+#include <console.h>
 
 extern	model_t	*loadmodel;
 
@@ -295,6 +296,7 @@ EmitBothSkyLayers ( msurface_t *fa ) {
 	glDisable (GL_BLEND);
 }
 
+#if 0
 /*
 	R_DrawSkyChain
 */
@@ -303,54 +305,18 @@ R_DrawSkyChain ( msurface_t *s ) {
 
 	msurface_t	*fa;
 
-	GL_DisableMultitexture();
-
-	// used when gl_texsort is on
-	GL_Bind(solidskytexture);
-	speedscale = realtime*8;
-	speedscale -= (int)speedscale & ~127 ;
-
-	for (fa=s ; fa ; fa=fa->texturechain)
-		EmitSkyPolys (fa);
-
-	glEnable (GL_BLEND);
-	GL_Bind (alphaskytexture);
-	speedscale = realtime*16;
-	speedscale -= (int)speedscale & ~127 ;
-
-	for (fa=s ; fa ; fa=fa->texturechain)
-		EmitSkyPolys (fa);
-
-	glDisable (GL_BLEND);
 }
+#endif
 
 /*
 	Quake 2 sky rendering ("skyboxes")
 */
-
-#ifdef QUAKE2
 
 #define	SKY_TEX		2000
 
 /*
 	PCX Loading
 */
-
-typedef struct {
-    char	manufacturer;
-    char	version;
-    char	encoding;
-    char	bits_per_pixel;
-    unsigned short	xmin,ymin,xmax,ymax;
-    unsigned short	hres,vres;
-    unsigned char	palette[48];
-    char	reserved;
-    char	color_planes;
-    unsigned short	bytes_per_line;
-    unsigned short	palette_type;
-    char	filler[58];
-    unsigned 	data;			// unbounded
-} pcx_t;
 
 byte	*pcx_rgb;
 
@@ -460,8 +426,9 @@ void
 LoadTGA (QFile *fin) {
 
 	int		columns, rows, numPixels;
-	byte	*pixbuf;
+	byte		*pixbuf;
 	int		row, column;
+	unsigned char	red = 0, green = 0, blue = 0, alphabyte = 0;
 
 	targa_header.id_length = Qgetc(fin);
 	targa_header.colormap_type = Qgetc(fin);
@@ -498,7 +465,6 @@ LoadTGA (QFile *fin) {
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = targa_rgba + row*columns*4;
 			for(column=0; column<columns; column++) {
-				unsigned char red,green,blue,alphabyte;
 				switch (targa_header.pixel_size) {
 					case 24:
 							
@@ -525,7 +491,7 @@ LoadTGA (QFile *fin) {
 		}
 	}
 	else if (targa_header.image_type==10) {   // Runlength encoded RGB images
-		unsigned char red,green,blue,alphabyte,packetHeader,packetSize,j;
+		unsigned char packetHeader,packetSize,j;
 		for(row=rows-1; row>=0; row--) {
 			pixbuf = targa_rgba + row*columns*4;
 			for(column=0; column<columns; ) {
@@ -613,13 +579,16 @@ char	*suf[6] = {"rt", "bk", "lf", "ft", "up", "dn"};
 void
 R_LoadSkys ( void ) {
 
-	int		i;
+	int	i;
 	QFile	*f;
 	char	name[64];
+	cvar_t	*r_skyname;
 
+	r_skyname = Cvar_Get ("r_skyname","sky",CVAR_NONE, "");
 	for (i=0 ; i<6 ; i++) {
 		GL_Bind (SKY_TEX + i);
-		snprintf(name, sizeof(name), "gfx/env/bkgtst%s.tga", suf[i]);
+		snprintf(name, sizeof(name), "gfx/env/%s%s.tga",
+				r_skyname->string, suf[i]);
 		COM_FOpenFile (name, &f);
 		if (!f) {
 			Con_Printf ("Couldn't load %s\n", name);
@@ -851,18 +820,43 @@ R_DrawSkyChain (msurface_t *s) {
 	vec3_t	verts[MAX_CLIP_VERTS];
 	glpoly_t	*p;
 
-	c_sky = 0;
-	GL_Bind(solidskytexture);
+	if (1)
+	{
+		c_sky = 0;
+		GL_Bind(solidskytexture);
 
-	// calculate vertex values for sky box
+		// calculate vertex values for sky box
 
-	for (fa=s ; fa ; fa=fa->texturechain) {
-		for (p=fa->polys ; p ; p=p->next) {
-			for (i=0 ; i<p->numverts ; i++) {
-				VectorSubtract (p->verts[i], r_origin, verts[i]);
+		for (fa=s ; fa ; fa=fa->texturechain) {
+			for (p=fa->polys ; p ; p=p->next) {
+				for (i=0 ; i<p->numverts ; i++) {
+					VectorSubtract (p->verts[i], r_origin, verts[i]);
+				}
+				ClipSkyPolygon (p->numverts, verts[0], 0);
 			}
-			ClipSkyPolygon (p->numverts, verts[0], 0);
 		}
+	}
+	else
+	{
+		GL_DisableMultitexture();
+
+		// used when gl_texsort is on
+		GL_Bind(solidskytexture);
+		speedscale = realtime*8;
+		speedscale -= (int)speedscale & ~127 ;
+
+		for (fa=s ; fa ; fa=fa->texturechain)
+			EmitSkyPolys (fa);
+
+		glEnable (GL_BLEND);
+		GL_Bind (alphaskytexture);
+		speedscale = realtime*16;
+		speedscale -= (int)speedscale & ~127 ;
+
+		for (fa=s ; fa ; fa=fa->texturechain)
+			EmitSkyPolys (fa);
+
+		glDisable (GL_BLEND);
 	}
 }
 
@@ -923,9 +917,9 @@ int	skytexorder[6] = {0,2,1,3,4,5};
 void
 R_DrawSkyBox (void) {
 
-	int		i, j, k;
-	vec3_t	v;
-	float	s, t;
+	int		i; //, j, k;
+//	vec3_t	v;
+//	float	s, t;
 
 #if 0
 	glEnable (GL_BLEND);
@@ -961,7 +955,6 @@ R_DrawSkyBox (void) {
 #endif
 }
 
-#endif	// QUAKE2
 
 /*
 	R_InitSky

@@ -1,4 +1,5 @@
 /*
+gl_rsurf.c - surrface-related refresh code
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,12 +20,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_surf.c: surrface-related refresh code
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "glquake.h"
-#include "mathlib.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <glquake.h>
+#include <mathlib.h>
 #include <sys.h>
 
 int			skytexturenum;
@@ -1321,9 +1321,7 @@ void R_DrawWorld (void)
 
 	glColor3f (1,1,1);
 	memset (lightmap_polys, 0, sizeof(lightmap_polys));
-#ifdef QUAKE2
 	R_ClearSkyBox ();
-#endif
 
 	R_RecursiveWorldNode (cl.worldmodel->nodes);
 
@@ -1331,9 +1329,7 @@ void R_DrawWorld (void)
 
 	R_BlendLightmaps ();
 
-#ifdef QUAKE2
 	R_DrawSkyBox ();
-#endif
 }
 
 
@@ -1638,10 +1634,8 @@ void GL_BuildLightmaps (void)
 			GL_CreateSurfaceLightmap (m->surfaces + i);
 			if ( m->surfaces[i].flags & SURF_DRAWTURB )
 				continue;
-#ifndef QUAKE2
 			if ( m->surfaces[i].flags & SURF_DRAWSKY )
 				continue;
-#endif
 			BuildSurfaceDisplayList (m->surfaces + i);
 		}
 	}
