@@ -23,8 +23,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef _CLIENT_H
 #define _CLIENT_H
+#include "config.h"
 
+#ifdef HAS_ZLIB
 #include <zlib.h>
+#else
+#include "nozip.h"
+#endif
 
 #include "qtypes.h"
 #include "zone.h"

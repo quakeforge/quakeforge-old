@@ -222,9 +222,9 @@ qboolean NET_IsClientLegal(netadr_t *adr)
 
 qboolean NET_GetPacket (void)
 {
-	int 	ret;
-	struct sockaddr_in	from;
-	int		fromlen;
+	int 	            ret;
+	struct sockaddr_in  from;
+	socklen_t           fromlen;
 
 	fromlen = sizeof(from);
 	ret = recvfrom(net_socket, (void*)net_message_buffer, sizeof(net_message_buffer), 0, (struct sockaddr *)&from, &fromlen);
@@ -332,7 +332,7 @@ void NET_GetLocalAddress (void)
 {
 	char	buff[MAXHOSTNAMELEN];
 	struct sockaddr_in	address;
-	int		namelen;
+	socklen_t               namelen;
 
 	if (gethostname(buff, MAXHOSTNAMELEN) == -1)
 	        Sys_Error ("Net_GetLocalAddress: gethostname: %s", strerror(errno));
