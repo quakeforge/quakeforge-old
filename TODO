@@ -1,2 +1,14 @@
 Global: sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix possible buffer overruns
 configure.in: clean up the intel -mcpu stuff
+
+.
+* audio support for more platforms
+* Add OpenGL multi-pass texturing replacement for when no OpenGL
+multi-texturing extension is available
+* Add tested platforms list to README or other file
+* Separate out more common code (glquake.h, software rendering, etc.)
+* Add install Makefile target
+* Allow non-gnu Makefile's or even better provide automake support
+* add .cvsignore files so that CVS will ignore various created
+files/directories
+.loring (lsh@cs.brown.edu)
