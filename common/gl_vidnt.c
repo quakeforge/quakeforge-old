@@ -158,7 +158,7 @@ qboolean gl_mtexable = false;
 //====================================
 
 cvar_t	*gl_ztrick;
-cvar_t	*gl_pscale;
+cvar_t	*gl_particles;
 
 cvar_t	*vid_mode;
 // Note that 0 is MODE_WINDOWED
@@ -1626,7 +1626,8 @@ void	VID_Init (unsigned char *palette)
 					"None");
 	_windowed_mouse = Cvar_Get ("_windowed_mouse","1",CVAR_ARCHIVE,"None");
 	gl_ztrick = Cvar_Get ("gl_ztrick","1",CVAR_ARCHIVE,"None");
-	gl_pscale = Cvar_Get ("gl_pscale","1",0,"Sets the size of particles");
+	gl_particles = Cvar_Get ("gl_particles","1",0,
+				"Sets the size of particles");
 
 	Cmd_AddCommand ("vid_nummodes", VID_NumModes_f);
 	Cmd_AddCommand ("vid_describecurrentmode", VID_DescribeCurrentMode_f);

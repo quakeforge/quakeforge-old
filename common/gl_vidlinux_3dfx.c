@@ -58,7 +58,7 @@ static cvar_t	*vid_redrawfull;
 static cvar_t	*vid_waitforrefresh;
 cvar_t	*gl_ztrick;
 extern cvar_t	*gl_triplebuffer;
-cvar_t	*gl_pscale;
+cvar_t	*gl_particles;
 
 static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;
@@ -519,7 +519,8 @@ void VID_ExtraOptionCmd(int option_cursor)
 void VID_InitCvars ()
 {
 	gl_triplebuffer = Cvar_Get ("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
-	gl_pscale = Cvar_Get ("gl_pscale","1",0,"Sets the size of particles");
+	gl_particles = Cvar_Get ("gl_particles","1",0,
+				 "Sets the size of particles");
 }
 
 void
