@@ -48,7 +48,7 @@ input_pi *IN;
 void *_plugin_load(const char *filename)
 {
 	void *h;
-	char path_buf[MAXPATHLEN*2+1];
+	char path_buf[MAXPATHLEN*2+1+1];
 	char *path,*end;
 	int len;
 
