@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sound.h>
 #include <screen.h>
 #include <menu.h>
+#include <plugin.h>
 
 #include <time.h>
 
@@ -799,7 +800,7 @@ int SCR_ModalMessage (char *text)
 	do
 	{
 		key_count = -1;         // wait for a key down and up
-		Sys_SendKeyEvents ();
+		IN->SendKeyEvents ();
 	} while (key_lastpress != 'y' && key_lastpress != 'n' && key_lastpress != K_ESCAPE);
 
 	scr_fullupdate = 0;

@@ -451,7 +451,7 @@ ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 	      $(TARGET_DIR)/sound_lib.a
 
 GL_CFLAGS  = @OGL_CFLAGS@
-GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@
 
 $(BUILD_DIR)/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
