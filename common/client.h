@@ -34,9 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <net.h>
 #include <qtypes.h>
 #include <zone.h>
-#if defined(UQUAKE) || defined(QUAKEWORLD)
-#	include <protocol.h>
-#endif
+#include <protocol.h>
 #include <vid.h>
 #include <render.h>
 #include <common.h>
@@ -105,7 +103,7 @@ typedef struct player_info_s
 } player_info_t;
 
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 typedef struct
 {
 	// generated on client side
@@ -121,7 +119,7 @@ typedef struct
 	packet_entities_t	packet_entities;
 	qboolean	invalid;	// if packet_entities delta is invalid
 } frame_t;
-#endif
+//#endif
 
 #define	CSHIFT_CONTENTS		0
 #define	CSHIFT_DAMAGE		1
@@ -199,7 +197,7 @@ typedef struct
 	cactive_t	state;		// connection info
 	netchan_t	netchan;	// network stuff
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 	char		userinfo[MAX_INFO_STRING];
 	char		servername[MAX_OSPATH];
 	int		qport;
@@ -214,13 +212,13 @@ typedef struct
 
 	int		challenge;
 	float		latency;		// rolling average
-#elif UQUAKE
+//#elif UQUAKE
 	char		mapstring[MAX_QPATH];
 	char		spawnparms[MAX_MAPSTRING];	// to restart level
 
 	int		signon;
 	struct qsocket_s	*netcon;
-#endif // QUAKEWORLD else UQUAKE
+//#endif // QUAKEWORLD else UQUAKE
 	
 // demos - this stuff can't go into client_state_t
 	int		demonum;
@@ -298,7 +296,7 @@ typedef struct
 	int		gametype;
 	int		maxclients;
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 // QW specific!
 // all player information
 	player_info_t	players[MAX_CLIENTS];
@@ -325,7 +323,7 @@ typedef struct
 //
 	char		model_name[MAX_MODELS][MAX_QPATH];
 	char		sound_name[MAX_SOUNDS][MAX_QPATH];
-#elif defined(UQUAKE)
+//#elif defined(UQUAKE)
 // UQ specific.
 	int		num_entities;	// held in cl_entities array
 	float		last_received_message;	// (time) for net trouble icon
@@ -347,7 +345,7 @@ typedef struct
 	vec3_t		mvelocity[2];	// update by server, used for lean+bob
 					// (0 is newest)
 	vec3_t		velocity;	// lerped between mvelocity[0] and [1]
-#endif // QUAKEWORLD else UQUAKE
+//#endif // QUAKEWORLD else UQUAKE
 } client_state_t;
 
 extern client_state_t cl;
@@ -398,9 +396,7 @@ extern cvar_t	_windowed_mouse;
 
 
 // FIXME, allocate dynamically
-#ifdef QUAKEWORLD
 extern entity_state_t	cl_baselines[MAX_EDICTS];
-#endif // QUAKEWORLD
 #ifdef UQUAKE
 entity_t		cl_entities[MAX_EDICTS];
 entity_t		cl_temp_entities[MAX_TEMP_ENTITIES];
@@ -550,7 +546,7 @@ void CL_ClearTEnts (void);
 void CL_SignonReply (void);
 #endif
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 //
 // cl_ents.c
 //
@@ -617,6 +613,6 @@ void	Skin_NextDownload (void);
 #define RSSHOT_WIDTH 320
 #define RSSHOT_HEIGHT 200
 
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 
 #endif // _CLIENT_H

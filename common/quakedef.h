@@ -32,5 +32,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 extern	cvar_t	password;
 
 qboolean Host_SimulationTime(float time);
+void Host_ClearMemory (void);
+
+extern int			current_skill;		// skill level for currently loaded level (in case
+										//  the user changes the cvar while the level is
+										//  running, this reflects the level actually in use)
+extern qboolean		isDedicated;
+
+extern int			minimum_memory;
+
+/*
+	Chase camera
+*/
+extern	cvar_t	cl_chasecam;
+
+void Chase_Init (void);
+void Chase_Reset (void);
+void Chase_Update (void);
 
 #endif /* _QW_COMMON_QUAKEDEF_H */

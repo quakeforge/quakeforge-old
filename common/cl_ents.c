@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "mathlib.h"
 #include "view.h"
 #include "cvars.h"
+#include "model.h"
 
 extern	cvar_t	cl_predict_players;
 extern	cvar_t	cl_predict_players2;
@@ -221,11 +222,12 @@ void CL_ParseDelta (entity_state_t *from, entity_state_t *to, int bits)
 		
 	if (bits & U_ANGLE3)
 		to->angles[2] = MSG_ReadAngle();
-
+#ifdef QUAKEWORLD
 	if (bits & U_SOLID)
 	{
 		// FIXME
 	}
+#endif
 }
 
 
@@ -366,6 +368,7 @@ void CL_ParsePacketEntities (qboolean delta)
 		if (newnum < oldnum)
 		{	// new from baseline
 //Con_Printf ("baseline %i\n", newnum);
+#ifdef QUAKEWORLD
 			if (word & U_REMOVE)
 			{
 				if (full)
@@ -377,6 +380,7 @@ void CL_ParsePacketEntities (qboolean delta)
 				}
 				continue;
 			}
+#endif
 			if (newindex >= MAX_PACKET_ENTITIES)
 				Host_EndGame ("CL_ParsePacketEntities: newindex == MAX_PACKET_ENTITIES");
 			CL_ParseDelta (&cl_baselines[newnum], &newp->entities[newindex], word);
@@ -391,11 +395,13 @@ void CL_ParsePacketEntities (qboolean delta)
 				cl.validsequence = 0;
 				Con_Printf ("WARNING: delta on full update");
 			}
+#ifdef QUAKEWORLD
 			if (word & U_REMOVE)
 			{
 				oldindex++;
 				continue;
 			}
+#endif
 //Con_Printf ("delta %i\n",newnum);
 			CL_ParseDelta (&oldp->entities[oldindex], &newp->entities[newindex], word);
 			newindex++;

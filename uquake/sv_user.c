@@ -50,7 +50,7 @@ float	*angles;
 float	*origin;
 float	*velocity;
 
-qboolean	onground;
+int	onground;
 
 usercmd_t	cmd;
 
