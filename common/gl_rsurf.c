@@ -145,7 +145,6 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 	byte		*lightmap;
 	unsigned	scale;
 	int		maps;
-	int		lightadj[4];
 	unsigned	*bl;
 
 	surf->cached_dlight = (surf->dlightframe == r_framecount);
@@ -315,11 +314,9 @@ void R_DrawSequentialPoly (msurface_t *s)
 {
 	glpoly_t	*p;
 	float		*v;
-	int			i;
+	int		i;
 	texture_t	*t;
-	vec3_t		nv, dir;
-	float		ss, ss2, length;
-	float		s1, t1;
+	vec3_t		nv;
 	glRect_t	*theRect;
 
 	//
