@@ -487,8 +487,8 @@ R_DrawAliasModel (entity_t *e) {
 						cl_dlights[lnum].color[1];
 					shadelight[2] +=
 						cl_dlights[lnum].color[2];
+					shadelight[3] += add;
 				}
-				shadelight[3] += add;
 			}
 		}
 	}
