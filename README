@@ -79,7 +79,8 @@ III. Running and Compiling QuakeForge
 
 Read the INSTALL file for more information on compiling.
 
-Autoconf 2.13 or greater required to use the bootstrap script.
+Autoconf 2.13 or greater and automake 1.3 or greater required to use
+the bootstrap script.
 
 After you have compiled successfully, you must download the shareware
 version of Quake 1 to play. Insert the proper binaries in the same

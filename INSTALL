@@ -3,7 +3,8 @@ Basic Installation
 
    These are generic installation instructions.
 
-Autoconf 2.13 or greater required to use the bootstrap script.
+Autoconf 2.13 or greater and automake 1.3 or greater required to use
+the bootstrap script.
 Run bootstrap first.
 
    The `configure' shell script attempts to guess correct values for
