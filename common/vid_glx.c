@@ -92,7 +92,7 @@ unsigned	d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
 cvar_t	*vid_mode;
-cvar_t	*vid_glx_fullscreen;
+cvar_t	*vid_fullscreen;
 extern cvar_t	*gl_triplebuffer;
 extern cvar_t *vid_dga_mouseaccel;
 
@@ -420,7 +420,7 @@ void VID_Init(unsigned char *palette)
 
 	vid_mode = Cvar_Get ("vid_mode","0",0,"None");
 	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
-	vid_glx_fullscreen = Cvar_Get ("vid_glx_fullscreen","0",0,"None");
+	vid_fullscreen = Cvar_Get ("vid_fullscreen","0",0,"None");
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
@@ -481,7 +481,7 @@ void VID_Init(unsigned char *palette)
 #endif
 #ifdef HAS_VIDMODE
 	hasvidmode = VID_CheckVMode(x_disp, NULL, NULL);
-	if (hasvidmode) {
+	if (hasvidmode && vid_fullscreen->value) {
 		if (! XF86VidModeGetAllModeLines(x_disp, DefaultScreen(x_disp),
 						 &nummodes, &vidmodes)
 		    || nummodes <= 0) {
@@ -510,9 +510,9 @@ void VID_Init(unsigned char *palette)
 		const char *str = getenv("MESA_GLX_FX");
 		if (str != NULL && *str != 'd') {
 			if (tolower(*str) == 'w') {
-				Cvar_Set (vid_glx_fullscreen, "0");
+				Cvar_Set (vid_fullscreen, "0");
 			} else {
-				Cvar_Set (vid_glx_fullscreen, "1");
+				Cvar_Set (vid_fullscreen, "1");
 			}
 		}
 #endif
@@ -529,7 +529,7 @@ void VID_Init(unsigned char *palette)
 	mask = CWBackPixel | CWBorderPixel | CWColormap | CWEventMask;
 
 #ifdef HAS_VIDMODE
-	if (hasvidmode) {
+	if (hasvidmode && vid_fullscreen->value) {
 		int smallest_mode=0, x=MAXINT, y=MAXINT;
 
 		attr.override_redirect=1;

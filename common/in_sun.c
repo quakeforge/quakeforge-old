@@ -69,7 +69,6 @@ extern int			global_dx, global_dy;
 // globals
 //
 
-//cvar_t					in_grab = {"in_grab","1", CVAR_ARCHIVE};
 cvar_t	*in_grab;
 int					x_root, y_root;
 int					x_root_old, y_root_old;

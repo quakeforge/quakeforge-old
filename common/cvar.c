@@ -373,7 +373,14 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 		return v;
 	}
 	// Cvar does exist, so we update the flags and return.
-	v->flags |= cvarflags;
 	v->flags ^= CVAR_USER_CREATED;
+	v->flags ^= CVAR_HEAP;
+	v->flags |= cvarflags;
+	if (!Q_strcmp (v->description,"User created cvar"))
+	{	
+		// Set with the real description
+		free(v->description);
+		v->description = strdup (description);
+	}
 	return v;
 }

@@ -104,6 +104,8 @@ int	VID_options_items = 1;
 
 static byte current_palette[768];
 
+cvar_t	*vid_fullscreen;
+
 typedef unsigned short PIXEL16;
 typedef unsigned long PIXEL24;
 static PIXEL16 st2d_8to16table[256];
@@ -463,7 +465,8 @@ void VID_Init (unsigned char *palette)
 	int template_mask;
 
 	//plugin_load("in_x11.so");
-
+	vid_fullscreen = Cvar_Get ("vid_fullscreen","0",CVAR_NONE,
+		"Toggles fullscreen game mode");
 //	Cmd_AddCommand("gamma", VID_Gamma_f);
 	for (i=0; i < 256; i++)	vid_gamma[i] = i;
 
@@ -486,7 +489,7 @@ void VID_Init (unsigned char *palette)
 
 #ifdef HAS_VIDMODE
 	hasvidmode = VID_CheckVMode(x_disp, NULL, NULL);
-	if (hasvidmode) {
+	if (hasvidmode && vid_fullscreen->value) {
 		if (! XF86VidModeGetAllModeLines(x_disp, DefaultScreen(x_disp),
 						 &nummodes, &vidmodes)
 		    || nummodes <= 0) {
@@ -581,7 +584,7 @@ void VID_Init (unsigned char *palette)
 		attribs.border_pixel = 0;
 
 #ifdef HAS_VIDMODE
-		if (hasvidmode) {
+		if (hasvidmode && vid_fullscreen->value) {
 			int smallest_mode=0, x=MAXINT, y=MAXINT;
 
 			attribs.override_redirect=1;

@@ -479,6 +479,24 @@ void Cmd_UnAlias_f (void)
 }
 
 /*
+===============
+Cmd_Grab_f
+
+Grabs mouse so we don't have to mess with cvars. Kinda requires -nodga for the
+moment.
+===============
+*/
+void Cmd_Grab_f (void)
+{
+	Cbuf_AddText("set in_grab 1");
+}
+
+void Cmd_UnGrab_f (void)
+{
+	Cbuf_AddText("set in_grab 0");
+}
+
+/*
 =============================================================================
 
 					COMMAND EXECUTION
@@ -860,6 +878,8 @@ void Cmd_Init (void)
 	Cmd_AddCommand ("echo",Cmd_Echo_f);
 	Cmd_AddCommand ("alias",Cmd_Alias_f);
 	Cmd_AddCommand ("unalias",Cmd_UnAlias_f);
+	Cmd_AddCommand ("grab",Cmd_Grab_f);
+	Cmd_AddCommand ("ungrab",Cmd_UnGrab_f);
 	Cmd_AddCommand ("wait", Cmd_Wait_f);
 	Cmd_AddCommand ("cmdlist", Cmd_CmdList_f);
 #ifndef SERVERONLY
