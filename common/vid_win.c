@@ -241,6 +241,8 @@ void VID_UpdateWindowStatus (void)
 }
 
 
+extern qboolean keydown[256];
+
 /*
 ================
 ClearAllStates
@@ -253,7 +255,8 @@ void ClearAllStates (void)
 // send an up event for each key, to make sure the server clears them all
 	for (i=0 ; i<256 ; i++)
 	{
-		Key_Event (i, false);
+		if (keydown[i])
+			Key_Event (i, false);
 	}
 
 	Key_ClearStates ();
