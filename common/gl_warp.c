@@ -517,8 +517,9 @@ R_LoadSkys ( void ) {
 //		snprintf(name, sizeof(name), "env/%s%s.pcx",
 				r_skyname->string, suf[i]);
 		COM_FOpenFile (name, &f);
-		if (!f) {
-			Con_Printf ("Couldn't load %s\n", name);
+		if (!f)
+		{
+			Con_DPrintf ("R_LoadSkys: Couldn't load %s\n", name);
 			continue;
 		}
 		LoadTGA (f, &skyimage);
