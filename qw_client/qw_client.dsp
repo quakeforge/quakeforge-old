@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /WX /GX /O2 /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /YX /FD /c
+# ADD CPP /nologo /WX /GX /O2 /I "../qw_client" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -55,7 +55,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"Release/qw-client-win.exe"
+# ADD LINK32 dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"Release/qw-client-win.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
@@ -72,7 +72,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /FR /YX /FD /c
+# ADD CPP /nologo /WX /Gm /GX /ZI /Od /I "../qw_client" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "id386" /FR /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "_DEBUG"
@@ -82,7 +82,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /out:"Debug/qw-client-win.exe" /pdbtype:sept
+# ADD LINK32 dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /out:"Debug/qw-client-win.exe" /pdbtype:sept
 # SUBTRACT LINK32 /nodefaultlib
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
@@ -100,7 +100,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "QUAKEWORLD" /FR /YX /FD /c
-# ADD CPP /nologo /WX /GX /O2 /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
+# ADD CPP /nologo /WX /GX /O2 /I "../qw_client" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -111,7 +111,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"qwcl_Release/qw_client.exe"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/qw-client-wgl.exe"
+# ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLRelease/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
@@ -130,7 +130,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /GX /O2 /I "../scitech/include" /I "../qw_common" /I "../common" /I "../qw_client" /I "../qw_server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
 # SUBTRACT BASE CPP /Fr
-# ADD CPP /nologo /WX /GX /ZI /Od /I "../scitech/include" /I "../common" /I "../qw_client" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
+# ADD CPP /nologo /WX /GX /ZI /Od /I "../qw_client" /I "../common" /I "../win32" /I "../win32/vc" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QUAKEWORLD" /D "GLQUAKE" /D "id386" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
@@ -141,7 +141,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"GLRelease/glqw_client.exe"
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 dxguid.lib ..\scitech\lib\win32\vc\mgllt.lib comctl32.lib winmm.lib wsock32.lib opengl32.lib glu32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /out:"GLDebug/qw-client-wgl.exe"
+# ADD LINK32 comctl32.lib opengl32.lib glu32.lib dxguid.lib winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib mglfx.lib /nologo /subsystem:windows /incremental:yes /debug /machine:I386 /nodefaultlib:"libcmt.lib" /out:"GLDebug/qw-client-wgl.exe"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 

@@ -1,11 +1,20 @@
 Steps to compile standalone on win32 platforms with VC++.
 
-1) Copy scitech\*.* from the original q1source.zip by id Software to
-the quakeforge directory. Or you can get the scitech library from
-http://www.scitechsoft.com/
+1) either: (reccommended)
+     download and install MGL for VC++. it is available from Scitech at
+     http://www.scitechsoft.com
+   
+     IMPORTANT: make sure you add the mgl include and lib paths to VC++'s
+     options in Tools->Options->Directories
 
-2) Copy config.h from common\wins to common\
+   or:
+     if you don't feel like downloading the latest version of the MGL,
+     which is very highly reccommended, you can get the scitech directory
+     from the q1source.zip file, rename the MGLLT.LIB file in it to
+     MGLFX.LIB, and put the appropriate paths into VC++'s options, as
+     above.
 
-3) Compile gas2masm project using Debug configuration.
+2) Build the gas2masm Debug program first. all the other targets depend
+   on this one.
 
-4) Compile all the other projects.
+3) Build the other targets.
