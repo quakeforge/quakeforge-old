@@ -1,6 +1,5 @@
 Requirements
 ============
-
 - Following DJGPP packages:
 
 	acnf213b.zip	(Autoconf)
@@ -21,14 +20,17 @@ Requirements
 
 Also distclean requires find41b.zip (Findutils)
 It's also recommended to have txi40b.zip (documentation system) and faq230b.zip (DJGPP FAQ).
+Packages can be downloaded at http://www.delorie.com/djgpp/ or  
+ftp://ftp.simtelnet.net/pub/simtelnet/gnu/djgpp/
 
 - LFN support (Tested under Windows 98)
 
+
 Building instructions
 =====================
-
-First, install all aforementioned DJGPP packages. You also need mpdosock.h from the original source release. Put it somewhere the compiler can
-find it. I prefer c:\djgpp\include.
+First, install all aforementioned DJGPP packages. You also need mpdosock.h from 
+the original source release. Put it somewhere the compiler can find it. I prefer 
+c:\djgpp\include.
 If you want to change CFLAGS (defaults to -march=pentiumpro), edit djconfig.sh.
 Then change to the directory where you installed the Quakeforge sources and type:
 
@@ -38,11 +40,16 @@ make
 
 Then just copy targets\uquake-vga.exe to your Quake directory.
 
-NOTE: make install does NOT work.
+NOTES:
+- make install does NOT work.
+- DJGPP make does not work under Windows 2000
+  (as of 2000-08-20 / Service Pack 1 and Compatibility Pack May 2000)
+
 
 Known problems
 ==============
-- Joystick calibration occurs before video initialization. So if after starting you see only a black screen, press ESC. This bug was also
-present in the original source release, but not Quake 1.08.
+- Joystick calibration occurs before video initialization. So if after starting 
+  you see only a black screen, press ESC. This bug was also present in the 
+  original source release, but not Quake 1.08.
 
 - If you change video mode from the menu, vid_mode cvar isn't updated.
