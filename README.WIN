@@ -1,14 +1,12 @@
 Steps to compile standalone on win32 platforms with VC++.
 
-1) copy common\wins\config.h common\config.h
-
-(note: make sure you have a backup of common\config.h, doing the above
-will overwrite it)
-
-2) copy common\wins\*.s common\
+1) copy common\wins\*.* common\
 
 this will copy math.s, d_polysa.s, and d_parta.s into common
 (note: make sure you have backups of these three files)
+
+it will also copy any other files in that dir that need to be copied
+(note: make backups of the destinations in case you need them)
 
 3) copy uquake\wins\sys_win.c uquake\
 
