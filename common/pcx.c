@@ -126,6 +126,6 @@ byte *LoadPCX (char *file, cache_user_t *cache, int buf_x, int buf_y) {
 		return NULL;
 	}
 
-	return NULL;
+	return out;
 }
 

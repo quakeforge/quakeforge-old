@@ -232,9 +232,7 @@ void R_Init (void)
 
 	R_InitBubble();
 	
-#ifdef UQUAKE
 	gl_doubleeyes = Cvar_Get ("gl_doubleeyes","1",CVAR_ARCHIVE,"None");
-#endif /* UQUAKE */
 
 	R_InitParticles ();
 	R_InitParticleTexture ();
