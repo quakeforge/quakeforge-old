@@ -1,4 +1,5 @@
 /*
+console.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,17 +21,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// console.c
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "console.h"
-#include "keys.h"
-#include "lib_replace.h"
-#include "client.h"
-#include "cvar.h"
-#include "screen.h"
-#include "draw.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <console.h>
+#include <keys.h>
+#include <lib_replace.h>
+#include <client.h>
+#include <cvar.h>
+#include <screen.h>
+#include <draw.h>
 #include <cmd.h>
 #include <sys.h>
 

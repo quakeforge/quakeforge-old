@@ -1,4 +1,5 @@
 /*
+cl_parse.c - parse a message received from the server
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,9 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl_parse.c  -- parse a message received from the server
 
-#include "quakedef.h"
+#include <quakedef.h>
 #include <protocol.h>
 #include <sound.h>
 #include <net.h>
@@ -601,7 +601,13 @@ void CL_ParseServerMessage (void)
 			Host_EndGame ("Server disconnected\n");
 
 		case svc_print:
+			i = MSG_ReadByte ();
+			if (i == 1) {
+				S_LocalSound ("misc/talk.wav");
+				con_ormask = 128;
+			}
 			Con_Printf ("%s", MSG_ReadString ());
+			con_ormask = 0;
 			break;
 			
 		case svc_centerprint:
