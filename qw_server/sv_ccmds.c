@@ -685,7 +685,6 @@ void SV_Gamedir (void)
 ================
 SV_Floodport_f
 
-Sets the gamedir and path to a different directory.
 ================
 */
 

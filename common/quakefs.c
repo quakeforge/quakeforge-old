@@ -689,7 +689,7 @@ COM_LoadGameDirectory(char *dir)
 		if( !pak ) {
 			done = true;
 		} else {
-			search = Hunk_Alloc (sizeof(searchpath_t));
+			search = Z_Malloc (sizeof(searchpath_t));
 			search->pack = pak;
 			search->next = com_searchpaths;
 			com_searchpaths = search;
@@ -737,7 +737,7 @@ void COM_AddGameDirectory (char *dir)
 //
 // add the directory to the search path
 //
-	search = Hunk_Alloc (sizeof(searchpath_t));
+	search = Z_Malloc (sizeof(searchpath_t));
 	strcpy (search->filename, dir);
 	search->next = com_searchpaths;
 	com_searchpaths = search;
@@ -802,10 +802,18 @@ void COM_Gamedir (char *dir)
 	//
 	// add the directory to the search path
 	//
+#if 1
+	//search = Hunk_Alloc (sizeof(searchpath_t));
+	search = Z_Malloc (sizeof(searchpath_t));
+	strcpy (search->filename, dir);
+	search->next = com_searchpaths;
+	com_searchpaths = search;
+#else
 	search = Z_Malloc (sizeof(searchpath_t));
 	strcpy (search->filename, com_gamedir);
 	search->next = com_searchpaths;
 	com_searchpaths = search;
+#endif
 
 	//
 	// add any pak files in the format pak0.pak pak1.pak, ...

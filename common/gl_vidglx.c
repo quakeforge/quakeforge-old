@@ -141,10 +141,12 @@ void D_EndDirectRect (int x, int y, int width, int height)
 void
 VID_Shutdown(void)
 {
-	if (!ctx) return;
+	Con_Printf("VID_Shutdown\n");
 
-	glXDestroyContext(x_disp, ctx);
-	ctx = NULL;
+	if (x_disp && ctx) {
+		glXDestroyContext(x_disp, ctx);
+		ctx = NULL;
+	}
 #ifdef HAS_DGA
 	if (hasvidmode) {
 		int i;
@@ -162,8 +164,10 @@ VID_Shutdown(void)
 	}
 #endif
 
-	XCloseDisplay(x_disp);
-	x_disp = NULL;
+	if (x_disp) {
+		XCloseDisplay(x_disp);
+		x_disp = NULL;
+	}
 }
 
 

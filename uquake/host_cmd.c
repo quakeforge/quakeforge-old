@@ -193,6 +193,43 @@ void Host_Noclip_f (void)
 }
 
 /*
+================
+Host_Gamedir_f
+
+Sets the gamedir and path to a different directory.
+================
+*/
+char		gamedirfile[MAX_OSPATH];
+void
+Host_Gamedir_f (void)
+{
+	char		*dir;
+
+	if (Cmd_Argc() == 1)
+	{
+		Con_Printf ("Current gamedir: %s\n", com_gamedir);
+		return;
+	}
+
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("Usage: gamedir <newdir>\n");
+		return;
+	}
+
+	dir = Cmd_Argv(1);
+
+	if (strstr(dir, "..") || strstr(dir, "/")
+			|| strstr(dir, "\\") || strstr(dir, ":") )
+	{
+		Con_Printf ("Gamedir should be a single filename, not a path\n");
+		return;
+	}
+
+	COM_Gamedir (dir);
+}
+
+/*
 ==================
 Host_Fly_f
 
@@ -1917,4 +1954,5 @@ void Host_InitCommands (void)
 	Cmd_AddCommand ("viewprev", Host_Viewprev_f);
 
 	Cmd_AddCommand ("mcache", Mod_Print);
+	Cmd_AddCommand ("gamedir", Host_Gamedir_f);
 }
