@@ -36,6 +36,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <zone.h>
 #include <common.h>
 #include <draw.h>
+#include <dirent.h>
+#include <fnmatch.h>
 #ifdef WIN32
 #include <io.h>
 #endif
@@ -667,26 +669,31 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 void
 COM_LoadGameDirectory(char *dir)
 {
-	int 			i;
 	searchpath_t	*search;
 	pack_t			*pak;
 	char			pakfile[MAX_OSPATH];
-	qboolean 		done = false;
+	DIR				*dir_ptr;
+	struct dirent	*dirent;
 	
-	for ( i=0 ; !done ; i++ ) {	// Load all Pak1 files
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", dir, i);
+	dir_ptr = opendir(dir);
 
-		pak = COM_LoadPackFile(pakfile);                
-		
-		if( !pak ) {
-			done = true;
-		} else {
-			search = Z_Malloc (sizeof(searchpath_t));
-			search->pack = pak;
-			search->next = com_searchpaths;
-			com_searchpaths = search;
+	while ((dirent = readdir(dir_ptr))) {
+		if (!fnmatch("*.pak", dirent->d_name, 0)) {
+			snprintf(pakfile, sizeof(pakfile), "%s/%s", dir, dirent->d_name);
+
+			pak = COM_LoadPackFile(pakfile);                
+
+			if (!pak) {
+				Sys_Error(va("Bad pakfile %s!!", pakfile));
+			} else {
+				search = Z_Malloc (sizeof(searchpath_t));
+				search->pack = pak;
+				search->next = com_searchpaths;
+				com_searchpaths = search;
+			}
 		}
 	}
+	closedir(dir_ptr);
 
 #ifdef GENERATIONS
 	for (done=false, i=0 ; !done ; i++ ) {	

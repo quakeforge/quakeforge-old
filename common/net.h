@@ -61,7 +61,7 @@ extern	sizebuf_t	net_message;
 
 extern	int		net_socket;
 
-#ifdef UQUAKE
+//#ifdef UQUAKE
 // This ifdef is for clarity, not compilability
 #define	NET_NAMELEN		64
 
@@ -189,11 +189,11 @@ extern int		messagesSent;
 extern int		messagesReceived;
 extern int		unreliableMessagesSent;
 extern int		unreliableMessagesReceived;
-#endif // UQUAKE
+//#endif // UQUAKE
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 void		NET_Init (int port);
-#endif
+//#endif
 void		NET_Shutdown (void);
 qboolean	NET_GetPacket (void);
 void		NET_SendPacket (int length, void *data, netadr_t to);
@@ -256,7 +256,7 @@ typedef struct
 	double		outgoing_time[MAX_LATENT];
 } netchan_t;
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 extern	int	net_drop;		// packets dropped before this one
 
 void Netchan_Init (void);
@@ -268,11 +268,11 @@ void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport);
 
 qboolean Netchan_CanPacket (netchan_t *chan);
 qboolean Netchan_CanReliable (netchan_t *chan);
-#endif
+//#endif
 
 extern	cvar_t	*hostname;
 
-#ifdef UQUAKE
+//#ifdef UQUAKE
 qsocket_t *NET_NewQSocket (void);
 void NET_FreeQSocket(qsocket_t *);
 double SetNetTime(void);
@@ -305,7 +305,7 @@ extern	double		net_time;
 extern	sizebuf_t	net_message;
 extern	int			net_activeconnections;
 
-void		NET_Init (void);
+//void		NET_Init (void);
 void		NET_Shutdown (void);
 
 struct qsocket_s	*NET_CheckNewConnections (void);
@@ -373,7 +373,7 @@ extern	qboolean	slistSilent;
 extern	qboolean	slistLocal;
 
 void NET_Slist_f (void);
-#endif // UQUAKE
+//#endif // UQUAKE
 
 #define	MAX_PACKET_ENTITIES	64	// doesn't count nails
 typedef struct

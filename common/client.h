@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <net.h>
 #include <qtypes.h>
 #include <zone.h>
-#include <protocol.h>
+#include <common_protocol.h>
 #include <vid.h>
 #include <render.h>
 #include <common.h>
@@ -104,7 +104,6 @@ typedef struct player_info_s
 } player_info_t;
 
 
-//#ifdef QUAKEWORLD
 typedef struct
 {
 	// generated on client side
@@ -145,9 +144,7 @@ typedef struct
 	float		die;		// stop lighting after this time
 	float		decay;		// drop this each second
 	float		minlight;	// don't add when contributing less
-#ifdef QUAKE2
 	qboolean	dark;
-#endif // QUAKE2
 	float   color[4];
 } dlight_t;
 
@@ -198,7 +195,6 @@ typedef struct
 	cactive_t	state;		// connection info
 	netchan_t	netchan;	// network stuff
 
-//#ifdef QUAKEWORLD
 	char		userinfo[MAX_INFO_STRING];
 	char		servername[MAX_OSPATH];
 	int		qport;
@@ -213,13 +209,11 @@ typedef struct
 
 	int		challenge;
 	float		latency;		// rolling average
-//#elif UQUAKE
 	char		mapstring[MAX_QPATH];
 	char		spawnparms[MAX_MAPSTRING];	// to restart level
 
 	int		signon;
 	struct qsocket_s	*netcon;
-//#endif // QUAKEWORLD else UQUAKE
 	
 // demos - this stuff can't go into client_state_t
 	int		demonum;
@@ -297,7 +291,6 @@ typedef struct
 	int		gametype;
 	int		maxclients;
 
-//#ifdef QUAKEWORLD
 // QW specific!
 // all player information
 	player_info_t	players[MAX_CLIENTS];
@@ -324,7 +317,6 @@ typedef struct
 //
 	char		model_name[MAX_MODELS][MAX_QPATH];
 	char		sound_name[MAX_SOUNDS][MAX_QPATH];
-//#elif defined(UQUAKE)
 // UQ specific.
 	int		num_entities;	// held in cl_entities array
 	float		last_received_message;	// (time) for net trouble icon
@@ -346,7 +338,6 @@ typedef struct
 	vec3_t		mvelocity[2];	// update by server, used for lean+bob
 					// (0 is newest)
 	vec3_t		velocity;	// lerped between mvelocity[0] and [1]
-//#endif // QUAKEWORLD else UQUAKE
 } client_state_t;
 
 extern client_state_t cl;
@@ -354,18 +345,18 @@ extern client_state_t cl;
 //
 // cvars
 //
-#ifdef UQUAKE
+//#ifdef UQUAKE
 extern cvar_t	*cl_name;
 extern cvar_t	*cl_color;
 extern cvar_t	*cl_autofire;
 extern cvar_t	*cl_nolerp;
-#endif // UQUAKE
+//#endif // UQUAKE
 extern cvar_t	*cl_warncmd;
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 extern cvar_t	*name;
 extern cvar_t	*topcolor;
 extern cvar_t	*bottomcolor;
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 extern cvar_t	*rate;
 extern cvar_t	*host_speeds;
 extern cvar_t	*cl_maxfps;
@@ -403,10 +394,10 @@ extern cvar_t	*_windowed_mouse;
 
 // FIXME, allocate dynamically
 extern entity_state_t	cl_baselines[MAX_EDICTS];
-#ifdef UQUAKE
+//#ifdef UQUAKE
 entity_t		cl_entities[MAX_EDICTS];
 entity_t		cl_temp_entities[MAX_TEMP_ENTITIES];
-#endif // UQUAKE
+//#endif // UQUAKE
 extern efrag_t		cl_efrags[MAX_EFRAGS];
 extern entity_t		cl_static_entities[MAX_STATIC_ENTITIES];
 extern lightstyle_t	cl_lightstyle[MAX_LIGHTSTYLES];
@@ -435,20 +426,20 @@ void SetPal (int i);
 void CL_RelinkEntities (void);
 void CL_ReadPackets (void);
 
-#ifdef UQUAKE
+//#ifdef UQUAKE
 void CL_Signon1 (void);
 void CL_Signon2 (void);
 void CL_Signon3 (void);
 void CL_Signon4 (void);
-#endif // UQUAKE
+//#endif // UQUAKE
 
 void CL_Disconnect (void);
 void CL_Disconnect_f (void);
 void CL_NextDemo (void);
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 qboolean CL_DemoBehind(void);
 void CL_BeginServerConnect(void);
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 
 
 #define			MAX_VISEDICTS	256
@@ -486,9 +477,9 @@ void CL_UpdateTEnts (void);
 
 void CL_ClearState (void);
 
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 void CL_ReadPackets (void);
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 
 int  CL_ReadFromServer (void);
 void CL_WriteToServer (usercmd_t *cmd);
@@ -503,17 +494,17 @@ char *Key_KeynumToString (int keynum);
 //
 void CL_StopPlayback (void);
 int CL_GetMessage (void);
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 void CL_WriteDemoCmd (usercmd_t *pcmd);
-#elif defined(UQUAKE)
+//#elif defined(UQUAKE)
 void CL_SignonReply (void);
-#endif // QUAKEWORLD else UQUAKE
+//#endif // QUAKEWORLD else UQUAKE
 
 void CL_Stop_f (void);
 void CL_Record_f (void);
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 void CL_ReRecord_f (void);
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 void CL_PlayDemo_f (void);
 void CL_TimeDemo_f (void);
 
@@ -522,7 +513,7 @@ void CL_TimeDemo_f (void);
 //
 void CL_ParseServerMessage (void);
 void CL_NewTranslation (int slot);
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 #define NET_TIMINGS 256
 #define NET_TIMINGSMASK 255
 extern int	packet_latency[NET_TIMINGS];
@@ -532,7 +523,7 @@ qboolean CL_IsUploading(void);
 void CL_NextUpload(void);
 void CL_StartUpload (byte *data, int size);
 void CL_StopUpload(void);
-#endif // QUAKEWORLD
+//#endif // QUAKEWORLD
 
 //
 // view.c
@@ -553,9 +544,9 @@ void V_CalcBlend (void);
 //
 void CL_InitTEnts (void);
 void CL_ClearTEnts (void);
-#ifdef UQUAKE
+//#ifdef UQUAKE
 void CL_SignonReply (void);
-#endif
+//#endif
 
 //#ifdef QUAKEWORLD
 //

@@ -816,7 +816,7 @@ NET_Init
 ====================
 */
 
-void NET_Init (void)
+void NET_Init (int port)
 {
 	int			i;
 	int			controlSocket;

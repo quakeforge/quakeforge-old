@@ -590,7 +590,7 @@ Host_Init (quakeparms_t *parms)
 	Mod_Init ();
 
 #ifdef UQUAKE
-	NET_Init ();	
+	NET_Init (-1);	// The port is not used, at all..
 	SV_Init ();
 #endif
 

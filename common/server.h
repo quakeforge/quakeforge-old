@@ -24,6 +24,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _SERVER_H
 #define _SERVER_H
 
+#if !(defined(QUAKEWORLD) || defined(UQUAKE))
+#error This is NOT safe to include for common items.
+#endif
+
 #ifdef _WIN32
 #pragma warning( disable : 4244 4127 4201 4214 4514 4305 4115 4018)
 #endif

@@ -24,9 +24,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _COMMON_H
 #define _COMMON_H
 
-#ifdef QUAKEWORLD
-#	include <bothdefs.h>
-#endif
+//#ifdef QUAKEWORLD
+//#	include <bothdefs.h>
+//#endif
 #include <register_check.h>
 #include <qtypes.h>
 #include <cvar.h>
