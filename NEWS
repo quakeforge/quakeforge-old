@@ -1,6 +1,16 @@
 NEWS for the QuakeForge project
 -------------------------------
 
+22 Jan 2000 - changes to command line option -game
+	You may now specify multiple game directories with -game.  If for
+	example you wanted to use the original registered game with MegaTF
+	on a new style binary you would use -game id1,megatf.  It does work
+	with traditional style binaries and you may specify as many dirs as
+	you like seperated by commas.
+	
+	One caveat:  Most mods were designed to be the only one in use, it
+	may be a Bad Thing to mix certain mods with other mods.
+
 19 Jan 2000 - changes to cvar r_fog
 	Fog color is once again white.  The r_fog cvar is now a control for
 	the fog density rather than a simple toggle control.  Eric Windisch

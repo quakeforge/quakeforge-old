@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // common.c -- misc functions used in client and server
 
 #include "quakedef.h"
+#include <string.h>
 
 #define NUM_SAFE_ARGVS  7
 
@@ -1651,9 +1652,11 @@ COM_InitFilesystem
 */
 void COM_InitFilesystem (void)
 {
-	int             i, j;
-	char    basedir[MAX_OSPATH];
-	searchpath_t    *search;
+	int		i, j, len;
+	char		basedir[MAX_OSPATH];
+	searchpath_t	*search;
+	char *		p;
+	char *		games;
 
 //
 // -basedir <path>
@@ -1709,7 +1712,20 @@ void COM_InitFilesystem (void)
 	if (i && i < com_argc-1)
 	{
 		com_modified = true;
-		COM_AddGameDirectory (va("%s/%s", basedir, com_argv[i+1]));
+
+		len = strlen(com_argv[i+1]) + 1;
+		games = (char *)malloc(len);
+		strcpy(games, com_argv[i+1]);
+		
+		for (p = strtok(games, ",");
+				p != NULL;
+				p = strtok(NULL, ",")) {
+			COM_AddGameDirectory (va("%s/%s", basedir, p));
+		}
+
+		free(games);
+
+//		COM_AddGameDirectory (va("%s/%s", basedir, com_argv[i+1]));
 	}
 
 //
