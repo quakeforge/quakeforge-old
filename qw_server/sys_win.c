@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <conio.h>
 
 
-cvar_t	sys_nostdout = {"sys_nostdout","0"};
+extern cvar_t	sys_nostdout;
 
 /*
 ================
@@ -142,23 +142,6 @@ char *Sys_ConsoleInput (void)
 	return NULL;
 }
 
-
-/*
-================
-Sys_Printf
-================
-*/
-void Sys_Printf (char *fmt, ...)
-{
-	va_list		argptr;
-	
-	if (sys_nostdout.value)
-		return;
-		
-	va_start (argptr,fmt);
-	vprintf (fmt,argptr);
-	va_end (argptr);
-}
 
 /*
 ================

@@ -34,9 +34,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/dir.h>
 #endif
 
-cvar_t	sys_nostdout = {"sys_nostdout","0"};
-cvar_t	sys_extrasleep = {"sys_extrasleep","0"};
+extern cvar_t	sys_nostdout;
 
+cvar_t	sys_extrasleep = {"sys_extrasleep","0"};
 qboolean	stdin_ready;
 
 /*
@@ -118,37 +118,6 @@ void Sys_Error (char *error, ...)
 	printf ("Fatal error: %s\n",string);
 	
 	exit (1);
-}
-
-/*
-================
-Sys_Printf
-================
-*/
-void Sys_Printf (char *fmt, ...)
-{
-	va_list		argptr;
-	static char		text[2048];
-	unsigned char		*p;
-
-	va_start (argptr,fmt);
-	vsprintf (text,fmt,argptr);
-	va_end (argptr);
-
-	if (strlen(text) > sizeof(text))
-		Sys_Error("memory overwrite in Sys_Printf");
-
-    if (sys_nostdout.value)
-        return;
-
-	for (p = (unsigned char *)text; *p; p++) {
-		*p &= 0x7f;
-		if ((*p > 128 || *p < 32) && *p != 10 && *p != 13 && *p != 9)
-			printf("[%02x]", *p);
-		else
-			putc(*p, stdout);
-	}
-	fflush(stdout);
 }
 
 

@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define NOT_FOCUS_SLEEP	20				// sleep time when not focus
 
 int		starttime;
-qboolean ActiveApp, Minimized;
+qboolean	ActiveApp, Minimized;
 qboolean	WinNT;
 
 HWND	hwnd_dialog;		// startup dialog box
@@ -41,7 +41,7 @@ HWND	hwnd_dialog;		// startup dialog box
 static double		pfreq;
 static double		curtime = 0.0;
 static double		lastcurtime = 0.0;
-static int			lowshift;
+static int		lowshift;
 static HANDLE		hinput, houtput;
 
 HANDLE		qwclsemaphore;
@@ -247,17 +247,6 @@ void Sys_Error (char *error, ...)
 #endif
 
 	exit (1);
-}
-
-void Sys_Printf (char *fmt, ...)
-{
-	va_list		argptr;
-	char		text[1024];
-	DWORD		dummy;
-	
-	va_start (argptr,fmt);
-	vprintf (fmt, argptr);
-	va_end (argptr);
 }
 
 void Sys_Quit (void)

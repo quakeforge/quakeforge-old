@@ -46,11 +46,12 @@
 #include "quakedef.h"
 
 #ifndef QUAKEWORLD
-qboolean			isDedicated;
+qboolean	isDedicated;
 #endif
 
+extern int nostdout;
+
 int noconinput = 0;
-int nostdout = 0;
 
 char *basedir = ".";
 char *cachedir = "/tmp";
@@ -62,28 +63,6 @@ cvar_t  sys_linerefresh = {"sys_linerefresh","0"};// set for entity display
 // =======================================================================
 
 void Sys_DebugNumber(int y, int val) {
-}
-
-void Sys_Printf (char *fmt, ...) {
-	va_list		argptr;
-	char		text[2048];
-	unsigned char		*p;
-
-	va_start (argptr,fmt);
-	vsprintf (text,fmt,argptr);
-	va_end (argptr);
-
-	if (strlen(text) > sizeof(text))
-		Sys_Error("memory overwrite in Sys_Printf");
-
-    if (nostdout)
-        return;
-
-	for (p = (unsigned char *)text; *p; p++)
-		if ((*p > 128 || *p < 32) && *p != 10 && *p != 13 && *p != 9)
-			printf("[%02x]", *p);
-		else
-			putc(*p, stdout);
 }
 
 void Sys_Quit (void) {

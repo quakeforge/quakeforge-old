@@ -34,7 +34,7 @@ endif
 # Source files
 #
 
-QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
+QW_SRV_SYS_SRC = sys_common.c @QW_SRV_SYS_SRC@
 
 # Networking source files
 # FIXME: Should not assume UNIX

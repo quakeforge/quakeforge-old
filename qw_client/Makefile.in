@@ -122,7 +122,7 @@ endif
 CD_AUDIO_SRC   = cd_wrapper.c
 
 # Sound source
- 
+
 SND_STYLE      = @SND_STYLE@
 SND_SRC = snd_null.c
 
@@ -144,10 +144,9 @@ endif
 
 SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 
-SYS_SRC        = @QW_CL_SYS_SRC@
+SYS_SRC        = sys_common.c @QW_CL_SYS_SRC@
 
 # Networking source files
-# FIXME: Should not assume UNIX
 
 QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 

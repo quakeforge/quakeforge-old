@@ -233,15 +233,6 @@ void Sys_Error (char *error, ...)
     exit (1);
 }
 
-void Sys_Printf (char *fmt, ...)
-{
-    va_list         argptr;
-    
-    va_start (argptr,fmt);
-    vprintf (fmt,argptr);
-    va_end (argptr);
-}
-
 void Sys_Quit (void)
 {
     Host_Shutdown();
