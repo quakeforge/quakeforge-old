@@ -30,7 +30,7 @@ AC_CHECK_HEADERS(unistd.h fcntl.h dlfcn.h windows.h sys/ioctl.h sys/mman.h \
 	sys/socket.h netinet/in.h netdb.h arpa/inet.h sys/filio.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
 	dsound.h mmsystem.h initguid.h mme/mmsystem.h mme/mme_public.h \
-	sys/asoundlib.h string.h strings.h memory.h)
+	sys/asoundlib.h string.h strings.h memory.h malloc.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_PROG_GCC_TRADITIONAL
@@ -41,6 +41,11 @@ AC_STRUCT_TM
 AC_C_BIGENDIAN
 AC_MSG_CHECKING(for socklen_t in sys/socket.h)
 AC_TRY_COMPILE([#include <sys/socket.h>],
+        [ socklen_t x = 0;],
+        AC_DEFINE(HAVE_SOCKLEN_T) AC_MSG_RESULT(yes),
+        AC_MSG_RESULT(no))
+AC_MSG_CHECKING(for socklen_t in sys/types.h)
+AC_TRY_COMPILE([#include <sys/types.h>],
         [ socklen_t x = 0;],
         AC_DEFINE(HAVE_SOCKLEN_T) AC_MSG_RESULT(yes),
         AC_MSG_RESULT(no))
@@ -644,7 +649,7 @@ QF_maGiC_VALUE
     ], AC_DEFINE(USE_LINUX_CD),
       AC_EGREP_CPP([QF_maGiC_VALUE],[
 #include <sys/cdio.h>
-#ifdef CDIOREADTOCENTRY
+#if defined (CDIOREADTOCENTRY) || defined (CDIOREADTOCENTRYS)
 QF_maGiC_VALUE
 #endif
     ], AC_DEFINE(USE_BSD_CD))
