@@ -1278,7 +1278,18 @@ SOURCE=..\common\vid_win.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\view.c
+SOURCE=..\common\view.c
+
+!IF  "$(CFG)" == "uquake - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 GLRelease"
+
+!ELSEIF  "$(CFG)" == "uquake - Win32 GLDebug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
