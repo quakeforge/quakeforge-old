@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "winquake.h"
 #include "d_local.h"
 #include "resource.h"
+#include <mgraph.h>
 
 #ifndef CDS_FULLSCREEN
 # define CDS_FULLSCREEN        0x00000004
@@ -35,32 +36,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 qboolean	dibonly;
 
-extern int		Minimized;
-
 HWND		mainwindow;
 
 HWND WINAPI InitializeWindow (HINSTANCE hInstance, int nCmdShow);
 
-int			DIBWidth, DIBHeight;
+int		DIBWidth, DIBHeight;
 qboolean	DDActive;
 RECT		WindowRect;
 DWORD		WindowStyle, ExWindowStyle;
 
-int			window_center_x, window_center_y, window_x, window_y, window_width, window_height;
+int		window_center_x, window_center_y, window_x, window_y, window_width, window_height;
 RECT		window_rect;
 
 static DEVMODE	gdevmode;
 static qboolean	startwindowed = 0, windowed_mode_set;
-static int		firstupdate = 1;
+static int	firstupdate = 1;
 static qboolean	vid_initialized = false, vid_palettized;
-static int		lockcount;
-static int		vid_fulldib_on_focus_mode;
+static int	lockcount;
+static int	vid_fulldib_on_focus_mode;
 static qboolean	force_minimized, in_mode_set, is_mode0x13, force_mode_set;
-static int		vid_stretched, windowed_mouse;
+static int	vid_stretched, windowed_mouse;
 static qboolean	palette_changed, syscolchg, vid_mode_set, hide_window, pal_is_nostatic;
 static HICON	hIcon;
 
-qboolean mouseactive;	// from in_win.c
+extern qboolean mouseactive;	// from in_win.c
 
 viddef_t	vid;				// global video state
 
@@ -137,7 +136,6 @@ typedef struct {
 
 static vmode_t	modelist[MAX_MODE_LIST];
 static int		nummodes;
-static vmode_t	*pcurrentmode;
 
 int		aPage;					// Current active display page
 int		vPage;					// Current visible display page
@@ -389,6 +387,7 @@ int VID_Suspend (MGLDC *dc, int flags)
 		return MGL_NO_SUSPEND_APP;
 	}
 
+	return 0;
 }
 #endif
 
@@ -428,7 +427,7 @@ void registerAllMemDrivers(void)
 
 void VID_InitMGLFull (HINSTANCE hInstance)
 {
-	int			i, xRes, yRes, bits, vMode, lowres, curmode, temp;
+	int			i, xRes, yRes, bits, lowres, curmode, temp;
 	int			lowstretchedres, stretchedmode, lowstretched;
     uchar		*m;
 
@@ -663,7 +662,6 @@ void VID_InitMGLDIB (HINSTANCE hInstance)
 {
 	WNDCLASS		wc;
 	HDC				hdc;
-	int				i;
 
 	hIcon = LoadIcon (hInstance, MAKEINTRESOURCE (IDI_ICON2));
 
@@ -754,7 +752,7 @@ VID_InitFullDIB
 void VID_InitFullDIB (HINSTANCE hInstance)
 {
 	DEVMODE	devmode;
-	int		i, j, modenum, cmodes, existingmode, originalnummodes, lowestres;
+	int		i, j, modenum, existingmode, originalnummodes, lowestres;
 	int		numlowresmodes, bpp, done;
 	int		cstretch, istretch, mstretch;
 	BOOL	stat;
@@ -790,7 +788,7 @@ void VID_InitFullDIB (HINSTANCE hInstance)
 				modelist[nummodes].dib = 1;
 				modelist[nummodes].fullscreen = 1;
 				modelist[nummodes].bpp = devmode.dmBitsPerPel;
-				sprintf (modelist[nummodes].modedesc, "%dx%d",
+				sprintf (modelist[nummodes].modedesc, "%ldx%ld",
 						 devmode.dmPelsWidth, devmode.dmPelsHeight);
 
 			// if the width is more than twice the height, reduce it by half because this
@@ -869,7 +867,7 @@ void VID_InitFullDIB (HINSTANCE hInstance)
 					modelist[nummodes].dib = 1;
 					modelist[nummodes].fullscreen = 1;
 					modelist[nummodes].bpp = devmode.dmBitsPerPel;
-					sprintf (modelist[nummodes].modedesc, "%dx%d",
+					sprintf (modelist[nummodes].modedesc, "%ldx%ld",
 							 devmode.dmPelsWidth, devmode.dmPelsHeight);
 
 				// if the width is more than twice the height, reduce it by half because this
@@ -953,7 +951,7 @@ void VID_InitFullDIB (HINSTANCE hInstance)
 					modelist[nummodes].dib = 1;
 					modelist[nummodes].fullscreen = 1;
 					modelist[nummodes].bpp = devmode.dmBitsPerPel;
-					sprintf (modelist[nummodes].modedesc, "%dx%d",
+					sprintf (modelist[nummodes].modedesc, "%ldx%ld",
 							 devmode.dmPelsWidth, devmode.dmPelsHeight);
 
 			// we only want the lowest-bpp version of each mode
@@ -1262,7 +1260,6 @@ qboolean VID_SetWindowedMode (int modenum)
 	pixel_format_t	pf;
 	qboolean		stretched;
 	int				lastmodestate;
-	LONG			wlong;
 
 	if (!windowed_mode_set)
 	{
@@ -1272,7 +1269,7 @@ qboolean VID_SetWindowedMode (int modenum)
 			Cvar_SetValue ("vid_window_y", 0.0);
 		}
 
-		windowed_mode_set;
+		windowed_mode_set = 1;
 	}
 
 	VID_CheckModedescFixup (modenum);
@@ -1606,10 +1603,10 @@ void VID_SetDefaultMode (void)
 
 int VID_SetMode (int modenum, unsigned char *palette)
 {
-	int				original_mode, temp, dummy;
-	qboolean		stat;
-    MSG				msg;
-	HDC				hdc;
+	int		original_mode, temp;
+	qboolean	stat;
+	MSG		msg;
+	HDC		hdc;
 
 	while ((modenum >= nummodes) || (modenum < 0))
 	{
@@ -2085,7 +2082,6 @@ VID_ForceMode_f
 void VID_ForceMode_f (void)
 {
 	int		modenum;
-	double	testduration;
 
 	if (!vid_testingmode)
 	{
@@ -2223,9 +2219,6 @@ void	VID_Init (unsigned char *palette)
 
 void	VID_Shutdown (void)
 {
-	HDC				hdc;
-	int				dummy;
-
 	if (vid_initialized)
 	{
 		if (modestate == MS_FULLDIB)
@@ -2260,8 +2253,6 @@ FlipScreen
 */
 void FlipScreen(vrect_t *rects)
 {
-	HRESULT		ddrval;
-
 	// Flip the surfaces
 
 	if (DDActive)
@@ -2432,7 +2423,7 @@ void	VID_Update (vrect_t *rects)
 	{
 		if (!_windowed_mouse.value) {
 			if (windowed_mouse) {
-				IN_DectivateMouse ();
+				IN_DeactivateMouse ();
 				IN_ShowMouse ();
 			}
 			windowed_mouse = false;
@@ -2864,11 +2855,10 @@ LONG WINAPI MainWndProc (
     LPARAM  lParam)
 {
 	LONG			lRet = 0;
-	int				fwKeys, xPos, yPos, fActive, fMinimized, temp;
+	int				fActive, fMinimized, temp;
 	HDC				hdc;
 	PAINTSTRUCT		ps;
 	extern unsigned int uiWheelMessage;
-	static int		recursiveflag;
 
 	if ( uMsg == uiWheelMessage ) {
 		uMsg = WM_MOUSEWHEEL;
