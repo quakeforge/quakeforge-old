@@ -1,7 +1,8 @@
 /*
 Copyright (C) 1996-1997  Id Software, Inc.
-Copyright (C) 1999,2000  contributors of the QuakeForge project
-Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1999-2000  contributors of the QuakeForge project
+Copyright (C) 1999-2000  Nelson Rush.
+Copyright (C) 2000       Marcus Sundberg [mackan@stacken.kth.se]
 Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
@@ -18,7 +19,6 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 */
 
 #include "quakedef.h"
@@ -32,11 +32,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
-#undef HAS_DGA
-
 #ifdef HAS_DGA
 #include <X11/extensions/xf86dga.h>
+#include <X11/extensions/xf86vmode.h>
 #endif
+#include "dga_check.h"
 
 #ifdef XMESA
 #include <GL/xmesa.h>
@@ -45,40 +45,50 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
 
-static Display *dpy = NULL;
-static Window win;
-static Cursor cursor = None;
-static GLXContext ctx = NULL;
-
-static float old_windowed_mouse = 0;
+static Display		*dpy = NULL;
+static int		screen;
+static Window		win;
+static Cursor		cursor = None;
+static GLXContext	ctx = NULL;
 
 #define KEY_MASK (KeyPressMask | KeyReleaseMask)
 #define MOUSE_MASK (ButtonPressMask | ButtonReleaseMask | \
 		    PointerMotionMask)
 
-#define X_MASK (KEY_MASK | MOUSE_MASK | VisibilityChangeMask)
+#define X_MASK (KEY_MASK | MOUSE_MASK | VisibilityChangeMask | \
+	StructureNotifyMask)
 
 unsigned short	d_8to16table[256];
-unsigned		d_8to24table[256];
+unsigned	d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
-cvar_t	_windowed_mouse = {"_windowed_mouse","0", true};
-cvar_t	vid_mode = {"vid_mode","0",false};
+cvar_t	_windowed_mouse = {"_windowed_mouse", "0", true};
+cvar_t	m_filter = {"m_filter", "0"};
+cvar_t	vid_mode = {"vid_mode", "0", false};
+cvar_t  vid_glx_fullscreen = {"vid_glx_fullscreen", "0", false};
 
-cvar_t  vid_glx_mode = {"vid_glx_mode", "0"};
- 
+static int	fullscreen = 0;
+
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
+static int	mouse_grabbed = 0;
+#define	mouse_shouldgrab ((int)vid_glx_fullscreen.value ||(int)_windowed_mouse.value)
 
 #ifdef HAS_DGA
+static int	nummodes;
+static XF86VidModeModeInfo **vidmodes;
+static int	hasdga = 0, hasdgavideo = 0, hasvidmode = 0;
 static int	dgamouse = 0;
+static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", true};
 #endif
 
-cvar_t	m_filter = {"m_filter", "0"};
+#ifdef XMESA
+static int	xmesafullscreen = 0;
+#endif
 
 static int scr_width, scr_height;
 
-#ifdef XMESA
+#if defined(XMESA) || defined(HAS_DGA)
 int VID_options_items = 2;
 #else
 int VID_options_items = 1;
@@ -248,6 +258,7 @@ static int XLateKey(XKeyEvent *ev)
 	return key;
 }
 
+
 static void
 blank_cursor(void)
 {
@@ -259,84 +270,172 @@ blank_cursor(void)
 	if (blank == None) {
 		fprintf(stderr,"Could not create cursor: Out of memory.\n");
 	} else {
-		cursor = XCreatePixmapCursor(dpy, blank, blank, &dummy, &dummy, 0, 0);
+		cursor = XCreatePixmapCursor(dpy, blank, blank,
+					     &dummy, &dummy, 0, 0);
 		XFreePixmap(dpy, blank);
 	}
 }
 
+
 static void
-install_grabs(void)
+do_grabs(int grab)
 {
-	if (cursor == None) {
-		blank_cursor();
+	if (grab == mouse_grabbed) return;
+
+	if (grab) {
+		/*
+		  Grab mouse
+		*/
+		if (cursor == None) {
+			blank_cursor();
+		}
+
+		if (XGrabPointer(dpy, win, True, 0, GrabModeAsync,
+				 GrabModeAsync, win, cursor, CurrentTime)
+		    != GrabSuccess) {
+			Con_Printf("Unable to grab pointer\n");
+			Cvar_SetValue("vid_glx_fullscreen", 0);
+			Cvar_SetValue("_windowed_mouse", 0);
+			return;
+		}
+
+		/* We can live with this failing. */
+		XGrabKeyboard(dpy, win, False, GrabModeAsync, GrabModeAsync,
+			      CurrentTime);
+
+#ifdef HAS_DGA
+		if (hasdga) {
+			XF86DGADirectVideo(dpy, screen, XF86DGADirectMouse);
+			dgamouse = 1;
+		} else 
+#endif
+		{
+			XWarpPointer(dpy, None, win, 0, 0, 0, 0,
+				     vid.width / 2, vid.height / 2);
+		}
+		mouse_grabbed = 1;
+	} else {
+		/*
+		  Release grab
+		*/
+#ifdef HAS_DGA
+		if (dgamouse) {
+			XF86DGADirectVideo(dpy, screen, 0);
+			dgamouse = 0;
+		}
+#endif
+		XUngrabKeyboard(dpy, CurrentTime);
+		XUngrabPointer(dpy, CurrentTime);
+		mouse_grabbed = 0;
 	}
-	
-	XGrabPointer(dpy, win,
-				 True,
-				 0,
-				 GrabModeAsync, GrabModeAsync,
-				 win,
-				 cursor,
-				 CurrentTime);
-	
-#ifdef HAS_DGA
-	XF86DGADirectVideo(dpy, DefaultScreen(dpy), XF86DGADirectMouse);
-	dgamouse = 1;
-#else
-	XWarpPointer(dpy, None, win,
-				 0, 0, 0, 0,
-				 vid.width / 2, vid.height / 2);
-#endif
-
-	XGrabKeyboard(dpy, win,
-				  False,
-				  GrabModeAsync, GrabModeAsync,
-				  CurrentTime);
-
-//	XSync(dpy, True);
 }
+
 
 static void
-uninstall_grabs(void)
+do_fullscreen(int full)
 {
-#ifdef HAS_DGA
-	XF86DGADirectVideo(dpy, DefaultScreen(dpy), 0);
-	dgamouse = 0;
+	if (full == fullscreen) return;
+
+#ifdef XMESA
+	if (XMesaSetFXmode(full ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW)) {
+		fullscreen = full;
+		xmesafullscreen = full;
+		return;
+	}
+	if (xmesafullscreen) {
+		/* We are in XMesa fullscren mode and couldn't switch back
+		   to windowed mode ??? */
+		Cvar_SetValue("vid_glx_fullscreen", fullscreen);
+		do_grab(mouse_shouldgrab);
+		return;
+	}
 #endif
+#ifdef HAS_DGA
+	if (hasvidmode) {
+		static int prev_x = 0, prev_y = 0, prev_w = 640, prev_h = 480;
 
-	XUngrabPointer(dpy, CurrentTime);
-	XUngrabKeyboard(dpy, CurrentTime);
+		if (full) {
+			Window dumwin;
+			unsigned int dummy, i, curw = 65535, curh = 65535;
+			int curmode = -1;
 
-//	XSync(dpy, True);
+			XGetGeometry(dpy, win, &dumwin, &prev_x, &prev_y,
+				     &prev_w, &prev_h, &dummy, &dummy);
+
+			for (i = 0; i < nummodes; i++) {
+				if (vidmodes[i]->hdisplay == scr_width &&
+				    vidmodes[i]->vdisplay == scr_height) {
+					curmode = i;
+					break;
+				}
+				if (vidmodes[i]->hdisplay
+				    >= (scr_width - 10) &&
+				    vidmodes[i]->vdisplay
+				    >= (scr_height - 10) &&
+				    vidmodes[i]->hdisplay <= curw &&
+				    vidmodes[i]->vdisplay <= curh) {
+					curw = vidmodes[i]->hdisplay;
+					curh = vidmodes[i]->vdisplay;
+					curmode = i;
+				}
+			}
+			if (curmode >= 0 &&
+			    XF86VidModeSwitchToMode(dpy,
+				    screen, vidmodes[curmode])) {
+				XSync(dpy, 0);
+				XF86VidModeSetViewPort(dpy, screen, 0, 0);
+				XMoveResizeWindow(dpy, win, 0, 0,
+						vidmodes[curmode]->hdisplay,
+						vidmodes[curmode]->vdisplay);
+				fullscreen = full;
+				return;
+			}
+		} else {
+			XF86VidModeSwitchToMode(dpy, screen, vidmodes[0]);
+			XSync(dpy, 0);
+			XMoveResizeWindow(dpy, win, prev_x, prev_y,
+					  prev_w, prev_h);
+			fullscreen = full;
+			return;
+		}
+	}
+#endif
+	/* Failed to change anything */
+	Cvar_SetValue("vid_glx_fullscreen", fullscreen);
 }
 
-static void GetEvent(void)
+
+static void
+GetEvent(void)
 {
-	XEvent event;
+	XEvent x_event;
 	int b;
 
-	if (!dpy)
-		return;
+	if (!dpy) return;
 
-	XNextEvent(dpy, &event);
+	XNextEvent(dpy, &x_event);
 
-	switch (event.type) {
+	switch (x_event.type) {
 	case KeyPress:
 	case KeyRelease:
-		Key_Event(XLateKey(&event.xkey), event.type == KeyPress);
+		Key_Event(XLateKey(&x_event.xkey), x_event.type == KeyPress);
 		break;
 
 	case MotionNotify:
 #ifdef HAS_DGA
-		if (dgamouse && _windowed_mouse.value) {
-			mouse_x = event.xmotion.x_root;
-			mouse_y = event.xmotion.y_root;
+		if (dgamouse) {
+			mouse_x += (float)x_event.xmotion.x_root
+				* vid_dga_mouseaccel.value;
+			mouse_y += (float)x_event.xmotion.y_root
+				* vid_dga_mouseaccel.value;
 		} else
 #endif
 		{
 			if (_windowed_mouse.value) {
-				mouse_x = (float) ((int)event.xmotion.x - (int)(vid.width/2));
-				mouse_y = (float) ((int)event.xmotion.y - (int)(vid.height/2));
+				mouse_x += (float) ((int)x_event.xmotion.x
+						    - (int)(vid.width/2));
+				mouse_y += (float) ((int)x_event.xmotion.y 
+						    - (int)(vid.height/2));
 
 				/* move the mouse to the window center again */
 				XSelectInput(dpy, win, X_MASK & ~PointerMotionMask);
@@ -349,11 +448,11 @@ static void GetEvent(void)
 
 	case ButtonPress:
 		b=-1;
-		if (event.xbutton.button == 1)
+		if (x_event.xbutton.button == 1)
 			b = 0;
-		else if (event.xbutton.button == 2)
+		else if (x_event.xbutton.button == 2)
 			b = 2;
-		else if (event.xbutton.button == 3)
+		else if (x_event.xbutton.button == 3)
 			b = 1;
 		if (b>=0)
 			Key_Event(K_MOUSE1 + b, true);
@@ -361,47 +460,87 @@ static void GetEvent(void)
 
 	case ButtonRelease:
 		b=-1;
-		if (event.xbutton.button == 1)
+		if (x_event.xbutton.button == 1)
 			b = 0;
-		else if (event.xbutton.button == 2)
+		else if (x_event.xbutton.button == 2)
 			b = 2;
-		else if (event.xbutton.button == 3)
+		else if (x_event.xbutton.button == 3)
 			b = 1;
 		if (b>=0)
 			Key_Event(K_MOUSE1 + b, false);
 		break;
+	case ConfigureNotify:
+		if (scr_width == x_event.xconfigure.width &&
+		    scr_height == x_event.xconfigure.height) {
+			break;
+		}
+		scr_width = x_event.xconfigure.width;
+		scr_height = x_event.xconfigure.height;
+
+		if (scr_width < 320) scr_width = 320;
+		if (scr_height < 200) scr_height = 200;
+
+		scr_width &= ~7; /* make it a multiple of eight */
+
+		XResizeWindow(dpy, win, scr_width, scr_height);
+
+		vid.width = vid.conwidth = scr_width;
+		vid.height = scr_height;
+
+		/* pick a conheight that matches with correct aspect */
+		vid.conheight = vid.conwidth*3 / 4;
+
+		vid.aspect = ((float)vid.height / (float)vid.width)
+			* (320.0 / 240.0);
+
+		vid.recalc_refdef = 1;	/* force a surface cache flush */
+		Con_CheckResize();
+		Con_Clear_f();
+		break;
 	}
 
-	if (old_windowed_mouse != _windowed_mouse.value) {
-		old_windowed_mouse = _windowed_mouse.value;
-
-		if (!_windowed_mouse.value) {
-			/* ungrab the pointer */
-			uninstall_grabs();
-		} else {
-			/* grab the pointer */
-			install_grabs();
-		}
+	if (mouse_shouldgrab != mouse_grabbed) {
+		do_grabs(mouse_shouldgrab);
+	}
+	if (vid_glx_fullscreen.value != fullscreen) {
+		do_fullscreen(vid_glx_fullscreen.value);
 	}
 }
 
 
-void VID_Shutdown(void)
+void
+VID_Shutdown(void)
 {
-	if (!ctx)
-		return;
+	if (!ctx) return;
 
 	glXDestroyContext(dpy, ctx);
+	ctx = NULL;
+#ifdef HAS_DGA
+	if (hasvidmode) {
+		int i;
+
+		for (i = 0; i < nummodes; i++) {
+			if (vidmodes[i]->private) XFree(vidmodes[i]->private);
+		}
+		XFree(vidmodes);
+	}
+#endif
+
+	XCloseDisplay(dpy);
+	dpy = NULL;
 }
 
-void signal_handler(int sig)
+
+static void
+signal_handler(int sig)
 {
 	printf("Received signal %d, exiting...\n", sig);
 	Sys_Quit();
-	exit(0);
+	exit(sig);
 }
 
-void InitSig(void)
+static void
+InitSig(void)
 {
 	signal(SIGHUP, signal_handler);
 	signal(SIGINT, signal_handler);
@@ -499,6 +638,7 @@ void	VID_SetPalette (unsigned char *palette)
 	}
 }
 
+
 /*
 ===============
 GL_Init
@@ -506,9 +646,6 @@ GL_Init
 */
 void GL_Init (void)
 {
-
-	
-
 	gl_vendor = glGetString (GL_VENDOR);
 	Con_Printf ("GL_VENDOR: %s\n", gl_vendor);
 	gl_renderer = glGetString (GL_RENDERER);
@@ -619,7 +756,6 @@ void VID_Init(unsigned char *palette)
 	};
 	char	gldir[MAX_OSPATH];
 	int width = 640, height = 480;
-	int scrnum;
 	XSetWindowAttributes attr;
 	unsigned long mask;
 	Window root;
@@ -627,11 +763,14 @@ void VID_Init(unsigned char *palette)
 
 	S_Init();
 
-	Cvar_RegisterVariable (&vid_mode);
-	Cvar_RegisterVariable (&gl_ztrick);
-	Cvar_RegisterVariable (&_windowed_mouse);
-        Cvar_RegisterVariable (&vid_glx_mode);
-	
+	Cvar_RegisterVariable(&vid_mode);
+	Cvar_RegisterVariable(&gl_ztrick);
+	Cvar_RegisterVariable(&_windowed_mouse);
+        Cvar_RegisterVariable(&vid_glx_fullscreen);
+#ifdef HAS_DGA
+	Cvar_RegisterVariable(&vid_dga_mouseaccel);
+#endif
+
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
 	vid.colormap = host_colormap;
@@ -648,7 +787,7 @@ void VID_Init(unsigned char *palette)
 	if ((i = COM_CheckParm("-conwidth")) != 0)
 		vid.conwidth = Q_atoi(com_argv[i+1]);
 	else
-		vid.conwidth = 640;
+		vid.conwidth = width;
 
 	vid.conwidth &= 0xfff8; // make it a multiple of eight
 
@@ -668,14 +807,33 @@ void VID_Init(unsigned char *palette)
 		exit(1);
 	}
 
-	scrnum = DefaultScreen(dpy);
-	root = RootWindow(dpy, scrnum);
+	screen = DefaultScreen(dpy);
+	root = RootWindow(dpy, screen);
 
-	visinfo = glXChooseVisual(dpy, scrnum, attrib);
+	visinfo = glXChooseVisual(dpy, screen, attrib);
 	if (!visinfo) {
 		fprintf(stderr, "qkHack: Error couldn't get an RGB, Double-buffered, Depth visual\n");
 		exit(1);
 	}
+
+#ifdef HAS_DGA
+	{
+		int maj_ver;
+
+		hasdga = VID_CheckDGA(dpy, &maj_ver, NULL, &hasdgavideo);
+		if (!hasdga || maj_ver < 1) {
+			hasdga = hasdgavideo = 0;
+		}
+	}
+	hasvidmode = VID_CheckVMode(dpy, NULL, NULL);
+	if (hasvidmode) {
+		if (! XF86VidModeGetAllModeLines(dpy, DefaultScreen(dpy),
+						 &nummodes, &vidmodes)
+		    || nummodes <= 0) {
+			hasvidmode = 0;
+		}
+	}
+#endif
 	/* window attributes */
 	attr.background_pixel = 0;
 	attr.border_pixel = 0;
@@ -688,9 +846,7 @@ void VID_Init(unsigned char *palette)
 						visinfo->visual, mask, &attr);
 	XMapWindow(dpy, win);
 
-	XMoveWindow(dpy, win, 0, 0);
-
-	XFlush(dpy);
+	XSync(dpy, 0);
 
 	ctx = glXCreateContext(dpy, visinfo, NULL, True);
 
@@ -723,8 +879,11 @@ void VID_Init(unsigned char *palette)
 
 	Con_SafePrintf ("Video mode %dx%d initialized.\n", width, height);
 
-	vid.recalc_refdef = 1;				// force a surface cache flush
+	vid.recalc_refdef = 1;		// force a surface cache flush
+
+	do_grabs(mouse_shouldgrab);
 }
+
 
 void Sys_SendKeyEvents(void)
 {
@@ -745,7 +904,10 @@ void IN_Init(void)
 
 void IN_Shutdown(void)
 {
-	uninstall_grabs();
+	if (dpy) {
+		do_grabs(0);
+		do_fullscreen(0);
+	}
 }
 
 /*
@@ -757,15 +919,16 @@ void IN_Commands (void)
 {
 }
 
+
 /*
 ===========
 IN_Move
 ===========
 */
-void IN_MouseMove (usercmd_t *cmd)
+void
+IN_MouseMove(usercmd_t *cmd)
 {
-	if (m_filter.value)
-	{
+	if (m_filter.value) {
 		mouse_x = (mouse_x + old_mouse_x) * 0.5;
 		mouse_y = (mouse_y + old_mouse_y) * 0.5;
 	}
@@ -775,32 +938,32 @@ void IN_MouseMove (usercmd_t *cmd)
 	mouse_x *= sensitivity.value;
 	mouse_y *= sensitivity.value;
 
-// add mouse X/Y movement to cmd
-	if ( (in_strafe.state & 1) || (lookstrafe.value && (in_mlook.state & 1) ))
+	/* add mouse X/Y movement to cmd */
+	if ((in_strafe.state & 1) ||
+	    (lookstrafe.value && (in_mlook.state & 1))) {
 		cmd->sidemove += m_side.value * mouse_x;
-	else
+	} else {
 		cl.viewangles[YAW] -= m_yaw.value * mouse_x;
+	}
 	
-	if (in_mlook.state & 1)
-		V_StopPitchDrift ();
+	if (in_mlook.state & 1)	V_StopPitchDrift();
 		
-	if ( (in_mlook.state & 1) && !(in_strafe.state & 1))
-	{
+	if ((in_mlook.state & 1) && !(in_strafe.state & 1)) {
 		cl.viewangles[PITCH] += m_pitch.value * mouse_y;
 		if (cl.viewangles[PITCH] > 80)
 			cl.viewangles[PITCH] = 80;
 		if (cl.viewangles[PITCH] < -70)
 			cl.viewangles[PITCH] = -70;
-	}
-	else
-	{
-		if ((in_strafe.state & 1) && noclip_anglehack)
+	} else {
+		if ((in_strafe.state & 1) && noclip_anglehack) {
 			cmd->upmove -= m_forward.value * mouse_y;
-		else
+		} else {
 			cmd->forwardmove -= m_forward.value * mouse_y;
+		}
 	}
 	mouse_x = mouse_y = 0.0;
 }
+
 
 void IN_Move (usercmd_t *cmd)
 {
@@ -809,50 +972,30 @@ void IN_Move (usercmd_t *cmd)
 
 void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
-	
-	// Windowed Mouse
-        M_Print (16, options_draw_cursor+=8, "             Use Mouse");
-        M_DrawCheckbox (220, options_draw_cursor, _windowed_mouse.value);
+	/* Windowed Mouse */
+        M_Print(16, options_draw_cursor+=8, "             Use Mouse");
+        M_DrawCheckbox(220, options_draw_cursor, _windowed_mouse.value);
 
 
-#if defined(XMESA)
-	// Mesa has a fullscreen / windowed glx hack.
-        M_Print (16, options_draw_cursor+=8, "            Fullscreen");
-        M_DrawCheckbox (220, options_draw_cursor, vid_glx_mode.value);
+#if defined(XMESA) || defined(HAS_DGA)
+	/* Mesa has a fullscreen / windowed glx hack. */
+        M_Print(16, options_draw_cursor+=8, "            Fullscreen");
+        M_DrawCheckbox(220, options_draw_cursor, vid_glx_fullscreen.value);
 #endif
 
 }
 
 void VID_ExtraOptionCmd(int option_cursor)
 {
-	switch(option_cursor) 
-	{
+	switch(option_cursor) {
 	case 1:	// _windowed_mouse
-		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
+		Cvar_SetValue("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
+#if defined(XMESA) || defined(HAS_DGA)
 	case 2:
-		Cvar_SetValue ("vid_glx_mode",!vid_glx_mode.value);
-#ifdef XMESA
-		if(XMesaSetFXmode(vid_glx_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW))
-   		{
-			break;
-		} else {
+		Cvar_SetValue ("vid_glx_fullscreen",!vid_glx_fullscreen.value);
+		break;
 #endif
-
-/* thing for people without glide to fallback on.. 
-   Write ME!!
-			if(vid_glx_mode.value)
-			{
-			//	install_grabs();
-			} else {
-			//	uninstall_grabs();
-			}
-			break;
-*/
-#ifdef XMESA
-		}
-#endif
-
 	}
 }
