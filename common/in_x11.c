@@ -68,7 +68,7 @@ cvar_t	*m_filter;
 #ifdef HAS_DGA
 qboolean		dgamouse = 0;
 //static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", CVAR_ARCHIVE};
-static cvar_t	*vid_dga_mouseaccel;
+cvar_t	*vid_dga_mouseaccel;
 #endif
 
 static qboolean	mouse_avail;

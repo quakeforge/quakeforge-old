@@ -85,6 +85,7 @@ unsigned char	d_15to8table[65536];
 cvar_t	*vid_mode;
 cvar_t	*vid_glx_fullscreen;
 extern cvar_t	*gl_triplebuffer;
+extern cvar_t *vid_dga_mouseaccel;
 
 #ifdef HAS_DGA
 static int	nummodes;
