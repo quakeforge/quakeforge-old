@@ -87,6 +87,11 @@ void	VID_UnlockBuffer (void);
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+/* This fixes warnings when compiling with -pedantic */
+#if defined(__GNUC__) && !defined(inline)
+# define inline __inline__
+#endif
+
 /* Win32 have these underscored... */
 #if !defined(HAVE_SNPRINTF) && defined(HAVE__SNPRINTF)
 # define snprintf _snprintf
