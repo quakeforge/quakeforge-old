@@ -19,7 +19,7 @@ mandir		= @mandir@
 
 BUILD_DIR	= $(PROJECT_ODIR)/targets/qw_server
 
-LDFLAGS = @LDFLAGS@ -lm
+LDFLAGS = @LDFLAGS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
 CC = @CC@
 INTEL_ARCH = @INTEL_ARCH@
