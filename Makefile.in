@@ -45,8 +45,7 @@ clean-autoconf mrproper: distclean
 changelog:
 	./tools/cvs2cl/cvs2cl.pl
 
-# Code to automatically re-configure, only runs if you are compiling in the
-# source directory
+# Code to automatically re-configure
 
 config.status: $(srcdir)/configure
 	$(SHELL) ./config.status --recheck
@@ -58,6 +57,6 @@ CONFIG_SRC    = Makefile.in Rules.mk.in qw_client/Makefile.in \
 		qw_server/Makefile.in uquake/Makefile.in common/Makefile.in \
 		rpm/build_rpm.in rpm/quakeforge.spec.in
 
-$(patsubst %.in,%,$(CONFIG_SRC)): configure $(patsubst %.in,$(srcdir)/%.in,$(CONFIG_SRC))
+$(patsubst %.in,%,$(CONFIG_SRC)): $(srcdir)/configure $(patsubst %.in,$(srcdir)/%.in,$(CONFIG_SRC))
 	$(SHELL) ./config.status --recheck
 	$(SHELL) ./config.status
