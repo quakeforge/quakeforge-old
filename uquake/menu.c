@@ -24,6 +24,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "winquake.h"
 #endif
 
+//if defined (FX) && defined (XMESA)
+#ifdef XMESA
+#include <GL/xmesa.h>
+#endif
+
+cvar_t  vid_mesa_mode = {"vid_mesa_mode", "0"};
+
 void (*vid_menudrawfn)(void);
 void (*vid_menukeyfn)(int key);
 
@@ -1065,10 +1072,21 @@ again:
 /* OPTIONS MENU */
 
 #ifdef _WIN32
-#define	OPTIONS_ITEMS	14
-#else
 #define	OPTIONS_ITEMS	13
 #endif
+
+#ifdef X11
+#define	OPTIONS_ITEMS	13
+#endif
+
+#ifdef XMESA
+#define OPTIONS_ITEMS   15
+#endif
+
+#ifndef OPTIONS_ITEMS
+#define OPTIONS_ITEMS   13
+#endif 
+
 
 #define	SLIDER_RANGE	10
 
@@ -1165,11 +1183,20 @@ void M_AdjustSliders (int dir)
 		Cvar_SetValue ("lookstrafe", !lookstrafe.value);
 		break;
 
-#ifdef _WIN32
-	case 13:	// _windowed_mouse
+#if defined(X11) || defined(GLQUAKE) || defined(_WIN32)
+	case 12:	// _windowed_mouse
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 #endif
+
+#ifdef XMESA
+	case 13:
+		Cvar_SetValue ("vid_mesa_mode",!vid_mesa_mode.value);
+		XMesaSetFXmode(vid_mesa_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW);
+                break;
+#endif
+
+
 	}
 }
 
@@ -1248,20 +1275,36 @@ void M_Options_Draw (void)
 	M_Print (16, 120, "            Lookstrafe");
 	M_DrawCheckbox (220, 120, lookstrafe.value);
 
-	if (vid_menudrawfn)
-		M_Print (16, 128, "         Video Options");
-
 #ifdef _WIN32
 	if (modestate == MS_WINDOWED)
 	{
-		M_Print (16, 136, "             Use Mouse");
-		M_DrawCheckbox (220, 136, _windowed_mouse.value);
-	}
+		M_Print (16, 128, "             Use Mouse");
+		M_DrawCheckbox (220, 128, _windowed_mouse.value);
+	} 
 #endif
+
+#ifdef GLQUAKE
+	M_Print (16, 128, "             Use Mouse");
+        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+#endif
+
+#ifdef X11
+        M_Print (16, 128, "             Use Mouse");
+        M_DrawCheckbox (220, 128, _windowed_mouse.value);
+#endif
+
+#if defined(XMESA) && defined(GLQUAKE)
+// Mesa has a fullscreen / windowed glx hack.
+        M_Print (16, 134, "            Fullscreen");
+        M_DrawCheckbox (220, 136, vid_mesa_mode.value);
+#endif
+
+	if (vid_menudrawfn) M_Print (16, 144, "         Video Options");
 
 // cursor
 	M_DrawCharacter (200, 32 + options_cursor*8, 12+((int)(realtime*4)&1));
 }
+
 
 
 void M_Options_Key (int k)
@@ -1323,31 +1366,32 @@ void M_Options_Key (int k)
 		break;
 	}
 
-	if (options_cursor == 12 && vid_menudrawfn == NULL)
+#ifndef _WIN32
+	if (options_cursor == OPTIONS_ITEMS-1 && vid_menudrawfn == NULL)
 	{
 	    switch (k) {
 		case KP_UPARROW:
 		case K_UPARROW:
-		    options_cursor = 11;
+		    options_cursor = OPTIONS_ITEMS-2;
 		    break;
 		default:
 		    options_cursor = 0;
 	    }
 	}
-
-#ifdef _WIN32
-	if ((options_cursor == 13) && (modestate != MS_WINDOWED))
+#else
+	if ((options_cursor == OPTIONS_ITEMS-1) && (modestate != MS_WINDOWED))
 	{
 	    switch (k) {
 		case KP_UPARROW:
 		case K_UPARROW:
-		    options_cursor = 12;
+		    options_cursor = OPTIONS_ITEMS-2;
 		    break;
 		default:
 		    options_cursor = 0;
 	    }
 	}
 #endif
+
 }
 
 //=============================================================================
@@ -3090,6 +3134,11 @@ void M_Init (void)
 	Cmd_AddCommand ("menu_video", M_Menu_Video_f);
 	Cmd_AddCommand ("help", M_Menu_Help_f);
 	Cmd_AddCommand ("menu_quit", M_Menu_Quit_f);
+
+#ifdef XMESA
+	Cvar_RegisterVariable (&vid_mesa_mode);
+#endif
+
 }
 
 
