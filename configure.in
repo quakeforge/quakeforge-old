@@ -27,6 +27,20 @@ AC_HEADER_TIME
 AC_STRUCT_TM
 AC_C_BIGENDIAN
 
+dnl Check for symbol underscore prefix 
+dnl !!! FIXME !!! Do some real check here...
+
+AC_MSG_CHECKING(whether C symbols are prefixed by '_')
+case "${target}" in
+  *-*-mingw* | *-*-cygwin* | *-*-openbsd*)
+	AC_DEFINE(HAVE_SYM_PREFIX_UNDERSCORE)
+        AC_MSG_RESULT(yes)
+	;;
+  *)
+        AC_MSG_RESULT(no)
+	;;
+esac
+
 dnl Checks for library functions.
 AC_FUNC_MMAP
 AC_FUNC_VPRINTF

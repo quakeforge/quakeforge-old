@@ -13,6 +13,9 @@
 /* Define this if you have GL_COLOR_INDEX8_EXT in GL/gl.h */
 #undef HAVE_GL_COLOR_INDEX8_EXT
 
+/* Define this if C symbols are prefixed with an underscore */
+#undef HAVE_SYM_PREFIX_UNDERSCORE
+
 #if defined(X11)
 #   define OUTPUT_STR	"X11"
 #elif defined(GGI)
