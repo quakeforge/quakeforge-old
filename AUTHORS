@@ -203,3 +203,8 @@ D: GL spinning console
 N: Aaron Alcock (SaRcaZm)
 E: epca@powerup.com.au
 D: RGBA colored lightmaps (static/dynamic)
+
+N: Anton Gavrilov
+E: tonik@quake.ru
+D: VC Win32 support
+D: Console editing
