@@ -7,7 +7,7 @@ VERSION=0.1.0
 ifneq (,$(findstring alpha,$(shell uname -m)))
 ARCH=axp
 else
-ARCH=i386
+$(shell uname -m)
 endif
 
 PROJECT_DIR=..
@@ -32,7 +32,7 @@ RELEASE_CFLAGS=$(BASE_CFLAGS) -m486 -O6 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2
 else
-RELEASE_CFLAGS=$(BASE_CFLAGS) -ffast-math -funroll-loops \
+RELEASE_CFLAGS=$(BASE_CFLAGS) -O3 -ffast-math -funroll-loops \
 	-fomit-frame-pointer -fexpensive-optimizations
 endif
 GL_CFLAGS=-DGLQUAKE -I$(X11_DIR)/include -I/usr/include/glide
