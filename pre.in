@@ -1,0 +1,30 @@
+COMMON_DIR=$(PROJECT_DIR)/common
+ifeq ($(BUILD_DIR),)
+BUILD_DIR = .
+endif
+
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+CC = @CC@
+INTEL_ARCH = @INTEL_ARCH@
+
+ifneq ($(SRC_DIR),.)
+SRC_DIR_INC = -I$(SRC_DIR)
+endif
+
+HAS_VGA  = @HAS_VGA@
+HAS_GLIDE= @HAS_GLIDE@
+HAS_OGL  = @HAS_OGL@
+HAS_XIL  = @HAS_XIL@
+HAS_X11  = @HAS_X11@
+
+MAKE_SURE_DIR = if test -d "$(BUILD_DIR)/$$DIR"; \
+                then \
+                   true; \
+                else \
+		   echo "Creating directory $(BUILD_DIR)/$$DIR"; \
+		   mkdir -p $(BUILD_DIR)/$$DIR; \
+                fi
+MAKE_SURE_bin_DIR = @DIR=bin; \
+	 $(MAKE_SURE_DIR)
+

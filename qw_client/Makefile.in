@@ -1,0 +1,45 @@
+########################################################################
+#
+# Quake general stuff
+#
+@MAKEFILE_HEADER@
+
+PROJECT_DIR  = @top_srcdir@
+SRC_DIR      = @srcdir@
+QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
+BIN_PREFIX   = qw-client
+
+########################################################################
+#
+# Client targets
+#
+@CLIENT_TARGETS@
+
+########################################################################
+#
+# Source files
+#
+@SRCFILES@
+
+########################################################################
+#
+# Directory specific stuff
+#
+DEFS = @DEFS@ @STRICMP_DEF@
+CFLAGS = -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
+ALL_X11_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(QW_X11_VID_SRC) model.c
+ALL_GL_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC) $(QW_GL_REND_SRC) 
+
+GENERAL_SRC = $(CL_COMMON_SRC) \
+	   $(QW_CL_SRC) $(QW_NET_SRC) net_chan.c skin.c \
+	   $(QW_CL_SYS_SRC) \
+	   $(QW_GENERAL_SRC)
+# XXX - add dos/win specifc source
+
+###########################################################################
+#
+# Compilation rules
+#
+@COMP_RULES@
+
+@MAKEFILE_TAIL@

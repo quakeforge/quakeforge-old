@@ -1,0 +1,14 @@
+###########################################################################
+#
+# cleaning (clean, distclean)
+#
+distclean: clean
+	rm -f config.cache config.log config.status Makefile
+
+clean: $(CLEAN_TARGETS)
+
+install:
+	@echo Install not implemented
+
+check:
+	@echo check not implemented

@@ -431,8 +431,6 @@ float Q_atof (char *str)
 ============================================================================
 */
 
-qboolean        bigendien;
-
 short   (*BigShort) (short l);
 short   (*LittleShort) (short l);
 int     (*BigLong) (int l);
@@ -1124,29 +1122,21 @@ COM_Init
 */
 void COM_Init (char *basedir)
 {
-	byte    swaptest[2] = {1,0};
-
-// set the byte swapping variables in a portable manner 
-	if ( *(short *)swaptest == 1)
-	{
-		bigendien = false;
-		BigShort = ShortSwap;
-		LittleShort = ShortNoSwap;
-		BigLong = LongSwap;
-		LittleLong = LongNoSwap;
-		BigFloat = FloatSwap;
-		LittleFloat = FloatNoSwap;
-	}
-	else
-	{
-		bigendien = true;
-		BigShort = ShortNoSwap;
-		LittleShort = ShortSwap;
-		BigLong = LongNoSwap;
-		LittleLong = LongSwap;
-		BigFloat = FloatNoSwap;
-		LittleFloat = FloatSwap;
-	}
+#ifdef WORDS_BIGENDIAN
+	BigShort = ShortNoSwap;
+	LittleShort = ShortSwap;
+	BigLong = LongNoSwap;
+	LittleLong = LongSwap;
+	BigFloat = FloatNoSwap;
+	LittleFloat = FloatSwap;
+#else
+	BigShort = ShortSwap;
+	LittleShort = ShortNoSwap;
+	BigLong = LongSwap;
+	LittleLong = LongNoSwap;
+	BigFloat = FloatSwap;
+	LittleFloat = FloatNoSwap;
+#endif
 
 	Cvar_RegisterVariable (&registered);
 	Cvar_RegisterVariable (&cmdline);

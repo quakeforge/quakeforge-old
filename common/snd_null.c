@@ -22,6 +22,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 
+// =======================================================================
+// Various variables also defined in snd_dma.c
+// FIXME - should be put in one place
+// =======================================================================
+channel_t   channels[MAX_CHANNELS];
+int			total_channels;
+volatile dma_t  *shm = 0;
+cvar_t loadas8bit = {"loadas8bit", "0"};
+int    paintedtime;    // sample PAIRS
+
+
 cvar_t bgmvolume = {"bgmvolume", "1", true};
 cvar_t volume = {"volume", "0.7", true};
 

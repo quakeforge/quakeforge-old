@@ -1,0 +1,46 @@
+########################################################################
+#
+# Quake general stuff
+#
+@MAKEFILE_HEADER@
+
+PROJECT_DIR = @top_srcdir@
+SRC_DIR     = @srcdir@
+UQ_DIR      = $(SRC_DIR)
+BIN_PREFIX  = quake
+
+########################################################################
+#
+# Client targets
+#
+@CLIENT_TARGETS@
+
+########################################################################
+#
+# Source files
+#
+@SRCFILES@
+
+########################################################################
+#
+# Directory specific stuff
+#
+DEFS        = @DEFS@
+CFLAGS      = $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_DIR) -I$(UQ_DIR)/include
+ALL_X11_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(X11_VID_SRC) model.c
+ALL_GL_SRC  = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
+
+GENERAL_SRC = $(CL_COMMON_SRC) \
+	   $(SYS_SRC) chase.c world.c $(SRV_PR_SRC) \
+	   $(UQ_NET_SRC) $(UQ_SRV_SRC) \
+	   $(UQ_GENERAL_SRC) $(UQ_SWREND_SRC_PLAT)
+
+# XXX - add dos/win specific source
+
+###########################################################################
+#
+# Compilation rules
+#
+@COMP_RULES@
+
+@MAKEFILE_TAIL@

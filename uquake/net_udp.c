@@ -20,11 +20,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // net_udp.c
 
 #include "quakedef.h"
+#ifdef __sun__
+/* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
+#define model_t sunmodel_t
+#endif
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/param.h>
 #include <sys/ioctl.h>
@@ -32,6 +35,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifdef __sun__
 #include <sys/filio.h>
+#undef model_t
+#endif
+
+#if defined(sgi) && defined(sa_family)
+/* Get rid of problematic SGI #def */
+#undef sa_family
 #endif
 
 #ifdef NeXT

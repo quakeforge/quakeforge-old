@@ -335,7 +335,8 @@ int main (int argc, char **argv)
 
     // unroll the simulation loop to give the video side a chance to see _vid_default_mode
     Host_Frame( 0.1 );
-    VID_SetDefaultMode();
+    // FIXME - probably should be deleted - this is just an empty function
+//    VID_SetDefaultMode();
 
     oldtime = Sys_DoubleTime();
     while (1)

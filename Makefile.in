@@ -1,0 +1,41 @@
+SUBDIRS = qw_client qw_server uquake
+SRC_DIR = @src_dir@
+
+all:
+	@for dir in $(SUBDIRS); do \
+ 	$(MAKE) -C $$dir $@ || exit; \
+	done
+
+distclean:
+	rm -f config.cache config.log config.status \
+	      Makefile.header Makefile.client Makefile.comp_rules \
+	      Makefile.source Makefile.tail Makefile \
+	      client pre post rules srcfiles
+	for dir in $(SUBDIRS); do \
+	$(MAKE) -C $$dir $@ || exit; \
+	done
+
+%:
+	@for dir in $(SUBDIRS); do \
+ 	$(MAKE) -C $$dir $@ || exit; \
+	done
+
+
+# Code to automatically re-configure, only runs if you are compiling in the
+# source directory
+ifeq ($(SRC_DIR),.)
+configure: configure.in
+      autoconf
+
+Makefile: Makefile.in configure
+      ./configure
+
+qw_client/Makefile: qw_client/Makefile.in configure
+      ./configure
+
+qw_server/Makefile: qw_server/Makefile.in configure
+      ./configure
+
+uquake/Makefile: uquake/Makefile.in configure
+      ./configure
+endif

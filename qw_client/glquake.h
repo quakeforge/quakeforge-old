@@ -33,6 +33,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void GL_BeginRendering (int *x, int *y, int *width, int *height);
 void GL_EndRendering (void);
 
+#ifndef APIENTRY
+/* Mesa defines APIENTRY, but other versions of OpenGL do not */
+#ifdef GLAPIENTRY
+#define APIENTRY GLAPIENTRY
+#else
+#define APIENTRY
+#endif
+#endif
 
 // Function prototypes for the Texture Object Extension routines
 typedef GLboolean (GLAPIENTRY *ARETEXRESFUNCPTR)(GLsizei, const GLuint *,
@@ -237,12 +245,10 @@ void GL_Bind (int texnum);
 #define    TEXTURE0_SGIS				0x835E
 #define    TEXTURE1_SGIS				0x835F
 
-#ifdef _WIN32
-typedef void (GLAPIENTRY *lpMTexFUNC) (GLenum, GLfloat, GLfloat);
-typedef void (GLAPIENTRY *lpSelTexFUNC) (GLenum);
+typedef void (APIENTRY *lpMTexFUNC) (GLenum, GLfloat, GLfloat);
+typedef void (APIENTRY *lpSelTexFUNC) (GLenum);
 extern lpMTexFUNC qglMTexCoord2fSGIS;
 extern lpSelTexFUNC qglSelectTextureSGIS;
-#endif
 
 extern qboolean gl_mtexable;
 

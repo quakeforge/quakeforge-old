@@ -24,7 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <libc.h>
 #endif
 
-#if defined(__linux__) || defined(sun)
+// FIXME: use autoconf
+#if defined(unix) || defined(_AIX)
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/time.h>

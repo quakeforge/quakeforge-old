@@ -1,0 +1,324 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(common/crc.h)
+AC_CANONICAL_SYSTEM
+AC_LANG_C
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_MAKE_SET
+
+dnl checks for compiler characteristics
+AC_C_BIGENDIAN
+
+AC_ARG_WITH(optimize,
+[  --with-optimize         Compile with optimization],
+	RELEASE=$with_optimize
+)
+
+AC_ARG_ENABLE(release,
+[  --enable-release        Compile release (with optimization)],
+       RELEASE=$enable_release
+)
+AC_SUBST(RELEASE)
+
+dnl Checks for OGL support
+AC_ARG_ENABLE(OpenGLLIB,
+[  --enable-OpenGLLIB=ARG  Use OpenGL - the libraries are in ARG],
+[HAS_OGL_LIB=yes; OGL_LIB_PATH=$enable_OpenGLLIB;
+   OGL_LDFLAGS=-L$enable_OpenGLLIB])
+AC_SUBST(OGL_LDFLAGS)
+
+AC_ARG_ENABLE(OpenGLINC,
+[  --enable-OpenGLINC=ARG  Use OpenGL - the include files are in ARG],
+HAS_OGL_INC=yes; OGL_INC_PATH=$enable_OpenGLINC; OGL_CFLAGS=-I$enable_OpenGLINC)
+AC_SUBST(OGL_CFLAGS)
+
+if test "x$HAS_OGL_LIB" = x; then
+AC_CHECK_LIB(GL, glColor4f, [HAS_OGL_LIB=yes],
+   AC_CHECK_LIB(MesaGL, glColor4f, [HAS_OGL_LIB=yes],
+   if test "x$HAS_OGL_INC" != x; then
+      POSS_OGL_LDFLAGS=`echo $enable_OpenGLINC| sed 's/include/lib/i'`;
+      AC_MSG_CHECKING(for $POSS_OGL_LDFLAGS/libGL.so)
+      if test -f "$POSS_OGL_LDFLAGS"/libGL.so; then
+	 AC_MSG_RESULT(yes)
+	 HAS_OGL_LIB=yes
+	 OGL_LDFLAGS=-L$POSS_OGL_LDFLAGS
+	 OGL_LIB_PATH=$POSS_OGL_LDFLAGS
+      else
+	 AC_MSG_RESULT(no)
+      fi
+   fi
+   )
+)
+dnl Need to be able to check /usr/X11R6/lib...
+fi
+
+if test "x$HAS_OGL_INC" = x; then
+   AC_CHECK_HEADER(GL/gl.h, [HAS_OGL_INC=yes],
+   if test "x$HAS_OGL_LIB" != x; then
+      POSS_OGL_CFLAGS=`echo $enable_OpenGLLIB| sed 's/lib/include/i'`;
+      AC_MSG_CHECKING(for $POSS_OGL_CFLAGS/GL/gl.h)
+      if test -f "$POSS_OGL_CFLAGS/GL/gl.h"; then
+	 HAS_OGL_INC=yes
+	 OGL_CFLAGS=-I$POSS_OGL_CFLAGS
+	 OGL_INC_PATH=$POSS_OGL_CFLAGS
+	 AC_MSG_RESULT(yes)
+      else
+	 AC_MSG_RESULT(no)
+      fi
+   fi
+   )
+fi
+
+AC_MSG_CHECKING(for OpenGL support)
+if test "x$HAS_OGL_INC" != x; then
+   if test "x$HAS_OGL_LIB" != x; then
+      HAS_OGL=yes
+      AC_MSG_RESULT([yes, include ($OGL_CFLAGS), lib ($OGL_LDFLAGS)])
+      if test "x$OGL_LDFLAGS" = x-L; then
+         AC_MSG_ERROR(OpenGL LDFLAGS is -L with no directory)
+      fi
+      AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT)
+      if test "x$OGL_INC_PATH" = x; then
+	 OGL_INC_PATH_TO_GL="$OGL_INC_PATH/GL/gl.h"
+      else
+	 OGL_INC_PATH_TO_GL="GL/gl.h"
+      fi
+      AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
+                     [ int x = (int) GL_COLOR_INDEX8_EXT;],
+                     HAS_GL_COLOR_INDEX8_EXT=yes,
+                     HAS_GL_COLOR_INDEX8_EXT=no)
+      if test "x$HAS_GL_COLOR_INDEX8_EXT" != xno; then
+         cat >> confdefs.h <<\EOF
+#define HAS_GL_COLOR_INDEX8_EXT 1
+EOF
+      fi
+ 
+   else
+      AC_MSG_RESULT(no)
+   fi
+   else
+      AC_MSG_RESULT(no)
+fi
+AC_SUBST(HAS_OGL)
+
+dnl Check for other libraries
+AC_CHECK_LIB(vga, vga_getmousetype, [HAS_VGA=yes], [HAS_VGA=])
+AC_SUBST(HAS_VGA)
+AC_CHECK_LIB(xil,xil_import, [HAS_XIL=yes], [HAS_XIL=])
+AC_SUBST(HAS_XIL)
+AC_PATH_XTRA
+
+AC_SUBST(x_libraries)
+if test "x$no_x" = x; then
+HAS_X11=yes
+   if test "x$x_libraries" != x; then
+      X_LIB_PATH_L=-L${x_libraries};
+   else
+      X_LIB_PATH_L=
+   fi
+AC_CHECK_LIB(Xext, XShmQueryExtension, [X11_SHM_LIB=-lXext], [X11_SHM_LIB=], ${X_LIB_PATH_L})
+AC_SUBST(X11_SHM_LIB)
+fi
+AC_SUBST(HAS_X11)
+
+dnl Checks for header files.
+AC_CHECK_HEADER(glide.h, [HAS_GLIDE=yes], [HAS_GLIDE=])
+AC_SUBST(HAS_GLIDE)
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_CHECK_FUNC(stricmp, 
+	[STRICMP_DEF=],
+	AC_CHECK_FUNC(strcasecmp, [STRICMP_DEF=-Dstricmp=strcasecmp]))
+AC_SUBST(STRICMP_DEF)
+
+
+##########################################################
+#
+# Release (optimized) compiler settings (GCC only)
+#
+if test "x$RELEASE" = xyes; then
+if test "x$GCC" = xyes; then
+AC_MSG_CHECKING(for special release compiler settings)
+BASE_RELEASE_CFLAGS="-O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
+case "${target}" in
+changequote(,)dnl
+   i[34567]86-*-linux-gnu*)
+changequote([,])dnl
+        case "${target_cpu}" in
+          i486) GCC_EMULATION="-m486" ;;
+          i586) GCC_EMULATION="-mpentium" ;;
+          i686) GCC_EMULATION="-mpentiumpro" ;;
+        esac
+        MORE_RELEASE_CFLAGS="${GCC_EMULATION} -malign-loops=2 -malign-jumps=2 -malign-functions=2" ;;
+   *) MORE_RELEASE_CFLAGS="" ;;
+esac
+if test "x$MORE_RELEASE_CFLAGS" = x; then
+RELEASE_CFLAGS=-O
+AC_MSG_RESULT([no - using standard flags])
+RELEASE_CFLAGS=$BASE_RELEASE_CFLAGS
+else
+AC_MSG_RESULT(yes)
+RELEASE_CFLAGS="$BASE_RELEASE_CFLAGS $MORE_RELEASE_CFALGS"
+fi
+else
+RELEASE_CFLAGS=-O2
+fi
+fi
+AC_SUBST(RELEASE_CFLAGS)
+
+##########################################################
+#
+# is it an intel box?
+#
+AC_MSG_CHECKING(for an Intel machine)
+case "${target}" in
+changequote(,)dnl
+   i[34567]86-*-linux-gnu*)
+changequote([,])dnl
+      INTEL_ARCH=yes
+      AC_MSG_RESULT(yes)
+          ;;
+   *) AC_MSG_RESULT(no)
+esac
+AC_SUBST(INTEL_ARCH)
+
+##########################################################
+#
+# CD audio available?
+#
+AC_MSG_CHECKING(for CD audio support)
+case "${target}" in
+changequote(,)dnl
+   i[34567]86-*-linux-gnu*)
+changequote([,])dnl
+      CD_AUDIO_SRC="cd_linux.c" ;;
+   *)
+      CD_AUDIO_SRC="cd_null.c" ;;
+esac
+if test "x$CD_AUDIO_SRC" = xcd_null.c; then
+AC_MSG_RESULT(no - using cd_null.c)
+else
+AC_MSG_RESULT(yes - $CD_AUDIO_SRC)
+fi
+AC_SUBST(CD_AUDIO_SRC)
+
+##########################################################
+#
+# Sound available?
+#
+AC_MSG_CHECKING(for sound support)
+case "${target}" in
+changequote(,)dnl
+   i[34567]86-*-linux-gnu*)
+changequote([,])dnl
+      SND_SRC="snd_dma.c snd_linux.c snd_mixa.s" ;;
+   *-solaris*) 
+      SND_SRC="snd_dma.c snd_sun.c" ;;
+   *-sgi*)
+      SND_SRC="snd_null.c" ;;
+   *)
+      SND_SRC="snd_null.c" ;;
+# XXX - need to add dos, Windows
+esac
+if test "x$SND_SRC" = xsnd_null.c; then
+AC_MSG_RESULT(no - using snd_null.c)
+else
+AC_MSG_RESULT(yes - $SND_SRC)
+fi
+AC_SUBST(SND_SRC)
+
+##########################################################
+#
+# System driver?
+#
+AC_MSG_CHECKING(for system driver)
+case "${target}" in
+changequote(,)dnl
+   i[34567]86-*-linux-gnu*)
+changequote([,])dnl
+      SYS_SRC="sys_linux.c"
+      QW_CL_SYS_SRC="sys_linux.c"
+      QW_SRV_SYS_SRC="sys_unix.c"
+      ;;
+   *-solaris*) 
+      SYS_SRC="sys_sun.c"
+      QW_CL_SYS_SRC="sys_linux.c"
+      QW_SRV_SYS_SRC="sys_unix.c"
+      ;;
+   *)
+      SYS_SRC="sys_sun.c" 
+      QW_CL_SYS_SRC="sys_linux.c"
+      QW_SRV_SYS_SRC="sys_unix.c"
+      DEFAULT_SYS=yes ;;
+# XXX - windows - conproc.c sys_win.c
+# XXX - dos  - conproc.c(?) sys_dos.c
+# XXX - need to add dos, Windows
+esac
+if test "x$DEFAULT_SYS" = xyes; then
+AC_MSG_RESULT(no - using default)
+else
+AC_MSG_RESULT(yes - $SYS_SRC / $QW_SYS_SRC)
+fi
+AC_SUBST(SYS_SRC)
+AC_SUBST(QW_CL_SYS_SRC)
+AC_SUBST(QW_SRV_SYS_SRC)
+
+##########################################################
+#
+# X11 video driver?
+#
+# If Solaris, use vid_sunx.c,
+# otherwise (if X available) use vid_x.c
+AC_MSG_CHECKING(for X11 video driver)
+case "${target}" in
+   *-solaris*) 
+      X11_VID_SRC="vid_sunx.c" ;;
+   *)
+      if test "x$HAS_X11"; then
+         X11_VID_SRC="vid_x.c";
+      else
+         X11_VID_SRC=
+      fi
+     ;;
+esac
+if test "x$X11_VID_SRC" = x; then
+AC_MSG_RESULT(no)
+else
+AC_MSG_RESULT(yes - $X11_VID_SRC)
+fi
+AC_SUBST(X11_VID_SRC)
+
+dnl Check for system services
+AC_EXEEXT
+AC_OBJEXT
+AC_PATH_XTRA
+
+##########################################################
+#
+# make Makefile.header, Makefile.tail
+#
+
+AC_SUBST_FILE(MAKEFILE_HEADER)
+MAKEFILE_HEADER=pre
+
+AC_SUBST_FILE(MAKEFILE_TAIL)
+MAKEFILE_TAIL=post
+
+AC_SUBST_FILE(CLIENT_TARGETS)
+CLIENT_TARGETS=client
+
+AC_SUBST_FILE(SRCFILES)
+SRCFILES=srcfiles
+
+AC_SUBST_FILE(COMP_RULES)
+COMP_RULES=rules
+
+##########################################################
+#
+# Output files
+#
+AC_OUTPUT(pre post client srcfiles rules
+          qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)

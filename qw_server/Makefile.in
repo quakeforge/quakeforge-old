@@ -1,0 +1,84 @@
+########################################################################
+#
+# Quake general stuff
+#
+@MAKEFILE_HEADER@
+
+PROJECT_DIR  = @top_srcdir@
+SRC_DIR      = @srcdir@
+QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
+
+########################################################################
+#
+# Source files
+#
+@SRCFILES@
+
+########################################################################
+#
+# Directory specific stuff
+#
+CFLAGS = -DQUAKEWORLD -DSERVERONLY $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
+DEFS = @DEFS@ @STRICMP_DEF@
+
+SRVQUAKE = qw-server
+targets = $(SRVQUAKE)
+.PHONY: $(SRVQUAKE)
+
+GENERAL_SRC = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c \
+	$(QW_NET_SRC) net_chan.c $(SRV_SRC) $(QW_SRV_SRC) \
+        $(SRV_PR_SRC) $(QW_SRV_SYS_SRC) $(ADDITIONAL_GENERAL_SRC) \
+	$(QW_GENERAL_SRC)
+ALL_QW_SRV_SRC = $(GENERAL_SRC) $(SRV_VID_SRC) model.c
+# XXX - add dos/win specifc source
+
+x: Makefile
+	@echo binaries: $(targets)
+	@echo other targets: distclean 
+
+all: $(targets)
+
+###########################################################################
+#
+# qw-server
+#
+OBJSqw-server = $(patsubst %,$(BUILD_DIR)/srv/%, \
+        $(addsuffix .@OBJEXT@, $(basename $(ALL_QW_SRV_SRC) .c .s)))
+
+SRV_CFLAGS = -DSRV $(X_CFLAGS)
+# XXX - Don't use X_EXTRA_LIBS below
+SRV_LDFLAGS = @X_EXTRA_LIBS@ -lm
+
+MAKE_SURE_srv_DIR = @DIR=srv; $(MAKE_SURE_DIR)
+$(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_srv_DIR)
+	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_srv_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_srv_DIR)
+	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/srv/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_srv_DIR)
+	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_srv_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(SRVQUAKE): $(BUILD_DIR)/bin/$(SRVQUAKE)
+
+$(BUILD_DIR)/bin/$(SRVQUAKE): $(OBJSqw-server)
+	$(MAKE_SURE_bin_DIR)
+	$(CC) $(CFLAGS) $(OBJSqw-server) $(SRV_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(SRVQUAKE)
+# XXX - Can this be automated?
+clean-$(SRVQUAKE):
+	rm -f $(OBJSqw-server)
+
+clean: clean-$(SRVQUAKE)
+
+@MAKEFILE_TAIL@

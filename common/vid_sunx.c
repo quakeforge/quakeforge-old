@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "d_local.h"
 
+cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};
 
 qboolean        mouse_avail;
@@ -1058,7 +1059,9 @@ void	VID_Update (vrect_t *rects)
 
 		while (rects)
 		{
+#if 0
 printf("update: %d,%d (%d,%d)\n", rects->x, rects->y, rects->width, rects->height);
+#endif
 			if (x_visinfo->depth == 16)
 				st2_fixup( x_framebuffer[current_framebuffer], 
 					rects->x, rects->y, rects->width,

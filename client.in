@@ -1,0 +1,34 @@
+ifneq ($(HAS_OGL),)
+GLQUAKE   =$(BIN_PREFIX)-gl
+endif
+
+# XXX add glide
+ifneq ($(HAS_GLIDE),)
+GLIDEQUAKE= $(BIN_PREFIX)-glide
+endif
+
+ifneq ($(HAS_X11),)
+X11QUAKE  = $(BIN_PREFIX)-x11
+endif
+
+ifneq ($(HAS_VGA),)
+SVGAQUAKE = $(BIN_PREFIX)-svga
+endif
+
+RELEASE = @RELEASE@
+ifeq ($(RELEASE),yes)
+OPTFLAGS = @RELEASE_CFLAGS@
+else
+OPTFLAGS = -g
+endif
+
+targets       = $(SVGAQUAKE) $(GLQUAKE) $(GLIDEQUAKE) $(X11QUAKE)
+CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
+.PHONY: $(targets) ($CLEAN_TARGETS)
+
+x: Makefile
+	@echo binaries: $(targets)
+	@echo other targets: distclean 
+	@echo all: makes all targets - $(targets)
+
+all: $(targets)

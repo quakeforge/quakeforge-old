@@ -127,7 +127,7 @@ void Sys_Printf (char *fmt, ...)
 void Sys_Quit (void)
 {
 	Host_Shutdown();
-    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~O_NDELAY);
 	exit(0);
 }
 
@@ -144,7 +144,7 @@ void Sys_Error (char *error, ...)
     char        string[1024];
 
 // change stdin to non blocking
-    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~FNDELAY);
+    fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~O_NDELAY);
     
     va_start (argptr,error);
     vsprintf (string,error,argptr);
@@ -379,7 +379,7 @@ int main (int c, char **v)
 
 	noconinput = COM_CheckParm("-noconinput");
 	if (!noconinput)
-		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
+		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | O_NDELAY);
 
 	if (COM_CheckParm("-nostdout"))
 		nostdout = 1;

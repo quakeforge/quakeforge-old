@@ -747,7 +747,13 @@ void Draw_TransPicTranslate (int x, int y, qpic_t *pic, byte *translation)
 		}
 	}
 
-	glTexImage2D (GL_TEXTURE_2D, 0, gl_alpha_format, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
+	glTexImage2D (GL_TEXTURE_2D, 0, gl_alpha_format, 64, 64, 0,
+#ifdef WORDS_BIGENDIAN
+                      GL_ABGR_EXT,
+#else
+                      GL_RGBA,
+#endif
+                      GL_UNSIGNED_BYTE, trans);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1124,7 +1130,14 @@ texels += scaled_width * scaled_height;
 	{
 		if (!mipmap)
 		{
-			glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width,
+                                      scaled_height, 0,
+#ifdef WORDS_BIGENDIAN
+                                      GL_ABGR_EXT,
+#else
+                                      GL_RGBA,
+#endif
+                                      GL_UNSIGNED_BYTE, data);
 			goto done;
 		}
 		memcpy (scaled, data, width*height*4);
@@ -1132,7 +1145,14 @@ texels += scaled_width * scaled_height;
 	else
 		GL_ResampleTexture (data, width, height, scaled, scaled_width, scaled_height);
 
-	glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
+	glTexImage2D (GL_TEXTURE_2D, 0, samples, scaled_width, scaled_height,
+                      0,
+#ifdef WORDS_BIGENDIAN
+                      GL_ABGR_EXT,
+#else
+                      GL_RGBA,
+#endif
+                      GL_UNSIGNED_BYTE, scaled);
 	if (mipmap)
 	{
 		int		miplevel;
@@ -1148,7 +1168,14 @@ texels += scaled_width * scaled_height;
 			if (scaled_height < 1)
 				scaled_height = 1;
 			miplevel++;
-			glTexImage2D (GL_TEXTURE_2D, miplevel, samples, scaled_width, scaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, scaled);
+			glTexImage2D (GL_TEXTURE_2D, miplevel, samples,
+                                      scaled_width, scaled_height, 0,
+#ifdef WORDS_BIGENDIAN
+                                      GL_ABGR_EXT,
+#else
+                                      GL_RGBA,
+#endif
+                                      GL_UNSIGNED_BYTE, scaled);
 		}
 	}
 done: ;
@@ -1214,7 +1241,10 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 	{
 		if (!mipmap)
 		{
+// FIXME - what if this extension isn't available?
+#ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX , GL_UNSIGNED_BYTE, data);
+#endif
 			goto done;
 		}
 		memcpy (scaled, data, width*height);
@@ -1222,7 +1252,10 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 	else
 		GL_Resample8BitTexture (data, width, height, scaled, scaled_width, scaled_height);
 
+// FIXME - what if this extension isn't available?
+#ifdef HAVE_GL_COLOR_INDEX8_EXT
 	glTexImage2D (GL_TEXTURE_2D, 0, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
+#endif
 	if (mipmap)
 	{
 		int		miplevel;
@@ -1238,7 +1271,10 @@ void GL_Upload8_EXT (byte *data, int width, int height,  qboolean mipmap, qboole
 			if (scaled_height < 1)
 				scaled_height = 1;
 			miplevel++;
+// FIXME - what if this extension isn't available?
+#ifdef HAVE_GL_COLOR_INDEX8_EXT
 			glTexImage2D (GL_TEXTURE_2D, miplevel, GL_COLOR_INDEX8_EXT, scaled_width, scaled_height, 0, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, scaled);
+#endif
 		}
 	}
 done: ;

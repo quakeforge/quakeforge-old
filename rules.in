@@ -1,0 +1,154 @@
+###########################################################################
+#
+# quake-x11
+#
+ifneq ($(X11QUAKE),)
+
+# Map the list of source files into a list of object files
+OBJSquake-x11 = $(patsubst %,$(BUILD_DIR)/x11/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_X11_SRC) .c .s)))
+
+X11_CFLAGS  = -DX11 $(X_CFLAGS)
+X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@ -lm
+
+# This can be thought of as a macro that makes sure that the x11
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_x11_DIR = @DIR=x11; $(MAKE_SURE_DIR)
+
+$(BUILD_DIR)/x11/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_x11_DIR)
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/x11/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_x11_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_x11_DIR)
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/x11/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_x11_DIR)
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_x11_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(X11QUAKE): $(BUILD_DIR)/bin/$(X11QUAKE)
+
+$(BUILD_DIR)/bin/$(X11QUAKE): $(OBJSquake-x11)
+	$(MAKE_SURE_bin_DIR)
+	$(CC) $(CFLAGS) $(OBJSquake-x11) $(X11_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(X11QUAKE)
+# XXX - Can this be automated?
+clean-$(X11QUAKE):
+	rm -f $(OBJSquake-x11)
+endif
+
+###########################################################################
+#
+# quake-svga
+#
+ifneq ($(SVGAQUAKE),)
+ALL_SVGA_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(SVGA_VID_SRC) model.c
+OBJSquake-svga= $(patsubst %,$(BUILD_DIR)/svga/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_SVGA_SRC) .c .s)))
+
+SVGA_CFLAGS  =
+SVGA_LDFLAGS = -lvga
+SVGA_VID_SRC = vid_svgalib.c
+
+# This can be thought of as a macro that makes sure that the x11
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_svga_DIR = @DIR=svga; $(MAKE_SURE_DIR)
+
+# Not sure why this -O is needed, but it is...
+$(BUILD_DIR)/svga/vid_svgalib.o: $(COMMON_DIR)/vid_svgalib.c
+	$(MAKE_SURE_svga_DIR)
+	$(CC) -O $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/svga/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_svga_DIR)
+	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/svga/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_svga_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_svga_DIR)
+	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/svga/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_svga_DIR)
+	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_svga_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(SVGAQUAKE): $(BUILD_DIR)/bin/$(SVGAQUAKE)
+
+$(BUILD_DIR)/bin/$(SVGAQUAKE): $(OBJSquake-svga)
+	$(MAKE_SURE_bin_DIR)
+	$(CC) $(CFLAGS) $(OBJSquake-svga) $(SVGA_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(SVGAQUAKE)
+# XXX - Can this be automated?
+clean-$(SVGAQUAKE):
+	rm -f $(OBJSquake-svga)
+endif
+
+###########################################################################
+#
+# quake-gl
+#
+ifneq ($(GLQUAKE),)
+OBJSquake-gl = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_GL_SRC) .c .s)))
+
+GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LDFLAGS@ -lGL
+# XXX - this is for glx
+# XXX - is this platform independent?
+GL_VID_SRC = gl_vidlinuxglx.c
+
+# This can be thought of as a macro that makes sure that the x11
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_gl_DIR = @DIR=gl; $(MAKE_SURE_DIR)
+
+$(BUILD_DIR)/gl/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_gl_DIR)
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/gl/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_gl_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_gl_DIR)
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/gl/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_gl_DIR)
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_gl_DIR)
+	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+
+$(GLQUAKE): $(BUILD_DIR)/bin/$(GLQUAKE)
+
+$(BUILD_DIR)/bin/$(GLQUAKE): $(OBJSquake-gl)
+	$(MAKE_SURE_bin_DIR)
+	$(CC) $(CFLAGS) $(OBJSquake-gl) $(GL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/bin/$(GLQUAKE)
+
+# XXX - Can this be automated?
+clean-$(GLQUAKE):
+	rm -f $(OBJSquake-gl)
+endif
+
