@@ -25,9 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 
-void (*vid_menudrawfn)(void);
-void (*vid_menukeyfn)(int key);
-
 enum {m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer, m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit, m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions, m_search, m_slist} m_state;
 
 void M_Menu_Main_f (void);
@@ -1070,8 +1067,7 @@ again:
 
 extern int	VID_options_items;
 static int	options_cursor;
-#define 	LOCAL_OPTIONS_ITEMS 13
-static int	options_items=(LOCAL_OPTIONS_ITEMS + VID_options_items);
+#define options_items	15
 
 void M_Menu_Options_f (void)
 {
@@ -1165,7 +1161,7 @@ void M_AdjustSliders (int dir)
 		break;
 
 	default:
-		VID_ExtraOptionCmd(options_cursor-11);
+		VID_ExtraOptionCmd(options_cursor-(options_items-4));
 	}
 }
 
@@ -1244,9 +1240,7 @@ void M_Options_Draw (void)
 	M_Print (16, 120, "            Lookstrafe");
 	M_DrawCheckbox (220, 120, lookstrafe.value);
 
-/*
 	if (vid_menudrawfn) M_Print (16, 144, "         Video Options");
-*/
 
 	VID_ExtraOptionDraw();
 
@@ -1279,11 +1273,12 @@ void M_Options_Key (int k)
 		case 2:
 			Cbuf_AddText ("exec default.cfg\n");
 			break;
-		case 12:
-			M_Menu_Video_f ();
-			break;
 		default:
-			M_AdjustSliders (1);
+			if (options_cursor == options_items-1) {
+				M_Menu_Video_f();
+			} else {
+				M_AdjustSliders(1);
+			}
 			break;
 		}
 		return;
@@ -1546,6 +1541,33 @@ void M_Keys_Key (int k)
 //=============================================================================
 /* VIDEO MENU */
 
+/* Default functions */
+#define MAX_COLUMN_SIZE	11
+
+static void
+vid_menudraw(void)
+{
+	qpic_t		*p;
+
+	p = Draw_CachePic("gfx/vidmodes.lmp");
+	M_DrawPic ((320-p->width)/2, 4, p);
+	M_Print(4*8, 36 + MAX_COLUMN_SIZE * 8 + 8,
+		"Video mode switching unavailable");
+	M_Print(9*8, 36 + MAX_COLUMN_SIZE * 8 + 8*6, "Press any key...");
+}
+
+static void
+vid_menukey(int key)
+{
+	M_Menu_Options_f();
+}
+
+
+void (*vid_menudrawfn)(void) = vid_menudraw;
+void (*vid_menukeyfn)(int key) = vid_menukey;
+
+
+
 void M_Menu_Video_f (void)
 {
 	key_dest = key_menu;
@@ -1554,15 +1576,21 @@ void M_Menu_Video_f (void)
 }
 
 
-void M_Video_Draw (void)
+void M_Video_Draw(void)
 {
-	(*vid_menudrawfn) ();
+	if (vid_menudrawfn == NULL) {
+		Sys_Error("M_Video_Draw called wehn vid_menudrawfn == NULL!\n");
+	}
+	vid_menudrawfn();
 }
 
 
-void M_Video_Key (int key)
+void M_Video_Key(int key)
 {
-	(*vid_menukeyfn) (key);
+	if (vid_menukeyfn == NULL) {
+		Sys_Error("M_Video_Key called wehn vid_menukeyfn == NULL!\n");
+	}
+	vid_menukeyfn(key);
 }
 
 //=============================================================================
