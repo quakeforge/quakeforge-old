@@ -856,7 +856,6 @@ void SV_RunEntity (edict_t *ent)
 
 	switch ( (int)ent->v.movetype)
 	{
-	case MOVETYPE_WALK:
 	case MOVETYPE_PUSH:
 		SV_Physics_Pusher (ent);
 		break;
@@ -869,15 +868,7 @@ void SV_RunEntity (edict_t *ent)
 	case MOVETYPE_STEP:
 		SV_Physics_Step (ent);
 		break;
-#if 0
 	case MOVETYPE_FLY:
-		if (!SV_RunThink (ent))
-			return;
-		SV_FlyMove (ent, host_frametime, NULL);
-		break;
-#else
-	case MOVETYPE_FLY:
-#endif
 	case MOVETYPE_TOSS:
 	case MOVETYPE_BOUNCE:
 	case MOVETYPE_FLYMISSILE:
