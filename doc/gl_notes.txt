@@ -1,39 +1,23 @@
-Glquake v0.99, Quake v1.09 release notes
-
-3dfx owners -- read the 3dfx.txt file.
-
-On a standard OpenGL system, all you should need to do to run glquake is put 
-glquake.exe in your quake directory, and run it from there.  DO NOT install 
-the opengl32.dll unless you have a 3dfx!  Glquake should change the screen 
-resolution to 640*480*32k colors and run full screen by default.
+gl_notes.txt for QuakeForge, original copyright by Id Software.
+---------------------------------------------------------------
 
 If you are running win-95, your desktop must be set to 32k or 64k colors 
 before running glquake.  NT can switch automatically.
 
-Theoretically, glquake will run on any compliant OpenGL that supports the 
+Theoretically, quake will run on any compliant OpenGL that supports the 
 texture objects extensions, but unless it is very powerfull hardware that 
 accelerates everything needed, the game play will not be acceptable.  If it 
 has to go through any software emulation paths, the performance will likely 
 by well under one frame per second.
 
-3dfx has provided an opengl32.dll that implements everything glquake needs, 
-but it is not a full opengl implementation.  Other opengl applications are 
-very unlikely to work with it, so consider it basically a "glquake driver".  
-See the encluded 3dfx.txt for specific instalation notes.  3dfx can only run 
-full screen, but you must still have your desktop set to a 16 bit color mode 
-for glquake to start.
-
 resolution options
 ------------------
-We had dynamic resolution changing in glquake for a while, but every single 
-opengl driver I tried it on messed up in one way or another, so it is now 
-limited to startup time only.
 
-glquake -window
+quake-glx -window
 This will start glquake in a window on your desktop instead of switching the 
 screen to lower resolution and covering everything.
 
-glquake -width 800 -height 600
+glquake-glx -width 800 -height 600
 Tries to run glquake at the specified resolution.  Combined with -window, it 
 creates a desktop window that size, otherwise it tries to set a full screen 
 resolution.
@@ -41,12 +25,12 @@ resolution.
 You can also specify the resolution of the console independant of the screen
 resolution.
 
-glquake -conwidth 320
+quake-glx -conwidth 320
 This will specify a console resolution of 320 by 240 (the height is
 automatically determined by the default 4:3 aspect ratio, you can also
 specify the height directly with -conheight).
 
-In higher resolution modes such as 800x600 and 1024x768, glquake will default
+In higher resolution modes such as 800x600 and 1024x768, quake will default
 to a 640x480 console, since the font becomes small enough at higher 
 resolutions to become unreadable.  If do you wish to have a higher resolution
 console and status bar, specify it as well, such as:
@@ -69,18 +53,18 @@ higher size, or shrunk down to the next lower.  By default, they are filtered
 down to the smaller size, but you can cause it to use the larger size if you 
 really want by using: 
 
-glquake +gl_round_down 0
+quake-glx +gl_round_down 0
 This will generally run well on a normal 4 MB 3dfx card, but for other cards 
 that have either worse texture management or slower texture swapping speeds, 
 there are some additional settings that can drastically lower the amount of 
 textures to be managed.
 
-glquake +gl_picmip 1
+quake-glx +gl_picmip 1
 This causes all textures to have one half the dimensions they otherwise would.  
 This makes them blurry, but very small.  You can set this to 2 to make the 
 textures one quarter the resolution on each axis for REALLY blurry textures.
 
-glquake +gl_playermip 1
+quake-glx +gl_playermip 1
 This is similar to picmip, but is only used for other players in deathmatch.  
 Each player in a deathmatch requires an individual skin texture, so this can 
 be a serious problem for texture management.  It wouldn't be unreasonable to 
@@ -88,24 +72,22 @@ set this to 2 or even 3 if you are playing competatively (and don't care if
 the other guys have smudged skins).  If you change this during the game, it 
 will take effect as soon as a player changes their skin colors.
 
-GLQuake also supports the following extensions for faster texture operation:
+Quake also supports the following extensions for faster texture operation:
 
 GL_SGIS_multitexture
 Multitextures support allows certain hardware to render the world in one
-pass instead of two.  GLQuake uses two passes, one for the world textures
+pass instead of two.  Quake uses two passes, one for the world textures
 and the second for the lightmaps that are blended on the textures.  On some
 hardware, with a GL_SIGS_multitexture supported OpenGL implementation, this
 can be done in one pass.  On hardware that supports this, you will get a
-60% to 100% increase in frame rate.  Currently, only 3DFX dual TMU cards
-(such as the Obsidian 2220) support this extension, but other hardware will
-soon follow.
+60% to 100% increase in frame rate.
 
 This extension will be autodetected and used.  If for some reason it is not
 working correctly, specify the command line option "-nomtex" to disable it.
 
 GL_EXT_shared_texture_palette
-GLQuake uses 16bit textures by default but on OpenGL implementations 
-that support the GL_EXT_shared_texture_palette extension, GLQuake will use
+Quake uses 16bit textures by default but on OpenGL implementations 
+that support the GL_EXT_shared_texture_palette extension, Quake will use
 8bit textures instead.  This results in using half the needed texture memory
 of 16bit texture and can improve performance.  This is very little difference
 in visual quality due to the fact that the textures are 8bit sources to
@@ -152,6 +134,9 @@ novelty features
 These are some rendering tricks that were easy to do in glquake.  They aren't 
 very robust, but they are pretty cool to look at.
 
+r_volfog .0009
+Currently use with wateralpha .3 to try out the fog effect on water
+surfaces.  This will eventually lead to volumetric fog, stay tuned.
 
 r_waterripple 5
 Produces waves in the water surfaces.
@@ -171,9 +156,9 @@ processed maps.  0.3 is very faint, almost like fog.  1 is completely solid
 (the default).  Unfortunately, the standard quake maps don't contain any 
 visibility information for seeing past water surfaces, so you can't just play 
 quake with this turned on.  If you just want to see what it looks like, you 
-can set "r_novis 1", but that will make things go very slow.  When I get a 
-chance, I will probably release some maps that have been processed properly 
-for this.
+can set "r_novis 1", but that will make things go very slow.  You can find
+tools for created properly vis'ed maps that will run quickly with this
+turned on.
 
 r_mirroralpha 
 Has been removed in Quakeforge until has been rewritten, due to poor
