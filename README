@@ -1,0 +1,6 @@
+This is the current CVS source for QuakeForge, our tree for the future
+unification of the Quake and QuakeWorld sources. I wish I could say more, but
+we're currently working hard on getting the original Quake to compile under the
+merged tree. Once it's compiling and running in the current state, merging and
+enhancement will continue. :)
+				-- Deek (d2deek@pmail.net)
