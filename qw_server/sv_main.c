@@ -1436,6 +1436,7 @@ void SV_InitLocal (void)
 	Cmd_AddCommand ("removeip", SV_RemoveIP_f);
 	Cmd_AddCommand ("listip", SV_ListIP_f);
 	Cmd_AddCommand ("writeip", SV_WriteIP_f);
+	Cmd_AddCommand ("maplist", COM_Maplist_f);
 
 	for (i=0 ; i<MAX_MODELS ; i++)
 		snprintf(localmodels[i], sizeof(localmodels[i]), "*%i", i);

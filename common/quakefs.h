@@ -55,5 +55,6 @@ void COM_CreatePath (char *path);
 void COM_Gamedir (char *dir);
 void COM_InitFilesystem (void);
 void COM_Path_f (void);
+void COM_Maplist_f (void);
 
 #endif // _QUAKEFS_H

@@ -132,7 +132,6 @@ cvar_t	*cl_talksound;
 
 extern cvar_t	*sys_nostdout;
 
-extern void COM_Maplist_f (void);
 cvar_t	*localid;
 
 #ifdef QUAKEWORLD
