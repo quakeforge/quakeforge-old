@@ -1028,7 +1028,7 @@ R_RenderView ( void ) {
 	                glFogi (GL_FOG_MODE, GL_EXP2);
         	        glFogfv (GL_FOG_COLOR, colors);
 // fixme: GL_FOG_DENSITY should have r_volfog_density var
-			glFogf (GL_FOG_DENSITY, .0005);
+			glFogf (GL_FOG_DENSITY, r_volfog->value);
 		
                 glEnable(GL_FOG);
 		R_DrawWaterSurfaces();
