@@ -63,11 +63,11 @@ soft_targets  = $(X11QUAKE) $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(MGLQUAKE) \
 	$(VGAQUAKE)
 gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
 lib_targets   = $(COMMON_LIB)
-targets       = $(lib_targets) $(gl_targets) $(soft_targets)
-CLEAN_TARGETS = $(patsubst %,clean-%, $(gl_targets) $(soft_targets))
-.PHONY: $(targets) $(CLEAN_TARGETS) clean-soft clean-gl
+targets       = $(gl_targets) $(soft_targets)
+CLEAN_TARGETS = $(patsubst %,clean-%, $(lib_targets) $(targets))
+.PHONY: $(lib_targets) $(targets) $(CLEAN_TARGETS) clean-soft clean-gl
 
-all: $(targets)
+all: $(lib_targets) $(targets)
 
 ########################################################################
 #

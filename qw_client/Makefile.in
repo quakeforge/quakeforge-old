@@ -65,11 +65,11 @@ endif
 soft_targets  = $(SVGAQUAKE) $(GGIQUAKE) $(SDLQUAKE) $(X11QUAKE) $(MGLQUAKE)
 gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
 lib_targets   = $(COMMON_LIB)
-targets       = $(lib_targets) $(soft_targets) $(gl_targets)
-CLEAN_TARGETS = $(patsubst %,clean-%, $(soft_targets) $(gl_targets))
-.PHONY: $(targets) $(CLEAN_TARGETS)
+targets       = $(soft_targets) $(gl_targets)
+CLEAN_TARGETS = $(patsubst %,clean-%, $(lib_targets) $(targets))
+.PHONY: $(lib_targets) $(targets) $(CLEAN_TARGETS)
 
-all: $(targets)
+all: $(lib_targets) $(targets)
 ########################################################################
 #
 # Source files

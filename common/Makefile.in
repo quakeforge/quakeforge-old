@@ -3,10 +3,18 @@
 # Quake general stuff
 #
 
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+datadir = @datadir@
+
 top_builddir	= ..
-PROJECT_DIR	:= @top_srcdir@
+PROJECT_DIR	:= ${top_srcdir}
 BIN_PREFIX	:= common
-SRC_DIR		:= @srcdir@
 MODULE		:= common
 OBJ_PATTERN	= $(BUILD_DIR)/sound_lib/%.o $(BUILD_DIR)/common_lib/%.o
 
@@ -15,11 +23,11 @@ include $(top_builddir)/Rules.mk
 SOUND_LIB	:= sound_lib.a
 
 lib_targets   = $(SOUND_LIB) $(CD_LIB) $(COMMON_LIB)
-targets       = $(lib_targets)
-CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
-.PHONY: $(targets) $(CLEAN_TARGETS)
+targets       =
+CLEAN_TARGETS = $(patsubst %,clean-%, $(lib_targets) $(targets))
+.PHONY: $(lib_targets) $(targets) $(CLEAN_TARGETS)
 
-all: $(targets)
+all: $(lib_targets) $(targets)
 ########################################################################
 #
 # Source files
