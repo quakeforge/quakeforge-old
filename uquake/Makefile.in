@@ -268,7 +268,7 @@ $(COMMON_LIB): common_lib_DIR $(BUILD_DIR)/common_lib.a
 
 $(BUILD_DIR)/common_lib.a: $(ALL_COMMON_LIB_OBJS)
 	ar cru $@ $(ALL_COMMON_LIB_OBJS)
-	ranlib $@
+	@RANLIB@ $@
 
 # X11 software target
 

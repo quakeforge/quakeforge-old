@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // sys_unix.c -- Unix system driver
 
 #include "quakedef.h"
+#include "sys.h"
 #include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -172,6 +173,31 @@ int Sys_FileWrite (int handle, void *data, int count)
 	Sys_Error( "Attempted to write to read-only file %d!\n", handle );
     return fwrite (data, 1, count, sys_handles[handle].hFile);
 }
+
+void Sys_DebugLog(char *file, char *fmt, ...) {
+
+	va_list argptr; 
+	static char data[1024];
+	FILE *stream;
+	unsigned char *p;
+	//int fd;
+    
+	va_start(argptr, fmt);
+	vsnprintf(data, sizeof(data), fmt, argptr);
+	va_end(argptr);
+// fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
+	stream = fopen(file, "a");
+	for (p = (unsigned char *) data; *p; p++) {
+	    putc(trans_table[*p], stream);
+	}
+	fclose(stream);
+	/*
+	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	write(fd, data, strlen(data));
+	close(fd);
+	*/
+}
+
 
 /*
 ===============================================================================
