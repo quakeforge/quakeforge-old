@@ -312,6 +312,18 @@ void SV_SpawnServer (char *server)
 	Mod_ClearAll ();
 	Hunk_FreeToLowMark (host_hunklevel);
 
+//
+// make cvars consistant
+//
+	if (coop->value)
+		Cvar_Set ("deathmatch", "0");
+	current_skill = (int)(skill->value + 0.5);
+	if (current_skill < 0)
+		current_skill = 0;
+	if (current_skill > 3)
+		current_skill = 3;
+	Cvar_Set ("skill", va("%d", (int)current_skill));
+
 	// wipe the entire per-level structure
 	memset (&sv, 0, sizeof(sv));
 
