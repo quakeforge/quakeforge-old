@@ -1061,20 +1061,15 @@ void M_SinglePlayer_Key (key) {
 #define STAT_Y 122
 
 int m_multip_cursor=0;
-int m_multip_mins;
-int m_multip_maxs;
+int m_multip_mins=0;
+int m_multip_maxs=10;
 int m_multip_horiz;
-int m_multip_state;
 
 void M_Menu_MultiPlayer_f (void) {
 	key_dest = key_menu;
 	m_entersound = true;
 	m_state = m_multiplayer;
-//	m_multip_cursor = 0;
-	m_multip_mins = 0;
-	m_multip_maxs = 10;
 	m_multip_horiz = 0;
-	m_multip_state = 0;
 }
 
 void M_MultiPlayer_Draw (void) {
