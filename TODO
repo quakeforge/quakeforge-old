@@ -24,13 +24,14 @@ to quake-devel@lists.sourceforge.net with details.
    main tree)
  * Add currently removed documentation to the README, and also add more
    information to explain things that we've done, or broken.
- * Poke Deek.
  * Prep Aftershock for a future merge with the main tree.
  * Add localized volumetric fog, water, etc.
  * Implement a wind (airflow) engine.
  * Add a more modern portal engine.
  * Add cloudy skies, using the wind and fog engines
  * Add some flags to the setup menu, ie. gl_ztrick and +mlook
+ * Add gl_ztrick to the cvars saved in config.cfg
  * Allow more video and bpp modes
  * Make every object depend on dead-reckoning for network play, ie. no
    "moving entities"
+ * Add XInput stuff
