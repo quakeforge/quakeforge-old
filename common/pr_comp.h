@@ -22,6 +22,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // this file is shared by quake and qcc
 
+#ifndef _PR_COMP_H
+#define _PR_COMP_H
+
 typedef enum {ev_void, ev_string, ev_float, ev_vector, ev_entity, ev_field, ev_function, ev_pointer} etype_t;
 
 
@@ -177,3 +180,4 @@ typedef struct
 	int		entityfields;
 } dprograms_t;
 
+#endif // _PR_COMP_H

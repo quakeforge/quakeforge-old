@@ -214,7 +214,7 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 #
 DEFS         = @DEFS@
 CFLAGS       = @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) \
--I$(COMMON_ODIR) -I$(COMMON_DIR)
+-I$(COMMON_ODIR) -I$(COMMON_DIR) -DUQUAKE
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
 	   $(SYS_SRC) chasecam.c world.c $(SRV_PR_SRC) \

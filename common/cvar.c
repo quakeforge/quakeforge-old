@@ -22,18 +22,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // cvar.c -- dynamic variable tracking
 
+#include <zone.h>
 #include "qtypes.h"
+#include "qstructs.h"
 #include "lib_replace.h"
 #include "console.h"
-#include "common.h"
 #include "cmd.h"
 #include "client.h"
-
-#ifdef SERVERONLY 
-#include "qwsvdef.h"
-#else
-#include "quakedef.h"
+#ifdef UQUAKE
+#include "server.h"
 #endif
+#include <string.h>
 
 cvar_t	*cvar_vars;
 char	*cvar_null_string = "";
@@ -124,6 +123,7 @@ void SV_SendServerInfoChange(char *key, char *value);
 Cvar_Set
 ============
 */
+#if defined(QUAKEWORLD)
 void Cvar_Set (char *var_name, char *value)
 {
 	cvar_t	*var;
@@ -160,6 +160,33 @@ void Cvar_Set (char *var_name, char *value)
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
 }
+#elif defined(UQUAKE)
+void Cvar_Set (char *var_name, char *value)
+{
+	cvar_t	*var;
+	qboolean changed;
+	
+	var = Cvar_FindVar (var_name);
+	if (!var)
+	{	// there is an error in C code if this happens
+		Con_Printf ("Cvar_Set: variable %s not found\n", var_name);
+		return;
+	}
+
+	changed = Q_strcmp(var->string, value);
+	
+	Z_Free (var->string);	// free the old value string
+	
+	var->string = Z_Malloc (Q_strlen(value)+1);
+	Q_strcpy (var->string, value);
+	var->value = Q_atof (var->string);
+	if (var->server && changed)
+	{
+		if (sv.active)
+			SV_BroadcastPrintf ("\"%s\" changed to \"%s\"\n", var->name, var->string);
+	}
+}
+#endif
 
 /*
 ============

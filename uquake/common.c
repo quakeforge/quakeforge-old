@@ -22,8 +22,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // common.c -- misc functions used in client and server
 
-#include "quakedef.h"
 #include <string.h>
+#include <qtypes.h>
+#include <qdefs.h>
+#include <cvar.h>
+#include <quakefs.h>
+#include <common.h>
+#include <net.h>
+#include <zone.h>
+#include <sys.h>
+#include <qendian.h>
+#include <console.h>
+#include <cmd.h>
+#include <stdarg.h>
+#include <lib_replace.h>
+
 
 #define NUM_SAFE_ARGVS  7
 

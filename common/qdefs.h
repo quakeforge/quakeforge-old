@@ -25,13 +25,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdio.h>
 #include <sys/types.h>
 
-#define MAX_QPATH	64
+#define MAX_QPATH		64
 #define MAX_CL_STATS	32
-#define NUM_CSHIFTS	4
-#define MAX_MODELS 256
-#define MAX_SOUNDS 256
+#define NUM_CSHIFTS		4
+#define MAX_MODELS		256
+#define MAX_SOUNDS		256
 #define MAX_SCOREBOARDNAME 32
-#define MAX_NUM_ARGVS 50
-#define NUM_SAFE_ARGVS 7
+#define MAX_NUM_ARGVS	50
+#define NUM_SAFE_ARGVS	7
+#define MAX_STYLESTRING	64
+#define MAX_EDICTS		768
+#define MAX_LIGHTSTYLES	64
+#define MAX_DATAGRAM	1450
+#define MAX_MSGLEN		1450
+
+#define clc_stringcmd	4
 
 #endif // _QDEFS_H

@@ -19,6 +19,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // server.h
 
+#include <qtypes.h>
+#include <progs.h>
+#include <setjmp.h>
+
 typedef struct
 {
 	int			maxclients;
