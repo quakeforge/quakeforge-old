@@ -16,16 +16,6 @@ all: Makefile
 	$(MAKE) -C $$dir $@ || exit; \
 	done
 
-Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
-
-config.status: $(srcdir)/configure
-	$(SHELL) ./config.status --recheck
-
-$(srcdir)/configure: $(srcdir)/configure.in
-		(cd $(srcdir) && autoconf || true)
-
 distclean:
 	rm -f config.cache config.log config.status Makefile
 	rm -f common/config.h
@@ -57,16 +47,17 @@ changelog:
 
 # Code to automatically re-configure, only runs if you are compiling in the
 # source directory
-ifeq ($(srcdir),.)
-configure: configure.in acconfig.h
-	./bootstrap
+
+config.status: $(srcdir)/configure
+	$(SHELL) ./config.status --recheck
+
+$(srcdir)/configure: $(srcdir)/configure.in $(srcdir)/acconfig.h
+		(cd $(srcdir) && ./bootstrap || true)
 
 CONFIG_SRC    = Makefile.in Rules.mk.in qw_client/Makefile.in \
 		qw_server/Makefile.in uquake/Makefile.in common/Makefile.in \
 		rpm/build_rpm.in rpm/quakeforge.spec.in
 
-$(patsubst %.in,%,$(CONFIG_SRC)): configure $(CONFIG_SRC)
+$(patsubst %.in,%,$(CONFIG_SRC)): configure $(patsubst %.in,$(srcdir)/%.in,$(CONFIG_SRC))
 	$(SHELL) ./config.status --recheck
 	$(SHELL) ./config.status
-
-endif
