@@ -323,6 +323,8 @@ int main (int argc, char **argv)
     parms.basedir = ".";
     parms.cachedir = NULL;
 
+    signal(SIGFPE, SIG_IGN);
+
     COM_InitArgv (argc, argv);
 
     parms.argc = com_argc;
