@@ -18,225 +18,247 @@ AC_ARG_ENABLE(release,
 )
 AC_SUBST(RELEASE)
 
-dnl Checks for OGL support
-AC_ARG_WITH(opengl,
-[  --with-opengl=DIR       use OpenGL with libraries found in DIR],
-[HAS_OGL_LIB=yes; OGL_LIB_PATH=$enable_OpenGLLIB;
-   OGL_LDFLAGS=-L$enable_OpenGLLIB])
-AC_SUBST(OGL_LDFLAGS)
-
-AC_ARG_WITH(opengl-includes,
-[  --with-opengl-includes=DIR
-                          use OpenGL with header files found in DIR],
-HAS_OGL_INC=yes; OGL_INC_PATH=$enable_OpenGLINC; OGL_CFLAGS=-Wall -I$enable_OpenGLINC)
-AC_SUBST(OGL_CFLAGS)
-
-dnl Check for X first...
+dnl Checks for X11 support
 AC_PATH_XTRA
-AC_SUBST(x_libraries)
-AC_SUBST(x_includes)
 if test "x$no_x" = x; then
-HAS_X11=yes
+   HAS_X11=yes
    if test "x$x_libraries" != x; then
       X_LIB_PATH_L=-L${x_libraries};
    else
       X_LIB_PATH_L=
    fi
    AC_CHECK_LIB(Xext, XShmQueryExtension, [X11_SHM_LIB=-lXext],
-                [X11_SHM_LIB=], ${X_LIB_PATH_L})
-   AC_SUBST(X11_SHM_LIB)
+     [X11_SHM_LIB=""], ${X_LIB_PATH_L})
 fi
-AC_SUBST(HAS_X11)
+
+dnl Check for DGA support
+AC_ARG_ENABLE(DGA,
+[  --enable-DGA            use XFree86 DGA extension, if available],
+HAS_DGA=$enableval, HAS_DGA=auto)
+if test "x$HAS_DGA" != xno; then
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+   AC_CHECK_HEADER(X11/extensions/xf86dga.h, HAS_DGA=yes, HAS_DGA=no)
+   CPPFLAGS="$save_CPPFLAGS"
+fi
 
 
-if test "x$HAS_OGL_LIB" = x; then
-AC_CHECK_LIB(GL, glColor4f, [HAS_OGL_LIB=yes],
-   AC_CHECK_LIB(MesaGL, glColor4f, [HAS_OGL_LIB=yes],
-   if test "x$HAS_OGL_LIB" != xyes; then
-      POSS_OGL_LDFLAGS=`echo $enable_OpenGLINC| sed 's/include/lib/i'`;
-      AC_MSG_CHECKING(for $POSS_OGL_LDFLAGS/libGL.so)
-      if test -f "$POSS_OGL_LDFLAGS"/libGL.so; then
-	 AC_MSG_RESULT(yes)
-	 HAS_OGL_LIB=yes
-	 OGL_LDFLAGS=-L$POSS_OGL_LDFLAGS
-	 OGL_LIB_PATH=$POSS_OGL_LDFLAGS
-      else
-         AC_MSG_RESULT(no)
-         if test "x$x_libraries" != x; then
-	    AC_MSG_CHECKING(for $x_libraries/libGL.so)
-	    if test -f "$x_libraries"/libGL.so; then
-	       AC_MSG_RESULT(yes)
-	       HAS_OGL_LIB=yes
-	       OGL_LDFLAGS=-L$x_libraries
-	       OGL_LIB_PATH=$x_libraries
-	    else
-	       AC_MSG_RESULT(no)
-	    fi
-	 fi
-      fi
+dnl Checks for SVGALib support
+SVGA_CFLAGS=""
+SVGA_LIBS=""
+AC_ARG_WITH(svga,
+[  --with-svga=DIR         use SVGALib found in DIR],
+HAS_SVGA=$withval, HAS_SVGA=auto)
+if test "x$HAS_SVGA" != xno; then
+   if test "x$HAS_SVGA" != xauto; then
+      SVGA_CFLAGS="-I$withval/include"
+      SVGA_LIBS="-L$withval/lib"
+   dnl The default system location is /usr/include or /usr/local/include
+   dnl and we (obviously) don't need to set CFLAGS for that
    fi
-   )
-)
-fi
-
-if test "x$HAS_OGL_INC" = x; then
-   AC_CHECK_HEADER(GL/gl.h, [HAS_OGL_INC=yes],
-   if test "x$HAS_OGL_LIB" != x; then
-      if test "x$x_includes" != x; then
-         AC_MSG_CHECKING(for $x_includes/GL/gl.h)
-	 if test -f "$x_includes"/GL/gl.h; then
-	    HAS_OGL_INC=yes
-	    OGL_CFLAGS="-Wall -I$x_includes"
-	    OGL_INC_PATH=$x_includes
-	    AC_MSG_RESULT(yes)
-	 else
-	    POSS_OGL_CFLAGS=`echo $enable_OpenGLLIB| sed 's/lib/include/i'`;
-            AC_MSG_CHECKING(for $POSS_OGL_CFLAGS/GL/gl.h)
-	    if test -f "$POSS_OGL_CFLAGS/GL/gl.h"; then
-	       HAS_OGL_INC=yes
-	       OGL_CFLAGS="-Wall -I$POSS_OGL_CFLAGS"
-	       OGL_INC_PATH=$POSS_OGL_CFLAGS
-	       AC_MSG_RESULT(yes)
-            else
-	       AC_MSG_RESULT(no)
-	    fi
-         fi
-      fi
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $SVGA_CFLAGS"
+   AC_CHECK_HEADER(vga.h, HAS_SVGA=yes, HAS_SVGA=no)
+   if test "x$HAS_SVGA" != xyes; then
+        HAS_TDFXGL=no
    fi
-   )
+   CPPFLAGS="$save_CPPFLAGS"
 fi
 
-AC_MSG_CHECKING(for OpenGL support)
-if test "x$HAS_OGL_INC" != x; then
-    if test "x$HAS_OGL_LIB" != x; then
-	HAS_OGL=yes
-	if test "x$OGL_CFLAGS" != x; then
-	    AC_MSG_RESULT([yes, libraries $OGL_LDFLAGS, headers $OGL_CFLAGS])
-	else
-	    AC_MSG_RESULT(yes)
-	fi
-	if test "x$OGL_LDFLAGS" = x-L; then
-	    AC_MSG_ERROR(OpenGL LDFLAGS is -L with no directory)
-	fi
-	if test "x$OGL_INC_PATH" != x; then
-	    OGL_INC_PATH_TO_GL="$OGL_INC_PATH/GL/gl.h"
-	else
-	    OGL_INC_PATH_TO_GL="GL/gl.h"
-	fi
-	AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT)
-	AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
-			[ int x = (int) GL_COLOR_INDEX8_EXT;],
-			HAVE_GL_COLOR_INDEX8_EXT=yes,
-			HAVE_GL_COLOR_INDEX8_EXT=no)
-	if test "x$HAVE_GL_COLOR_INDEX8_EXT" != xno; then
-	    AC_MSG_RESULT(yes)
-	    AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, 1)
-	else
-	    AC_MSG_RESULT(no)
-	fi
-
-	AC_MSG_CHECKING(for GLAPIENTRY)
-	AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
-			[ int x = GLAPIENTRY printf("");],
-			HAS_GLAPIENTRY=yes,
-			HAS_GLAPIENTRY=no)
-	if test "x$HAS_GLAPIENTRY" != xno; then
-	    AC_MSG_RESULT(yes)
-	else
-	    AC_MSG_RESULT(no)
-
-	    AC_MSG_CHECKING(for APIENTRY)
-	    AC_TRY_COMPILE([#include "$OGL_INC_PATH_TO_GL"],
-			    [ int x = APIENTRY printf("");],
-			    HAS_APIENTRY=yes,
-			    HAS_APIENTRY=no)
-	    if test "x$HAS_APIENTRY" != xno; then
-		AC_MSG_RESULT(yes)
-		AC_DEFINE(GLAPIENTRY_IS_APIENTRY, 1)
-	    else
-		AC_MSG_RESULT(no)
-	    fi
-	fi
-
-    else
-	AC_MSG_RESULT(no)
-    fi
-else
-    AC_MSG_RESULT(no)
-fi
-AC_SUBST(HAS_OGL)
-AC_SUBST(HAS_APIENTRY)
-AC_SUBST(HAS_GLAPIENTRY)
-
-dnl Check for other libraries
-AC_CHECK_LIB(vga, vga_getmousetype, [HAS_VGA=yes], [HAS_VGA=])
-AC_SUBST(HAS_VGA)
-AC_CHECK_LIB(xil,xil_import, [HAS_XIL=yes], [HAS_XIL=])
-AC_SUBST(HAS_XIL)
 
 dnl Checks for GLIDE support
-dnl this rule lifted almost wholesale from Mesa
 GLIDE_CFLAGS=""
-GLIDE_LDFLAGS=""
+GLIDE_LIBS=""
 AC_ARG_WITH(glide,
 [  --with-glide=DIR        use the GLIDE 2.x SDK found in DIR],
-HAS_GLIDE=$withval, HAS_GLIDE=auto
-)
+HAS_GLIDE=$withval, HAS_GLIDE=auto)
 if test "x$HAS_GLIDE" != xno; then
    if test "x$HAS_GLIDE" != xauto; then
       GLIDE_CFLAGS="-I$withval/include"
-      GLIDE_LDFLAGS="-L$withval/lib"
+      GLIDE_LIBS="-L$withval/lib"
+   else
+      GLIDE_CFLAGS="-I/usr/include/glide -I/usr/local/include/glide"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $GLIDE_CFLAGS"
    AC_CHECK_HEADER(glide.h, HAS_GLIDE=yes, HAS_GLIDE=no)
    if test "x$HAS_GLIDE" != xyes; then
-      CPPFLAGS="$save_CPPFLAGS -I/usr/include/glide -I/usr/local/include/glide"
-      AC_CHECK_HEADER(glide/glide.h,
-	GLIDE_CFLAGS="-I/usr/include/glide -I/usr/local/include/glide"
-	HAS_GLIDE=yes)
+	HAS_GLIDE=no
    fi
    CPPFLAGS="$save_CPPFLAGS"
-   if test "x$HAS_GLIDE" = xyes; then
-      AC_CHECK_LIB(glide2x, main, GLIDE_LDFLAGS="$GLIDE_LDFLAGS -lglide2x"
-        HAS_GLIDE=yes, HAS_GLIDE=no, -lm)
-      LIBS="$save_LIBS"
+fi
+
+dnl Checks for OGL support
+OGL_CFLAGS=""
+OGL_LIBS=""
+dnl GL is a special case, we need seperate includes/libs entires
+AC_ARG_WITH(opengl,
+[  --with-opengl=DIR       use OpenGL with libraries found in DIR],
+HAS_OGL=$withval, HAS_OGL=auto)
+AC_ARG_WITH(opengl-includes,
+[  --with-opengl-includes=DIR
+                          use OpenGL with header files found in DIR],
+OGL_INCLUDES=$withval, OGL_INCLUDES=auto)
+if test "x$OGL_INCLUDES" = xno; then
+   HAS_OGL="no"
+fi
+if test "x$HAS_OGL" != xno; then
+   if test "x$HAS_OGL" != xauto; then
+      OGL_LIBS="-L$HAS_OGL"
    fi
-   if test "x$HAS_GLIDE" != xyes; then
-     GLIDE_CFLAGS="" GLIDE_LIBS=""
+   if test "x$OGL_INCLUDES" != xauto; then
+      OGL_CFLAGS="-I$OGL_INCLUDES"
+   else
+      OGL_CFLAGS="-I/usr/local/include -I$x_includes"
+   fi
+   save_CPPFLAGS="$CPPFLAGS"
+   CPPFLAGS="$CPPFLAGS $OGL_CFLAGS"
+   AC_CHECK_HEADER(GL/gl.h, HAS_OGL=yes, HAS_OGL=no)
+   if test "x$HAS_OGL" != no; then
+      AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT in GL/gl.h)
+      AC_TRY_COMPILE([#include "GL/gl.h"],
+        [ int x = (int) GL_COLOR_INDEX8_EXT;],
+        HAS_INDEX8=1 AC_MSG_RESULT(yes),
+        HAS_INDEX8=0 AC_MSG_RESULT(no))
+
+      AC_MSG_CHECKING(for GLAPIENTRY in GL/gl.h)
+      AC_TRY_COMPILE([#include "GL/gl.h"],
+        [ int x = GLAPIENTRY printf("");],
+        HAS_GLAPIENTRY=yes, HAS_GLAPIENTRY=no)
+      if test "x$HAS_GLAPIENTRY" != xno; then
+         AC_MSG_RESULT(yes)
+      else
+         AC_MSG_RESULT(no)
+      
+         AC_TRY_COMPILE([#include "GL/gl.h"],
+           [ int x = APIENTRY printf("");],
+	   HAS_APIENTRY=1 AC_MSG_RESULT(yes),
+	   HAS_APIENTRY=0 AC_MSG_RESULT(no))
+      fi
+
+      if test "x$HAS_GLIDE" != xno; then
+         CPPFLAGS="$GLIDE_CFLAGS $CPPFLAGS"
+         AC_CHECK_HEADER(GL/fxmesa.h, HAS_FXMESA=yes, HAS_FXMESA=no)
+      fi
+   fi
+   CPPFLAGS="$save_CPPFLAGS"
+fi
+
+dnl Make sure DGA works
+if test "x$HAS_DGA" = xyes; then
+   save_LIBS="$LIBS"
+   LIBS="$X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS"
+   AC_CHECK_LIB(Xxf86dga, XF86DGAQueryVersion,,
+     HAS_DGA=no)
+   AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,,
+     HAS_DGA=no)
+   LIBS="$save_LIBS"
+   DGA_LIBS="-lXxf86dga -lXxf86vm"
+fi
+if test "x$USE_DGA" != xyes; then
+   USE_DGA=no DGA_LIBS=""
+fi
+
+dnl Make sure -lvga works
+if test "x$HAS_SVGA" = xyes; then
+   save_LIBS="$LIBS"
+   LIBS="$SVGA_LIBS $LIBS"
+   AC_CHECK_LIB(vga, vga_getmousetype, SVGA_LIBS="$SVGA_LIBS -lvga"
+     HAS_VGA=yes, HAS_VGA=no, [$LIBS $SVGA_LIBS])
+   LIBS="$save_LIBS"
+fi 
+if test "x$HAS_SVGA" != xyes; then
+   SVGA_CFLAGS="" SVGA_LIBS=""
+fi
+
+
+dnl Make sure -lglide2x works
+if test "x$HAS_GLIDE" = xyes; then
+   AC_CHECK_LIB(glide2x, main, GLIDE_LIBS="$GLIDE_LIBS -lglide2x"
+     HAS_GLIDE=yes, HAS_GLIDE=no, [$GLIDE_LIBS -lm])
+fi
+if test "x$HAS_GLIDE" != xyes; then
+   GLIDE_CFLAGS="" GLIDE_LIBS=""
+fi
+
+dnl Make sure -lGL or -lMesaGL works
+if test "x$HAS_OGL" = xyes; then
+   AC_CHECK_LIB(GL, glColor4f, OGL_LIBS="$OGL_LIBS -lGL"
+     HAS_OGL=yes, HAS_OGL=no, [$OGL_LIBS])
+   if test "x$HAS_OGL" != xyes; then
+      AC_CHECK_LIB(MesaGL, glColor4f, OGL_LIBS="$OGL_LIBS -lMesaGL"
+        HAS_OGL=yes, HAS_OGL=no, [$OGL_LIBS])
    fi
 fi
-AC_SUBST(HAS_GLIDE)
-AC_SUBST(GLIDE_CFLAGS)
-AC_SUBST(GLIDE_LDFLAGS)
+if test "x$HAS_OGL" != xyes; then
+   OGL_CFLAGS="" OGL_LIBS="" HAS_APIENTRY=0
+fi
 
-TDFXGL_LDFLAGS=""
+dnl Check for other libraries
+AC_CHECK_LIB(m, pow, HAS_M=yes, HAS_M=no)
+if test "x$HAS_M" != xyes; then
+  AC_MSG_ERROR([math library (-lm) appears broken])
+fi
+AC_CHECK_LIB(xil,xil_import, HAS_XIL=yes, HAS_XIL=no)
+AC_SUBST(HAS_XIL)
+
+TDFXGL_CFLAGS=""
+TDFXGL_LIBS=""
+TDFXGL_NAME=""
 AC_ARG_WITH(3dfxgl,
 [  --with-3dfxgl=DIR       use 3Dfx MiniGL library found in DIR],
-HAS_TDFXGL=$withval, HAS_TDFXGL=auto
-)
+HAS_TDFXGL=$withval, HAS_TDFXGL=auto)
+AC_ARG_WITH(3dfxgl-name,
+[  --with-3dfxgl-name=NAME
+                          use -lNAME instead of -l3dfxgl],
+TDFXGL_NAME=$withval, TDFXGL_NAME=3dfxgl)
 if test "x$HAS_TDFXGL" != xno; then
    if test "x$HAS_TDFXGL" != xauto; then
-      TDFXGL_LDFLAGS="-L$withval"
+      TDFXGL_LIBS="-L$withval"
    fi
-   dnl FIX: is it safe to assume test has -o ?
    if test "x$HAS_GLIDE" != x; then
       if test "x$HAS_OGL" != x; then
          if test "x$HAS_VGA" != x; then
-	    save_LIBS="$LIBS"
-	    AC_CHECK_LIB(3dfxgl, glColor4f, HAS_TDFXGL=yes, HAS_TDFXGL=, -lglide2x)
+	    AC_CHECK_LIB($TDFXGL_NAME, glColor4f, 
+	      HAS_TDFXGL=yes, HAS_TDFXGL=no, [$GLIDE_LIBS $TDFXGL_LIBS])
 	 fi
       fi
    fi
 fi
 if test "x$HAS_TDFXGL" = xyes; then
-   TDFXGL_LDFLAGS="$TDFXGL_LDFLAGS -l3dfxgl"
+   AC_DEFINE(HAS_TDFXGL,1)
+   TDFXGL_CFLAGS="$GLIDE_CFLAGS"
+   TDFXGL_LIBS="$TDFXGL_LIBS $GLIDE_LIBS -l$TDFXGL_NAME"
 else
-   TDFXGL_LDFLAGS="$TDFXGL_LDFLAGS -lGL"
+   TDFXGL_NAME=""
+   TDFXGL_LIBS=""
    HAS_TDFXGL="no"
 fi
 AC_SUBST(HAS_TDFXGL)
-AC_SUBST(TDFXGL_LDFLAGS)
+AC_SUBST(TDFXGL_CFLAGS)
+AC_SUBST(TDFXGL_LIBS)
+
+
+AC_SUBST(X_LIBS)
+AC_SUBST(X_CFLAGS)
+AC_SUBST(X11_SHM_LIB)
+AC_SUBST(HAS_X11)
+if test "x$HAS_DGA" = xyes; then
+   AC_DEFINE(HAS_DGA,1)
+fi
+AC_SUBST(HAS_DGA)
+AC_SUBST(DGA_LIBS)
+AC_SUBST(HAS_SVGA)
+AC_SUBST(SVGA_CFLAGS)
+AC_SUBST(SVGA_LIBS)
+AC_SUBST(HAS_GLIDE)
+AC_SUBST(GLIDE_CFLAGS)
+AC_SUBST(GLIDE_LIBS)
+AC_SUBST(HAS_OGL)
+AC_SUBST(OGL_CFLAGS)
+AC_SUBST(OGL_LIBS)
+AC_DEFINE(GLAPIENTRY_IS_APIENTRY, $HAS_APIENTRY)
+AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, $HAS_INDEX8)
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL

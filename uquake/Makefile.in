@@ -19,7 +19,7 @@ ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
 
-HAS_VGA    = @HAS_VGA@
+HAS_SVGA   = @HAS_SVGA@
 HAS_GLIDE  = @HAS_GLIDE@
 HAS_TDFXGL = @HAS_TDFXGL@
 HAS_OGL    = @HAS_OGL@
@@ -52,7 +52,7 @@ ifeq ($(HAS_X11),yes)
 X11QUAKE  = $(BIN_PREFIX)-x11
 endif
 
-ifeq ($(HAS_VGA),yes)
+ifeq ($(HAS_SVGA),yes)
 SVGAQUAKE = $(BIN_PREFIX)-svga
 endif
 
@@ -242,8 +242,8 @@ ifneq ($(SVGAQUAKE),)
 ALL_SVGA_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(SVGA_VID_SRC) model.c
 OBJSquake-svga= $(patsubst %,$(BUILD_DIR)/svga/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_SVGA_SRC) .c .s)))
 
-SVGA_CFLAGS  =
-SVGA_LDFLAGS = -lvga -lm
+SVGA_CFLAGS  = @SVGA_CFLAGS@
+SVGA_LDFLAGS = @SVGA_LIBS@
 SVGA_VID_SRC = vid_svgalib.c
 
 # This can be thought of as a macro that makes sure that the x11
@@ -289,8 +289,7 @@ ifneq ($(GLQUAKE),)
 OBJSquake-gl = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_GL_SRC) .c .s)))
 
 GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
-GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LDFLAGS@ -lGL
-# XXX - this is for glx
+GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@
 # XXX - is this platform independent?
 GL_VID_SRC = gl_vidlinuxglx.c
 
@@ -333,8 +332,7 @@ ifneq ($(TDFXQUAKE),)
 OBJSquake-3dfx = $(patsubst %,$(BUILD_DIR)/3dfx/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_TDFX_SRC) .c .s)))
 
 TDFX_CFLAGS  = -I/usr/include/glide -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
-TDFX_LDFLAGS = $(SVGA_LDFLAGS) @GLIDE_LDFLAGS@ @TDFXGL_LDFLAGS@ -ldl
-# XXX - this is for 3dfxgl
+TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@ -ldl
 TDFX_VID_SRC = gl_vidlinux.c
 
 # This can be thought of as a macro that makes sure that the x11
