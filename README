@@ -154,26 +154,32 @@ issues.
 
 Problem:  The screen flickers once about every other frame when using GL
 Solution: Not all GL implementations support a performance hack which is
-	  used by the GL renderer allowing it to avoid clearing the
+          used by the GL renderer allowing it to avoid clearing the
 	  Z-buffer.  The console command "gl_ztrick 0" fixes this problem.
 
+Problem:  On Linux systems, SVGALib-using targets (-svga and -3dfx) can't
+	  be started from within X.
+Solution: Yes, we know.  And if you can figure out why we want you to send
+	  us a patch, please!  In the meantime, use open to start those
+	  targets from within X.  (eg, open -s -- qw-client-svga)
+
 Problem:  Zombies can sometimes get "stuck" in the ground.  They can be
-          heard but not killed making it impossible to get 100% on the
+	  heard but not killed making it impossible to get 100% on the
 	  current level.
 Solution: None found yet.
 
 Problem:  It is possible for players to sometimes get stuck in a room or
-          wall, much like the zombies mentioned above.
+	  wall, much like the zombies mentioned above.
 Solution: The "kill" console command will un-stick you, but it has the
-          unfortunate side effect of killing you in the process (hence
+	  unfortunate side effect of killing you in the process (hence
 	  the command's name.)  It is a good idea to save your games
 	  often.
 
 Problem:  Sometimes during a game the player's view will not center
-          properly.  The end result is that the player view is looking
+	  properly.  The end result is that the player view is looking
 	  up toward the ceiling while walking.
 Solution: Use of freelook (mouse or keyboard) may solve this problem, as
-          will exiting the level or the "kill" console command.
+	  will exiting the level or the "kill" console command.
 
 
 6	Troubleshooting
