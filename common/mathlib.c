@@ -92,11 +92,11 @@ void PerpendicularVector( vec3_t dst, const vec3_t src )
 
 void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees )
 {
-	float	m[3][3];
-	float	im[3][3];
-	float	zrot[3][3];
-	float	tmpmat[3][3];
-	float	rot[3][3];
+	float	m[3][3],
+		im[3][3],
+		zrot[3][3],
+		tmpmat[3][3],
+		rot[3][3];
 	int	i;
 	vec3_t vr, vup, vf;
 
@@ -317,6 +317,7 @@ int VectorCompare (vec3_t v1, vec3_t v2)
 {
 	int		i;
 	
+
 	for (i=0 ; i<3 ; i++)
 		if (v1[i] != v2[i])
 			return 0;
@@ -365,27 +366,16 @@ void CrossProduct (vec3_t v1, vec3_t v2, vec3_t cross)
 	cross[2] = v1[0]*v2[1] - v1[1]*v2[0];
 }
 
-double sqrt(double x);
-
 vec_t Length(vec3_t v)
 {
-	int		i;
-	float	length;
-	
-	length = 0;
-	for (i=0 ; i< 3 ; i++)
-		length += v[i]*v[i];
-	length = sqrt (length);		// FIXME
-
-	return length;
+	return sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
 }
 
 float VectorNormalize (vec3_t v)
 {
 	float	length, ilength;
 
-	length = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-	length = sqrt (length);		// FIXME
+	length = sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 
 	if (length)
 	{
