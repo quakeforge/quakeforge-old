@@ -38,10 +38,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/time.h>
 #endif
 
-// FIXME: use autoconf
-#if defined(unix) || defined(_AIX) || defined(__NetBSD__)
+#ifdef HAVE_ERRNO_H
 #include <errno.h>
-#else
+#endif
+
+#ifdef HAVE_SYS_DIR_H
 #include <sys/dir.h>
 #endif
 
