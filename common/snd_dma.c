@@ -82,28 +82,17 @@ int 		desired_bits = 16;
 
 int sound_started=0;
 
-//cvar_t bgmvolume = {"bgmvolume", "1", CVAR_ARCHIVE};
 cvar_t	*bgmvolume;
-//cvar_t volume = {"volume", "0.7", CVAR_ARCHIVE};
 cvar_t	*volume;
 
-//cvar_t nosound = {"nosound", "0"};
 cvar_t	*nosound;
-//cvar_t precache = {"precache", "1"};
 cvar_t	*precache;
-//cvar_t loadas8bit = {"loadas8bit", "0"};
 cvar_t	*loadas8bit;
-//cvar_t bgmbuffer = {"bgmbuffer", "4096"};
 cvar_t	*bgmbuffer;
-//cvar_t ambient_level = {"ambient_level", "0.3"};
 cvar_t	*ambient_level;
-//cvar_t ambient_fade = {"ambient_fade", "100"};
 cvar_t	*ambient_fade;
-//cvar_t snd_noextraupdate = {"snd_noextraupdate", "0"};
 cvar_t	*snd_noextraupdate;
-//cvar_t snd_show = {"snd_show", "0"};
 cvar_t	*snd_show;
-//cvar_t _snd_mixahead = {"_snd_mixahead", "0.1", CVAR_ARCHIVE};
 cvar_t	*_snd_mixahead;
 
 
@@ -191,8 +180,20 @@ S_Init
 */
 void S_Init (void)
 {
-
 //	Con_Printf("\nSound Initialization\n");
+
+// Always create sound cvars, even with -nosound
+	nosound = Cvar_Get ("nosound","0",CVAR_NONE,"None");
+	volume = Cvar_Get ("volume","0.7",CVAR_ARCHIVE,"None");
+	precache = Cvar_Get ("precache","1",0,"None");
+	loadas8bit = Cvar_Get ("loadas8bit","0",0,"None");
+	bgmvolume = Cvar_Get ("bgmvolume","1",CVAR_ARCHIVE,"None");
+	bgmbuffer = Cvar_Get ("bgmbuffer","4096",0,"None");
+	ambient_level = Cvar_Get ("ambient_level","0.3",0,"None");
+	ambient_fade = Cvar_Get ("ambient_fade","100",0,"None");
+	snd_noextraupdate = Cvar_Get ("snd_noextraupdate","0",0,"None");
+	snd_show = Cvar_Get ("snd_show","0",0,"None");
+	_snd_mixahead = Cvar_Get ("_snd_mixahead","0.1",CVAR_ARCHIVE,"None");
 
 	if (COM_CheckParm("-nosound"))
 		return;
@@ -206,28 +207,6 @@ void S_Init (void)
 	Cmd_AddCommand("soundlist", S_SoundList);
 	Cmd_AddCommand("soundinfo", S_SoundInfo_f);
 
-//	Cvar_RegisterVariable(&nosound);
-	nosound = Cvar_Get ("nosound","0",CVAR_NONE,"None");
-//	Cvar_RegisterVariable(&volume);
-	volume = Cvar_Get ("volume","0.7",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable(&precache);
-	precache = Cvar_Get ("precache","1",0,"None");
-//	Cvar_RegisterVariable(&loadas8bit);
-	loadas8bit = Cvar_Get ("loadas8bit","0",0,"None");
-//	Cvar_RegisterVariable(&bgmvolume);
-	bgmvolume = Cvar_Get ("bgmvolume","1",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable(&bgmbuffer);
-	bgmbuffer = Cvar_Get ("bgmbuffer","4096",0,"None");
-//	Cvar_RegisterVariable(&ambient_level);
-	ambient_level = Cvar_Get ("ambient_level","0.3",0,"None");
-//	Cvar_RegisterVariable(&ambient_fade);
-	ambient_fade = Cvar_Get ("ambient_fade","100",0,"None");
-//	Cvar_RegisterVariable(&snd_noextraupdate);
-	snd_noextraupdate = Cvar_Get ("snd_noextraupdate","0",0,"None");
-//	Cvar_RegisterVariable(&snd_show);
-	snd_show = Cvar_Get ("snd_show","0",0,"None");
-//	Cvar_RegisterVariable(&_snd_mixahead);
-	_snd_mixahead = Cvar_Get ("_snd_mixahead","0.1",CVAR_ARCHIVE,"None");
 
 	if (host_parms.memsize < 0x800000)
 	{
@@ -1027,9 +1006,9 @@ void S_LocalSound (char *sound)
 {
 	sfx_t	*sfx;
 
-	if (nosound->value)
-		return;
 	if (!sound_started)
+		return;
+	if (nosound->value)
 		return;
 		
 	sfx = S_PrecacheSound (sound);
