@@ -1,4 +1,5 @@
 /*
+bothdefs.h - defs common to qw client and server
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -20,7 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-// defs common to client and server
 
 
 #ifndef _BOTHDEFS_H
@@ -104,9 +104,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 // item flags
 //
-#define	IT_SHOTGUN				1
+#define	IT_SHOTGUN			1
 #define	IT_SUPER_SHOTGUN		2
-#define	IT_NAILGUN				4
+#define	IT_NAILGUN			4
 #define	IT_SUPER_NAILGUN		8
 
 #define	IT_GRENADE_LAUNCHER		16
@@ -114,33 +114,79 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	IT_LIGHTNING			64
 #define	IT_SUPER_LIGHTNING		128
 
-#define	IT_SHELLS				256
-#define	IT_NAILS				512
-#define	IT_ROCKETS				1024
-#define	IT_CELLS				2048
+#define	IT_SHELLS			256
+#define	IT_NAILS			512
+#define	IT_ROCKETS			1024
+#define	IT_CELLS			2048
 
-#define	IT_AXE					4096
+#define	IT_AXE				4096
 
-#define	IT_ARMOR1				8192
-#define	IT_ARMOR2				16384
-#define	IT_ARMOR3				32768
+#define	IT_ARMOR1			8192
+#define	IT_ARMOR2			16384
+#define	IT_ARMOR3			32768
 
 #define	IT_SUPERHEALTH			65536
 
-#define	IT_KEY1					131072
-#define	IT_KEY2					262144
+#define	IT_KEY1				131072
+#define	IT_KEY2				262144
 
 #define	IT_INVISIBILITY			524288
 
 #define	IT_INVULNERABILITY		1048576
-#define	IT_SUIT					2097152
-#define	IT_QUAD					4194304
+#define	IT_SUIT				2097152
+#define	IT_QUAD				4194304
 
-#define	IT_SIGIL1				(1<<28)
+#define	IT_SIGIL1			(1<<28)
 
-#define	IT_SIGIL2				(1<<29)
-#define	IT_SIGIL3				(1<<30)
-#define	IT_SIGIL4				(1<<31)
+#define	IT_SIGIL2			(1<<29)
+#define	IT_SIGIL3			(1<<30)
+#define	IT_SIGIL4			(1<<31)
+
+//
+// Rogue changed/added defines
+//
+
+#define RIT_SHELLS			128
+#define RIT_NAILS			256
+#define RIT_ROCKETS			512
+#define RIT_CELLS			1024
+
+#define RIT_AXE				2048
+
+#define RIT_LAVA_NAILGUN		4096
+#define RIT_LAVA_SUPER_NAILGUN		8192
+#define RIT_MULTI_GRENADE		16384
+#define RIT_MULTI_ROCKET		32768
+#define RIT_PLASMA_GUN			65536
+
+#define RIT_ARMOR1			8388608
+#define RIT_ARMOR2			16777216
+#define RIT_ARMOR3			33554432
+
+#define RIT_LAVA_NAILS			67108864
+#define RIT_PLASMA_AMMO			134217728
+#define RIT_MULTI_ROCKETS		268435456
+
+#define RIT_SHIELD			536870912
+#define RIT_ANTIGRAV			1073741824
+#define RIT_SUPERHEALTH			2147483648
+
+
+//
+// Hipnotic added defines
+//
+
+#define HIT_PROXIMITY_GUN_BIT		16
+#define HIT_MJOLNIR_BIT			7
+#define HIT_LASER_CANNON_BIT		23
+#define HIT_WETSUIT_BIT			25
+#define HIT_EMPATHY_SHIELDS_BIT		26
+#define HIT_PROXIMITY_GUN		(1<<HIT_PROXIMITY_GUN_BIT)
+#define HIT_MJOLNIR			(1<<HIT_MJOLNIR_BIT)
+#define HIT_LASER_CANNON		(1<<HIT_LASER_CANNON_BIT)
+#define HIT_WETSUIT			(1<<HIT_WETSUIT_BIT)
+#define HIT_EMPATHY_SHIELDS		(1<<HIT_EMPATHY_SHIELDS_BIT)
+
 
 //
 // print flags

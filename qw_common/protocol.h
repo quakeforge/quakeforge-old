@@ -55,6 +55,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	A2C_CLIENT_COMMAND	'B'	// + command line
 #define	S2M_SHUTDOWN		'C'
 
+// game types sent by serverinfo
+// these determine which intermission screen plays
+#define GAME_COOP		0
+#define GAME_DEATHMATCH		1
 
 //==================
 // note that there are some defs.qc that mirror to these numbers

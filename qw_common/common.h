@@ -1,4 +1,5 @@
 /*
+common.h - general definitions
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,14 +20,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// comndef.h  -- general definitions
 
 #ifndef _COMMON_H
 #define _COMMON_H
 
 #include <bothdefs.h>
 #include <register_check.h>
-#include "qtypes.h"
+#include <qtypes.h>
 
 #define	MAX_INFO_STRING	196
 #define	MAX_SERVERINFO_STRING	512
@@ -43,7 +43,7 @@ typedef struct sizebuf_s
 	int		cursize;
 } sizebuf_t;
 
-#include "net.h"
+#include <net.h>
 void SZ_Clear (sizebuf_t *buf);
 void *SZ_GetSpace (sizebuf_t *buf, int length);
 void SZ_Write (sizebuf_t *buf, void *data, int length);
@@ -87,7 +87,7 @@ void InsertLinkAfter (link_t *l, link_t *after);
 
 //============================================================================
 
-#include "qendian.h"
+#include <qendian.h>
 
 //============================================================================
 
@@ -126,7 +126,7 @@ void MSG_ReadDeltaUsercmd (struct usercmd_s *from, struct usercmd_s *cmd);
 
 //============================================================================
 
-#include "lib_replace.h"
+#include <lib_replace.h>
 
 //============================================================================
 
@@ -156,7 +156,7 @@ char	*va(char *format, ...);
 
 //============================================================================
 
-#include "quakefs.h"
+#include <quakefs.h>
 
 extern qboolean		standard_quake, rogue, hipnotic;
 

@@ -1,4 +1,5 @@
 /*
+sv_main.c - QW main server loop
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -21,7 +22,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include "qwsvdef.h"
+#include <qwsvdef.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -1666,8 +1667,8 @@ SV_Init
 void SV_Init (quakeparms_t *parms)
 {
 	COM_InitArgv (parms->argc, parms->argv);
-	COM_AddParm ("-game");
-	COM_AddParm ("qw");
+//	COM_AddParm ("-game");
+//	COM_AddParm ("qw");
 
 	if (COM_CheckParm ("-minmemory"))
 		parms->memsize = MINIMUM_MEMORY;

@@ -1,4 +1,5 @@
 /*
+gl_draw.c - GL renderer draw routines
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -20,19 +21,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-// draw.c -- this is the only file outside the refresh that touches the
-// vid buffer
-
-#include "qtypes.h"
-#include "quakedef.h"
-#include "cvar.h"
-#include "wad.h"
-#include "glquake.h"
-#include "console.h"
-#include "sbar.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <cvar.h>
+#include <wad.h>
+#include <glquake.h>
+#include <console.h>
+#include <sbar.h>
 #include <sys.h>
 #include <cmd.h>
 #include <lib_replace.h>
+
+#undef HIPFIX
 
 extern unsigned char d_15to8table[65536];
 extern cvar_t crosshair, cl_crossx, cl_crossy, crosshaircolor;
@@ -231,6 +231,7 @@ qpic_t *Draw_PicFromWad (char *name)
 	p = W_GetLumpName (name);
 	gl = (glpic_t *)p->data;
 
+#ifndef HIPFIX
 	// load little ones into the scrap
 	if (p->width < 64 && p->height < 64)
 	{
@@ -255,6 +256,7 @@ qpic_t *Draw_PicFromWad (char *name)
 		pic_texels += p->width*p->height;
 	}
 	else
+#endif
 	{
 		gl->texnum = GL_LoadPicTexture (p);
 		gl->sl = 0;

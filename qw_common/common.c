@@ -1,4 +1,5 @@
 /*
+common.c - misc functions used in client and server
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,19 +21,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// common.c -- misc functions used in client and server
 
 #include <ctype.h>
-#include "common.h"
-#include "crc.h"
-#include "sys.h"
-#include "cmd.h"
-#include "console.h"
+#include <common.h>
+#include <crc.h>
+#include <sys.h>
+#include <cmd.h>
+#include <console.h>
 
 #ifdef SERVERONLY 
-#include "qwsvdef.h"
+#include <qwsvdef.h>
 #else
-#include "quakedef.h"
+#include <quakedef.h>
 #endif
 
 #include "config.h"

@@ -1,4 +1,5 @@
 /*
+cl_main.c - client main loop
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,7 +21,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl_main.c  -- client main loop
 
 /* Will have problems with isspace() when comiling w/ gcc on SGI without this */
 #ifdef sgi
@@ -34,22 +34,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #undef _LINT
 #endif
 
-#include "quakedef.h"
-#include "winquake.h"
-#include "pmove_simple.h"
-#include "qtypes.h"
-#include "client.h"
-#include "menu.h"
-#include "console.h"
-#include "cvar.h"
-#include "mathlib.h"
-#include "keys.h"
-#include "sound.h"
-#include "input.h"
-#include "screen.h"
-#include "view.h"
-#include "sbar.h"
-#include "cdaudio.h"
+#include <quakedef.h>
+#include <winquake.h>
+#include <pmove_simple.h>
+#include <qtypes.h>
+#include <client.h>
+#include <menu.h>
+#include <console.h>
+#include <cvar.h>
+#include <mathlib.h>
+#include <keys.h>
+#include <sound.h>
+#include <input.h>
+#include <screen.h>
+#include <view.h>
+#include <sbar.h>
+#include <cdaudio.h>
 
 #ifdef __sun
 /* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
@@ -57,7 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 #ifdef _WIN32
-#include "winsock.h"
+#include <winsock.h>
 #else
 #include <sys/types.h>
 #include <netinet/in.h>

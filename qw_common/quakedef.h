@@ -1,4 +1,5 @@
 /*
+quakedef.h - primary header for client
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,15 +20,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// quakedef.h -- primary header for client
 
 #ifndef _QW_COMMON_QUAKEDEF_H
 #define _QW_COMMON_QUAKEDEF_H
 
 #include <common_quakedef.h>
 
-#include "bothdefs.h"
-#include "pmove.h"
+#include <bothdefs.h>
+#include <pmove.h>
 
 extern	cvar_t	password;
 

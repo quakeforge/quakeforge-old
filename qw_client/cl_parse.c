@@ -1,4 +1,5 @@
 /*
+cl_parse.c - parse a message received from the server
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,18 +21,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl_parse.c  -- parse a message received from the server
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "model.h"
-#include "pmove.h"
-#include "console.h"
-#include "mathlib.h"
-#include "sound.h"
-#include "cdaudio.h"
-#include "sbar.h"
-#include "screen.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <model.h>
+#include <pmove.h>
+#include <console.h>
+#include <mathlib.h>
+#include <sound.h>
+#include <cdaudio.h>
+#include <sbar.h>
+#include <screen.h>
 #include <cvars.h>
 
 char *svc_strings[] =
@@ -558,6 +558,12 @@ void CL_ParseServerData (void)
 
 	cl.servercount = MSG_ReadLong ();
 
+	// gametype is always GAME_DEATHMATCH in QW
+	cl.gametype = GAME_DEATHMATCH;
+	
+	// maxclients is irrelivant in QW
+	cl.maxclients = 0;
+	
 	// game directory
 	str = MSG_ReadString ();
 
