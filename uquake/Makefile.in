@@ -105,6 +105,7 @@ CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
 SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
 	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
 	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
+XTRA_SND_SRC = snd_mixa.s
 else
 # Source files for non-Intel platforms
 SWREND_SRC_PLAT = nonintel.c
@@ -137,7 +138,7 @@ ifeq ($(SND_STYLE),Windows)
 SND_SRC = snd_dma.c snd_win.c
 endif
 
-SND_SRC        += snd_mem.c snd_mix.c snd_mixa.s
+SND_SRC        += snd_mem.c snd_mix.c $(XTRA_SND_SRC)
 
 # x11 vid
 

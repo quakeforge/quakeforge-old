@@ -47,16 +47,9 @@ static int lastwrite = 0;
 
 qboolean SNDDMA_Init(void)
 {
-	int rc;
-	int fmt;
-	int tmp;
-	int i;
-	char *s;
-	int caps;
-
 	if (snd_inited) {
 		printf("Sound already init'd\n");
-		return;
+		return 0;
 	}
 
 	shm = &sn;
