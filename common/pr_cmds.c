@@ -46,6 +46,8 @@
 #define	RETURN_EDICT(e) (((int *)pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))
 #define	RETURN_STRING(s) (((int *)pr_globals)[OFS_RETURN] = PR_SetString(s))
 
+cvar_t *Cvar_FindAlias (char *alias_name);
+
 /*
 ===============================================================================
 
