@@ -1,17 +1,11 @@
 Steps to compile standalone on win32 platforms with VC++.
 
-1) copy common\wins\*.* common\
+1) Copy scitech\*.* from the original q1source.zip by id Software to
+the quakeforge directory. Or you can get the scitech library from
+http://www.scitechsoft.com/
 
-this will copy math.s, d_polysa.s, and d_parta.s into common
-(note: make sure you have backups of these three files)
+2) Copy config.h from common\wins to common\
 
-it will also copy any other files in that dir that need to be copied
-(note: make backups of the destinations in case you need them)
+3) Compile gas2masm project using Debug configuration.
 
-2) copy uquake\wins\sys_win.c uquake\
-
-Notes:
-
-The VC project files assume a couple of things, i.e, that the workspace is
-in the root quakeforge directory, and that \scitech is directly off the root
-directory, as is \gas2masm\debug.
+4) Compile all the other projects.
