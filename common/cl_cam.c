@@ -1,4 +1,5 @@
 /*
+cl_cam.c - Player camera tracking in Spectator mode
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -13,8 +14,6 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 
-See the included (GNU.txt) GNU General Public License for more details.
-
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -22,20 +21,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 /* ZOID
  *
- * Player camera tracking in Spectator mode
- *
  * This takes over player controls for spectator automatic camera.
  * Player moves as a spectator, but the camera tracks and enemy player
  */
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "winquake.h"
-#include "mathlib.h"
-#include "client.h"
-#include "sbar.h"
-#include "cvar.h"
-#include "console.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <winquake.h>
+#include <mathlib.h>
+#include <client.h>
+#include <sbar.h>
+#include <cvar.h>
+#include <console.h>
 
 #define	PM_SPECTATORMAXSPEED	500
 #define	PM_STOPSPEED	100
