@@ -58,14 +58,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <client.h>
 #include <input.h>
 
-<<<<<<< vid_sunx.c
 //cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t	*_windowed_mouse;
 //cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
 cvar_t	*m_filter;
 
-=======
->>>>>>> 1.27
 static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static int	p_mouse_x, p_mouse_y;
@@ -1149,76 +1146,6 @@ Sys_SendKeyEvents(void)
 	if (x_disp) {
 		while (XPending(x_disp)) GetEvent();
 	}
-}
-
-
-void
-IN_SendKeyEvents (void)
-{
-	Sys_SendKeyEvents ();
-}
-
-void
-IN_Init(void)
-{
-	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE,"None");
-	if (COM_CheckParm("-nomouse")) return;
-	mouse_x = mouse_y = 0.0;
-	mouse_avail = 1;
-}
-
-
-void
-IN_Shutdown(void)
-{
-	mouse_avail = 0;
-}
-
-
-void
-IN_Frame(void)
-{
-	/* Nothing to do here */
-}
-
-
-void
-IN_Move(usercmd_t *cmd)
-{
-	if (!mouse_avail)
-		return;
-   
-	if (m_filter->value) {
-		mouse_x = (mouse_x + old_mouse_x) * 0.5;
-		mouse_y = (mouse_y + old_mouse_y) * 0.5;
-	}
-
-	old_mouse_x = mouse_x;
-	old_mouse_y = mouse_y;
-   
-	mouse_x *= sensitivity->value;
-	mouse_y *= sensitivity->value;
-   
-	if ( (in_strafe.state & 1) || (lookstrafe->value && (in_mlook.state & 1) ))
-		cmd->sidemove += m_side->value * mouse_x;
-	else
-		cl.viewangles[YAW] -= m_yaw->value * mouse_x;
-	if (in_mlook.state & 1)
-		V_StopPitchDrift ();
-   
-	if ( (in_mlook.state & 1) && !(in_strafe.state & 1)) {
-		cl.viewangles[PITCH] += m_pitch->value * mouse_y;
-		if (cl.viewangles[PITCH] > 80)
-			cl.viewangles[PITCH] = 80;
-		if (cl.viewangles[PITCH] < -70)
-			cl.viewangles[PITCH] = -70;
-	} else {
-		if ((in_strafe.state & 1) && noclip_anglehack)
-			cmd->upmove -= m_forward->value * mouse_y;
-		else
-			cmd->forwardmove -= m_forward->value * mouse_y;
-	}
-	mouse_x = mouse_y = 0.0;
 }
 
 void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
