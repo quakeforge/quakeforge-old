@@ -1,13 +1,13 @@
 /*
 	plugin.c
 	
-	(description)
+	Dynamic shared object loader
 	
-	Copyright (C) 1999,2000  contributors of the QuakeForge project
+	Copyright (C) 1999, 2000 contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
-	Author: Jeff Teunissen	<deek@quakeforge.net>
-	Date:	09 Feb 2000
+	Author: Zephaniah E. Hull	<mwarp@whitestar.soark.net>
+	Date:	11 Feb 2000
 	
 	This file is part of the QuakeForge Core system.
 	
