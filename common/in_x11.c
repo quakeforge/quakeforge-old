@@ -434,6 +434,7 @@ IN_Shutdown(void)
 	x11_close_display();
 }
 
+extern int scr_width, scr_height;
 
 int
 IN_Init(void)
@@ -475,17 +476,20 @@ IN_Init(void)
 						   XF86DGADirectMouse|XF86DGADirectKeyb);
 		//	XF86DGASetVidPage(x_disp, DefaultScreen(x_disp), 0);
 
-		XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync,
-					  CurrentTime);
-		XGrabPointer(x_disp, x_win, True, MOUSE_MASK,
-					 GrabModeAsync, GrabModeAsync,
-					 x_win, None, CurrentTime);
+		XGrabKeyboard (x_disp, x_win, True, GrabModeAsync, 
+				GrabModeAsync, CurrentTime);
+
+		XGrabPointer (x_disp, x_win, True, MOUSE_MASK, GrabModeAsync,
+				GrabModeAsync, x_win, None, CurrentTime);
+
+		XWarpPointer (x_disp, None, x_win, 0, 0, 0, 0, scr_width,
+				scr_height);
 
 		in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
-								"1 if you have DGA mouse support");
+				"1 if you have DGA mouse support");
 	} else
 		in_dgamouse = Cvar_Get ("in_dgamouse", "0", CVAR_ROM,
-								"1 if you have DGA mouse support");
+				"1 if you have DGA mouse support");
 
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;

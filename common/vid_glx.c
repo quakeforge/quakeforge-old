@@ -112,7 +112,7 @@ static void	*dlhand = NULL;
 static GLboolean (*QF_XMesaSetFXmode)(GLint mode) = NULL;
 
 
-static int scr_width, scr_height;
+int scr_width, scr_height;
 
 #if defined(XMESA) || defined(HAS_DGA)
 int VID_options_items = 2;

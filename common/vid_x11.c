@@ -116,6 +116,8 @@ static unsigned long r_mask,g_mask,b_mask;
 
 static long X11_highhunkmark;
 
+int scr_width, scr_height;
+
 #define STD_EVENT_MASK \
 			( VisibilityChangeMask | ExposureMask | StructureNotifyMask)
 
@@ -622,6 +624,9 @@ void VID_Init (unsigned char *palette)
 			      0, /* borderwidth	*/
 			      x_visinfo->depth, InputOutput, x_vis,
 			      attribmask, &attribs);
+
+		scr_width = vid.width;
+		scr_height = vid.height;
 
 		/* Give it a title */
 		XStoreName(x_disp, x_win, "XQuake");
