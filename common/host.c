@@ -238,7 +238,7 @@ int		nopacketcount;		// for Host_FrameMain
 	Run everything that happens on a per-frame basis
 */
 void
-Host_FrameMain ( float time )
+Host_FrameMain ( double time )
 {
 	static double	time1 = 0;
 	static double	time2 = 0;
@@ -365,7 +365,7 @@ Host_FrameMain ( float time )
 	to be handled and write it to console.
 */
 void
-Host_Frame ( float time )
+Host_Frame ( double time )
 {
 #ifdef QUAKEWORLD
 	Host_FrameMain (time);

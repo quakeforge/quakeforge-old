@@ -109,7 +109,7 @@ void Host_Init (quakeparms_t *parms);
 void Host_Shutdown(void);
 void Host_Error (char *error, ...);
 void Host_EndGame (char *message, ...);
-void Host_Frame (float time);
+void Host_Frame (double time);
 void Host_Quit_f (void);
 void Host_ClientCommands (char *fmt, ...);
 void Host_ShutdownServer (qboolean crash);
