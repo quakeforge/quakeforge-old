@@ -195,62 +195,90 @@ void R_Init (void)
 	Cmd_AddCommand ("envmap", R_Envmap_f);
 	Cmd_AddCommand ("pointfile", R_ReadPointFile_f);
 
-	r_norefresh = Cvar_Get ("r_norefresh","0",0,"None");
-	r_lightmap = Cvar_Get ("r_lightmap","0",0,"None");
-	r_fullbright = Cvar_Get ("r_fullbright","0",0,
+	r_norefresh = Cvar_Get ("r_norefresh", "0", CVAR_NONE,
+			"None");
+	r_lightmap = Cvar_Get ("r_lightmap", "0", CVAR_NONE,
+			"None");
+	r_fullbright = Cvar_Get ("r_fullbright", "0", CVAR_NONE,
 			"Toggles whether light shading is in effect");
-	r_drawentities = Cvar_Get ("r_drawentities","1",0,
-				"Toggles drawing of doors, monsters, etc");
-	r_drawviewmodel = Cvar_Get ("r_drawviewmodel","1",0,
-					"Toggles drawing of your weapon");
-	r_shadows = Cvar_Get ("r_shadows","0",0,"None");
-	r_wateralpha = Cvar_Get ("r_wateralpha","1",0,"None");
-	r_dynamic = Cvar_Get ("r_dynamic","1",0,"Toggles dynamic lighting");
-	r_novis = Cvar_Get ("r_novis","0",0,"None");
-	r_speeds = Cvar_Get ("r_speeds","0",0,
+	r_drawentities = Cvar_Get ("r_drawentities", "1", CVAR_NONE,
+			"Toggles drawing of doors, monsters, etc");
+	r_drawviewmodel = Cvar_Get ("r_drawviewmodel", "1", CVAR_NONE,
+			"Toggles drawing of your weapon");
+	r_shadows = Cvar_Get ("r_shadows", "0", CVAR_NONE,
+			"None");
+	r_wateralpha = Cvar_Get ("r_wateralpha", "1", CVAR_NONE,
+			"Alpha value for water textures, valid range is "
+			"between 0 and 1.  Leave it at 1 unless you have "
+			"maps which are vis'd for wateralpha.");
+	r_dynamic = Cvar_Get ("r_dynamic", "1", CVAR_NONE,
+			"Toggles dynamic lighting");
+	r_novis = Cvar_Get ("r_novis", "0", CVAR_NONE,
+			"Toggles whether or not to ignore vis information.  "
+			"Leave it at 0 to avoid a nasty FPS hit.");
+	r_speeds = Cvar_Get ("r_speeds", "0", CVAR_NONE,
 			"Toggles display of drawing time");
 #ifdef QUAKEWORLD
-	r_netgraph = Cvar_Get ("r_netgraph","0",0,"Toggles the netgraph");
+	r_netgraph = Cvar_Get ("r_netgraph", "0", CVAR_NONE,
+			"Toggles the netgraph");
 #endif /* QUAKEWORLD */
-	r_fog = Cvar_Get ("r_fog","0",0,"None");
-	r_waterwarp = Cvar_Get ("r_waterwarp","0",0,
+	r_fog = Cvar_Get ("r_fog", "0", CVAR_NONE,
+			"The amount og global fog to apply.  Values larger "
+			"than 0.0005 don't look very good.");
+	r_waterwarp = Cvar_Get ("r_waterwarp", "0", CVAR_NONE,
 		"Toggles whether surfaces are warped when in a liquid");
-	r_volfog = Cvar_Get ("r_volfog","0",0,"None");
-	r_waterripple = Cvar_Get ("r_waterripple","0",0,"None");
-	r_clearcolor = Cvar_Get ("r_clearcolor","2",0,"None");
-	r_sky = Cvar_Get ("r_sky", "0", CVAR_NONE, "Toggles skyboxes");
+	r_volfog = Cvar_Get ("r_volfog", "0", CVAR_NONE,
+			"volumetric fog - don't use this yet");
+	r_waterripple = Cvar_Get ("r_waterripple", "0", CVAR_NONE,
+			"The amount of ripple to add to liquid surfaces, "
+			"values of 5 to 8 or so seem to work well, works "
+			"best with maps which are vised for wateralpha");
+	r_clearcolor = Cvar_Get ("r_clearcolor", "2", 0,
+			"this is the color of \"void space\"");
+	r_sky = Cvar_Get ("r_sky", "0", CVAR_NONE,
+			"Toggles skyboxes");
 	r_skyname = Cvar_Get ("r_skyname", "sky", CVAR_NONE, 
-				"Sets the name of the current skybox");
+			"Sets the name of the current skybox");
 
-	gl_clear = Cvar_Get ("gl_clear","0",0,"None");
-	gl_texsort = Cvar_Get ("gl_texsort","1",0,"None");
+	gl_clear = Cvar_Get ("gl_clear", "0", CVAR_NONE,
+			"Toggles whether or not to clear void space");
+	gl_texsort = Cvar_Get ("gl_texsort", "1", CVAR_NONE,
+			"None");
 
  	if (gl_mtexable)
-		gl_texsort->value = 0.0;
+		Cvar_Set (gl_texsort, "0");
 
-	gl_cull = Cvar_Get ("gl_cull","1",0,"None");
-	gl_smoothmodels = Cvar_Get ("gl_smoothmodels","1",0,"None");
-	gl_affinemodels = Cvar_Get ("gl_affinemodels","0",0,"None");
-	gl_polyblend = Cvar_Get ("gl_polyblend","1",0,"None");
-	gl_flashblend = Cvar_Get ("gl_flashblend","1",0,"None");
-	gl_playermip = Cvar_Get ("gl_playermip","0",0,"None");
-	gl_nocolors = Cvar_Get ("gl_nocolors","0",0,"None");
-	gl_finish = Cvar_Get ("gl_finish","0",0,"None");
+	gl_cull = Cvar_Get ("gl_cull", "1", CVAR_NONE,
+			"None");
+	gl_smoothmodels = Cvar_Get ("gl_smoothmodels", "1", CVAR_NONE,
+			"None");
+	gl_affinemodels = Cvar_Get ("gl_affinemodels", "0", CVAR_NONE,
+			"None");
+	gl_polyblend = Cvar_Get ("gl_polyblend", "1", CVAR_NONE,
+			"None");
+	gl_flashblend = Cvar_Get ("gl_flashblend", "1", CVAR_NONE,
+			"Toggles whether or not to use flashblend effect "
+			"for dynamic lights.  Turning this off looks very "
+			"cool, but can cost a few FPS for the effect");
+	gl_playermip = Cvar_Get ("gl_playermip", "0", CVAR_NONE,
+			"None");
+	gl_nocolors = Cvar_Get ("gl_nocolors", "0", CVAR_NONE,
+			"None");
+	gl_finish = Cvar_Get ("gl_finish", "0", CVAR_NONE,
+			"None");
 
 	gl_particles = Cvar_Get ("gl_particles", "1", CVAR_ARCHIVE,
 			"Toggles and sets the size of particles");
 	gl_fires = Cvar_Get ("gl_fires", "1", CVAR_ARCHIVE,
 			"Toggles lavaball and rocket fireballs");
 
-#ifdef QUAKEWORLD
-	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions","1",0,"None");
-#else
-	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions","0",0,"None");
-#endif
+	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions", "1", CVAR_NONE,
+			"None");
 
 	R_InitBubble();
 
-	gl_doubleeyes = Cvar_Get ("gl_doubleeyes","1",CVAR_ARCHIVE,"None");
+	gl_doubleeyes = Cvar_Get ("gl_doubleeyes", "1", CVAR_ARCHIVE,
+			"None");
 
 	R_InitParticles ();
 	R_InitParticleTexture ();
