@@ -34,6 +34,7 @@ Autoconf support and portability isues:
   Peter Andreasen <pandr@pandr.dk>
   Daniel J. O'Connor <darius@dons.net.au>
   Tim Rowley <tor@cs.brown.edu>
+  Pontus Lidman <pontus@lysator.liu.se>
 
 FreeBSD support:
   Daniel J. O'Connor <darius@dons.net.au>
@@ -120,8 +121,11 @@ Network code fixes/cleanups:
   Roger Sen Montero <rogersm@tau.uab.es>
   Marcus Sundberg <mackan@stacken.kth.se>
 
-IPv6 support (not complete):
+IPv6 support:
   Pontus Lidman <pontus@lysator.liu.se>
+  Florent Parent, Viagénie Inc. <florent.parent@viagenie.qc.ca>
+  André Cormier, Viagénie Inc. <andre.cormier@viagenie.qc.ca>
+  Jun-ichiro Hagino <itojun@iijlab.net>
 
 Driver modules:
   Zephaniah E. Hull <warp@whitestar.soark.net>
