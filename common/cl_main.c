@@ -52,6 +52,11 @@
 #include <netinet/in.h>
 #endif
 
+#ifdef __sun
+/* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
+#define model_t sunmodel_t
+#endif
+
 #include <quakedef.h>
 #include <winquake.h>
 #ifdef QUAKEWORLD
@@ -85,11 +90,6 @@
 #ifdef QUAKEWORLD
 #include <cl_slist.h>
 #endif
-#ifdef __sun
-/* Sun's model_t in sys/model.h conflicts w/ Quake's model_t */
-#define model_t sunmodel_t
-#endif
-
 #ifdef __sun
 #undef model_t
 #endif
