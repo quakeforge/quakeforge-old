@@ -82,8 +82,8 @@ int Server_List_Set(int i,char *addr,char *desc) {
 
 int Server_List_Load (QFile *f) { // This could get messy
 	int serv = 0;
-	char line[256]; // Long lines get truncated.
-	char c = ' ';
+	char line[256]; /* Long lines get truncated. */
+	int c = ' ';    /* int so it can be compared to EOF properly*/
 	char *start;
 	int len;
 	int i;
