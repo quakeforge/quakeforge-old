@@ -15,3 +15,11 @@
 /* Define this if you have GL_COLOR_INDEX8_EXT in GL/gl.h */
 #undef HAVE_GL_COLOR_INDEX8_EXT
 
+#if defined(X11)
+#   define OUTPUT_STR	"X11"
+#elif defined(GGI)
+#   define OUTPUT_STR	"GGI"
+#else
+#   define OUTPUT_STR	"Unknown"
+#endif
+

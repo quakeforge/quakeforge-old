@@ -1076,9 +1076,7 @@ void CL_Init (void)
 	Info_SetValueForKey (cls.userinfo, "bottomcolor", "0", MAX_INFO_STRING);
 	Info_SetValueForKey (cls.userinfo, "rate", "2500", MAX_INFO_STRING);
 	Info_SetValueForKey (cls.userinfo, "msg", "1", MAX_INFO_STRING);
-	//sprintf (st, "%4.2f-%04d", VERSION, build_number());
-	sprintf (st, "%s", VERSION);
-	Info_SetValueForStarKey (cls.userinfo, "*ver", st, MAX_INFO_STRING);
+	Info_SetValueForStarKey(cls.userinfo, "*ver", VERSION, MAX_INFO_STRING);
 
 	CL_InitInput ();
 	CL_InitTEnts ();
@@ -1515,7 +1513,7 @@ void Host_Init (quakeparms_t *parms)
 
 	host_initialized = true;
 
-	Con_Printf ("\nClient Version %s (Build %04d)\n\n", VERSION, build_number());
+	Con_Printf ("\nClient Version %s\n\n", VERSION);
 
 	Con_Printf ("ÄÅÅÅÅÅÅ QuakeWorld Initialized ÅÅÅÅÅÅÇ\n");	
 }

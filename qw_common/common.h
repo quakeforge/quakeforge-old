@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // comndef.h  -- general definitions
 
 #include <bothdefs.h>
+#include <register_check.h>
 
 typedef unsigned char 		byte;
 #define _DEF_BYTE_
@@ -204,7 +205,6 @@ void COM_LoadCacheFile (char *path, struct cache_user_s *cu);
 void COM_CreatePath (char *path);
 void COM_Gamedir (char *dir);
 
-extern	struct cvar_s	registered;
 extern qboolean		standard_quake, rogue, hipnotic;
 
 char *Info_ValueForKey (char *s, char *key);
@@ -218,5 +218,3 @@ unsigned Com_BlockChecksum (void *buffer, int length);
 void Com_BlockFullChecksum (void *buffer, int len, unsigned char *outbuf);
 byte	COM_BlockSequenceCheckByte (byte *base, int length, int sequence, unsigned mapchecksum);
 byte	COM_BlockSequenceCRCByte (byte *base, int length, int sequence);
-
-int build_number( void );

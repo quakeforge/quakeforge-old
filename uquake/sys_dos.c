@@ -571,10 +571,7 @@ void Sys_Quit (void)
 	
 
 // load the sell screen before shuting everything down
-	if (registered.value)
-		d = COM_LoadHunkFile ("end2.bin"); 
-	else
-		d = COM_LoadHunkFile ("end1.bin"); 
+	d = COM_LoadHunkFile ("end2.bin"); 
 	if (d)
 		memcpy (screen, d, sizeof(screen));
 

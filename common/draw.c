@@ -620,28 +620,20 @@ Draw_ConsoleBackground
 */
 void Draw_ConsoleBackground (int lines)
 {
-	int				i, x, y, v;
+	int			i, x, y, v;
 	byte			*src, *dest;
-	unsigned short	*pusdest;
-	int				f, fstep;
+	unsigned short		*pusdest;
+	int			f, fstep;
 	qpic_t			*conback;
-	char			ver[100];
 	static			char saveback[320*8];
+#ifdef QUAKEWORLD
+	char ver[] = "QuakeForge (Software QW) " VERSION;
+#else
+	char ver[] = "QuakeForge (Software UQ) " VERSION;
+#endif
 
 	conback = Draw_CachePic ("gfx/conback.lmp");
 
-// hack the version number directly into the pic
-#ifdef _WIN32
-	sprintf (ver, "QuakeForge (Win32) v%s", VERSION);
-#elif defined(X11)
-	sprintf (ver, "QuakeForge (X11) v%s", VERSION);
-#elif defined(GGI)
-	sprintf (ver, "QuakeForge (GGI) v%s", VERSION);
-#elif defined(__linux__)
-	sprintf (ver, "QuakeForge (Linux) v%s", VERSION);
-#else
-	sprintf (ver, "QuakeForge (Unknown) v%s", VERSION);
-#endif
 	dest = conback->data + 320 - (strlen(ver)*8 + 11) + 320*186;
 
 	memcpy(saveback, conback->data + 320*186, 320*8);

@@ -2741,10 +2741,8 @@ void M_NetStart_Change (int dir)
 	//PGM 03/02/97 added 1 for dmatch episode
 		else if (rogue)
 			count = 4;
-		else if (registered.value)
-			count = 7;
 		else
-			count = 2;
+			count = 7;
 
 		if (startepisode < 0)
 			startepisode = count - 1;

@@ -139,7 +139,7 @@ UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 #
 # Common source files
 #
-MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c
+MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c wad.c zone.c
 
 #
 # Rendering source files

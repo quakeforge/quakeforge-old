@@ -390,13 +390,6 @@ void Draw_Init (void)
 		Sys_Error ("Couldn't load gfx/conback.lmp");
 	SwapPic (cb);
 
-#ifdef SCALEVER
-	sprintf (ver, VERSION);
-	dest = cb->data + 320 + 320*186 - 11 - 8*strlen(ver);
-	for (x=0 ; x<strlen(ver) ; x++)
-		Draw_CharToConback (ver[x], dest+(x<<3));
-#endif
-
 #if 0
 	conback->width = vid.conwidth;
 	conback->height = vid.conheight;
@@ -758,7 +751,11 @@ Draw_ConsoleBackground
 */
 void Draw_ConsoleBackground (int lines)
 {
-	char ver[80];
+#ifdef QUAKEWORLD
+	char ver[] = "QuakeForge (GL QW) " VERSION;
+#else
+	char ver[] = "QuakeForge (GL UQ) " VERSION;
+#endif
 	int x, i;
 	int y;
 
@@ -770,7 +767,6 @@ void Draw_ConsoleBackground (int lines)
 
 	// hack the version number directly into the pic
 	y = lines-14;
-	sprintf (ver, "QuakeForge (GL) " VERSION);
 	x = vid.conwidth - (strlen(ver)*8 + 11);
 	for (i=0 ; i<strlen(ver) ; i++)
 		Draw_Character (x + i * 8, y, ver[i] | 0x80);
