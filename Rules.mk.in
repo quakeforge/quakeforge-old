@@ -2,7 +2,7 @@
 # The above line is so vim knows that this is a makefile.
 
 COMMON_DIR	:= $(PROJECT_DIR)/common
-TARGET_DIR	:= $(PROJECT_DIR)/targets
+TARGET_DIR	:= $(top_builddir)/targets
 QW_COMMON_DIR	:= $(PROJECT_DIR)/qw_common
 
 BUILD_DIR	:= $(TARGET_DIR)/$(MODULE)
