@@ -85,10 +85,6 @@ Other engines:
 -          Add replacement for OpenGL multi-pass texturing extension
 -          Unreal-style camera rooms
 -          Working fullbright in GL targets
-
-
-Network engine(s):
-
 -          Packet compression ala Qizmo
 
 
