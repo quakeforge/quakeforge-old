@@ -1069,13 +1069,8 @@ void DrawTextureChains (void)
 		}
 		else
 		{
-#ifndef _EXPERIMENTAL_
-			/* XXX this one is wierd. If both wateralpha and mirror alpha
-			   are !=1.0, you can see the water though walls and floors.
-			*/
 			if ((s->flags & SURF_DRAWTURB) && r_wateralpha.value != 1.0)
 				continue;	// draw translucent water later
-#endif
 			for ( ; s ; s=s->texturechain)
 				R_RenderBrushPoly (s);
 		}
