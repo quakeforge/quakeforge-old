@@ -850,7 +850,7 @@ COM_AddDirectory (char *dir)
 void
 COM_AddGameDirectory (char *dir)
 {
-	Con_DPrintf ("COM_AddGameDirectory (\"%s/%s\"\n",
+	Con_DPrintf ("COM_AddGameDirectory (\"%s/%s\")\n",
 			fs_sharepath->string, dir);
 
 	if (strcmp (fs_sharepath->string, fs_basepath->string) != 0)
