@@ -76,6 +76,7 @@ Tonik <tonik@quake.ru>
 
 taniwha <bill@taniwha.org>
  - Dud explosives (yeah, yeah, it's probably QC, but still...)
+ - fps high/low (not really mine: privacy)
 
 djsmoke <djsmoke@optonline.net>
  - scripting support additions; sleep/timer command, if statements, server
