@@ -463,6 +463,7 @@ IN_Init(void)
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
 
+	if (!COM_CheckParm("-nodga")) {
 	// XF86DGASetViewPort, XF86DGASetVidPage, and XF86DGADirectVideo's
 	// XF86DGADirectVideo flag are disabled till someone has a chance to
 	// figure out what's wrong with them (if anything)  --KB
@@ -479,6 +480,10 @@ IN_Init(void)
 
 	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
 			"1 if you have DGA mouse support");
+	} else
+		in_dgamouse = Cvar_Get ("in_dgamouse", "0", CVAR_ROM,
+				"1 if you have DGA mouse support");
+
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;
