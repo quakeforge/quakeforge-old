@@ -260,6 +260,9 @@ extern	cvar_t	cl_autofire;
 extern	cvar_t	cl_shownet;
 extern	cvar_t	cl_nolerp;
 
+extern	cvar_t	cl_sbar;
+extern	cvar_t	cl_hudswap;
+
 extern	cvar_t	cl_pitchdriftspeed;
 extern	cvar_t	lookspring;
 extern	cvar_t	lookstrafe;
