@@ -643,13 +643,8 @@ R_DrawViewModel ( void ) {
 
 	if (!r_drawentities->value)
 		return;
-#ifdef QUAKEWORLD
 	if (cl.stats[STAT_ITEMS] & IT_INVISIBILITY)
 		return;
-#else
-	if (cl.items & IT_INVISIBILITY)
-		return;
-#endif
 
 	if (cl.stats[STAT_HEALTH] <= 0)
 		return;

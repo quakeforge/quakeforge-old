@@ -1,4 +1,5 @@
 /*
+view.c - player eye positioning
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,11 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// view.c -- player eye positioning
 
-#include "quakedef.h"
-#include "r_local.h"
-#include "draw.h" /* For Draw_Crosshair() */
+#include <quakedef.h>
+#include <r_local.h>
+#include <draw.h> /* For Draw_Crosshair() */
 #include <mathlib.h>
 #include <qtypes.h>
 #include <qstructs.h>
@@ -39,64 +39,39 @@ when crossing a water boudnary.
 
 */
 
-//cvar_t	lcd_x = {"lcd_x", "0"};	// FIXME: make this work sometime...
-cvar_t	*lcd_x;
-//cvar_t	lcd_yaw = {"lcd_yaw", "0"};
+cvar_t	*lcd_x;			// FIXME: make this work sometime...
 cvar_t	*lcd_yaw;
 
-//cvar_t	scr_ofsx = {"scr_ofsx", "0"};
 cvar_t	*scr_ofsx;
-//cvar_t	scr_ofsy = {"scr_ofsy", "0"};
 cvar_t	*scr_ofsy;
-//cvar_t	scr_ofsz = {"scr_ofsz", "0"};
 cvar_t	*scr_ofsz;
 
-//cvar_t	cl_rollspeed = {"cl_rollspeed", "200"};
 cvar_t	*cl_rollspeed;
-//cvar_t	cl_rollangle = {"cl_rollangle", "2.0"};
 cvar_t	*cl_rollangle;
 
-//cvar_t	cl_bob = {"cl_bob","0.02"};
 cvar_t	*cl_bob;
-//cvar_t	cl_bobcycle = {"cl_bobcycle","0.6"};
 cvar_t	*cl_bobcycle;
-//cvar_t	cl_bobup = {"cl_bobup","0.5"};
 cvar_t	*cl_bobup;
 
-//cvar_t	v_kicktime = {"v_kicktime", "0.5"};
 cvar_t	*v_kicktime;
-//cvar_t	v_kickroll = {"v_kickroll", "0.6"};
 cvar_t	*v_kickroll;
-//cvar_t	v_kickpitch = {"v_kickpitch", "0.6"};
 cvar_t	*v_kickpitch;
 
-//cvar_t	v_iyaw_cycle = {"v_iyaw_cycle", "2"};
 cvar_t	*v_iyaw_cycle;
-//cvar_t	v_iroll_cycle = {"v_iroll_cycle", "0.5"};
 cvar_t	*v_iroll_cycle;
-//cvar_t	v_ipitch_cycle = {"v_ipitch_cycle", "1"};
 cvar_t	*v_ipitch_cycle;
-//cvar_t	v_iyaw_level = {"v_iyaw_level", "0.3"};
 cvar_t	*v_iyaw_level;
-//cvar_t	v_iroll_level = {"v_iroll_level", "0.1"};
 cvar_t	*v_iroll_level;
-//cvar_t	v_ipitch_level = {"v_ipitch_level", "0.3"};
 cvar_t	*v_ipitch_level;
 
-//cvar_t	v_idlescale = {"v_idlescale", "0"};
 cvar_t	*v_idlescale;
 
-//cvar_t	crosshair = {"crosshair", "0", CVAR_ARCHIVE};
 cvar_t	*crosshair;
-//cvar_t	crosshaircolor = {"crosshaircolor", "79",CVAR_ARCHIVE};
 cvar_t	*crosshaircolor;
 
-//cvar_t	cl_crossx = {"cl_crossx", "0",CVAR_ARCHIVE};
 cvar_t	*cl_crossx;
-//cvar_t	cl_crossy = {"cl_crossy", "0", CVAR_ARCHIVE};
 cvar_t	*cl_crossy;
 
-//cvar_t	gl_cshiftpercent = {"gl_cshiftpercent", "100"};
 cvar_t	*gl_cshiftpercent;
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
@@ -169,9 +144,7 @@ float V_CalcBob (void)
 //=============================================================================
 
 
-//cvar_t	v_centermove = {"v_centermove", "0.15"};
 cvar_t	*v_centermove;
-//cvar_t	v_centerspeed = {"v_centerspeed","500"};
 cvar_t	*v_centerspeed;
 
 
@@ -473,28 +446,28 @@ V_CalcPowerupCshift
 */
 void V_CalcPowerupCshift (void)
 {
-	if (cl.items & IT_QUAD)
+	if (cl.stats[STAT_ITEMS] & IT_QUAD)
 	{
 		cl.cshifts[CSHIFT_POWERUP].destcolor[0] = 0;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[1] = 0;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[2] = 255;
 		cl.cshifts[CSHIFT_POWERUP].percent = 30;
 	}
-	else if (cl.items & IT_SUIT)
+	else if (cl.stats[STAT_ITEMS] & IT_SUIT)
 	{
 		cl.cshifts[CSHIFT_POWERUP].destcolor[0] = 0;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[1] = 255;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[2] = 0;
 		cl.cshifts[CSHIFT_POWERUP].percent = 20;
 	}
-	else if (cl.items & IT_INVISIBILITY)
+	else if (cl.stats[STAT_ITEMS] & IT_INVISIBILITY)
 	{
 		cl.cshifts[CSHIFT_POWERUP].destcolor[0] = 100;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[1] = 100;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[2] = 100;
 		cl.cshifts[CSHIFT_POWERUP].percent = 100;
 	}
-	else if (cl.items & IT_INVULNERABILITY)
+	else if (cl.stats[STAT_ITEMS] & IT_INVULNERABILITY)
 	{
 		cl.cshifts[CSHIFT_POWERUP].destcolor[0] = 255;
 		cl.cshifts[CSHIFT_POWERUP].destcolor[1] = 255;
@@ -942,68 +915,40 @@ void V_Init (void)
 	Cmd_AddCommand ("bf", V_BonusFlash_f);
 	Cmd_AddCommand ("centerview", V_StartPitchDrift);
 
-//	Cvar_RegisterVariable (&lcd_x);
 	lcd_x = Cvar_Get ("lcd_x","0",0,"None");
-//	Cvar_RegisterVariable (&lcd_yaw);
 	lcd_yaw = Cvar_Get ("lcd_yaw","0",0,"None");
 
-//	Cvar_RegisterVariable (&v_centermove);
 	v_centermove = Cvar_Get ("v_centermove","0.15",0,"None");
-//	Cvar_RegisterVariable (&v_centerspeed);
 	v_centerspeed = Cvar_Get ("v_centerspeed","500",0,"None");
 
-//	Cvar_RegisterVariable (&v_iyaw_cycle);
 	v_iyaw_cycle = Cvar_Get ("v_iyaw_cycle","2",0,"None");
-//	Cvar_RegisterVariable (&v_iroll_cycle);
 	v_iroll_cycle = Cvar_Get ("v_iroll_cycle","0.5",0,"None");
-//	Cvar_RegisterVariable (&v_ipitch_cycle);
 	v_ipitch_cycle = Cvar_Get ("v_ipitch_cycle","1",0,"None");
-//	Cvar_RegisterVariable (&v_iyaw_level);
 	v_iyaw_level = Cvar_Get ("v_iyaw_level","0.3",0,"None");
-//	Cvar_RegisterVariable (&v_iroll_level);
 	v_iroll_level = Cvar_Get ("v_iroll_level","0.1",0,"None");
-//	Cvar_RegisterVariable (&v_ipitch_level);
 	v_ipitch_level = Cvar_Get ("v_ipitch_level","0.3",0,"None");
 
-//	Cvar_RegisterVariable (&v_idlescale);
 	v_idlescale = Cvar_Get ("v_idlescale","0",0,"None");
-//	Cvar_RegisterVariable (&crosshaircolor);
 	crosshaircolor = Cvar_Get ("crosshaircolor","79",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&crosshair);
 	crosshair = Cvar_Get ("crosshair","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_crossx);
 	cl_crossx = Cvar_Get ("cl_crossx","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_crossy);
 	cl_crossy = Cvar_Get ("cl_crossy","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&gl_cshiftpercent);
 	gl_cshiftpercent = Cvar_Get ("gl_cshiftpercent","100",0,"None");
 
-//	Cvar_RegisterVariable (&scr_ofsx);
 	scr_ofsx = Cvar_Get ("scr_ofsx","0",0,"None");
-//	Cvar_RegisterVariable (&scr_ofsy);
 	scr_ofsy = Cvar_Get ("scr_ofsy","0",0,"None");
-//	Cvar_RegisterVariable (&scr_ofsz);
 	scr_ofsz = Cvar_Get ("scr_ofsz","0",0,"None");
-//	Cvar_RegisterVariable (&cl_rollspeed);
 	cl_rollspeed = Cvar_Get ("cl_rollspeed","200",0,"None");
-//	Cvar_RegisterVariable (&cl_rollangle);
 	cl_rollangle = Cvar_Get ("cl_rollangle","2.0",0,"None");
-//	Cvar_RegisterVariable (&cl_bob);
 	cl_bob = Cvar_Get ("cl_bob","0.02",0,"None");
-//	Cvar_RegisterVariable (&cl_bobcycle);
 	cl_bobcycle = Cvar_Get ("cl_bobcycle","0.6",0,"None");
-//	Cvar_RegisterVariable (&cl_bobup);
 	cl_bobup = Cvar_Get ("cl_bobup","0.5",0,"None");
 
-//	Cvar_RegisterVariable (&v_kicktime);
 	v_kicktime = Cvar_Get ("v_kicktime","0.5",0,"None");
-//	Cvar_RegisterVariable (&v_kickroll);
 	v_kickroll = Cvar_Get ("v_kickroll","0.6",0,"None");
-//	Cvar_RegisterVariable (&v_kickpitch);	
 	v_kickpitch = Cvar_Get ("v_kickpitch","0.6",0,"None");
 
 	BuildGammaTable (1.0);	// no gamma yet
-//	Cvar_RegisterVariable (&v_gamma);
 	v_gamma = Cvar_Get ("gamma","1",CVAR_ARCHIVE,"None");
 }
 

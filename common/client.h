@@ -340,7 +340,7 @@ typedef struct
 	scoreboard_t	*scores;	// [cl.maxclients]
 
 	usercmd_t	cmd;		// last command sent to the server
-	int		items;		// inventory bit flags
+//	int		items;		// inventory bit flags
 	vec3_t		mviewangles[2];	// in demos, viewangles is lerped
 					// between these
 	vec3_t		mvelocity[2];	// update by server, used for lean+bob

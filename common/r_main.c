@@ -1,4 +1,5 @@
 /*
+r_main.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,10 +20,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// r_main.c
 
-#include "quakedef.h"
-#include "r_local.h"
+#include <quakedef.h>
+#include <r_local.h>
 #include <cvar.h>
 #include <mathlib.h>
 #include <screen.h>
@@ -730,11 +730,7 @@ void R_DrawViewModel (void)
 #endif	// QUAKEWORLD
 		return;
 
-#ifdef QUAKEWORLD
 	if (cl.stats[STAT_ITEMS] & IT_INVISIBILITY)
-#else
-	if (cl.items & IT_INVISIBILITY)
-#endif	// QUAKEWORLD	
 		return;
 
 	if (cl.stats[STAT_HEALTH] <= 0)
