@@ -276,6 +276,8 @@ static void IN_init_mouse()
 
 void IN_Shutdown(void)
 {
+	Con_Printf("IN_Shutdown\n");
+
 	if (UseMouse) mouse_close();
 	if (UseKeyboard) keyboard_close();
 	in_svgalib_inited = 0;
