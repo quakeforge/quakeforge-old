@@ -849,7 +849,7 @@ SOURCE=..\common\model.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\qw_common\net_chan.c
+SOURCE=..\common\net_chan.c
 # End Source File
 # Begin Source File
 
@@ -857,7 +857,7 @@ SOURCE=..\common\net_com.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\qw_common\net_udp.c
+SOURCE=..\common\net_udp.c
 # End Source File
 # Begin Source File
 
@@ -1316,7 +1316,7 @@ SOURCE=..\common\vid_win.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\view.c
+SOURCE=..\common\view.c
 # End Source File
 # Begin Source File
 
@@ -1334,6 +1334,10 @@ SOURCE=..\common\zone.c
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\common\net_udp.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

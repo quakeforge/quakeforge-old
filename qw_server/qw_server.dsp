@@ -120,7 +120,7 @@ SOURCE=..\common\model.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\qw_common\net_chan.c
+SOURCE=..\common\net_chan.c
 # End Source File
 # Begin Source File
 
@@ -128,7 +128,7 @@ SOURCE=..\common\net_com.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\qw_common\net_udp.c
+SOURCE=..\common\net_udp.c
 # End Source File
 # Begin Source File
 
