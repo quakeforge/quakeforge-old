@@ -63,3 +63,4 @@ to quake-devel@lists.sourceforge.net with details.
    just select servers to play on while in the game.
  * implement a "feign death" action, so that users can play dead
  * allow server admin to adjust air control (ie. in low gravity)
+ * bullets leave "holes" in walls, and disappear as threshold is reached
