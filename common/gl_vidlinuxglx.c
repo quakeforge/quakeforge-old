@@ -500,6 +500,12 @@ GL_Init
 */
 void GL_Init (void)
 {
+
+#ifdef XMESA
+        Cvar_RegisterVariable (&vid_mesa_mode);
+#endif
+	
+
 	gl_vendor = glGetString (GL_VENDOR);
 	Con_Printf ("GL_VENDOR: %s\n", gl_vendor);
 	gl_renderer = glGetString (GL_RENDERER);
@@ -797,7 +803,7 @@ void IN_Move (usercmd_t *cmd)
 	IN_MouseMove(cmd);
 }
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 
 	// Windowed Mouse

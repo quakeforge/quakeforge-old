@@ -3088,10 +3088,6 @@ void M_Init (void)
 	Cmd_AddCommand ("help", M_Menu_Help_f);
 	Cmd_AddCommand ("menu_quit", M_Menu_Quit_f);
 
-#ifdef XMESA
-	Cvar_RegisterVariable (&vid_mesa_mode);
-#endif
-
 }
 
 

@@ -1945,7 +1945,7 @@ void VID_MenuKey (int key)
 	}
 }
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 	// Windowed Mouse
         M_Print (16, 128, "             Use Mouse");

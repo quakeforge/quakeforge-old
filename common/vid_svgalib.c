@@ -1020,7 +1020,7 @@ char *VID_ModeInfo (int modenum)
 	}
 }
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 /* Port specific Options menu entrys */
 }

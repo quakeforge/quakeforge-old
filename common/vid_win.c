@@ -3391,7 +3391,7 @@ void VID_MenuKey (int key)
 	}
 }
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 	if(modestate == MS_WINDOWED)
 	{

@@ -413,7 +413,7 @@ char *Sys_ConsoleInput (void)
 }
 */
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 	// Windowed Mouse
         M_Print (16, 128, "             Use Mouse");

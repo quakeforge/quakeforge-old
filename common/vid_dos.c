@@ -779,7 +779,7 @@ void VID_MenuKey (int key)
 	}
 }
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 /* Port specific Options menu entrys */
 }

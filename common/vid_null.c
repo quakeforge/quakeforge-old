@@ -89,7 +89,7 @@ void D_EndDirectRect (int x, int y, int width, int height)
 {
 }
 
-void VID_ExtraOptionDraw()
+void VID_ExtraOptionDraw(void)
 {
 /* Port specific Options menu entrys */
 }

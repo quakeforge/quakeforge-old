@@ -828,13 +828,19 @@ void IN_Move (usercmd_t *cmd)
 	IN_MouseMove(cmd);
 }
 
-void VID_ExtraOptionDraw() 
+void VID_ExtraOptionDraw(void)
 {
-// No extra option menu items yet
+/* Port specific Options menu entrys */
 }
 
-void VID_ExtraOptionCmd() 
+void VID_ExtraOptionCmd(int option_cursor)
 {
-// Read the previous function
+/*
+	switch(option_cursor)
+	{
+	case 12:  // Always start with 12
+	break;
+	}
+*/
 }
 
