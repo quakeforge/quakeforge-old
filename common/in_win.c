@@ -37,20 +37,21 @@ HRESULT (WINAPI *pDirectInputCreate)(HINSTANCE hinst, DWORD dwVersion,
 // mouse variables
 cvar_t	m_filter = {"m_filter","0"};
 
-int			mouse_buttons;
-int			mouse_oldbuttonstate;
+int		mouse_buttons;
+int		mouse_oldbuttonstate;
 POINT		current_pos;
-int			mouse_x, mouse_y, old_mouse_x, old_mouse_y, mx_accum, my_accum;
+int		mouse_x, mouse_y, old_mouse_x, old_mouse_y, mx_accum, my_accum;
+unsigned int	uiWheelMessage;
 
 static qboolean	restore_spi;
-static int		originalmouseparms[3], newmouseparms[3] = {0, 0, 1};
+static int	originalmouseparms[3], newmouseparms[3] = {0, 0, 1};
 
-qboolean		mouseinitialized;
+qboolean	mouseactive;
+qboolean	mouseinitialized;
 static qboolean	mouseparmsvalid, mouseactivatetoggle;
 static qboolean	mouseshowtoggle = 1;
 static qboolean	dinput_acquired;
 static unsigned int		mstate_di;
-unsigned int uiWheelMessage;
 
 // joystick defines and variables
 // where should defines be moved?
@@ -423,8 +424,6 @@ IN_StartupMouse
 */
 void IN_StartupMouse (void)
 {
-	HDC			hdc;
-
 	if ( COM_CheckParm ("-nomouse") ) 
 		return; 
 
@@ -582,7 +581,6 @@ IN_MouseMove
 void IN_MouseMove (usercmd_t *cmd)
 {
 	int	mx, my;
-	HDC	hdc;
 	int	i;
 	DIDEVICEOBJECTDATA	od;
 	DWORD		dwElements;
@@ -751,9 +749,6 @@ IN_Accumulate
 */
 void IN_Accumulate (void)
 {
-	int		mx, my;
-	HDC	hdc;
-
 	if (mouseactive)
 	{
 		GetCursorPos (&current_pos);
@@ -791,9 +786,9 @@ IN_StartupJoystick
 */  
 void IN_StartupJoystick (void) 
 { 
-	int			i, numdevs;
+	int			numdevs;
 	JOYCAPS		jc;
-	MMRESULT	mmr;
+	MMRESULT	mmr = !JOYERR_NOERROR;
  
  	// assume no joystick
 	joy_avail = false; 
@@ -875,6 +870,8 @@ PDWORD RawValuePointer (int axis)
 	case JOY_AXIS_V:
 		return &ji.dwVpos;
 	}
+
+	return NULL;
 }
 
 
