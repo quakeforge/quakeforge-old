@@ -165,7 +165,7 @@ void SV_Init (void)
 	extern	cvar_t	*sv_aim;
 
 //	Cvar_RegisterVariable (&sv_maxvelocity);
-	sv_maxvelocity = Cvar_Get ("sv_maxvelocity,","2000",0,"None");
+	sv_maxvelocity = Cvar_Get ("sv_maxvelocity","2000",0,"None");
 //	Cvar_RegisterVariable (&sv_gravity);
 	sv_gravity = Cvar_Get ("sv_gravity","800",
 				CVAR_USERINFO|CVAR_SERVERINFO,"None");
