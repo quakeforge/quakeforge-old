@@ -1,103 +1,134 @@
-The original Quake(R), QuakeWorld(R), and QuakeWorld(R) server:
-  ID Software, Inc  http://www.idsoftware.com
+N: Nelson Rush
+E: palisade@quakeforge.net
+D: QuakeForge Project Maintainer
+D: Website Design
+D: QW/Q1 tree merging
+D: Math fixes/optimizations
+D: Buffer overflow fixes
+D: Documentation
 
-Project hosting and server resources:
-  VA Linux Systems, Inc  http://www.valinux.com
-  Chase Hargraves <absolutek@quakeforge.net>
-  Chad Fowler <chadfowler@quakeforge.net>
-  Jeff Teunissen <d2deek@pmail.net>
+N: Chase Hargraves
+E: absolutek@quakeforge.net
+D: Irc logging
+D: Website design
 
-Website design:
-  Nelson J. Rush <palisade@quakeforge.net>
-  Chase Hargraves <absolutek@quakeforge.net>
+N: Jeff Teunissen
+E: d2deek@pmail.net
+D: IRC Info bot
+D: QW/Q1 tree merging
 
-Administration and project management:
-  Nelson J. Rush <chesterrr@att.net>
+N: Zephaniah E. Hull
+E: warp@whitestar.soark.net
+D: QW/Q1 tree merging
+D: GL renderer fixes/optimizations
+D: Input handling fixes/optimizations
+D: Cheat/exploit fixes
 
-QW/Q1 tree merging:
-  Jeff Teunissen <d2deek@pmail.net>
-  Zephaniah E. Hull <warp@whitestar.soark.net>
-  Marcus Sundberg <mackan@stacken.kth.se>
-  Bill Currie <bill@taniwha.org>
-  Nelson J. Rush <chesterrr@att.net>
-  Eric Windisch <windisch@nni.com>
-  Joseph Carter <knghtbrd@debian.org>
-  Peter Andreasen <pandr@pandr.dk>
-  Maas van den Berg <email@dds.nl>
+N: Marcus Sundberg
+E: mackan@stacken.kth.se
+D: QW/Q1 tree merging
+D: Autoconf support and portability
+D: Sound cleanups
+D: Input handling fixes/optimizations
+D: GGI support
+D: Win32 support
+D: CD-ROM support/optimizations
 
-Autoconf support and portability isues:
-  Loring Holden <lsh@cs.brown.edu>
-  Joseph Carter <knghtbrd@debian.org>
-  Bill Currie <bill@taniwha.org>
-  Cesar Eduardo Barros <cesarb@web4u.com.br>
-  Marcus Sundberg <mackan@stacken.kth.se>
-  Peter Andreasen <pandr@pandr.dk>
-  Daniel J. O'Connor <darius@dons.net.au>
-  Tim Rowley <tor@cs.brown.edu>
+N: Bill Currie
+E: bill@taniwha.org
+D: QW/Q1 tree merging
+D: Autoconf support and portability
 
-Sound cleanups:
-  Ryan C. Gordon <ryan_gordon@hotmail.com>
-  Marcus Sundberg <mackan@stacken.kth.se>
-  Robert S. Elsner <sockman@ngfc.com>
+N: Eric Windisch
+E: windisch@nni.com
+D: QW/Q1 tree merging
+D: GL renderer fixes/optimizations
 
-GL renderer fixes/optimizations:
-  Zephaniah E. Hull <warp@whitestar.soark.net>
-  Eric Windisch <windisch@nni.com>
+N: Joseph Carter
+E: knghtbrd@debian.org
+D: QW/Q1 tree merging
+D: Autoconf support and portability
+D: Documentation
 
-Input handling fixes/optimizations:
-  Michael Pujos <mpujos@mail.dotcom.fr>
-  Filip Van Raemdonck <filipvr@xs4all.be>
-  Zephaniah E. Hull <warp@whitestar.soark.net>
-  Marcus Sundberg <mackan@stacken.kth.se>
+N: Peter Andreasen
+E: pandr@pandr.dk
+D: QW/Q1 tree merging
+D: Autoconf support and portability
 
-Math fixes/optimizations:
-  Zinx Verituse <zinx@linuxfreak.com>
-  Nelson J. Rush <chesterrr@att.net>
+N: Maas van den Berg
+E: email@dds.nl
+D: QW/Q1 tree merging
+D: SDL support
 
-Buffer overflow fixes:
-  Nelson J. Rush <chesterrr@att.net>
+N: Loring Holden
+E: lsh@cv.brown.edu
+D: Autoconf support and portability
+D: CD-ROM support/optimizations
+D: AIX/IRIX/Sun Support
 
-Documentation:
-  Nelson J. Rush <chesterrr@att.net>
-  Joseph Carter <knghtbrd@debian.org>
+N: Cesar Eduardo Barros
+E: cesarb@web4u.com.br
+D: Autoconf support and portability
 
-Svgalib fixes/optimizations:
-  Justin A. McCright <jam@qIj.damogran.org>
+N: Daniel J. O'Connor
+E: darius@dons.net.au
+D: Autoconf support and portability
+D: Corrected failed mmap checking
 
-GGI support:
-  Marcus Sundberg <mackan@stacken.kth.se>
+N: Tim Rowley
+E: tor@cs.brown.edu
+D: Autoconf support and portability
+D: AIX/IRIX/Sun support
 
-SDL support:
-  Sam Lantinga <slouken@devolution.com>
-  Maas van den Berg <email@dds.nl>
+N: Ryan C. Gordon
+E: ryan_gorden@hotmail.com
+D: Sound cleanups
 
-X11 software renderer fixes:
-  Justin A. McCright <jam@qIj.damogran.org>
+N: Robert S. Elsner
+E: sockman@ngfc.com
+D: Sound cleanups
 
-GL fullbright Support:
-  Neal White III <nwhite@softblox.com>
+N: Michael Pujos
+E: mpujos@mail.dotcom.fr
+D: Input handling fixes/optimizations
 
-Misc Code Fixes:
-  Daniel O'Connor <doconnor@gsoft.com.au> -- Correct failed mmap checking.
-  Dan Nelson <dnelson@emsphone.com> -- Typo fix..
-  Dan Olson <theoddone@quakefiles.com>
+N: Filip Van Raemdonck
+E: filipvr@xs4all.be
+D: Input handling fixes/optimizations
 
-Cheat/exploit fixes:
-  Mads Bondo Dydensborg <madsdyd@challenge.dk>
-  Zephaniah E. Hull <warp@whitestar.soark.net>
-  Roger Sen Montero <rogersm@tau.uab.es>
+N: Zinx Verituse
+E: zinx@linuxfreak.com
+D: Math fixes/optimizations
 
-Win32 support:
-  Marcus Sundberg <mackan@stacken.kth.se>
+N: Justin A. McCright
+E: jam@qIj.damogren.org
+D: Svgalib fixes/optimizations
 
-CD-ROM support/optimizations:
-  Marcus Sundberg <mackan@stacken.kth.se>
-  Loring Holden <lsh@cs.brown.edu>
-  Theo van Klaveren <havoc@phoenix.student.utwente.nl>
+N: Sam Lantinga
+E: slouken@devolution.com
+D: SDL support
 
-AIX/IRIX/Sun support:
-  Loring Holden <lsh@cs.brown.edu>
-  Tim Rowley <tor@cs.brown.edu>
+N: Neal White III
+E: nwhite@softblox.com
+D: GL fullbright support
 
-Network code fixes/cleanups:
-  Roger Sen Montero <rogersm@tau.uab.es>
+N: Dan Nelson
+E: dnelson@emsphone.com
+D: Typo fix
+
+N: Dan Olson
+E: theoddone@quakefiles.com
+D: Misc. code fixes
+
+N: Mads Bondo Dydensborg
+E: madsdyd@challenge.dk
+D: Cheat/exploit fixes
+
+N: Roger Sen Montero
+E: rogersm@tau.uab.es
+D: Cheat/exploit fixes
+D: Network code fixes/cleanups
+
+N: Theo van Klaveren
+E: havoc@phoenix.student.utwente.nl
+D: CD-ROM support/optimizations
