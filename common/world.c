@@ -65,7 +65,6 @@ HULL BOXES
 ===============================================================================
 */
 
-
 static	hull_t		box_hull;
 static	dclipnode_t	box_clipnodes[6];
 static	mplane_t	box_planes[6];
@@ -129,6 +128,7 @@ hull_t	*SV_HullForBox (vec3_t mins, vec3_t maxs)
 
 
 
+#ifdef SERVERONLY
 /*
 ================
 SV_HullForEntity
@@ -182,6 +182,7 @@ hull_t *SV_HullForEntity (edict_t *ent, vec3_t mins, vec3_t maxs, vec3_t offset)
 
 	return hull;
 }
+#endif
 
 /*
 ===============================================================================
@@ -240,6 +241,7 @@ areanode_t *SV_CreateAreaNode (int depth, vec3_t mins, vec3_t maxs)
 	return anode;
 }
 
+#ifdef SERVERONLY
 /*
 ===============
 SV_ClearWorld
@@ -254,7 +256,7 @@ void SV_ClearWorld (void)
 	sv_numareanodes = 0;
 	SV_CreateAreaNode (0, sv.worldmodel->mins, sv.worldmodel->maxs);
 }
-
+#endif
 
 /*
 ===============
@@ -270,7 +272,7 @@ void SV_UnlinkEdict (edict_t *ent)
 	ent->area.prev = ent->area.next = NULL;
 }
 
-
+#ifdef SERVERONLY
 /*
 ====================
 SV_TouchLinks
@@ -320,7 +322,6 @@ void SV_TouchLinks ( edict_t *ent, areanode_t *node )
 	if ( ent->v.absmin[node->axis] < node->dist )
 		SV_TouchLinks ( ent, node->children[1] );
 }
-
 
 /*
 ===============
@@ -478,7 +479,7 @@ void SV_LinkEdict (edict_t *ent, qboolean touch_triggers)
 		SV_TouchLinks ( ent, sv_areanodes );
 }
 
-
+#endif
 
 /*
 ===============================================================================
@@ -525,7 +526,7 @@ int SV_HullPointContents (hull_t *hull, int num, vec3_t p)
 
 #endif	// !id386
 
-
+#ifdef SERVERONLY
 /*
 ==================
 SV_PointContents
@@ -546,9 +547,11 @@ int SV_TruePointContents (vec3_t p)
 {
 	return SV_HullPointContents (&sv.worldmodel->hulls[0], 0, p);
 }
+#endif
 
 //===========================================================================
 
+#ifdef SERVERONLY
 /*
 ============
 SV_TestEntityPosition
@@ -570,6 +573,7 @@ edict_t	*SV_TestEntityPosition (edict_t *ent)
 		
 	return NULL;
 }
+#endif
 
 /*
 ===============================================================================
@@ -615,8 +619,13 @@ qboolean SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 		return true;		// empty
 	}
 
-	if (num < hull->firstclipnode || num > hull->lastclipnode)
+	if (num < hull->firstclipnode || num > hull->lastclipnode) {
+#ifdef SERVERONLY
 		SV_Error ("SV_RecursiveHullCheck: bad node number");
+#else
+		Sys_Error ("SV_RecursiveHullCheck: bad node number");
+#endif
+	}
 
 //
 // find the point distances
@@ -721,6 +730,7 @@ qboolean SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 }
 
 
+#ifdef SERVERONLY
 /*
 ==================
 SV_ClipMoveToEntity
@@ -811,9 +821,11 @@ trace_t SV_ClipMoveToEntity (edict_t *ent, vec3_t start, vec3_t mins, vec3_t max
 
 	return trace;
 }
+#endif
 
 //===========================================================================
 
+#ifdef SERVERONLY
 /*
 ====================
 SV_ClipToLinks
@@ -893,7 +905,7 @@ void SV_ClipToLinks ( areanode_t *node, moveclip_t *clip )
 	if ( clip->boxmins[node->axis] < node->dist )
 		SV_ClipToLinks ( node->children[1], clip );
 }
-
+#endif
 
 /*
 ==================
@@ -925,6 +937,7 @@ boxmaxs[0] = boxmaxs[1] = boxmaxs[2] = 9999;
 #endif
 }
 
+#ifdef SERVERONLY
 /*
 ==================
 SV_Move
@@ -1028,5 +1041,4 @@ edict_t	*SV_TestPlayerPosition (edict_t *ent, vec3_t origin)
 
 	return NULL;
 }
-
-
+#endif

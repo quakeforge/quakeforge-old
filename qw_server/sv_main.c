@@ -22,11 +22,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#include <qwsvdef.h>
-
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
+
+#include <quakedef.h>
+#include <qtypes.h>
+#include <net.h>
+#include <cmd.h>
+#include <sys.h>
+#include <console.h>
+#include <protocol.h>
+#include <server.h>
 
 quakeparms_t host_parms;
 
