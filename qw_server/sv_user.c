@@ -1,4 +1,5 @@
 /*
+sv_user.c - server code for moving users
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,7 +21,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sv_user.c -- server code for moving users
 
 #include <ctype.h>
 #include <quakedef.h>
@@ -39,14 +39,9 @@ edict_t	*sv_player;
 
 usercmd_t	cmd;
 
-//cvar_t	cl_rollspeed = {"cl_rollspeed", "200"};
 cvar_t	*cl_rollspeed;
-//cvar_t	cl_rollangle = {"cl_rollangle", "2.0"};
 cvar_t	*cl_rollangle;
-//cvar_t	sv_spectalk = {"sv_spectalk", "1"};
 cvar_t	*sv_spectalk;
-
-//cvar_t	sv_mapcheck	= {"sv_mapcheck", "1"};
 cvar_t	*sv_mapcheck;
 
 extern	vec3_t	player_mins;
@@ -942,7 +937,7 @@ void SV_Pause_f (void)
 		return;
 	}
 
-	if (sv.paused)
+	if (!sv.paused)
 		snprintf(st, sizeof(st), "%s paused the game\n", host_client->name);
 	else
 		snprintf(st, sizeof(st), "%s unpaused the game\n", host_client->name);
@@ -1740,14 +1735,9 @@ SV_UserInit
 */
 void SV_UserInit (void)
 {
-//	Cvar_RegisterVariable (&cl_rollspeed);
 	cl_rollspeed = Cvar_Get ("cl_rollspeed","200",0,"None");
-//	Cvar_RegisterVariable (&cl_rollangle);
 	cl_rollangle = Cvar_Get ("cl_rollangle","2.0",0,"None");
-//	Cvar_RegisterVariable (&sv_spectalk);
 	sv_spectalk = Cvar_Get ("sv_spectalk","1",0,"None");
-//	Cvar_RegisterVariable (&sv_mapcheck);
 	sv_mapcheck = Cvar_Get ("sv_mapcheck","1",0,"None");
 }
-
 
