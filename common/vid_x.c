@@ -1088,7 +1088,7 @@ void IN_Move (usercmd_t *cmd)
 	mouse_x = mouse_y = 0.0;
 }
 
-void VID_ExtraOptionDraw(void)
+void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 {
 	// Windowed Mouse
         M_Print (16, options_draw_cursor+=8, "             Use Mouse");
