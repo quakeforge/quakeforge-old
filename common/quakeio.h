@@ -10,7 +10,9 @@
 
 typedef struct {
 	FILE *file;
+#ifdef HAS_ZLIB
 	gzFile *gzfile;
+#endif
 } QFile;
 
 QFile *Qopen(const char *path, const char *mode);
