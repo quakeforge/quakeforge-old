@@ -23,21 +23,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // screen.c -- master for refresh, status bar, console, chat, notify, etc
 
-#include "qtypes.h"
 #include "quakedef.h"
-#include "client.h"
-#include "draw.h"
-#include "keys.h"
-#include "cvar.h"
 #include "glquake.h"
-#include "console.h"
-#include "screen.h"
-#include "sbar.h"
-#include "menu.h"
-#include "sound.h" 
-#include <plugin.h>
-#include "mathlib.h"
+#include <qtypes.h>
+#include <sys.h>
+#include <cvar.h>
+#include <keys.h>
+#include <draw.h>
+#include <sbar.h>
+#include <cmd.h>
+#include <console.h>
+#include <sound.h>
+#include <screen.h>
+#include <menu.h>
+#include <mathlib.h>
 #include <input.h>
+#include <plugin.h>
 #include <time.h>
 #include <client.h>
 
@@ -468,7 +469,11 @@ SCR_DrawNet
 */
 void SCR_DrawNet (void)
 {
+#ifdef QUAKEWORLD
 	if (cls.netchan.outgoing_sequence - cls.netchan.incoming_acknowledged < UPDATE_BACKUP-1)
+#else
+	if (realtime - cl.last_received_message < 0.3)
+#endif
 		return;
 	if (cls.demoplayback)
 		return;
@@ -476,6 +481,14 @@ void SCR_DrawNet (void)
 	Draw_Pic (scr_vrect.x+64, scr_vrect.y, scr_net);
 }
 
+/*
+===============
+SCR_DrawFPS
+
+Backported by Jules Bean <jules@jellybean.co.uk> from
+quakeworld client
+===============
+*/
 void SCR_DrawFPS (void)
 {
 	extern cvar_t show_fps;
@@ -754,10 +767,11 @@ void WritePCXfile (char *filename, byte *data, int width, int height,
 		
 // write output file 
 	length = pack - (byte *)pcx;
-
+#ifdef QUAKEWORLD
 	if (upload)
 		CL_StartUpload((void *)pcx, length);
 	else
+#endif
 		COM_WriteFile (filename, pcx, length);
 } 
  
@@ -860,10 +874,10 @@ void SCR_RSShot_f (void)
 	float fracw, frach;
 	char st[80];
 	time_t now;
-
+#ifdef QUAKEWORLD
 	if (CL_IsUploading())
 		return; // already one pending
-
+#endif
 	if (cls.state < ca_onserver)
 		return; // gotta be connected
 
@@ -954,8 +968,11 @@ void SCR_RSShot_f (void)
 	strncpy(st, cls.servername, sizeof(st));
 	st[sizeof(st) - 1] = 0;
 	SCR_DrawStringToSnap (st, newbuf, w - strlen(st)*8, h - 11, w);
-
+#ifdef QUAKEWORLD
 	strncpy(st, name.string, sizeof(st));
+#else
+	strncpy(st, cl_name.string, sizeof(st));
+#endif
 	st[sizeof(st) - 1] = 0;
 	SCR_DrawStringToSnap (st, newbuf, w - strlen(st)*8, h - 21, w);
 
@@ -971,6 +988,49 @@ void SCR_RSShot_f (void)
 
 //=============================================================================
 
+/*
+===============
+SCR_BeginLoadingPlaque
+
+================
+*/
+void SCR_BeginLoadingPlaque (void)
+{
+	S_StopAllSounds (true);
+
+	if (cls.state < ca_connected)
+		return;
+	if (cls.signon != SIGNONS)
+		return;
+	
+// redraw with no console and the loading plaque
+	Con_ClearNotify ();
+	scr_centertime_off = 0;
+	scr_con_current = 0;
+
+	scr_drawloading = true;
+	scr_fullupdate = 0;
+	Sbar_Changed ();
+	SCR_UpdateScreen ();
+	scr_drawloading = false;
+
+	scr_disabled_for_loading = true;
+	scr_disabled_time = realtime;
+	scr_fullupdate = 0;
+}
+
+/*
+===============
+SCR_EndLoadingPlaque
+
+================
+*/
+void SCR_EndLoadingPlaque (void)
+{
+	scr_disabled_for_loading = false;
+	scr_fullupdate = 0;
+	Con_ClearNotify ();
+}
 
 //=============================================================================
 
@@ -1019,6 +1079,11 @@ keypress.
 */
 int SCR_ModalMessage (char *text)
 {
+#ifdef UQUAKE
+	if (cls.state == ca_dedicated)
+		return true;
+#endif
+
 	scr_notifystring = text;
  
 // draw a fresh screen
@@ -1032,7 +1097,7 @@ int SCR_ModalMessage (char *text)
 	do
 	{
 		key_count = -1;         // wait for a key down and up
-		IN_SendKeyEvents();
+		IN_SendKeyEvents ();
 	} while (key_lastpress != 'y' && key_lastpress != 'n' && key_lastpress != K_ESCAPE);
 
 	scr_fullupdate = 0;
@@ -1158,9 +1223,10 @@ void SCR_UpdateScreen (void)
 	// draw any areas not covered by the refresh
 	//
 	SCR_TileClear ();
-
+#ifdef QUAKEWORLD
 	if (r_netgraph.value)
 		R_NetGraph ();
+#endif
 
 	if (scr_drawdialog)
 	{
