@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include "common_quakedef.h"
+#include "console.h"
 #include "sound.h"
 #include <mme/mmsystem.h>
 #ifdef HAVE_MME_MME_PUBLIC_H
@@ -87,8 +88,6 @@ FreeSound
 */
 void FreeSound (void)
 {
-	int		i;
-
 // only release primary buffer if it's not also the mixing buffer we just released
 	if (hWaveOut) {
 		waveOutReset (hWaveOut);
@@ -265,9 +264,7 @@ how many sample are required to fill it up.
 */
 int SNDDMA_GetDMAPos(void)
 {
-	MMTIME	mmtime;
-	int		s;
-	DWORD	dwWrite;
+	int	s = 0;
 
 	if (wav_init) {
 		s = snd_sent * WAV_BUFFER_SIZE;
