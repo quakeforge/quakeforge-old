@@ -1,5 +1,6 @@
 targets
 Makefile
+Rules.mk
 aclocal.m4
 configure
 config.cache
