@@ -715,19 +715,21 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 }
 #endif
 
+#define FBLOCK_SIZE	32
+#define FNAME_SIZE	MAX_OSPATH
+
 void
 COM_LoadGameDirectory(char *dir)
 {
 	searchpath_t	*search;
 	pack_t			*pak;
-	char			pakfile[MAX_OSPATH];
 	DIR				*dir_ptr;
 	struct dirent	*dirent;
 	char			**pakfiles;
 	int				i = 0, bufsize = 0, count = 0;
 
-	pakfiles = calloc(1, BLOCK_SIZE);
-	bufsize += BLOCK_SIZE;
+	pakfiles = calloc(1, FBLOCK_SIZE);
+	bufsize += FBLOCK_SIZE;
 	if (!pakfiles)
 		goto COM_LoadGameDirectory_free;
 	
@@ -738,7 +740,7 @@ COM_LoadGameDirectory(char *dir)
 	while ((dirent = readdir(dir_ptr))) {
 		if (!fnmatch("*.pak", dirent->d_name, FNMATCH_FLAGS)) {
 			if (count >= bufsize) {
-				bufsize += BLOCK_SIZE;
+				bufsize += FBLOCK_SIZE;
 				pakfiles = realloc(pakfiles, bufsize);
 				if (!pakfiles)
 					goto COM_LoadGameDirectory_free;
