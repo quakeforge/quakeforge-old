@@ -17,22 +17,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sys_sun.h -- Sun system driver
+// sys_unix.c -- Unix system driver
 
 #include "quakedef.h"
-#include "errno.h"
+#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stddef.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <sys/param.h>
-#include <fcntl.h>
-#include <stddef.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <stdio.h>
-#include <signal.h>
+
+#ifndef MAP_FAILED
+# define MAP_FAILED ((void*)-1)
+#endif
 
 qboolean			isDedicated;
 
@@ -101,9 +102,9 @@ int Sys_FileOpenRead (char *path, int *hndl)
     sys_handles[i].hFile = f;
     sys_handles[i].nLen = filelength(f);
     sys_handles[i].nPos = 0;
-    sys_handles[i].pMap = mmap( 0, sys_handles[i].nLen, PROT_READ, MAP_SHARED, fileno( sys_handles[i].hFile ), 0 );
-    if (!sys_handles[i].pMap || (sys_handles[i].pMap == (char *)-1))
-    {
+    sys_handles[i].pMap = mmap(NULL, sys_handles[i].nLen, PROT_READ,
+			       MAP_SHARED, fileno(sys_handles[i].hFile), 0 );
+    if (sys_handles[i].pMap == MAP_FAILED) {
 	printf( "mmap %s failed!", path );
 	sys_handles[i].pMap = NULL;
     }
