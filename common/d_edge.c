@@ -1,6 +1,8 @@
 /*
 d_edge.c
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -181,7 +183,11 @@ void D_DrawSurfaces (void)
 	vec3_t			world_transformed_modelorg;
 	vec3_t			local_modelorg;
 
+#ifdef QUAKEWORLD
+	currententity = &r_worldentity;
+#else
 	currententity = &cl_entities[0];
+#endif
 	TransformVector (modelorg, transformed_modelorg);
 	VectorCopy (transformed_modelorg, world_transformed_modelorg);
 
@@ -197,7 +203,7 @@ void D_DrawSurfaces (void)
 			d_zistepv = s->d_zistepv;
 			d_ziorigin = s->d_ziorigin;
 
-			D_DrawSolidSurface (s, (int)s->data & 0xFF);
+			D_DrawSolidSurface (s, (int)((long)s->data & 0xFF));
 			D_DrawZSpans (s->spans);
 		}
 	}
@@ -259,6 +265,7 @@ void D_DrawSurfaces (void)
 				}
 
 				D_CalcGradients (pface);
+
 				Turbulent8 (s->spans);
 				D_DrawZSpans (s->spans);
 
@@ -269,7 +276,11 @@ void D_DrawSurfaces (void)
 				// FIXME: we don't want to do this every time!
 				// TODO: speed up
 				//
+#ifdef QUAKEWORLD
+					currententity = &r_worldentity;
+#else
 					currententity = &cl_entities[0];
+#endif
 					VectorCopy (world_transformed_modelorg,
 								transformed_modelorg);
 					VectorCopy (base_vpn, vpn);
@@ -317,7 +328,9 @@ void D_DrawSurfaces (void)
 				// FIXME: we don't want to do this every time!
 				// TODO: speed up
 				//
+#ifdef UQUAKE
 					currententity = &cl_entities[0];
+#endif
 					VectorCopy (world_transformed_modelorg,
 								transformed_modelorg);
 					VectorCopy (base_vpn, vpn);
@@ -325,6 +338,9 @@ void D_DrawSurfaces (void)
 					VectorCopy (base_vright, vright);
 					VectorCopy (base_modelorg, modelorg);
 					R_TransformFrustum ();
+#ifdef QUAKEWORLD
+					currententity = &r_worldentity;
+#endif
 				}
 			}
 		}
