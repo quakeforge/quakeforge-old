@@ -42,6 +42,9 @@ extern 	cvar_t 	*cl_predict_players;
 extern 	cvar_t 	*cl_predict_players2;
 extern 	cvar_t 	*cl_solid_players;
 
+entity_t                cl_entities[MAX_EDICTS];
+entity_t                cl_temp_entities[MAX_TEMP_ENTITIES];
+
 static struct predicted_player {
 	int flags;
 	qboolean active;
