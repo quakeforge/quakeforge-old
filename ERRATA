@@ -13,4 +13,6 @@ Joseph Carter <knghtbrd@debian.org>
 			      processed) with 0 events remaining."
 
 Tonik <tonik@quake.ru>
- - qw-server hangs in win32
+ - qw-server hangs in win32 (knghtbrd). Well i kinda fixed it in my tree (Tonik)
+ - the real problem is, client connection process doesn't go any further
+   after the 'CONNECTING' stage, and that really sucks :(
