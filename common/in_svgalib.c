@@ -379,3 +379,7 @@ void IN_Move(usercmd_t *cmd)
 		}
 	}
 }
+
+void IN_Frame()
+{
+}

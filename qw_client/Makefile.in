@@ -339,7 +339,7 @@ endif
 
 ifneq ($(SVGAQUAKE),)
 ALL_SVGA_SRC = $(SW_REND_SRC) \
-		vid_svgalib.c d_copy.s model.c
+		vid_svgalib.c d_copy.s model.c in_svgalib.c
 ALL_SVGA_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
                 $(basename $(ALL_SVGA_SRC) .c .s))) \
 		$(BUILD_DIR)/common_lib.a $(TARGET_DIR)/sound_lib.a
