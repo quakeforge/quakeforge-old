@@ -48,7 +48,7 @@ QuakeForge 0.1.0
 	least-surprise principle.  Set it to 0 if you want a qw-client like
 	HUD.
 
-22 Jan 2000 - changes to command line option -game
+22 Jan 2000 - changes to command line option -game  [REMOVED!]
 	You may now specify multiple game directories with -game.  If for
 	example you wanted to use the original registered game with MegaTF
 	on a new style binary you would use -game id1,megatf.  It does work
@@ -57,6 +57,10 @@ QuakeForge 0.1.0
 	
 	One caveat:  Most mods were designed to be the only one in use, it
 	may be a Bad Thing to mix certain mods with other mods.
+
+	NOTE: This feature has been removed because it can seriously cause
+	      confusion to a game mod.  The proper way to override part of
+	      a game is to use different fs_basepath and fs_sharepath.
 
 19 Jan 2000 - changes to cvar r_fog
 	Fog color is once again white.  The r_fog cvar is now a control for

@@ -581,9 +581,10 @@ Draw_Crosshair(void)
 
 		glTexEnvf ( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 	} else if (crosshair->value)
-		Draw_Character (scr_vrect.x + scr_vrect.width/2-4 + cl_crossx->value,
-			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy->value,
-			'+');
+		Draw_Character (scr_vrect.x + scr_vrect.width/2-4 
+				+ cl_crossx->value, scr_vrect.y
+				+ scr_vrect.height/2-4 + cl_crossy->value,
+				'+');
 }
 
 

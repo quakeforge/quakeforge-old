@@ -521,6 +521,8 @@ Host_InitDisplay ()
 {
 }
 
+extern cvar_t	*fs_basepath;
+
 /*
 	Host_Init
 
@@ -531,7 +533,8 @@ Host_Init (quakeparms_t *parms)
 {
 	COM_InitArgv (parms->argc, parms->argv);
 
-#ifdef QUAKEWORLD
+#if 0
+//#ifdef QUAKEWORLD
 	COM_AddParm ("-game");
 	COM_AddParm ("qw");
 	Sys_mkdir("qw");
@@ -546,12 +549,17 @@ Host_Init (quakeparms_t *parms)
 		Sys_Error ("Only %4.1fMB of memory reported, can't execute game", parms->memsize / (float) 0x100000);
 
 	Memory_Init (parms->membase, parms->memsize);
-	CL_InitCvars();
-	SCR_InitCvars();
-	VID_InitCvars ();
 	Cbuf_Init ();
 	Cmd_Init ();
 	Cvar_Init ();
+	CL_InitCvars ();
+	SCR_InitCvars ();
+	VID_InitCvars ();
+
+	// FIXME: stuff only +set here, shouldn't stuff all commands --KB
+	Cmd_StuffCmds_f ();
+	Cbuf_Execute ();
+
 	V_Init ();
 	Chase_Init ();
 

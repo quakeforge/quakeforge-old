@@ -74,6 +74,9 @@ QUAKE FILESYSTEM
 
 char    gamedirfile[MAX_OSPATH];
 
+cvar_t	*fs_basepath;
+cvar_t	*fs_sharepath;
+
 #ifdef GENERATIONS
 #include <unzip.h>
 typedef unsigned char byte_t;
@@ -123,7 +126,6 @@ typedef struct
 #define	MAX_FILES_IN_PACK	2048
 
 char	com_gamedir[MAX_OSPATH];
-char	com_basedir[MAX_OSPATH];
 
 typedef struct searchpath_s
 {
@@ -136,11 +138,10 @@ searchpath_t	*com_searchpaths;
 searchpath_t	*com_base_searchpaths;	// without gamedirs
 
 /*
-================
-COM_filelength
-================
+	COM_filelength
 */
-int COM_filelength (QFile *f)
+int
+COM_filelength (QFile *f)
 {
 	int		pos;
 	int		end;
@@ -153,7 +154,11 @@ int COM_filelength (QFile *f)
 	return end;
 }
 
-int COM_FileOpenRead (char *path, QFile **hndl)
+/*
+	COM_FileOpenRead
+*/
+int
+COM_FileOpenRead (char *path, QFile **hndl)
 {
 	QFile	*f;
 
@@ -169,12 +174,10 @@ int COM_FileOpenRead (char *path, QFile **hndl)
 }
 
 /*
-============
-COM_Path_f
-
-============
+	COM_Path_f
 */
-void COM_Path_f (void)
+void
+COM_Path_f (void)
 {
 	searchpath_t	*s;
 
@@ -277,14 +280,14 @@ COM_CreatePath ( char *path )
 
 
 /*
-===========
-COM_CopyFile
+	COM_CopyFile
 
-Copies a file over from the net to the local cache, creating any directories
-needed.  This is for the convenience of developers using ISDN from home.
-===========
+	Copies a file over from the net to the local cache, creating any
+	directories needed.  This is for the convenience of developers using
+	ISDN from home.
 */
-void COM_CopyFile (char *netpath, char *cachepath)
+void
+COM_CopyFile (char *netpath, char *cachepath)
 {
 	QFile	*in, *out;
 	int		remaining, count;
@@ -311,8 +314,11 @@ void COM_CopyFile (char *netpath, char *cachepath)
 	Qclose (out);
 }
 
-
-QFile *COM_OpenRead(const char *path, int offs, int len)
+/*
+	COM_OpenRead
+*/
+QFile *
+COM_OpenRead (const char *path, int offs, int len)
 {
 	int fd=open(path,O_RDONLY);
 	unsigned char id[2];
@@ -342,17 +348,16 @@ QFile *COM_OpenRead(const char *path, int offs, int len)
 	return 0;
 }
 
-/*
-===========
-COM_FOpenFile
-
-Finds the file in the search path.
-Sets com_filesize and one of handle or file
-===========
-*/
 int file_from_pak; // global indicating file came from pack file ZOID
 
-int COM_FOpenFile (char *filename, QFile **gzfile)
+/*
+	COM_FOpenFile
+
+	Finds the file in the search path.
+	Sets com_filesize and one of handle or file
+*/
+int
+COM_FOpenFile (char *filename, QFile **gzfile)
 {
 	searchpath_t	*search;
 	char		netpath[MAX_OSPATH];
@@ -418,8 +423,6 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 			if(developer->value)
 				Sys_Printf ("FindFile: %s\n",netpath);
 
-			//*file = fopen (netpath, "rb");
-			//return COM_filelength (*file);
 			*gzfile=COM_OpenRead(netpath,-1,-1);
 			return com_filesize;
 		}
@@ -433,18 +436,18 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 	return -1;
 }
 
-/*
-============
-COM_LoadFile
-
-Filename are relative to the quake directory.
-Allways appends a 0 byte to the loaded data.
-============
-*/
 cache_user_t *loadcache;
 byte	*loadbuf;
 int		loadsize;
-byte *COM_LoadFile (char *path, int usehunk)
+
+/*
+	COM_LoadFile
+
+	Filename are relative to the quake directory.
+	Allways appends a 0 byte to the loaded data.
+*/
+byte *
+COM_LoadFile (char *path, int usehunk)
 {
 	QFile	*h;
 	byte	*buf;
@@ -495,24 +498,28 @@ byte *COM_LoadFile (char *path, int usehunk)
 	return buf;
 }
 
-byte *COM_LoadHunkFile (char *path)
+byte *
+COM_LoadHunkFile (char *path)
 {
 	return COM_LoadFile (path, 1);
 }
 
-byte *COM_LoadTempFile (char *path)
+byte *
+COM_LoadTempFile (char *path)
 {
 	return COM_LoadFile (path, 2);
 }
 
-void COM_LoadCacheFile (char *path, struct cache_user_s *cu)
+void
+COM_LoadCacheFile (char *path, struct cache_user_s *cu)
 {
 	loadcache = cu;
 	COM_LoadFile (path, 3);
 }
 
 // uses temp hunk if larger than bufsize
-byte *COM_LoadStackFile (char *path, void *buffer, int bufsize)
+byte *
+COM_LoadStackFile (char *path, void *buffer, int bufsize)
 {
 	byte	*buf;
 
@@ -524,16 +531,15 @@ byte *COM_LoadStackFile (char *path, void *buffer, int bufsize)
 }
 
 /*
-=================
-COM_LoadPackFile
+	COM_LoadPackFile
 
-Takes an explicit (not game tree related) path to a pak file.
+	Takes an explicit (not game tree related) path to a pak file.
 
-Loads the header and directory, adding the files at the beginning
-of the list so they override previous pack files.
-=================
+	Loads the header and directory, adding the files at the beginning
+	of the list so they override previous pack files.
 */
-pack_t *COM_LoadPackFile (char *packfile)
+pack_t *
+COM_LoadPackFile (char *packfile)
 {
 	dpackheader_t		header;
 	int			i;
@@ -652,7 +658,8 @@ COM_pakzip_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
 }
 
 
-pack_t *COM_LoadPackZipFile (char *packfile)
+pack_t *
+COM_LoadPackZipFile (char *packfile)
 {
 	int				i=0;
 	packfile_t              	*newfiles;
@@ -722,6 +729,8 @@ COM_LoadGameDirectory(char *dir)
 	struct dirent	*dirent;
 	char			**pakfiles = NULL;
 	int				i = 0, bufsize = 0, count = 0;
+
+	Con_DPrintf ("COM_LoadGameDirectory (\"%s\")\n", dir);
 
 	pakfiles = malloc(FBLOCK_SIZE * sizeof(char *));
 	bufsize += FBLOCK_SIZE;
@@ -798,14 +807,13 @@ COM_LoadGameDirectory_free:
 }
 
 /*
-================
-COM_AddGameDirectory
+	COM_AddDirectory
 
-Sets com_gamedir, adds the directory to the head of the path,
-then loads and adds pak1.pak pak2.pak ...
-================
+	Sets com_gamedir, adds the directory to the head of the path,
+	then loads and adds pak1.pak pak2.pak ...
 */
-void COM_AddGameDirectory (char *dir)
+void
+COM_AddDirectory (char *dir)
 {
 	searchpath_t	*search;
 	char			*p;
@@ -815,7 +823,6 @@ void COM_AddGameDirectory (char *dir)
 	else
 		strcpy(gamedirfile, dir);
 	strcpy (com_gamedir, dir);
-	Con_Printf ("com_gamedir changed to %s\n", com_gamedir);
 
 //
 // add the directory to the search path
@@ -829,19 +836,37 @@ void COM_AddGameDirectory (char *dir)
 // add any pak files in the format pak0.pak pak1.pak, ...
 //
 
-	COM_LoadGameDirectory(dir);
+	COM_LoadGameDirectory (dir);
 }
 
 /*
-================
-COM_Gamedir
+	COM_AddGameDirectory
 
-Sets the gamedir and path to a different directory.
-================
+	FIXME: this is a wrapper for COM_AddDirectory (which used to be
+	this function) to have it load share and base paths.  Whenver
+	someone goes through to clean up the fs code, this function should
+	merge with COM_AddGameDirectory.
 */
-void COM_Gamedir (char *dir)
+void
+COM_AddGameDirectory (char *dir)
 {
-	searchpath_t	*search, *next;
+	Con_DPrintf ("COM_AddGameDirectory (\"%s/%s\"\n",
+			fs_sharepath->string, dir);
+
+	if (strcmp (fs_sharepath->string, fs_basepath->string) != 0)
+		COM_AddDirectory (va("%s/%s", fs_sharepath->string, dir));
+	COM_AddDirectory (va("%s/%s", fs_basepath->string, dir));
+}
+
+/*
+	COM_Gamedir
+
+	Sets the gamedir and path to a different directory.
+*/
+void
+COM_Gamedir (char *dir)
+{
+	searchpath_t	*next;
 
 	if (strstr(dir, "..") || strstr(dir, "/")
 		|| strstr(dir, "\\") || strstr(dir, ":") )
@@ -850,7 +875,7 @@ void COM_Gamedir (char *dir)
 		return;
 	}
 
-	if (!strcmp(gamedirfile, dir))
+	if (strcmp (gamedirfile, dir) == 0)
 		return;		// still the same
 	strcpy (gamedirfile, dir);
 
@@ -875,85 +900,48 @@ void COM_Gamedir (char *dir)
 	//
 	Cache_Flush ();
 
+	if (strcmp (dir, GAMENAME) == 0)
+		return;
 #ifdef QUAKEWORLD
-	if (!strcmp(dir, GAMENAME) || !strcmp(dir, "qw"))
+	if (strcmp (dir, "qw") == 0)
 		return;
 #endif
 
-	snprintf(com_gamedir, sizeof(com_gamedir), "%s/%s", com_basedir, dir);
-
-	//
-	// add the directory to the search path
-	//
-#if 1
-	//search = Hunk_Alloc (sizeof(searchpath_t));
-	search = Z_Malloc (sizeof(searchpath_t));
-	strcpy (search->filename, dir);
-	search->next = com_searchpaths;
-	com_searchpaths = search;
-#else
-	search = Z_Malloc (sizeof(searchpath_t));
-	strcpy (search->filename, com_gamedir);
-	search->next = com_searchpaths;
-	com_searchpaths = search;
-#endif
-
-	//
-	// add any pak files in the format pak0.pak pak1.pak, ...
-	//
-
-	COM_LoadGameDirectory(dir);
+	COM_AddGameDirectory (dir);
 }
 
 /*
-================
-COM_InitFilesystem
-================
+	COM_InitFilesystem
 */
 void
 COM_InitFilesystem ( void )
 {
-	int		i, len;
-	char	*p;
-	char	*games;
+#ifdef UQUAKE
+	int		i;
+#endif
 
-/*
-	-basedir <path>
-	Overrides the system supplied base directory
-*/
-	i = COM_CheckParm ("-basedir");
-	if (i && i < com_argc-1)
-		strcpy (com_basedir, com_argv[i+1]);
-	else
-		strcpy (com_basedir, host_parms.basedir);
-
+	fs_basepath = Cvar_Get ("fs_basepath", ".", CVAR_ROM,
+			"the location of your game directories");
+	fs_sharepath = Cvar_Get ("fs_sharepath", fs_basepath->string,
+			CVAR_ROM, "read-only game directories");
 /*
 	start up with GAMENAME by default
 */
-	COM_AddGameDirectory (va("%s/" GAMENAME, com_basedir) );
+	COM_AddGameDirectory (GAMENAME);
+	if (hipnotic)
+		COM_AddGameDirectory ("hipnotic");
+	if (rogue)
+		COM_AddGameDirectory ("rogue");
+
 #ifdef QUAKEWORLD
-	COM_AddGameDirectory (va("%s/qw", com_basedir) );
-#endif	// QUAKEWORLD
-	if ( hipnotic ) {
-		COM_AddGameDirectory (va("%s/hipnotic", com_basedir) );
-	}
-	if ( rogue ) {
-		COM_AddGameDirectory (va("%s/rogue", com_basedir) );
-	}
-
+	COM_AddGameDirectory ("qw");
+#elif UQUAKE
 	i = COM_CheckParm ("-game");
-	if (i && i < com_argc-1) {
-
-		len = strlen(com_argv[i+1]) + 1;
-		games = (char *) malloc(len);
-		strcpy(games, com_argv[i+1]);
-
-		for ( p = strtok(games, ",") ; p != NULL; p = strtok(NULL, ",")) {
-			COM_AddGameDirectory (va("%s/%s", com_basedir, p));
-		}
-		free(games);
-	}
+	if (i && i < com_argc-1)
+		COM_AddGameDirectory (com_argv[i+1]);
+#endif
 
 	// any set gamedirs will be freed up to here
 	com_base_searchpaths = com_searchpaths;
 }
+
