@@ -947,7 +947,7 @@ void Sbar_DrawFrags (void)
 
 // draw the text
 	l = scoreboardlines <= 4 ? scoreboardlines : 4;
-	
+
 	x = 23;
 #ifdef QUAKEWORLD
 	xofs = 0;

@@ -191,8 +191,9 @@ extern int		unreliableMessagesSent;
 extern int		unreliableMessagesReceived;
 #endif // UQUAKE
 
-
+#ifdef QUAKEWORLD
 void		NET_Init (int port);
+#endif
 void		NET_Shutdown (void);
 qboolean	NET_GetPacket (void);
 void		NET_SendPacket (int length, void *data, netadr_t to);

@@ -228,6 +228,7 @@ typedef struct
 	qboolean	demorecording;
 	qboolean	demoplayback;
 	qboolean	timedemo;
+	int		forcetrack;
 	gzFile		*demofile;
 	float		td_lastframe;
 	int		td_startframe;	
@@ -337,10 +338,10 @@ typedef struct
 	qboolean	inwater;
 	float		viewheight;
 	float		idealpitch;
-	struct scoreboard_t	*scores;	// [cl.maxclients]
+	scoreboard_t	*scores;	// [cl.maxclients]
 
-	struct usercmd_t	cmd;	// last command sent to the server
-	int			items;	// inventory bit flags
+	usercmd_t	cmd;		// last command sent to the server
+	int		items;		// inventory bit flags
 	vec3_t		mviewangles[2];	// in demos, viewangles is lerped
 					// between these
 	vec3_t		mvelocity[2];	// update by server, used for lean+bob
