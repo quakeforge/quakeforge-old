@@ -644,6 +644,7 @@ void COM_LoadGameDirectory(char *dir)
 		
 		pak = COM_LoadPackFile(pakfile);                
 		if(!pak)
+			break;
 
                 search = Hunk_Alloc (sizeof(searchpath_t));
                 search->pack = pak;
