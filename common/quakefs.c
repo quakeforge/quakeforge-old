@@ -920,7 +920,7 @@ COM_InitFilesystem ( void )
 	int		i;
 #endif
 
-	fs_basepath = Cvar_Get ("fs_basepath", ".", CVAR_ROM,
+	fs_basepath = Cvar_Get ("fs_basepath", FS_BASEPATH, CVAR_ROM,
 			"the location of your game directories");
 	fs_sharepath = Cvar_Get ("fs_sharepath", fs_basepath->string,
 			CVAR_ROM, "read-only game directories");

@@ -123,6 +123,27 @@ else
    AC_DEFINE(GAMENAME, "id1")
 fi
 
+AC_ARG_ENABLE(basepath,
+[  --enable-basepath       use \${prefix}/games/quakeforge instead of . for game
+                          data],
+   BASEPATH=$enable_basepath
+)
+AC_ARG_WITH(basepath,
+[  --with-basepath=DIR     use basepath instead of . or
+                          \${prefix}/games/quakeforge for game data],
+BASEPATH=$withval)
+if test "x$BASEPATH" = xyes; then
+   if test "x$prefix" = xNONE; then
+      AC_DEFINE_UNQUOTED(FS_BASEPATH, "${ac_default_prefix}/games/quakeforge")
+   else
+      AC_DEFINE_UNQUOTED(FS_BASEPATH, "${prefix}/games/quakeforge")
+   fi
+elif test "x$BASEPATH" = xno -o "x$BASEPATH" = x; then
+   AC_DEFINE(FS_BASEPATH, ".")
+else
+   AC_DEFINE_UNQUOTED(FS_BASEPATH, "$BASEPATH")
+fi
+
 GENERATIONS=no
 AC_ARG_ENABLE(generations,
 [  --enable-generations    enable .qz support. Requires zlib)],

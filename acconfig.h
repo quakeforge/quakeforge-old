@@ -9,6 +9,9 @@
 /* Define if you want .qz support */
 #undef GENERATIONS
 
+/* Define this to the default location of the game directories */
+#undef FS_BASEPATH
+
 /* Define this to the subdirectory name of the default game */
 #undef GAMENAME
 
