@@ -240,11 +240,7 @@ void V_DriftPitch (void)
 		return;
 	}
 	
-#ifdef QUAKEWORLD
-	delta = 0 - cl.viewangles[PITCH];
-#else
 	delta = cl.idealpitch - cl.viewangles[PITCH];
-#endif
 
 	if (!delta)
 	{
@@ -461,18 +457,18 @@ void V_SetContentsColor (int contents)
 #endif
 	switch (contents)
 	{
-	case CONTENTS_EMPTY:
-#ifdef UQUAKE
 	case CONTENTS_SOLID:
+#ifdef QUAKEWORLD
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
+#else
+		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
 #endif
+	case CONTENTS_EMPTY:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
 		break;
 	case CONTENTS_LAVA:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
 		break;
-#ifdef QUAKEWORLD
-	case CONTENTS_SOLID:
-#endif
 	case CONTENTS_SLIME:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
 		break;
@@ -538,11 +534,9 @@ void V_CalcBlend (void)
 
 		a2 = ((cl.cshifts[j].percent * gl_cshiftpercent->value) / 100.0) / 255.0;
 
-#ifdef QUAKEWORLD
-//		a2 = (cl.cshifts[j].percent/2)/255.0;
-#else
-//		a2 = cl.cshifts[j].percent/255.0;
-#endif
+//		a2 = (cl.cshifts[j].percent/2)/255.0;	// from qw
+//		a2 = cl.cshifts[j].percent/255.0;		// from uq
+
 		if (!a2)
 			continue;
 		a = a + a2*(1-a);
@@ -732,16 +726,14 @@ void V_CalcViewRoll (void)
 */
 void V_CalcIntermissionRefdef (void)
 {
-#ifdef QUAKEWORLD
 	entity_t	*view;
-#else
-	entity_t	*ent, *view;
+#ifdef UQUAKE
+	entity_t	*ent;
 #endif
 	float		old;
 
-#ifdef QUAKEWORLD
 // view is the weapon model
-#else
+#ifdef UQUAKE
 // ent is the player model (visible when out of body)
 	ent = &cl_entities[cl.playernum + 1];
 // view is the weapon model (only visible from inside body)
@@ -769,17 +761,15 @@ void V_CalcIntermissionRefdef (void)
 */
 void V_CalcRefdef (void)
 {
-#ifdef QUAKEWORLD
 	entity_t	*view;
-	int		h, i;
+#ifdef QUAKEWORLD
+	int			h;
 #else
-	entity_t	*ent, *view;
-	int			i;
-#endif
-	vec3_t		forward, right, up;
-#ifdef UQUAKE
+	entity_t	*ent;
 	vec3_t		angles;
 #endif
+	int			i;
+	vec3_t		forward, right, up;
 	float		bob;
 	static float oldz = 0;
 
@@ -974,7 +964,6 @@ void V_CalcRefdef (void)
 #endif
 }
 
-#ifdef QUAKEWORLD
 /*
 	DropPunchAngle
 */
@@ -984,7 +973,6 @@ void DropPunchAngle (void)
 	if (cl.punchangle < 0)
 		cl.punchangle = 0;
 }
-#endif
 
 /*
 	V_RenderView
@@ -1026,12 +1014,8 @@ cl.simangles[ROLL] = 0;	// FIXME @@@
 	}
 	else
 	{
-#ifdef QUAKEWORLD
-		V_CalcRefdef ();
-#else
 		if (!cl.paused /* && (sv.maxclients > 1 || key_dest == key_game) */ )
 			V_CalcRefdef ();
-#endif
 	}
 
 	R_PushDlights ();
