@@ -185,6 +185,9 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_novis);
 	Cvar_RegisterVariable (&r_speeds);
 	Cvar_RegisterVariable (&r_netgraph);
+	Cvar_RegisterVariable (&r_fog);
+	Cvar_RegisterVariable (&r_waterwarp);
+	Cvar_RegisterVariable (&r_volfog);
 
 	Cvar_RegisterVariable (&gl_clear);
 	Cvar_RegisterVariable (&gl_texsort);
