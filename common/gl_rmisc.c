@@ -418,7 +418,7 @@ void R_TranslatePlayerSkin (int playernum)
 		paliashdr = (aliashdr_t *)Mod_Extradata (model);
 		s = paliashdr->skinwidth * paliashdr->skinheight;
 		if (currententity->skinnum < 0 || currententity->skinnum >= paliashdr->numskins) {
-			Con_Printf("(%d): Invalid player skin #%d\n", playernum, currententity->skinnum);
+			Con_DPrintf("(%d): Invalid player skin #%d\n", playernum, currententity->skinnum);
 			original = (byte *)paliashdr + paliashdr->texels[0];
 		} else
 			original = (byte *)paliashdr + paliashdr->texels[currententity->skinnum];
