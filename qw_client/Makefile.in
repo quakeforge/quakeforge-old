@@ -20,7 +20,10 @@ mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
 BUILD_DIR	:= $(TARGET_DIR)/qw_client
-OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{client,common_lib}/%.o)
+OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{client,common_lib}/%.@OBJEXT@)
+DEP_PATTERN	:= $(shell echo $(BUILD_DIR)/{client,common_lib}/%.d)
+GL_OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/client/gl/%.@OBJEXT@)
+GL_DEP_PATTERN	:= $(shell echo $(BUILD_DIR)/client/gl/%.d)
 
 LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
@@ -145,7 +148,6 @@ MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
 GL_REND_SRC = gl_screen.c gl_model.c gl_draw.c gl_mesh.c gl_refrag.c \
               gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_warp.c \
 	      nonintel.c gl_ngraph.c gl_view.c gl_rpart.c gl_cl_parse.c
-#              gl_rlight.c gl_rmain.c gl_rmisc.c gl_rsurf.c gl_test.c gl_warp.c
 
 # Software renderer source
 
@@ -191,6 +193,51 @@ GENERAL_SRC = $(CL_COMMON_SRC) \
 
 ###########################################################################
 #
+# Dependency Rules
+#
+
+$(DEP_PATTERN): $(SRC_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(SRC_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(COMMON_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(COMMON_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(QW_COMMON_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(DEP_PATTERN): $(QW_COMMON_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(GL_DEP_PATTERN): $(COMMON_DIR)/%.c
+	set -e; $(CC) -M $(CFLAGS) $(GL_CFLAGS) $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+$(GL_DEP_PATTERN): $(COMMON_DIR)/%.s
+	set -e; $(CC) -M $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp $< \
+		| sed 's%\($*\)\.@OBJEXT@[ :]*%\1.@OBJEXT@ $@ : %g' > $@; \
+		[ -s $@ ] || rm -f $@
+
+###########################################################################
+#
 # Compilation rules
 #
 
@@ -206,20 +253,23 @@ $(OBJ_PATTERN): $(COMMON_DIR)/%.c
 $(OBJ_PATTERN): $(COMMON_DIR)/%.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
-$(BUILD_DIR)/client/gl/%.@OBJEXT@: $(COMMON_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/client/gl/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
-$(BUILD_DIR)/client/gl/%.@OBJEXT@: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
-
-$(BUILD_DIR)/client/gl/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
-
 $(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(SRC_DIR)/%.s
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.c
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(GL_OBJ_PATTERN): $(COMMON_DIR)/%.s
+	$(CC) $(CFLAGS) $(GL_CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 # Software targets
 client_DIR:
@@ -238,7 +288,10 @@ gl_DIR:
 
 # Lib Software targets
 ALL_COMMON_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix \
-			  .@OBJEXT@, $(basename $(GENERAL_SRC) .c .s)))
+			.@OBJEXT@, $(basename $(GENERAL_SRC) .c .s)))
+
+ALL_COMMON_LIB_DEPS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix .d,\
+			$(basename $(GENERAL_SRC) .c .s)))
 
 common_lib_DIR:
 	@DIR=common_lib; $(MAKE_SURE_DIR)
@@ -389,10 +442,10 @@ ifneq ($(GLQUAKE),)
 GLX_GL_SRC = gl_vidglx.c dga_check.c
 ALL_GL_SRC = $(GL_REND_SRC) $(GLX_GL_SRC)
 
-GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/client/gl/%,$(addsuffix .o,\
+GL_REND_OBJS = $(patsubst %,$(BUILD_DIR)/client/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(GL_REND_SRC) .c .s)))
 
-GLX_GL_OBJS = $(patsubst %,$(BUILD_DIR)/client/%,$(addsuffix .o,\
+GLX_GL_OBJS = $(patsubst %,$(BUILD_DIR)/client/%,$(addsuffix .@OBJEXT@,\
               $(basename $(GLX_GL_SRC) .c .s)))
 	      
 ALL_GL_OBJS = $(GLX_GL_OBJS) $(GL_REND_OBJS) \
