@@ -107,7 +107,9 @@ static int	hasdgavideo = 0, hasvidmode = 0;
 #ifdef HAVE_DLOPEN
 static void	*dlhand = NULL;
 #endif
+#ifdef HAS_DGA
 static int	hasdga = 0;
+#endif
 static GLboolean (*QF_XMesaSetFXmode)(GLint mode) = NULL;
 
 
