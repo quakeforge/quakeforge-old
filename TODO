@@ -43,7 +43,7 @@ Major projects:
 Platform support:
 
 * (0.2)    X11 DGA support
-* (0.2)    tty target [Palisade]
++          tty target
 * (0.2?)   Run-time video mode switching for most targets
 + (0.2)    Seperate pak game and config directory support
 + (0.2)    Global config file [knghtbrd]
