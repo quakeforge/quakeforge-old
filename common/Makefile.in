@@ -107,9 +107,11 @@ clean: $(CLEAN_TARGETS)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)
-	for i in $(targets); do \
-	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
-	     $(DESTDIR)/$(bindir)/$$i; \
+	for i in x-dummy $(targets); do \
+	   if test "$i" -ne x-dummy; then \
+	      $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	        $(DESTDIR)/$(bindir)/$$i; \
+	   fi \
 	done
 
 check:
