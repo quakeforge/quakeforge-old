@@ -132,7 +132,7 @@ PROC glColorPointerEXT;
 PROC glTexCoordPointerEXT;
 PROC glVertexPointerEXT;
 
-typedef void (APIENTRY *lp3DFXFUNC) (int, int, int, int, int, const void*);
+typedef void (GLAPIENTRY *lp3DFXFUNC) (int, int, int, int, int, const void*);
 lp3DFXFUNC glColorTableEXT;
 qboolean is8bit = false;
 qboolean isPermedia = false;
