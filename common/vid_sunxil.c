@@ -121,9 +121,6 @@ int		vid_buffersize;
 	FocusChangeMask \
 )
 
-int		VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
-byte	*VGA_pagebase;
-
 qboolean			x_fullscreen = true;
 Display				*x_disp = NULL;
 int				x_screen, x_screen_width, x_screen_height;

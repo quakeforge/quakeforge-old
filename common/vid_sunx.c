@@ -52,9 +52,6 @@ int p_mouse_x;
 int p_mouse_y;
 qboolean	mouse_grabbed = false; // we grab it when console is up
 
-int		VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
-byte	*VGA_pagebase;
-
 // The following X property format is defined in Motif 1.1's
 // Xm/MwmUtils.h, but QUAKE should not depend on that header
 // file. Note: Motif 1.2 expanded this structure with

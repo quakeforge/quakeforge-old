@@ -38,10 +38,6 @@ unsigned short	d_8to16table[256];
 cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};
 
-// not used
-int	VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
-byte	*VGA_pagebase;
-
 #define NUM_STDBUTTONS	3
 #define NUM_BUTTONS	10
 

@@ -46,10 +46,6 @@ cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
 cvar_t		m_filter = {"m_filter","0", true};
 float old_windowed_mouse;
 
-// not used
-int	VGA_width, VGA_height, VGA_rowbytes, VGA_bufferrowbytes, VGA_planar;
-byte	*VGA_pagebase;
-
 
 qboolean        mouse_avail;
 int             mouse_buttons=3;
