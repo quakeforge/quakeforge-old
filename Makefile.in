@@ -1,9 +1,9 @@
 SUBDIRS = qw_client qw_server uquake
-SRC_DIR = @src_dir@
+SRC_DIR = @srcdir@
 
 all:
 	@for dir in $(SUBDIRS); do \
- 	$(MAKE) -C $$dir $@ || exit; \
+	$(MAKE) -C $$dir $@ || exit; \
 	done
 
 distclean:
@@ -14,7 +14,7 @@ distclean:
 
 %:
 	@for dir in $(SUBDIRS); do \
- 	$(MAKE) -C $$dir $@ || exit; \
+	$(MAKE) -C $$dir $@ || exit; \
 	done
 
 
@@ -22,17 +22,17 @@ distclean:
 # source directory
 ifeq ($(SRC_DIR),.)
 configure: configure.in
-      autoconf
+	autoconf
 
 Makefile: Makefile.in configure
-      ./configure
+	./configure
 
 qw_client/Makefile: qw_client/Makefile.in configure
-      ./configure
+	./configure
 
 qw_server/Makefile: qw_server/Makefile.in configure
-      ./configure
+	./configure
 
 uquake/Makefile: uquake/Makefile.in configure
-      ./configure
+	./configure
 endif
