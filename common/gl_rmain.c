@@ -86,9 +86,12 @@ cvar_t	r_dynamic = {"r_dynamic","1"};
 cvar_t	r_novis = {"r_novis","0"};
 #ifdef QUAKEWORLD
 cvar_t	r_netgraph = {"r_netgraph","0"};
-#else
-cvar_t  r_fog = {"r_fog", "0"};
 #endif
+
+// All the fog code was disabled for QuakeWold
+// _reduced_ visability shouldn't be considered cheating :)
+cvar_t  r_fog = {"r_fog", "0"};
+
 
 cvar_t	gl_finish = {"gl_finish","0"};
 cvar_t	gl_clear = {"gl_clear","0"};
@@ -1157,10 +1160,8 @@ r_refdef must be set before the first call
 void R_RenderView (void)
 {
 	double	time1 = 0, time2 = 0;
-#ifndef QUAKEWORLD
 	// Fixme: the last argument should be a cvar... r_fog_gamma
 	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.15};
-#endif
 
 	if (r_norefresh.value)
 		return;
@@ -1184,8 +1185,6 @@ void R_RenderView (void)
 	R_Clear ();
 
 	// render normal view
-#ifndef QUAKEWORLD
-	// XXX
 
 /***** Experimental silly looking fog ******
 ****** Use r_fullbright if you enable ******
@@ -1209,19 +1208,16 @@ if(r_fog.value) {
         glFogf (GL_FOG_DENSITY, .0005); 
         glEnable(GL_FOG);
 }
-#endif
 	R_RenderScene ();
 	R_DrawViewModel ();
 	R_DrawWaterSurfaces ();
 
-#ifndef QUAKEWORLD
 //  More fog right here :)
 	glDisable(GL_FOG);
 //  End of all fog code...
 
 	// render mirror view
 	R_Mirror ();
-#endif
 	R_PolyBlend ();
 
 	if (r_speeds.value)
