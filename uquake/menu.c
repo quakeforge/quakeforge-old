@@ -1586,7 +1586,7 @@ void M_Menu_Video_f (void)
 void M_Video_Draw(void)
 {
 	if (vid_menudrawfn == NULL) {
-		Sys_Error("M_Video_Draw called wehn vid_menudrawfn == NULL!\n");
+		Sys_Error("M_Video_Draw called when vid_menudrawfn == NULL!\n");
 	}
 	vid_menudrawfn();
 }
@@ -1595,7 +1595,7 @@ void M_Video_Draw(void)
 void M_Video_Key(int key)
 {
 	if (vid_menukeyfn == NULL) {
-		Sys_Error("M_Video_Key called wehn vid_menukeyfn == NULL!\n");
+		Sys_Error("M_Video_Key called when vid_menukeyfn == NULL!\n");
 	}
 	vid_menukeyfn(key);
 }
