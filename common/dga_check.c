@@ -1,73 +1,72 @@
 /*
-	dga_check.h
-	
-	Definitions for DGA support for XFree86
-	
-	Copyright (C) 2000 contributors of the QuakeForge project
-	Please see the file "AUTHORS" for a list of contributors
+  Routines to check for XFree86 DGA and VidMode extensions
 
-	Author: Jeff Teunissen
-	Date:	09 Jan 2000
-	
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
+  Copyright (C) 2000	Jeff Teunissen  [d2deek@pmail.net]
+  Copyright (C) 2000	Marcus Sundberg [mackan@stacken.kth.se]
+  Please see the file "AUTHORS" for a list of contributors
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
 
-	See the GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to:
-	
-	Free Software Foundation, Inc.
-	59 Temple Place - Suite 330
-	Boston, MA  02111-1307, USA.
+  See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to:
+
+  Free Software Foundation, Inc.
+  59 Temple Place - Suite 330
+  Boston, MA  02111-1307, USA.
 */
 
-#include <config.h>
+#include <quakedef.h>
 
-#ifdef HAS_DGA
 #include "dga_check.h"
 
+#include <X11/Xlib.h>
+
+#ifdef HAS_DGA
 #include <X11/extensions/xf86dga.h>
 #include <X11/extensions/xf86vmode.h>
 
 /*
-	VID_CheckDGA
-	
-	Check for the presence of the XFree86-DGA X server extension
+  VID_CheckDGA
+
+  Check for the presence of the XFree86-DGA X server extension
 */
 int
-VID_CheckDGA ( Display *dpy )
+VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver)
 {
-	int *event_base, *error_base;
+	int event_base, error_base;
 	
-	event_base = error_base = NULL;
-	XF86DGAQueryExtension ( dpy, event_base, error_base );
-	if ( event_base )
-		return true;
-	return false;
+	if (! XF86DGAQueryExtension(dpy, &event_base, &error_base)) {
+		return 0;
+	}
+
+	return XF86DGAQueryVersion(dpy, maj_ver, min_ver);
 }
+
 
 /*
-	VID_CheckVMode
-	
-	Check for the presence of the XFree86-VMode X server extension
+  VID_CheckVMode
+
+  Check for the presence of the XFree86-VidMode X server extension
 */
 int
-VID_CheckVMode ( Display *dpy )
+VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 {
-	int *event_base, *error_base;
+	int event_base, error_base;
 	
-	event_base = error_base = NULL;
-	XF86VidModeQueryExtension ( dpy, event_base, error_base );
-	if ( event_base )
-		return true;
-	return false;
+	if (! XF86VidModeQueryExtension(dpy, &event_base, &error_base)) {
+		return 0;
+	}
+
+	return XF86VidModeQueryVersion(dpy, maj_ver, min_ver);
 }
 
-#endif // HAS_DGA
+#endif /* HAS_DGA */
