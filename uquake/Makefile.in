@@ -99,7 +99,7 @@ ifeq ($(HAVE_WSOCK),yes)
 NET_SRC    = net_win.c net_wins.c net_wipx.c
 else
 ifeq ($(HAVE_UDP),yes)
-NET_SRC	   = net_bsd.c net_udp.c
+NET_SRC	   = net_bsd.c @NET_SOURCE@
 else
 NET_SRC    = net_dos.c net_bw.c net_ipx.c net_mp.c net_ser.c
 endif
