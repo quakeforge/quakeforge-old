@@ -557,10 +557,8 @@ void Con_DrawConsole (int lines)
 	int				rows;
 	char			*text;
 	int				row;
-#ifdef QUAKEWORLD
 	int				j, n;
 	char			dlbar[1024];
-#endif
 	
 	if (lines <= 0)
 		return;
@@ -601,7 +599,6 @@ void Con_DrawConsole (int lines)
 			Draw_Character ( (x+1)<<3, y, text[x]);
 	}
 
-#ifdef QUAKEWORLD
 	// draw the download bar
 	// figure out width
 	if (cls.download) {
@@ -644,8 +641,6 @@ void Con_DrawConsole (int lines)
 		for (i = 0; i < strlen(dlbar); i++)
 			Draw_Character ( (i+1)<<3, y, dlbar[i]);
 	}
-#endif
-
 
 // draw the input prompt, user text, and cursor if desired
 	Con_DrawInput ();
