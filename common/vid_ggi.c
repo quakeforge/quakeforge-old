@@ -54,8 +54,8 @@ cvar_t	*m_filter;
 static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;
 static float	old_mouse_x, old_mouse_y;
-static int	p_mouse_x;
-static int	p_mouse_y;
+static int		p_mouse_x, p_mouse_y;
+static float	old_windowed_mouse;
 
 static ggi_visual_t		ggivis = NULL;
 static ggi_mode			mode;
@@ -880,13 +880,31 @@ void IN_SendKeyEvents(void)
 
 void IN_Frame(void)
 {
+	/* Only supported by LibGII 0.7 or later. */
+#ifdef GII_CMDCODE_PREFER_RELPTR
+	if (old_windowed_mouse != _windowed_mouse->value) {
+		gii_event ev;
+
+		old_windowed_mouse = _windowed_mouse->value;
+
+		ev.cmd.size = sizeof(gii_cmd_nodata_event);
+		ev.cmd.type = evCommand;
+		ev.cmd.target = GII_EV_TARGET_ALL;
+		ev.cmd.code = (int)_windowed_mouse->value ? GII_CMDCODE_PREFER_RELPTR
+			: GII_CMDCODE_PREFER_ABSPTR;
+
+		ggiEventSend(ggivis, &ev);
+	}
+#endif
 }
 
 
 void
 IN_Init(void)
 {
-	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE, "None");
+	_windowed_mouse = Cvar_Get("_windowed_mouse", "0", CVAR_ARCHIVE, "None");
+	old_windowed_mouse = -1; /* Force update */
+	m_filter = Cvar_Get("m_filter","0",CVAR_ARCHIVE, "None");
 	if (COM_CheckParm ("-nomouse")) return;
 
 	mouse_x = mouse_y = 0.0;
