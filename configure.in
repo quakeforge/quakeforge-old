@@ -96,6 +96,12 @@ else
    AC_DEFINE(GAMENAME, "id1")
 fi
 
+GENERATIONS=no
+AC_ARG_ENABLE(generations,
+[  --enable-generations    enable .qz support. Requires zlib)],
+   GENERATIONS=$enable_generations
+)
+
 AC_ARG_ENABLE(release,
 [  --enable-release        compile release (with optimization)],
        RELEASE=$enable_release
@@ -151,6 +157,9 @@ if test "x$HAS_ZLIB" = "xyes"; then
       if test "x$HAS_ZLIB" = "xyes"; then
          LIBS="-lz $LIBS"
          AC_DEFINE(HAS_ZLIB)
+         if test "x$GENERATIONS" = "xyes"; then
+            AC_DEFINE(GENERATIONS)
+         fi
       fi
    fi
 fi

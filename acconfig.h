@@ -5,6 +5,9 @@
 /* Define if you want to use QF-style defaults instead of Id-style */
 #undef NEWSTYLE
 
+/* Define if you want .qz support */
+#undef GENERATIONS
+
 /* Define this to the subdirectory name of the default game */
 #undef GAMENAME
 
