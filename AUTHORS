@@ -202,7 +202,7 @@ D: svgalib fixes
 D: warnings cleanup and XShm checking
 
 N: Jeff Teunissen (Deek)
-E: d2deek@pmail.net
+E: deek@quakeforge.net
 D: QW/Q1 tree merging
 D: IRC Info bot
 D: Website design
@@ -219,6 +219,12 @@ N: Zinx Verituse
 E: zinx@linuxfreak.com
 D: Math fixes/optimizations
 
+N: Thad Ward (Coderjoe)
+E: coderjoe@grnet.com
+D: Win32 fnmatch() support
+D: Win32 opendir/readdir/closedir support
+D: Win32 compilation fixes
+
 N: Neal White III
 E: nwhite@softblox.com
 D: GL fullbright support (removed temporarily)
@@ -227,4 +233,3 @@ N: Eric Windisch
 E: windisch@nni.com
 D: QW/Q1 tree merging
 D: GL renderer fixes/optimizations
-
