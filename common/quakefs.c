@@ -46,6 +46,7 @@
 
 #include <dirent.h>
 #include <fnmatch.h>
+#include <pwd.h>
 
 #ifdef WIN32
 #include <io.h>
@@ -817,6 +818,27 @@ COM_AddDirectory (char *dir)
 {
 	searchpath_t	*search;
 	char			*p;
+
+	if (strncmp (dir, "~/", 2) == 0) {
+		struct passwd *pwd_ent;
+		char *home;
+		char *tmp;
+
+		if ((pwd_ent = getpwuid (getuid()))) {
+			home = pwd_ent->pw_dir;
+			printf("%p\n",pwd_ent);
+		} else {
+			home = getenv("HOME");
+		}
+		if (home) {
+			tmp = alloca(strlen(home)+strlen(dir));
+			strcpy (tmp, home);
+			strcat (tmp, dir+1); // skip leading ~
+			dir=tmp;
+		}
+		//if (pwd_ent)
+		//	free (pwd_ent);
+	}
 
 	if ((p = strrchr(dir, '/')) != NULL)
 		strcpy(gamedirfile, ++p);
