@@ -48,6 +48,13 @@ dnl Checks for stricmp/strcasecmp
 AC_CHECK_FUNC(stricmp,,
   AC_CHECK_FUNC(strcasecmp, AC_DEFINE(stricmp,strcasecmp)))
 
+dnl Check for vsnprintf
+if test "x$ac_cv_func_vsnprintf" = "xno" -a \
+	"x$ac_cv_func__vsnprintf" = "xno"; then
+  dnl libdb may have this
+  AC_CHECK_LIB(db,vsnprintf)
+fi
+
 dnl Checks for working -lm
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([math library (-lm) appears broken]))
 
