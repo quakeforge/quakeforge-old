@@ -3,18 +3,20 @@
 # Quake general stuff
 #
 
-PROJECT_DIR = @top_srcdir@
-SRC_DIR     = @srcdir@
-BIN_PREFIX  = quake
+PROJECT_DIR	= @top_srcdir@
+PROJECT_ODIR	= ..
+SRC_DIR		= @srcdir@
+COMMON_DIR	= $(PROJECT_DIR)/common
+COMMON_ODIR	= $(PROJECT_ODIR)/common
+BIN_PREFIX	= quake
 
-DESTDIR     =
+DESTDIR		=
 
-prefix      = @prefix@
-bindir      = @bindir@
-mandir      = @mandir@
+prefix		= @prefix@
+bindir		= @bindir@
+mandir		= @mandir@
 
-COMMON_DIR=$(PROJECT_DIR)/common
-BUILD_DIR =../targets/uquake
+BUILD_DIR	= $(PROJECT_ODIR)/targets/uquake
 
 LDFLAGS = @LDFLAGS@ @SND_LIBS@ -lm
 LIBS = @LIBS@
@@ -192,7 +194,7 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 #
 DEFS         = @DEFS@
 CFLAGS       = @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) \
--I$(COMMON_DIR) -I$(SRC_DIR)/include
+-I$(COMMON_ODIR) -I$(COMMON_DIR)
 ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(X11_VID_SRC) model.c
 ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC)

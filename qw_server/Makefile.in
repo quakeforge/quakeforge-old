@@ -3,18 +3,21 @@
 # Quake general stuff
 #
 
-PROJECT_DIR  = @top_srcdir@
-SRC_DIR      = @srcdir@
+PROJECT_DIR	= @top_srcdir@
+PROJECT_ODIR	= ..
+SRC_DIR		= @srcdir@
+QW_COMMON_DIR	= $(PROJECT_DIR)/qw_common
+COMMON_DIR	= $(PROJECT_DIR)/common
+COMMON_ODIR	= $(PROJECT_ODIR)/common
+BIN_PREFIX	= qw-server
 
-DESTDIR      =
+DESTDIR		=
 
-prefix      = @prefix@
-bindir      = @bindir@
-mandir      = @mandir@
+prefix		= @prefix@
+bindir		= @bindir@
+mandir		= @mandir@
 
-COMMON_DIR=$(PROJECT_DIR)/common
-QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
-BUILD_DIR = ../targets/qw_server
+BUILD_DIR	= $(PROJECT_ODIR)/targets/qw_server
 
 LDFLAGS = @LDFLAGS@ -lm
 LIBS = @LIBS@
@@ -71,7 +74,7 @@ QW_GENERAL_SRC = pmove.c pmovetst.c
 # Directory specific stuff
 #
 CFLAGS = @CFLAGS@ -DQUAKEWORLD -DSERVERONLY $(OPTFLAGS) $(DEFS) -I. \
-$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
+$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
 DEFS = @DEFS@
 
 SRVQUAKE = qw-server
