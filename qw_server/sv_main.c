@@ -97,24 +97,19 @@ cvar_t	*pausable;
 //
 // game rules mirrored in svs.info
 //
-//cvar_t	fraglimit = {"fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	*fraglimit;
-//cvar_t	timelimit = {"timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	*timelimit;
-//cvar_t	teamplay = {"teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	*teamplay;
-//cvar_t	samelevel = {"samelevel","0", CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	*samelevel;
-//cvar_t	maxclients = {"maxclients","8", CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	*maxclients;
-//cvar_t	maxspectators = {"maxspectators","8", CVAR_USERINFO|CVAR_SERVERINFO};
-cvar_t	*maxspectators;
-//cvar_t	deathmatch = {"deathmatch","1", CVAR_USERINFO|CVAR_SERVERINFO};			// 0, 1, or 2
+cvar_t	*coop;
+cvar_t	*skill;
 cvar_t	*deathmatch;
-//cvar_t	spawn = {"spawn","0", CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	*teamplay;
+cvar_t	*fraglimit;
+cvar_t	*timelimit;
+cvar_t	*samelevel;
+cvar_t	*maxclients;
+cvar_t	*maxspectators;
 cvar_t	*spawn;
-//cvar_t	watervis = {"watervis", "0", CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*watervis;
+
+int		current_skill;
 
 //cvar_t	hostname = {"hostname","unnamed", CVAR_USERINFO|CVAR_SERVERINFO};
 cvar_t	*hostname;
