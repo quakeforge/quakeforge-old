@@ -202,7 +202,7 @@ Cbuf_Execute (void)
 	while (cmd_text.cursize) {
 		extract_line (line);
 		// execute the command line
-		Con_DPrintf("+%s\n",line),
+		//Con_DPrintf("+%s\n",line),
 		Cmd_ExecuteString (line, src_command);
 
 		if (cmd_wait)
@@ -228,7 +228,7 @@ Cbuf_Execute_Sets (void)
 		// execute the command line
 		if (strncmp(line,"set",3)==0
 			&& isspace((int) line[3]))
-			Con_DPrintf("+%s\n",line),
+			//Con_DPrintf("+%s\n",line),
 			Cmd_ExecuteString (line, src_command);
 	}
 }
