@@ -36,6 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sound.h>
 #include <screen.h>
 #include <menu.h>
+#include <input.h>
 #include <plugin.h>
 
 #include <time.h>
