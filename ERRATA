@@ -10,11 +10,8 @@ djsmoke <djsmoke@optonline.net>
  - SVGALib target does not properly restore keys on exit
 
 Joseph Carter <knghtbrd@debian.org>
- - View in UQuake starts off-map and never changes
  - GLX error on exit:  "XIO:  fatal IO error 9 (Bad file descriptor) on X
                               server ":0.0" after 65 requests (64 known
 			      processed) with 0 events remaining."
-
-sdennis101@geocities.com
- - make install fails in common/
+ - make install is broken
 

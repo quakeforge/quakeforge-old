@@ -46,12 +46,15 @@ D: Autoconf support and portability
 D: User documentation
 D: Development design/documentation
 D: GL renderer fixes
-D: X11 GLX target fixes
+D: GLX target fixes
 D: SVGALib target fixes
 D: Driver module support
-D: Skybox implementation (several mods to existing tutorial)
+D: GL skybox implementation (several mods to existing tutorial)
 D: Made RGBA lightmaps actually work
+D: Project administration
 D: Statusbar fixes
+D: QW flight physics
+D: QW view offset (currently an evil hack)
 
 N: Andrew Coles
 E: andycole123@ic24.net
@@ -167,8 +170,8 @@ D: AIX/IRIX/Sun support
 
 N: Nelson Rush (Palisade)
 E: palisade@quakeforge.net
-D: Project Administration
-D: Website Design
+D: Project administration
+D: Website design
 D: QW/Q1 tree merging
 D: Math fixes/optimizations
 D: Buffer overflow fixes
