@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "r_local.h"
 
-//define	PASSAGES
+//#define	PASSAGES
 
 void		*colormap;
 vec3_t		viewlightvec;
@@ -327,11 +327,9 @@ void R_NewMap (void)
 
 	r_dowarpold = false;
 	r_viewchanged = false;
-#ifndef QUAKEWORLD
-#ifdef PASSAGES
+#if !defined(QUAKEWORLD) && defined(PASSAGES)
 	CreatePassages ();
-#endif
-#endif	// !QUAKEWORLD
+#endif	// !QUAKEWORLD && PASSAGES
 }
 
 
@@ -1136,13 +1134,13 @@ void R_RenderView (void)
 		Sys_Error ("R_RenderView: called without enough stack");
 
 	if ( Hunk_LowMark() & 3 )
-		Sys_Error ("Hunk is missaligned");
+		Sys_Error ("Hunk is misaligned");
 
 	if ( (long)(&dummy) & 3 )
-		Sys_Error ("Stack is missaligned");
+		Sys_Error ("Stack is misaligned");
 
 	if ( (long)(&r_warpbuffer) & 3 )
-		Sys_Error ("Globals are missaligned");
+		Sys_Error ("Globals are misaligned");
 
 	R_RenderView_ ();
 }
