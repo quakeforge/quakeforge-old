@@ -2,9 +2,9 @@ ifneq ($(HAS_OGL),)
 GLQUAKE   =$(BIN_PREFIX)-gl
 endif
 
-# XXX add glide
-ifneq ($(HAS_GLIDE),)
-GLIDEQUAKE= $(BIN_PREFIX)-glide
+# FIX:  Add 3dfxgl targets
+ifneq ($(HAS_TDFXGL),)
+TDFXQUAKE= $(BIN_PREFIX)-3dfx
 endif
 
 ifneq ($(HAS_X11),)

@@ -1,1 +1,2 @@
 Global: sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix possible buffer overruns
+configure.in: clean up the intel -mcpu stuff
