@@ -125,7 +125,7 @@ hull_t	*SV_HullForBox (vec3_t mins, vec3_t maxs)
 
 
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ================
 SV_HullForEntity
@@ -238,7 +238,7 @@ areanode_t *SV_CreateAreaNode (int depth, vec3_t mins, vec3_t maxs)
 	return anode;
 }
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ===============
 SV_ClearWorld
@@ -269,7 +269,7 @@ void SV_UnlinkEdict (edict_t *ent)
 	ent->area.prev = ent->area.next = NULL;
 }
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ====================
 SV_TouchLinks
@@ -523,7 +523,7 @@ int SV_HullPointContents (hull_t *hull, int num, vec3_t p)
 
 #endif	// !id386
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ==================
 SV_PointContents
@@ -548,7 +548,7 @@ int SV_TruePointContents (vec3_t p)
 
 //===========================================================================
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ============
 SV_TestEntityPosition
@@ -617,7 +617,7 @@ qboolean SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 	}
 
 	if (num < hull->firstclipnode || num > hull->lastclipnode) {
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 		SV_Error ("SV_RecursiveHullCheck: bad node number");
 #else
 		Sys_Error ("SV_RecursiveHullCheck: bad node number");
@@ -727,7 +727,7 @@ qboolean SV_RecursiveHullCheck (hull_t *hull, int num, float p1f, float p2f, vec
 }
 
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ==================
 SV_ClipMoveToEntity
@@ -822,7 +822,7 @@ trace_t SV_ClipMoveToEntity (edict_t *ent, vec3_t start, vec3_t mins, vec3_t max
 
 //===========================================================================
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ====================
 SV_ClipToLinks
@@ -934,7 +934,7 @@ boxmaxs[0] = boxmaxs[1] = boxmaxs[2] = 9999;
 #endif
 }
 
-#ifdef SERVERONLY
+#if defined(SERVERONLY) || defined(UQUAKE)
 /*
 ==================
 SV_Move
