@@ -213,7 +213,8 @@ Operating systems tested:
    Solaris
    IRIX
    AIX
-   Windows 98
+   Digital Unix/TRU64
+   Windows 98	(Hasn't been tested since we switched to autoconf)
 
 FIXME: Have we tested dos and NT?
 
