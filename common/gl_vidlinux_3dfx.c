@@ -30,19 +30,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <GL/gl.h>
 #include <GL/fxmesa.h>
+#include <glide/sst1vid.h>
 
 #define WARP_WIDTH              320
 #define WARP_HEIGHT             200
 
 
-unsigned short		d_8to16table[256];
+//unsigned short	d_8to16table[256];
 unsigned		d_8to24table[256];
-unsigned char		d_15to8table[65536];
+unsigned char	d_15to8table[65536];
 
-static cvar_t	vid_mode = {"vid_mode","5",false};
-static cvar_t	vid_redrawfull = {"vid_redrawfull","0",false};
-static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
-cvar_t	gl_ztrick = {"gl_ztrick", "1", true};
+static cvar_t	vid_mode =				{"vid_mode", "5", false};
+static cvar_t	vid_redrawfull =		{"vid_redrawfull", "0", false};
+static cvar_t	vid_waitforrefresh =	{"vid_waitforrefresh", "0", true};
+cvar_t	gl_ztrick = {"gl_ztrick", "0", true};
  
 static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;
@@ -218,8 +219,6 @@ void GL_Init (void)
 	gl_extensions = glGetString (GL_EXTENSIONS);
 	Con_Printf ("GL_EXTENSIONS: %s\n", gl_extensions);
 
-//	Con_Printf ("%s %s\n", gl_renderer, gl_version);
-
 	glClearColor (1,0,0,0);
 	glCullFace(GL_FRONT);
 	glEnable(GL_TEXTURE_2D);
@@ -267,10 +266,30 @@ void GL_EndRendering (void)
 }
 
 static int resolutions[][3]={ 
-  { 512, 384, GR_RESOLUTION_512x384 },
-  { 640, 400, GR_RESOLUTION_640x400 },
-  { 640, 480, GR_RESOLUTION_640x480 },
-  { 800, 600, GR_RESOLUTION_800x600 }
+	{ 320,	200,	GR_RESOLUTION_320x200 },
+	{ 320,	240,	GR_RESOLUTION_320x240 },
+	{ 400,	256,	GR_RESOLUTION_400x256 },
+	{ 400,	300,	GR_RESOLUTION_400x300 },
+	{ 512,	256,	GR_RESOLUTION_512x256 },
+	{ 512,	384,	GR_RESOLUTION_512x384 },
+	{ 640,	200,	GR_RESOLUTION_640x200 },
+	{ 640,	350,	GR_RESOLUTION_640x350 },
+	{ 640,	400,	GR_RESOLUTION_640x400 },
+	{ 640,	480,	GR_RESOLUTION_640x480 },
+	{ 800,	600,	GR_RESOLUTION_800x600 },
+	{ 856,	480,	GR_RESOLUTION_856x480 },
+	{ 960,	720,	GR_RESOLUTION_960x720 },
+	{ 1024,	768,	GR_RESOLUTION_1024x768 },
+	{ 1152,	864,	GR_RESOLUTION_1152x864 },
+	{ 1280,	960,	GR_RESOLUTION_1280x960 },
+	{ 1280,	1024,	GR_RESOLUTION_1280x1024 },
+	{ 1600,	1024,	GR_RESOLUTION_1600x1024 },
+	{ 1600,	1200,	GR_RESOLUTION_1600x1200 },
+	{ 1792,	1344,	GR_RESOLUTION_1792x1344 },
+	{ 1856,	1392,	GR_RESOLUTION_1856x1392 },
+	{ 1920,	1440,	GR_RESOLUTION_1920x1440 },
+	{ 2048,	1536,	GR_RESOLUTION_2048x1536 },
+	{ 2048,	2048,	GR_RESOLUTION_2048x2048 }
 };
 
 #define NUM_RESOLUTIONS		(sizeof(resolutions)/(sizeof(int)*3))
@@ -367,10 +386,10 @@ void VID_Init(unsigned char *palette)
 	Cvar_RegisterVariable (&vid_waitforrefresh);
 	Cvar_RegisterVariable (&gl_ztrick);
 	
-        vid.maxwarpwidth = WARP_WIDTH;
-        vid.maxwarpheight = WARP_HEIGHT;
-        vid.colormap = host_colormap;
-        vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
+	vid.maxwarpwidth = WARP_WIDTH;
+	vid.maxwarpheight = WARP_HEIGHT;
+	vid.colormap = host_colormap;
+	vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
 
 // interpret command-line params
 
@@ -422,8 +441,7 @@ void VID_Init(unsigned char *palette)
 	vid.width = vid.conwidth;
 	vid.height = vid.conheight;
 
-	vid.aspect = ((float)vid.height / (float)vid.width) *
-				(320.0 / 240.0);
+	vid.aspect = ((float)vid.height / (float)vid.width) * (320.0 / 240.0);
 	vid.numpages = 2;
 
 	InitSig(); // trap evil signals
@@ -451,10 +469,10 @@ void VID_ExtraOptionDraw(unsigned int options_draw_cursor)
 void VID_ExtraOptionCmd(int option_cursor)
 {
 /*
-        switch(option_cursor)
-        {
-        case 12:  // Always start with 12
-        break;
-        }
+	switch(option_cursor)
+	{
+	case 12:  // Always start with 12
+	break;
+	}
 */
 }

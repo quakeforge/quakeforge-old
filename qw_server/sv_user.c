@@ -39,6 +39,7 @@ extern	vec3_t	player_mins;
 extern int fp_messages, fp_persecond, fp_secondsdead;
 extern char fp_msg[];
 extern cvar_t pausable;
+static int loss;
 
 /*
 ============================================================
@@ -854,7 +855,7 @@ void SV_Pings_f (void)
 
 		ClientReliableWrite_Begin (host_client, svc_updateping, 4);
 		ClientReliableWrite_Byte (host_client, j);
-		ClientReliableWrite_Short (host_client, SV_CalcPing(client));
+		ClientReliableWrite_Short (host_client, client->ping);
 		ClientReliableWrite_Begin (host_client, svc_updatepl, 4);
 		ClientReliableWrite_Byte (host_client, j);
 		ClientReliableWrite_Byte (host_client, client->lossage);
@@ -1368,31 +1369,42 @@ SV_RunCmd
 */
 void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 {
-	edict_t		*ent;
-	int		i, n;
-	int		oldmsec;
-	double		tmp_time;
+	edict_t	*ent;
+	int		i, n, oldmsec;
+	double	tmp_time;
 
 	// To prevent a infinate loop
 	if (!inside) {
 		oldmsec = ucmd->msec;
 		// Calculate the real msec.
-		tmp_time = realtime - host_client->frame_time_2;
-		tmp_time /= 2;
-		// Cap it at a max of 250 msec though..
+		tmp_time = realtime - host_client->frame_time;
 		ucmd->msec = tmp_time * 1000;
+
+		if (loss)
+			ucmd->msec /= (loss + 1);
+
+		// Cap it at a max of 250 msec though..
 		ucmd->msec = min(ucmd->msec, 250);
 		ucmd->msec = max(ucmd->msec, 10);
 
+		if (host_client->msecs[host_client->msec_head])
+			host_client->msec_total-=host_client->msecs[host_client->msec_head];
+
+		host_client->msec_total += ucmd->msec;
+		host_client->msecs[host_client->msec_head] = ucmd->msec;
+		host_client->msec_head = (host_client->msec_head + 1) % 100;
+		host_client->msec_count = min(100, host_client->msec_count + 1);
+
+		ucmd->msec = host_client->msec_total / host_client->msec_count;
+
 		// If were more then 10 msecs off what the client tells us, report it.
 		if (abs(oldmsec - ucmd->msec) > 10) {
-			printf("tmp_time: %f, realtime: %f, frame_time_1: %f\n",
-					tmp_time, realtime, host_client->frame_time_1);
+			printf("tmp_time: %f, realtime: %f, frame_time: %f\n",
+					tmp_time, realtime, host_client->frame_time);
 			printf("oldmsec: '%d', msec: '%d'\n", oldmsec, 
 					ucmd->msec);
 		}
-		host_client->frame_time_2 = host_client->frame_time_1;
-		host_client->frame_time_1 = realtime;
+		host_client->frame_time = realtime;
 	}
 
 	cmd = *ucmd;
@@ -1660,20 +1672,19 @@ void SV_ExecuteClientMessage (client_t *cl)
 			if (!sv.paused) {
 				SV_PreRunCmd();
 
-				/*
-				if (net_drop < 20)
-				{
-					while (net_drop > 2)
-					{
-						SV_RunCmd (&cl->lastcmd, 0);
+				loss = net_drop;
+
+				if (net_drop < 20) {
+					while (net_drop > 2) {
+						SV_RunCmd (&cl->lastcmd, 1);
 						net_drop--;
 					}
 					if (net_drop > 1)
-						SV_RunCmd (&oldest, 0);
+						SV_RunCmd (&oldest, 1);
 					if (net_drop > 0)
-						SV_RunCmd (&oldcmd, 0);
+						SV_RunCmd (&oldcmd, 1);
 				}
-				*/
+
 				SV_RunCmd (&newcmd, 0);
 
 				SV_PostRunCmd();

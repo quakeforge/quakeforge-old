@@ -531,6 +531,9 @@ void Key_SetBinding (int keynum, char *binding)
 // free old bindings
 	if (keybindings[keynum])
 	{
+		if (!Q_strncmp (keybindings[keynum], "toggleconsole", 13)) {
+				consolekeys[keynum] = true;
+		}
 		Z_Free (keybindings[keynum]);
 		keybindings[keynum] = NULL;
 	}
@@ -541,6 +544,10 @@ void Key_SetBinding (int keynum, char *binding)
 	Q_strcpy (new, binding);
 	new[l] = 0;
 	keybindings[keynum] = new;	
+
+	if (!Q_strncmp (new, "toggleconsole", 13)) {
+			consolekeys[keynum] = false;
+	}
 }
 
 /*

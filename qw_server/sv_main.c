@@ -36,6 +36,7 @@ netadr_t	master_adr[MAX_MASTERS];	// address of group servers
 
 client_t	*host_client;			// current client
 
+cvar_t	sv_maxrate = {"sv_maxrate","0"};	// server maximum rate
 cvar_t	sv_mintic = {"sv_mintic","0.03"};	// bound the size of the
 cvar_t	sv_maxtic = {"sv_maxtic","0.1"};	// physics time tic 
 
@@ -81,7 +82,7 @@ FILE	*sv_logfile;
 FILE	*sv_fraglogfile;
 
 void SV_AcceptClient (netadr_t adr, int userid, char *userinfo);
-void Master_Shutdown (void);
+
 
 //============================================================================
 
@@ -99,7 +100,7 @@ Quake calls this before calling Sys_Quit or Sys_Error
 */
 void SV_Shutdown (void)
 {
-	Master_Shutdown ();
+	Shutdown_Master ();
 	if (sv_logfile)
 	{
 		fclose (sv_logfile);
@@ -289,7 +290,7 @@ void SV_FullClientUpdate (client_t *client, sizebuf_t *buf)
 	
 	MSG_WriteByte (buf, svc_updateping);
 	MSG_WriteByte (buf, i);
-	MSG_WriteShort (buf, SV_CalcPing (client));
+	MSG_WriteShort (buf, client->ping);
 	
 	MSG_WriteByte (buf, svc_updatepl);
 	MSG_WriteByte (buf, i);
@@ -361,7 +362,7 @@ void SVC_Status (void)
 			bottom = atoi(Info_ValueForKey (cl->userinfo, "bottomcolor"));
 			top = (top < 0) ? 0 : ((top > 13) ? 13 : top);
 			bottom = (bottom < 0) ? 0 : ((bottom > 13) ? 13 : bottom);
-			ping = SV_CalcPing (cl);
+			ping = cl->ping;
 			Con_Printf ("%i %i %i %i \"%s\" \"%s\" %i %i\n", cl->userid, 
 				cl->old_frags, (int)(realtime - cl->connection_started)/60,
 				ping, cl->name, Info_ValueForKey (cl->userinfo, "skin"), top, bottom);
@@ -711,6 +712,15 @@ void SVC_DirectConnect (void)
 	else
 		Con_DPrintf ("Client %s connected\n", newcl->name);
 	newcl->sendinfo = true;
+
+	// QuakeForge stuff.
+	for (i=0; i<MAX_MSECS; i++)
+		newcl->msecs[i] = 0;
+
+	newcl->msec_count = 0;
+	newcl->msec_head = 0;
+	newcl->msec_total = 0;
+	newcl->frame_time = realtime;
 }
 
 int Rcon_Validate (void)
@@ -1271,8 +1281,8 @@ void SV_Frame (float time)
 // send messages back to the clients that had packets read this frame
 	SV_SendClientMessages ();
 
-// send a heartbeat to the master if needed
-	Master_Heartbeat ();
+// Breathe in... Breathe out.. breath in...
+	HeartBeat ();
 
 // collect timing statistics
 	end = Sys_DoubleTime ();
@@ -1329,6 +1339,7 @@ void SV_InitLocal (void)
 	Cvar_RegisterVariable (&spawn);
 	Cvar_RegisterVariable (&watervis);
 
+	Cvar_RegisterVariable (&sv_maxrate);
 	Cvar_RegisterVariable (&developer);
 
 	Cvar_RegisterVariable (&timeout);
@@ -1387,25 +1398,68 @@ void SV_InitLocal (void)
 
 //============================================================================
 
+
+// Lots of nifty checks done in here.. Lives by the heartbeat
+void  HeartBeat_Check( void) {
+	int i;
+	client_t        *cl;
+
+
+	for (i=0, cl = svs.clients ; i<MAX_CLIENTS ; i++, cl++)
+	{
+		if (cl->state == cs_connected || cl->state == cs_spawned) {
+			// Put stuff in here that you want done to every client
+
+			// Slades maxrate function
+			if((1/cl->netchan.rate) > sv_maxrate.value && sv_maxrate.value) {
+				SV_BroadcastPrintf (PRINT_HIGH, "%s was kicked for having his rate to high\n", cl->name);
+				SV_ClientPrintf (cl, PRINT_HIGH, "You were kicked from the game for having a rate higher then %5.0f\n", sv_maxrate.value);
+				SV_DropClient(cl);
+			}
+
+			// Lets build our ping query tables -- Slade
+			cl->ping=SV_CalcPing(cl);
+		}
+	}
+}
+
+
+// This is the HeartBeat of the server.. center of alot of useful stuff
+// -- Slade
+void HeartBeat (void)
+{
+
+	if (realtime - svs.last_heartbeat < HEARTBEAT_SECONDS)
+		return;         // not time to send yet
+
+	svs.last_heartbeat = realtime;
+	if(svs.beatcount == MAX_BEATCOUNT)
+		svs.beatcount = 0;
+	svs.beatcount++;
+
+	// Do this stuff every HeartBeat
+	HeartBeat_Check();
+
+	// Do this every 100 Beats
+	if(svs.beatcount == 100) {
+		HeartBeat_Master();
+	}
+}
+
+
 /*
 ================
-Master_Heartbeat
+HeartBeat_Master
 
 Send a message to the master every few minutes to
 let it know we are alive, and log information
 ================
 */
-#define	HEARTBEAT_SECONDS	300
-void Master_Heartbeat (void)
+void HeartBeat_Master (void)
 {
 	char		string[2048];
 	int			active;
 	int			i;
-
-	if (realtime - svs.last_heartbeat < HEARTBEAT_SECONDS)
-		return;		// not time to send yet
-
-	svs.last_heartbeat = realtime;
 
 	//
 	// count active users
@@ -1416,9 +1470,9 @@ void Master_Heartbeat (void)
 		svs.clients[i].state == cs_spawned )
 			active++;
 
-	svs.heartbeat_sequence++;
+	svs.mheartbeat_sequence++;
 	snprintf(string, sizeof(string), "%c\n%i\n%i\n", S2M_HEARTBEAT,
-		svs.heartbeat_sequence, active);
+		svs.mheartbeat_sequence, active);
 
 
 	// send to group master
@@ -1432,12 +1486,12 @@ void Master_Heartbeat (void)
 
 /*
 =================
-Master_Shutdown
+Shutdown_Master
 
 Informs all masters that this server is going down
 =================
 */
-void Master_Shutdown (void)
+void Shutdown_Master (void)
 {
 	char		string[2048];
 	int			i;

@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	MAX_MASTERS	8				// max recipients for heartbeat packets
 
 #define	MAX_SIGNON_BUFFERS	8
+#define MAX_MSECS 100
 
 typedef enum {
 	ss_dead,			// no map loaded
@@ -190,8 +191,10 @@ typedef struct client_s
 //===== NETWORK ============
 	int				chokecount;
 	int				delta_sequence;		// -1 = no compression
+	int				ping;
 	netchan_t		netchan;
-	double			frame_time_1, frame_time_2;
+	int				msecs[MAX_MSECS], msec_count, msec_head, msec_total;
+	double			frame_time;
 } client_t;
 
 // a client can leave the server in one of four ways:
@@ -236,7 +239,8 @@ typedef struct
 	int			serverflags;		// episode completion information
 	
 	double		last_heartbeat;
-	int			heartbeat_sequence;
+	int			beatcount;
+	int			mheartbeat_sequence;
 	svstats_t	stats;
 
 	char		info[MAX_SERVERINFO_STRING];
@@ -251,6 +255,10 @@ typedef struct
 } server_static_t;
 
 //=============================================================================
+
+// HeartBeat Related things
+#define HEARTBEAT_SECONDS		3
+#define MAX_BEATCOUNT			100		// 5 Minutes
 
 // edict->movetype values
 #define	MOVETYPE_NONE			0		// never moves
@@ -378,8 +386,9 @@ void SV_SendServerinfo (client_t *client);
 void SV_ExtractFromUserinfo (client_t *cl);
 
 
-void Master_Heartbeat (void);
+void HeartBeat_Master (void);
 void Master_Packet (void);
+void Shutdown_Master (void);
 
 //
 // sv_init.c
@@ -458,3 +467,6 @@ void ClientReliableWrite_Short(client_t *cl, int c);
 void ClientReliableWrite_String(client_t *cl, char *s);
 void ClientReliableWrite_SZ(client_t *cl, void *data, int len);
 
+// The Heartbeat function
+
+void HeartBeat (void);

@@ -1825,8 +1825,12 @@ void PF_infokey (void)
 		if (!strcmp(key, "ip"))
 			value = strcpy(ov, NET_BaseAdrToString (svs.clients[e1-1].netchan.remote_address));
 		else if (!strcmp(key, "ping")) {
+#ifndef QUAKEWORLD
 			int ping = SV_CalcPing (&svs.clients[e1-1]);
 			snprintf(ov, sizeof(ov), "%d", ping);
+#else
+			snprintf(ov, sizeof(ov), "%d", svs.clients[e1-1].ping);
+#endif
 			value = ov;
 		} else
 			value = Info_ValueForKey (svs.clients[e1-1].userinfo, key);
