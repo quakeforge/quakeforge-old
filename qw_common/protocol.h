@@ -249,7 +249,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 // entity_state_t is the information conveyed from the server
 // in an update message
-/*
 typedef struct
 {
 	int		number;			// edict index
@@ -263,7 +262,6 @@ typedef struct
 	int		skinnum;
 	int		effects;
 } entity_state_t;
-*/
 
 
 #define	MAX_PACKET_ENTITIES	64	// doesn't count nails

@@ -165,3 +165,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define TE_IMPLOSION		14
 #define TE_RAILTRAIL		15
 #endif
+
+typedef struct
+{
+    vec3_t  origin;
+    vec3_t  angles;
+    int		modelindex;
+    int		frame;
+    int		colormap;
+    int		skin;
+    int		effects;
+} entity_state_t;
+

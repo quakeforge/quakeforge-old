@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <setjmp.h>
 #include <time.h>
 
+
 #if defined(_WIN32) && !defined(WINDED)
 void	VID_LockBuffer (void);
 void	VID_UnlockBuffer (void);
@@ -47,21 +48,6 @@ void	VID_UnlockBuffer (void);
 #include "sys.h"
 #include "zone.h"
 #include "mathlib.h"
-
-typedef struct
-{
-    int             number;                 // edict index
-
-    int             flags;                  // nolerp, etc
-    vec3_t  origin;
-    vec3_t  angles;
-    int             modelindex;
-    int             frame;
-    int             colormap;
-    int             skinnum;
-    int             effects;
-} entity_state_t;
-
 #include "wad.h"
 #include "draw.h"
 #include "cvar.h"
