@@ -20,25 +20,24 @@ All Rights Reserved.
 Table of Contents
 -----------------
 
-I.	Quake System Requirements
+I.	Tested Systems
 II.	Running and Compiling Quake
 III.	Operating System Specific Issues
 IV.	Errata and Known Bugs
 V.	Troubleshooting
 VI.	Technical Support
-VII.	Joystick notes
-VIII.	License
+VII.	Joystick Notes
+VIII.	Tested Systems
+IX.	License
 
 
-I. Quake System Requirements
-----------------------------
-IBM PC and Compatibles, PPC, Alpha, UltraSparc, Indigo2
-VGA Compatible Display or better
-8MB RAM minimum, 16MB recommended (16 MB required for running under Win95)
-CD-ROM drive no longer *required*
-Linux, FreeBSD, Solaris, IRIX, AIX, MS-DOS 5.0 or better, Windows 95+
-Hard drive space - 30MB for Shareware, 80MB for registered.
-Floating point processor required.
+I. System Requirements
+----------------------
+
+VGA-compatible display
+8MB RAM (16MB required under Win32)
+Floating-point processor
+30MB free disk space (shareware version, 80MB for registered version)
 
 
 II. Running and Compiling Quake
@@ -154,8 +153,29 @@ The "mlook" and "sidestep" commands work with a joystick exactly as they
 do for a mouse, as does the "invert mouse up/down" menu option.
 
 
-XII. License
-------------
+VIII. Tested Systems
+--------------------
+
+Processors tested:
+   Various Intel ia32
+   Motorola PowerPC
+   Compaq Alpha
+   Sun UltraSPARC
+   SGI Indigo 2
+
+Operating systems tested:
+   Linux
+   FreeBSD
+   Solaris
+   IRIX
+   AIX
+   Windows 98
+
+FIXME: Have we tested dos and NT?
+
+
+IX. License
+-----------
 
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  The QuakeForge Project.
