@@ -1,4 +1,5 @@
 /*
+vid_sdl.h - sdl video driver 
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,15 +20,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// vid_sdl.h -- sdl video driver 
 
 #include <SDL/SDL.h>
-#include "keys.h"
-#include "quakedef.h"
-#include "d_local.h"
-#include "sound.h"
-#include "cvar.h"
-#include "draw.h"
+#include <keys.h>
+#include <quakedef.h>
+#include <d_local.h>
+#include <sound.h>
+#include <cvar.h>
+#include <draw.h>
+#include <sys.h>
+#include <lib_replace.h>
+#include <cmd.h>
 
 cvar_t          _windowed_mouse = {"_windowed_mouse","0", true};
 static float old_windowed_mouse = 0;

@@ -202,7 +202,7 @@ void	VID_SetPalette (unsigned char *palette)
  		Sys_mkdir (s);
 		snprintf(s, sizeof(s), "%s/glquake/15to8.pal", com_gamedir);
 		if ((f = gzopen(s, "wb")) != NULL) {
-			gzwrite(d_15to8table, 1<<15, 1);
+			gzwrite(f, d_15to8table, 1<<15);
 			gzclose(f);
 		}
 //#endif // QUAKEWORLD
