@@ -2243,14 +2243,14 @@ InputName=surf8
 # End Source File
 # Begin Source File
 
-SOURCE=.\common\sys_wina.s
+SOURCE=.\common\sys_dosa.s
 
 !IF  "$(CFG)" == "quakeforge - Win32 Release"
 
 # Begin Custom Build
 OutDir=.\quakeforge___Win32_Release
-InputPath=.\common\sys_wina.s
-InputName=sys_wina
+InputPath=.\common\sys_dosa.s
+InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /I "\quakeforge\quakeforge\common" /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
@@ -2264,8 +2264,8 @@ InputName=sys_wina
 
 # Begin Custom Build
 OutDir=.\Debug
-InputPath=.\common\sys_wina.s
-InputName=sys_wina
+InputPath=.\common\sys_dosa.s
+InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /I "\quakeforge\quakeforge\common" /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
@@ -2280,8 +2280,8 @@ InputName=sys_wina
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build
 OutDir=.\quakeforge___Win32_GLDebug
-InputPath=.\common\sys_wina.s
-InputName=sys_wina
+InputPath=.\common\sys_dosa.s
+InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /I "\quakeforge\quakeforge\common" /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
@@ -2296,8 +2296,8 @@ InputName=sys_wina
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build
 OutDir=.\quakeforge___Win32_GLRelease
-InputPath=.\common\sys_wina.s
-InputName=sys_wina
+InputPath=.\common\sys_dosa.s
+InputName=sys_dosa
 
 "$(OUTDIR)\$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
 	cl /I "\quakeforge\quakeforge\common" /EP > $(OUTDIR)\$(InputName).spp $(InputPath) 
