@@ -46,4 +46,6 @@ to quake-devel@lists.sourceforge.net with details.
  * Fix q1/qw smurf attack
  * Fix oversized packet QW server crash
  * DOS/Win support in autoconf
+ * Backport QW's HUD stuff to UQuake
+ * Sanitize the makefiles to cut down unnecessary builds
  
