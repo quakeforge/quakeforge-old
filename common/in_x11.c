@@ -89,6 +89,7 @@ void IN_Shutdown(void)
 	if (x_disp) {
 		XAutoRepeatOn(x_disp);
 		XCloseDisplay(x_disp);
+		x_disp = 0;
 	}
 }
 
