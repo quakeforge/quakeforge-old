@@ -338,18 +338,24 @@ fi
 dnl Make sure -lGL or -lMesaGL works
 if test "x$HAS_OGL" = xyes; then
    AC_CHECK_LIB(GL, glColor4f, OGL_LIBS="$OGL_LIBS -lGL"
-     HAS_OGL=yes, HAS_OGL=no,
-     [$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS])
+     HAS_OGL=yes
+     AC_CHECK_LIB(GL, XMesaSetFXmode, , HAS_XMESA=no,
+       [ $OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS]),
+     HAS_OGL=no,
+     [$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
    if test "x$HAS_OGL" != xyes; then
       AC_CHECK_LIB(MesaGL, glColor4f, OGL_LIBS="$OGL_LIBS -lMesaGL"
-        HAS_OGL=yes, HAS_OGL=no,
-	[$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS])
+        HAS_OGL=yes
+        AC_CHECK_LIB(MesaGL, XMesaSetFXmode, , HAS_XMESA=no,
+          [ $OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS]),
+        HAS_OGL=no,
+	[$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
    fi
 fi
 if test "x$HAS_OGL" != xyes; then
    OGL_CFLAGS="" OGL_LIBS=""
 else
-   if test "xHAS_XMESA" = xyes; then
+   if test "x$HAS_XMESA" = xyes; then
       AC_DEFINE(XMESA)
    fi
 fi
