@@ -1385,7 +1385,7 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 		host_client->msecs += ucmd->msec;
 
 		if ((tmp_time = realtime - host_client->last_check) >= CHECK_TIME) {
-			tmp_time *= 1000;
+			tmp_time *= 1025;
 		    if (host_client->msecs > tmp_time) {
 				host_client->msec_cheating++;
 				SV_BroadcastPrintf(PRINT_HIGH, 
