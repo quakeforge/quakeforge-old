@@ -582,7 +582,10 @@ void SCR_SetUpToDrawConsole (void)
 		scr_con_current = scr_conlines;
 	}
 	else if (key_dest == key_console)
-		scr_conlines = vid.height * scr_consize->value;
+	{
+		scr_conlines = vid.height * max(0.2, 
+				min(scr_consize->value, 1));
+	}
 	else
 		scr_conlines = 0;			// none visible
 	

@@ -765,7 +765,6 @@ void Draw_ConsoleBackground (int lines)
 #else
 	char		ver[] = "QuakeForge (UQuake) " QF_VERSION;
 #endif
-	int 		x, i;
 	int 		y;
 	qpic_t		*conback;
 	glpic_t		*gl;
@@ -775,7 +774,7 @@ void Draw_ConsoleBackground (int lines)
 	conback = Draw_CachePic ("gfx/conback.lmp");
 	gl = (glpic_t *)conback->data;
 	
-	y = (vid.height * 3) >> 2;
+	y = vid.height * 0.9;
 	if (lines > y)
 		alpha = 1;
 	else
@@ -837,11 +836,7 @@ void Draw_ConsoleBackground (int lines)
 		glPopMatrix ();
 	}
 
-	// hack the version number directly into the pic
-	y = lines-14;
-	x = vid.conwidth - (strlen(ver)*8 + 11);
-	for (i=0 ; i<strlen(ver) ; i++)
-		Draw_Character (x + i * 8, y, ver[i] | 0x80);
+	Draw_Alt_String (vid.conwidth - strlen(ver)*8 - 11, lines-14, ver);
 }
 
 

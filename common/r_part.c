@@ -574,13 +574,17 @@ void R_TeleportSplash (vec3_t org)
 			}
 }
 
-void R_RocketTrail (vec3_t start, vec3_t end, int type)
+/*
+	R_RocketTrail
+*/
+void
+R_RocketTrail (vec3_t start, vec3_t end, int type)
 {
 	vec3_t		vec;
 	float		len;
-	int			j;
+	int		j;
 	particle_t	*p;
-	int			dec;
+	int		dec;
 
 	VectorSubtract (end, start, vec);
 	len = VectorNormalize (vec);

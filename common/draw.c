@@ -629,7 +629,7 @@ Draw_ConsoleBackground
 */
 void Draw_ConsoleBackground (int lines)
 {
-	int			i, x, y, v;
+	int			x, y, v;
 	byte			*src, *dest;
 	unsigned short		*pusdest;
 	int			f, fstep;
@@ -704,10 +704,7 @@ void Draw_ConsoleBackground (int lines)
 	// put it back
 	memcpy(conback->data + 320*186, saveback, 320*8);
 
-	y = lines-14;
-	x = vid.conwidth - (strlen(ver)*8 + 11);
-	for (i=0 ; i<strlen(ver) ; i++)
-		Draw_Character (x + i * 8, y, ver[i] | 0x80);
+	Draw_Alt_String (vid.conwidth - strlen(ver)*8 - 11, lines-14, ver);
 }
 
 

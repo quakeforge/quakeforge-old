@@ -112,6 +112,7 @@ cvar_t	*scr_showturtle;
 cvar_t	*scr_showpause;
 cvar_t	*scr_printspeed;
 cvar_t	*scr_allowsnap;
+cvar_t	*scr_consize;
 
 qboolean	scr_initialized;		// ready to draw
 
@@ -388,15 +389,17 @@ void SCR_SizeDown_f (void)
 
 void SCR_InitCvars (void)
 {
-	scr_fov = Cvar_Get ("fov","90",0,"None");
+	scr_fov = Cvar_Get ("fov","90",CVAR_NONE,"None");
 	scr_viewsize = Cvar_Get ("viewsize","100",CVAR_ARCHIVE,"None");
-	scr_conspeed = Cvar_Get ("scr_conspeed","300",0,"None");
-	scr_showram = Cvar_Get ("showram","1",0,"None");
-	scr_showturtle = Cvar_Get ("showturtle","0",0,"None");
-	scr_showpause = Cvar_Get ("showpause","1",0,"None");
-	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
-	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
-	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",0,"None");
+	scr_conspeed = Cvar_Get ("scr_conspeed","300",CVAR_NONE,"None");
+	scr_showram = Cvar_Get ("showram","1",CVAR_NONE,"None");
+	scr_showturtle = Cvar_Get ("showturtle","0",CVAR_NONE,"None");
+	scr_showpause = Cvar_Get ("showpause","1",CVAR_NONE,"None");
+	scr_centertime = Cvar_Get ("scr_centertime","2",CVAR_NONE,"None");
+	scr_printspeed = Cvar_Get ("scr_printspeed","8",CVAR_NONE,"None");
+	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",CVAR_NONE,"None");
+	scr_consize = Cvar_Get ("scr_consize", "0.5",CVAR_NONE,
+			"sets console size (0.5 is half screen");
 }
 
 /*
@@ -581,7 +584,9 @@ void SCR_SetUpToDrawConsole (void)
 		scr_con_current = scr_conlines;
 	}
 	else if (key_dest == key_console)
-		scr_conlines = vid.height/2;	// half screen
+		scr_conlines = vid.height * max(0.2,
+				min(scr_consize->value, 1));
+	
 	else
 		scr_conlines = 0;				// none visible
 	

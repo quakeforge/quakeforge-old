@@ -55,12 +55,6 @@ double cam_lastviewtime;
 
 int spec_track = 0; // player# of who we are tracking
 int autocam = CAM_NONE;
-/*
-cvar_t	cl_chasecam 		= {"cl_chasecam", "0", CVAR_ARCHIVE};
-cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16",CVAR_ARCHIVE};
-cvar_t	cl_chasecam_back	= {"cl_chasecam_back", "100", CVAR_ARCHIVE};
-cvar_t	cl_chasecam_right = {"cl_chasecam_right", "0", CVAR_ARCHIVE};
-*/
 
 cvar_t * cl_chasecam;
 cvar_t *cl_chasecam_up;
@@ -75,13 +69,13 @@ vec3_t	chase_dest_angles;
 
 void Chase_Init (void) {
 	cl_chasecam = Cvar_Get ("cl_chasecam", "0", CVAR_ARCHIVE,
-				"None");
+			"None");
 	cl_chasecam_up = Cvar_Get ("cl_chasecam_up","16",CVAR_ARCHIVE,
-				   "None");
+			"None");
 	cl_chasecam_back = Cvar_Get ("cl_chasecam_back","100",CVAR_ARCHIVE,
-				     "None");
+			"None");
 	cl_chasecam_right = Cvar_Get ("cl_chasecam_right","0", CVAR_ARCHIVE,
-				      "None");
+			"None");
 }
 
 void Chase_Reset (void) {
@@ -642,8 +636,6 @@ void Cam_Reset(void)
 void CL_InitCam(void)
 {
 	cl_hightrack = Cvar_Get ("cl_hightrack","0",0,"None");	
-//	Cvar_RegisterVariable (&cl_camera_maxpitch);
-//	Cvar_RegisterVariable (&cl_camera_maxyaw);
 }
 
 
