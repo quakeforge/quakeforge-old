@@ -384,6 +384,9 @@ OGL_INCLUDES=$withval, OGL_INCLUDES=auto)
 if test "x$OGL_INCLUDES" = xno; then
    HAS_OGL="no"
 fi
+if test "x$HAS_OGL" = xno; then
+   OGL_INCLUDES=""
+fi
 if test "x$HAS_OGL" != xno; then
    if test "x$HAS_OGL" != xauto; then
       OGL_LIBS="$OGL_LIBS -L$HAS_OGL"
