@@ -42,9 +42,7 @@ void Draw_String (int x, int y, char *str);
 void Draw_Alt_String (int x, int y, char *str);
 qpic_t *Draw_PicFromWad (char *name);
 qpic_t *Draw_CachePic (char *path);
-#ifdef QUAKEWORLD
 void Draw_Crosshair(void);
-#endif
 
 /* Menu drawing functions goes here too */
 void M_Print (int cx, int cy, char *str);

@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 #include <X11/extensions/XShm.h>
+#include <errno.h>
 
 #include "quakedef.h"
 #include "d_local.h"
@@ -416,7 +417,7 @@ void ResetFrameBuffer(void)
 		x_visinfo->depth,
 		ZPixmap,
 		0,
-		Z_Malloc(mem),
+		Hunk_HighAllocName(mem, "imagemem"),
 		vid.width, vid.height,
 		32,
 		0);
@@ -426,10 +427,9 @@ void ResetFrameBuffer(void)
 
 }
 
-void ResetSharedFrameBuffers(void)
+int ResetSharedFrameBuffers(void)
 {
 	int size;
-	int key;
 	int minsize = getpagesize();
 	int frm;
 
@@ -467,10 +467,21 @@ void ResetSharedFrameBuffers(void)
 		if (size < minsize)
 			Sys_Error("VID: Window must use at least %d bytes\n", minsize);
 
-		key = random();
-		x_shminfo[frm].shmid = shmget((key_t)key, size, IPC_CREAT|0777);
-		if (x_shminfo[frm].shmid==-1)
-			Sys_Error("VID: Could not get any shared memory\n");
+		x_shminfo[frm].shmid = shmget(IPC_PRIVATE, size,IPC_CREAT|0777);
+		if (x_shminfo[frm].shmid==-1) {
+                        int i;
+			Sys_Printf(
+                        "VID: Could not get %dk of shared memory, error: %s\n",
+                           size/1024, strerror(errno));
+                        Sys_Printf("Trying without shared memory\n");
+                        /* Deallocate memory */
+                        /* Z_Free(d_pzbuffer); */
+                        for (i = 0; i <= frm; i++) {
+                           free(x_framebuffer[i]);
+                           x_framebuffer[i] = 0;
+                        }
+                        return 0;
+                }
 
 		// attach to the shared memory segment
 		x_shminfo[frm].shmaddr =
@@ -489,7 +500,7 @@ void ResetSharedFrameBuffers(void)
 		shmctl(x_shminfo[frm].shmid, IPC_RMID, 0);
 
 	}
-
+        return 1;
 }
 
 void VID_MenuDraw( void )
@@ -780,10 +791,12 @@ void	VID_Init (unsigned char *palette)
 	if (doShm)
 	{
 		x_shmeventtype = XShmGetEventBase(x_disp) + ShmCompletion;
-		ResetSharedFrameBuffers();
+		if (!ResetSharedFrameBuffers()) {
+                   doShm = false;
+                }
 	}
-	else
-		ResetFrameBuffer();
+
+        if (!doShm) ResetFrameBuffer();
 
 	current_framebuffer = 0;
 	vid.rowbytes = x_framebuffer[0]->bytes_per_line;
