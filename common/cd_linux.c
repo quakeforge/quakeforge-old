@@ -131,7 +131,9 @@ void CDAudio_Play(byte track, qboolean looping)
 	struct cdrom_tocentry entry;
 	struct cdrom_ti ti;
 #elif defined(USE_BSD_CD)
+#ifdef HAVE_STRUCT_IOC_READ_TOC_SINGLE_ENTRY_ENTRY
 	struct ioc_read_toc_single_entry entry;
+#endif
 	struct ioc_play_track ti;
 #endif
 
@@ -153,6 +155,7 @@ void CDAudio_Play(byte track, qboolean looping)
 		return;
 	}
 
+#if !defined(USE_BSD_CD) || defined(HAVE_STRUCT_IOC_READ_TOC_SINGLE_ENTRY_ENTRY)
 	// don't try to play a non-audio track
 #if defined(USE_LINUX_CD)
 	entry.cdte_track = track;
@@ -176,6 +179,7 @@ void CDAudio_Play(byte track, qboolean looping)
 		Con_Printf("CDAudio: track %i is not audio\n", track);
 		return;
 	}
+#endif /* HAVE_STRUCT_IOC_READ_TOC_SINGLE_ENTRY_ENTRY */
 
 	if (playing)
 	{
@@ -196,8 +200,13 @@ void CDAudio_Play(byte track, qboolean looping)
 	ti.end_index = 99;
 #endif
 
-	if ( ioctl(cdfile, CDROMPLAYTRKIND, &ti) == -1 ) 
-	{
+#ifdef USE_BSD_CD
+	if (ioctl(cdfile, CDIOCSTART) == -1) {
+		Con_DPrintf("CD start ioctl failed\n");
+	}
+#endif
+
+	if (ioctl(cdfile, CDROMPLAYTRKIND, &ti) == -1) {
 		Con_DPrintf("CD play ioctl failed\n");
 		return;
 	}
@@ -268,6 +277,7 @@ void CDAudio_Update(void)
 	struct cdrom_subchnl subchnl;
 #elif defined(USE_BSD_CD)
 	struct ioc_read_subchannel subchnl;
+	struct cd_sub_channel_info subchnldata;
 #endif
 	static time_t lastchk;
 
@@ -293,9 +303,13 @@ void CDAudio_Update(void)
 	if (playing && lastchk < time(NULL)) {
 		lastchk = time(NULL) + 2; //two seconds between chks
 #if defined(USE_LINUX_CD)
-		subchnl.cdsc_format = CDROM_MSF;
+		subchnl.cdsc_format	= CDROM_MSF;
 #elif defined(USE_BSD_CD)
-		subchnl.data_format = CD_MSF_FORMAT;
+		subchnl.address_format	= CD_MSF_FORMAT;
+		subchnl.data_format	= CD_CURRENT_POSITION;
+		subchnl.track		= 0;
+		subchnl.data_len	= sizeof(subchnldata);
+		subchnl.data		= &subchnl
 #endif
 		if (ioctl(cdfile, CDROMSUBCHNL, &subchnl) == -1 ) {
 			Con_DPrintf("CD subcchannel ioctl failed\n");
