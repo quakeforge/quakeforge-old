@@ -3,7 +3,6 @@
 
 	Check for registered version of Quake data files
 
-	Copyright (C) 1996-1997  Id Software, Inc.
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
@@ -24,16 +23,17 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to:
 
-	Free Software Foundation, Inc.
-	59 Temple Place - Suite 330
-	Boston, MA  02111-1307, USA
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+
+	$Id$
 */
 
-#include "cvar.h"
-#include "quakefs.h"
-#include "quakedef.h"
+#include <cvar.h>
+#include <quakefs.h>
+#include <quakedef.h>
 
-//cvar_t registered = {"registered", "0"};
 cvar_t	*registered;
 
 /*
@@ -43,11 +43,10 @@ cvar_t	*registered;
 	and set the "registered" cvar to 1 if found.
 */
 void
-register_check ( void ) {
-
+register_check ( void )
+{
 	QFile *h;
 
-//	Cvar_RegisterVariable (&registered);
 	registered = Cvar_Get ("registered","0",0,"None");
 
 	COM_FOpenFile("gfx/pop.lmp", &h);
