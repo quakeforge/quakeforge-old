@@ -1,0 +1,77 @@
+#!/usr/bin/make
+# The above line is so vim knows that this is a makefile.
+
+COMMON_DIR	:= $(PROJECT_DIR)/common
+TARGET_DIR	:= $(PROJECT_DIR)/targets
+QW_COMMON_DIR	:= $(PROJECT_DIR)/qw_common
+
+BUILD_DIR	:= $(TARGET_DIR)/$(MODULE)
+OBJ_PATTERN	+= $(BUILD_DIR)/common_lib/%.@OBJEXT@ $(BUILD_DIR)/%.@OBJEXT@
+
+CC		:= @CC@
+
+
+LDFLAGS		+= @LDFLAGS@ @LIBS@
+INCLUDES	+= -I$(SRC_DIR) -I$(COMMON_DIR)
+CFLAGS		+= @CFLAGS@ $(INCLUDES)
+
+MAKE_SURE_DIR = if test -d "$$DIR"; then \
+		   true; \
+		else \
+		   echo "Creating directory $$DIR"; \
+		   mkdir -p $$DIR; \
+		fi
+
+# What do we want to support feature wise..
+
+HAS_MGL		= @HAS_MGL@
+HAS_GGI		= @HAS_GGI@
+HAS_SVGA	= @HAS_SVGA@
+HAS_GLIDE	= @HAS_GLIDE@
+HAS_TDFXGL	= @HAS_TDFXGL@
+HAS_OGL		= @HAS_OGL@
+HAS_XIL		= @HAS_XIL@
+HAS_X11		= @HAS_X11@
+HAS_SDL		= @HAS_SDL@
+
+HAVE_WSOCK	= @HAVE_WSOCK@
+HAVE_UDP	= @HAVE_UDP@
+
+# Arch specific stuff..
+
+ASM_ARCH	:= @ASM_ARCH@
+
+ifeq ($(ASM_ARCH),i386)
+# Source file the Intel archictecture only
+CFLAGS		+= -Did386=1
+endif
+
+
+###########################################################################
+#
+# Compilation rules
+#
+
+$(OBJ_PATTERN): $(SRC_DIR)/%.c
+	@DIR=$(@D); $(MAKE_SURE_DIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(SRC_DIR)/%.s
+	@DIR=$(@D); $(MAKE_SURE_DIR)
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(OBJ_PATTERN): $(COMMON_DIR)/%.c
+	@DIR=$(@D); $(MAKE_SURE_DIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(COMMON_DIR)/%.s
+	@DIR=$(@D); $(MAKE_SURE_DIR)
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.c
+	@DIR=$(@D); $(MAKE_SURE_DIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(OBJ_PATTERN): $(QW_COMMON_DIR)/%.s
+	@DIR=$(@D); $(MAKE_SURE_DIR)
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
