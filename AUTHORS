@@ -146,7 +146,7 @@ D: Autoconf support and portability
 D: Corrected failed mmap checking
 D: FreeBSD support
 
-N: Dan Olson
+N: Dan Olson (theoddone33)
 E: theoddone@quakefiles.com
 D: Misc. code fixes
 D: Driver modules
@@ -162,6 +162,10 @@ D: Input handling fixes/optimizations
 N: Filip Van Raemdonck
 E: filipvr@xs4all.be
 D: Input handling fixes/optimizations
+
+N: James Roberts (omnibus)
+E: omnibus@users.sourceforge.net
+D: Donated the project's domain
 
 N: Tim Rowley
 E: tor@cs.brown.edu
