@@ -215,4 +215,3 @@
 
 /* Define the name of the global config file */
 #define GLOBAL_CFG_FILE ".\\qforge.cfg"
-

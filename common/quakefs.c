@@ -31,7 +31,6 @@
 
 #include <config.h>
 #include <ctype.h>
-#include <limits.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -57,6 +56,12 @@
 #ifdef WIN32
 #include <io.h>
 #endif
+
+#ifdef _MSC_VER
+#define _POSIX_
+#endif
+#include <limits.h>
+
 
 /*
 All of Quake's data access is through a hierchal file system, but the contents of the file system can be transparently merged from several sources.

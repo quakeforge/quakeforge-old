@@ -32,7 +32,6 @@
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif
-#include <limits.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <quakeio.h>
@@ -46,6 +45,11 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+
+#ifdef _MSC_VER
+#define _POSIX_
+#endif
+#include <limits.h>
 
 void
 Qexpand_squiggle(const char *path, char *dest)
