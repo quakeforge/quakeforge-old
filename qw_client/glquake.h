@@ -33,12 +33,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void GL_BeginRendering (int *x, int *y, int *width, int *height);
 void GL_EndRendering (void);
 
-#ifndef APIENTRY
-/* Mesa defines APIENTRY, but other versions of OpenGL do not */
-#ifdef GLAPIENTRY
-#define APIENTRY GLAPIENTRY
+	/* Mesa pre-3.1 defines APIENTRY instead of GLAPIENTRY */
+#ifndef GLAPIENTRY
+#ifdef APIENTRY
+	/* Create compatible GLAPIENTRY definition from APIENTRY */
+#define GLAPIENTRY APIENTRY
 #else
-#define APIENTRY
+	/* Error out -- it's pathological and we don't know what to do */
+#error I don't know what data type GLAPIENTRY is on this system.
 #endif
 #endif
 
