@@ -16,6 +16,7 @@ DESTDIR		=
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 bindir		= @bindir@
+libdir		= @libdir@
 mandir		= @mandir@
 
 BUILD_DIR	= $(PROJECT_ODIR)/targets/qw_server
@@ -84,7 +85,7 @@ all: $(targets)
 ALL_SRV_OBJS = $(patsubst %,$(BUILD_DIR)/%, $(addsuffix .@OBJEXT@,\
                $(basename $(ALL_QW_SRV_SRC) .c .s)))
 
-SRV_CFLAGS = -DSRV $(X_CFLAGS)
+SRV_CFLAGS = -DSRV -DLIBDIR=\"$(libdir)\" $(X_CFLAGS)
 # FIXME: Don't use X_EXTRA_LIBS below
 SRV_LDFLAGS = @X_EXTRA_LIBS@
 

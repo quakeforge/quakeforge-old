@@ -16,6 +16,7 @@ DESTDIR		:=
 prefix		:= @prefix@
 exec_prefix	:= @exec_prefix@
 bindir		:= @bindir@
+libdir		:= @libdir@
 mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
@@ -183,8 +184,8 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 # Directory specific stuff
 #
 DEFS = @DEFS@
-CFLAGS += @CFLAGS@ -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. \
-$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
+CFLAGS += @CFLAGS@ -DQUAKEWORLD -DLIBDIR=\"$(libdir)\" $(OPTFLAGS) $(DEFS) \
+-I. $(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_ODIR) -I$(COMMON_DIR)
 
 GENERAL_SRC = $(CL_COMMON_SRC) \
 	   $(QW_CL_SRC) $(QW_NET_SRC) net_chan.c skin.c \
