@@ -26,6 +26,7 @@ clean-autoconf mrproper: distclean
 %:
 	@for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
+	done
 	
 	
 changelog:
