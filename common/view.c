@@ -938,13 +938,7 @@ void V_CalcRefdef (void)
 		float steptime;
 		
 		steptime = host_frametime;
-#else
-if (cl.onground && ent->origin[2] - oldz > 0)
-{
-	float steptime;
-#endif
-	
-#ifdef QUAKEWORLD
+
 		oldz += steptime * 80;
 		if (oldz > cl.simorg[2])
 			oldz = cl.simorg[2];
@@ -956,23 +950,29 @@ if (cl.onground && ent->origin[2] - oldz > 0)
 	else
 		oldz = cl.simorg[2];
 #else
-	steptime = cl.time - cl.oldtime;
-	if (steptime < 0)
-//FIXME		I_Error ("steptime < 0");
-		steptime = 0;
+	if (cl.onground && ent->origin[2] - oldz > 0)
+	{
+		float steptime;
 
-	oldz += steptime * 80;
-	if (oldz > ent->origin[2])
-		oldz = ent->origin[2];
-	if (ent->origin[2] - oldz > 12)
-		oldz = ent->origin[2] - 12;
-	r_refdef.vieworg[2] += oldz - ent->origin[2];
-	view->origin[2] += oldz - ent->origin[2];
+		steptime = cl.time - cl.oldtime;
+		if (steptime < 0)
+//FIXME		I_Error ("steptime < 0");
+			steptime = 0;
+
+		oldz += steptime * 80;
+		if (oldz > ent->origin[2])
+			oldz = ent->origin[2];
+		if (ent->origin[2] - oldz > 12)
+			oldz = ent->origin[2] - 12;
+		r_refdef.vieworg[2] += oldz - ent->origin[2];
+		view->origin[2] += oldz - ent->origin[2];
+	}
+
+	oldz = ent->origin[2];
+	if (cl_chasecam->value)
+		Chase_Update ();
 #endif
 }
-#ifdef UQUAKE
-	oldz = ent->origin[2];
-#endif
 
 #ifdef QUAKEWORLD
 /*
@@ -983,11 +983,8 @@ void DropPunchAngle (void)
 	cl.punchangle -= 10*host_frametime;
 	if (cl.punchangle < 0)
 		cl.punchangle = 0;
-#else
-	if (cl_chasecam->value)
-		Chase_Update ();
-#endif
 }
+#endif
 
 /*
 	V_RenderView
