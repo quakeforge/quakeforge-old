@@ -844,8 +844,6 @@ void IN_Init(void)
 	char *mousedev;
 	int mouserate;
 
-	Cvar_RegisterVariable (&m_filter);
-	
 	if (UseMouse)
 	{
 
