@@ -19,7 +19,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // sv_edict.c -- entity dictionary
 
+#ifdef QUAKEWORLD
+#include "qwsvdef.h"
+#else
 #include "quakedef.h"
+#endif
 
 dprograms_t		*progs;
 dfunction_t		*pr_functions;
@@ -31,13 +35,17 @@ globalvars_t	*pr_global_struct;
 float			*pr_globals;			// same as pr_global_struct
 int				pr_edict_size;	// in bytes
 
+#ifdef QUAKEWORLD
+int		type_size[8] = {1,sizeof(void *)/4,1,3,1,1,sizeof(void *)/4,sizeof(void *)/4};
+#else
 unsigned short		pr_crc;
-
 int		type_size[8] = {1,sizeof(string_t)/4,1,3,1,1,sizeof(func_t)/4,sizeof(void *)/4};
+#endif
 
 ddef_t *ED_FieldAtOfs (int ofs);
 qboolean	ED_ParseEpair (void *base, ddef_t *key, char *s);
 
+#ifndef QUAKEWORLD
 cvar_t	nomonsters = {"nomonsters", "0"};
 cvar_t	gamecfg = {"gamecfg", "0"};
 cvar_t	scratch1 = {"scratch1", "0"};
@@ -49,6 +57,7 @@ cvar_t	saved1 = {"saved1", "0", true};
 cvar_t	saved2 = {"saved2", "0", true};
 cvar_t	saved3 = {"saved3", "0", true};
 cvar_t	saved4 = {"saved4", "0", true};
+#endif
 
 #define	MAX_FIELD_LEN	64
 #define GEFV_CACHESIZE	2
@@ -59,6 +68,13 @@ typedef struct {
 } gefv_cache;
 
 static gefv_cache	gefvCache[GEFV_CACHESIZE] = {{NULL, ""}, {NULL, ""}};
+
+#ifdef QUAKEWORLD
+func_t SpectatorConnect;
+func_t SpectatorThink;
+func_t SpectatorDisconnect;
+#endif
+
 
 /*
 =================
@@ -89,7 +105,11 @@ edict_t *ED_Alloc (void)
 	int			i;
 	edict_t		*e;
 
+#ifdef QUAKEWORLD
+	for ( i=MAX_CLIENTS+1 ; i<sv.num_edicts ; i++)
+#else
 	for ( i=svs.maxclients+1 ; i<sv.num_edicts ; i++)
+#endif
 	{
 		e = EDICT_NUM(i);
 		// the first couple seconds of server time can involve a lot of
@@ -102,9 +122,21 @@ edict_t *ED_Alloc (void)
 	}
 	
 	if (i == MAX_EDICTS)
+#ifdef QUAKEWORLD
+	{
+		Con_Printf ("WARNING: ED_Alloc: no free edicts\n");
+		i--;	// step on whatever is the last edict
+		e = EDICT_NUM(i);
+		SV_UnlinkEdict(e);
+	}
+	else
+		sv.num_edicts++;
+#else
 		Sys_Error ("ED_Alloc: no free edicts");
-		
+
 	sv.num_edicts++;
+#endif
+
 	e = EDICT_NUM(i);
 	ED_ClearEdict (e);
 
@@ -191,7 +223,7 @@ ddef_t *ED_FindField (char *name)
 	for (i=0 ; i<progs->numfielddefs ; i++)
 	{
 		def = &pr_fielddefs[i];
-		if (!strcmp(pr_strings + def->s_name,name) )
+		if (!strcmp(PR_GetString(def->s_name),name) )
 			return def;
 	}
 	return NULL;
@@ -211,7 +243,7 @@ ddef_t *ED_FindGlobal (char *name)
 	for (i=0 ; i<progs->numglobaldefs ; i++)
 	{
 		def = &pr_globaldefs[i];
-		if (!strcmp(pr_strings + def->s_name,name) )
+		if (!strcmp(PR_GetString(def->s_name),name) )
 			return def;
 	}
 	return NULL;
@@ -231,12 +263,11 @@ dfunction_t *ED_FindFunction (char *name)
 	for (i=0 ; i<progs->numfunctions ; i++)
 	{
 		func = &pr_functions[i];
-		if (!strcmp(pr_strings + func->s_name,name) )
+		if (!strcmp(PR_GetString(func->s_name),name) )
 			return func;
 	}
 	return NULL;
 }
-
 
 eval_t *GetEdictFieldValue(edict_t *ed, char *field)
 {
@@ -269,7 +300,6 @@ Done:
 	return (eval_t *)((char *)&ed->v + def->ofs*4);
 }
 
-
 /*
 ============
 PR_ValueString
@@ -288,18 +318,18 @@ char *PR_ValueString (etype_t type, eval_t *val)
 	switch (type)
 	{
 	case ev_string:
-		sprintf (line, "%s", pr_strings + val->string);
+		sprintf (line, "%s", PR_GetString(val->string));
 		break;
 	case ev_entity:	
 		sprintf (line, "entity %i", NUM_FOR_EDICT(PROG_TO_EDICT(val->edict)) );
 		break;
 	case ev_function:
 		f = pr_functions + val->function;
-		sprintf (line, "%s()", pr_strings + f->s_name);
+		sprintf (line, "%s()", PR_GetString(f->s_name));
 		break;
 	case ev_field:
 		def = ED_FieldAtOfs ( val->_int );
-		sprintf (line, ".%s", pr_strings + def->s_name);
+		sprintf (line, ".%s", PR_GetString(def->s_name));
 		break;
 	case ev_void:
 		sprintf (line, "void");
@@ -340,18 +370,18 @@ char *PR_UglyValueString (etype_t type, eval_t *val)
 	switch (type)
 	{
 	case ev_string:
-		sprintf (line, "%s", pr_strings + val->string);
+		sprintf (line, "%s", PR_GetString(val->string));
 		break;
 	case ev_entity:	
 		sprintf (line, "%i", NUM_FOR_EDICT(PROG_TO_EDICT(val->edict)));
 		break;
 	case ev_function:
 		f = pr_functions + val->function;
-		sprintf (line, "%s", pr_strings + f->s_name);
+		sprintf (line, "%s", PR_GetString(f->s_name));
 		break;
 	case ev_field:
 		def = ED_FieldAtOfs ( val->_int );
-		sprintf (line, "%s", pr_strings + def->s_name);
+		sprintf (line, "%s", PR_GetString(def->s_name));
 		break;
 	case ev_void:
 		sprintf (line, "void");
@@ -393,7 +423,7 @@ char *PR_GlobalString (int ofs)
 	else
 	{
 		s = PR_ValueString (def->type, val);
-		sprintf (line,"%i(%s)%s", ofs, pr_strings + def->s_name, s);
+		sprintf (line,"%i(%s)%s", ofs, PR_GetString(def->s_name), s);
 	}
 	
 	i = strlen(line);
@@ -414,7 +444,7 @@ char *PR_GlobalStringNoContents (int ofs)
 	if (!def)
 		sprintf (line,"%i(???)", ofs);
 	else
-		sprintf (line,"%i(%s)", ofs, pr_strings + def->s_name);
+		sprintf (line,"%i(%s)", ofs, PR_GetString(def->s_name));
 	
 	i = strlen(line);
 	for ( ; i<20 ; i++)
@@ -446,12 +476,11 @@ void ED_Print (edict_t *ed)
 		Con_Printf ("FREE\n");
 		return;
 	}
-
-	Con_Printf("\nEDICT %i:\n", NUM_FOR_EDICT(ed));
+	
 	for (i=1 ; i<progs->numfielddefs ; i++)
 	{
 		d = &pr_fielddefs[i];
-		name = pr_strings + d->s_name;
+		name = PR_GetString(d->s_name);
 		if (name[strlen(name)-2] == '_')
 			continue;	// skip _x, _y, _z vars
 			
@@ -501,7 +530,7 @@ void ED_Write (FILE *f, edict_t *ed)
 	for (i=1 ; i<progs->numfielddefs ; i++)
 	{
 		d = &pr_fielddefs[i];
-		name = pr_strings + d->s_name;
+		name = PR_GetString(d->s_name);
 		if (name[strlen(name)-2] == '_')
 			continue;	// skip _x, _y, _z vars
 			
@@ -540,7 +569,10 @@ void ED_PrintEdicts (void)
 	
 	Con_Printf ("%i entities\n", sv.num_edicts);
 	for (i=0 ; i<sv.num_edicts ; i++)
+	{
+		Con_Printf ("\nEDICT %i:\n",i);
 		ED_PrintNum (i);
+	}
 }
 
 /*
@@ -555,11 +587,15 @@ void ED_PrintEdict_f (void)
 	int		i;
 	
 	i = Q_atoi (Cmd_Argv(1));
+#ifdef QUAKEWORLD
+	Con_Printf ("\n EDICT %i:\n",i);
+#else
 	if (i >= sv.num_edicts)
 	{
 		Con_Printf("Bad edict number\n");
 		return;
 	}
+#endif
 	ED_PrintNum (i);
 }
 
@@ -634,7 +670,7 @@ void ED_WriteGlobals (FILE *f)
 		&& type != ev_entity)
 			continue;
 
-		name = pr_strings + def->s_name;		
+		name = PR_GetString(def->s_name);
 		fprintf (f,"\"%s\" ", name);
 		fprintf (f,"\"%s\"\n", PR_UglyValueString(type, (eval_t *)&pr_globals[def->ofs]));		
 	}
@@ -658,27 +694,43 @@ void ED_ParseGlobals (char *data)
 		if (com_token[0] == '}')
 			break;
 		if (!data)
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEntity: EOF without closing brace");
+#else
 			Sys_Error ("ED_ParseEntity: EOF without closing brace");
+#endif
 
 		strcpy (keyname, com_token);
 
 	// parse value	
 		data = COM_Parse (data);
 		if (!data)
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEntity: EOF without closing brace");
+#else
 			Sys_Error ("ED_ParseEntity: EOF without closing brace");
+#endif
 
 		if (com_token[0] == '}')
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEntity: closing brace without data");
+#else
 			Sys_Error ("ED_ParseEntity: closing brace without data");
+#endif
 
 		key = ED_FindGlobal (keyname);
 		if (!key)
 		{
-			Con_Printf ("'%s' is not a global\n", keyname);
+			Con_Printf ("%s is not a global\n", keyname);
 			continue;
 		}
 
 		if (!ED_ParseEpair ((void *)pr_globals, key, com_token))
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseGlobals: parse error");
+#else
 			Host_Error ("ED_ParseGlobals: parse error");
+#endif
 	}
 }
 
@@ -739,7 +791,7 @@ qboolean	ED_ParseEpair (void *base, ddef_t *key, char *s)
 	switch (key->type & ~DEF_SAVEGLOBAL)
 	{
 	case ev_string:
-		*(string_t *)d = ED_NewString (s) - pr_strings;
+		*(string_t *)d = PR_SetString(ED_NewString (s));
 		break;
 		
 	case ev_float:
@@ -821,7 +873,11 @@ char *ED_ParseEdict (char *data, edict_t *ent)
 		if (com_token[0] == '}')
 			break;
 		if (!data)
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEntity: EOF without closing brace");
+#else
 			Sys_Error ("ED_ParseEntity: EOF without closing brace");
+#endif
 		
 // anglehack is to allow QuakeEd to write single scalar angles
 // and allow them to be turned into vectors. (FIXME...)
@@ -839,6 +895,7 @@ if (!strcmp(com_token, "light"))
 
 		strcpy (keyname, com_token);
 
+#ifndef QUAKEWORLD
 		// another hack to fix heynames with trailing spaces
 		n = strlen(keyname);
 		while (n && keyname[n-1] == ' ')
@@ -846,14 +903,23 @@ if (!strcmp(com_token, "light"))
 			keyname[n-1] = 0;
 			n--;
 		}
-
+#endif
+		
 	// parse value	
 		data = COM_Parse (data);
 		if (!data)
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEntity: EOF without closing brace");
+#else
 			Sys_Error ("ED_ParseEntity: EOF without closing brace");
+#endif
 
 		if (com_token[0] == '}')
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEntity: closing brace without data");
+#else
 			Sys_Error ("ED_ParseEntity: closing brace without data");
+#endif
 
 		init = true;	
 
@@ -865,7 +931,7 @@ if (!strcmp(com_token, "light"))
 		key = ED_FindField (keyname);
 		if (!key)
 		{
-			Con_Printf ("'%s' is not a field\n", keyname);
+			Con_Printf ("%s is not a field\n", keyname);
 			continue;
 		}
 
@@ -877,7 +943,11 @@ sprintf (com_token, "0 %s 0", temp);
 }
 
 		if (!ED_ParseEpair ((void *)&ent->v, key, com_token))
+#ifdef QUAKEWORLD
+			SV_Error ("ED_ParseEdict: parse error");
+#else
 			Host_Error ("ED_ParseEdict: parse error");
+#endif
 	}
 
 	if (!init)
@@ -920,23 +990,30 @@ void ED_LoadFromFile (char *data)
 		if (!data)
 			break;
 		if (com_token[0] != '{')
+#ifdef QUAKEWORLD
+			SV_Error ("ED_LoadFromFile: found %s when expecting {",com_token);
+#else
 			Sys_Error ("ED_LoadFromFile: found %s when expecting {",com_token);
+#endif
 
 		if (!ent)
 			ent = EDICT_NUM(0);
 		else
 			ent = ED_Alloc ();
 		data = ED_ParseEdict (data, ent);
-
+		
 // remove things from different skill levels or deathmatch
+#ifndef QUAKEWORLD
 		if (deathmatch.value)
 		{
+#endif
 			if (((int)ent->v.spawnflags & SPAWNFLAG_NOT_DEATHMATCH))
 			{
 				ED_Free (ent);	
 				inhibit++;
 				continue;
 			}
+#ifndef QUAKEWORLD
 		}
 		else if ((current_skill == 0 && ((int)ent->v.spawnflags & SPAWNFLAG_NOT_EASY))
 				|| (current_skill == 1 && ((int)ent->v.spawnflags & SPAWNFLAG_NOT_MEDIUM))
@@ -946,6 +1023,7 @@ void ED_LoadFromFile (char *data)
 			inhibit++;
 			continue;
 		}
+#endif
 
 //
 // immediately call spawn function
@@ -957,9 +1035,9 @@ void ED_LoadFromFile (char *data)
 			ED_Free (ent);
 			continue;
 		}
-
+		
 	// look for the spawn function
-		func = ED_FindFunction ( pr_strings + ent->v.classname );
+		func = ED_FindFunction ( PR_GetString(ent->v.classname) );
 
 		if (!func)
 		{
@@ -971,6 +1049,9 @@ void ED_LoadFromFile (char *data)
 
 		pr_global_struct->self = EDICT_TO_PROG(ent);
 		PR_ExecuteProgram (func - pr_functions);
+#ifdef QUAKEWORLD
+		SV_FlushSignon();
+#endif
 	}	
 
 	Con_DPrintf ("%i entities inhibited\n", inhibit);
@@ -985,35 +1066,65 @@ PR_LoadProgs
 void PR_LoadProgs (void)
 {
 	int		i;
+	char	num[32];
+	dfunction_t *f;
 
 // flush the non-C variable lookup cache
 	for (i=0 ; i<GEFV_CACHESIZE ; i++)
 		gefvCache[i].field[0] = 0;
 
+#ifndef QUAKEWORLD
 	CRC_Init (&pr_crc);
+#endif
 
-	progs = (dprograms_t *)COM_LoadHunkFile ("progs.dat");
+#ifdef QUAKEWORLD
+	progs = (dprograms_t *)COM_LoadHunkFile ("qwprogs.dat");
 	if (!progs)
+#endif
+		progs = (dprograms_t *)COM_LoadHunkFile ("progs.dat");
+	if (!progs)
+#ifdef QUAKEWORLD
+		SV_Error ("PR_LoadProgs: couldn't load progs.dat");
+#else
 		Sys_Error ("PR_LoadProgs: couldn't load progs.dat");
+#endif
 	Con_DPrintf ("Programs occupy %iK.\n", com_filesize/1024);
 
+#ifdef QUAKEWORLD
+// add prog crc to the serverinfo
+	sprintf (num, "%i", CRC_Block ((byte *)progs, com_filesize));
+	Info_SetValueForStarKey (svs.info, "*progs", num, MAX_SERVERINFO_STRING);
+#else
 	for (i=0 ; i<com_filesize ; i++)
 		CRC_ProcessByte (&pr_crc, ((byte *)progs)[i]);
+#endif
 
 // byte swap the header
 	for (i=0 ; i<sizeof(*progs)/4 ; i++)
 		((int *)progs)[i] = LittleLong ( ((int *)progs)[i] );		
 
 	if (progs->version != PROG_VERSION)
+#ifdef QUAKEWORLD
+		SV_Error ("progs.dat has wrong version number (%i should be %i)", progs->version, PROG_VERSION);
+#else
 		Sys_Error ("progs.dat has wrong version number (%i should be %i)", progs->version, PROG_VERSION);
+#endif
 	if (progs->crc != PROGHEADER_CRC)
+#ifdef QUAKEWORLD
+		SV_Error ("You must have the progs.dat from QuakeWorld installed");
+#else
 		Sys_Error ("progs.dat system vars have been modified, progdefs.h is out of date");
+#endif
 
 	pr_functions = (dfunction_t *)((byte *)progs + progs->ofs_functions);
 	pr_strings = (char *)progs + progs->ofs_strings;
 	pr_globaldefs = (ddef_t *)((byte *)progs + progs->ofs_globaldefs);
 	pr_fielddefs = (ddef_t *)((byte *)progs + progs->ofs_fielddefs);
 	pr_statements = (dstatement_t *)((byte *)progs + progs->ofs_statements);
+
+#ifdef QUAKEWORLD
+	num_prstr = 0;
+#endif
 
 	pr_global_struct = (globalvars_t *)((byte *)progs + progs->ofs_globals);
 	pr_globals = (float *)pr_global_struct;
@@ -1050,13 +1161,29 @@ void PR_LoadProgs (void)
 	{
 		pr_fielddefs[i].type = LittleShort (pr_fielddefs[i].type);
 		if (pr_fielddefs[i].type & DEF_SAVEGLOBAL)
+#ifdef QUAKEWORLD
+			SV_Error ("PR_LoadProgs: pr_fielddefs[i].type & DEF_SAVEGLOBAL");
+#else
 			Sys_Error ("PR_LoadProgs: pr_fielddefs[i].type & DEF_SAVEGLOBAL");
+#endif
 		pr_fielddefs[i].ofs = LittleShort (pr_fielddefs[i].ofs);
 		pr_fielddefs[i].s_name = LittleLong (pr_fielddefs[i].s_name);
 	}
 
 	for (i=0 ; i<progs->numglobals ; i++)
 		((int *)pr_globals)[i] = LittleLong (((int *)pr_globals)[i]);
+
+#ifdef QUAKEWORLD
+	// Zoid, find the spectator functions
+	SpectatorConnect = SpectatorThink = SpectatorDisconnect = 0;
+
+	if ((f = ED_FindFunction ("SpectatorConnect")) != NULL)
+		SpectatorConnect = (func_t)(f - pr_functions);
+	if ((f = ED_FindFunction ("SpectatorThink")) != NULL)
+		SpectatorThink = (func_t)(f - pr_functions);
+	if ((f = ED_FindFunction ("SpectatorDisconnect")) != NULL)
+		SpectatorDisconnect = (func_t)(f - pr_functions);
+#endif
 }
 
 
@@ -1071,6 +1198,7 @@ void PR_Init (void)
 	Cmd_AddCommand ("edicts", ED_PrintEdicts);
 	Cmd_AddCommand ("edictcount", ED_Count);
 	Cmd_AddCommand ("profile", PR_Profile_f);
+#ifndef QUAKEWORLD
 	Cvar_RegisterVariable (&nomonsters);
 	Cvar_RegisterVariable (&gamecfg);
 	Cvar_RegisterVariable (&scratch1);
@@ -1082,14 +1210,19 @@ void PR_Init (void)
 	Cvar_RegisterVariable (&saved2);
 	Cvar_RegisterVariable (&saved3);
 	Cvar_RegisterVariable (&saved4);
+#endif
 }
 
 
 
 edict_t *EDICT_NUM(int n)
 {
-	if (n < 0 || n >= sv.max_edicts)
+	if (n < 0 || n >= MAX_EDICTS)
+#ifdef QUAKEWORLD
+		SV_Error ("EDICT_NUM: bad number %i", n);
+#else
 		Sys_Error ("EDICT_NUM: bad number %i", n);
+#endif
 	return (edict_t *)((byte *)sv.edicts+ (n)*pr_edict_size);
 }
 
@@ -1101,6 +1234,12 @@ int NUM_FOR_EDICT(edict_t *e)
 	b = b / pr_edict_size;
 	
 	if (b < 0 || b >= sv.num_edicts)
+#ifdef QUAKEWORLD
+		SV_Error ("NUM_FOR_EDICT: bad pointer");
+#else
 		Sys_Error ("NUM_FOR_EDICT: bad pointer");
+#endif
 	return b;
 }
+
+

@@ -17,10 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-
-#include "quakedef.h"
+#ifdef QUAKEWORLD
+#   include "qwsvdef.h"
+#else
+#   include "quakedef.h"
+#endif
 
 #define	RETURN_EDICT(e) (((int *)pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))
+#define	RETURN_STRING(s) (((int *)pr_globals)[OFS_RETURN] = PR_SetString(s))
 
 /*
 ===============================================================================
@@ -60,12 +64,15 @@ void PF_error (void)
 	edict_t	*ed;
 	
 	s = PF_VarString(0);
-	Con_Printf ("======SERVER ERROR in %s:\n%s\n"
-	,pr_strings + pr_xfunction->s_name,s);
+	Con_Printf ("======SERVER ERROR in %s:\n%s\n", PR_GetString(pr_xfunction->s_name) ,s);
 	ed = PROG_TO_EDICT(pr_global_struct->self);
 	ED_Print (ed);
 
+#ifdef QUAKEWORLD
+	SV_Error ("Program error");
+#else
 	Host_Error ("Program error");
+#endif
 }
 
 /*
@@ -84,13 +91,16 @@ void PF_objerror (void)
 	edict_t	*ed;
 	
 	s = PF_VarString(0);
-	Con_Printf ("======OBJECT ERROR in %s:\n%s\n"
-	,pr_strings + pr_xfunction->s_name,s);
+	Con_Printf ("======OBJECT ERROR in %s:\n%s\n", PR_GetString(pr_xfunction->s_name),s);
 	ed = PROG_TO_EDICT(pr_global_struct->self);
 	ED_Print (ed);
 	ED_Free (ed);
 	
+#ifdef QUAKEWORLD
+	SV_Error ("Program error");
+#else
 	Host_Error ("Program error");
+#endif
 }
 
 
@@ -128,6 +138,11 @@ void PF_setorigin (void)
 	SV_LinkEdict (e, false);
 }
 
+/*
+===============
+ QUAKEWORLD: Note, the function SetMinMaxSize is only used for UQUAKE
+===============
+*/
 
 void SetMinMaxSize (edict_t *e, float *min, float *max, qboolean rotate)
 {
@@ -203,6 +218,7 @@ void SetMinMaxSize (edict_t *e, float *min, float *max, qboolean rotate)
 	SV_LinkEdict (e, false);
 }
 
+
 /*
 =================
 PF_setsize
@@ -220,7 +236,14 @@ void PF_setsize (void)
 	e = G_EDICT(OFS_PARM0);
 	min = G_VECTOR(OFS_PARM1);
 	max = G_VECTOR(OFS_PARM2);
+#ifdef QUAKEWORLD
+	VectorCopy (min, e->v.mins);
+	VectorCopy (max, e->v.maxs);
+	VectorSubtract (max, min, e->v.size);
+	SV_LinkEdict (e, false);
+#else
 	SetMinMaxSize (e, min, max, false);
+#endif
 }
 
 
@@ -229,14 +252,15 @@ void PF_setsize (void)
 PF_setmodel
 
 setmodel(entity, model)
+Also sets size, mins, and maxs for inline bmodels
 =================
 */
 void PF_setmodel (void)
 {
 	edict_t	*e;
 	char	*m, **check;
-	model_t	*mod;
 	int		i;
+	model_t	*mod;
 
 	e = G_EDICT(OFS_PARM0);
 	m = G_STRING(OFS_PARM1);
@@ -245,20 +269,32 @@ void PF_setmodel (void)
 	for (i=0, check = sv.model_precache ; *check ; i++, check++)
 		if (!strcmp(*check, m))
 			break;
-			
+
 	if (!*check)
 		PR_RunError ("no precache: %s\n", m);
 		
+	e->v.model = PR_SetString(m);
+	e->v.modelindex = i;
 
-	e->v.model = m - pr_strings;
-	e->v.modelindex = i; //SV_ModelIndex (m);
-
+#ifdef QUAKEWORLD
+// if it is an inline model, get the size information for it
+	if (m[0] == '*')
+	{
+		mod = Mod_ForName (m, true);
+		VectorCopy (mod->mins, e->v.mins);
+		VectorCopy (mod->maxs, e->v.maxs);
+		VectorSubtract (mod->maxs, mod->mins, e->v.size);
+		SV_LinkEdict (e, false);
+	}
+#else
 	mod = sv.models[ (int)e->v.modelindex];  // Mod_ForName (m, true);
 	
 	if (mod)
 		SetMinMaxSize (e, mod->mins, mod->maxs, true);
 	else
 		SetMinMaxSize (e, vec3_origin, vec3_origin, true);
+#endif
+
 }
 
 /*
@@ -273,9 +309,18 @@ bprint(value)
 void PF_bprint (void)
 {
 	char		*s;
+	int			level;
+	
+#ifdef QUAKEWORLD
+	level = G_FLOAT(OFS_PARM0);
 
+	s = PF_VarString(1);
+	SV_BroadcastPrintf (level, "%s", s);
+#else
 	s = PF_VarString(0);
 	SV_BroadcastPrintf ("%s", s);
+#endif
+
 }
 
 /*
@@ -292,20 +337,36 @@ void PF_sprint (void)
 	char		*s;
 	client_t	*client;
 	int			entnum;
+	int			level;
 	
 	entnum = G_EDICTNUM(OFS_PARM0);
+
+#ifdef QUAKEWORLD
+	level = G_FLOAT(OFS_PARM1);
+
+	s = PF_VarString(2);
+#else
 	s = PF_VarString(1);
+#endif
 	
+#ifdef QUAKEWORLD
+	if (entnum < 1 || entnum > MAX_CLIENTS)
+#else
 	if (entnum < 1 || entnum > svs.maxclients)
+#endif
 	{
 		Con_Printf ("tried to sprint to a non-client\n");
 		return;
 	}
 		
 	client = &svs.clients[entnum-1];
-		
+	
+#ifdef QUAKEWORLD
+	SV_ClientPrintf (client, level, "%s", s);
+#else
 	MSG_WriteChar (&client->message,svc_print);
 	MSG_WriteString (&client->message, s );
+#endif
 }
 
 
@@ -321,22 +382,31 @@ centerprint(clientent, value)
 void PF_centerprint (void)
 {
 	char		*s;
-	client_t	*client;
 	int			entnum;
+	client_t	*cl;
 	
 	entnum = G_EDICTNUM(OFS_PARM0);
 	s = PF_VarString(1);
 	
+#ifdef QUAKEWORLD
+	if (entnum < 1 || entnum > MAX_CLIENTS)
+#else
 	if (entnum < 1 || entnum > svs.maxclients)
+#endif
 	{
 		Con_Printf ("tried to sprint to a non-client\n");
 		return;
 	}
 		
-	client = &svs.clients[entnum-1];
-		
-	MSG_WriteChar (&client->message,svc_centerprint);
-	MSG_WriteString (&client->message, s );
+	cl = &svs.clients[entnum-1];
+
+#ifdef QUAKEWORLD
+	ClientReliableWrite_Begin (cl, svc_centerprint, 2 + strlen(s));
+	ClientReliableWrite_String (cl, s);
+#else
+	MSG_WriteChar (&cl->message,svc_centerprint);
+	MSG_WriteString (&cl->message, s );
+#endif
 }
 
 
@@ -476,6 +546,7 @@ void PF_random (void)
 	G_FLOAT(OFS_RETURN) = num;
 }
 
+#ifndef QUAKEWORLD /* !QUAKEWORLD */
 /*
 =================
 PF_particle
@@ -495,7 +566,7 @@ void PF_particle (void)
 	count = G_FLOAT(OFS_PARM3);
 	SV_StartParticle (org, dir, color, count);
 }
-
+#endif
 
 /*
 =================
@@ -568,7 +639,8 @@ void PF_sound (void)
 	sample = G_STRING(OFS_PARM2);
 	volume = G_FLOAT(OFS_PARM3) * 255;
 	attenuation = G_FLOAT(OFS_PARM4);
-	
+
+#ifndef QUAKEWORLD
 	if (volume < 0 || volume > 255)
 		Sys_Error ("SV_StartSound: volume = %i", volume);
 
@@ -577,7 +649,8 @@ void PF_sound (void)
 
 	if (channel < 0 || channel > 7)
 		Sys_Error ("SV_StartSound: channel = %i", channel);
-
+#endif
+	
 	SV_StartSound (entity, channel, sample, volume, attenuation);
 }
 
@@ -634,37 +707,6 @@ void PF_traceline (void)
 		pr_global_struct->trace_ent = EDICT_TO_PROG(sv.edicts);
 }
 
-
-#ifdef QUAKE2
-extern trace_t SV_Trace_Toss (edict_t *ent, edict_t *ignore);
-
-void PF_TraceToss (void)
-{
-	trace_t	trace;
-	edict_t	*ent;
-	edict_t	*ignore;
-
-	ent = G_EDICT(OFS_PARM0);
-	ignore = G_EDICT(OFS_PARM1);
-
-	trace = SV_Trace_Toss (ent, ignore);
-
-	pr_global_struct->trace_allsolid = trace.allsolid;
-	pr_global_struct->trace_startsolid = trace.startsolid;
-	pr_global_struct->trace_fraction = trace.fraction;
-	pr_global_struct->trace_inwater = trace.inwater;
-	pr_global_struct->trace_inopen = trace.inopen;
-	VectorCopy (trace.endpos, pr_global_struct->trace_endpos);
-	VectorCopy (trace.plane.normal, pr_global_struct->trace_plane_normal);
-	pr_global_struct->trace_plane_dist =  trace.plane.dist;	
-	if (trace.ent)
-		pr_global_struct->trace_ent = EDICT_TO_PROG(trace.ent);
-	else
-		pr_global_struct->trace_ent = EDICT_TO_PROG(sv.edicts);
-}
-#endif
-
-
 /*
 =================
 PF_checkpos
@@ -695,6 +737,16 @@ int PF_newcheckclient (int check)
 
 	if (check < 1)
 		check = 1;
+
+#ifdef QUAKEWORLD
+	if (check > MAX_CLIENTS)
+		check = MAX_CLIENTS;
+
+	if (check == MAX_CLIENTS)
+		i = 1;
+	else
+		i = check + 1;
+#else
 	if (check > svs.maxclients)
 		check = svs.maxclients;
 
@@ -702,10 +754,15 @@ int PF_newcheckclient (int check)
 		i = 1;
 	else
 		i = check + 1;
+#endif
 
 	for ( ;  ; i++)
 	{
+#ifdef QUAKEWORLD
+		if (i == MAX_CLIENTS+1)
+#else
 		if (i == svs.maxclients+1)
+#endif
 			i = 1;
 
 		ent = EDICT_NUM(i);
@@ -805,17 +862,34 @@ void PF_stuffcmd (void)
 {
 	int		entnum;
 	char	*str;
-	client_t	*old;
+	client_t	*cl;
 	
 	entnum = G_EDICTNUM(OFS_PARM0);
+#ifdef QUAKEWORLD
+	if (entnum < 1 || entnum > MAX_CLIENTS)
+#else
 	if (entnum < 1 || entnum > svs.maxclients)
+#endif
 		PR_RunError ("Parm 0 not a client");
 	str = G_STRING(OFS_PARM1);	
 	
-	old = host_client;
+	cl = &svs.clients[entnum-1];
+
+#if QUAKEWORLD
+	if (strcmp(str, "disconnect\n") == 0) {
+		// so long and thanks for all the fish
+		cl->drop = true;
+		return;
+	}
+
+	ClientReliableWrite_Begin (cl, svc_stufftext, 2+strlen(str));
+	ClientReliableWrite_String (cl, str);
+#else
+	cl = host_client;
 	host_client = &svs.clients[entnum-1];
 	Host_ClientCommands ("%s", str);
-	host_client = old;
+	host_client = cl;
+#endif
 }
 
 /*
@@ -917,7 +991,11 @@ PF_dprint
 */
 void PF_dprint (void)
 {
+#ifdef QUAKEWORLD
+	Con_Printf ("%s",PF_VarString(0));
+#else
 	Con_DPrintf ("%s",PF_VarString(0));
+#endif
 }
 
 char	pr_string_temp[128];
@@ -931,7 +1009,7 @@ void PF_ftos (void)
 		sprintf (pr_string_temp, "%d",(int)v);
 	else
 		sprintf (pr_string_temp, "%5.1f",v);
-	G_INT(OFS_RETURN) = pr_string_temp - pr_strings;
+	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
 }
 
 void PF_fabs (void)
@@ -944,16 +1022,8 @@ void PF_fabs (void)
 void PF_vtos (void)
 {
 	sprintf (pr_string_temp, "'%5.1f %5.1f %5.1f'", G_VECTOR(OFS_PARM0)[0], G_VECTOR(OFS_PARM0)[1], G_VECTOR(OFS_PARM0)[2]);
-	G_INT(OFS_RETURN) = pr_string_temp - pr_strings;
+	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
 }
-
-#ifdef QUAKE2
-void PF_etos (void)
-{
-	sprintf (pr_string_temp, "entity %i", G_EDICTNUM(OFS_PARM0));
-	G_INT(OFS_RETURN) = pr_string_temp - pr_strings;
-}
-#endif
 
 void PF_Spawn (void)
 {
@@ -973,61 +1043,12 @@ void PF_Remove (void)
 
 // entity (entity start, .string field, string match) find = #5;
 void PF_Find (void)
-#ifdef QUAKE2
 {
 	int		e;	
 	int		f;
 	char	*s, *t;
 	edict_t	*ed;
-	edict_t	*first;
-	edict_t	*second;
-	edict_t	*last;
-
-	first = second = last = (edict_t *)sv.edicts;
-	e = G_EDICTNUM(OFS_PARM0);
-	f = G_INT(OFS_PARM1);
-	s = G_STRING(OFS_PARM2);
-	if (!s)
-		PR_RunError ("PF_Find: bad search string");
-		
-	for (e++ ; e < sv.num_edicts ; e++)
-	{
-		ed = EDICT_NUM(e);
-		if (ed->free)
-			continue;
-		t = E_STRING(ed,f);
-		if (!t)
-			continue;
-		if (!strcmp(t,s))
-		{
-			if (first == (edict_t *)sv.edicts)
-				first = ed;
-			else if (second == (edict_t *)sv.edicts)
-				second = ed;
-			ed->v.chain = EDICT_TO_PROG(last);
-			last = ed;
-		}
-	}
-
-	if (first != last)
-	{
-		if (last != second)
-			first->v.chain = last->v.chain;
-		else
-			first->v.chain = EDICT_TO_PROG(last);
-		last->v.chain = EDICT_TO_PROG((edict_t *)sv.edicts);
-		if (second && second != last)
-			second->v.chain = EDICT_TO_PROG(last);
-	}
-	RETURN_EDICT(first);
-}
-#else
-{
-	int		e;	
-	int		f;
-	char	*s, *t;
-	edict_t	*ed;
-
+	
 	e = G_EDICTNUM(OFS_PARM0);
 	f = G_INT(OFS_PARM1);
 	s = G_STRING(OFS_PARM2);
@@ -1048,10 +1069,9 @@ void PF_Find (void)
 			return;
 		}
 	}
-
+	
 	RETURN_EDICT(sv.edicts);
 }
-#endif
 
 void PR_CheckEmptyString (char *s)
 {
@@ -1106,7 +1126,9 @@ void PF_precache_model (void)
 		if (!sv.model_precache[i])
 		{
 			sv.model_precache[i] = s;
+#ifndef QUAKEWORLD
 			sv.models[i] = Mod_ForName (s, true);
+#endif
 			return;
 		}
 		if (!strcmp(sv.model_precache[i], s))
@@ -1235,6 +1257,15 @@ void PF_lightstyle (void)
 	if (sv.state != ss_active)
 		return;
 	
+#ifdef QUAKEWORLD
+	for (j=0, client = svs.clients ; j<MAX_CLIENTS ; j++, client++)
+		if ( client->state == cs_spawned )
+		{
+			ClientReliableWrite_Begin (client, svc_lightstyle, strlen(val)+3);
+			ClientReliableWrite_Char (client, style);
+			ClientReliableWrite_String (client, val);
+		}
+#else
 	for (j=0, client = svs.clients ; j<svs.maxclients ; j++, client++)
 		if (client->active || client->spawned)
 		{
@@ -1242,6 +1273,7 @@ void PF_lightstyle (void)
 			MSG_WriteChar (&client->message,style);
 			MSG_WriteString (&client->message, val);
 		}
+#endif
 }
 
 void PF_rint (void)
@@ -1329,7 +1361,11 @@ Pick a vector for the player to shoot along
 vector aim(entity, missilespeed)
 =============
 */
+#ifdef QUAKEWORLD
+cvar_t	sv_aim = {"sv_aim", "2"};
+#else
 cvar_t	sv_aim = {"sv_aim", "0.93"};
+#endif
 void PF_aim (void)
 {
 	edict_t	*ent, *check, *bestent;
@@ -1338,12 +1374,27 @@ void PF_aim (void)
 	trace_t	tr;
 	float	dist, bestdist;
 	float	speed;
-	
+	char	*noaim;
+
 	ent = G_EDICT(OFS_PARM0);
 	speed = G_FLOAT(OFS_PARM1);
 
 	VectorCopy (ent->v.origin, start);
 	start[2] += 20;
+
+#ifdef QUAKEWORLD
+// noaim option
+	i = NUM_FOR_EDICT(ent);
+	if (i>0 && i<MAX_CLIENTS)
+	{
+		noaim = Info_ValueForKey (svs.clients[i-1].userinfo, "noaim");
+		if (atoi(noaim) > 0)
+		{
+			VectorCopy (pr_global_struct->v_forward, G_VECTOR(OFS_RETURN));
+			return;
+		}
+	}
+#endif
 
 // try sending a trace straight
 	VectorCopy (pr_global_struct->v_forward, dir);
@@ -1446,50 +1497,6 @@ void PF_changeyaw (void)
 	ent->v.angles[1] = anglemod (current + move);
 }
 
-#ifdef QUAKE2
-/*
-==============
-PF_changepitch
-==============
-*/
-void PF_changepitch (void)
-{
-	edict_t		*ent;
-	float		ideal, current, move, speed;
-	
-	ent = G_EDICT(OFS_PARM0);
-	current = anglemod( ent->v.angles[0] );
-	ideal = ent->v.idealpitch;
-	speed = ent->v.pitch_speed;
-	
-	if (current == ideal)
-		return;
-	move = ideal - current;
-	if (ideal > current)
-	{
-		if (move >= 180)
-			move = move - 360;
-	}
-	else
-	{
-		if (move <= -180)
-			move = move + 360;
-	}
-	if (move > 0)
-	{
-		if (move > speed)
-			move = speed;
-	}
-	else
-	{
-		if (move < -speed)
-			move = -speed;
-	}
-	
-	ent->v.angles[0] = anglemod (current + move);
-}
-#endif
-
 /*
 ===============================================================================
 
@@ -1502,6 +1509,7 @@ MESSAGE WRITING
 #define	MSG_ONE			1		// reliable to one (msg_entity)
 #define	MSG_ALL			2		// reliable to all
 #define	MSG_INIT		3		// write to the init string
+#define	MSG_MULTICAST	4		// for multicast()
 
 sizebuf_t *WriteDest (void)
 {
@@ -1516,17 +1524,29 @@ sizebuf_t *WriteDest (void)
 		return &sv.datagram;
 	
 	case MSG_ONE:
+#ifdef QUAKEWORLD
+		SV_Error("Shouldn't be at MSG_ONE");
+		return &svs.clients[entnum-1].netchan.message;
+#else
 		ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
 		entnum = NUM_FOR_EDICT(ent);
 		if (entnum < 1 || entnum > svs.maxclients)
 			PR_RunError ("WriteDest: not a client");
 		return &svs.clients[entnum-1].message;
+#endif
 		
 	case MSG_ALL:
 		return &sv.reliable_datagram;
 	
 	case MSG_INIT:
+#ifdef QUAKEWORLD
+		if (sv.state != ss_loading)
+			PR_RunError ("PF_Write_*: MSG_INIT can only be written in spawn functions");
 		return &sv.signon;
+
+	case MSG_MULTICAST:
+		return &sv.multicast;
+#endif
 
 	default:
 		PR_RunError ("WriteDest: bad destination");
@@ -1536,45 +1556,116 @@ sizebuf_t *WriteDest (void)
 	return NULL;
 }
 
+#ifdef QUAKEWORLD
+static client_t *Write_GetClient(void)
+{
+	int		entnum;
+	edict_t	*ent;
+
+	ent = PROG_TO_EDICT(pr_global_struct->msg_entity);
+	entnum = NUM_FOR_EDICT(ent);
+	if (entnum < 1 || entnum > MAX_CLIENTS)
+		PR_RunError ("WriteDest: not a client");
+	return &svs.clients[entnum-1];
+}
+#endif
+
+
 void PF_WriteByte (void)
 {
-	MSG_WriteByte (WriteDest(), G_FLOAT(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 1);
+		ClientReliableWrite_Byte(cl, G_FLOAT(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteByte (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 void PF_WriteChar (void)
 {
-	MSG_WriteChar (WriteDest(), G_FLOAT(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 1);
+		ClientReliableWrite_Char(cl, G_FLOAT(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteChar (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 void PF_WriteShort (void)
 {
-	MSG_WriteShort (WriteDest(), G_FLOAT(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 2);
+		ClientReliableWrite_Short(cl, G_FLOAT(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteShort (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 void PF_WriteLong (void)
 {
-	MSG_WriteLong (WriteDest(), G_FLOAT(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 4);
+		ClientReliableWrite_Long(cl, G_FLOAT(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteLong (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 void PF_WriteAngle (void)
 {
-	MSG_WriteAngle (WriteDest(), G_FLOAT(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 1);
+		ClientReliableWrite_Angle(cl, G_FLOAT(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteAngle (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 void PF_WriteCoord (void)
 {
-	MSG_WriteCoord (WriteDest(), G_FLOAT(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 2);
+		ClientReliableWrite_Coord(cl, G_FLOAT(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteCoord (WriteDest(), G_FLOAT(OFS_PARM1));
 }
 
 void PF_WriteString (void)
 {
-	MSG_WriteString (WriteDest(), G_STRING(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 1+strlen(G_STRING(OFS_PARM1)));
+		ClientReliableWrite_String(cl, G_STRING(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteString (WriteDest(), G_STRING(OFS_PARM1));
 }
 
 
 void PF_WriteEntity (void)
 {
-	MSG_WriteShort (WriteDest(), G_EDICTNUM(OFS_PARM1));
+#ifdef QUAKEWORLD
+	if (G_FLOAT(OFS_PARM0) == MSG_ONE) {
+		client_t *cl = Write_GetClient();
+		ClientReliableCheckBlock(cl, 2);
+		ClientReliableWrite_Short(cl, G_EDICTNUM(OFS_PARM1));
+	} else
+#endif
+		MSG_WriteShort (WriteDest(), G_EDICTNUM(OFS_PARM1));
 }
 
 //=============================================================================
@@ -1590,7 +1681,7 @@ void PF_makestatic (void)
 
 	MSG_WriteByte (&sv.signon,svc_spawnstatic);
 
-	MSG_WriteByte (&sv.signon, SV_ModelIndex(pr_strings + ent->v.model));
+	MSG_WriteByte (&sv.signon, SV_ModelIndex(PR_GetString(ent->v.model)));
 
 	MSG_WriteByte (&sv.signon, ent->v.frame);
 	MSG_WriteByte (&sv.signon, ent->v.colormap);
@@ -1620,7 +1711,11 @@ void PF_setspawnparms (void)
 
 	ent = G_EDICT(OFS_PARM0);
 	i = NUM_FOR_EDICT(ent);
+#ifdef QUAKEWORLD
+	if (i < 1 || i > MAX_CLIENTS)
+#else
 	if (i < 1 || i > svs.maxclients)
+#endif
 		PR_RunError ("Entity is not a client");
 
 	// copy spawn parms out of the client_t
@@ -1637,189 +1732,138 @@ PF_changelevel
 */
 void PF_changelevel (void)
 {
-#ifdef QUAKE2
-	char	*s1, *s2;
-
-	if (svs.changelevel_issued)
-		return;
-	svs.changelevel_issued = true;
-
-	s1 = G_STRING(OFS_PARM0);
-	s2 = G_STRING(OFS_PARM1);
-
-	if ((int)pr_global_struct->serverflags & (SFL_NEW_UNIT | SFL_NEW_EPISODE))
-		Cbuf_AddText (va("changelevel %s %s\n",s1, s2));
-	else
-		Cbuf_AddText (va("changelevel2 %s %s\n",s1, s2));
-#else
 	char	*s;
+	static	int	last_spawncount;
 
 // make sure we don't issue two changelevels
+#ifdef QUAKEWORLD
+	if (svs.spawncount == last_spawncount)
+		return;
+	last_spawncount = svs.spawncount;
+#else
 	if (svs.changelevel_issued)
 		return;
 	svs.changelevel_issued = true;
+#endif
 	
 	s = G_STRING(OFS_PARM0);
+#ifdef QUAKEWORLD
+	Cbuf_AddText (va("map %s\n",s));
+#else
 	Cbuf_AddText (va("changelevel %s\n",s));
 #endif
 }
 
 
-#ifdef QUAKE2
+#ifdef QUAKEWORLD
 
-#define	CONTENT_WATER	-3
-#define CONTENT_SLIME	-4
-#define CONTENT_LAVA	-5
+/*
+==============
+PF_logfrag
 
-#define FL_IMMUNE_WATER	131072
-#define	FL_IMMUNE_SLIME	262144
-#define FL_IMMUNE_LAVA	524288
-
-#define	CHAN_VOICE	2
-#define	CHAN_BODY	4
-
-#define	ATTN_NORM	1
-
-void PF_WaterMove (void)
+logfrag (killer, killee)
+==============
+*/
+void PF_logfrag (void)
 {
-	edict_t		*self;
-	int			flags;
-	int			waterlevel;
-	int			watertype;
-	float		drownlevel;
-	float		damage = 0.0;
+	edict_t	*ent1, *ent2;
+	int		e1, e2;
+	char	*s;
 
-	self = PROG_TO_EDICT(pr_global_struct->self);
+	ent1 = G_EDICT(OFS_PARM0);
+	ent2 = G_EDICT(OFS_PARM1);
 
-	if (self->v.movetype == MOVETYPE_NOCLIP)
-	{
-		self->v.air_finished = sv.time + 12;
-		G_FLOAT(OFS_RETURN) = damage;
-		return;
-	}
-
-	if (self->v.health < 0)
-	{
-		G_FLOAT(OFS_RETURN) = damage;
-		return;
-	}
-
-	if (self->v.deadflag == DEAD_NO)
-		drownlevel = 3;
-	else
-		drownlevel = 1;
-
-	flags = (int)self->v.flags;
-	waterlevel = (int)self->v.waterlevel;
-	watertype = (int)self->v.watertype;
-
-	if (!(flags & (FL_IMMUNE_WATER + FL_GODMODE)))
-		if (((flags & FL_SWIM) && (waterlevel < drownlevel)) || (waterlevel >= drownlevel))
-		{
-			if (self->v.air_finished < sv.time)
-				if (self->v.pain_finished < sv.time)
-				{
-					self->v.dmg = self->v.dmg + 2;
-					if (self->v.dmg > 15)
-						self->v.dmg = 10;
-//					T_Damage (self, world, world, self.dmg, 0, FALSE);
-					damage = self->v.dmg;
-					self->v.pain_finished = sv.time + 1.0;
-				}
-		}
-		else
-		{
-			if (self->v.air_finished < sv.time)
-//				sound (self, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
-				SV_StartSound (self, CHAN_VOICE, "player/gasp2.wav", 255, ATTN_NORM);
-			else if (self->v.air_finished < sv.time + 9)
-//				sound (self, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
-				SV_StartSound (self, CHAN_VOICE, "player/gasp1.wav", 255, ATTN_NORM);
-			self->v.air_finished = sv.time + 12.0;
-			self->v.dmg = 2;
-		}
+	e1 = NUM_FOR_EDICT(ent1);
+	e2 = NUM_FOR_EDICT(ent2);
 	
-	if (!waterlevel)
-	{
-		if (flags & FL_INWATER)
-		{	
-			// play leave water sound
-//			sound (self, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
-			SV_StartSound (self, CHAN_BODY, "misc/outwater.wav", 255, ATTN_NORM);
-			self->v.flags = (float)(flags &~FL_INWATER);
-		}
-		self->v.air_finished = sv.time + 12.0;
-		G_FLOAT(OFS_RETURN) = damage;
+	if (e1 < 1 || e1 > MAX_CLIENTS
+	|| e2 < 1 || e2 > MAX_CLIENTS)
 		return;
-	}
-
-	if (watertype == CONTENT_LAVA)
-	{	// do damage
-		if (!(flags & (FL_IMMUNE_LAVA + FL_GODMODE)))
-			if (self->v.dmgtime < sv.time)
-			{
-				if (self->v.radsuit_finished < sv.time)
-					self->v.dmgtime = sv.time + 0.2;
-				else
-					self->v.dmgtime = sv.time + 1.0;
-//				T_Damage (self, world, world, 10*self.waterlevel, 0, TRUE);
-				damage = (float)(10*waterlevel);
-			}
-	}
-	else if (watertype == CONTENT_SLIME)
-	{	// do damage
-		if (!(flags & (FL_IMMUNE_SLIME + FL_GODMODE)))
-			if (self->v.dmgtime < sv.time && self->v.radsuit_finished < sv.time)
-			{
-				self->v.dmgtime = sv.time + 1.0;
-//				T_Damage (self, world, world, 4*self.waterlevel, 0, TRUE);
-				damage = (float)(4*waterlevel);
-			}
-	}
 	
-	if ( !(flags & FL_INWATER) )
-	{	
+	s = va("\\%s\\%s\\\n",svs.clients[e1-1].name, svs.clients[e2-1].name);
 
-// player enter water sound
-		if (watertype == CONTENT_LAVA)
-//			sound (self, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
-			SV_StartSound (self, CHAN_BODY, "player/inlava.wav", 255, ATTN_NORM);
-		if (watertype == CONTENT_WATER)
-//			sound (self, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
-			SV_StartSound (self, CHAN_BODY, "player/inh2o.wav", 255, ATTN_NORM);
-		if (watertype == CONTENT_SLIME)
-//			sound (self, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
-			SV_StartSound (self, CHAN_BODY, "player/slimbrn2.wav", 255, ATTN_NORM);
-
-		self->v.flags = (float)(flags | FL_INWATER);
-		self->v.dmgtime = 0;
+	SZ_Print (&svs.log[svs.logsequence&1], s);
+	if (sv_fraglogfile) {
+		fprintf (sv_fraglogfile, s);
+		fflush (sv_fraglogfile);
 	}
-	
-	if (! (flags & FL_WATERJUMP) )
-	{
-//		self.velocity = self.velocity - 0.8*self.waterlevel*frametime*self.velocity;
-		VectorMA (self->v.velocity, -0.8 * self->v.waterlevel * host_frametime, self->v.velocity, self->v.velocity);
-	}
-
-	G_FLOAT(OFS_RETURN) = damage;
 }
 
 
-void PF_sin (void)
+/*
+==============
+PF_infokey
+
+string(entity e, string key) infokey
+==============
+*/
+void PF_infokey (void)
 {
-	G_FLOAT(OFS_RETURN) = sin(G_FLOAT(OFS_PARM0));
+	edict_t	*e;
+	int		e1;
+	char	*value;
+	char	*key;
+	static	char ov[256];
+
+	e = G_EDICT(OFS_PARM0);
+	e1 = NUM_FOR_EDICT(e);
+	key = G_STRING(OFS_PARM1);
+
+	if (e1 == 0) {
+		if ((value = Info_ValueForKey (svs.info, key)) == NULL ||
+			!*value)
+			value = Info_ValueForKey(localinfo, key);
+	} else if (e1 <= MAX_CLIENTS) {
+		if (!strcmp(key, "ip"))
+			value = strcpy(ov, NET_BaseAdrToString (svs.clients[e1-1].netchan.remote_address));
+		else if (!strcmp(key, "ping")) {
+			int ping = SV_CalcPing (&svs.clients[e1-1]);
+			sprintf(ov, "%d", ping);
+			value = ov;
+		} else
+			value = Info_ValueForKey (svs.clients[e1-1].userinfo, key);
+	} else
+		value = "";
+
+	RETURN_STRING(value);
 }
 
-void PF_cos (void)
+/*
+==============
+PF_stof
+
+float(string s) stof
+==============
+*/
+void PF_stof (void)
 {
-	G_FLOAT(OFS_RETURN) = cos(G_FLOAT(OFS_PARM0));
+	char	*s;
+
+	s = G_STRING(OFS_PARM0);
+
+	G_FLOAT(OFS_RETURN) = atof(s);
 }
 
-void PF_sqrt (void)
+
+/*
+==============
+PF_multicast
+
+void(vector where, float set) multicast
+==============
+*/
+void PF_multicast (void)
 {
-	G_FLOAT(OFS_RETURN) = sqrt(G_FLOAT(OFS_PARM0));
+	float	*o;
+	int		to;
+
+	o = G_VECTOR(OFS_PARM0);
+	to = G_FLOAT(OFS_PARM1);
+
+	SV_Multicast (o, to);
 }
-#endif
+
+#endif /* QUAKEWORLD */
 
 void PF_Fixme (void)
 {
@@ -1830,7 +1874,7 @@ void PF_Fixme (void)
 
 builtin_t pr_builtin[] =
 {
-PF_Fixme,
+	PF_Fixme,
 PF_makevectors,	// void(entity e)	makevectors 		= #1;
 PF_setorigin,	// void(entity e, vector o) setorigin	= #2;
 PF_setmodel,	// void(entity e, string m) setmodel	= #3;
@@ -1878,7 +1922,11 @@ PF_aim,
 PF_cvar,
 PF_localcmd,
 PF_nextent,
+#ifdef QUAKEWORLD
+PF_Fixme,
+#else
 PF_particle,
+#endif
 PF_changeyaw,
 PF_Fixme,
 PF_vectoangles,
@@ -1892,15 +1940,6 @@ PF_WriteAngle,
 PF_WriteString,
 PF_WriteEntity,
 
-#ifdef QUAKE2
-PF_sin,
-PF_cos,
-PF_sqrt,
-PF_changepitch,
-PF_TraceToss,
-PF_etos,
-PF_WaterMove,
-#else
 PF_Fixme,
 PF_Fixme,
 PF_Fixme,
@@ -1908,7 +1947,6 @@ PF_Fixme,
 PF_Fixme,
 PF_Fixme,
 PF_Fixme,
-#endif
 
 SV_MoveToGoal,
 PF_precache_file,
@@ -1927,6 +1965,15 @@ PF_precache_sound,		// precache_sound2 is different only for qcc
 PF_precache_file,
 
 PF_setspawnparms
+#ifdef QUAKEWORLD
+,
+
+PF_logfrag,
+
+PF_infokey,
+PF_stof,
+PF_multicast
+#endif
 };
 
 builtin_t *pr_builtins = pr_builtin;
