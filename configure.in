@@ -170,21 +170,17 @@ AC_ARG_WITH(ipv6,
 [  --with-ipv6             enable IPv6 support. Optional argument specifies
                           location of inet6 libraries.],
 	AC_DEFINE(HAVE_IPV6)
-	if test "x$witharg" = xno ; then
+	if test "x$withval" = xno ; then
 		NET_SOURCE=net_udp.c
-		IPV6_LIBS=""
 	else
 		NET_SOURCE=net_udp6.c
-		if test "x$witharg" = xyes ; then
-			IPV6_LIBS=""
-		else
-			IPV6_LIBS="-L${witharg}"
+		if test "x$withval" != xyes ; then
+			LIBS="$LIBS -L${withval}"
 		fi
 	fi
 ,
 dnl Default is no IPv6
 	NET_SOURCE=net_udp.c
-	IPV6_LIBS=""
 )
 
 AC_ARG_ENABLE(alsa,
@@ -217,7 +213,7 @@ fi
 
 dnl Checks for getaddrinfo in separate IPv6 lib, if not available by default
 if test "x$ac_cv_func_getaddrinfo" = xno ; then
-  AC_CHECK_LIB(inet6,getaddrinfo,LIBS="${LIBS} -L${IPV6_LIBS} -linet6")
+ AC_CHECK_LIB(inet6,getaddrinfo,LIBS="${LIBS} -linet6")
 fi
 
 dnl Checks for working -lm
