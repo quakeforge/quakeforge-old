@@ -1,8 +1,10 @@
 The original Quake, QuakeWorld, and QuakeWorld server:
   ID Software, Inc  http://www.idsoftware.com
 
-Merge of the QW/Q1 trees done largely by:
+QW/Q1 tree merging:
   Jeff Teunissen <deek@dusknet.dhis.net>
+  Zephaniah E. Hull <warp@whitestar.soark.net>
+  Marcus Sundberg <mackan@stacken.kth.se>
 
 Autoconf support:
   Loring Holden <lsh@cs.brown.edu>
@@ -16,11 +18,9 @@ Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
   Marcus Sundber <mackan@stacken.kth.se>
 
-Maintance of 3Dfx support:
+3Dfx MiniGL target fixes/maintenance:
   Zephaniah E. Hull <warp@whitestar.soark.net>
 
-Maintance of the keyboard stuff:
+Input handling cleanups:
   Zephaniah E. Hull <warp@whitestar.soark.net>
 
-Pointing out more common files:
-  Marcus Sundberg <mackan@stacken.kth.se>

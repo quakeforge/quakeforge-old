@@ -1,14 +1,22 @@
-Global: sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix possible buffer overruns
-configure.in: clean up the intel -mcpu stuff
+This file contains a (very incomplete) list of things to do still with the
+QuakeForge project.  If you'd like to add something to this list or point
+out that something has been done we forgot to remove, please send an email
+to quake-devel@lists.sourceforge.net with details.
 
-.
-* audio support for more platforms
-* Add OpenGL multi-pass texturing replacement for when no OpenGL
-multi-texturing extension is available
-* Add tested platforms list to README or other file
-* Separate out more common code (glquake.h, software rendering, etc.)
-* Add install Makefile target
-* Allow non-gnu Makefile's or even better provide automake support
-* add .cvsignore files so that CVS will ignore various created
-files/directories
-.loring (lsh@cs.brown.edu)
+ * sed 's/\<sprintf *(\([^,]\+\),/sprintf(\1, sizeof(\1)),/g' to fix some
+   possible buffer overruns
+ * configure.in: clean up the intel -mcpu stuff
+ * Audio support for more platforms
+ * Add OpenGL multi-pass texturing replacement for when multi-texturing
+   extension isn't available
+ * README: add tested platforms and results
+ * Makefile.in, */Makefile.in: Add install target
+ * Remove dependency on GNU make or migrate to automake
+ * Add default .cvsignore files to the tree
+ * Makefile.in: rerun configure if configure is newer than Makefile, also
+   rerun autoconf if configure.in is newer than configure
+ * AUTHORS: There are some patches in the tree aren't attributed to their
+   authors yet.  If your patch was applied and you haven't gotten a line
+   in the AUTHORS file yet, please let us know so we can fix it.
+ * Makefile.in */Makefile.in: developer-clean target ?
+
