@@ -534,7 +534,7 @@ pack_t *COM_LoadPackFile (char *packfile)
 
 #if defined(_EXPERIMENTAL_) && defined(GENERATIONS)
 int
-COM_pak3_checkfile(unzFile *pak, const char *path)
+COM_pakzip_checkfile(unzFile *pak, const char *path)
 {
     int status;
         
@@ -543,7 +543,7 @@ COM_pak3_checkfile(unzFile *pak, const char *path)
 }
 
 void
-COM_pak3_closepak(unzFile *pak)
+COM_pakzip_closepak(unzFile *pak)
 {
     if (pak)
         unzClose(pak);
@@ -551,7 +551,7 @@ COM_pak3_closepak(unzFile *pak)
 }
 
 void
-COM_pak3_close(unzFile *pak)
+COM_pakzip_close(unzFile *pak)
 {
     unzCloseCurrentFile(pak);
 }
@@ -559,7 +559,7 @@ COM_pak3_close(unzFile *pak)
 
 
 int
-COM_pak3_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb)
+COM_pakzip_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb)
 {
     int len;
    
@@ -568,7 +568,7 @@ COM_pak3_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb)
 }
 
 int
-COM_pak3_open(unzFile *pak, const char *path)
+COM_pakzip_open(unzFile *pak, const char *path)
 {
    if (unzLocateFile(pak, path, 2) != UNZ_OK)
        return 0;
@@ -578,7 +578,7 @@ COM_pak3_open(unzFile *pak, const char *path)
 }
 
 uint_t
-COM_pak3_getlen(unzFile *pak)
+COM_pakzip_getlen(unzFile *pak)
 {
     unz_file_info info;
     
@@ -589,26 +589,26 @@ COM_pak3_getlen(unzFile *pak)
 }
 
 uint_t
-COM_pak3_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
+COM_pakzip_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
 {
     uint_t len;
    
-    if (!COM_pak3_open(pak,path))
+    if (!COM_pakzip_open(pak,path))
         return 0;
     
-    if ((len = COM_pak3_getlen(pak)) != 0)
+    if ((len = COM_pakzip_getlen(pak)) != 0)
     {
-        if (COM_pak3_read(pak, (void*)buf, 1, len) != len)
+        if (COM_pakzip_read(pak, (void*)buf, 1, len) != len)
             len = 0;
     }
-    COM_pak3_close(pak);
+    COM_pakzip_close(pak);
     return len;
 }
 
 #endif
 
 #if defined _EXPERIMENTAL_ && GENERATIONS 
-pack_t *COM_LoadQ3PackFile (char *packfile)
+pack_t *COM_LoadPackZipFile (char *packfile)
 {
 
 	int                             i;
@@ -690,11 +690,10 @@ COM_LoadGameDirectory(char *dir)
 	}
 
 #if defined _EXPERIMENTAL_ && GENERATIONS
-	done = false;
-	for ( i=0 ; !done ; i++ ) {	// Load all Pak3 files.
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak3", dir, i);
+	for (done=false, i=0 ; !done ; i++ ) {	// Load all Pak3 files.
+		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pk3", dir, i);
 		
-		pak = COM_LoadPak3File(pakfile);
+		pak = COM_LoadPackZipFile(pakfile);
  
 		if(!pak) {
 			done = true;
@@ -703,7 +702,7 @@ COM_LoadGameDirectory(char *dir)
 			search->pack = pak;
 			search->next = com_searchpaths;
 			com_searchpaths = search;
-        }
+         	}
 	}
 #endif
 }
