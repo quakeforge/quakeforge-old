@@ -106,7 +106,9 @@ void VID_Shutdown(void)
 void signal_handler(int sig)
 {
 	printf("Received signal %d, exiting...\n", sig);
-	Sys_Quit();
+	Host_Shutdown();
+	abort();
+	//Sys_Quit();
 	exit(0);
 }
 
@@ -117,9 +119,9 @@ void InitSig(void)
 	signal(SIGQUIT, signal_handler);
 	signal(SIGILL, signal_handler);
 	signal(SIGTRAP, signal_handler);
-	signal(SIGIOT, signal_handler);
+//	signal(SIGIOT, signal_handler);
 	signal(SIGBUS, signal_handler);
-/*	signal(SIGFPE, signal_handler); */
+//	signal(SIGFPE, signal_handler);
 	signal(SIGSEGV, signal_handler);
 	signal(SIGTERM, signal_handler);
 }
@@ -416,15 +418,11 @@ void VID_Init(unsigned char *palette)
 	char	gldir[MAX_OSPATH];
 	int width = 640, height = 480;
 
-//	Cvar_RegisterVariable (&vid_mode);
-	vid_mode = Cvar_Get ("vid_mode","5",0,"None");
-//	Cvar_RegisterVariable (&vid_redrawfull);
-	vid_redrawfull = Cvar_Get ("vid_redrawfull","0",0,"None");
-//	Cvar_RegisterVariable (&vid_waitforrefresh);
-	vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh","0",CVAR_ARCHIVE,
-					"None");
-//	Cvar_RegisterVariable (&gl_ztrick);
-	gl_ztrick = Cvar_Get ("gl_ztrick","0",CVAR_ARCHIVE,"None");
+	vid_mode = Cvar_Get ("vid_mode", "5", 0, "None");
+	vid_redrawfull = Cvar_Get ("vid_redrawfull", "0", 0," None");
+	vid_waitforrefresh = Cvar_Get ("vid_waitforrefresh", "0", CVAR_ARCHIVE,
+								   "None");
+	gl_ztrick = Cvar_Get ("gl_ztrick", "0", CVAR_ARCHIVE, "None");
 
 	vid.maxwarpwidth = WARP_WIDTH;
 	vid.maxwarpheight = WARP_HEIGHT;
