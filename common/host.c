@@ -53,6 +53,7 @@
 #include <sbar.h>
 #include <mathlib.h>
 #include <menu.h>
+#include <cvars.h>
 #ifdef QUAKEWORLD
 #include <cl_slist.h>
 #endif
@@ -576,6 +577,12 @@ Host_Init (quakeparms_t *parms)
 	// but it doesn't matter)
 	Cmd_StuffCmds_f ();
 	Cbuf_Execute ();
+
+	// make these read-only
+	fs_basepath = Cvar_Get ("fs_basepath", fs_basepath->string, CVAR_ROM,
+			"the location of your game directories");
+	fs_sharepath = Cvar_Get ("fs_sharepath", fs_sharepath->string,
+			CVAR_ROM, "read-only game directories");
 
 	V_Init ();
 	Chase_Init ();
