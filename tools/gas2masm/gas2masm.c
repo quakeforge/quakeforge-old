@@ -792,7 +792,7 @@ tokenstat whitespace (char c)
 
 int gettoken (void)
 {
-	char		c;
+	int		c;
 	int			count, parencount;
 	tokenstat	stat;
 
@@ -1030,7 +1030,7 @@ tokenstat parseline (void)
 }
 
 
-int main (int argc, char **argv)
+int main ()
 {
 	tokenstat	stat;
 
