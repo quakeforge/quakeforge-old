@@ -555,11 +555,11 @@ Host_Init (quakeparms_t *parms)
 	Cbuf_Execute_Sets ();
 
 	// execute the global configuration file if it exists
-	// would have been nice if Cmd_Exec_f could have been used, but it only
-	// reads from within the quake file system, and changing that is probably
-	// Not A Good Thing (tm).
+	// would have been nice if Cmd_Exec_f could have been used, but it
+	// only reads from within the quake file system, and changing that is
+	// probably Not A Good Thing (tm).
 	global_cfg_file = Cvar_Get("global_cfg_file", GLOBAL_CFG_FILE,
-							   CVAR_ROM, "global configuration file");
+			CVAR_ROM, "global configuration file");
 	if ((globalcfg = Qopen (global_cfg_file->string, "r")) != NULL) {
 		char *f;
 		int mark;

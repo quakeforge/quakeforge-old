@@ -12,7 +12,7 @@ CC		:= @CC@
 
 LDFLAGS		+= @LDFLAGS@ @LIBS@
 INCLUDES	+= -I$(srcdir) -I$(COMMON_DIR) @OGL_INCLUDES@ -I$(top_builddir)/common
-CFLAGS		+= @CFLAGS@ $(INCLUDES)
+CFLAGS		+= @CFLAGS@ -DGLOBAL_CFG_FILE=\"@globalconf@\" $(INCLUDES)
 
 MAKE_SURE_DIR = if test -d "$$DIR"; then \
 		   true; \
