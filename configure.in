@@ -122,7 +122,7 @@ if test "x$HAS_OGL_INC" != x; then
          AC_MSG_ERROR(OpenGL LDFLAGS is -L with no directory)
       fi
       AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT)
-      if test "x$OGL_INC_PATH" = x; then
+      if test "x$OGL_INC_PATH" != x; then
 	 OGL_INC_PATH_TO_GL="$OGL_INC_PATH/GL/gl.h"
       else
 	 OGL_INC_PATH_TO_GL="GL/gl.h"
@@ -132,6 +132,7 @@ if test "x$HAS_OGL_INC" != x; then
                      HAS_GL_COLOR_INDEX8_EXT=yes,
                      HAS_GL_COLOR_INDEX8_EXT=no)
       if test "x$HAS_GL_COLOR_INDEX8_EXT" != xno; then
+         AC_MSG_RESULT(yes)
          cat >> confdefs.h <<\EOF
 #define HAS_GL_COLOR_INDEX8_EXT 1
 EOF
