@@ -123,7 +123,8 @@ V_CalcRoll (vec3_t angles, vec3_t velocity)
 
 	(desc)
 */
-float V_CalcBob (void)
+float
+V_CalcBob ( void )
 {
 #ifdef QUAKEWORLD
 	static	double	bobtime;
@@ -160,10 +161,7 @@ float V_CalcBob (void)
 	bob = sqrt(cl.velocity[0]*cl.velocity[0] + cl.velocity[1]*cl.velocity[1]) * cl_bob->value;
 #endif
 	bob = bob*0.3 + bob*0.7*sin(cycle);
-	if (bob > 4)
-		bob = 4;
-	else if (bob < -7)
-		bob = -7;
+	bob = bound( -7, bob, 4);
 	return bob;
 	
 }
@@ -409,9 +407,10 @@ V_ParseDamage ( void )
 void
 V_cshift_f ( void )
 {
-	cshift_empty.destcolor[0] = atoi(Cmd_Argv(1));
-	cshift_empty.destcolor[1] = atoi(Cmd_Argv(2));
-	cshift_empty.destcolor[2] = atoi(Cmd_Argv(3));
+	int i;
+
+	for ( i=0 ; i<3 ; i++ )
+		cshift_empty.destcolor[i] = atoi(Cmd_Argv(i+1));
 	cshift_empty.percent = atoi(Cmd_Argv(4));
 }
 
@@ -515,15 +514,11 @@ V_CalcBlend ( void )
 	b = 0;
 	a = 0;
 
-	for (j=0 ; j<NUM_CSHIFTS ; j++)	
-	{
+	for (j=0 ; j<NUM_CSHIFTS ; j++) {
 		if (!gl_cshiftpercent->value)
 			continue;
 
 		a2 = ((cl.cshifts[j].percent * gl_cshiftpercent->value) / 100.0) / 255.0;
-
-//		a2 = (cl.cshifts[j].percent/2)/255.0;	// from qw
-//		a2 = cl.cshifts[j].percent/255.0;		// from uq
 
 		if (!a2)
 			continue;
@@ -574,15 +569,11 @@ CalcGunAngle ( void )
 	pitch = -r_refdef.viewangles[PITCH];
 
 	yaw = angledelta(yaw - r_refdef.viewangles[YAW]) * 0.4;
-	if (yaw > 10)
-		yaw = 10;
-	if (yaw < -10)
-		yaw = -10;
+	yaw = bound(-10, yaw, 10);
+	
 	pitch = angledelta(-pitch - r_refdef.viewangles[PITCH]) * 0.4;
-	if (pitch > 10)
-		pitch = 10;
-	if (pitch < -10)
-		pitch = -10;
+	pitch = bound(-10, pitch, 10);
+
 	move = host_frametime*20;
 	if ( yaw > oldyaw ) {
 		if (oldyaw + move < yaw)
@@ -1104,5 +1095,3 @@ V_Init ( void )
 
 	BuildGammaTable (v_gamma->value);	// no gamma yet
 }
-
-
