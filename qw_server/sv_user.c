@@ -44,12 +44,16 @@ cvar_t	*cl_rollangle;
 cvar_t	*sv_spectalk;
 cvar_t	*sv_mapcheck;
 
+extern cvar_t	*sv_timekick;
+extern cvar_t	*sv_timekick_fuzz;
+extern cvar_t	*sv_timekick_interval;
+
 extern	vec3_t	player_mins;
 
-extern int fp_messages, fp_persecond, fp_secondsdead;
-extern char fp_msg[];
-extern cvar_t *pausable;
-static int loss;
+extern int		fp_messages, fp_persecond, fp_secondsdead;
+extern char 	fp_msg[];
+extern cvar_t	*pausable;
+static int		loss;
 
 /*
 ============================================================
@@ -1372,18 +1376,11 @@ void SV_PreRunCmd(void)
 	memset(playertouch, 0, sizeof(playertouch));
 }
 
-// Over how long do we make the checks?
-#define CHECK_TIME 30
-
-// How many failed checks before we boot the guy?
-#define CHECK_LIMIT 3
-
 /*
-===========
-SV_RunCmd
-===========
+	SV_RunCmd
 */
-void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
+void
+SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 {
 	edict_t	*ent;
 	int		i, n, oldmsec;
@@ -1393,20 +1390,20 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 	if (!inside) {
 		host_client->msecs += ucmd->msec;
 
-		if ((tmp_time = realtime - host_client->last_check) >= CHECK_TIME) {
-			tmp_time *= 1010;
-		    if (host_client->msecs > (int) (tmp_time + 0.5)) {
+		if ((sv_timekick->value >= 1) &&
+			(tmp_time = realtime - host_client->last_check) >= sv_timekick_interval->value) {
+			tmp_time *= (1000 + sv_timekick_fuzz->value);
+			if (host_client->msecs > (int) tmp_time) {
 				host_client->msec_cheating++;
-				SV_BroadcastPrintf(PRINT_HIGH,
-					va("%s thinks %d msecs pass in %f msecs. (Strike %d/%d)\n",
+				SV_BroadcastPrintf( PRINT_HIGH,
+						va("%s thinks %d msecs pass in %f msecs. (Strike %d/%d)\n",
 						host_client->name, host_client->msecs, tmp_time,
-						host_client->msec_cheating, CHECK_LIMIT));
+						host_client->msec_cheating, (int)sv_timekick->value));
 
-				if (host_client->msec_cheating >= CHECK_LIMIT) {
-					SV_BroadcastPrintf(PRINT_HIGH,
-							va("Strike %d for %s!!\n",
-								host_client->msec_cheating, host_client->name));
-					SV_BroadcastPrintf(PRINT_HIGH, "Please see http://www.quakeforge.net/speed_cheat.html for infomation on the cheat detection, and to explain how some may be cheating without knowing it.\n");
+				if (host_client->msec_cheating >= sv_timekick->value) {
+						SV_BroadcastPrintf(PRINT_HIGH, va("Strike %d for %s!!\n",
+						host_client->msec_cheating, host_client->name));
+					SV_BroadcastPrintf(PRINT_HIGH, "Please see http://www.quakeforge.net/speed_cheat.php for infomation on QuakeForge's timecheat protection, and to explain how some may be cheating without knowing it.\n");
 					SV_DropClient(host_client);
 				}
 		    }
@@ -1440,10 +1437,8 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 //
 // angles
 // show 1/3 the pitch angle and all the roll angle
-	if (sv_player->v.health > 0)
-	{
-		if (!sv_player->v.fixangle)
-		{
+	if (sv_player->v.health > 0) {
+		if (!sv_player->v.fixangle) {
 			sv_player->v.angles[PITCH] = -sv_player->v.v_angle[PITCH]/3;
 			sv_player->v.angles[YAW] = sv_player->v.v_angle[YAW];
 		}
@@ -1451,12 +1446,9 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 			V_CalcRoll (sv_player->v.angles, sv_player->v.velocity)*4;
 	}
 
-	host_frametime = ucmd->msec * 0.001;
-	if (host_frametime > 0.1)
-		host_frametime = 0.1;
-
-	if (!host_client->spectator)
-	{
+	host_frametime = max(0.1, ucmd->msec * 0.001);
+	
+	if (!host_client->spectator) {
 		pr_global_struct->frametime = host_frametime;
 
 		pr_global_struct->time = sv.time;
@@ -1483,8 +1475,7 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 	movevars.entgravity = host_client->entgravity;
 	movevars.maxspeed = host_client->maxspeed;
 
-	for (i=0 ; i<3 ; i++)
-	{
+	for (i=0 ; i<3 ; i++) {
 		pmove_mins[i] = pmove.origin[i] - 256;
 		pmove_maxs[i] = pmove.origin[i] + 256;
 	}
@@ -1513,13 +1504,12 @@ if (sv_player->v.health > 0 && before && !after )
 	sv_player->v.teleport_time = pmove.waterjumptime;
 	sv_player->v.waterlevel = waterlevel;
 	sv_player->v.watertype = watertype;
-	if (onground != -1)
-	{
+	if (onground != -1) {
 		sv_player->v.flags = (int)sv_player->v.flags | FL_ONGROUND;
 		sv_player->v.groundentity = EDICT_TO_PROG(EDICT_NUM(pmove.physents[onground].info));
-	}
-	else
+	} else {
 		sv_player->v.flags = (int)sv_player->v.flags & ~FL_ONGROUND;
+	}
 	for (i=0 ; i<3 ; i++)
 		sv_player->v.origin[i] = pmove.origin[i] - (sv_player->v.mins[i] - player_mins[i]);
 
@@ -1533,14 +1523,12 @@ if (sv_player->v.health > 0 && before && !after )
 
 	VectorCopy (pmove.angles, sv_player->v.v_angle);
 
-	if (!host_client->spectator)
-	{
+	if (!host_client->spectator) {
 		// link into place and touch triggers
 		SV_LinkEdict (sv_player, true);
 
 		// touch other objects
-		for (i=0 ; i<pmove.numtouch ; i++)
-		{
+		for (i=0 ; i<pmove.numtouch ; i++) {
 			n = pmove.physents[pmove.touchindex[i]].info;
 			ent = EDICT_NUM(n);
 			if (!ent->v.touch || (playertouch[n/8]&(1<<(n%8))))
@@ -1554,12 +1542,12 @@ if (sv_player->v.health > 0 && before && !after )
 }
 
 /*
-===========
-SV_PostRunCmd
-===========
-Done after running a player command.
+	SV_PostRunCmd
+
+	Done after running a player command.
 */
-void SV_PostRunCmd(void)
+void
+SV_PostRunCmd(void)
 {
 	// run post-think
 

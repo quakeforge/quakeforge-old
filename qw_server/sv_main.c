@@ -78,6 +78,10 @@ cvar_t	*pausable;
 
 cvar_t	*sv_fraglogdir;
 
+cvar_t	*sv_timekick;					// Time cheat protection
+cvar_t	*sv_timekick_fuzz;				// Timecheat sensitivity
+cvar_t	*sv_timekick_interval;			// Timecheat check interval
+
 //
 // game rules mirrored in svs.info
 //
@@ -1414,6 +1418,10 @@ void SV_InitLocal (void)
 	sv_phs = Cvar_Get ("sv_phs","1",0,"None");
 
 	pausable = Cvar_Get ("pausable","1",0,"None");
+	
+	sv_timekick = Cvar_Get( "sv_timekick", "3", CVAR_SERVERINFO, "Time cheat protection");
+	sv_timekick_fuzz = Cvar_Get( "sv_timekick_fuzz", "10", CVAR_NONE, "Time cheat \"fuzz factor\"");
+	sv_timekick_interval = Cvar_Get( "sv_timekick_interval", "30", CVAR_NONE, "Time cheat check interval");
 
 	sv_fraglogdir = Cvar_Get ("fraglogdir","",0,"Where to store fraglog files");
 
@@ -1447,20 +1455,20 @@ void SV_InitLocal (void)
 
 
 // Lots of nifty checks done in here.. Lives by the heartbeat
-void  HeartBeat_Check( void) {
+void
+HeartBeat_Check( void )
+{
 	int i;
 	client_t        *cl;
 
-
-	for (i=0, cl = svs.clients ; i<MAX_CLIENTS ; i++, cl++)
-	{
+	for (i=0, cl = svs.clients ; i<MAX_CLIENTS ; i++, cl++)	{
 		if (cl->state == cs_connected || cl->state == cs_spawned) {
 			// Put stuff in here that you want done to every client
 
 			// Slades maxrate function
 			if((1/cl->netchan.rate) > sv_maxrate->value && sv_maxrate->value) {
-				SV_BroadcastPrintf (PRINT_HIGH, "%s was kicked for having his rate to high\n", cl->name);
-				SV_ClientPrintf (cl, PRINT_HIGH, "You were kicked from the game for having a rate higher then %5.0f\n", sv_maxrate->value);
+				SV_BroadcastPrintf (PRINT_HIGH, "%s has been kicked for having too high a rate.\n", cl->name);
+				SV_ClientPrintf (cl, PRINT_HIGH, "You have been kicked for having a rate higher than %5.0f.\n", sv_maxrate->value);
 				SV_DropClient(cl);
 			}
 
