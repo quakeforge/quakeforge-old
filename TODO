@@ -50,3 +50,6 @@ to quake-devel@lists.sourceforge.net with details.
  * Implement mp3 player
  * Implement mod/s3m/it/xm/etc player
  * Add compiled shared mod support .dll/.so, q2/q3-style
+ * Finish Volumetric fog
+ * Colored lighting for common tasks such as emitting a blue dynamic light
+   from players with quad damage..
