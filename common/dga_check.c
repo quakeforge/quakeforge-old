@@ -47,7 +47,7 @@
 int
 VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
 {
-#ifdef HAS_DGA
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
 	int event_base, error_base, dgafeat, dummy;
 
 	if (! XF86DGAQueryExtension(dpy, &event_base, &error_base)) {
@@ -81,7 +81,7 @@ VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
 int
 VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 {
-#ifdef HAS_DGA
+#if (defined(HAS_DGA) && defined(_EXPERIMENTAL_))
 	XF86VidModeModeInfo **vidmodes;
 	int event_base, error_base;
 	int dummy;
