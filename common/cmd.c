@@ -397,6 +397,41 @@ void Cmd_Alias_f (void)
 	a->value = CopyString (cmd);
 }
 
+void Cmd_UnAlias_f (void)
+{
+	cmdalias_t	*a, *prev;
+	char		*s;
+
+	if (Cmd_Argc() != 2)
+	{
+		Con_Printf ("unalias <alias>: erase an existing alias\n");
+		return;
+	}
+
+	s = Cmd_Argv(1);
+	if (strlen(s) >= MAX_ALIAS_NAME)
+	{
+		Con_Printf ("Alias name is too long\n");
+		return;
+	}
+
+	prev = cmd_alias;
+	for (a = cmd_alias ; a ; a = a->next)
+	{
+		if (!strcmp(s, a->name))
+		{
+			Z_Free (a->value);
+			prev->next = a->next;
+			if (a == cmd_alias)
+				cmd_alias = a->next;
+			Z_Free (a);			
+			return;
+		}
+		prev = a;
+	}
+	Con_Printf ("Unknown alias \"%s\"\n", s);
+}
+
 /*
 =============================================================================
 
@@ -708,6 +743,10 @@ void	Cmd_ExecuteString (char *text, cmd_source_t src)
 		}
 	}
 
+// Tonik: check cvars
+	if (Cvar_Command())
+		return;
+
 // check alias
 	for (a=cmd_alias ; a ; a=a->next)
 	{
@@ -718,8 +757,7 @@ void	Cmd_ExecuteString (char *text, cmd_source_t src)
 		}
 	}
 	
-// check cvars
-	if (!Cvar_Command () && (cl_warncmd->value || developer->value))
+	if (cl_warncmd->value || developer->value)
 		Con_Printf ("Unknown command \"%s\"\n", Cmd_Argv(0));
 	
 }
@@ -762,6 +800,7 @@ void Cmd_Init (void)
 	Cmd_AddCommand ("exec",Cmd_Exec_f);
 	Cmd_AddCommand ("echo",Cmd_Echo_f);
 	Cmd_AddCommand ("alias",Cmd_Alias_f);
+	Cmd_AddCommand ("unalias",Cmd_UnAlias_f);	// Tonik
 	Cmd_AddCommand ("wait", Cmd_Wait_f);
 #ifndef SERVERONLY
 	Cmd_AddCommand ("cmd", Cmd_ForwardToServer_f);
