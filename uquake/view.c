@@ -31,12 +31,12 @@ when crossing a water boudnary.
 
 */
 
-cvar_t		lcd_x = {"lcd_x","0"};
-cvar_t		lcd_yaw = {"lcd_yaw","0"};
+cvar_t	lcd_x = {"lcd_x", "0"};	// FIXME: make this work sometime...
+cvar_t	lcd_yaw = {"lcd_yaw", "0"};
 
-cvar_t	scr_ofsx = {"scr_ofsx","0", false};
-cvar_t	scr_ofsy = {"scr_ofsy","0", false};
-cvar_t	scr_ofsz = {"scr_ofsz","0", false};
+cvar_t	scr_ofsx = {"scr_ofsx", "0", false};
+cvar_t	scr_ofsy = {"scr_ofsy", "0", false};
+cvar_t	scr_ofsz = {"scr_ofsz", "0", false};
 
 cvar_t	cl_rollspeed = {"cl_rollspeed", "200"};
 cvar_t	cl_rollangle = {"cl_rollangle", "2.0"};
@@ -59,10 +59,14 @@ cvar_t	v_ipitch_level = {"v_ipitch_level", "0.3", false};
 cvar_t	v_idlescale = {"v_idlescale", "0", false};
 
 cvar_t	crosshair = {"crosshair", "0", true};
-cvar_t	cl_crossx = {"cl_crossx", "0", false};
-cvar_t	cl_crossy = {"cl_crossy", "0", false};
+cvar_t	crosshaircolor = {"crosshaircolor", "79", true};
 
+cvar_t	cl_crossx = {"cl_crossx", "0", true};
+cvar_t	cl_crossy = {"cl_crossy", "0", true};
+
+#ifdef GLQUAKE
 cvar_t	gl_cshiftpercent = {"gl_cshiftpercent", "100", false};
+#endif
 
 float	v_dmg_time, v_dmg_roll, v_dmg_pitch;
 
@@ -73,13 +77,11 @@ extern	int			in_forward, in_forward2, in_back;
 ===============
 V_CalcRoll
 
-Used by view and sv_user
 ===============
 */
-vec3_t	forward, right, up;
-
 float V_CalcRoll (vec3_t angles, vec3_t velocity)
 {
+	vec3_t	forward, right, up;
 	float	sign;
 	float	side;
 	float	value;
@@ -90,8 +92,6 @@ float V_CalcRoll (vec3_t angles, vec3_t velocity)
 	side = fabs(side);
 	
 	value = cl_rollangle.value;
-//	if (cl.inwater)
-//		value *= 6;
 
 	if (side < cl_rollspeed.value)
 		side = side * value / cl_rollspeed.value;
@@ -125,7 +125,6 @@ float V_CalcBob (void)
 // (don't count Z, or jumping messes it up)
 
 	bob = sqrt(cl.velocity[0]*cl.velocity[0] + cl.velocity[1]*cl.velocity[1]) * cl_bob.value;
-//Con_Printf ("speed: %5.1f\n", Length(cl.velocity));
 	bob = bob*0.3 + bob*0.7*sin(cycle);
 	if (bob > 4)
 		bob = 4;
@@ -259,6 +258,7 @@ cshift_t	cshift_lava = { {255,80,0}, 150 };
 cvar_t		v_gamma = {"gamma", "1", true};
 
 byte		gammatable[256];	// palette is sent through this
+
 
 #ifdef	GLQUAKE
 byte		ramps[3][256];
@@ -1017,6 +1017,7 @@ void V_RenderView (void)
 
 	R_PushDlights ();
 
+#if 0
 	if (lcd_x.value)
 	{
 		//
@@ -1052,11 +1053,17 @@ void V_RenderView (void)
 	{
 		R_RenderView ();
 	}
+#endif
+	R_RenderView ();
 
 #ifndef GLQUAKE
 	if (crosshair.value)
+#ifdef OLD_CROSSHAIR
 		Draw_Character (scr_vrect.x + scr_vrect.width/2 + cl_crossx.value, 
 			scr_vrect.y + scr_vrect.height/2 + cl_crossy.value, '+');
+#else
+		Draw_Crosshair();
+#endif
 #endif
 		
 }
@@ -1088,10 +1095,13 @@ void V_Init (void)
 	Cvar_RegisterVariable (&v_ipitch_level);
 
 	Cvar_RegisterVariable (&v_idlescale);
+	Cvar_RegisterVariable (&crosshaircolor);
 	Cvar_RegisterVariable (&crosshair);
 	Cvar_RegisterVariable (&cl_crossx);
 	Cvar_RegisterVariable (&cl_crossy);
+#ifdef GLQUAKE
 	Cvar_RegisterVariable (&gl_cshiftpercent);
+#endif
 
 	Cvar_RegisterVariable (&scr_ofsx);
 	Cvar_RegisterVariable (&scr_ofsy);
@@ -1105,7 +1115,7 @@ void V_Init (void)
 	Cvar_RegisterVariable (&v_kicktime);
 	Cvar_RegisterVariable (&v_kickroll);
 	Cvar_RegisterVariable (&v_kickpitch);	
-	
+
 	BuildGammaTable (1.0);	// no gamma yet
 	Cvar_RegisterVariable (&v_gamma);
 }

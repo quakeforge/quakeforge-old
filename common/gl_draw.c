@@ -536,7 +536,6 @@ void Draw_Alt_String (int x, int y, char *str)
 	}
 }
 
-#ifdef QUAKEWORLD
 void Draw_Crosshair(void)
 {
 	int x, y;
@@ -569,7 +568,6 @@ void Draw_Crosshair(void)
 			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy.value, 
 			'+');
 }
-#endif
 
 
 /*

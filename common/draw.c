@@ -268,7 +268,6 @@ void Draw_Pixel(int x, int y, byte color)
 	}
 }
 
-#ifdef QUAKEWORLD
 void Draw_Crosshair(void)
 {
 	int x, y;
@@ -293,7 +292,6 @@ void Draw_Crosshair(void)
 			scr_vrect.y + scr_vrect.height/2-4 + cl_crossy.value, 
 			'+');
 }
-#endif
 
 /*
 ================
