@@ -33,7 +33,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <client.h>
 
-cvar_t          _windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 static float old_windowed_mouse = 0;
 
 viddef_t    vid;                // global video state
@@ -91,7 +90,6 @@ void    VID_Init (unsigned char *palette)
 
     S_Init();
 
-    Cvar_RegisterVariable(&_windowed_mouse);
     // Load the SDL library
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_CDROM)<0) //|SDL_INIT_AUDIO|SDL_INIT_CDROM) < 0)
         Sys_Error("VID: Couldn't load SDL: %s", SDL_GetError());

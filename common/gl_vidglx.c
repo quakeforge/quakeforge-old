@@ -411,8 +411,7 @@ void VID_Init(unsigned char *palette)
 	S_Init();
 
 	Cvar_RegisterVariable(&vid_mode);
-	Cvar_RegisterVariable(&gl_ztrick);
-	Cvar_RegisterVariable(&_windowed_mouse);
+	Cvar_RegisterVariable(&gl_ztrick); 
         Cvar_RegisterVariable(&vid_glx_fullscreen);
 
 	vid.maxwarpwidth = WARP_WIDTH;

@@ -53,7 +53,6 @@ cvar_t		_vid_default_mode_win = {"_vid_default_mode_win","1", CVAR_ARCHIVE};
 cvar_t		vid_config_x = {"vid_config_x","800", CVAR_ARCHIVE};
 cvar_t		vid_config_y = {"vid_config_y","600", CVAR_ARCHIVE};
 cvar_t		vid_stretch_by_2 = {"vid_stretch_by_2","1", CVAR_ARCHIVE};
-cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
 cvar_t		vid_fullscreen_mode = {"vid_fullscreen_mode","3", CVAR_ARCHIVE};
 cvar_t		vid_windowed_mode = {"vid_windowed_mode","0", CVAR_ARCHIVE};
 cvar_t		block_switch = {"block_switch","0", CVAR_ARCHIVE};
@@ -105,7 +104,6 @@ void    VID_Init (unsigned char *palette)
 	Cvar_RegisterVariable (&vid_config_x);
 	Cvar_RegisterVariable (&vid_config_y);
 	Cvar_RegisterVariable (&vid_stretch_by_2);
-	Cvar_RegisterVariable (&_windowed_mouse);
 	Cvar_RegisterVariable (&vid_fullscreen_mode);
 	Cvar_RegisterVariable (&vid_windowed_mode);
 	Cvar_RegisterVariable (&block_switch);
