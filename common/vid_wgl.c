@@ -1,5 +1,5 @@
 /*
-	vid_nt_gl.c
+	vid_wgl.c
 	
 	OpenGL low-level video driver for Windows NT/9x
 

@@ -746,7 +746,7 @@ SOURCE=..\common\gl_test.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\common\vid_nt_gl.c
+SOURCE=..\common\vid_wgl.c
 
 !IF  "$(CFG)" == "qw_client - Win32 Release"
 
