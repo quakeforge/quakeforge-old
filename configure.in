@@ -312,7 +312,7 @@ if test "x$RELEASE" = xyes; then
 dnl FIX:  Someone PLEASE be so kind as to make this -mcpu stuff sane?
       case "${target}" in
          changequote(,)dnl
-         i[34567]86-*-linux-gnu*)
+         i[34567]86-*-{linux-gnu,freebsd}*)
          changequote([,])dnl
             case "${target_cpu}" in
 	       changequote(,)dnl
@@ -343,7 +343,7 @@ AC_SUBST(RELEASE_CFLAGS)
 AC_MSG_CHECKING(for an Intel machine)
 case "${target}" in
 changequote(,)dnl
-   i[34567]86-*-linux-gnu*)
+   i[34567]86-*-{linux-gnu,freebsd}*)
 changequote([,])dnl
       INTEL_ARCH=yes
       AC_MSG_RESULT(yes)
