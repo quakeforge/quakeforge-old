@@ -203,5 +203,12 @@ Operating systems tested:
    AIX
    Windows 98
 
+User testimonies:
+   Linux, Athlon, G400 w/ utah-glx
+   Solaris 7.0, Ultrasparc, Elite3D
+   AIX 4.3.3, Power3, GTX3000p
+   Irix 6.5, MIPS R10k, MXI (Octane)
+
+
 FIXME: Have we tested dos and NT?
 
