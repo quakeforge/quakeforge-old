@@ -770,7 +770,7 @@ void Draw_ConsoleBackground (int lines)
 	qpic_t		*conback;
 	glpic_t		*gl;
 	float		alpha;
-	int		ofs;
+	float		ofs;
 
 	conback = Draw_CachePic ("gfx/conback.lmp");
 	gl = (glpic_t *)conback->data;
@@ -780,8 +780,6 @@ void Draw_ConsoleBackground (int lines)
 		alpha = 1;
 	else
 		alpha = (float)(gl_conalpha->value * 2 * lines)/y;
-
-	ofs = vid.height == lines ? 0: 0-lines;
 
 	if (gl_conspin->value)
 	{
@@ -811,11 +809,13 @@ void Draw_ConsoleBackground (int lines)
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	}
 	
+	ofs = (vid.height - lines)/(float)vid.height;
+
 	glBegin (GL_QUADS);
-	glTexCoord2f (gl->sl, gl->tl);
-	glVertex2f (0, ofs);
-	glTexCoord2f (gl->sh, gl->tl);
-	glVertex2f (vid.width, ofs);
+	glTexCoord2f (gl->sl, gl->tl + ofs);
+	glVertex2f (0, 0);
+	glTexCoord2f (gl->sh, gl->tl + ofs);
+	glVertex2f (vid.width, 0);
 	glTexCoord2f (gl->sh, gl->th);
 	glVertex2f (vid.width, lines);
 	glTexCoord2f (gl->sl, gl->th);
