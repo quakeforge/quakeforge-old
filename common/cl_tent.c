@@ -413,8 +413,8 @@ CL_ParseTEnt (void)
 /*
     CL_NewTempEntity
 */
-entity_t
-*CL_NewTempEntity (void)
+entity_t *
+CL_NewTempEntity (void)
 {
 	entity_t	*ent;
 
