@@ -1,6 +1,6 @@
 Summary: The QuakeForge Project
 Name: quakeforge
-%define version 0.1.0
+%define version @QF_VERSION@
 Version: %{version}
 Release: 1
 Group: Amusements/Games
