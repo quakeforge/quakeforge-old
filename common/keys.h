@@ -62,7 +62,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // Keypad stuff..
 //
 
-#define KP_NUM			153
+#define KP_NUMLCK		153
 #define KP_DIVIDE		154
 #define KP_MULTIPLY		155
 
@@ -84,6 +84,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define	KP_DEL			168
 #define	KP_ENTER		169
 
+#define	K_PRNTSCR		253
+#define K_SCRLCK		254
 #define K_PAUSE			255
 
 //
@@ -141,7 +143,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // JACK: Intellimouse(c) Mouse Wheel Support
 
 #define K_MWHEELUP		239
-#define K_MWHEELDOWN	240
+#define K_MWHEELDOWN		240
 
 
 

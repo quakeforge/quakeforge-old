@@ -1373,14 +1373,20 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 	int		oldmsec;
 	double		tmp_time;
 
+	// To prevent a infinate loop
 	if (!inside) {
 		oldmsec = ucmd->msec;
+		// Calculate the real msec.
 		tmp_time = realtime - host_client->frame_time_2;
 		tmp_time /= 2;
-		ucmd->msec = tmp_time * 1000;
+		// Cap it at a max of 250 msec though..
+		ucmd->msec = max(tmp_time * 1000, 250);
+		/*
 		if (ucmd->msec > oldmsec)
 			ucmd->msec = oldmsec;
+			*/
 
+		// If were more then 10 msecs off what the client tells us, report it.
 		if (abs(oldmsec - ucmd->msec) > 10) {
 			printf("tmp_time: %f, realtime: %f, frame_time_1: %f\n",
 					tmp_time, realtime, host_client->frame_time_1);
@@ -1389,19 +1395,19 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 		}
 		host_client->frame_time_2 = host_client->frame_time_1;
 		host_client->frame_time_1 = realtime;
+	}
 
-		cmd = *ucmd;
+	cmd = *ucmd;
 
-		// chop up very long commands
-		if (cmd.msec > 50) {
-			oldmsec = ucmd->msec;
-			cmd.msec = oldmsec/2;
-			SV_RunCmd (&cmd, 1);
-			cmd.msec = oldmsec/2;
-			cmd.impulse = 0;
-			SV_RunCmd (&cmd, 1);
-			return;
-		}
+	// chop up very long commands
+	if (cmd.msec > 50) {
+		oldmsec = ucmd->msec;
+		cmd.msec = oldmsec/2;
+		SV_RunCmd (&cmd, 1);
+		cmd.msec = oldmsec/2;
+		cmd.impulse = 0;
+		SV_RunCmd (&cmd, 1);
+		return;
 	}
 
 	if (!sv_player->v.fixangle)
@@ -1656,6 +1662,7 @@ void SV_ExecuteClientMessage (client_t *cl)
 			if (!sv.paused) {
 				SV_PreRunCmd();
 
+				/*
 				if (net_drop < 20)
 				{
 					while (net_drop > 2)
@@ -1668,6 +1675,7 @@ void SV_ExecuteClientMessage (client_t *cl)
 					if (net_drop > 0)
 						SV_RunCmd (&oldcmd, 0);
 				}
+				*/
 				SV_RunCmd (&newcmd, 0);
 
 				SV_PostRunCmd();

@@ -74,7 +74,7 @@ keyname_t keynames[] =
 	{"SHIFT", K_SHIFT},
 	
 	// Keypad stuff..
-	{"KP_NUM", KP_NUM},
+	{"KP_NUMLCK", KP_NUMLCK},
 	{"KP_DIVIDE", KP_DIVIDE},
 	{"KP_MULTIPLY", KP_MULTIPLY},
 	{"KP_MINUS", KP_MINUS},
@@ -159,6 +159,8 @@ keyname_t keynames[] =
 	{"AUX31", K_AUX31},
 	{"AUX32", K_AUX32},
 
+	{"PRNTSCR", K_PRNTSCR},
+	{"SCRLCK", K_SCRLCK},
 	{"PAUSE", K_PAUSE},
 
 	{"MWHEELUP", K_MWHEELUP},
