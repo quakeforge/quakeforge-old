@@ -148,10 +148,12 @@ void MSG_ReadDeltaUsercmd (struct usercmd_s *from, struct usercmd_s *cmd);
 
 //============================================================================
 
+extern	int			com_no_escapes;
 extern	char		com_token[1024];
 extern	qboolean	com_eof;
 
 char *COM_Parse (char *data);
+char *COM_EscapeEscapes(char *str);
 
 
 extern	int		com_argc;

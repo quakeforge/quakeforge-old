@@ -40,7 +40,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <console.h>
 #include <cmd.h>
 
-char	com_token[1024];
+int				com_no_escapes = 0;
+char			com_token[1024];
 qboolean		standard_quake = true, rogue, hipnotic;
 qboolean		msg_suppress_1 = 0;
 
@@ -631,7 +632,7 @@ skipwhite:
 		while (*data && *data!='\"')
 		{
 			c = *data++;
-			if (c=='\\') {
+			if (!com_no_escapes && c=='\\') {
 				int base=8;
 				char buf[4];
 				char *str,*string=buf;
@@ -691,6 +692,20 @@ skipwhite:
 	
 	com_token[len] = 0;
 	return data;
+}
+
+char *
+COM_EscapeEscapes(char *str)
+{
+	static char buf[4096];
+	int i;
+
+	for (i=0; *str && i<sizeof(buf)-1; i++, str++) {
+		if (*str=='\\')
+			buf[i++]='\\';
+		buf[i]=*str;
+	}
+	return buf;
 }
 
 /*

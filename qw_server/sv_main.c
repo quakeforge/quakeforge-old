@@ -846,7 +846,9 @@ void SV_ConnectionlessPacket (void)
 
 	s = MSG_ReadStringLine ();
 
+	com_no_escapes++;
 	Cmd_TokenizeString (s);
+	com_no_escapes--;
 
 	c = Cmd_Argv(0);
 

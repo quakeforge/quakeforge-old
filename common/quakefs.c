@@ -676,6 +676,8 @@ COM_LoadGameDirectory(char *dir)
 	struct dirent	*dirent;
 	
 	dir_ptr = opendir(dir);
+	if (!dir_ptr)
+		return;
 
 	while ((dirent = readdir(dir_ptr))) {
 		if (!fnmatch("*.pak", dirent->d_name, 0)) {
