@@ -628,17 +628,43 @@ skipwhite:
 	if (c == '\"')
 	{
 		data++;
-		while (1)
+		while (*data && *data!='\"')
 		{
 			c = *data++;
-			if (c=='\"' || !c)
-			{
-				com_token[len] = 0;
-				return data;
+			if (c=='\\') {
+				int base=8;
+				char buf[4];
+				char *str,*string=buf;
+
+				c = *data++;
+				switch (c) {
+				case 'a':c='\a';break;
+				case 'b':c='\b';break;
+				case 'e':c=27  ;break;
+				case 'f':c='\f';break;
+				case 'n':c='\n';break;
+				case 'r':c='\r';break;
+				case 'x':
+					base+=8;
+					string=data;
+					goto parse_char_number;
+				case '0' ... '7':
+					strncpy(buf,data,3);
+				parse_char_number:
+					c=strtol(string,&str,base);
+					if (str==string)
+						c='x';
+					data+=str-string;
+					break;
+				}
 			}
 			com_token[len] = c;
 			len++;
 		}
+		if (*data)
+			data++;
+		com_token[len] = 0;
+		return data;
 	}
 
 // parse single characters

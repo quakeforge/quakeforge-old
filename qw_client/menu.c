@@ -787,6 +787,11 @@ void M_Keys_Key (int k)
 		{
 			bind_grab = false;
 		}
+		else if (k == '\\')
+		{
+			snprintf(cmd, sizeof(cmd), "bind \"\\\\\" \"%s\"\n", bindnames[keys_cursor][0]);
+			Cbuf_InsertText (cmd);
+		}
 		else if (k != '`')
 		{
 			snprintf(cmd, sizeof(cmd), "bind %s \"%s\"\n", Key_KeynumToString (k), bindnames[keys_cursor][0]);			
