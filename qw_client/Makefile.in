@@ -20,10 +20,12 @@ mandir		:= @mandir@
 
 TARGET_DIR	:= $(PROJECT_ODIR)/targets
 BUILD_DIR	:= $(TARGET_DIR)/qw_client
-OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/{client,common_lib}/%.@OBJEXT@)
-DEP_PATTERN	:= $(shell echo $(BUILD_DIR)/{client,common_lib}/%.d)
-GL_OBJ_PATTERN	:= $(shell echo $(BUILD_DIR)/client/gl/%.@OBJEXT@)
-GL_DEP_PATTERN	:= $(shell echo $(BUILD_DIR)/client/gl/%.d)
+OBJ_PATTERN	:= $(BUILD_DIR)/common_lib/%.@OBJEXT@ \
+                   $(BUILD_DIR)/client/%.@OBJEXT@
+
+DEP_PATTERN	:= $(BUILD_DIR)/client/%.d $(BUILD_DIR)/common_lib/%.d
+GL_OBJ_PATTERN	:= $(BUILD_DIR)/client/gl/%.@OBJEXT@
+GL_DEP_PATTERN	:= $(BUILD_DIR)/client/gl/%.d
 
 LDFLAGS = @LDFLAGS@ @SOUND_LIBS@ @NET_LIBS@ -lm
 LIBS = @LIBS@
@@ -100,7 +102,8 @@ gl_targets    = $(GLQUAKE) $(TDFXQUAKE)
 lib_targets   = $(COMMON_LIB)
 targets       = $(lib_targets) $(soft_targets) $(gl_targets)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
-.PHONY: $(targets) $(CLEAN_TARGETS) clean-soft clean-gl clean-common_lib clean-client
+.PHONY: $(targets) $(CLEAN_TARGETS) clean-soft clean-gl clean-common_lib \
+        clean-client
 
 all: $(targets)
 ########################################################################
@@ -293,14 +296,14 @@ ALL_COMMON_LIB_OBJS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix \
 ALL_COMMON_LIB_DEPS = $(patsubst %,$(BUILD_DIR)/common_lib/%,$(addsuffix .d,\
 			$(basename $(GENERAL_SRC) .c .s)))
 
-common_lib_DIR:
+$(BUILD_DIR)/common_lib:
 	@DIR=common_lib; $(MAKE_SURE_DIR)
 
-$(COMMON_LIB): common_lib_DIR $(BUILD_DIR)/common_lib.a
+$(COMMON_LIB): $(BUILD_DIR)/common_lib $(BUILD_DIR)/common_lib.a
 
-$(BUILD_DIR)/common_lib.a: common_lib_DIR $(ALL_COMMON_LIB_OBJS)
+$(BUILD_DIR)/common_lib.a: $(BUILD_DIR)/common_lib $(ALL_COMMON_LIB_OBJS)
 	ar cru $@ $(ALL_COMMON_LIB_OBJS)
-	ranlib $@
+	@RANLIB@ $@
 
 # X11 Software target
 
