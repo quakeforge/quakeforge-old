@@ -225,7 +225,7 @@ if test "x$HAS_OGL" != xno; then
    if test "x$OGL_INCLUDES" != xauto; then
       OGL_CFLAGS="-I$OGL_INCLUDES"
    else
-      OGL_CFLAGS="-I/usr/local/include -I$x_includes"
+      OGL_CFLAGS="-I/usr/local/include -I${x_includes:-.}"
    fi
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$CPPFLAGS $OGL_CFLAGS"
