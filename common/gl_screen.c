@@ -673,17 +673,19 @@ void SCR_ScreenShot_f (void)
 //
 // find a file name to save it to
 //
-	strcpy(pcxname,"quake00.tga");
+	strcpy(pcxname,"qf000.tga");
 
-	for (i=0 ; i<=99 ; i++)
+	for (i=0 ; i<=999 ; i++)
 	{
-		pcxname[5] = i/10 + '0';
-		pcxname[6] = i%10 + '0';
+		pcxname[2] = i / 100 + '0';
+		pcxname[3] = i / 10 % 10 + '0';
+		pcxname[4] = i % 10 + '0';
+
 		snprintf(checkname, sizeof(checkname), "%s/%s", com_gamedir, pcxname);
 		if (Sys_FileTime(checkname) == -1)
 			break;  // file doesn't exist
 	}
-	if (i==100)
+	if (i==1000)
 	{
 		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX file\n");
 		return;
