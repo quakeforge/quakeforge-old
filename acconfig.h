@@ -12,6 +12,9 @@
 #  define GLAPIENTRY   APIENTRY
 #endif
 
+/* Define this to something sane if you don't have stricmp */
+#undef stricmp
+
 /* Define this if you have GL_COLOR_INDEX8_EXT in GL/gl.h */
 #undef HAVE_GL_COLOR_INDEX8_EXT
 

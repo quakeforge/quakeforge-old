@@ -1,6 +1,8 @@
 SUBDIRS = qw_client qw_server uquake
 SRC_DIR = @srcdir@
 
+DESTDIR =
+
 all:
 	@for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
@@ -28,10 +30,11 @@ clean-autoconf mrproper: distclean
 # Code to automatically re-configure, only runs if you are compiling in the
 # source directory
 ifeq ($(SRC_DIR),.)
-configure: configure.in
-	autoconf
+configure: configure.in acconfig.h
+	./bootstrap
 
-Makefile: Makefile.in configure
+Makefile: Makefile.in configure \
+          qw_client/Makefile qw_server/Makefile uquake/Makefile
 	./configure
 
 qw_client/Makefile: qw_client/Makefile.in configure

@@ -13,16 +13,13 @@ to quake-devel@lists.sourceforge.net with details.
    possible buffer overruns
  * Devise and implement a way to ensure original gameplay compatibility
    while still letting us expand and extend the quake engine
- * configure.in: clean up the intel -mcpu stuff
  * Audio support for more platforms
  * Add OpenGL multi-pass texturing replacement for when multi-texturing
    extension isn't available
  * README: add tested platforms and results
- * Makefile.in, */Makefile.in: Add install target
  * Remove dependency on GNU make or migrate to automake
  * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
    on systems with XFree86 available
- * Merge in GGIQuake
  * Merge SDLQuake (BigM created a patch against an older revision of our
    main tree)
  * Add currently removed documentation to the README, and also add more

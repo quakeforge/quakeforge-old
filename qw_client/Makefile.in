@@ -6,10 +6,16 @@
 PROJECT_DIR  = @top_srcdir@
 SRC_DIR      = @srcdir@
 QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
-COMMON_DIR=$(PROJECT_DIR)/common
+COMMON_DIR   = $(PROJECT_DIR)/common
 BIN_PREFIX   = qw-client
 
-BUILD_DIR = ../targets/qw_client
+DESTDIR      =
+
+prefix      = @prefix@
+bindir      = @bindir@
+mandir      = @mandir@
+
+BUILD_DIR    = ../targets/qw_client
 
 LDFLAGS = @LDFLAGS@ @SND_LIBS@
 LIBS = @LIBS@
@@ -198,9 +204,9 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 #
 # Directory specific stuff
 #
-DEFS = @DEFS@ @STRICMP_DEF@
-CFLAGS = -Wall -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) \
--I$(QW_COMMON_DIR) -I$(COMMON_DIR) -I../common
+DEFS = @DEFS@
+CFLAGS = @CFLAGS@ -Wall -DQUAKEWORLD $(OPTFLAGS) $(DEFS) -I. \
+$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
 ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(QW_X11_VID_SRC) model.c
 ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC) $(QW_GL_REND_SRC) 
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC) $(QW_GL_REND_SRC) 
@@ -522,9 +528,16 @@ distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
 clean: $(CLEAN_TARGETS)
+	for i in $(targets); do \
+	  rm -f $(BUILD_DIR)/../$$i; \
+	done
 
-install:
-	@echo Install not implemented
+install: $(targets)
+	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)
+	for i in $(targets); do \
+	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	     $(DESTDIR)$(prefix)$(bindir)/$$i; \
+	done
 
 check:
 	@echo check not implemented

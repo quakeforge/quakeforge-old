@@ -7,6 +7,12 @@ PROJECT_DIR = @top_srcdir@
 SRC_DIR     = @srcdir@
 BIN_PREFIX  = quake
 
+DESTDIR     =
+
+prefix      = @prefix@
+bindir      = @bindir@
+mandir      = @mandir@
+
 COMMON_DIR=$(PROJECT_DIR)/common
 BUILD_DIR =../targets/uquake
 
@@ -76,11 +82,6 @@ endif
 targets       = $(GGIQUAKE) $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE) $(SDLQUAKE)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) ($CLEAN_TARGETS)
-
-x: Makefile
-	@echo binaries: $(targets)
-	@echo other targets: distclean 
-	@echo all: makes all targets - $(targets)
 
 all: $(targets)
 
@@ -187,8 +188,8 @@ CL_COMMON_SRC = $(MISC_SRC) $(CL_GUI_SRC) $(CL_SRC) \
 # Directory specific stuff
 #
 DEFS         = @DEFS@
-CFLAGS       = $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) -I$(COMMON_DIR) \
--I../common -I$(SRC_DIR)/include
+CFLAGS       = @CFLAGS@ $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) \
+-I$(COMMON_DIR) -I$(SRC_DIR)/include
 ALL_X11_SRC  = $(GENERAL_SRC) $(SW_REND_SRC) $(X11_VID_SRC) model.c
 ALL_GL_SRC   = $(GENERAL_SRC) $(GL_REND_SRC) $(GL_VID_SRC)
 ALL_TDFX_SRC = $(GENERAL_SRC) $(GL_REND_SRC) $(TDFX_VID_SRC)
@@ -474,9 +475,16 @@ distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
 clean: $(CLEAN_TARGETS)
+	for i in $(targets); do \
+	  rm -f $(BUILD_DIR)/../$$i; \
+	done
 
-install:
-	@echo Install not implemented
+install: $(targets)
+	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)
+	for i in $(targets); do \
+	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	     $(DESTDIR)$(prefix)$(bindir)/$$i; \
+	done
 
 check:
 	@echo check not implemented

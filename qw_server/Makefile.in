@@ -6,6 +6,12 @@
 PROJECT_DIR  = @top_srcdir@
 SRC_DIR      = @srcdir@
 
+DESTDIR      =
+
+prefix      = @prefix@
+bindir      = @bindir@
+mandir      = @mandir@
+
 COMMON_DIR=$(PROJECT_DIR)/common
 QW_COMMON_DIR= $(PROJECT_DIR)/qw_common
 BUILD_DIR = ../targets/qw_server
@@ -64,9 +70,9 @@ QW_GENERAL_SRC = pmove.c pmovetst.c
 #
 # Directory specific stuff
 #
-CFLAGS = -DQUAKEWORLD -DSERVERONLY $(OPTFLAGS) $(DEFS) -I. $(SRC_DIR_INC) \
--I$(QW_COMMON_DIR) -I$(COMMON_DIR) -I../common
-DEFS = @DEFS@ @STRICMP_DEF@
+CFLAGS = @CFLAGS@ -DQUAKEWORLD -DSERVERONLY $(OPTFLAGS) $(DEFS) -I. \
+$(SRC_DIR_INC) -I$(QW_COMMON_DIR) -I$(COMMON_DIR)
+DEFS = @DEFS@
 
 SRVQUAKE = qw-server
 targets = $(SRVQUAKE)
@@ -135,9 +141,16 @@ distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
 clean: $(CLEAN_TARGETS)
-
-install:
-	@echo Install not implemented
+	for i in $(targets); do \
+	  rm -f $(BUILD_DIR)/../$$i; \
+	done
+  
+install: $(targets)
+	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)
+	for i in $(targets); do \
+	   $(PROJECT_DIR)/install-sh -m 755 $(BUILD_DIR)/../$$i \
+	     $(DESTDIR)$(prefix)$(bindir)/$$i; \
+	done
 
 check:
 	@echo check not implemented

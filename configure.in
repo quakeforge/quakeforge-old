@@ -331,13 +331,14 @@ AC_SUBST(TDFXGL_LIBS)
 AC_SUBST(HAS_SDL)
 AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
+AC_SUBST(prefix)
+AC_SUBST(bindir)
+AC_SUBST(mandir)
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
-AC_CHECK_FUNC(stricmp, 
-	[STRICMP_DEF=],
-	AC_CHECK_FUNC(strcasecmp, [STRICMP_DEF=-Dstricmp=strcasecmp]))
-AC_SUBST(STRICMP_DEF)
+AC_CHECK_FUNC(stricmp,,
+  AC_CHECK_FUNC(strcasecmp, AC_DEFINE(stricmp,strcasecmp)))
 
 
 ##########################################################
