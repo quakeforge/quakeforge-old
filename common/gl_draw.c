@@ -32,8 +32,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <lib_replace.h>
 
-#undef HIPFIX
-
 extern unsigned char d_15to8table[65536];
 extern cvar_t crosshair, cl_crossx, cl_crossy, crosshaircolor;
 
@@ -143,7 +141,7 @@ void GL_Bind (int texnum)
 =============================================================================
 */
 
-#define	MAX_SCRAPS		1
+#define	MAX_SCRAPS		4
 #define	BLOCK_WIDTH		256
 #define	BLOCK_HEIGHT	256
 
@@ -231,7 +229,6 @@ qpic_t *Draw_PicFromWad (char *name)
 	p = W_GetLumpName (name);
 	gl = (glpic_t *)p->data;
 
-#ifndef HIPFIX
 	// load little ones into the scrap
 	if (p->width < 64 && p->height < 64)
 	{
@@ -256,7 +253,6 @@ qpic_t *Draw_PicFromWad (char *name)
 		pic_texels += p->width*p->height;
 	}
 	else
-#endif
 	{
 		gl->texnum = GL_LoadPicTexture (p);
 		gl->sl = 0;
