@@ -44,13 +44,6 @@ int VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo);
 
   Check for the presence of the XFree86-VMode X server extension
 */
-
-struct qfvm_modes {
-	int	x;
-	int	y;
-};
-
-int VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver, int *num_modes,
-		   struct qfvm_modes **modes);
+int VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver);
 
 #endif /* DGA_CHECK_H */

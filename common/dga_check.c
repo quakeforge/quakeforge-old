@@ -79,13 +79,12 @@ VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
   Check for the presence of the XFree86-VidMode X server extension
 */
 int
-VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver, int *num_modes,
-	       struct qfvm_modes **modes)
+VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
 {
 #ifdef HAS_DGA
 	XF86VidModeModeInfo **vidmodes;
 	int event_base, error_base;
-	int ret, dummy, i;
+	int dummy;
 	
 	if (! XF86VidModeQueryExtension(dpy, &event_base, &error_base)) {
 		return 0;
@@ -98,27 +97,7 @@ VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver, int *num_modes,
 		return 0;
 	}
 
-	if (! XF86VidModeGetAllModeLines(dpy, DefaultScreen(dpy),
-					 num_modes, &vidmodes)) {
-		return 0;
-	}
-	if (*num_modes <= 0) return 0;
-
-	ret = 0;
-	*modes = malloc(sizeof(struct qfvm_modes) * *num_modes);
-	if (*modes) {
-		ret = 1;
-		for (i = 0; i < *num_modes; i++) {
-			(*modes)[i].x = vidmodes[i]->hdisplay;
-			(*modes)[i].y = vidmodes[i]->vdisplay;
-		}
-	}
-	for (i = 0; i < *num_modes; i++) {
-		if (vidmodes[i]->private) XFree(vidmodes[i]->private);
-	}
-	XFree(vidmodes);
-
-	return ret;
+	return 1;
 #else
 	return 0;
 #endif	// HAS_DGA
