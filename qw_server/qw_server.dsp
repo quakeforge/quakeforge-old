@@ -179,6 +179,19 @@ SOURCE=..\common\net_udp.c
 # Begin Source File
 
 SOURCE=..\common\net_udp6.c
+
+!IF  "$(CFG)" == "qw_server - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_server - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_server - Win32 IPv6"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 

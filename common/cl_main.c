@@ -44,7 +44,9 @@
 #ifdef _WIN32
 # include <winsock2.h>
 # include <ws2tcpip.h>
-# include <tpipv6.h>
+# ifdef HAVE_IPV6
+#  include <tpipv6.h>
+# endif
 # define  _WINSOCKAPI_
 # define HAVE_SOCKLEN_T
 #else
