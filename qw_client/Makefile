@@ -669,11 +669,11 @@ $(BUILD_DIR)/gl_qw_obj/snd_mixa.o:	$(COMMON_DIR)/snd_mixa.s
 #############################################################################
 
 clean:	clean-soft clean-gl
-	@-rmdir $(BUILD_DIR)
+	-rmdir $(BUILD_DIR)
 	@echo Done.
 
 clean-soft:
-	@-rm -f $(SOFT_TARGETS) $(BUILD_DIR)/soft_qw_obj
+	-rm -rf $(SOFT_TARGETS) $(BUILD_DIR)/soft_qw_obj
 
 clean-gl:
-	@-rm -f $(GL_TARGETS) $(BUILD_DIR)/gl_qw_obj
+	-rm -rf $(GL_TARGETS) $(BUILD_DIR)/gl_qw_obj
