@@ -189,6 +189,10 @@ SOURCE=.\cl_pred.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\cl_slist.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\common\cl_tent.c
 # End Source File
 # Begin Source File
@@ -746,27 +750,6 @@ SOURCE=..\common\gl_test.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\common\vid_wgl.c
-
-!IF  "$(CFG)" == "qw_client - Win32 Release"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
-
-# PROP BASE Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
 SOURCE=..\common\gl_view.c
 
 !IF  "$(CFG)" == "qw_client - Win32 Release"
@@ -1294,6 +1277,27 @@ SOURCE=..\common\sys_common.c
 # Begin Source File
 
 SOURCE=.\sys_win.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\vid_wgl.c
+
+!IF  "$(CFG)" == "qw_client - Win32 Release"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 Debug"
+
+# PROP Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLRelease"
+
+# PROP BASE Exclude_From_Build 1
+
+!ELSEIF  "$(CFG)" == "qw_client - Win32 GLDebug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
