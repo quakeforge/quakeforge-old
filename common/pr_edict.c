@@ -1065,9 +1065,7 @@ PR_LoadProgs
 */
 void PR_LoadProgs (void)
 {
-	int		i;
-	char	num[32];
-	dfunction_t *f;
+	int	i;
 
 // flush the non-C variable lookup cache
 	for (i=0 ; i<GEFV_CACHESIZE ; i++)
@@ -1091,9 +1089,15 @@ void PR_LoadProgs (void)
 	Con_DPrintf ("Programs occupy %iK.\n", com_filesize/1024);
 
 #ifdef QUAKEWORLD
-// add prog crc to the serverinfo
-	snprintf(num, sizeof(num), "%i", CRC_Block ((byte *)progs, com_filesize));
-	Info_SetValueForStarKey (svs.info, "*progs", num, MAX_SERVERINFO_STRING);
+	{
+		char	num[32];
+
+		// add prog crc to the serverinfo
+		snprintf(num, sizeof(num), "%i", CRC_Block ((byte *)progs,
+							    com_filesize));
+		Info_SetValueForStarKey(svs.info, "*progs", num,
+					MAX_SERVERINFO_STRING);
+	}
 #else
 	for (i=0 ; i<com_filesize ; i++)
 		CRC_ProcessByte (&pr_crc, ((byte *)progs)[i]);
@@ -1174,15 +1178,19 @@ void PR_LoadProgs (void)
 		((int *)pr_globals)[i] = LittleLong (((int *)pr_globals)[i]);
 
 #ifdef QUAKEWORLD
-	// Zoid, find the spectator functions
-	SpectatorConnect = SpectatorThink = SpectatorDisconnect = 0;
+	{
+		dfunction_t *f;
 
-	if ((f = ED_FindFunction ("SpectatorConnect")) != NULL)
-		SpectatorConnect = (func_t)(f - pr_functions);
-	if ((f = ED_FindFunction ("SpectatorThink")) != NULL)
-		SpectatorThink = (func_t)(f - pr_functions);
-	if ((f = ED_FindFunction ("SpectatorDisconnect")) != NULL)
-		SpectatorDisconnect = (func_t)(f - pr_functions);
+		// Zoid, find the spectator functions
+		SpectatorConnect = SpectatorThink = SpectatorDisconnect = 0;
+
+		if ((f = ED_FindFunction ("SpectatorConnect")) != NULL)
+			SpectatorConnect = (func_t)(f - pr_functions);
+		if ((f = ED_FindFunction ("SpectatorThink")) != NULL)
+			SpectatorThink = (func_t)(f - pr_functions);
+		if ((f = ED_FindFunction ("SpectatorDisconnect")) != NULL)
+			SpectatorDisconnect = (func_t)(f - pr_functions);
+	}
 #endif
 }
 

@@ -308,10 +308,10 @@ bprint(value)
 */
 void PF_bprint (void)
 {
-	char		*s;
-	int			level;
-	
+	char	*s;
 #ifdef QUAKEWORLD
+	int	level;
+
 	level = G_FLOAT(OFS_PARM0);
 
 	s = PF_VarString(1);
@@ -336,8 +336,8 @@ void PF_sprint (void)
 {
 	char		*s;
 	client_t	*client;
-	int			entnum;
-	int			level;
+	int		entnum;
+	int		level;
 	
 	entnum = G_EDICTNUM(OFS_PARM0);
 
@@ -382,7 +382,7 @@ centerprint(clientent, value)
 void PF_centerprint (void)
 {
 	char		*s;
-	int			entnum;
+	int		entnum;
 	client_t	*cl;
 	
 	entnum = G_EDICTNUM(OFS_PARM0);
@@ -1370,11 +1370,10 @@ void PF_aim (void)
 {
 	edict_t	*ent, *check, *bestent;
 	vec3_t	start, dir, end, bestdir;
-	int		i, j;
+	int	i, j;
 	trace_t	tr;
 	float	dist, bestdist;
 	float	speed;
-	char	*noaim;
 
 	ent = G_EDICT(OFS_PARM0);
 	speed = G_FLOAT(OFS_PARM1);
@@ -1387,6 +1386,8 @@ void PF_aim (void)
 	i = NUM_FOR_EDICT(ent);
 	if (i>0 && i<MAX_CLIENTS)
 	{
+		char	*noaim;
+
 		noaim = Info_ValueForKey (svs.clients[i-1].userinfo, "noaim");
 		if (atoi(noaim) > 0)
 		{
@@ -1733,10 +1734,10 @@ PF_changelevel
 void PF_changelevel (void)
 {
 	char	*s;
+#ifdef QUAKEWORLD
 	static	int	last_spawncount;
 
 // make sure we don't issue two changelevels
-#ifdef QUAKEWORLD
 	if (svs.spawncount == last_spawncount)
 		return;
 	last_spawncount = svs.spawncount;

@@ -329,13 +329,10 @@ int	bitcounts[16];
 
 void CL_ParseUpdate (int bits)
 {
-	int			i;
 	model_t		*model;
-	int			modnum;
 	qboolean	forcelink;
 	entity_t	*ent;
-	int			num;
-	int			skin;
+	int		modnum, num, i;
 
 	if (cls.signon == SIGNONS - 1)
 	{	// first update is the final signon stage
@@ -416,16 +413,19 @@ if (bits&(1<<i))
 	}
 
 #ifdef GLQUAKE
-	if (bits & U_SKIN)
-		skin = MSG_ReadByte();
-	else
-		skin = ent->baseline.skin;
-	if (skin != ent->skinnum) {
-		ent->skinnum = skin;
-		if (num > 0 && num <= cl.maxclients)
-			R_TranslatePlayerSkin (num - 1);
-	}
+	{
+		int	skin;
 
+		if (bits & U_SKIN)
+			skin = MSG_ReadByte();
+		else
+			skin = ent->baseline.skin;
+		if (skin != ent->skinnum) {
+			ent->skinnum = skin;
+			if (num > 0 && num <= cl.maxclients)
+				R_TranslatePlayerSkin (num - 1);
+		}
+	}
 #else
 
 	if (bits & U_SKIN)

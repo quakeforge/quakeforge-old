@@ -124,13 +124,6 @@ const char *gl_renderer;
 const char *gl_version;
 const char *gl_extensions;
 
-#ifndef QUAKEWORLD
-void (*qgl3DfxSetPaletteEXT) (GLuint *);
-void (*qglColorTableEXT) (int, int, int, int, int, const void *);
-
-static float vid_gamma = 1.0;
-#endif // !QUAKEWORLD
-
 qboolean is8bit = false;
 qboolean isPermedia = false;
 qboolean gl_mtexable = false;
@@ -232,8 +225,6 @@ void	VID_SetPalette (unsigned char *palette)
 	FILE *f;
 	char s[255];
 	float dist, bestdist;
-	static qboolean palflag = false;
-
 //
 // 8 8 8 encoding
 //
@@ -257,19 +248,22 @@ void	VID_SetPalette (unsigned char *palette)
 
 	// JACK: 3D distance calcs - k is last closest, l is the distance.
 #ifdef QUAKEWORLD
-	// FIXME: Precalculate this and cache to disk.
-	if (palflag)
-		return;
-	palflag = true;
+	{
+		static qboolean palflag = false;
+
+		// FIXME: Precalculate this and cache to disk.
+		if (palflag)
+			return;
+		palflag = true;
+	}
 
 	COM_FOpenFile("glquake/15to8.pal", &f);
 	if (f) {
 		fread(d_15to8table, 1<<15, 1, f);
 		fclose(f);
-	} else {
-#else // QUAKEWORLD
-	{
+	} else
 #endif // QUAKEWORLD
+	{
 		for (i=0; i < (1<<15); i++) {
 			/* Maps
  			000000000000000
