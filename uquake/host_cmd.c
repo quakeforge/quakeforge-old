@@ -1248,6 +1248,11 @@ Host_Pause_f
 */
 void Host_Pause_f (void)
 {
+	if (cls.demoplayback)
+	{
+		cl.paused = !cl.paused;
+		return;
+	}
 	
 	if (cmd_source == src_command)
 	{
@@ -1258,7 +1263,7 @@ void Host_Pause_f (void)
 		SV_ClientPrintf ("Pause not allowed.\n");
 	else
 	{
-		sv.paused ^= 1;
+		sv.paused = !sv.paused;
 
 		if (sv.paused)
 		{
