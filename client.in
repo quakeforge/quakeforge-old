@@ -22,7 +22,7 @@ else
 OPTFLAGS = -g
 endif
 
-targets       = $(SVGAQUAKE) $(GLQUAKE) $(GLIDEQUAKE) $(X11QUAKE)
+targets       = $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) ($CLEAN_TARGETS)
 
