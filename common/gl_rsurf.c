@@ -205,9 +205,9 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 		{
 			scale = d_lightstylevalue[surf->styles[maps]];
 			surf->cached_light[maps] = scale;	// 8.8 fraction
-			for (i=0, j=0 ; i<size ; i++)
+			if (bspver == CBSPVERSION)
 			{
-				if (bspver == CBSPVERSION)
+				for (i=0, j=0 ; i<size ; i++)
 				{
 					cblocklights[0][i] +=
 						lightmap[j++] * scale;
@@ -215,17 +215,24 @@ void R_BuildLightMap (msurface_t *surf, byte *dest, int stride)
 						lightmap[j++] * scale;
 					cblocklights[2][i] +=
 						lightmap[j++] * scale;
-				} else {
+					blocklights[i] += 
+						lightmap[j++] * scale;
+				}
+				lightmap += (size<<2);
+			} else {
+				for (i=0 ; i<size ; i++)
+				{
 					cblocklights[0][i] +=
 						lightmap[i] * scale;
 					cblocklights[1][i] +=
 						lightmap[i] * scale;
 					cblocklights[2][i] +=
 						lightmap[i] * scale;
+					blocklights[i] +=
+						lightmap[i] * scale;
 				}
-				blocklights[i] += lightmap[j++] * scale;
+				lightmap += size;
 			}
-			lightmap += size;	// skip to next lightmap
 		}
 
 // add all the dynamic lights
@@ -237,6 +244,7 @@ store:
 	switch (gl_lightmap_format)
 	{
 	case GL_RGBA:
+	case GL_RGBA4:
 		stride -= (smax<<2);
 		rbl = cblocklights[0];
 		gbl = cblocklights[1];
