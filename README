@@ -86,6 +86,8 @@ After you have compiled successfully, you must download the shareware
 version of Quake 1 to play. Insert the proper binaries in the same
 directory as the unpacked shareware files, and run.
 
+We are currently working on a free replacement for this.
+
 
 IV. Operating System Specific Issues
 ------------------------------------
@@ -98,6 +100,7 @@ platforms.  Issues to be discussed include:
   * Mouse Setup
   * Booting "Clean"
 
+Currently this section is unfinished.
 
 V. Errata and Known Bugs
 ------------------------
@@ -161,7 +164,7 @@ installed as part of the QEMM installation.
 VII. Technical Support
 ----------------------
 
-Please do not contact ID Software, Inc regarding technical support
+Please do not contact Id Software, Inc regarding technical support
 issues related to QuakeForge. QuakeForge is heavily modified from the
 original Quake source release and Id Software does not support these
 modifications.
@@ -216,8 +219,6 @@ Operating systems tested:
    Digital Unix/TRU64
    Windows 98	(Hasn't been tested since we switched to autoconf)
 
-FIXME: Have we tested dos and NT?
-
 User testimonies:
    Linux, Athlon, G400 w/ utah-glx
    Linux, PentiumII, G200 w/ utah-glx
@@ -225,14 +226,17 @@ User testimonies:
    Linux, Debian Potato, PII 266 CPU, 3Dfx Voodoo3 3000 AGP, Mesa 3.1   
    Linux, Debian Potato, K6-2, TNT1, ancient nvida glx drivers
    Linux, Debian Potato, PIII-450, 3dfx Voodoo3 3000 AGP, Mesa 3.1
-   Linux, Suse 6.1 Pentium-133, 8meg V2, with all applicable targets at 16bpp; Mesa 3.1
+   Linux, Suse 6.1 Pentium-133, 8meg V2, with all applicable targets
+	at 16bpp; Mesa 3.1
    Linux, Suse 6.1 Celeron 400, Neomagic; all software targets.
    Linux 2.2, k6-2-350, quake-x11 -bpp 16
    Linux 2.2, k6-2-350, quake-gl mesa 3.1 glide2x voodoo2 8M
    Linux 2.0, k6-2-266, quake-x11 -bpp 16
-   Linux 2.2, Slackware 7, PII-300, Xfree86 3.3.5, TNT(Velocity 4400/new GLX), Mesa 3.1
-      libvga.so.1.4.0, tested all clients, GL freeze problem (dont use new GLX drivers)
-   Linux 2.x, Mandrake 6.1, Dell G1 400, Creative Riva TNT 16MB, Mesa 3.1, XFree86 3.3.5, Nvidia GLX driver. Tested quake-x11, works.
+   Linux 2.2, Slackware 7, PII-300, Xfree86 3.3.5, TNT(Velocity 4400/new GLX),
+	Mesa 3.1, libvga.so.1.4.0, tested all clients, GL freeze problem (dont
+	use new GLX drivers)
+   Linux 2.x, Mandrake 6.1, Dell G1 400, Creative Riva TNT 16MB, Mesa 3.1,
+	XFree86 3.3.5, Nvidia GLX driver. Tested quake-x11, works.
    Linux 2.x, RedHat 6.1, Dell G1 400, onboard S3, quake-x11 works.
    FreeBSD 2.2.8 - X11
    FreeBSD 3.2 - X11
