@@ -114,6 +114,38 @@ void SV_Shutdown(qboolean crash)
 	memset (svs.clients, 0, svs.maxclientslimit*sizeof(client_t));
 }
 /*
+================
+SV_Error
+
+Sends a datagram to all the clients informing them of the server crash,
+then exits
+================
+*/
+void SV_Error (char *error, ...)
+{
+	va_list		argptr;
+	static	char		string[1024];
+	static	qboolean inerror = false;
+
+	if (inerror)
+		Sys_Error ("SV_Error: recursively entered (%s)", string);
+
+	inerror = true;
+
+	va_start (argptr, error);
+	vsnprintf (string, sizeof(string), error, argptr);
+	va_end (argptr);
+
+	Con_Printf ("SV_Error: %s\n",string);
+
+	//SV_FinalMessage (va("server crashed: %s\n", string));
+		
+	SV_Shutdown (false);//XXX
+
+	Sys_Error ("SV_Error: %s\n",string);
+}
+
+/*
 ===============
 SV_Init
 ===============
