@@ -31,6 +31,9 @@
 */
 
 #include <quakedef.h>
+#include <sys.h>
+#include <console.h>
+#include <qtypes.h>
 
 #include <stdio.h>
 #include <errno.h>
@@ -76,6 +79,17 @@
 #define MAXHOSTNAMELEN	512
 #endif
 
+#ifdef __sun__
+#define s6_addr32       _S6_un._S6_u32
+#define ss_family	__ss_family
+#define ss_len	__ss_len
+#endif __sun__
+
+#ifdef __GLIBC__ // glibc macro
+#define s6_addr32       in6_u.u6_addr32
+#define ss_family __ss_family
+#endif
+
 netadr_t	net_local_adr;
 
 netadr_t	net_from;
@@ -96,21 +110,18 @@ void NetadrToSockadr (netadr_t *a, struct sockaddr_in6 *s)
 	memset (s, 0, sizeof(*s));
 
 	s->sin6_family = AF_INET6;
-
-	s->sin6_addr.in6_u.u6_addr32[0] = a->ip[0];
-	s->sin6_addr.in6_u.u6_addr32[1] = a->ip[1];
-	s->sin6_addr.in6_u.u6_addr32[2] = a->ip[2];
-	s->sin6_addr.in6_u.u6_addr32[3] = a->ip[3];
+	memcpy(&s->sin6_addr, a->ip, sizeof(s->sin6_addr));
 	s->sin6_port = a->port;
+#ifdef HAVE_SIN6_LEN
+ 	s->sin6_len = sizeof(struct sockaddr_in6);
+#endif
 }
 
 void SockadrToNetadr (struct sockaddr_in6 *s, netadr_t *a)
 {
-	a->ip[0] = s->sin6_addr.in6_u.u6_addr32[0];
-	a->ip[1] = s->sin6_addr.in6_u.u6_addr32[1];
-	a->ip[2] = s->sin6_addr.in6_u.u6_addr32[2];
-	a->ip[3] = s->sin6_addr.in6_u.u6_addr32[3];
+	memcpy(a->ip, &s->sin6_addr, sizeof(s->sin6_addr));
 	a->port = s->sin6_port;
+ 	a->family = s->sin6_family;
 }
 
 qboolean	NET_CompareBaseAdr (netadr_t a, netadr_t b)
@@ -141,14 +152,36 @@ char	*NET_AdrToString (netadr_t a)
 char	*NET_BaseAdrToString (netadr_t a)
 {
 	static	char	s[64];
-	struct sockaddr_in6 sa;
-	int err;
+	struct sockaddr_storage ss;
 
-	NetadrToSockadr(&a,&sa);
+	//NetadrToSockadr(&a,&sa);
 
-	if ((err=getnameinfo((struct sockaddr *) &sa,sizeof(sa),s,sizeof(s),NULL,0,NI_NUMERICHOST))) {
-	  strcpy(s,"<invalid>");
-	}
+	memset(&ss, 0, sizeof(ss));
+	if (IN6_IS_ADDR_V4MAPPED((struct in6_addr *)a.ip)) {
+#ifdef HAVE_SS_LEN	  
+		ss.ss_len = sizeof(struct sockaddr_in);
+#endif
+		ss.ss_family = AF_INET;
+		memcpy(&((struct sockaddr_in *)&ss)->sin_addr,
+		    &((struct in6_addr *)a.ip)->s6_addr[12], sizeof(struct in_addr));
+	} else {
+#ifdef HAVE_SS_LEN
+		ss.ss_len = sizeof(struct sockaddr_in6);
+#endif
+		ss.ss_family = AF_INET6;
+		memcpy(&((struct sockaddr_in6 *)&ss)->sin6_addr,
+		    a.ip, sizeof(struct in6_addr));
+ 	}
+#ifdef HAVE_SS_LEN
+	if (getnameinfo((struct sockaddr *)&ss, ss.ss_len, s, sizeof(s),
+	    NULL, 0, NI_NUMERICHOST))
+	  strcpy(s, "<invalid>");
+#else
+	// maybe needs switch for AF_INET6 or AF_INET?
+	if (getnameinfo((struct sockaddr *)&ss, sizeof(ss), s, sizeof(s),
+	    NULL, 0, NI_NUMERICHOST))
+	  strcpy(s, "<invalid>");
+#endif	
 	return s;
 }
 
@@ -216,10 +249,11 @@ qboolean	NET_StringToAdr (char *s, netadr_t *a)
 	  ss6=(struct sockaddr_in6 *) &ss;
 	  ss4=(struct sockaddr_in *) resultp->ai_addr;
 	  ss6->sin6_family=AF_INET6;
-	  ss6->sin6_addr.in6_u.u6_addr32[0]=0;
-	  ss6->sin6_addr.in6_u.u6_addr32[1]=0;
-	  ss6->sin6_addr.in6_u.u6_addr32[2]=htonl(0xffff);
-	  ss6->sin6_addr.in6_u.u6_addr32[3]=ss4->sin_addr.s_addr;
+
+	  memset(&ss6->sin6_addr, 0, sizeof(ss6->sin6_addr));
+          ss6->sin6_addr.s6_addr[10] = ss6->sin6_addr.s6_addr[11] = 0xff;
+	  memcpy(&ss6->sin6_addr.s6_addr[12], &ss4->sin_addr, sizeof(ss4->sin_addr));
+
 	  ss6->sin6_port=ss4->sin_port;
 	  break;
 	case AF_INET6:
@@ -344,13 +378,14 @@ void NET_SendPacket (int length, void *data, netadr_t to)
 
 int UDP_OpenSocket (int port)
 {
-        int err;
 	int newsocket;
 	struct sockaddr_in6 address;
-	struct sockaddr_in *ss4;
-	struct addrinfo hints;
-	struct addrinfo *resultp;
-	char addrbuf[128];
+	struct addrinfo hints,*res;
+	int Error;
+	char Buf[BUFSIZ],*Host,*Service;
+#ifdef IPV6_BINDV6ONLY
+	int dummy;
+#endif
 #ifdef _WIN32
 #define ioctl ioctlsocket
 	unsigned long _true = true;
@@ -366,45 +401,46 @@ int UDP_OpenSocket (int port)
 	memset(&address,0,sizeof(address));
 	address.sin6_family = AF_INET6;
 //ZOID -- check for interface binding option
+
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = PF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_protocol = IPPROTO_UDP;
+	hints.ai_flags = AI_PASSIVE;
+
 	if ((i = COM_CheckParm("-ip")) != 0 && i < com_argc) {
+		Host = com_argv[i+1];
+	} else {
+		Host = "0::0";
+	}
+	Con_Printf("Binding to IP Interface Address of %s\n", Host);
 
-	        memset(&hints,0,sizeof(hints));
-		hints.ai_socktype=SOCK_DGRAM;
-		hints.ai_family=PF_UNSPEC;
-
-	        if ((err=getaddrinfo(com_argv[i+1],NULL,&hints,&resultp)))
-		  {
-		    Sys_Error ("UDP_OpenSocket: addr %s: %s",com_argv[i+1], gai_strerror(err));
-		  }
-		switch(resultp->ai_family) {
-		case AF_INET:
-		  ss4=(struct sockaddr_in *) resultp->ai_addr;
-		  address.sin6_family=AF_INET6;
-		  address.sin6_addr.in6_u.u6_addr32[0]=0;
-		  address.sin6_addr.in6_u.u6_addr32[1]=0;
-		  address.sin6_addr.in6_u.u6_addr32[2]=htonl(0xffff);
-		  address.sin6_addr.in6_u.u6_addr32[3]=ss4->sin_addr.s_addr;
-		  break;
-		case AF_INET6:
-		  memcpy((void *) &address,(void *) resultp->ai_addr,sizeof(address));
-		  break;
-		default:
-		    Sys_Error ("UDP_OpenSocket: address family %d not supported",com_argv[i+1], resultp->ai_family);
-		}
-
-		// address.sin_addr.s_addr = inet_addr(com_argv[i+1]);
-
-		Con_Printf("Binding to IP Interface Address of %s\n",
-		  inet_ntop(AF_INET6,&address.sin6_addr,addrbuf,sizeof(addrbuf)));
-
-	} else
-		address.sin6_addr = in6addr_any;
 	if (port == PORT_ANY)
-		address.sin6_port = 0;
-	else
-		address.sin6_port = htons((unsigned short)port);
-	if( bind (newsocket, (void *)&address, sizeof(address)) == -1)
+		Service = NULL;
+	else {
+		sprintf(Buf, "%5d", port);
+                Service = Buf;
+        }
+
+	if((Error = getaddrinfo(Host, Service, &hints, &res)))
+		Sys_Error ("UDP_OpenSocket: getaddrinfo: %s", gai_strerror(Error));
+
+	if ((newsocket = socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == -1)
+		Sys_Error ("UDP_OpenSocket: socket:", strerror(errno));
+	if (ioctl (newsocket, FIONBIO, (char *)&_true) == -1)
+		Sys_Error ("UDP_OpenSocket: ioctl FIONBIO:", strerror(errno));
+
+#ifdef IPV6_BINDV6ONLY
+	if (setsockopt(newsocket, IPPROTO_IPV6, IPV6_BINDV6ONLY, &dummy,
+	    sizeof(dummy)) < 0) {
+		/* I don't care */
+	}
+#endif
+
+	if (bind(newsocket, res->ai_addr, res->ai_addrlen) < 0)
 		Sys_Error ("UDP_OpenSocket: bind: %s", strerror(errno));
+
+	freeaddrinfo(res);
 
 	return newsocket;
 }
