@@ -193,51 +193,6 @@ char modellist_name[] = "modellist %i %i";
 char soundlist_name[] = "soundlist %i %i";
 
 
-#ifdef UQUAKE
-/*
-===============
-CL_AllocDlight
-
-===============
-*/
-dlight_t *CL_AllocDlight (int key)
-{
-	int		i;
-	dlight_t	*dl;
-
-// first look for an exact key match
-	if (key)
-	{
-		dl = cl_dlights;
-		for (i=0 ; i<MAX_DLIGHTS ; i++, dl++)
-		{
-			if (dl->key == key)
-			{
-				memset (dl, 0, sizeof(*dl));
-				dl->key = key;
-				return dl;
-			}
-		}
-	}
-
-// then look for anything else
-	dl = cl_dlights;
-	for (i=0 ; i<MAX_DLIGHTS ; i++, dl++)
-	{
-		if (dl->die < cl.time)
-		{
-			memset (dl, 0, sizeof(*dl));
-			dl->key = key;
-			return dl;
-		}
-	}
-
-	dl = &cl_dlights[0];
-	memset (dl, 0, sizeof(*dl));
-	dl->key = key;
-	return dl;
-}
-#endif
 #ifdef QUAKEWORLD
 void CL_BeginServerConnect(void)
 {
@@ -563,33 +518,6 @@ void CL_ConnectionlessPacket (void)
 }
 #endif
 
-#ifdef UQUAKE
-/*
-===============
-CL_DecayLights
-
-===============
-*/
-void CL_DecayLights (void)
-{
-	int			i;
-	dlight_t	*dl;
-	float		time;
-	
-	time = cl.time - cl.oldtime;
-
-	dl = cl_dlights;
-	for (i=0 ; i<MAX_DLIGHTS ; i++, dl++)
-	{
-		if (dl->die < cl.time || !dl->radius)
-			continue;
-		
-		dl->radius -= time*dl->decay;
-		if (dl->radius < 0)
-			dl->radius = 0;
-	}
-}
-#endif
 
 /*
 =====================

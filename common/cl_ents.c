@@ -1,4 +1,5 @@
 /*
+cl_ents.c - entity parsing and management
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,17 +20,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl_ents.c -- entity parsing and management
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "cvar.h"
-#include "client.h"
-#include "console.h"
-#include "mathlib.h"
-#include "view.h"
-#include "cvars.h"
-#include "model.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <cvar.h>
+#include <client.h>
+#include <console.h>
+#include <mathlib.h>
+#include <view.h>
+#include <cvars.h>
+#include <model.h>
 
 extern	cvar_t	cl_predict_players;
 extern	cvar_t	cl_predict_players2;
