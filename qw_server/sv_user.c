@@ -1446,7 +1446,7 @@ SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 			V_CalcRoll (sv_player->v.angles, sv_player->v.velocity)*4;
 	}
 
-	host_frametime = max(0.1, ucmd->msec * 0.001);
+	host_frametime = min(0.1, ucmd->msec * 0.001);
 	
 	if (!host_client->spectator) {
 		pr_global_struct->frametime = host_frametime;
