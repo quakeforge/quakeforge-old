@@ -51,24 +51,8 @@ ifeq ($(SRC_DIR),.)
 configure: configure.in acconfig.h
 	./bootstrap
 
-Makefile: Makefile.in configure \
-          qw_client/Makefile qw_server/Makefile uquake/Makefile
+Makefile qw_client/Makefile qw_server/Makefile uquake/Makefile common/Makefile: configure Makefile.in qw_client/Makefile.in qw_server/Makefile.in uquake/Makefile.in common/Makefile.in
 	$(SHELL) ./config.status --recheck
 	$(SHELL) ./config.status
 
-qw_client/Makefile: qw_client/Makefile.in configure
-	$(SHELL) ./config.status --recheck
-	$(SHELL) ./config.status
-
-qw_server/Makefile: qw_server/Makefile.in configure
-	$(SHELL) ./config.status --recheck
-	$(SHELL) ./config.status
-
-uquake/Makefile: uquake/Makefile.in configure
-	$(SHELL) ./config.status --recheck
-	$(SHELL) ./config.status
-
-common/Makefile: common/Makefile.in configure
-	$(SHELL) ./config.status --recheck
-	$(SHELL) ./config.status
 endif
