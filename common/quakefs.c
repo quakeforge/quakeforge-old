@@ -786,8 +786,10 @@ void COM_Gamedir (char *dir)
 	//
 	Cache_Flush ();
 
+#ifdef QUAKEWORLD
 	if (!strcmp(dir, GAMENAME) || !strcmp(dir, "qw"))
 		return;
+#endif
 
 	snprintf(com_gamedir, sizeof(com_gamedir), "%s/%s", com_basedir, dir);
 

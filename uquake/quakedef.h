@@ -1,4 +1,5 @@
 /*
+quakedef.h - primary header for client
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// quakedef.h -- primary header for client
 
 #ifndef _UQUAKE_QUAKEDEF_H
 #define _UQUAKE_QUAKEDEF_H
@@ -146,14 +146,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //MED 01/04/97 added hipnotic defines
 //===========================================
 //hipnotic added defines
-#define HIT_PROXIMITY_GUN_BIT 16
-#define HIT_MJOLNIR_BIT       7
-#define HIT_LASER_CANNON_BIT  23
-#define HIT_PROXIMITY_GUN   (1<<HIT_PROXIMITY_GUN_BIT)
-#define HIT_MJOLNIR         (1<<HIT_MJOLNIR_BIT)
-#define HIT_LASER_CANNON    (1<<HIT_LASER_CANNON_BIT)
-#define HIT_WETSUIT         (1<<(23+2))
-#define HIT_EMPATHY_SHIELDS (1<<(23+3))
+#define HIT_PROXIMITY_GUN_BIT		16
+#define HIT_MJOLNIR_BIT			7
+#define HIT_LASER_CANNON_BIT		23
+#define HIT_WETSUIT_BIT			25
+#define HIT_EMPATHY_SHIELDS_BIT		26
+#define HIT_PROXIMITY_GUN		(1<<HIT_PROXIMITY_GUN_BIT)
+#define HIT_MJOLNIR			(1<<HIT_MJOLNIR_BIT)
+#define HIT_LASER_CANNON		(1<<HIT_LASER_CANNON_BIT)
+#define HIT_WETSUIT			(1<<HIT_WETSUIT_BIT)
+#define HIT_EMPATHY_SHIELDS		(1<<HIT_EMPATHY_SHIELDS_BIT)
 
 //===========================================
 
