@@ -5,6 +5,8 @@ Portions Copyright by their individual authors.
 
 The QuakeForge Project would like to thank Id Software for the release of
 Quake 1 under the GPL and their support of the open source community.
+We would also like to thank VA Linux for hardware and T-shirts, and 3Dfx
+for contributing hardware.
 
 This file details how to get Quake running on your system and what to do
 if you have problems.  We would like to thank Gandalf Technologies, Inc
@@ -34,7 +36,7 @@ IBM PC and Compatibles, PPC, Alpha, UltraSparc, Indigo2
 VGA Compatible Display or better
 8MB RAM minimum, 16MB recommended (16 MB required for running under Win95)
 CD-ROM drive no longer *required*
-Linux, FreeBSD, IRIX, MS-DOS 5.0 or better, Windows 95
+Linux, FreeBSD, Solaris, IRIX, AIX, MS-DOS 5.0 or better, Windows 95+
 Hard drive space - 30MB for Shareware, 80MB for registered.
 Floating point processor required.
 
