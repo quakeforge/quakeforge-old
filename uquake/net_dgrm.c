@@ -100,8 +100,8 @@ char *StrAddr (struct qsockaddr *addr)
 
 
 #ifdef BAN_TEST
-unsigned long banAddr = 0x00000000;
-unsigned long banMask = 0xffffffff;
+unsigned long banAddr = ~0x0;
+unsigned long banMask =  0x0;
 
 void NET_Ban_f (void)
 {
