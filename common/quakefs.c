@@ -838,10 +838,16 @@ COM_AddDirectory (char *dir)
 			printf("%p\n",pwd_ent);
 		} else
 #endif
-			home = getenv("HOME");
+		
+		home = getenv("HOME");
 
-		if (home) {
+		if (home)
+		{
+#if !defined(_WIN32)
 			tmp = alloca(strlen(home)+strlen(dir));
+#else
+			tmp = malloc(strlen(home)+strlen(dir));
+#endif
 			strcpy (tmp, home);
 			strcat (tmp, dir+1); // skip leading ~
 			dir=tmp;
