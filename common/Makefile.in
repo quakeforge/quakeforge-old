@@ -206,9 +206,12 @@ $(CLEAN_TARGETS):
 	rm -f $(BUILD_DIR)/../$(subst clean-,,$@)
 
 clean-sound_lib:
-	rm -rf $(BUILD_DIR)/$(subst clean-,,$@)
+	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
 
-clean: clean-sound_lib $(CLEAN_TARGETS)
+clean-input_libs:
+	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
+
+clean: clean-sound_lib clean-input_libs $(CLEAN_TARGETS)
 	-rmdir $(BUILD_DIR)
 
 install: $(targets)

@@ -506,10 +506,10 @@ $(CLEAN_TARGETS):
 	rm -f $(BUILD_DIR)/../$(subst clean-,,$@)
 
 clean-soft clean-gl clean-common_lib:
-	rm -rf $(BUILD_DIR)/$(subst clean-,,$@)
+	rm -f $(BUILD_DIR)/$(subst clean-,,$@)/*
 
 clean: clean-soft clean-gl clean-common_lib $(CLEAN_TARGETS)
-	-rmdir $(BUILD_DIR)
+	-rm -f $(BUILD_DIR)/*
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)/$(bindir)

@@ -34,33 +34,58 @@
 #include <stdio.h>
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <sys/param.h>
 
 #include <config.h>
 #include <net.h>
 #include <plugin.h>
 #include <cvar.h>
 
-cvar_t drv_path = {"drv_path", LIBDIR "/quakeforge"};
+cvar_t drv_path = {"drv_path", ".:" LIBDIR "/quakeforge"};
 
 input_pi *IN;
 
-int plugin_load(char *filename)
+void *_plugin_load(const char *filename)
 {
 	void *h;
-	void *(*gpi) (void);
+	char path_buf[MAXPATHLEN*2+1];
+	char *path,*end;
+	int len;
 
-	if ((h = dlopen(va("./%s", filename), RTLD_LAZY))) {
+	for (path = drv_path.string; *path; path=end) {
+		end = strchr(path,':');
+		if (!end)
+			end = strchr(path,0);
+		len=end-path;
+		if (len>MAXPATHLEN)
+			len=MAXPATHLEN;
+		sprintf(path_buf,"%.*s/%.*s",len,path,MAXPATHLEN,filename);
+		if ((h = dlopen(path_buf, RTLD_LAZY))) {
+			return h;
+		}
+		if (*end)
+			end++;
+	}
+	return 0;
+}
+
+int plugin_load(char *filename)
+{
+	void *(*gpi) (void);
+	void *h;
+
+	if ((h=_plugin_load(filename))) {
 		if ((gpi = dlsym(h, "get_input_plugin_info"))) {
 			input_pi *p;
-
+			
 			p = (input_pi *) gpi();
 			p->handle = h;
 			p->filename = filename;
-
+			
 			IN = p;
 			/*
 		} else if (gpi = dlsym(h, "get_sound_plugin_info")) {
-			sound_pi *p;
+			  sound_pi *p;
 
 			p = (sound_pi *) gpi();
 			p->handle = h;
