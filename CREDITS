@@ -41,6 +41,7 @@ Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
   Marcus Sundberg <mackan@stacken.kth.se>
   Robert S. Elsner <sockman@ngfc.com>
+  Bill Currie <bill@taniwha.org>
 
 GL renderer fixes/optimizations:
   Zephaniah E. Hull <warp@whitestar.soark.net>
@@ -65,6 +66,7 @@ Documentation:
 
 Svgalib fixes/optimizations:
   Justin A. McCright <jam@qIj.damogran.org>
+  David Symonds <xoxus@usa.net>
 
 GGI support:
   Marcus Sundberg <mackan@stacken.kth.se>

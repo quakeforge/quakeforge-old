@@ -38,6 +38,7 @@ N: Bill Currie
 E: bill@taniwha.org
 D: QW/Q1 tree merging
 D: Autoconf support and portability
+D: ALSA sound support
 
 N: Eric Windisch
 E: windisch@nni.com
@@ -140,3 +141,8 @@ D: Fix for SDL _windowed_mouse
 N: Pontus Lidman
 E: <pontus@lysator.liu.se>
 D: adding IPv6 support
+
+N: David Symonds
+E: xoxus@usa.net
+D: svgalib fixes
+D: warnings cleanup and XShm checking
