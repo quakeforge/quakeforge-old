@@ -1380,11 +1380,9 @@ void SV_RunCmd (usercmd_t *ucmd, qboolean inside)
 		tmp_time = realtime - host_client->frame_time_2;
 		tmp_time /= 2;
 		// Cap it at a max of 250 msec though..
-		ucmd->msec = max(tmp_time * 1000, 250);
-		/*
-		if (ucmd->msec > oldmsec)
-			ucmd->msec = oldmsec;
-			*/
+		ucmd->msec = tmp_time * 1000;
+		ucmd->msec = min(ucmd->msec, 250);
+		ucmd->msec = max(ucmd->msec, 10);
 
 		// If were more then 10 msecs off what the client tells us, report it.
 		if (abs(oldmsec - ucmd->msec) > 10) {
