@@ -666,7 +666,7 @@ R_DrawAliasModel (entity_t *e)
 	shadelight[3] = (float)j[3];
 	ambientlight = shadelight[3];
 
-	// allways give the gun some light
+	// always give the gun some light
 	if (e == &cl.viewent && ambientlight < 24)
 		ambientlight = shadelight[3] = 24;
 
@@ -918,7 +918,7 @@ R_DrawViewModel ( void )
 	j = R_LightPoint (currententity->origin);
 
 	if (j[3] < 24)
-		j[3] = 24;		// allways give some light on gun
+		j[3] = 24;		// always give some light on gun
 	ambientlight = j[3];
 	shadelight[0] = j[0];
 	shadelight[1] = j[1];

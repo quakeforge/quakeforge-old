@@ -277,7 +277,7 @@ Sys_Init (void)
 	// allocate a named semaphore on the client so the
 	// front end can tell if it is alive
 
-	// mutex will fail if semephore allready exists
+	// mutex will fail if semephore already exists
 	qwclsemaphore = CreateMutex(
 			NULL,		// Security attributes
 			0,		// owner

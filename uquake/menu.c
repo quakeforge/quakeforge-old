@@ -2,7 +2,7 @@
 menu.c - menu system
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999-2000  Nelson Rush.
-Copyright (C) 2000       contributors of the QuakeForge project
+Copyright (C) 1999-2000  contributors of the QuakeForge project
 Copyright (C) 2000       Marcus Sundberg [mackan@stacken.kth.se]
 Please see the file "AUTHORS" for a list of contributors
 
@@ -22,33 +22,38 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include <qstructs.h>
+#include <quakedef.h>
 #include <qtypes.h>
-#include <keys.h>
 #include <draw.h>
-#include <vid.h>
-#include <render.h>
+#include <keys.h>
 #include <console.h>
 #include <client.h>
-#include <wad.h>
-#include <server.h>
-#include <sound.h>
 #include <screen.h>
-#include <cmd.h>
-#include <quakedef.h>
-#include <net.h>
-#include <menu.h>
-#include <lib_replace.h>
-#include <sys.h>
 #include <cvar.h>
+#include <menu.h>
 #include <view.h>
+#include <sound.h>
+#include <cmd.h>
+#include <lib_replace.h>
+#include <qstructs.h>
+#include <render.h>
+#include <server.h>
+#include <sys.h>
+#include <vid.h>
+#include <wad.h>
+#include <net.h>
 
 #ifdef _WIN32
 #include "winquake.h"
 #endif
 
 
-enum {m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer, m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit, m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions, m_search, m_slist} m_state;
+enum {
+	m_none, m_main, m_singleplayer, m_load, m_save, m_multiplayer,
+	m_setup, m_net, m_options, m_video, m_keys, m_help, m_quit,
+	m_serialconfig, m_modemconfig, m_lanconfig, m_gameoptions,
+	m_search, m_slist
+} m_state;
 
 void M_Menu_Main_f (void);
 	void M_Menu_SinglePlayer_f (void);
@@ -123,6 +128,9 @@ char		m_return_reason [32];
 #define	TCPIPConfig	(m_net_cursor == 3)
 
 void M_ConfigureNetSubsystem(void);
+
+//=============================================================================
+/* Support Routines */
 
 /*
 ================
@@ -336,7 +344,7 @@ void M_Main_Key (int key)
 		key_dest = key_game;
 		m_state = m_none;
 		cls.demonum = m_save_demonum;
-		if (cls.demonum != -1 && !cls.demoplayback && cls.state != ca_connected)
+		if (cls.demonum != -1 && !cls.demoplayback && cls.state == ca_disconnected)
 			CL_NextDemo ();
 		break;
 
@@ -1226,7 +1234,7 @@ void M_AdjustSliders (int dir)
 			Cvar_Set(volume, va("%f", bound(0, volume->value + (dir * 0.1), 1)));
 			break;
 
-		case 8:	// allways run
+		case 8:	// always run
 			if (cl_forwardspeed->value > 200) {
 				Cvar_Set(cl_forwardspeed, va("%i", 200));
 				Cvar_Set(cl_backspeed, va("%i", 200));

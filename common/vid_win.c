@@ -1347,17 +1347,21 @@ qboolean VID_SetWindowedMode (int modenum)
 	if (!vid_mode_set)
 	{
 		mainwindow = CreateWindowEx (
-			 ExWindowStyle,
-			 "WinQuake",
-			 "QuakeWorld",
-			 WindowStyle,
-			 0, 0,
-			 WindowRect.right - WindowRect.left,
-			 WindowRect.bottom - WindowRect.top,
-			 NULL,
-			 NULL,
-			 global_hInstance,
-			 NULL);
+			ExWindowStyle,
+			"WinQuake",
+#ifdef QUAKEWORLD
+			"QuakeWorld",
+#else
+			"UQuake",
+#endif
+			WindowStyle,
+			0, 0,
+			WindowRect.right - WindowRect.left,
+			WindowRect.bottom - WindowRect.top,
+			NULL,
+			NULL,
+			global_hInstance,
+			NULL);
 
 		if (!mainwindow)
 			Sys_Error ("Couldn't create DIB window");

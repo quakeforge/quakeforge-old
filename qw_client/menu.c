@@ -524,7 +524,7 @@ void M_AdjustSliders ( int dir )
 			Cvar_Set(volume, va("%f",	bound(0, volume->value + (dir * 0.1), 1)));
 			break;
 
-		case 8:	// allways run
+		case 8:	// always run
 			if (cl_forwardspeed->value > 200) {
 				Cvar_Set(cl_forwardspeed, va("%i", 200));
 				Cvar_Set(cl_backspeed, va("%i", 200));
@@ -1087,7 +1087,7 @@ void M_MultiPlayer_Draw (void) {
 	M_DrawTransPic(16,4,Draw_CachePic("gfx/qplaque.lmp"));
 	p = Draw_CachePic("gfx/p_multi.lmp");
 	M_DrawPic((320-p->width)/2,4,p);
-	
+
 	if (!(slist[0].server)) {
 		M_DrawTextBox(60,80,23,4);
 		M_PrintWhite(110,12*8,"No server list");
@@ -1190,7 +1190,7 @@ void M_MultiPlayer_Key (key) {
 			if (Server_List_Len()-1 == m_multip_cursor) {
 				Server_List_Reset_NoFree(m_multip_cursor);
 				m_multip_cursor = !m_multip_cursor ? 0 : m_multip_cursor-1;
-				
+
 			}
 			else {
 				memmove(&slist[m_multip_cursor],
@@ -1260,7 +1260,7 @@ void M_Menu_SEdit_f (void) {
 
 void M_SEdit_Draw (void) {
 	qpic_t *p;
-	
+
 	M_DrawTransPic(16,4,Draw_CachePic("gfx/qplaque.lmp"));
 	p = Draw_CachePic("gfx/p_multi.lmp");
 	M_DrawPic((320-p->width)/2,4,p);
@@ -1628,5 +1628,3 @@ void M_Keydown (int key)
 		break;
 	}
 }
-
-
