@@ -1,0 +1,139 @@
+NEWS for the QuakeForge project
+-------------------------------
+
+19 Jan 2000 - changes to cvar r_fog
+	Fog color is once again white.  The r_fog cvar is now a control for
+	the fog density rather than a simple toggle control.  Eric Windisch
+	recommends setting r_fog to .0005 if you're going to use it.
+
+19 Jan 2000 - time cheats revisited
+	The final word in detecting time/speed cheating is here at long
+	last!  Still catches an occasional person who is "not cheating", but
+	as it turns out when it does catch such a person they technically
+	are cheating.
+
+	This seems to be caused by dodgy cmos clocks used in many machines
+	on the market.  If the server occasionally claims you seem to be
+	cheating, try installing some sort of ntp program to synchronize
+	your clock periodically against a time server.  If this does not
+	seem to fix the problem, we'd like to know about it.
+
+18 Jan 2000 - cvar show_fps
+	show_fps 1 now works in uquake as well as qw-client.  No more need
+	to use timedemo to check performance!  Much more accurate in showing
+	where performance is good and where it isn't.
+
+16 Jan 2000 - new ./configure option:  --enable-newstyle
+	Use this option when you run ./configure if you wish to use a few
+	QuakeForge defaults which are a bit different than Id Software used,
+	but do not change the gameplay.
+
+	Currenly all this does is use "base" instead of "id1" for the
+	default place to look for your game data.
+
+11 Jan 2000 - New cvar: r_waterripple
+	When set to 1 this will create a small wave effect under the GL
+	renderer.
+
+09 Jan 2000 - Preliminary IPv6 support
+	Support exists in QuakeForge for the use of IPv6.  It's not ready
+	for prime time yet.  Still, it deserves mention.
+
+09 Jan 2000 - gl_ztrick default changed
+	Since this seems not to work more places than it does at this point,
+	the default for the cvar gl_ztrick has been changed from 1 to 0 in
+	the glx target.  This value is saved to your config so if it works
+	for you just set it to 1.
+
+08 Jan 2000 - Mouse wheel support
+	Preliminary support for the wheels found on some mice has been added
+	to the Linux SVGALib target.  To use it bind MHWHEELDOWN and
+	MHWHEELUP to whatever you want to use the wheel for.
+
+07 Jan 2000 - Options menu changes
+	A few things were added to the options menu in some targets such as
+	an option for fullscreen and whether or not to use the mouse.
+
+06 Jan 2000 - Output cleanups
+	The use of CR and LF in names is a "feature" Id Software clearly
+	didn't intend.  General mailing list consensus is that unlike other
+	unintended features (rocket jumps for example), this "feature" has
+	no real legitimate use.  qw-server now replaces CR's and LF's with
+	underscores.
+
+	You will no longer see [e1] or similar crap sent to stdout.  These
+	characters are now translated to the nearest ASCII characters,
+	resulting in much nicer-looking output.
+
+06 Jan 2000 - PackFile/Findfile messages to stdout removed
+	The PackFile and FindFile messages previously sent to stdout no
+	longer are.  If you wish to see them again for some reason, set the
+	developer cvar to 1.
+
+05 Jan 2000 - Preliminary time cheat detection code
+	Preliminary code to detect clients attempting various time related
+	cheats has been added.  Some issues persist.
+
+05 Jan 2000 - GL fullbright texture support [REMOVED]
+	The GL renderer now supports fullbright textures, though this causes
+	a noticable impact on performance.  Use the new cmdline option
+	-noglow to disable it if this bugs you.
+
+	NOTE: This was removed for now because it didn't work quite right
+	      and -noglow did not in fact actually disable it properly.
+
+02 Jan 2000 - registered game check removed
+	The check for a copy of the registered pak files has largely been
+	removed since it no longer makes a whole lot of sense with all the
+	talk of free complete TC's (total conversions).
+
+	A very simple check for pop.txt (found only in the registered pak
+	files) remains to set the cvar registered to 1 if necessary,
+	allowing the start map to know whether or not to allow you through
+	the gates leading to episodes 2-4.
+
+02 Jan 2000 - crosshairs
+	qw-client's crosshair 2 is now supported in uquake.
+
+	A new (for now) GL-renderer-only experimental crosshair 3 has been
+	added.  It's obeys the crosshaircolor cvar.  No timeframe on porting
+	it to the software renderers yet, but it will happen eventually.
+
+02 Jan 2000 - Removed cvar
+	gl_reporttjunctions did nothing at all, removed.
+
+01 Jan 2000 - Changed cvar
+	In uquake, the chasecam cvar is now cl_chasecam just like it is in
+	qw-client.
+
+01 Jan 2000 - Preliminary volumetric fog
+	QuakeForge now has preliminary support for volumetric fog.  The cvar
+	r_fog can be set to 1 to try it out.
+
+30 Dec 1999 - CVS tree changes
+	We now use autoheader and autoconf.  If you checkout/update your
+	tree from CVS you're going to need to run ./bootstrap now to
+	perform all the necessary black voodoo needed to allow you to run
+	./configure as normal.  This should not be necessary for releases,
+	only for the CVS tree and CVS snapshots.
+
+29 Dec 1999 - Known bug in sound init fixed
+	A bug which caused QF to segfault if sound could not be initialized
+	has been fixed.  If sound can not be initialized, you will now
+	simply not hear any.
+
+29 Dec 1999 - Autoconf support
+	QuakeForge now uses autoconf!  Run ./configure --help and have a
+	look at the options available in case something isn't detected or
+	you wish to enable or disable certain compile-time options.
+
+25 Dec 1999 - Keyboard bindings now support keypad keys
+	The numeric keypad keys found on many keyboards may now be bound to
+	functions.  The names for these keys are (in PC style layout):
+	
+	KP_NUMLCK       KP_DIVIDE       KP_MULTIPLY     KP_MINUS
+	KP_HOME         KP_UPARROW      KP_PGUP
+	KP_LEFTARROW    KP_5            KP_RIGHTARROW   KP_PLUS
+	KP_END          KP_DOWNARROW    KP_PGDN
+	KP_INS                          KP_DEL          KP_ENTER
+
