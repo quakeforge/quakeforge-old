@@ -93,7 +93,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/%.o: $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
@@ -102,7 +102,7 @@ $(BUILD_DIR)/%.o: $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/%.o: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(SRVQUAKE): srv_DIR $(BUILD_DIR)/../$(SRVQUAKE)
 
@@ -120,7 +120,7 @@ distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
 clean: $(CLEAN_TARGETS)
-	rm -r $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
 
 install: $(targets)
 	$(PROJECT_DIR)/mkinstalldirs $(DESTDIR)$(prefix)$(bindir)

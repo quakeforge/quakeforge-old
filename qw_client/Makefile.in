@@ -218,13 +218,13 @@ $(BUILD_DIR)/soft/%.@OBJEXT@: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/soft/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/soft/%.@OBJEXT@: $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/soft/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/soft/%.o: $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -238,13 +238,13 @@ $(BUILD_DIR)/gl/%.@OBJEXT@: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.@OBJEXT@: $(SRC_DIR)/%.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.@OBJEXT@: $(COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.@OBJEXT@: $(COMMON_DIR)/%.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.o: $(QW_COMMON_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -298,7 +298,7 @@ $(BUILD_DIR)/soft/vid_svgalib.@OBJEXT@: $(COMMON_DIR)/vid_svgalib.c
 	$(CC) -O $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/soft/d_copy.@OBJEXT@: $(COMMON_DIR)/d_copy.s
-	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 
 $(SVGAQUAKE): soft_DIR $(BUILD_DIR)/../$(SVGAQUAKE)
 
