@@ -49,13 +49,18 @@ configure: configure.in acconfig.h
 
 Makefile: Makefile.in configure \
           qw_client/Makefile qw_server/Makefile uquake/Makefile
+	$(SHELL) ./config.status --recheck
+	$(SHELL) ./config.status
 
 qw_client/Makefile: qw_client/Makefile.in configure
-	./configure
+	$(SHELL) ./config.status --recheck
+	$(SHELL) ./config.status
 
 qw_server/Makefile: qw_server/Makefile.in configure
-	./configure
+	$(SHELL) ./config.status --recheck
+	$(SHELL) ./config.status
 
 uquake/Makefile: uquake/Makefile.in configure
-	./configure
+	$(SHELL) ./config.status --recheck
+	$(SHELL) ./config.status
 endif
