@@ -607,20 +607,11 @@ DrawSkyPolygon (int nump, vec3_t vecs) {
 	av[1] = fabs(v[1]);
 	av[2] = fabs(v[2]);
 	if (av[0] > av[1] && av[0] > av[2]) {
-		if (v[0] < 0)
-			axis = 1;
-		else
-			axis = 0;
+		axis = (v[0] < 0) ? 1 : 0;
 	} else if (av[1] > av[2] && av[1] > av[0]) {
-		if (v[1] < 0)
-			axis = 3;
-		else
-			axis = 2;
+		axis = (v[1] < 0) ? 3 : 2;
 	} else {
-		if (v[2] < 0)
-			axis = 5;
-		else
-			axis = 4;
+		axis = (v[2] < 0) ? 5 : 4;
 	}
 
 	// project new texture coords
@@ -642,14 +633,11 @@ DrawSkyPolygon (int nump, vec3_t vecs) {
 		else
 			t = vecs[j-1] / dv;
 
-		if (s < skymins[0][axis])
-			skymins[0][axis] = s;
-		if (t < skymins[1][axis])
-			skymins[1][axis] = t;
-		if (s > skymaxs[0][axis])
-			skymaxs[0][axis] = s;
-		if (t > skymaxs[1][axis])
-			skymaxs[1][axis] = t;
+		skymins[0][axis] = min(s, skymins[0][axis]);
+		skymaxs[0][axis] = max(s, skymaxs[0][axis]);
+
+		skymins[1][axis] = min(t, skymins[1][axis]);
+		skymaxs[1][axis] = max(t, skymaxs[1][axis]);
 	}
 }
 
@@ -748,13 +736,11 @@ R_DrawSkyChain (msurface_t *s) {
 	vec3_t	verts[MAX_CLIP_VERTS];
 	glpoly_t	*p;
 
-	if (r_sky->value)
-	{
+	if (r_sky->value) {
 		c_sky = 0;
 		GL_Bind(solidskytexture);
 
 		// calculate vertex values for sky box
-
 		for (fa=s ; fa ; fa=fa->texturechain) {
 			for (p=fa->polys ; p ; p=p->next) {
 				for (i=0 ; i<p->numverts ; i++) {
@@ -763,9 +749,7 @@ R_DrawSkyChain (msurface_t *s) {
 				ClipSkyPolygon (p->numverts, verts[0], 0);
 			}
 		}
-	}
-	else
-	{
+	} else {
 		GL_DisableMultitexture();
 
 		// used when gl_texsort is on
@@ -781,7 +765,7 @@ R_DrawSkyChain (msurface_t *s) {
 		speedscale = realtime*16;
 		speedscale -= (int)speedscale & ~127 ;
 
-		for (fa=s ; fa ; fa=fa->texturechain)
+		for ( fa=s ; fa != NULL ; fa = fa->texturechain )
 			EmitSkyPolys (fa);
 
 		glDisable (GL_BLEND);
@@ -843,8 +827,8 @@ MakeSkyVec (float s, float t, int axis) {
 int	skytexorder[6] = {0,2,1,3,4,5};
 
 void
-R_DrawSkyBox (void) {
-
+R_DrawSkyBox ( void )
+{
 	int		i;
 
 #if 0
@@ -921,7 +905,7 @@ R_InitSky (texture_t *mt) {
 
 	if (!solidskytexture)
 		solidskytexture = texture_extension_number++;
-	GL_Bind (solidskytexture );
+	GL_Bind (solidskytexture);
 	glTexImage2D (GL_TEXTURE_2D, 0, gl_solid_format, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, trans);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
