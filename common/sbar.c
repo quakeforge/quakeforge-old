@@ -685,7 +685,7 @@ void Sbar_SoloScoreboard (void)
 		int l = strlen (cl.levelname);
 		Sbar_DrawString (232 - l*4, 12, cl.levelname);
 	}
-#endif	// QUAKEWORLD
+#endif	// UQUAKE
 }
 
 /*
@@ -699,7 +699,7 @@ void Sbar_DrawScoreboard (void)
 	Sbar_SoloScoreboard ();
 	if (cl.gametype == GAME_DEATHMATCH)
 		Sbar_DeathmatchOverlay (0);
-#endif // !QUAKEWORLD
+#endif // UQUAKE
 }
 
 //=============================================================================
@@ -949,14 +949,10 @@ void Sbar_DrawFrags (void)
 	l = scoreboardlines <= 4 ? scoreboardlines : 4;
 
 	x = 23;
-#ifdef QUAKEWORLD
-	xofs = 0;
-#else
-	if (cl.gametype == GAME_DEATHMATCH)
+	if (cl.gametype == GAME_DEATHMATCH || cl_sbar.value == 0)
 		xofs = 0;
 	else
 		xofs = (vid.width - 320)>>1;
-#endif	// QUAKEWORLD
 	y = vid.height - SBAR_HEIGHT - 23;
 
 	for (i=0 ; i < l ; i++)
