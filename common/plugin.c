@@ -38,6 +38,9 @@
 #include <config.h>
 #include <net.h>
 #include <plugin.h>
+#include <cvar.h>
+
+cvar_t drv_path = {"drv_path", LIBDIR "/quakeforge"};
 
 input_pi *IN;
 
