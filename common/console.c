@@ -152,6 +152,9 @@ Con_MessageMode_f
 */
 void Con_MessageMode_f (void)
 {
+	if (cls.state != ca_active)
+		return;
+
 	chat_team = false;
 	key_dest = key_message;
 }
@@ -163,6 +166,9 @@ Con_MessageMode2_f
 */
 void Con_MessageMode2_f (void)
 {
+	if (cls.state != ca_active)
+		return;
+
 	chat_team = true;
 	key_dest = key_message;
 }

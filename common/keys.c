@@ -762,7 +762,6 @@ void Key_Init (void)
 	keyshift['\\'] = '|';
 
 	menubound[K_ESCAPE] = true;
-	menubound['~'] = true;	// Tonik
 	for (i=0 ; i<12 ; i++)
 		menubound[K_F1+i] = true;
 
@@ -824,6 +823,9 @@ void Key_Event (int key, qboolean down)
 	if (key == K_CTRL)
 		ctrl_down = down;
 
+	if (key_dest == key_message && cls.state != ca_active)
+		key_dest = key_console;
+		
 //
 // handle escape specialy, so the user can never unbind it
 //
@@ -880,7 +882,7 @@ void Key_Event (int key, qboolean down)
 // during demo playback, most keys bring up the main menu
 //
 	if (cls.demoplayback && down && consolekeys[key] && key_dest == key_game
-	  && key != K_CTRL && key != K_DEL && key != K_HOME && key != K_END)
+	  && key != K_CTRL && key != K_DEL && key != K_HOME && key != K_END && key != K_TAB)
 	{
 		M_ToggleMenu_f ();
 		return;
