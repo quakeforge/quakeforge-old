@@ -1,0 +1,24 @@
+Coding Style Guide
+==================
+
+You _WILL_ indent with hard tabs, or you will be harmed. :)
+You can format for whatever tab spacing you like, but if you indent with spaces 
+you will be hurt, and you will have deserved it. :)
+For best results, use 4-space tabs, because that's what id used and what most 
+of us use.
+
+/*
+	SECTION_FunctionName
+
+	Description
+*/
+returntype
+SECTION_FunctionName ( args )
+{
+	type	var;
+
+	for (stuff) {	// do something silly
+		:
+		:
+	}
+}
