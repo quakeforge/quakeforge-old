@@ -424,7 +424,8 @@ endif
 # X11 GL target
 
 ifneq ($(GLQUAKE),)
-ALL_GL_SRC  = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(GL_REND_SRC) gl_vidlinuxglx.c
+ALL_GL_SRC  = $(GENERAL_SRC) $(CD_AUDIO_SRC) $(GL_REND_SRC) \
+	gl_vidlinuxglx.c dga_check.c
 ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/gl/%,$(addsuffix .@OBJEXT@,\
               $(basename $(ALL_GL_SRC) .c .s)))
 
@@ -433,6 +434,9 @@ GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@
 
 $(BUILD_DIR)/gl/vid_linuxglx.o: $(COMMON_DIR)/vid_linuxglx.c
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/gl/dga_check.@OBJEXT@: $(COMMON_DIR)/dga_check.c
+	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
 $(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
 
