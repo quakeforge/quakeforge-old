@@ -18,7 +18,7 @@ build-stamp:
 
 	./configure --prefix=/usr --mandir=\$${prefix}/share/man \
                     --bindir=/usr/games --enable-release \
-		    --with-3dfxgl-name=GL --enable-newstyle
+		    --with-3dfxgl-name=GL
 	$(MAKE)
 
 	touch build-stamp

@@ -32,16 +32,6 @@
 #define VERSION "2.40"
 #define QF_VERSION "0.2.0-pre"
 
-/* Define if you want to use QF-style defaults instead of Id-style */
-#undef NEWSTYLE
-
-/* Define this to the subdirectory name of the default game */
-#ifdef NEWSTYLE
-#	define GAMENAME "base"
-#else
-#	define GAMENAME "id1"
-#endif
-
 /* Define if you have the XFree86 DGA extension */
 #undef HAS_DGA
 
