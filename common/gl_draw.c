@@ -441,6 +441,8 @@ void Draw_Init (void)
 	//  of size) order else things don't work right.  No idea why this
 	//  is so.
 	//            - knghtbrd (2 Jan 2000)
+	// texture alignment maybe??
+	//			  - taniwha (2 May 2000)
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

@@ -50,6 +50,8 @@ netadr_t	master_adr[MAX_MASTERS];	// address of group servers
 
 client_t	*host_client;			// current client
 
+cvar_t	*global_cfg_file;
+
 cvar_t	*sv_maxrate;
 cvar_t	*sv_mintic;
 cvar_t	*sv_maxtic;
@@ -1728,11 +1730,25 @@ void SV_Init (quakeparms_t *parms)
 		SV_Error ("Only %4.1f megs of memory reported, can't execute game", parms->memsize / (float)0x100000);
 
 	Memory_Init (parms->membase, parms->memsize);
-	SV_InitCvars ();
 	Cbuf_Init ();
 	Cmd_Init ();
 	Cvar_Init ();
 
+	// execute +set as early as possible
+	Cmd_StuffCmds_f ();
+	Cbuf_Execute_Sets ();
+
+	// execute the global configuration file if it exists
+	// would have been nice if Cmd_Exec_f could have been used, but it
+	// only reads from within the quake file system, and changing that is
+	// probably Not A Good Thing (tm).
+	global_cfg_file = Cvar_Get("global_cfg_file", GLOBAL_CFG_FILE,
+			CVAR_ROM, "global configuration file");
+
+	Cmd_Exec_File (global_cfg_file->string);
+	Cbuf_Execute_Sets ();
+
+	SV_InitCvars ();
 	COM_Init ();
 
 	PR_Init ();
@@ -1743,6 +1759,9 @@ void SV_Init (quakeparms_t *parms)
 	SV_InitLocal ();
 	Sys_Init ();
 	Pmove_Init ();
+
+	Cmd_Exec_File (global_cfg_file->string);
+	Cbuf_Execute ();
 
 	Hunk_AllocName (0, "-HOST_HUNKLEVEL-");
 	host_hunklevel = Hunk_LowMark ();
