@@ -152,6 +152,25 @@ Host_EndGame ( char *message, ... )
 #endif
 }
 
+/*
+===================
+Host_GetConsoleCommands
+
+Add them exactly as if they had been typed at the console
+===================
+*/
+void Host_GetConsoleCommands (void)
+{
+	char	*cmd;
+
+	while (1)
+	{
+		cmd = Sys_ConsoleInput ();
+		if (!cmd)
+			break;
+		Cbuf_AddText (cmd);
+	}
+}
 
 /*
 	Host_FilterTime
@@ -190,6 +209,7 @@ Host_FilterTime ( float time )
 	
 	return true;
 }
+
 /*
 #ifdef QUAKEWORLD
 int		nopacketcount;		// for Host_FrameMain

@@ -262,5 +262,6 @@ void SV_SpawnServer (char *server, char *startspot);
 #else
 void SV_SpawnServer (char *server);
 #endif
+void SV_Frame (void);
 
 #endif // _SERVER_H
