@@ -117,6 +117,11 @@ installed as part of the QEMM installation.
 
 4.2	Linux
 
+SVGALib-using targets (-svga and -3dfx) can't be started from within X.
+We are aware of the problem, and if you can figure out the reason, we'd
+appreciate a patch, PLEASE! As a workaround, you can use "open" to start
+those targets from within X.  (e.g. "open -s -- qw-client-svga")
+
 Some 3Dfx Voodoo-based 3D accelerators may have issues with the way
 QuakeForge uses the "3dfxgl" minidriver to interface to the Glide
 library.
@@ -159,13 +164,8 @@ Solution: xset r on
 Problem:  The screen flickers once about every other frame when using GL
 Solution: Not all GL implementations support a performance hack which is
           used by the GL renderer allowing it to avoid clearing the
-	  Z-buffer.  The console command "gl_ztrick 0" fixes this problem.
-
-Problem:  On Linux systems, SVGALib-using targets (-svga and -3dfx) can't
-	  be started from within X.
-Solution: Yes, we know.  And if you can figure out why we want you to send
-	  us a patch, please!  In the meantime, use open to start those
-	  targets from within X.  (eg, open -s -- qw-client-svga)
+	  Z-buffer.  The console command "gl_ztrick 0" fixes this
+	  problem.
 
 Problem:  Zombies can sometimes get "stuck" in the ground.  They can be
 	  heard but not killed making it impossible to get 100% on the
