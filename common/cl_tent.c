@@ -183,10 +183,13 @@ CL_ParseTEnt (void)
 #endif
 	dlight_t	*dl;
 	int		rnd;
-// UQ used these
-//	int		colorStart, colorLength;
+#ifdef UQUAKE
+	int		colorStart, colorLength;
+#endif
 	explosion_t	*ex;
+#ifdef QUAKEWORLD
 	int		cnt;
+#endif
 
 	type = MSG_ReadByte ();
 	switch (type)

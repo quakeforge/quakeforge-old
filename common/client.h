@@ -545,6 +545,9 @@ void V_CalcBlend (void);
 //
 void CL_InitTEnts (void);
 void CL_ClearTEnts (void);
+#ifdef UQUAKE
+void CL_SignonReply (void);
+#endif
 
 #ifdef QUAKEWORLD
 //
