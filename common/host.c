@@ -69,6 +69,17 @@ double		oldrealtime;			// last frame run
 qboolean	isDedicated;
 int			fps_count;
 int vcrFile = -1;
+cvar_t		serverprofile = {"serverprofile","0"};
+cvar_t	host_framerate = {"host_framerate","0"};	// set for slow motion
+cvar_t	samelevel = {"samelevel","0"};
+cvar_t	noexit = {"noexit","0",false,true};
+cvar_t	pausable = {"pausable","1"};
+cvar_t	temp1 = {"temp1","0"};
+/* Should server filter out \n & \r in player names ? */
+cvar_t        sv_filter       = {"sv_filter","1"};
+
+void Host_InitLocal (void);
+void Host_FindMaxClients (void);
 
 void
 Host_EndGame ( char *message, ... )
@@ -536,3 +547,90 @@ void Host_WriteConfiguration (void)
 		Qclose (f);
 	}
 }
+
+#ifdef UQUAKE
+/*
+=======================
+Host_InitLocal
+======================
+*/
+void Host_InitLocal (void)
+{
+	Host_InitCommands ();
+	
+	Cvar_RegisterVariable (&host_framerate);
+
+	Cvar_RegisterVariable (&sys_ticrate);
+	Cvar_RegisterVariable (&serverprofile);
+
+	Cvar_RegisterVariable (&fraglimit);
+	Cvar_RegisterVariable (&timelimit);
+	Cvar_RegisterVariable (&teamplay);
+	Cvar_RegisterVariable (&samelevel);
+	Cvar_RegisterVariable (&noexit);
+	Cvar_RegisterVariable (&skill);
+	Cvar_RegisterVariable (&deathmatch);
+	Cvar_RegisterVariable (&coop);
+
+	Cvar_RegisterVariable (&pausable);
+
+	Cvar_RegisterVariable (&temp1);
+	Cvar_RegisterVariable (&sv_filter);
+
+
+	Host_FindMaxClients ();
+	
+	host_time = 1.0;		// so a think at time 0 won't get called
+}
+
+/*
+================
+Host_FindMaxClients
+================
+*/
+void	Host_FindMaxClients (void)
+{
+	int		i;
+
+	svs.maxclients = 1;
+		
+	i = COM_CheckParm ("-dedicated");
+	if (i)
+	{
+		cls.state = ca_dedicated;
+		if (i != (com_argc - 1))
+		{
+			svs.maxclients = Q_atoi (com_argv[i+1]);
+		}
+		else
+			svs.maxclients = 8;
+	}
+	else
+		cls.state = ca_disconnected;
+
+	i = COM_CheckParm ("-listen");
+	if (i)
+	{
+		if (cls.state == ca_dedicated)
+			Sys_Error ("Only one of -dedicated or -listen can be specified");
+		if (i != (com_argc - 1))
+			svs.maxclients = Q_atoi (com_argv[i+1]);
+		else
+			svs.maxclients = 8;
+	}
+	if (svs.maxclients < 1)
+		svs.maxclients = 8;
+	else if (svs.maxclients > MAX_SCOREBOARD)
+		svs.maxclients = MAX_SCOREBOARD;
+
+	svs.maxclientslimit = svs.maxclients;
+	if (svs.maxclientslimit < 4)
+		svs.maxclientslimit = 4;
+	svs.clients = Hunk_AllocName (svs.maxclientslimit*sizeof(client_t), "clients");
+
+	if (svs.maxclients > 1)
+		Cvar_SetValue ("deathmatch", 1.0);
+	else
+		Cvar_SetValue ("deathmatch", 0.0);
+}
+#endif

@@ -429,6 +429,7 @@ void CL_CheckForResend (void);
 void CL_SendConnectPacket (void);
 void SetPal (int i);
 void CL_RelinkEntities (void);
+void CL_ReadPackets (void);
 
 #ifdef UQUAKE
 void CL_Signon1 (void);
