@@ -32,6 +32,7 @@ Ambush
  - positional audio allowing eg rocket flybys
  - allow mp3 sounds to reduce pak sizes [cache them to wav's maybe?]
  - alpha textures
+ - color mapping of models (eg for team colors)
 
 Attlee; Mathew Thomas <mattlee@ug.cs.su.oz.au>
  - better setup screen (ie rotating player model)
