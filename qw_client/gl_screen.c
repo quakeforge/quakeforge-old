@@ -465,7 +465,7 @@ void SCR_DrawFPS (void)
 	static double lastframetime;
 	double t;
 	extern int fps_count;
-	static lastfps;
+	static int lastfps;
 	int x, y;
 	char st[80];
 
@@ -753,7 +753,7 @@ int MipColor(int r, int g, int b)
 {
 	int i;
 	float dist;
-	int best;
+	int best = 0;
 	float bestdist;
 	int r1, g1, b1;
 	static int lr = -1, lg = -1, lb = -1;
@@ -830,12 +830,12 @@ SCR_RSShot_f
 */  
 void SCR_RSShot_f (void) 
 { 
-	int     i, x, y;
+//	int     i;
+	int     x, y;
 	unsigned char		*src, *dest;
 	char		pcxname[80]; 
-	char		checkname[MAX_OSPATH];
-	unsigned char		*newbuf, *srcbuf;
-	int srcrowbytes;
+//	char		checkname[MAX_OSPATH];
+	unsigned char		*newbuf;
 	int w, h;
 	int dx, dy, dex, dey, nx;
 	int r, b, g;

@@ -334,8 +334,6 @@ GL_BeginRendering
 */
 void GL_BeginRendering (int *x, int *y, int *width, int *height)
 {
-	extern cvar_t gl_clear;
-
 	*x = *y = 0;
 	*width = scr_width;
 	*height = scr_height;
@@ -472,7 +470,7 @@ void Init_KBD(void)
 
 #define NUM_RESOLUTIONS 3
 
-static resolutions[NUM_RESOLUTIONS][3]={ 
+static int resolutions[NUM_RESOLUTIONS][3]={ 
   { 512, 384, GR_RESOLUTION_512x384 },
   { 640, 400, GR_RESOLUTION_640x400 },
   { 640, 480, GR_RESOLUTION_640x480 }

@@ -2173,11 +2173,11 @@ static byte chktbl[1024 + 4] = {
 0x00,0x00,0x00,0x00
 };
 
+#if 0
 static byte chkbuf[16 + 60 + 4];
 
 static unsigned last_mapchecksum = 0;
 
-#if 0
 /*
 ====================
 COM_BlockSequenceCheckByte

@@ -116,7 +116,6 @@ int CL_CalcNet (void)
 	int		a, i;
 	frame_t	*frame;
 	int lost;
-	char st[80];
 
 	for (i=cls.netchan.outgoing_sequence-UPDATE_BACKUP+1
 		; i <= cls.netchan.outgoing_sequence
@@ -1008,8 +1007,6 @@ CL_ServerInfo
 */
 void CL_ServerInfo (void)
 {
-	int		slot;
-	player_info_t	*player;
 	char key[MAX_MSGLEN];
 	char value[MAX_MSGLEN];
 
