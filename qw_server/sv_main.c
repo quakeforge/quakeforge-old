@@ -213,7 +213,7 @@ void SV_DropClient (client_t *drop)
 
 	if (drop->download)
 	{
-		fclose (drop->download);
+		gzclose (drop->download);
 		drop->download = NULL;
 	}
 	if (drop->upload)
