@@ -21,6 +21,7 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_MAKE_SET
+AC_PROG_RANLIB
 
 dnl Checks for header files.
 AC_CHECK_HEADERS(unistd.h fcntl.h dlfcn.h windows.h sys/ioctl.h sys/mman.h \
