@@ -359,8 +359,8 @@ extern cvar_t	*cl_color;
 extern cvar_t	*cl_autofire;
 extern cvar_t	*cl_nolerp;
 #endif // UQUAKE
-#ifdef QUAKEWORLD
 extern cvar_t	*cl_warncmd;
+#ifdef QUAKEWORLD
 extern cvar_t	*name;
 #endif // QUAKEWORLD
 extern cvar_t	*rate;
@@ -422,6 +422,7 @@ dlight_t *CL_AllocDlight (int key);
 void	CL_DecayLights (void);
 
 void CL_Init (void);
+void CL_InitCvars();
 void Host_WriteConfiguration (void);
 
 void CL_EstablishConnection (char *host);

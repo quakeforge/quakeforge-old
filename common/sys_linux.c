@@ -60,9 +60,6 @@ int noconinput = 0;
 char *basedir = ".";
 char *cachedir = "/tmp";
 
-//cvar_t  sys_linerefresh = {"sys_linerefresh","0"};// set for entity display
-cvar_t	*sys_linerefresh;
-
 // =======================================================================
 // General routines
 // =======================================================================
@@ -224,9 +221,6 @@ void alarm_handler(int x) {
 	oktogo=1;
 }
 
-void Sys_LineRefresh(void) {
-}
-
 void floating_point_exception_handler(int whatever) {
 // Sys_Warn("floating point exception\n");
 	signal(SIGFPE, floating_point_exception_handler);
@@ -338,9 +332,6 @@ int main (int c, char **v) {
 		oldtime = newtime;
 #endif
 		Host_Frame(time);
-		// graphic debugging aids
-		if (sys_linerefresh->value)
-			Sys_LineRefresh ();
 	}
 }
 

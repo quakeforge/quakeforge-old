@@ -7,6 +7,7 @@ QF_VERSION=0.2-d
 VERSION=2.40
 AC_DEFINE_UNQUOTED(QF_VERSION,"$QF_VERSION")
 AC_DEFINE_UNQUOTED(VERSION,"$VERSION")
+LIBS=-lefence
 
 dnl Set to yes for releases
 RELEASE=no
@@ -477,7 +478,7 @@ dnl CFLAGS for release and devel versions
 if test "x$RELEASE" = xyes; then
    if test "x$GCC" = xyes; then
       AC_MSG_CHECKING(for special release compiler settings)
-      BASE_RELEASE_CFLAGS="-lefence -Wall -Werror -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
+      BASE_RELEASE_CFLAGS="-Wall -Werror -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations"
       case "${target}" in
          changequote(,)dnl
          i?86-*-*)
@@ -508,7 +509,7 @@ if test "x$GCC" != xyes; then
    AC_MSG_CHECKING(for how to deal with C++ comments)
    case "$target" in
    *-aix*)
-	CFLAGS="-lefence $CFLAGS -qcpluscmt"
+	CFLAGS="$CFLAGS -qcpluscmt"
         AC_MSG_RESULT([-qcpluscmt])
 	;;
    *-irix6*)
@@ -527,7 +528,7 @@ fi
 
 dnl We want warnings, lots of warnings...
 if test "x$GCC" = xyes; then
-   CFLAGS="-lefence $CFLAGS -Wall -Werror"
+   CFLAGS="$CFLAGS -Wall -Werror"
 fi
 #   CFLAGS="$CFLAGS -Wall -pedantic"
 

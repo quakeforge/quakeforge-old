@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <sys.h>
 #include <console.h>
+#include <cvars.h>
 
 //#define	PASSAGES
 
@@ -296,6 +297,8 @@ void R_Init (void)
 	r_aliastransbase = Cvar_Get ("r_aliastransbase","200",0,"None");
 //	Cvar_RegisterVariable (&r_aliastransadj);
 	r_aliastransadj = Cvar_Get ("r_aliastransadj","100",0,"None");
+
+	gl_flashblend = Cvar_Get ("gl_flashblend","1",0,"None");
 
 	r_maxedges->value = (float)NUMSTACKEDGES;
 	r_maxsurfs->value = (float)NUMSTACKSURFACES;

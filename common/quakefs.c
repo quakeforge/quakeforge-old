@@ -346,14 +346,9 @@ int COM_FOpenFile (char *filename, QFile **gzfile)
 #endif
 				if (fn)
 				{	// found it!
-					if(developer->value)
+					if (developer->value)
 						Sys_Printf ("PackFile: %s : %s\n",pak->filename, fn);
-				// open a new file on the pakfile
-					//*file = fopen (pak->filename, "rb");
-					//if (!*file)
-					//	Sys_Error ("Couldn't reopen %s", pak->filename);
-					//fseek (*file, pak->files[i].filepos, SEEK_SET);
-					//com_filesize = pak->files[i].filelen;
+					// open a new file on the pakfile
 					*gzfile=COM_OpenRead(pak->filename,pak->files[i].filepos,
 										 pak->files[i].filelen);
 					file_from_pak = 1;

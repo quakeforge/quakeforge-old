@@ -224,11 +224,15 @@ Host_FilterTime ( float time )
 	host_frametime = realtime - oldrealtime;
 	oldrealtime = realtime;
 
+#ifdef UQUAKE
 	if (host_framerate->value > 0) {
 		host_frametime = host_framerate->value;
 	} else {		// don't allow really long or short frames
+#endif
 		host_frametime = min(MAXTIME, max(host_frametime, MINTIME));
+#ifdef UQUAKE
 	}
+#endif
 	
 	return true;
 }
@@ -543,6 +547,7 @@ Host_Init ( quakeparms_t *parms)
 		Sys_Error ("Only %4.1fMB of memory reported, can't execute game", parms->memsize / (float) 0x100000);
 	
 	Memory_Init (parms->membase, parms->memsize);
+	CL_InitCvars();
 	Cbuf_Init ();
 	Cmd_Init ();
 	V_Init ();

@@ -1684,13 +1684,6 @@ CL_Init
 */
 void CL_Init (void)
 {
-#ifdef QUAKEWORLD
-//	extern	cvar_t		baseskin;
-	extern	cvar_t	*baseskin;
-//	extern	cvar_t		noskins;
-	extern	cvar_t	*noskins;
-#endif
-
 #ifdef UQUAKE
 	SZ_Alloc (&cls.netchan.message, 1024);
 #endif
@@ -1714,136 +1707,11 @@ void CL_Init (void)
 	CL_InitCam ();
 	Pmove_Init ();
 #endif
-	
+
 //
 // register our commands
 //
-//	Cvar_RegisterVariable (&show_fps);
-	show_fps = Cvar_Get ("show_fps","0",0,"None");
-//	Cvar_RegisterVariable (&host_speeds);
-	host_speeds = Cvar_Get ("host_speeds","0",0,"None");
-//	Cvar_RegisterVariable (&developer);
-	developer = Cvar_Get ("developer","0",0,"None");
-
-#ifdef QUAKEWOLRD
-//	Cvar_RegisterVariable (&cl_warncmd);
-	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");
-#endif
-//	Cvar_RegisterVariable (&cl_name);
-	cl_name = Cvar_Get ("_cl_name","player",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_color);
-	cl_color = Cvar_Get ("_cl_color","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_upspeed);
-	cl_upspeed = Cvar_Get ("cl_upspeed","200",0,"None");
-//	Cvar_RegisterVariable (&cl_forwardspeed);
-	cl_forwardspeed = Cvar_Get ("cl_forwardspeed","200",CVAR_ARCHIVE,
-				    "None");
-//	Cvar_RegisterVariable (&cl_backspeed);
-	cl_backspeed = Cvar_Get ("cl_backspeed","200",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_sidespeed);
-	cl_sidespeed = Cvar_Get ("cl_sidespeed","350",0,"None");
-//	Cvar_RegisterVariable (&cl_movespeedkey);
-	cl_movespeedkey = Cvar_Get ("cl_movespeedkey","2.0",0,"None");
-//	Cvar_RegisterVariable (&cl_yawspeed);
-	cl_yawspeed = Cvar_Get ("cl_yawspeed","140",0,"None");
-//	Cvar_RegisterVariable (&cl_pitchspeed);
-	cl_pitchspeed = Cvar_Get ("cl_pitchspeed","150",0,"None");
-//	Cvar_RegisterVariable (&cl_anglespeedkey);
-	cl_anglespeedkey = Cvar_Get ("cl_anglespeedkey","1.5",0,"None");
-//	Cvar_RegisterVariable (&cl_shownet);
-	cl_shownet = Cvar_Get ("cl_shownet","0",0,"None");
-//	Cvar_RegisterVariable (&cl_nolerp);
-	cl_nolerp = Cvar_Get ("cl_nolerp","0",0,"None");
-//	Cvar_RegisterVariable (&cl_sbar);
-	cl_sbar = Cvar_Get ("cl_sbar","1",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_hudswap);
-	cl_hudswap = Cvar_Get ("cl_hudswap","1",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_maxfps);
-	cl_maxfps = Cvar_Get ("cl_maxfps","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&cl_timeout);
-	cl_timeout = Cvar_Get ("cl_timeout","60",0,"None");
-//	Cvar_RegisterVariable (&lookspring);
-	lookspring = Cvar_Get ("lookspring","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&lookstrafe);
-	lookstrafe = Cvar_Get ("lookstrafe","0",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&sensitivity);
-	sensitivity = Cvar_Get ("sensitivity","3",CVAR_ARCHIVE,"None");
-
-//	Cvar_RegisterVariable (&m_pitch);
-	m_pitch = Cvar_Get ("m_pitch","0.022",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&m_yaw);
-	m_yaw = Cvar_Get ("m_yaw","0.022",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&m_forward);
-	m_forward = Cvar_Get ("m_forward","1",CVAR_ARCHIVE,"None");
-//	Cvar_RegisterVariable (&m_side);
-	m_side = Cvar_Get ("m_side","0.8",CVAR_ARCHIVE,"None");
-
-//	Cvar_RegisterVariable (&rcon_password);
-	rcon_password = Cvar_Get ("rcon_password","",0,"None");
-//	Cvar_RegisterVariable (&rcon_address);
-	rcon_address = Cvar_Get ("rcon_address","",0,"None");
-
-//	Cvar_RegisterVariable (&entlatency);
-	entlatency = Cvar_Get ("entlatency","20",0,"None");
-//	Cvar_RegisterVariable (&cl_predict_players2);
-	cl_predict_players2 = Cvar_Get ("cl_predict_players2","1",0,"None");
-//	Cvar_RegisterVariable (&cl_predict_players);
-	cl_predict_players = Cvar_Get ("cl_predict_players","1",0,"None");
-//	Cvar_RegisterVariable (&cl_solid_players);
-	cl_solid_players = Cvar_Get ("cl_solid_players","1",0,"None");
-
-//	Cvar_RegisterVariable (&localid);
-	localid = Cvar_Get ("localid","",0,"None");
-
-#ifdef QUAKEWORLD
-//	Cvar_RegisterVariable (&baseskin);
-	baseskin = Cvar_Get ("baseskin","base",0,"None");
-//	Cvar_RegisterVariable (&noskins);
-	noskins = Cvar_Get ("noskins","0",0,"None");
-
-	//
-	// info mirrors
-	//
-//	Cvar_RegisterVariable (&name);
-	name = Cvar_Get ("name","unnamed",
-			CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,"None");
-#endif
-//	Cvar_RegisterVariable (&password);
-	password = Cvar_Get ("password","",CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-//	Cvar_RegisterVariable (&spectator);
-	spectator = Cvar_Get ("spectator","",CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-//	Cvar_RegisterVariable (&skin);
-	skin = Cvar_Get ("skin","",CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-			"None");
-//	Cvar_RegisterVariable (&team);
-	team = Cvar_Get ("team","",CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-			"None");
-//	Cvar_RegisterVariable (&topcolor);
-	topcolor = Cvar_Get ("topcolor","0",
-				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-				"None"); 
-//	Cvar_RegisterVariable (&bottomcolor);
-	bottomcolor = Cvar_Get ("bottomcolor","0",
-				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-//	Cvar_RegisterVariable (&rate);
-	rate = Cvar_Get ("rate","2500",
-				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-//	Cvar_RegisterVariable (&msg);
-	msg = Cvar_Get ("msg","1",CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-			"None");
-//	Cvar_RegisterVariable (&noaim);
-	noaim = Cvar_Get ("noaim","0",
-				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
-				"None");
-
-
-
 	Cmd_AddCommand ("changing", CL_Changing_f);
-//	Cvar_RegisterVariable (&cl_autofire);
 #ifdef UQUAKE	
 	Cmd_AddCommand ("entities", CL_PrintEntities_f);
 #endif
@@ -1895,4 +1763,89 @@ void CL_Init (void)
 #ifdef _WIN32
 	Cmd_AddCommand ("windows", CL_Windows_f);
 #endif
+}
+
+void CL_InitCvars()
+{
+#ifdef QUAKEWORLD
+	extern	cvar_t	*baseskin;
+	extern	cvar_t	*noskins;
+#endif
+
+//
+// register our cvars
+//
+	show_fps = Cvar_Get ("show_fps","0",0,"None");
+	host_speeds = Cvar_Get ("host_speeds","0",0,"None");
+	developer = Cvar_Get ("developer","0",0,"None");
+
+	cl_warncmd = Cvar_Get ("cl_warncmd","0",0,"None");
+	cl_name = Cvar_Get ("_cl_name","player",CVAR_ARCHIVE,"None");
+	cl_color = Cvar_Get ("_cl_color","0",CVAR_ARCHIVE,"None");
+	cl_upspeed = Cvar_Get ("cl_upspeed","200",0,"None");
+	cl_forwardspeed = Cvar_Get ("cl_forwardspeed","200",CVAR_ARCHIVE,
+				    "None");
+	cl_backspeed = Cvar_Get ("cl_backspeed","200",CVAR_ARCHIVE,"None");
+	cl_sidespeed = Cvar_Get ("cl_sidespeed","350",0,"None");
+	cl_movespeedkey = Cvar_Get ("cl_movespeedkey","2.0",0,"None");
+	cl_yawspeed = Cvar_Get ("cl_yawspeed","140",0,"None");
+	cl_pitchspeed = Cvar_Get ("cl_pitchspeed","150",0,"None");
+	cl_anglespeedkey = Cvar_Get ("cl_anglespeedkey","1.5",0,"None");
+	cl_shownet = Cvar_Get ("cl_shownet","0",0,"None");
+	cl_nolerp = Cvar_Get ("cl_nolerp","0",0,"None");
+	cl_sbar = Cvar_Get ("cl_sbar","1",CVAR_ARCHIVE,"None");
+	cl_hudswap = Cvar_Get ("cl_hudswap","1",CVAR_ARCHIVE,"None");
+	cl_maxfps = Cvar_Get ("cl_maxfps","0",CVAR_ARCHIVE,"None");
+	cl_timeout = Cvar_Get ("cl_timeout","60",0,"None");
+	lookspring = Cvar_Get ("lookspring","0",CVAR_ARCHIVE,"None");
+	lookstrafe = Cvar_Get ("lookstrafe","0",CVAR_ARCHIVE,"None");
+	sensitivity = Cvar_Get ("sensitivity","3",CVAR_ARCHIVE,"None");
+
+	m_pitch = Cvar_Get ("m_pitch","0.022",CVAR_ARCHIVE,"None");
+	m_yaw = Cvar_Get ("m_yaw","0.022",CVAR_ARCHIVE,"None");
+	m_forward = Cvar_Get ("m_forward","1",CVAR_ARCHIVE,"None");
+	m_side = Cvar_Get ("m_side","0.8",CVAR_ARCHIVE,"None");
+
+	rcon_password = Cvar_Get ("rcon_password","",0,"None");
+	rcon_address = Cvar_Get ("rcon_address","",0,"None");
+
+	entlatency = Cvar_Get ("entlatency","20",0,"None");
+	cl_predict_players2 = Cvar_Get ("cl_predict_players2","1",0,"None");
+	cl_predict_players = Cvar_Get ("cl_predict_players","1",0,"None");
+	cl_solid_players = Cvar_Get ("cl_solid_players","1",0,"None");
+
+	localid = Cvar_Get ("localid","",0,"None");
+
+#ifdef QUAKEWORLD
+	baseskin = Cvar_Get ("baseskin","base",0,"None");
+	noskins = Cvar_Get ("noskins","0",0,"None");
+
+	//
+	// info mirrors
+	//
+	name = Cvar_Get ("name","unnamed",
+			CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,"None");
+#endif
+	password = Cvar_Get ("password","",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+	spectator = Cvar_Get ("spectator","",CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+	skin = Cvar_Get ("skin","",CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+			"None");
+	team = Cvar_Get ("team","",CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+			"None");
+	topcolor = Cvar_Get ("topcolor","0",
+				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+				"None"); 
+	bottomcolor = Cvar_Get ("bottomcolor","0",
+				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+	rate = Cvar_Get ("rate","2500",
+				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
+	msg = Cvar_Get ("msg","1",CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+			"None");
+	noaim = Cvar_Get ("noaim","0",
+				CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO,
+				"None");
 }

@@ -889,6 +889,11 @@ void V_Init (void)
 	Cmd_AddCommand ("bf", V_BonusFlash_f);
 	Cmd_AddCommand ("centerview", V_StartPitchDrift);
 
+//	Cvar_RegisterVariable (&lcd_x);
+	lcd_x = Cvar_Get ("lcd_x","0",0,"None");
+//	Cvar_RegisterVariable (&lcd_yaw);
+	//lcd_yaw = Cvar_Get ("lcd_yaw","0",0,"None");
+
 //	Cvar_RegisterVariable (&v_centermove);
 	v_centermove = Cvar_Get ("v_centermove","0.15",0,"None");
 //	Cvar_RegisterVariable (&v_centerspeed);

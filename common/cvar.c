@@ -284,7 +284,7 @@ void Cvar_Shutdown (void)
 	{
 		next = var->next;
 		free(var->description);
-		free(var->string);
+		Z_Free(var->string);
 		free(var->name);
 		free(var);
 		var = next;
@@ -310,7 +310,8 @@ cvar_t *Cvar_Get(char *name, char *string, int cvarflags, char *description)
 		v->next = cvar_vars;
 		cvar_vars = v;
 		v->name = strdup(name);
-		v->string = strdup(string);
+		v->string = Z_Malloc (Q_strlen(string)+1);
+		Q_strcpy (v->string, string);
 		v->flags = cvarflags;
 		v->description = strdup(description);
 		v->value = Q_atof (v->string); 
