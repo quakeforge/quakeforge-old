@@ -187,17 +187,12 @@ void R_DrawParticles (void)
 				p->vel[i] -= p->vel[i]*dvel;
 			p->vel[2] -= grav;
 			break;
-#ifdef UQUAKE
 		case pt_grav:
 #ifdef QUAKE2
 			p->vel[2] -= grav * 20;
 			break;
 #endif
-#endif
 		case pt_slowgrav:
-#ifdef QUAKEWORLD
-		case pt_grav:
-#endif
 			p->vel[2] -= grav;
 			break;
 		}
