@@ -39,7 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 // FIXME: use autoconf
-#if defined(unix) || defined(_AIX)
+#if defined(unix) || defined(_AIX) || defined(__NetBSD__)
 #include <errno.h>
 #else
 #include <sys/dir.h>
