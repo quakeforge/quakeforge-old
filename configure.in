@@ -416,6 +416,7 @@ dnl Make sure -lGL or -lMesaGL works
 if test "x$HAS_OGL" = xyes; then
    AC_CHECK_LIB(GL, glColor4f, OGL_LIBS="$OGL_LIBS -lGL"
      HAS_OGL=yes
+     OGL_NAME=GL
      if test "x$have_dynload" != "xyes"; then
        AC_CHECK_LIB(GL, XMesaSetFXmode, qwfoo=qwfoo, HAS_XMESA=no,
          [ $OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
@@ -426,6 +427,7 @@ if test "x$HAS_OGL" = xyes; then
    if test "x$HAS_OGL" != xyes; then
       AC_CHECK_LIB(MesaGL, glColor4f, OGL_LIBS="$OGL_LIBS -lMesaGL"
         HAS_OGL=yes
+	OGL_NAME=MesaGL
         if test "x$have_dynload" != "xyes"; then
           AC_CHECK_LIB(MesaGL, XMesaSetFXmode, qwfoo=qwfoo, HAS_XMESA=no,
             [ $OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
@@ -465,7 +467,7 @@ if test "x$HAS_3dfx" != xno; then
       if test -n "$HAS_SVGA"; then
 	 if test -z "$TDFXGL_NAME"; then
 	    if test -n "$HAS_FXMESA"; then
-	       TDFXGL_NAME=MesaGL
+               TDFXGL_NAME=$OGL_NAME
 	    fi
 	 fi
 	 if test -z "$TDFXGL_NAME"; then
