@@ -9,9 +9,13 @@ all:
 distclean:
 	rm -f config.cache config.log config.status Makefile
 	rm -f common/config.h
+	find . -name \*~ | xargs rm -f
 	for dir in $(SUBDIRS); do \
 	$(MAKE) -C $$dir $@ || exit; \
 	done
+
+clean-autoconf mrproper: distclean
+	rm -f configure
 
 %:
 	@for dir in $(SUBDIRS); do \

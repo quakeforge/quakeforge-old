@@ -247,6 +247,7 @@ AC_SUBST(X_LIBS)
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X11_SHM_LIB)
 AC_SUBST(HAS_X11)
+echo "HAS_DGA is ($HAS_DGA)"
 if test "x$HAS_DGA" = xyes; then
    AC_DEFINE(HAS_DGA,1)
 fi
