@@ -978,7 +978,7 @@ R_RenderView ( void ) {
 
 	double	time1 = 0, time2 = 0;
 	// Fixme: the last argument should be a cvar... r_fog_gamma
-	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.1};
+	GLfloat colors[4] = {(GLfloat) 1.0, (GLfloat) 1.0, (GLfloat) 1, (GLfloat) 0.1};
 
 	if (r_norefresh.value)
 		return;
@@ -1000,8 +1000,11 @@ R_RenderView ( void ) {
 	R_Clear ();
 
 	// render normal view
-/*
-	// The volume fog probally will not work yet :)
+
+#ifdef _EXPERIMENTAL_
+/*	
+	// Fixme!!
+	// The volume fog will not work as is :)
 	if(r_volfog.value) 
 	{
        
@@ -1028,15 +1031,15 @@ R_RenderView ( void ) {
 		glDisable(GL_DEPTH_TEST);
 	}
 */
+#endif
+
 	if (r_fog.value) {	// FIXME: would be nice if the user could select what fogmode... (r_fog_mode)
 		glFogi (GL_FOG_MODE, GL_EXP2);
 		glFogfv (GL_FOG_COLOR, colors);
-		// fixme: GL_FOG_DENSITY should have r_fog_density var
-		glFogf (GL_FOG_DENSITY, .0005); 
+		glFogf (GL_FOG_DENSITY, (GLfloat) r_fog.value); 
 		glEnable(GL_FOG);
 	}
 
-	glEnable(GL_STEREO);
 	R_RenderScene ();
 	R_DrawViewModel ();
 
