@@ -830,14 +830,28 @@ void VID_ExtraOptionCmd(int option_cursor)
 		Cvar_SetValue ("_windowed_mouse", !_windowed_mouse.value);
 		break;
 
-#ifdef XMESA
 	case 13:
 		Cvar_SetValue ("vid_mesa_mode",!vid_mesa_mode.value);
-		XMesaSetFXmode(vid_mesa_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW);
-                break;
-	
+#ifdef XMESA
+		if(XMesaSetFXmode(vid_mesa_mode.value ? XMESA_FX_FULLSCREEN : XMESA_FX_WINDOW))
+   		{
+			break;
+		} else {
 #endif
 
+#ifdef USE_DGA                    
+       			 XF86DGADirectVideo(dpy, DefaultScreen(dpy), 1x);
+       			 dgamouse = 1;
+ 
+		        XGrabPointer(dpy, CurrentTime);
+			XGrabKeyboard(dpy, CurrentTime);
+			
+			break;
+#endif
+
+#ifdef XMESA
+		}
+#endif XMESA
 
 	}
 }
