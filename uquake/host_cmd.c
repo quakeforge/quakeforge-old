@@ -60,7 +60,7 @@ void Host_Quit_f (void)
 		return;
 	}
 	CL_Disconnect ();
-	Host_ShutdownServer(false);		
+	SV_Shutdown(false);		
 
 	Sys_Quit ();
 }
@@ -282,7 +282,7 @@ void Host_Map_f (void)
 	cls.demonum = -1;		// stop demo loop in case this fails
 
 	CL_Disconnect ();
-	Host_ShutdownServer(false);		
+	SV_Shutdown(false);		
 
 	key_dest = key_game;			// remove console or menu
 	SCR_BeginLoadingPlaque ();

@@ -44,6 +44,75 @@ char	localmodels[MAX_MODELS][5];			// inline model names for precache
 //============================================================================
 
 /*
+==================
+SV_Shutdown
+
+This only happens at the end of a game, not between levels
+==================
+*/
+void SV_Shutdown(qboolean crash)
+{
+	int		i;
+	int		count;
+	sizebuf_t	buf;
+	char		message[4];
+	double	start;
+
+	if (!sv.active)
+		return;
+
+	sv.active = false;
+
+// stop all client sounds immediately
+	if (cls.state >= ca_connected)
+		CL_Disconnect ();
+
+// flush any pending messages - like the score!!!
+	start = Sys_DoubleTime();
+	do
+	{
+		count = 0;
+		for (i=0, host_client = svs.clients ; i<svs.maxclients ; i++, host_client++)
+		{
+			if (host_client->active && host_client->message.cursize)
+			{
+				if (NET_CanSendMessage (host_client->netconnection))
+				{
+					NET_SendMessage(host_client->netconnection, &host_client->message);
+					SZ_Clear (&host_client->message);
+				}
+				else
+				{
+					NET_GetMessage(host_client->netconnection);
+					count++;
+				}
+			}
+		}
+		if ((Sys_DoubleTime() - start) > 3.0)
+			break;
+	}
+	while (count);
+
+// make sure all the clients know we're disconnecting
+	buf.data = message;
+	buf.maxsize = 4;
+	buf.cursize = 0;
+	MSG_WriteByte(&buf, svc_disconnect);
+	count = NET_SendToAll(&buf, 5);
+	if (count)
+		Con_Printf("SV_ShutdownServer: NET_SendToAll failed for %u clients\n", count);
+
+	for (i=0, host_client = svs.clients ; i<svs.maxclients ; i++, host_client++)
+		if (host_client->active)
+			SV_DropClient(crash);
+
+//
+// clear structures
+//
+	memset (&sv, 0, sizeof(sv));
+	memset (svs.clients, 0, svs.maxclientslimit*sizeof(client_t));
+}
+/*
 ===============
 SV_Init
 ===============

@@ -145,7 +145,7 @@ Host_EndGame ( char *message, ... )
 	longjmp (host_abort, 1);
 #elif UQUAKE
 	if ( sv.active )
-		Host_ShutdownServer (false);
+		SV_Shutdown (false);
 
 	if ( cls.state == ca_dedicated )
 		Sys_Error ("Host_EndGame: %s\n",string);	// dedicated servers exit
@@ -421,7 +421,7 @@ Host_Error ( char *error, ... )
 
 #ifdef UQUAKE	
 	if (sv.active)
-		Host_ShutdownServer (false);
+		SV_Shutdown (false);
 
 	if (cls.state == ca_dedicated)
 		Sys_Error ("Host_Error: %s\n",string);	// dedicated servers exit

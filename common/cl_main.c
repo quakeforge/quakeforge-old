@@ -569,7 +569,7 @@ void CL_Disconnect (void)
 		cls.demoplayback = cls.demorecording = cls.timedemo = false;
 #ifdef UQUQKE
 		if (sv.active)
-			Host_ShutdownServer(false);
+			SV_Shutdown(false);
 #endif
 	}
 #ifdef QUAKEWORLD
@@ -593,7 +593,7 @@ void CL_Disconnect_f (void)
 	CL_Disconnect ();
 #ifdef UQUQKE
 	if (sv.active)
-		Host_ShutdownServer (false);
+		SV_Shutdown (false);
 #endif
 }
 
