@@ -287,3 +287,35 @@ void Cvar_WriteVariables (QFile *f)
 			Qprintf (f, "%s \"%s\"\n", var->name, var->string);
 }
 
+void Cvar_Set_f(void)
+{
+	cvar_t *var;
+	char *value;
+	char *var_name;
+
+	if (Cmd_Argc() != 3)
+	{
+		Con_Printf ("usage: set <cvar> <value>\n");
+		return;
+	}
+	var_name = Cmd_Argv (1);
+	value = Cmd_Argv (2);
+	var = Cvar_FindVar (var_name);
+	if (var) 
+	{
+		Cvar_Set (var->name, value);
+	} 
+	else 
+	{
+		var = (cvar_t*)calloc(1,sizeof(cvar_t));
+		var->heap = 1;
+		var->name = strdup (var_name);
+		var->string = value;
+		Cvar_RegisterVariable (var);
+	}
+}
+
+void Cvar_Init()
+{
+	Cmd_AddCommand ("set", Cvar_Set_f);
+}

@@ -66,6 +66,7 @@ typedef struct cvar_s
 	qboolean archive;	// set to true to cause it to be saved to vars.rc
 	qboolean info;		// added to serverinfo or userinfo when changed
 	qboolean server;	// notifies players when changed (UQUAKE)
+	qboolean heap;		// allocated off the heap, safe to free
 	float   value;
 	struct cvar_s *next;
 } cvar_t;
@@ -101,6 +102,8 @@ void 	Cvar_WriteVariables (QFile *f);
 // with the archive flag set to true.
 
 cvar_t *Cvar_FindVar (char *var_name);
+
+void Cvar_Init();
 
 extern cvar_t	*cvar_vars;
 #endif // _CVAR_H
