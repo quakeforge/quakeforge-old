@@ -49,6 +49,14 @@ extern "C" {
 #include <zlib.h>
 #endif
 
+#ifndef UNZ_BUFSIZE  
+#define UNZ_BUFSIZE (16384)
+#endif
+
+#ifndef UNZ_MAXFILENAMEINZIP
+#define UNZ_MAXFILENAMEINZIP (256)
+#endif
+
 #if defined(STRICTUNZIP) || defined(STRICTZIPUNZIP)
 /* like the STRICT of WIN32, we define a pointer that cannot be converted
     from (void*) without cast */

@@ -35,7 +35,7 @@
 #define CASESENSITIVITYDEFAULT_NO
 #endif
 
-
+#if 0
 #ifndef UNZ_BUFSIZE
 #define UNZ_BUFSIZE (16384)
 #endif
@@ -43,6 +43,7 @@
 #ifndef UNZ_MAXFILENAMEINZIP
 #define UNZ_MAXFILENAMEINZIP (256)
 #endif
+#endif 
 
 #ifndef ALLOC
 # define ALLOC(size) (malloc(size))

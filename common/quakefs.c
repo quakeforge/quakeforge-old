@@ -61,10 +61,11 @@ QUAKE FILESYSTEM
 =============================================================================
 */
 
+char    gamedirfile[MAX_OSPATH];
+
 #ifdef GENERATIONS
 #include <unzip.h>
 typedef unsigned char byte_t;
-char	gamedirfile[MAX_OSPATH];
 
 #ifndef _AIX
 typedef unsigned int uint_t;
@@ -616,7 +617,7 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 
 //	This following variable info is unused ATM.
 //	dpackfile_t            		info[MAX_FILES_IN_PACK];
-	char szCurrentFileName[256];
+	char szCurrentFileName[UNZ_MAXFILENAMEINZIP+1];
 
 	pak = unzOpen(packfile);
 
