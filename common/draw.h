@@ -45,3 +45,7 @@ qpic_t *Draw_CachePic (char *path);
 #ifdef QUAKEWORLD
 void Draw_Crosshair(void);
 #endif
+
+/* Menu drawing functions goes here too */
+void M_Print (int cx, int cy, char *str);
+void M_DrawCheckbox (int x, int y, int on);
