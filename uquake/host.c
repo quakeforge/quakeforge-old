@@ -95,8 +95,8 @@ void Host_EndGame (char *message, ...)
 	va_list		argptr;
 	char		string[1024];
 	
-	va_start (argptr,message);
-	vsprintf (string,message,argptr);
+	va_start (argptr, message);
+	vsnprintf (string, sizeof(string), message, argptr);
 	va_end (argptr);
 	Con_DPrintf ("Host_EndGame: %s\n",string);
 	
@@ -133,8 +133,8 @@ void Host_Error (char *error, ...)
 	
 	SCR_EndLoadingPlaque ();		// reenable screen updates
 
-	va_start (argptr,error);
-	vsprintf (string,error,argptr);
+	va_start (argptr, error);
+	vsnprintf (string, sizeof(string), error,argptr);
 	va_end (argptr);
 	Con_Printf ("Host_Error: %s\n",string);
 	
@@ -283,8 +283,8 @@ void SV_ClientPrintf (char *fmt, ...)
 	va_list		argptr;
 	char		string[1024];
 	
-	va_start (argptr,fmt);
-	vsprintf (string, fmt,argptr);
+	va_start (argptr, fmt);
+	vsnprintf (string, sizeof(string), fmt, argptr);
 	va_end (argptr);
 	
 	MSG_WriteByte (&host_client->message, svc_print);
@@ -304,8 +304,8 @@ void SV_BroadcastPrintf (char *fmt, ...)
 	char		string[1024];
 	int			i;
 	
-	va_start (argptr,fmt);
-	vsprintf (string, fmt,argptr);
+	va_start (argptr, fmt);
+	vsnprintf (string, sizeof(string), fmt, argptr);
 	va_end (argptr);
 	
 	for (i=0 ; i<svs.maxclients ; i++)
@@ -328,8 +328,8 @@ void Host_ClientCommands (char *fmt, ...)
 	va_list		argptr;
 	char		string[1024];
 	
-	va_start (argptr,fmt);
-	vsprintf (string, fmt,argptr);
+	va_start (argptr, fmt);
+	vsnprintf (string, sizeof(string), fmt, argptr);
 	va_end (argptr);
 	
 	MSG_WriteByte (&host_client->message, svc_stufftext);

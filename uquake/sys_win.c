@@ -342,13 +342,13 @@ void Sys_Error (char *error, ...)
 	}
 
 	va_start (argptr, error);
-	vsprintf (text, error, argptr);
+	vsnprintf (text, sizeof(text), error, argptr);
 	va_end (argptr);
 
 	if (isDedicated)
 	{
 		va_start (argptr, error);
-		vsprintf (text, error, argptr);
+		vsnprintf (text, sizeof(text), error, argptr);
 		va_end (argptr);
 
 		snprintf(text2, sizeof(text2), "ERROR: %s\n", text);

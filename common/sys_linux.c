@@ -85,8 +85,8 @@ void Sys_Error (char *error, ...) {
 // change stdin to non blocking
     fcntl (0, F_SETFL, fcntl (0, F_GETFL, 0) & ~O_NDELAY);
     
-    va_start (argptr,error);
-    vsprintf (string,error,argptr);
+    va_start (argptr, error);
+    vsnprintf (string, sizeof(string), error, argptr);
     va_end (argptr);
 	fprintf(stderr, "Error: %s\n", string);
 
@@ -99,8 +99,8 @@ void Sys_Warn (char *warning, ...) {
     va_list     argptr;
     char        string[1024];
     
-    va_start (argptr,warning);
-    vsprintf (string,warning,argptr);
+    va_start (argptr, warning);
+    vsnprintf (string, sizeof(string), warning, argptr);
     va_end (argptr);
 	fprintf(stderr, "Warning: %s", string);
 } 
@@ -160,7 +160,7 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 	//int fd;
     
 	va_start(argptr, fmt);
-	vsprintf(data, fmt, argptr);
+	vsnprintf(data, sizeof(data), fmt, argptr);
 	va_end(argptr);
 // fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
 	stream = fopen(file, "a");

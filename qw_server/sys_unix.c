@@ -57,8 +57,8 @@ void Sys_Error (char *error, ...)
 	va_list		argptr;
 	char		string[1024];
 	
-	va_start (argptr,error);
-	vsprintf (string,error,argptr);
+	va_start (argptr, error);
+	vsnprintf (string, sizeof(string), error, argptr);
 	va_end (argptr);
 	printf ("Fatal error: %s\n",string);
 	

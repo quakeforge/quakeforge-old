@@ -130,8 +130,8 @@ void SV_Error (char *error, ...)
 
 	inerror = true;
 
-	va_start (argptr,error);
-	vsprintf (string,error,argptr);
+	va_start (argptr, error);
+	vsnprintf (string, sizeof(string), error, argptr);
 	va_end (argptr);
 
 	Con_Printf ("SV_Error: %s\n",string);

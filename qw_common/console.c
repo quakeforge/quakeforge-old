@@ -403,7 +403,7 @@ void Con_DPrintf (char *fmt, ...)
 		return;			// don't confuse non-developers with techie stuff...
 
 	va_start (argptr,fmt);
-	vsprintf (msg,fmt,argptr);
+	vsnprintf (msg, sizeof(msg), fmt, argptr);
 	va_end (argptr);
 	
 	Con_Printf ("%s", msg);
@@ -681,8 +681,8 @@ void Con_SafePrintf (char *fmt, ...)
 	char		msg[1024];
 	int			temp;
 		
-	va_start (argptr,fmt);
-	vsprintf (msg,fmt,argptr);
+	va_start (argptr, fmt);
+	vsnprintf (msg, sizeof(msg), fmt,argptr);
 	va_end (argptr);
 	
 	temp = scr_disabled_for_loading;

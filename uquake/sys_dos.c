@@ -522,8 +522,8 @@ void Sys_Printf (char *fmt, ...)
 	va_list		argptr;
 	char		text[1024];
 	
-	va_start (argptr,fmt);
-	vsprintf (text,fmt,argptr);
+	va_start (argptr, fmt);
+	vsnprintf (text, sizeof(text), fmt, argptr);
 	va_end (argptr);
 
 	if (cls.state == ca_dedicated)
@@ -583,8 +583,8 @@ void Sys_Error (char *error, ...)
     va_list     argptr;
     char        string[1024];
     
-    va_start (argptr,error);
-    vsprintf (string,error,argptr);
+    va_start (argptr, error);
+    vsnprintf (string, sizeof(string), error, argptr);
     va_end (argptr);
 
 	Host_Shutdown();
