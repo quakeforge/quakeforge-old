@@ -1,0 +1,177 @@
+Summary: The QuakeForge Project
+Name: quakeforge
+%define version 0.1.0
+Version: %{version}
+Release: 1
+Group: Amusements/Games
+Source: quakeforge-%{version}.tar.gz
+Copyright: GPL
+BuildRoot: /var/tmp/%{name}-root
+
+%define HAS_VGA    '@HAS_VGA@'
+%define HAS_MGL    '@HAS_MGL@'
+%define HAS_GGI    '@HAS_GGI@'
+%define HAS_SVGA   '@HAS_SVGA@'
+%define HAS_TDFXGL '@HAS_TDFXGL@'
+%define HAS_OGL    '@HAS_OGL@'
+%define HAS_X11    '@HAS_X11@'
+%define HAS_SDL    '@HAS_SDL@'
+%define SND_STYLE  '@SND_STYLE@'
+
+%description
+Umm, it's Quake man, Quake. You know, that game by id software?
+
+This is the QuakeForge Project's rendition of id's GPLed Quake 1 sources.
+Quakeforge aims for maximum compatability and platform support but also
+includes various enhancements.
+
+%package server
+Summary: quakeworld server
+Group: Amusements/Games
+Requires: quakeforge
+
+%description server
+%endif
+
+%if "%{HAS_OGL}"=="'yes'"
+%package gl
+Summary: OpenGL(tm) support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description gl
+%endif
+
+%if "%{HAS_TDFXGL}"=="'yes'"
+%package 3dfx
+Summary: 3dfx support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description 3dfx
+%endif
+
+%if "%{HAS_X11}"=="'yes'"
+%package x11
+Summary: X11 support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description x11
+%endif
+
+%if "%{HAS_SVGA}"=="'yes'"
+%package svga
+Summary: svgalib support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description svga
+%endif
+
+%if "%{HAS_VGA}"=="'yes'"
+%package vga
+Summary: vga (djgpp?) support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description vga
+%endif
+
+%if "%{HAS_MGL}"=="'yes'"
+%package mgl
+Summary: mgl support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description mgl
+%endif
+
+%if "%{HAS_GGI}"=="'yes'"
+%package ggi
+Summary: ggi support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description ggi
+%endif
+
+%if "%{HAS_SDL}"=="'yes'"
+%package sdl
+Summary: sdl support
+Group: Amusements/Games
+Requires: quakeforge
+
+%description sdl
+%endif
+
+%prep
+%setup -q
+
+%build
+%if "%{SND_STYLE}"==ALSA
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr --enable-alsa
+%else
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
+%endif
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR="$RPM_BUILD_ROOT" install
+
+%files
+%doc AUTHORS COPYING CREDITS INSTALL README TODO doc/*
+%dir /usr/games/quake
+%dir /usr/games/quake/id1
+
+%files server
+/usr/bin/qw-server
+
+%if "%{HAS_OGL}"=="'yes'"
+%files gl
+/usr/bin/quake-gl
+/usr/bin/qw-client-gl
+%endif
+
+%if "%{HAS_TDFXGL}"=="'yes'"
+%files gl
+/usr/bin/quake-3dfx
+/usr/bin/qw-client-3dfx
+%endif
+
+%if "%{HAS_X11}"=="'yes'"
+%files gl
+/usr/bin/quake-x11
+/usr/bin/qw-client-x11
+%endif
+
+%if "%{HAS_SVGA}"=="'yes'"
+%files gl
+/usr/bin/quake-svga
+/usr/bin/qw-client-svga
+%endif
+
+%if "%{HAS_VGA}"=="'yes'"
+%files gl
+/usr/bin/quake-vga
+/usr/bin/qw-client-vga
+%endif
+
+%if "%{HAS_MGL}"=="'yes'"
+%files gl
+/usr/bin/quake-mgl
+/usr/bin/qw-client-mgl
+%endif
+
+%if "%{HAS_GGI}"=="'yes'"
+%files gl
+/usr/bin/quake-ggi
+/usr/bin/qw-client-ggi
+%endif
+
+%if "%{HAS_SDL}"=="'yes'"
+%files gl
+/usr/bin/quake-sdl
+/usr/bin/qw-client-sdl
+%endif

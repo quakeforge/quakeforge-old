@@ -693,4 +693,4 @@ AC_SUBST(HAVE_UDP)
 
 dnl Output files
 AC_CONFIG_HEADER(common/config.h)
-AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
+AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile quakeforge.spec)
