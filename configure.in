@@ -426,8 +426,9 @@ fi
 
 dnl We want warnings, lots of warnings...
 if test "x$GCC" = xyes; then
-   CFLAGS="$CFLAGS -Wall -pedantic"
+   CFLAGS="$CFLAGS -Wall"
 fi
+#   CFLAGS="$CFLAGS -Wall -pedantic"
 
 dnl Check for ia32
 AC_MSG_CHECKING(for an ia32 machine)
