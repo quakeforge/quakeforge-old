@@ -36,7 +36,7 @@
 #include <mathlib.h>
 #include <console.h>
 
-#define	MAX_BEAMS	8	// UQ originally 24
+#define	MAX_BEAMS	32
 typedef struct
 {
 	int		entity;
@@ -45,7 +45,7 @@ typedef struct
 	vec3_t		start, end;
 } beam_t;
 
-#define	MAX_EXPLOSIONS	8
+#define	MAX_EXPLOSIONS	32
 typedef struct
 {
 	vec3_t		origin;
@@ -437,7 +437,7 @@ CL_NewTempEntity (void)
 void
 CL_UpdateBeams (void)
 {
-	int			i;
+	int			i,j;
 	beam_t		*b;
 	vec3_t		dist, org;
 	float		d;
@@ -494,8 +494,8 @@ CL_UpdateBeams (void)
 			ent->angles[1] = yaw;
 			ent->angles[2] = rand()%360;
 
-			for (i=0 ; i<3 ; i++)
-				org[i] += dist[i]*30;
+			for (j=0 ; j<3 ; j++)
+				org[j] += dist[j]*30;
 			d -= 30;
 		}
 	}
