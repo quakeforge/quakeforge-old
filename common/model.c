@@ -1,6 +1,8 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -28,7 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <lib_replace.h>
 #include <sys.h>
 #include <mathlib.h>
+#include <common.h>
 #include <console.h>
+#include <crc.h>
 #include <quakefs.h>
 
 model_t	*loadmodel;
@@ -44,11 +48,6 @@ byte	mod_novis[MAX_MAP_LEAFS/8];
 #define	MAX_MOD_KNOWN	256
 model_t	mod_known[MAX_MOD_KNOWN];
 int		mod_numknown;
-
-// values for model_t's needload
-#define NL_PRESENT		0
-#define NL_NEEDS_LOADED	1
-#define NL_UNREFERENCED	2
 
 /*
 ===============
@@ -128,6 +127,9 @@ byte *Mod_DecompressVis (byte *in, model_t *model)
 	row = (model->numleafs+7)>>3;	
 	out = decompressed;
 
+#if 0
+	memcpy (out, in, row);
+#else
 	if (!in)
 	{	// no vis info, so make all visible
 		while (row)
@@ -154,6 +156,7 @@ byte *Mod_DecompressVis (byte *in, model_t *model)
 			c--;
 		}
 	} while (out - decompressed < row);
+#endif
 	
 	return decompressed;
 }
@@ -174,13 +177,10 @@ void Mod_ClearAll (void)
 {
 	int		i;
 	model_t	*mod;
-
-
-	for (i=0 , mod=mod_known ; i<mod_numknown ; i++, mod++) {
-		mod->needload = NL_UNREFERENCED;
-//FIX FOR CACHE_ALLOC ERRORS:
-		if (mod->type == mod_sprite) mod->cache.data = NULL;
-	}
+	
+	for (i=0 , mod=mod_known ; i<mod_numknown ; i++, mod++)
+		if (mod->type != mod_alias)
+			mod->needload = true;
 }
 
 /*
@@ -193,8 +193,7 @@ model_t *Mod_FindName (char *name)
 {
 	int		i;
 	model_t	*mod;
-	model_t	*avail = NULL;
-
+	
 	if (!name[0])
 		Sys_Error ("Mod_ForName: NULL name");
 		
@@ -202,32 +201,16 @@ model_t *Mod_FindName (char *name)
 // search the currently loaded models
 //
 	for (i=0 , mod=mod_known ; i<mod_numknown ; i++, mod++)
-	{
 		if (!strcmp (mod->name, name) )
 			break;
-		if (mod->needload == NL_UNREFERENCED)
-			if (!avail || mod->type != mod_alias)
-				avail = mod;
-	}
 			
 	if (i == mod_numknown)
 	{
 		if (mod_numknown == MAX_MOD_KNOWN)
-		{
-			if (avail)
-			{
-				mod = avail;
-				if (mod->type == mod_alias)
-					if (Cache_Check (&mod->cache))
-						Cache_Free (&mod->cache);
-			}
-			else
-				Sys_Error ("mod_numknown == MAX_MOD_KNOWN");
-		}
-		else
-			mod_numknown++;
+			Sys_Error ("mod_numknown == MAX_MOD_KNOWN");
 		strcpy (mod->name, name);
-		mod->needload = NL_NEEDS_LOADED;
+		mod->needload = true;
+		mod_numknown++;
 	}
 
 	return mod;
@@ -245,7 +228,7 @@ void Mod_TouchModel (char *name)
 	
 	mod = Mod_FindName (name);
 	
-	if (mod->needload == NL_PRESENT)
+	if (!mod->needload)
 	{
 		if (mod->type == mod_alias)
 			Cache_Check (&mod->cache);
@@ -261,26 +244,29 @@ Loads a model into the cache
 */
 model_t *Mod_LoadModel (model_t *mod, qboolean crash)
 {
+	void	*d;
 	unsigned *buf;
 	byte	stackbuf[1024];		// avoid dirtying the cache heap
 
-	if (mod->type == mod_alias)
+	if (!mod->needload)
 	{
-		if (Cache_Check (&mod->cache))
+		if (mod->type == mod_alias)
 		{
-			mod->needload = NL_PRESENT;
-			return mod;
+			d = Cache_Check (&mod->cache);
+			if (d)
+				return mod;
 		}
-	}
-	else
-	{
-		if (mod->needload == NL_PRESENT)
-			return mod;
+		else
+			return mod;		// not cached at all
 	}
 
 //
 // because the world is so huge, load it one piece at a time
 //
+	if (!crash)
+	{
+	
+	}
 	
 //
 // load the file
@@ -305,8 +291,8 @@ model_t *Mod_LoadModel (model_t *mod, qboolean crash)
 //
 
 // call the apropriate loader
-	mod->needload = NL_PRESENT;
-
+	mod->needload = false;
+	
 	switch (LittleLong(*(unsigned *)buf))
 	{
 	case IDPOLYHEADER:
@@ -429,12 +415,13 @@ void Mod_LoadTextures (lump_t *l)
 		mt = (miptex_t *)((byte *)m + m->dataofs[i]);
 		mt->width = LittleLong (mt->width);
 		mt->height = LittleLong (mt->height);
+#ifdef UQUAKE
 		if (mt->height == -1 && mt->width == -1)
 			{
 			if (Mod_LoadExternalTexture(i, mt->name));
 			continue;
 			}
-
+#endif
 		for (j=0 ; j<MIPLEVELS ; j++)
 			mt->offsets[j] = LittleLong (mt->offsets[j]);
 		
@@ -1214,8 +1201,24 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 	for (i=0 ; i<sizeof(dheader_t)/4 ; i++)
 		((int *)header)[i] = LittleLong ( ((int *)header)[i]);
 
-// load into heap
+	mod->checksum = 0;
+	mod->checksum2 = 0;
+
+// checksum all of the map, except for entities
+	for (i = 0; i < HEADER_LUMPS; i++) {
+		if (i == LUMP_ENTITIES)
+			continue;
+		mod->checksum ^= LittleLong(Com_BlockChecksum(mod_base + header->lumps[i].fileofs, 
+			header->lumps[i].filelen));
+
+		if (i == LUMP_VISIBILITY || i == LUMP_LEAFS || i == LUMP_NODES)
+			continue;
+		mod->checksum2 ^= LittleLong(Com_BlockChecksum(mod_base + header->lumps[i].fileofs, 
+			header->lumps[i].filelen));
+	}
 	
+// load into heap
+
 	Mod_LoadVertexes (&header->lumps[LUMP_VERTEXES]);
 	Mod_LoadEdges (&header->lumps[LUMP_EDGES]);
 	Mod_LoadSurfedges (&header->lumps[LUMP_SURFEDGES]);
@@ -1253,11 +1256,11 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 		
 		mod->firstmodelsurface = bm->firstface;
 		mod->nummodelsurfaces = bm->numfaces;
+		mod->radius = RadiusFromBounds (mod->mins, mod->maxs);
 		
 		VectorCopy (bm->maxs, mod->maxs);
 		VectorCopy (bm->mins, mod->mins);
-		mod->radius = RadiusFromBounds (mod->mins, mod->maxs);
-		
+	
 		mod->numleafs = bm->visleafs;
 
 		if (i < mod->numsubmodels-1)
@@ -1509,6 +1512,31 @@ void Mod_LoadAliasModel (model_t *mod, void *buffer)
 	int					skinsize;
 	int					start, end, total;
 	
+	if (!strcmp(loadmodel->name, "progs/player.mdl") ||
+		!strcmp(loadmodel->name, "progs/eyes.mdl")) {
+		unsigned short crc;
+		byte *p;
+		int len;
+		char st[40];
+
+		CRC_Init(&crc);
+		for (len = com_filesize, p = buffer; len; len--, p++)
+			CRC_ProcessByte(&crc, *p);
+	
+		snprintf(st, sizeof(st), "%d", (int) crc);
+		Info_SetValueForKey (cls.userinfo, 
+			!strcmp(loadmodel->name, "progs/player.mdl") ? pmodel_name : emodel_name,
+			st, MAX_INFO_STRING);
+
+		if (cls.state >= ca_connected) {
+			MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
+			snprintf(st, sizeof(st), "setinfo %s %d", 
+				!strcmp(loadmodel->name, "progs/player.mdl") ? pmodel_name : emodel_name,
+				(int)crc);
+			SZ_Print (&cls.netchan.message, st);
+		}
+	}
+
 	start = Hunk_LowMark ();
 
 	pinmodel = (mdl_t *)buffer;
@@ -1916,12 +1944,7 @@ void Mod_Print (void)
 	Con_Printf ("Cached models:\n");
 	for (i=0, mod=mod_known ; i < mod_numknown ; i++, mod++)
 	{
-		Con_Printf ("%8p : %s",mod->cache.data, mod->name);
-		if (mod->needload & NL_UNREFERENCED)
-			Con_Printf (" (!R)");
-		if (mod->needload & NL_NEEDS_LOADED)
-			Con_Printf (" (!P)");
-		Con_Printf ("\n");
+		Con_Printf ("%8p : %s\n",mod->cache.data, mod->name);
 	}
 }
 

@@ -152,7 +152,7 @@ else
 NET_SRC    = net_dos.c net_bw.c net_ipx.c net_mp.c net_ser.c
 endif
 endif
-UQ_NET_SRC = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
+UQ_NET_SRC = net_com.c mdfour.c net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
 # Common source files
 

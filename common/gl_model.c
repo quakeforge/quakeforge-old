@@ -1187,7 +1187,6 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 	for (i=0 ; i<sizeof(dheader_t)/4 ; i++)
 		((int *)header)[i] = LittleLong ( ((int *)header)[i]);
 
-#ifdef QUAKEWORLD
 // checksum all of the map, except for entities
 	mod->checksum = 0;
 	mod->checksum2 = 0;
@@ -1203,7 +1202,6 @@ void Mod_LoadBrushModel (model_t *mod, void *buffer)
 		mod->checksum2 ^= LittleLong(Com_BlockChecksum(mod_base + header->lumps[i].fileofs, 
 			header->lumps[i].filelen));
 	}
-#endif
 
 // load into heap
 	
