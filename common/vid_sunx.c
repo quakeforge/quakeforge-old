@@ -1164,3 +1164,7 @@ void VID_ExtraOptionCmd(int option_cursor)
 	}
 }
 
+void VID_InitCvars (void)
+{
+	// It may not look like it, but this is important
+}

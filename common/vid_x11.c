@@ -852,3 +852,7 @@ VID_DitherOff(void)
 	}
 }
 
+void VID_InitCvars ()
+{
+	// It may not look like it, but this is important
+}

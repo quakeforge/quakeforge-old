@@ -94,6 +94,9 @@ void VID_ExtraOptionDraw(unsigned int);
 void VID_ExtraOptionCmd(int options_cursor);
 // commands for the extra menu options of the target
 
+void VID_InitCvars(void);
+// used to initialize any cvars needed early in program execution
+
 qboolean VID_Is8bit(void);
 
 #endif // _VID_H

@@ -154,6 +154,7 @@ void SV_Shutdown (void)
 		sv_logfile = NULL;
 	}
 	NET_Shutdown ();
+	Cvar_Shutdown ();
 }
 
 /*

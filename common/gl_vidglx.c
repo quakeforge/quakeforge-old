@@ -82,10 +82,9 @@ unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
-//cvar_t	vid_mode = {"vid_mode", "0", CVAR_NONE};
 cvar_t	*vid_mode;
-//cvar_t  vid_glx_fullscreen = {"vid_glx_fullscreen", "0", CVAR_NONE};
 cvar_t	*vid_glx_fullscreen;
+extern cvar_t	*gl_triplebuffer;
 
 #ifdef HAS_DGA
 static int	nummodes;
@@ -570,4 +569,9 @@ void VID_Init(unsigned char *palette)
 			width, height);
 
 	vid.recalc_refdef = 1;		// force a surface cache flush
+}
+
+void VID_InitCvars()
+{
+	gl_triplebuffer = Cvar_Get("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 }

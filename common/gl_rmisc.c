@@ -188,69 +188,42 @@ void R_Init (void)
 	Cmd_AddCommand ("envmap", R_Envmap_f);	
 	Cmd_AddCommand ("pointfile", R_ReadPointFile_f);	
 
-//	Cvar_RegisterVariable (&r_norefresh);
 	r_norefresh = Cvar_Get ("r_norefresh","0",0,"None");
-//	Cvar_RegisterVariable (&r_lightmap);
 	r_lightmap = Cvar_Get ("r_lightmap","0",0,"None");
-//	Cvar_RegisterVariable (&r_fullbright);
 	r_fullbright = Cvar_Get ("r_fullbright","0",0,"None");
-//	Cvar_RegisterVariable (&r_drawentities);
 	r_drawentities = Cvar_Get ("r_drawentities","1",0,"None");
-//	Cvar_RegisterVariable (&r_drawviewmodel);
 	r_drawviewmodel = Cvar_Get ("r_drawviewmodel","1",0,"None");
-//	Cvar_RegisterVariable (&r_shadows);
 	r_shadows = Cvar_Get ("r_shadows","0",0,"None");
-//	Cvar_RegisterVariable (&r_wateralpha);
 	r_wateralpha = Cvar_Get ("r_wateralpha","1",0,"None");
-//	Cvar_RegisterVariable (&r_dynamic);
 	r_dynamic = Cvar_Get ("r_dynamic","1",0,"None");
-//	Cvar_RegisterVariable (&r_novis);
 	r_novis = Cvar_Get ("r_novis","0",0,"None");
-//	Cvar_RegisterVariable (&r_speeds);
 	r_speeds = Cvar_Get ("r_speeds","0",0,"None");
 #ifdef QUAKEWORLD
-//	Cvar_RegisterVariable (&r_netgraph);
 	r_netgraph = Cvar_Get ("r_netgraph","0",0,"None");
 #endif /* QUAKEWORLD */
-//	Cvar_RegisterVariable (&r_fog);
 	r_fog = Cvar_Get ("r_fog","0",0,"None");
-//	Cvar_RegisterVariable (&r_waterwarp);
 	r_waterwarp = Cvar_Get ("r_waterwarp","0",0,"None");
 #ifdef _EXPERIMENTAL_
-//	Cvar_RegisterVariable (&r_volfog);
 	r_volfog = Cvar_Get ("r_volfog","0",0,"None");
 #endif
-//	Cvar_RegisterVariable (&r_waterripple);
 	r_waterripple = Cvar_Get ("r_waterripple","0",0,"None");
-//	Cvar_RegisterVariable (&r_clearcolor);
 	r_clearcolor = Cvar_Get ("r_clearcolor","2",0,"None");
 
-//	Cvar_RegisterVariable (&gl_clear);
 	gl_clear = Cvar_Get ("gl_clear","0",0,"None");
-//	Cvar_RegisterVariable (&gl_texsort);
 	gl_texsort = Cvar_Get ("gl_texsort","1",0,"None");
 
  	if (gl_mtexable)
 		gl_texsort->value = 0.0;
 
-//	Cvar_RegisterVariable (&gl_cull);
 	gl_cull = Cvar_Get ("gl_cull","1",0,"None");
-//	Cvar_RegisterVariable (&gl_smoothmodels);
 	gl_smoothmodels = Cvar_Get ("gl_smoothmodels","1",0,"None");
-//	Cvar_RegisterVariable (&gl_affinemodels);
 	gl_affinemodels = Cvar_Get ("gl_affinemodels","0",0,"None");
-//	Cvar_RegisterVariable (&gl_polyblend);
 	gl_polyblend = Cvar_Get ("gl_polyblend","1",0,"None");
-//	Cvar_RegisterVariable (&gl_flashblend);
 	gl_flashblend = Cvar_Get ("gl_flashblend","1",0,"None");
-//	Cvar_RegisterVariable (&gl_playermip);
 	gl_playermip = Cvar_Get ("gl_playermip","0",0,"None");
-//	Cvar_RegisterVariable (&gl_nocolors);
 	gl_nocolors = Cvar_Get ("gl_nocolors","0",0,"None");
-//	Cvar_RegisterVariable (&gl_finish);
 	gl_finish = Cvar_Get ("gl_finish","0",0,"None");
 
-//	Cvar_RegisterVariable (&gl_keeptjunctions);
 #ifdef QUAKEWORLD
 	gl_keeptjunctions = Cvar_Get ("gl_keeptjunctions","1",0,"None");
 #else
@@ -260,10 +233,9 @@ void R_Init (void)
 	R_InitBubble();
 	
 #ifdef UQUAKE
-//	Cvar_RegisterVariable (&gl_doubleeyes);
 	gl_doubleeyes = Cvar_Get ("gl_doubleeyes","1",CVAR_ARCHIVE,"None");
+#endif /* UQUAKE */
 
-#endif /* QUAKEWORLD */
 	R_InitParticles ();
 	R_InitParticleTexture ();
 

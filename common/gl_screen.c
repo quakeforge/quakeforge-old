@@ -402,7 +402,6 @@ void SCR_Init (void)
 	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
 	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
 	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",0,"None");
-	gl_triplebuffer = Cvar_Get ("gl_triplebuffer","1",CVAR_ARCHIVE,"None");
 
 //
 // register our commands
