@@ -1,79 +1,111 @@
-This file contains a (very incomplete) list of things to do still with the
-QuakeForge project.  If you'd like to add something to this list or point
-out that something has been done we forgot to remove, please send an email
-to quake-devel@lists.sourceforge.net with details.
+TODO for QuakeForge
+-------------------
 
- * On unix systems /etc/qfrc should be read as a system-wide config
-   file which should be able to specify console commands and other things
-   like where to find the id1, qw, and other -game specified dirs
- * On unix systems ~/.quakeforge should overlay a shared data directory.
-   Files in a user's ~/.quakeforge directory should take precedence over
-   files in the shared data dir and all files written should be placed
-   into ~/.quakeforge
- * Devise and implement a way to ensure original gameplay compatibility
-   while still letting us expand and extend the quake engine
- * Audio support for more platforms
- * Add OpenGL multi-pass texturing replacement for when multi-texturing
-   extension isn't available
- * Remove dependency on GNU make or migrate to automake
- * Quake/QW Client: Add proper XFree86 DGA/VideoMode support to X-based targets
-   on systems with XFree86 available
- * Prep Aftershock for a future merge with the main tree
- * Implement a wind (airflow) engine
- * Add a more modern portal engine
- * Add a terrain engine
- * Add cloudy skies, using the wind and fog engines
- * Add some options to the setup menu, ie. gl_ztrick and +mlook
- * Allow more video and bpp modes
- * Support for camera rooms ala Unreal
- * Make every object depend on dead-reckoning for network play, ie. no
-   "moving entities"
- * Add XInput stuff
- * Allow any size console font to be used
- * Use dynamic memory
- * Remove arbitrary limits such as max number of players
- * Fixes for various exploits/cheats
- * Dynamically loaded (at run time) renderers
- * Optional basic server authentication
- * Pluggable server authentication
- * Enhanced console (improved history and cmdline editing)
- * Integrate some sort of packet compression ala Qizmo
- * Fix q1/qw smurf attack
- * Fix oversized packet QW server crash
- * DOS/Win support in autoconf
- * Backport QW's HUD stuff to UQuake
- * Implement colored lighting
- * Implement mp3 player
- * Implement mod/s3m/it/xm/etc player
- * Add compiled shared mod support .dll/.so, q2/q3-style
- * Finish Volumetric fog
- * Colored lighting for common tasks such as emitting a blue dynamic light
-   from players with quad damage..
- * C equivalents of the SVGALib target's asm (Linux Alpha has SVGALib)
- * Wheel mouse support (make it bindable so that it can be bound to
-   anything, ie. previous weapon/next weapon)
- * add threading support (ie. network code)
- * add tty target (Nelson is working on this, it's done, I just need to
-make a target for it.)
- * add walls that emit light
- * port to Amiga (someone is working on this)
- * port to MacOS (this has already been done as a seperate project, ala
-   the author does not wish to help merge his changes to our tree, so
-   until then... no mac port)
- * add something like qstat to the multiplayer menu in qw so that we can
-   just select servers to play on while in the game.
- * implement a "feign death" action, so that users can play dead
- * allow server admin to adjust air control (ie. in low gravity)
- * bullets leave "holes" in walls, and disappear as threshold is reached
- * make explosions also leave marks, but dynamic marks, ie. blast can
-   affect multiple surfaces.
- * implement pak3 loading support (in progress)
- * make a pak conversion tool
- * allow fire (ie. torches) to burn the player when touched.
- * allow projectiles from weapons to pass through teleporters
- * allow water to "move", ie. if the water is behind glass and the glass
-is shot, the water flows out onto the floor.
- * add breakable objects, ie. glass
- * allow user to switch video modes while running the engine.
- * add ladders and vines on walls so the user can climb to another part of
-the level.
+This file contains a (very incomplete) list of things we are doing and
+considering doing in the QuakeForge project.  If you'd like to make
+additions or corrections to this list, pleas send an email with details to
+quake-devel@lists.sourceforge.net.  Thanks!
+
+This file is divided into several generally broad categories, plus a group
+for unsorted ideas.  New ideas will probably go into unsorted until we
+determine the factors involved with implementation and move them.  Each
+idea has a status flag and may also have a list of people currently
+working on it and an estimate as to when it'll be done.  An explanation of
+the flags:
+
+        *  Being implemented now
+	+  We know how we'll implement it, but it hasn't been started yet
+	-  We don't yet know how we'll implement it, but we'll probably
+	     do it at some point if we can
+	?  Don't know if we'll do it, how we'll do it, or exactly what'd
+	     be involed with doing it yet.
+	0  This cannot be done (you won't see many of these)
+
+
+PLEASE NOTE:  Because the merge is still in progress, we haven't even
+              looked yet at how we'll do a number of these things yet.
+	      That doesn't mean we don't want to or can't implement them,
+	      but rather that we're too busy working on the internal
+	      framework necessary to support most of these nifty features
+	      later on.  The merge is our release goal for 0.2 and we are
+	      convinced it can be finished before then.
+
+
+Major projects:
+
+* (0.2)    Merge Quake/QuakeWorld [almost everybody]
++ (0.3?)   Make one QF bin w/ many shared libs
++          Integration of Aftershock
+?          Redesign the entire network protocol to be more extensible and
+             better able to combat cheating/exploits
+
+
+Platform support:
+
+* (0.2)    X11 DGA support
+* (0.2)    tty target [Palisade]
+* (0.2?)   Run-time video mode switching for most targets
++ (0.2)    Seperate pak game and config directory support
++ (0.2)    Global config file [knghtbrd]
++ (0.2?)   Automake support
++ (0.3)    Revamp the entire menu subsystem
++          Return of the unix dedicated server
++          Add more platform support
+-          Audio support for more platforms
+-          Support for XInput
+-          C replacements for Linux SVGALib target's asm
+-          Amiga support
+-          MacOS support
+
+
+Game engine:
+
+* (0.2)    zip-packed game files (pak3 and similar) [raptor]
++ (0.2)    Enhanced console (history, cmdline editing)
+* (0.3?)   Add a volumetric fog engine [raptor]
++          Allow server admin to adjust air control (ie. in low gravity)
+-          Add a wind engine
+-          Add a terrain engine
+-          Real skies (using wind/fog engines)
+-          Remove many arbitrary limits by using dynamic memory
+-          Add support for compiled shared library game modifications
+-          qstat-type support directly in the game
+?          Add a more modern portal engine
+?          Dead-reckoning for some/all entities
+?          Multithreading support
+
+
+Other engines:
+
++ (0.2?)   Real mouse wheel support
++ (0.3?)   Colored lighting support [raptor]
+- (0.3?)   Make the damned brightness slider in GL renderers useful
++          More generalized sound/music APIs [mercury, knghtbrd]
+-          Support overriding the 8x8 console font with one of any size
+-          Add replacement for OpenGL multi-pass texturing extension
+-          Unreal-style camera rooms
+-          Working fullbright in GL targets
+
+
+Network engine(s):
+
+-          Packet compression ala Qizmo
+
+
+Gameplay-altering mods:
+
++          Implement a "feign death" action
++          Implement climbable objects (ladders, vines)
++          Allow support for fire (ie torches) to burn
+-          Lasting effects of ammunition (bulletholes, scorch marks)
+-          Implement breakable objects such as glass
+-          Flowing water that can be spilled out 
+-          Implement possibility for projectiles to enter slipgates
+
+(some of these may end up not requiring mods to the QuakeForge code)
+
+
+General unsorted ideas:
+
+          (none at this time)
+
