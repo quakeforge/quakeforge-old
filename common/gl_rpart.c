@@ -579,7 +579,7 @@ void R_TeleportSplash (vec3_t org)
 	R_RocketTrail
 */
 void
-R_RocketTrail (vec3_t start, vec3_t end, int type)
+R_RocketTrail (vec3_t start, vec3_t end, int type, entity_t *ent)
 {
 	vec3_t		vec;
 	float		len;
@@ -612,7 +612,7 @@ R_RocketTrail (vec3_t start, vec3_t end, int type)
 
 		switch (type) {
 			case 0:		// rocket trail
-				R_AddFire (start, end);
+				R_AddFire (start, end, ent);
 				p->ramp = (rand()&3);
 				p->color = ramp3[(int)p->ramp];
 				p->type = pt_fire;
@@ -871,7 +871,7 @@ void R_DrawParticles (void)
 	particle engine code.
 */
 void
-R_AddFire (vec3_t start, vec3_t end)
+R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 {
 	float		len;
 	fire_t		*f;
@@ -882,7 +882,7 @@ R_AddFire (vec3_t start, vec3_t end)
 
 	if (len)
 	{
-		f = R_AllocFire (0);
+		f = R_AllocFire (ent-cl_entities+1);
 		VectorCopy (end, f->origin);
 		VectorCopy (start, f->owner);
 		f->size = 20;
@@ -896,7 +896,7 @@ R_AddFire (vec3_t start, vec3_t end)
 }
 
 /*
-	R_AllocFireball
+	R_AllocFire
 
 	Clears out and returns a new fireball
 */
@@ -905,7 +905,6 @@ R_AllocFire (int key)
 {
 	int		i;
 	fire_t		*f;
-
 	if (key)	// first try to find/reuse a keyed spot
 	{
 		f = r_fires;
@@ -921,7 +920,7 @@ R_AllocFire (int key)
 	f = r_fires;	// no match, look for a free spot
 	for (i = 0; i < MAX_FIRES; i++, f++)
 	{
-		if (f->die > cl.time)
+		if (f->die < cl.time)
 		{
 			memset (f, 0, sizeof(*f));
 			f->key = key;
@@ -998,19 +997,17 @@ R_UpdateFires (void)
 	int		i;
 	fire_t	*f;
 
-	f = r_fires;
-
 	glDepthMask (0);
 	glDisable (GL_TEXTURE_2D);
 	glShadeModel (GL_SMOOTH);
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_ONE, GL_ONE);
 
-	for (i = 0; i < MAX_FIRES; i++)
+	f = r_fires;
+	for (i = 0; i < MAX_FIRES; i++, f++)
 	{
 		if (f->die < cl.time || !f->size)
 			continue;
-
 		f->size += f->decay;
 		f->color[3] /= 2.0;
 		R_DrawFire (f);

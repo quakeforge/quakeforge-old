@@ -423,7 +423,6 @@ CL_NewTempEntity (void)
 
 	ent = &cl_visedicts[cl_numvisedicts];
 	cl_numvisedicts++;
-	ent->keynum = 0;
 
 	memset (ent, 0, sizeof(*ent));
 

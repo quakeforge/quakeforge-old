@@ -252,7 +252,7 @@ typedef struct {
 	float	color[4];		// RGBA
 } fire_t;
 
-void R_AddFire (vec3_t, vec3_t);
+void R_AddFire (vec3_t, vec3_t, entity_t *ent);
 fire_t *R_AllocFire (int);
 void R_DrawFire (fire_t *);
 void R_UpdateFires (void);
