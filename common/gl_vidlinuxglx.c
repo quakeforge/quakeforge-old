@@ -99,7 +99,7 @@ int		texture_extension_number = 1;
 
 float		gldepthmin, gldepthmax;
 
-cvar_t	gl_ztrick = {"gl_ztrick", "1", true};
+cvar_t	gl_ztrick = {"gl_ztrick", "0", true};
 
 const char *gl_vendor;
 const char *gl_renderer;
