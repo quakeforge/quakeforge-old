@@ -84,6 +84,7 @@ Misc Code Fixes:
   Daniel O'Connor <doconnor@gsoft.com.au> -- Correct failed mmap checking.
   Dan Nelson <dnelson@emsphone.com> -- Typo fix..
   Dan Olson <theoddone@quakefiles.com>
+  David Symonds <xoxus@usa.net> some warnings
 
 Cheat/exploit fixes:
   Mads Bondo Dydensborg <madsdyd@challenge.dk>
