@@ -29,7 +29,7 @@ Table of Contents
 
 I.	Special Thanks
 II.	System Requirements
-III.	Running and Compiling Quake
+III.	Running and Compiling QuakeForge
 IV.	Operating System Specific Issues
 V.	Errata and Known Bugs
 VI.	Troubleshooting
@@ -58,9 +58,11 @@ support to the QuakeForge project.
 
 Without all of you, we would not be where we are right now.
 
+Id Software, Inc. thanks MPath Interactive and Gandalf Technology for
+their help and support.
 
-Id Software, Inc thanks MPath Interactive and Gandalf Technology for their
-help and support.
+If you'd like to contribute code/hardware/support/suggestion/help to the
+QuakeForge project, contact Nelson Rush at: palisade@quakeforge.net
 
 
 II. System Requirements
@@ -72,8 +74,8 @@ Floating-point processor (not strictly required but a Good Idea(TM))
 30MB free disk space (shareware version, 80MB for registered version)
 
 
-III. Running and Compiling Quake
---------------------------------
+III. Running and Compiling QuakeForge
+-------------------------------------
 
 Read the INSTALL file for more information on compiling.
 
@@ -126,10 +128,10 @@ Solution: Use of freelook (mouse or keyboard) may solve this problem, as
 VI. Troubleshooting
 -------------------
 
-If Quake fails to start up, or has problems not addressed elsewhere in the
-documentation, try the -safe command line switch, which disables a number
-of parts of Quake that can be problems if there are hardware or
-configuration problems.  The -safe command line switch is equivalent to 
+If QuakeForge fails to start up, or has problems not addressed elsewhere
+in the documentation, try the -safe command line switch, which disables a 
+number of parts of QuakeForge that can be problems if there are hardware
+or configuration problems.  The -safe command line switch is equivalent to 
 -stdvid, -nosound, -nonet, and -nocdaudio together.  Those four switches
 do the following:
 
@@ -140,8 +142,8 @@ do the following:
 
 If -safe makes the problem go away, try using each of the switches
 individually to isolate the area in which you're experiencing the problem,
-then either correct the configuration or hardware problem or play Quake
-with that functionality disabled.
+then either correct the configuration or hardware problem or play
+QuakeForge with that functionality disabled.
 
 If you still have problems, try booting clean in conjunction with the
 -safe command line parameter.  For information on booting clean, refer to 
@@ -149,16 +151,16 @@ If you still have problems, try booting clean in conjunction with the
 
 If you experience page faults while running Quarterdeck's QDPMI DPMI
 server, this is caused by a bug in QDPMI.  Workarounds:  Remove QDPMI from
-CONFIG.SYS, issue the command QDPMI OFF before running QUAKE, or get the
-update patch for QDPMI from Quarterdeck.  You may be running QDPMI without
-knowing it if you have QEMM installed, because it can be installed as part
-of the QEMM installation.
+CONFIG.SYS, issue the command QDPMI OFF before running QuakeForge, or get
+the update patch for QDPMI from Quarterdeck.  You may be running QDPMI
+without knowing it if you have QEMM installed, because it can be
+installed as part of the QEMM installation.
 
 
 VII. Technical Support
 ----------------------
 
-Please do *not* contact ID Software, Inc regarding technical support
+Please do not contact ID Software, Inc regarding technical support
 issues related to QuakeForge. QuakeForge is heavily modified from the
 original Quake source release and Id Software does not support these
 modifications.
@@ -172,7 +174,7 @@ Thank you.
 VIII. Joystick notes
 --------------------
 
-Your joystick must be plugged in when Quake is launched.
+Your joystick must be plugged in when QuakeForge is launched.
 
 If you have a joystick plugged in, but do not wish QuakeForge to try to
 use it, just add the -nojoy option to the QuakeForge command line.
