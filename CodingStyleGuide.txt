@@ -28,7 +28,7 @@ SECTION_FunctionName ( args )
 		:
 	}
 
-	switch ( var ) {
+	switch (var) {
 		case a:
 			:
 		case b:
