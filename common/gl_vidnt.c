@@ -1576,6 +1576,8 @@ void	VID_Init (unsigned char *palette)
 	HDC		hdc;
 	DEVMODE	devmode;
 
+	S_Init();
+
 	memset(&devmode, 0, sizeof(devmode));
 
 	Cvar_RegisterVariable (&vid_mode);
