@@ -17,13 +17,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sys_win.h
+// sys_win.c -- Win32 system interface code
 
 #include "quakedef.h"
 #include "winquake.h"
 #include "resource.h"
-#include "errno.h"
-#include "fcntl.h"
+#include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 
 #define MINIMUM_WIN_MEMORY	0x0c00000
@@ -76,6 +76,7 @@ FILE IO
 ===============================================================================
 */
 
+#if 0
 /*
 ================
 filelength
@@ -93,6 +94,7 @@ int filelength (FILE *f)
 
 	return end;
 }
+#endif
 
 
 int	Sys_FileTime (char *path)
