@@ -7,4 +7,9 @@ Merge of the QW/Q1 trees done largely by:
 
 Autoconf support:
   Loring Holden <lsh@cs.brown.edu>
+  Joseph Carter <knghtbrd@debian.org>
+  Bill Currie <bill@taniwha.org>
+
+Sound cleanups:
+  Ryan C. Gordon <ryan_gordon@hotmail.com>
 
