@@ -890,7 +890,7 @@ void
 IN_Init(void)
 {
 //	Cvar_RegisterVariable(&m_filter);
-	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE);
+	m_filter = Cvar_Get ("m_filter","0",CVAR_ARCHIVE, "None");
 	if (COM_CheckParm ("-nomouse")) return;
 
 	mouse_x = mouse_y = 0.0;
