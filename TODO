@@ -51,5 +51,4 @@ to quake-devel@lists.sourceforge.net with details.
  * Fix q1/qw smurf attack
  * Fix oversized packet QW server crash
  * DOS/Win support in autoconf
- * Remove all of the #ifdef IDGODS stuff
  
