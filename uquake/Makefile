@@ -4,11 +4,7 @@
 
 VERSION=0.1.0
 
-ifneq (,$(findstring alpha,$(shell uname -m)))
-ARCH=axp
-else
-ARCH=$(shell uname -m)
-endif
+ARCH=$(shell uname -m | sed -e s/i.86/i386/ )
 
 PROJECT_DIR=..
 
@@ -40,7 +36,7 @@ GL_CFLAGS=-DGLQUAKE -I$(X11_DIR)/include -I/usr/include/glide
 LDFLAGS=-lm
 SVGA_LDFLAGS=$(LDFLAGS) -lvga
 X11_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lX11 -lXext
-GL_GLX_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lGL -lX11 -lXext
+GL_X11_LDFLAGS=-L$(X11_DIR)/lib $(LDFLAGS) -lGL -lX11 -lSM -lICE -lXext -lXxf86dga -lXxf86vm
 GL_GLIDE_LDFLAGS=-L$(X11_DIR)/lib -lvga -lGL -lglide2x -lX11 -lXext -ldl
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
@@ -57,7 +53,7 @@ DO_O_CC=$(CC) -O $(CFLAGS) -o $@ -c $<
 
 SOFT_TARGETS=$(BUILD_DIR)/quake-svga \
 	$(BUILD_DIR)/quake-x11
-GL_TARGETS=$(BUILD_DIR)/quake-glx \
+GL_TARGETS=$(BUILD_DIR)/quake-gl \
 	$(BUILD_DIR)/quake-glide
 
 debug:		debug-soft debug-gl
@@ -551,11 +547,11 @@ GL_AS_OBJS =\
 	$(BUILD_DIR)/gl_uq_obj/snd_mixa.o \
 	$(BUILD_DIR)/gl_uq_obj/sys_dosa.o
 
-GL_GLX_OBJS = $(BUILD_DIR)/gl_uq_obj/gl_vidlinuxglx.o
+GL_X11_OBJS = $(BUILD_DIR)/gl_uq_obj/gl_vidlinuxglx.o
 GL_GLIDE_OBJS = $(BUILD_DIR)/gl_uq_obj/gl_vidlinux.o
 
-$(BUILD_DIR)/quake-glx:	$(GL_OBJS) $(GL_AS_OBJS) $(GL_GLX_OBJS)
-	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_AS_OBJS) $(GL_GLX_OBJS) $(GL_GLX_LDFLAGS)
+$(BUILD_DIR)/quake-gl:	$(GL_OBJS) $(GL_AS_OBJS) $(GL_X11_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_AS_OBJS) $(GL_X11_OBJS) $(GL_X11_LDFLAGS)
 
 $(BUILD_DIR)/quake-glide:	$(GL_OBJS) $(GL_AS_OBJS) $(GL_GLIDE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $(GL_OBJS) $(GL_AS_OBJS) $(GL_GLIDE_OBJS) $(GL_GLIDE_LDFLAGS)
@@ -739,16 +735,11 @@ $(BUILD_DIR)/gl_uq_obj/sys_dosa.o :     $(UQ_DIR)/sys_dosa.s
 #############################################################################
 
 clean:  clean-soft clean-gl
-	@-rmdir $(BUILD_DIR)
 	@echo Done.
 
 clean-soft:
-	@-rm -f $(SOFT_TARGETS)
-	@-rm -f $(SOFT_OBJS)
-	@-rmdir $(BUILD_DIR)/soft_uq_obj
+	-rm -rf $(SOFT_TARGETS) $(BUILD_DIR)/soft_uq_obj
 
 clean-gl:
-	@-rm -f $(GL_TARGETS)
-	@-rm -f $(GL_OBJS)
-	@-rmdir $(BUILD_DIR)/gl_uq_obj
+	-rm -rf $(GL_TARGETS) $(BUILD_DIR)/gl_uq_obj
 
