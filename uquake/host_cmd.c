@@ -483,7 +483,7 @@ Host_Savegame_f
 void Host_Savegame_f (void)
 {
 	char	name[256];
-	FILE	*f;
+	QFile	*f;
 	int		i;
 	char	comment[SAVEGAME_COMMENT_LENGTH+1];
 
@@ -533,30 +533,30 @@ void Host_Savegame_f (void)
 	COM_DefaultExtension (name, ".sav");
 	
 	Con_Printf ("Saving game to %s...\n", name);
-	f = fopen (name, "w");
+	f = Qopen (name, "w");
 	if (!f)
 	{
 		Con_Printf ("ERROR: couldn't open.\n");
 		return;
 	}
 	
-	fprintf (f, "%i\n", SAVEGAME_VERSION);
+	Qprintf (f, "%i\n", SAVEGAME_VERSION);
 	Host_SavegameComment (comment);
-	fprintf (f, "%s\n", comment);
+	Qprintf (f, "%s\n", comment);
 	for (i=0 ; i<NUM_SPAWN_PARMS ; i++)
-		fprintf (f, "%f\n", svs.clients->spawn_parms[i]);
-	fprintf (f, "%d\n", current_skill);
-	fprintf (f, "%s\n", sv.name);
-	fprintf (f, "%f\n",sv.time);
+		Qprintf (f, "%f\n", svs.clients->spawn_parms[i]);
+	Qprintf (f, "%d\n", current_skill);
+	Qprintf (f, "%s\n", sv.name);
+	Qprintf (f, "%f\n",sv.time);
 
 // write the light styles
 
 	for (i=0 ; i<MAX_LIGHTSTYLES ; i++)
 	{
 		if (sv.lightstyles[i])
-			fprintf (f, "%s\n", sv.lightstyles[i]);
+			Qprintf (f, "%s\n", sv.lightstyles[i]);
 		else
-			fprintf (f,"m\n");
+			Qprintf (f,"m\n");
 	}
 
 
@@ -564,9 +564,9 @@ void Host_Savegame_f (void)
 	for (i=0 ; i<sv.num_edicts ; i++)
 	{
 		ED_Write (f, EDICT_NUM(i));
-		fflush (f);
+		Qflush (f);
 	}
-	fclose (f);
+	Qclose (f);
 	Con_Printf ("done.\n");
 }
 

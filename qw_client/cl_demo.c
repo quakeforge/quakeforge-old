@@ -54,7 +54,7 @@ void CL_StopPlayback (void)
 	if (!cls.demoplayback)
 		return;
 
-	gzclose (cls.demofile);
+	Qclose (cls.demofile);
 	cls.demofile = NULL;
 	cls.state = ca_disconnected;
 	cls.demoplayback = 0;
@@ -84,10 +84,10 @@ void CL_WriteDemoCmd (usercmd_t *pcmd)
 //Con_Printf("write: %ld bytes, %4.4f\n", msg->cursize, realtime);
 
 	fl = LittleFloat((float)realtime);
-	gzwrite (cls.demofile, &fl, sizeof(fl));
+	Qwrite (cls.demofile, &fl, sizeof(fl));
 
 	c = dem_cmd;
-	gzwrite (cls.demofile, &c, sizeof(c));
+	Qwrite (cls.demofile, &c, sizeof(c));
 
 	// correct for byte order, bytes don't matter
 	cmd = *pcmd;
@@ -98,15 +98,15 @@ void CL_WriteDemoCmd (usercmd_t *pcmd)
 	cmd.sidemove    = LittleShort(cmd.sidemove);
 	cmd.upmove      = LittleShort(cmd.upmove);
 
-	gzwrite(cls.demofile, &cmd, sizeof(cmd));
+	Qwrite(cls.demofile, &cmd, sizeof(cmd));
 
 	for (i=0 ; i<3 ; i++)
 	{
 		fl = LittleFloat (cl.viewangles[i]);
-		gzwrite (cls.demofile, &fl, 4);
+		Qwrite (cls.demofile, &fl, 4);
 	}
 
-	gzflush (cls.demofile, Z_SYNC_FLUSH);
+	Qflush (cls.demofile);
 }
 
 /*
@@ -128,16 +128,16 @@ void CL_WriteDemoMessage (sizebuf_t *msg)
 		return;
 
 	fl = LittleFloat((float)realtime);
-	gzwrite (cls.demofile, &fl, sizeof(fl));
+	Qwrite (cls.demofile, &fl, sizeof(fl));
 
 	c = dem_read;
-	gzwrite (cls.demofile, &c, sizeof(c));
+	Qwrite (cls.demofile, &c, sizeof(c));
 
 	len = LittleLong (msg->cursize);
-	gzwrite (cls.demofile, &len, 4);
-	gzwrite (cls.demofile, msg->data, msg->cursize);
+	Qwrite (cls.demofile, &len, 4);
+	Qwrite (cls.demofile, msg->data, msg->cursize);
 
-	gzflush (cls.demofile, Z_SYNC_FLUSH);
+	Qflush (cls.demofile);
 }
 
 /*
@@ -156,7 +156,7 @@ qboolean CL_GetDemoMessage (void)
 	usercmd_t *pcmd;
 
 	// read the time from the packet
-	gzread(cls.demofile, &demotime, sizeof(demotime));
+	Qread(cls.demofile, &demotime, sizeof(demotime));
 	demotime = LittleFloat(demotime);
 
 // decide if it is time to grab the next message		
@@ -166,7 +166,7 @@ qboolean CL_GetDemoMessage (void)
 		else if (demotime > cls.td_lastframe) {
 			cls.td_lastframe = demotime;
 			// rewind back to time
-			gzseek(cls.demofile, gztell(cls.demofile) - sizeof(demotime),
+			Qseek(cls.demofile, Qtell(cls.demofile) - sizeof(demotime),
 					SEEK_SET);
 			return 0;		// allready read this frame's message
 		}
@@ -180,12 +180,12 @@ qboolean CL_GetDemoMessage (void)
 			// too far back
 			realtime = demotime - 1.0;
 			// rewind back to time
-			gzseek(cls.demofile, gztell(cls.demofile) - sizeof(demotime),
+			Qseek(cls.demofile, Qtell(cls.demofile) - sizeof(demotime),
 					SEEK_SET);
 			return 0;
 		} else if (realtime < demotime) {
 			// rewind back to time
-			gzseek(cls.demofile, gztell(cls.demofile) - sizeof(demotime),
+			Qseek(cls.demofile, Qtell(cls.demofile) - sizeof(demotime),
 					SEEK_SET);
 			return 0;		// don't need another message yet
 		}
@@ -196,14 +196,14 @@ qboolean CL_GetDemoMessage (void)
 		Host_Error ("CL_GetDemoMessage: cls.state != ca_active");
 	
 	// get the msg type
-	gzread (cls.demofile, &c, sizeof(c));
+	Qread (cls.demofile, &c, sizeof(c));
 	
 	switch (c) {
 	case dem_cmd :
 		// user sent input
 		i = cls.netchan.outgoing_sequence & UPDATE_MASK;
 		pcmd = &cl.frames[i].cmd;
-		r = gzread (cls.demofile, pcmd, sizeof(*pcmd));
+		r = Qread (cls.demofile, pcmd, sizeof(*pcmd));
 		if (r != sizeof(*pcmd))
 		{
 			CL_StopPlayback ();
@@ -220,19 +220,19 @@ qboolean CL_GetDemoMessage (void)
 		cls.netchan.outgoing_sequence++;
 		for (i=0 ; i<3 ; i++)
 		{
-			r = gzread (cls.demofile, &f, 4);
+			r = Qread (cls.demofile, &f, 4);
 			cl.viewangles[i] = LittleFloat (f);
 		}
 		break;
 
 	case dem_read:
 		// get the next message
-		gzread (cls.demofile, &net_message.cursize, 4);
+		Qread (cls.demofile, &net_message.cursize, 4);
 		net_message.cursize = LittleLong (net_message.cursize);
 	//Con_Printf("read: %ld bytes\n", net_message.cursize);
 		if (net_message.cursize > MAX_MSGLEN)
 			Sys_Error ("Demo message > MAX_MSGLEN");
-		r = gzread (cls.demofile, net_message.data, net_message.cursize);
+		r = Qread (cls.demofile, net_message.data, net_message.cursize);
 		if (r != net_message.cursize)
 		{
 			CL_StopPlayback ();
@@ -241,9 +241,9 @@ qboolean CL_GetDemoMessage (void)
 		break;
 
 	case dem_set :
-		gzread (cls.demofile, &i, 4);
+		Qread (cls.demofile, &i, 4);
 		cls.netchan.outgoing_sequence = LittleLong(i);
-		gzread (cls.demofile, &i, 4);
+		Qread (cls.demofile, &i, 4);
 		cls.netchan.incoming_sequence = LittleLong(i);
 		break;
 
@@ -300,7 +300,7 @@ void CL_Stop_f (void)
 	CL_WriteDemoMessage (&net_message);
 
 // finish up
-	gzclose (cls.demofile);
+	Qclose (cls.demofile);
 	cls.demofile = NULL;
 	cls.demorecording = false;
 	Con_Printf ("Completed demo\n");
@@ -327,21 +327,21 @@ void CL_WriteRecordDemoMessage (sizebuf_t *msg, int seq)
 		return;
 
 	fl = LittleFloat((float)realtime);
-	gzwrite (cls.demofile, &fl, sizeof(fl));
+	Qwrite (cls.demofile, &fl, sizeof(fl));
 
 	c = dem_read;
-	gzwrite (cls.demofile, &c, sizeof(c));
+	Qwrite (cls.demofile, &c, sizeof(c));
 
 	len = LittleLong (msg->cursize + 8);
-	gzwrite (cls.demofile, &len, 4);
+	Qwrite (cls.demofile, &len, 4);
 
 	i = LittleLong(seq);
-	gzwrite (cls.demofile, &i, 4);
-	gzwrite (cls.demofile, &i, 4);
+	Qwrite (cls.demofile, &i, 4);
+	Qwrite (cls.demofile, &i, 4);
 
-	gzwrite (cls.demofile, msg->data, msg->cursize);
+	Qwrite (cls.demofile, msg->data, msg->cursize);
 
-	gzflush (cls.demofile, Z_SYNC_FLUSH);
+	Qflush (cls.demofile);
 }
 
 
@@ -357,17 +357,17 @@ void CL_WriteSetDemoMessage (void)
 		return;
 
 	fl = LittleFloat((float)realtime);
-	gzwrite (cls.demofile, &fl, sizeof(fl));
+	Qwrite (cls.demofile, &fl, sizeof(fl));
 
 	c = dem_set;
-	gzwrite (cls.demofile, &c, sizeof(c));
+	Qwrite (cls.demofile, &c, sizeof(c));
 
 	len = LittleLong(cls.netchan.outgoing_sequence);
-	gzwrite (cls.demofile, &len, 4);
+	Qwrite (cls.demofile, &len, 4);
 	len = LittleLong(cls.netchan.incoming_sequence);
-	gzwrite (cls.demofile, &len, 4);
+	Qwrite (cls.demofile, &len, 4);
 
-	gzflush (cls.demofile, Z_SYNC_FLUSH);
+	Qflush (cls.demofile);
 }
 
 
@@ -416,7 +416,7 @@ void CL_Record_f (void)
 //
 	COM_DefaultExtension (name, ".qwd");
 
-	cls.demofile = gzopen (name, "wb");
+	cls.demofile = Qopen (name, "wb");
 	if (!cls.demofile)
 	{
 		Con_Printf ("ERROR: couldn't open.\n");
@@ -702,7 +702,7 @@ void CL_ReRecord_f (void)
 //
 	COM_DefaultExtension (name, ".qwd");
 
-	cls.demofile = gzopen (name, "wb");
+	cls.demofile = Qopen (name, "wb");
 	if (!cls.demofile)
 	{
 		Con_Printf ("ERROR: couldn't open.\n");

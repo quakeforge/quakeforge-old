@@ -25,6 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <client.h>
 #include <server.h>
+#include <model.h>
 
 entity_t *CL_EntityNum (int num);
 

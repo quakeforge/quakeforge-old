@@ -205,7 +205,7 @@ typedef struct
 	int		qport;
 
 	// download stuff
-	FILE		*download;		// file transfer from server
+	QFile		*download;		// file transfer from server
 	char		downloadtempname[MAX_OSPATH];
 	char		downloadname[MAX_OSPATH];
 	int		downloadnumber;
@@ -229,7 +229,7 @@ typedef struct
 	qboolean	demoplayback;
 	qboolean	timedemo;
 	int		forcetrack;
-	gzFile		*demofile;
+	QFile		*demofile;
 	float		td_lastframe;
 	int		td_startframe;	
 	float		td_starttime;	
@@ -446,14 +446,14 @@ void CL_BeginServerConnect(void);
 #define			MAX_VISEDICTS	256
 
 extern	int		cl_numvisedicts, cl_oldnumvisedicts;
-#ifdef QUAKEWORLD
+//#ifdef QUAKEWORLD
 extern	entity_t	*cl_visedicts, *cl_oldvisedicts;
 extern	entity_t	cl_visedicts_list[2][MAX_VISEDICTS];
 extern char		emodel_name[], pmodel_name[], prespawn_name[],
 			modellist_name[], soundlist_name[];
-#elif UQUAKE
-extern entity_t		*cl_visedicts[MAX_VISEDICTS];
-#endif // QUAKEWORLD else UQUAKE
+//#elif UQUAKE
+//extern entity_t		*cl_visedicts[MAX_VISEDICTS];
+//#endif // QUAKEWORLD else UQUAKE
 
 
 //
@@ -497,8 +497,9 @@ void CL_StopPlayback (void);
 #ifdef QUAKEWORLD
 qboolean CL_GetMessage (void);
 void CL_WriteDemoCmd (usercmd_t *pcmd);
-#elif UQUAKE
+#elif defined(UQUAKE)
 int CL_GetMessage (void);
+void CL_SignonReply (void);
 #endif // QUAKEWORLD else UQUAKE
 
 void CL_Stop_f (void);

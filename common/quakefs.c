@@ -264,9 +264,9 @@ void COM_CopyFile (char *netpath, char *cachepath)
 }
 
 
-gzFile *COM_gzOpenRead(const char *path, int offs, int len)
+QFile *COM_gzOpenRead(const char *path, int offs, int len)
 {
-	int fd=open(path,O_RDONLY);
+/*	int fd=open(path,O_RDONLY);
 	unsigned char id[2];
 	unsigned char len_bytes[4];
 	if (fd==-1) {
@@ -290,7 +290,8 @@ gzFile *COM_gzOpenRead(const char *path, int offs, int len)
 	}
 	lseek(fd,offs,SEEK_SET);
 	com_filesize=len;
-	return gzdopen(fd,"rb");
+	return gzdopen(fd,"rb");*/
+	return 0;
 }
 
 /*
@@ -303,7 +304,7 @@ Sets com_filesize and one of handle or file
 */
 int file_from_pak; // global indicating file came from pack file ZOID
 
-int COM_FOpenFile (char *filename, gzFile **gzfile)
+int COM_FOpenFile (char *filename, QFile **gzfile)
 {
 	searchpath_t	*search;
 	char		netpath[MAX_OSPATH];
@@ -402,7 +403,7 @@ byte	*loadbuf;
 int		loadsize;
 byte *COM_LoadFile (char *path, int usehunk)
 {
-	gzFile	*h;
+	QFile	*h;
 	byte	*buf;
 	char	base[32];
 	int		len;
@@ -442,8 +443,8 @@ byte *COM_LoadFile (char *path, int usehunk)
 #ifndef SERVERONLY
 	Draw_BeginDisc ();
 #endif
-	gzread (h, buf, len);
-	gzclose (h);
+	Qread (h, buf, len);
+	Qclose (h);
 #ifndef SERVERONLY
 	Draw_EndDisc ();
 #endif

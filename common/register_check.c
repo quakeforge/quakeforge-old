@@ -44,7 +44,7 @@ cvar_t registered = {"registered", "0"};
 void
 register_check ( void ) {
 
-	gzFile *h;
+	QFile *h;
 
 	Cvar_RegisterVariable (&registered);
 
@@ -52,6 +52,6 @@ register_check ( void ) {
 
 	if (h) {
 		Cvar_Set ("registered", "1");
-		gzclose (h);
+		Qclose (h);
 	}
 }

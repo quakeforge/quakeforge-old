@@ -146,7 +146,8 @@ QW_NET_SRC     = net_udp.c net_com.c mdfour.c
 # Common source files
 
 MISC_SRC       = common.c crc.c cvar.c cmd.c mathlib.c register_check.c \
-                 wad.c zone.c cvars.c qendian.c lib_replace.c quakefs.c qargs.c
+                 wad.c zone.c cvars.c qendian.c lib_replace.c quakefs.c \
+		 quakeio.c qargs.c
 
 # GL renderer source
 

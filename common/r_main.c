@@ -597,11 +597,8 @@ void R_DrawEntitiesOnList (void)
 
 	for (i=0 ; i<cl_numvisedicts ; i++)
 	{
-#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
-#else
-		currententity = cl_visedicts[i];
-		
+#ifdef UQUAKE
 		if (currententity == &cl_entities[cl.playernum + 1])
 			continue;	// don't draw the player
 #endif	// QUAKEWORLD
@@ -827,11 +824,7 @@ void R_DrawBEntitiesOnList (void)
 
 	for (i=0 ; i<cl_numvisedicts ; i++)
 	{
-#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
-#else
-		currententity = cl_visedicts[i];
-#endif	// QUAKEWORLD
 
 		switch (currententity->model->type)
 		{

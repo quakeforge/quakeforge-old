@@ -527,7 +527,7 @@ ED_Write
 For savegames
 =============
 */
-void ED_Write (FILE *f, edict_t *ed)
+void ED_Write (QFile *f, edict_t *ed)
 {
 	ddef_t	*d;
 	int		*v;
@@ -535,11 +535,11 @@ void ED_Write (FILE *f, edict_t *ed)
 	char	*name;
 	int		type;
 
-	fprintf (f, "{\n");
+	Qprintf (f, "{\n");
 
 	if (ed->free)
 	{
-		fprintf (f, "}\n");
+		Qprintf (f, "}\n");
 		return;
 	}
 	
@@ -560,11 +560,11 @@ void ED_Write (FILE *f, edict_t *ed)
 		if (j == type_size[type])
 			continue;
 	
-		fprintf (f,"\"%s\" ",name);
-		fprintf (f,"\"%s\"\n", PR_UglyValueString(d->type, (eval_t *)v));		
+		Qprintf (f,"\"%s\" ",name);
+		Qprintf (f,"\"%s\"\n", PR_UglyValueString(d->type, (eval_t *)v));		
 	}
 
-	fprintf (f, "}\n");
+	Qprintf (f, "}\n");
 }
 
 void ED_PrintNum (int ent)
@@ -665,14 +665,14 @@ FIXME: need to tag constants, doesn't really work
 ED_WriteGlobals
 =============
 */
-void ED_WriteGlobals (FILE *f)
+void ED_WriteGlobals (QFile *f)
 {
 	ddef_t		*def;
 	int			i;
 	char		*name;
 	int			type;
 
-	fprintf (f,"{\n");
+	Qprintf (f,"{\n");
 	for (i=0 ; i<progs->numglobaldefs ; i++)
 	{
 		def = &pr_globaldefs[i];
@@ -687,10 +687,10 @@ void ED_WriteGlobals (FILE *f)
 			continue;
 
 		name = PR_GetString(def->s_name);
-		fprintf (f,"\"%s\" ", name);
-		fprintf (f,"\"%s\"\n", PR_UglyValueString(type, (eval_t *)&pr_globals[def->ofs]));		
+		Qprintf (f,"\"%s\" ", name);
+		Qprintf (f,"\"%s\"\n", PR_UglyValueString(type, (eval_t *)&pr_globals[def->ofs]));		
 	}
-	fprintf (f,"}\n");
+	Qprintf (f,"}\n");
 }
 
 /*

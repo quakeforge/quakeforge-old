@@ -306,7 +306,7 @@ void SV_Map_f (void)
 {
 	char	level[MAX_QPATH];
 	char	expanded[MAX_QPATH];
-	gzFile	*f;
+	QFile	*f;
 
 	if (Cmd_Argc() != 2)
 	{

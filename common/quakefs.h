@@ -25,11 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _QUAKEFS_H
 #include "config.h"
 
-#ifdef HAS_ZLIB
-#include <zlib.h>
-#else
-#include "nozip.h"
-#endif
+#include "quakeio.h"
 
 //============================================================================
 
@@ -41,8 +37,8 @@ struct cache_user_s;
 extern	char	com_gamedir[MAX_OSPATH];
 
 void COM_WriteFile (char *filename, void *data, int len);
-int COM_FOpenFile (char *filename, gzFile **file);
-void COM_CloseFile (FILE *h);
+int COM_FOpenFile (char *filename, QFile **file);
+void COM_CloseFile (QFile *h);
 
 byte *COM_LoadStackFile (char *path, void *buffer, int bufsize);
 byte *COM_LoadTempFile (char *path);

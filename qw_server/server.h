@@ -26,12 +26,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "config.h"
 
-#ifdef HAS_ZLIB
-#include <zlib.h>
-#else
-#include "nozip.h"
-#endif
-
 #include <progs.h>
 
 #define	QW_SERVER
@@ -183,7 +177,7 @@ typedef struct client_s
 
 	client_frame_t		frames[UPDATE_BACKUP];	// updates can be deltad from here
 
-	gzFile			*download;		// file being downloaded
+	QFile			*download;		// file being downloaded
 	int			downloadsize;		// total bytes
 	int			downloadcount;		// bytes sent
 
