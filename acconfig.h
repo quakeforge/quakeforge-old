@@ -10,6 +10,9 @@
 /* Define this to something sane if you don't have stricmp */
 #undef stricmp
 
+/* Define this if you are using Mesa */
+#undef XMESA
+
 /* Define this if you have GL_COLOR_INDEX8_EXT in GL/gl.h */
 #undef HAVE_GL_COLOR_INDEX8_EXT
 
@@ -21,6 +24,9 @@
 
 /* Define this if you have a BSD-style CD-ROM API */
 #undef USE_BSD_CD
+
+/* Define this to use experimental code */
+#undef _EXPERIMENTAL_
 
 #if defined(X11)
 #   define OUTPUT_STR	"X11"

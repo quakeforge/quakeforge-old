@@ -231,6 +231,7 @@ if test "x$HAS_OGL" != xno; then
    CPPFLAGS="$CPPFLAGS $OGL_CFLAGS"
    AC_CHECK_HEADER(GL/gl.h, HAS_OGL=yes, HAS_OGL=no)
    if test "x$HAS_OGL" != xno; then
+      AC_CHECK_HEADER(GL/xmesa.h, HAS_XMESA=yes, HAS_XMESA=no)
       AC_MSG_CHECKING(for GL_COLOR_INDEX8_EXT in GL/gl.h)
       AC_TRY_COMPILE([#include "GL/gl.h"],
         [ int x = (int) GL_COLOR_INDEX8_EXT;],
@@ -347,6 +348,10 @@ if test "x$HAS_OGL" = xyes; then
 fi
 if test "x$HAS_OGL" != xyes; then
    OGL_CFLAGS="" OGL_LIBS=""
+else
+   if test "xHAS_XMESA" = xyes; then
+      AC_DEFINE(XMESA)
+   fi
 fi
 
 dnl Check for xil
