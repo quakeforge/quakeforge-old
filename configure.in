@@ -90,6 +90,7 @@ if test "x$HAS_DGA" != xno; then
    save_CPPFLAGS="$CPPFLAGS"
    CPPFLAGS="$X_CFLAGS $CPPFLAGS"
    AC_CHECK_HEADER(X11/extensions/xf86dga.h, HAS_DGA=yes, HAS_DGA=no)
+   AC_CHECK_HEADER(X11/extensions/xf86vmode.h, qwfoo=qwfoo, HAS_DGA=no)
    CPPFLAGS="$save_CPPFLAGS"
 fi
 
