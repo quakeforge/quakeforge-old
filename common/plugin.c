@@ -30,7 +30,6 @@
 	Boston, MA  02111-1307, USA.
 */
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <stdio.h>
 #include <dlfcn.h>
