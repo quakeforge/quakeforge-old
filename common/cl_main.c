@@ -793,6 +793,12 @@ void CL_FullServerinfo_f (void)
 		else
 			Con_Printf("Invalid standards version: %s", p);
 	}
+
+// check game type (also done in CL_ServerInfo_f)
+	if ((p = Info_ValueForKey(cl.serverinfo, "deathmatch")) && *p)
+		cl.gametype = Q_atoi (p) ? GAME_DEATHMATCH : GAME_COOP;
+	else
+		cl.gametype = GAME_DEATHMATCH;
 }
 #endif
 

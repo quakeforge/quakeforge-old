@@ -976,6 +976,7 @@ void CL_ServerInfo (void)
 {
 	char key[MAX_MSGLEN];
 	char value[MAX_MSGLEN];
+	char *p;
 
 	strncpy (key, MSG_ReadString(), sizeof(key) - 1);
 	key[sizeof(key) - 1] = 0;
@@ -985,6 +986,12 @@ void CL_ServerInfo (void)
 	Con_DPrintf("SERVERINFO: %s=%s\n", key, value);
 
 	Info_SetValueForKey (cl.serverinfo, key, value, MAX_SERVERINFO_STRING);
+
+// check game type (also done in CL_FullServerinfo_f)
+	if ((p = Info_ValueForKey(cl.serverinfo, "deathmatch")) && *p)
+		cl.gametype = Q_atoi (p) ? GAME_DEATHMATCH : GAME_COOP;
+	else
+		cl.gametype = GAME_DEATHMATCH;
 }
 
 /*

@@ -647,23 +647,26 @@ int	Sbar_ColorForMap (int m)
 
 /*
 ===============
-Sbar_SoloScoreboard
+Sbar_DrawScoreboard
 ===============
 */
-void Sbar_SoloScoreboard (void)
+void Sbar_DrawScoreboard (void)
 {
 	char	str[80];
 	int		minutes, seconds, tens, units;
 
 #ifdef QUAKEWORLD
 	Sbar_DrawPic (0, 0, sb_scorebar);
-#else
-	snprintf(str, sizeof(str),"Monsters:%3i /%3i", cl.stats[STAT_MONSTERS], cl.stats[STAT_TOTALMONSTERS]);
-	Sbar_DrawString (8, 4, str);
+#endif
 
-	snprintf(str, sizeof(str),"Secrets :%3i /%3i", cl.stats[STAT_SECRETS], cl.stats[STAT_TOTALSECRETS]);
-	Sbar_DrawString (8, 12, str);
-#endif // QUAKEWORLD
+	if (cl.gametype != GAME_DEATHMATCH)
+	{
+		snprintf(str, sizeof(str),"Monsters:%3i /%3i", cl.stats[STAT_MONSTERS], cl.stats[STAT_TOTALMONSTERS]);
+		Sbar_DrawString (8, 4, str);
+
+		snprintf(str, sizeof(str),"Secrets :%3i /%3i", cl.stats[STAT_SECRETS], cl.stats[STAT_TOTALSECRETS]);
+		Sbar_DrawString (8, 12, str);
+	}
 
 	// time
 	minutes = cl.time / 60;
@@ -673,28 +676,19 @@ void Sbar_SoloScoreboard (void)
 	snprintf(str, sizeof(str),"Time :%3i:%i%i", minutes, tens, units);
 	Sbar_DrawString (184, 4, str);
 
-#ifdef UQUAKE
+//#ifdef UQUAKE
 	{
 		// draw level name
 		int l = strlen (cl.levelname);
-		Sbar_DrawString (232 - l*4, 12, cl.levelname);
+		if (l < 22 && !strstr(cl.levelname, "\n"))
+			Sbar_DrawString (232 - l*4, 12, cl.levelname);
 	}
-#endif	// UQUAKE
-}
+//#endif	// UQUAKE
 
-/*
-===============
-Sbar_DrawScoreboard
-===============
-*/
-void Sbar_DrawScoreboard (void)
-{
-#ifdef UQUAKE
-	Sbar_SoloScoreboard ();
 	if (cl.gametype == GAME_DEATHMATCH)
 		Sbar_DeathmatchOverlay (0);
-#endif // UQUAKE
 }
+
 
 //=============================================================================
 
@@ -1235,7 +1229,7 @@ void Sbar_Draw (void)
 				Sbar_DrawString(160-14*8+4, 12, "Press [ATTACK] for AutoCamera");
 			} else {
 				if (sb_showscores || cl.stats[STAT_HEALTH] <= 0)
-					Sbar_SoloScoreboard ();
+					Sbar_DrawScoreboard ();
 				else
 					Sbar_DrawNormal ();
 
@@ -1245,7 +1239,7 @@ void Sbar_Draw (void)
 				Sbar_DrawString(0, -8, st);
 			}
 		} else if (sb_showscores || cl.stats[STAT_HEALTH] <= 0)
-			Sbar_SoloScoreboard ();
+			Sbar_DrawScoreboard ();
 		else
 			Sbar_DrawNormal ();
 #else
