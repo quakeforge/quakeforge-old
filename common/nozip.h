@@ -27,8 +27,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef HAS_ZLIB
 #define gzFile  FILE
 #define gzdopen fdopen
-#define gzread(F, BUF, LEN)  fread(BUF, LEN, 1, F)
-#define gzwrite(F, BUF, LEN) fwrite(BUF, LEN, 1, F)
+#define gzread(F, BUF, LEN)  fread(BUF, 1, LEN, F)
+#define gzwrite(F, BUF, LEN) fwrite(BUF, 1, LEN, F)
 /* #define gzwrite(F, BUF, SIZE,LEN) fwrite( */
 #define gzflush(FILE, VAL)   fflush(FILE)
 #define gzprintf fprintf

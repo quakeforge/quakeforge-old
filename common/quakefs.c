@@ -310,10 +310,12 @@ int COM_FOpenFile (char *filename, gzFile **gzfile)
 	pack_t		*pak;
 	int			i;
 	int			findtime;
+#ifdef HAS_ZLIB
 	char		gzfilename[MAX_OSPATH];
 
 	strncpy(gzfilename,filename,sizeof(gzfilename));
 	strncat(gzfilename,".gz",sizeof(gzfilename));
+#endif
 
 	file_from_pak = 0;
 		
@@ -331,8 +333,10 @@ int COM_FOpenFile (char *filename, gzFile **gzfile)
 				char *fn=0;
 				if (!strcmp (pak->files[i].name, filename))
 					fn=filename;
+#ifdef HAS_ZLIB
 				else if (!strcmp (pak->files[i].name, gzfilename))
 					fn=gzfilename;
+#endif
 				if (fn)
 				{	// found it!
 					if(developer.value)
@@ -358,10 +362,12 @@ int COM_FOpenFile (char *filename, gzFile **gzfile)
 			
 			findtime = Sys_FileTime (netpath);
 			if (findtime == -1) {
+#ifdef HAS_ZLIB
 				snprintf(netpath, sizeof(netpath), "%s/%s",search->filename,
 						 gzfilename);
 				findtime = Sys_FileTime (netpath);
 				if (findtime == -1)
+#endif
 					continue;
 			}
 				
