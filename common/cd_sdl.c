@@ -158,6 +158,8 @@ void CDAudio_Shutdown()
 	cd_id = NULL;
 }
 
+
+#define CD_f_DEFINED
 static void CD_f()
 {
 	char *command;

@@ -620,6 +620,7 @@ void CDAudio_Resume(void)
 }
 
 
+#define CD_f_DEFINED
 static void CD_f (void)
 {
 	char	*command;
