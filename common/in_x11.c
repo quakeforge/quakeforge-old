@@ -460,20 +460,26 @@ IN_Init(void)
 #ifdef HAS_DGA
 	vid_dga_mouseaccel = Cvar_Get ("vid_dga_mouseaccel","1",CVAR_ARCHIVE,
 					"None");
-#if 1
-//	XF86DGASetViewPort(x_disp, x_win, 0, 0);
-	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp), XF86DGADirectMouse|XF86DGADirectKeyb);
-//	XF86DGADirectVideo(x_disp, x_win, XF86DGADirectGraphics|XF86DGADirectMouse|XF86DGADirectKeyb);
-//	                        
-//	XF86DGASetVidPage(x_disp, x_win, 0);
+
+	// XF86DGASetViewPort, XF86DGASetVidPage, and XF86DGADirectVideo's
+	// XF86DGADirectVideo flag are disabled till someone has a chance to
+	// figure out what's wrong with them (if anything)  --KB
+
+//	XF86DGASetViewPort(x_disp, DefaultScreen(x_disp), 0, 0);
+	XF86DGADirectVideo(x_disp, DefaultScreen(x_disp),
+			/*XF86DGADirectGraphics|*/
+			XF86DGADirectMouse|XF86DGADirectKeyb);
+//	XF86DGASetVidPage(x_disp, DefaultScreen(x_disp), 0);
 
 	XGrabKeyboard(x_disp, x_win, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 	XGrabPointer(x_disp, x_win, True, MOUSE_MASK, GrabModeAsync, GrabModeAsync,
 				 x_win, None, CurrentTime);
-	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM, "");
-#endif
+
+	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
+			"1 if you have DGA mouse support");
 #else
-	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM, "");
+	in_dgamouse = Cvar_Get ("in_dgamouse", "1", CVAR_ROM,
+			"1 if you have DGA mouse support");
 #endif
 	if (COM_CheckParm("-nomouse")) return 1;
 	mouse_x = mouse_y = 0.0;
