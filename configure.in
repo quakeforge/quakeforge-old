@@ -497,6 +497,24 @@ fi
 
 
 dnl ========================================================================
+dnl Check for CD-ROM
+
+AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <linux/cdrom.h>
+#ifdef CDROMREADTOCENTRY
+QF_maGiC_VALUE
+#endif
+    ], AC_DEFINE(USE_LINUX_CD),
+      AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <sys/cdio.h>
+#ifdef CDIOREADTOCENTRY
+QF_maGiC_VALUE
+#endif
+    ], AC_DEFINE(USE_BSD_CD))
+)
+
+
+dnl ========================================================================
 dnl Check for networking
 
 NET_LIBS=""

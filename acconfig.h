@@ -16,6 +16,12 @@
 /* Define this if C symbols are prefixed with an underscore */
 #undef HAVE_SYM_PREFIX_UNDERSCORE
 
+/* Define this if you have a Linux-style CD-ROM API */
+#undef USE_LINUX_CD
+
+/* Define this if you have a BSD-style CD-ROM API */
+#undef USE_BSD_CD
+
 #if defined(X11)
 #   define OUTPUT_STR	"X11"
 #elif defined(GGI)
