@@ -478,7 +478,10 @@ qboolean SV_Push (edict_t *pusher, vec3_t move)
 		block = SV_TestEntityPosition (check);
 		pusher->v.solid = SOLID_BSP;
 		if (block)
+		{
+//			Con_Printf ("blocked..  %i\n", block);
 			continue;
+		}
 
 	// if the entity is standing on the pusher, it will definately be moved
 		if ( ! ( ((int)check->v.flags & FL_ONGROUND)

@@ -612,6 +612,7 @@ void PM_AirMove (void)
 	{
 		if (pmove.velocity[2] > 0 || !pm_slidefix->value)
 			pmove.velocity[2] = 0;
+
 		PM_Accelerate (wishdir, wishspeed, movevars.accelerate);
 		pmove.velocity[2] -= movevars.entgravity * movevars.gravity * frametime;
 		PM_GroundMove ();
@@ -631,14 +632,14 @@ void PM_AirMove (void)
 			PM_CategorizePosition ();
 			if (onground != -1)		// but we're on ground now
 			{
-//				Con_Printf ("Jumping bug!\n");
+				//Con_DPrintf ("Jumping bug!\n");
 				VectorCopy (pmove.origin, original);
 				// Calculate correct velocity
 				PM_FlyMove();	
 				// Restore position
 				VectorCopy (original, pmove.origin);
 			}
-		};
+		}
 	}
 
 //Con_Printf("airmove:vec: %4.2f %4.2f %4.2f\n",
@@ -833,7 +834,7 @@ void NudgePosition (void)
 //	pmove.origin[2] += 0.124;
 
 //	if (pmove.dead)
-//		return;		// might be a squished point, so don'y bother
+//		return;		// might be a squished point, so don't bother
 //	if (PM_TestPlayerPosition (pmove.origin) )
 //		return;
 
