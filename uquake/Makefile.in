@@ -223,26 +223,22 @@ X11_LDFLAGS = @X_LIBS@ -lX11 @X11_SHM_LIB@ @X_EXTRA_LIBS@
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
-# XXX - can we avoid doing every compile?
-MAKE_SURE_x11_DIR = @DIR=x11; $(MAKE_SURE_DIR)
+x11_DIR:
+	DIR=x11; $(MAKE_SURE_DIR)
 
 $(BUILD_DIR)/x11/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_x11_DIR)
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/x11/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_x11_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_x11_DIR)
 	$(CC) $(CFLAGS) $(X11_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/x11/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_x11_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(X11QUAKE): $(BUILD_DIR)/../$(X11QUAKE)
+$(X11QUAKE): x11_DIR $(BUILD_DIR)/../$(X11QUAKE)
 
 $(BUILD_DIR)/../$(X11QUAKE): $(OBJSquake-x11)
 	$(CC) $(CFLAGS) $(OBJSquake-x11) $(X11_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(X11QUAKE)
@@ -265,31 +261,26 @@ SVGA_VID_SRC = vid_svgalib.c
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
-# XXX - can we avoid doing every compile?
-MAKE_SURE_svga_DIR = @DIR=svga; $(MAKE_SURE_DIR)
+svga_DIR:
+	DIR=svga; $(MAKE_SURE_DIR)
 
 # Not sure why this -O is needed, but it is...
 $(BUILD_DIR)/svga/vid_svgalib.o: $(COMMON_DIR)/vid_svgalib.c
-	$(MAKE_SURE_svga_DIR)
 	$(CC) -O $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/svga/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/svga/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/svga/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_svga_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(SVGAQUAKE): $(BUILD_DIR)/../$(SVGAQUAKE)
+$(SVGAQUAKE): svga_DIR $(BUILD_DIR)/../$(SVGAQUAKE)
 
 $(BUILD_DIR)/../$(SVGAQUAKE): $(OBJSquake-svga)
 	$(CC) $(CFLAGS) $(OBJSquake-svga) $(SVGA_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SVGAQUAKE)
@@ -314,26 +305,22 @@ GGI_VID_SRC = vid_ggi.c
 
 # This can be thought of as a macro that makes sure that the ggi
 # sub-directory is created
-# XXX - can we avoid doing every compile?
-MAKE_SURE_ggi_DIR = @DIR=ggi; $(MAKE_SURE_DIR)
+ggi_DIR:
+	DIR=ggi; $(MAKE_SURE_DIR)
 
 $(BUILD_DIR)/ggi/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_ggi_DIR)
 	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/ggi/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_ggi_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/ggi/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_ggi_DIR)
 	$(CC) $(CFLAGS) $(GGI_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/ggi/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_ggi_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(GGIQUAKE): $(BUILD_DIR)/../$(GGIQUAKE)
+$(GGIQUAKE): ggi_DIR $(BUILD_DIR)/../$(GGIQUAKE)
 
 $(BUILD_DIR)/../$(GGIQUAKE): $(OBJSquake-ggi)
 	$(CC) $(CFLAGS) $(OBJSquake-ggi) $(GGI_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(GGIQUAKE)
@@ -356,26 +343,22 @@ GL_VID_SRC = gl_vidlinuxglx.c
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
-# XXX - can we avoid doing every compile?
-MAKE_SURE_gl_DIR = @DIR=gl; $(MAKE_SURE_DIR)
+gl_DIR:
+	DIR=gl; $(MAKE_SURE_DIR)
 
 $(BUILD_DIR)/gl/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) $(GL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/gl/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(GLQUAKE): $(BUILD_DIR)/../$(GLQUAKE)
+$(GLQUAKE): gl_DIR $(BUILD_DIR)/../$(GLQUAKE)
 
 $(BUILD_DIR)/../$(GLQUAKE): $(OBJSquake-gl)
 	$(CC) $(CFLAGS) $(OBJSquake-gl) $(GL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(GLQUAKE)
@@ -398,26 +381,22 @@ TDFX_VID_SRC = gl_vidlinux_3dfx.c
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
-# XXX - can we avoid doing every compile?
-MAKE_SURE_3dfx_DIR = @DIR=3dfx; $(MAKE_SURE_DIR)
+3dfx_DIR:
+	DIR=3dfx; $(MAKE_SURE_DIR)
 
 $(BUILD_DIR)/3dfx/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_3dfx_DIR)
 	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/3dfx/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_3dfx_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_3dfx_DIR)
 	$(CC) $(CFLAGS) $(TDFX_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/3dfx/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_gl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(TDFXQUAKE): $(BUILD_DIR)/../$(TDFXQUAKE)
+$(TDFXQUAKE): 3dfx_DIR $(BUILD_DIR)/../$(TDFXQUAKE)
 
 $(BUILD_DIR)/../$(TDFXQUAKE): $(OBJSquake-3dfx)
 	$(CC) $(CFLAGS) $(OBJSquake-3dfx) $(TDFX_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(TDFXQUAKE)
@@ -442,26 +421,22 @@ SDL_VID_SRC = vid_sdl.c
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
-# XXX - can we avoid doing every compile?
-MAKE_SURE_sdl_DIR = @DIR=sdl; $(MAKE_SURE_DIR)
+sdl_DIR:
+	DIR=sdl; $(MAKE_SURE_DIR)
 
 $(BUILD_DIR)/sdl/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_sdl_DIR)
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/sdl/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_sdl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/sdl/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_sdl_DIR)
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/sdl/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_sdl_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(SDLQUAKE): $(BUILD_DIR)/../$(SDLQUAKE)
+$(SDLQUAKE): sdl_DIR $(BUILD_DIR)/../$(SDLQUAKE)
 
 $(BUILD_DIR)/../$(SDLQUAKE): $(OBJSquake-sdl)
 	$(CC) $(CFLAGS) $(OBJSquake-sdl) $(SDL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SDLQUAKE)

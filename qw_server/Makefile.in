@@ -85,9 +85,6 @@ GENERAL_SRC = common.c crc.c cvar.c cmd.c mathlib.c wad.c zone.c \
 ALL_QW_SRV_SRC = $(GENERAL_SRC) model.c
 # XXX - add dos/win specifc source
 
-x: Makefile
-	@echo binaries: $(targets)
-	@echo other targets: distclean 
 
 all: $(targets)
 
@@ -102,28 +99,26 @@ SRV_CFLAGS = -DSRV $(X_CFLAGS)
 # XXX - Don't use X_EXTRA_LIBS below
 SRV_LDFLAGS = @X_EXTRA_LIBS@
 
-MAKE_SURE_srv_DIR = @DIR=srv; $(MAKE_SURE_DIR)
+srv_DIR:
+	@DIR=srv; $(MAKE_SURE_DIR)
+
+
 $(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.c
-	$(MAKE_SURE_srv_DIR)
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/srv/%.o: $(SRC_DIR)/%.s
-	$(MAKE_SURE_srv_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
 $(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.c
-	$(MAKE_SURE_srv_DIR)
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/srv/%.o: $(QW_COMMON_DIR)/%.c
-	$(MAKE_SURE_srv_DIR)
 	$(CC) $(CFLAGS) $(SRV_CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/srv/%.o: $(COMMON_DIR)/%.s
-	$(MAKE_SURE_srv_DIR)
 	$(CC) $(CFLAGS) -DELF -x assembler-with-cpp -o $@ -c $<
 
-$(SRVQUAKE): $(BUILD_DIR)/../$(SRVQUAKE)
+$(SRVQUAKE): srv_DIR $(BUILD_DIR)/../$(SRVQUAKE)
 
 $(BUILD_DIR)/../$(SRVQUAKE): $(OBJSqw-server)
 	$(CC) $(CFLAGS) $(OBJSqw-server) $(SRV_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(SRVQUAKE)
