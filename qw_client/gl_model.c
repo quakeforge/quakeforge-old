@@ -348,30 +348,6 @@ void Mod_LoadTextures (lump_t *l)
 	texture_t	*altanims[10];
 	dmiptexlump_t *m;
 
-	// Neal White III - 12-28-1999 - OpenGL fullbright bugfix
-	// nwhite@softblox.com
-	// http://home.telefragged.com/wally/
-	//
-	// Problem:
-	//
-	// There was a problem in the original glquake with fullbright texels.
-	// In the software renderer, fullbrights glow brightly in the dark.
-	// Essentially, the fullbrights were ignored.  I've fixed it by
-	// adding another rendering pass and creating a new glowmap texture.
-	//
-	// Fix:
-	//
-	// When a texture with fullbright (FB) texels is loaded, a copy is made,
-	// then the FB pixels are cleared to black in the original texture.  In 
-	// the copy, all normal colors are cleared and only the FBs remain.  When
-	// it comes time to render the polygons, I do an additional pass and ADD
-	// the glowmap on top of the current polygon.
-
-	byte        *ptexel;
-	qboolean     hasfullbrights;
-	qboolean     noglow = COM_CheckParm("-noglow");
-	// Neal White III - 12-28-1999 - END
-
 	if (!l->filelen)
 	{
 		loadmodel->textures = NULL;
@@ -397,172 +373,25 @@ void Mod_LoadTextures (lump_t *l)
 		
 		if ( (mt->width & 15) || (mt->height & 15) )
 			Sys_Error ("Texture %s is not 16 aligned", mt->name);
-
 		pixels = mt->width*mt->height/64*85;
-
-		// Neal White III - 12-28-1999 - OpenGL fullbright bugfix
-
-		hasfullbrights = false;
-
-		if ((!Q_strncmp(mt->name,"sky",3)) ||
-				(!Q_strncmp(mt->name,"*",1)) || 	// turbulent (liquid)
-				(noglow) || (! gl_mtexable))
-		{
-			// sky has no lightmap, nor do liquids (so never needs a glowmap),
-			// -noglow command line parameter, or no multi-texture support
-			//
-			// hasfullbrights is already false
-		}
-		else					// check this texture for fullbright texels
-		{
-			ptexel = (byte *)(mt+1);
-
-			for (j=0 ; j<pixels ; j++)
-			{
-				if (ptexel[j] >= 256-32)	// 32 fullbright colors
-				{
-					hasfullbrights = true;
-					break;
-				}
-			}
-		}
-
-		if (hasfullbrights)
-			tx = Hunk_AllocName (sizeof(texture_t) +pixels*2, loadname );
-		else
-			tx = Hunk_AllocName (sizeof(texture_t) +pixels, loadname );
+		tx = Hunk_AllocName (sizeof(texture_t) +pixels, loadname );
 		loadmodel->textures[i] = tx;
 
 		memcpy (tx->name, mt->name, sizeof(tx->name));
 		tx->width = mt->width;
 		tx->height = mt->height;
 		for (j=0 ; j<MIPLEVELS ; j++)
-		{
 			tx->offsets[j] = mt->offsets[j] + sizeof(texture_t) - sizeof(miptex_t);
-
-			if (hasfullbrights)
-				tx->glowoffsets[j] = mt->offsets[j] + sizeof(texture_t) - sizeof(miptex_t) + pixels;
-			else
-				tx->glowoffsets[j] = 0;
-		}
 		// the pixels immediately follow the structures
 		memcpy ( tx+1, mt+1, pixels);
 		
-		if (hasfullbrights)
-		{
-			ptexel = (byte *)(tx+1);
-			memcpy ( ptexel+pixels, mt+1, pixels);
-		}
-
-		tx->flags = 0;
 
 		if (!Q_strncmp(mt->name,"sky",3))	
-		{
-			// Neal White III - 12-30-1999 - new variable speed sky layers
-
-			if (!Q_strncmp(mt->name,"!",1))
-				tx->flags |= FLAG_FAR_SKY_STOPPED;	// for non-moving stars
-			if (!Q_strncmp(mt->name,".",1))
-				tx->flags |= FLAG_SKY_SLOWER;		// sky moves at 1/2 speed
-			else if (!Q_strncmp(mt->name,":",1))
-				tx->flags |= FLAG_SKY_FASTER;		// sky moves at 2x speed
-			if (!Q_strncmp(mt->name,"%",1))
-				tx->flags |= FLAG_SKY_TRANS;		// near sky is semi-transparent
-
-			// Neal White III - 12-30-1999 - END
-
 			R_InitSky (tx);
-		} else {
+		else
+		{
 			texture_mode = GL_LINEAR_MIPMAP_NEAREST; //_LINEAR;
-
-			// remove glowing fullbright colors from base texture (make black)
-			if (hasfullbrights)
-			{
-				// SAVE THIS - for debugging
-				//qboolean bColorUsed[256];
-				//Con_Printf ("*** Fullbright Texture: \"%s\", %dx%d, %d pixels\n", mt->name, mt->width, mt->height, pixels);
-				//for (j=0 ; j<256 ; j++)
-				//	bColorUsed[j] = false;
-
-				ptexel = (byte *)(tx+1);
-
-				for (j=0 ; j<pixels ; j++)
-				{
-				//	bColorUsed[ptexel[j]] = true;
-
-					if (ptexel[j] >= 256-32)	// 32 fullbright colors
-					{
-						ptexel[j] = 0;			// make fullbrights black
-					}
-				}
-				//Con_Printf ("*** Normal colors: ");
-				//for (j=0 ; j<256-32 ; j++)
-				//{
-				//	if (bColorUsed[j])
-				//		Con_Printf ("%d ", j);
-				//}
-				//Con_Printf ("\n");
-				//Con_Printf ("*** Fullbrights: ");
-				//for (j=256-32 ; j<256 ; j++)
-				//{
-				//	if (bColorUsed[j])
-				//		Con_Printf ("%d ", j);
-				//}
-				//Con_Printf ("\n");
-			}
-			//else
-			//{
-			//	Con_Printf ("*** Normal Texture:     \"%s\", %d*%d\n", mt->name, mt->width, mt->height);
-			//}
-
 			tx->gl_texturenum = GL_LoadTexture (mt->name, tx->width, tx->height, (byte *)(tx+1), true, false);
-
-			// create glowmap texture (all black except for glowing fullbright colors)
-			if (hasfullbrights)
-			{
-#ifdef _DEBUG
-				qboolean bGlowDoubleCheck = false;
-#endif
-				char glowname[32];
-				memcpy (glowname, mt->name, sizeof(mt->name));
-
-				glowname[16] = '\0';
-				for (j=0 ; glowname[j] != '\0'; j++)
-					;
-				glowname[j++] = '<';
-				glowname[j++] = 'G';
-				glowname[j++] = 'L';
-				glowname[j++] = 'O';
-				glowname[j++] = 'W';
-				glowname[j++] = '>';
-				glowname[j++] = '\0';
-
-				ptexel = (byte *)(tx+1) + pixels;
-
-				for (j=0 ; j<pixels ; j++)
-				{
-					if (ptexel[j] < 256-32)		// build glowmap
-					{
-						ptexel[j] = 0;			// make non-fullbrights black
-					}
-#ifdef _DEBUG
-					else
-					{
-						bGlowDoubleCheck = true;
-					}
-#endif
-				}
-				tx->gl_glowtexnum = GL_LoadTexture (glowname, tx->width, tx->height, ptexel, true, false);
-				tx->flags |= FLAG_HAS_GLOWMAP;
-
-#ifdef _DEBUG
-				if (! bGlowDoubleCheck)
-					Con_Printf ("INTERNAL ERROR: Mod_LoadTextures - FullBright texture \"%s\" has no FullBright colors!\n", glowname);
-#endif
-			}
-
-			// Neal White III - 12-28-1999 - END
-			//
 			texture_mode = GL_LINEAR;
 		}
 	}

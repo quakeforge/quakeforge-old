@@ -302,7 +302,7 @@ SVGA_LDFLAGS = @SVGA_LIBS@
 
 # Not sure why this -O is needed, but it is...
 $(BUILD_DIR)/soft/vid_svgalib.@OBJEXT@: $(COMMON_DIR)/vid_svgalib.c
-	$(CC) -O $(CFLAGS) $(SVGA_CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(SVGA_CFLAGS) -O -o $@ -c $<
 
 $(BUILD_DIR)/soft/d_copy.@OBJEXT@: $(COMMON_DIR)/d_copy.s
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
