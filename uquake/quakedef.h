@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // quakedef.h -- primary header for client
 
-
+#define VERSION         "0.1.0"
 #define	GAMENAME	"id1"		// directory to look in by default
 
 #if defined(_WIN32) && !defined(WINDED)
