@@ -137,6 +137,7 @@ D: game dir fixes
 N: Justin A. McCright
 E: jam@damogran.org
 D: Svgalib fixes/optimizations
+D: Variable fixes
 
 N: Roger Sen Montero
 E: rogersm@tau.uab.es
@@ -196,6 +197,7 @@ D: QW/Q1 tree merging
 D: Math fixes/optimizations
 D: Buffer overflow fixes
 D: Documentation
+D: Variable fixes
 
 N: Tarjei Skorgenes
 E: tarjei.skorgenes@online.no
@@ -207,6 +209,7 @@ D: Bug squasher (see below).
 D: QW network protocol fixes.
 D: Found out why our VERSION was messing things up..
 D: win32/Borland support
+D: Variable fixes
 
 N: Marcus Sundberg
 E: mackan@stacken.kth.se
