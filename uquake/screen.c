@@ -1,6 +1,8 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
+Copyright (C) 1999,2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,6 +25,56 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include "r_local.h"
 
+#include <time.h>
+
+/*
+
+background clear
+rendering
+turtle/net/ram icons
+sbar
+centerprint / slow centerprint
+notify lines
+intermission / finale overlay
+loading plaque
+console
+menu
+
+required background clears
+required update regions
+
+
+syncronous draw mode or async
+One off screen buffer, with updates either copied or xblited
+Need to double buffer?
+
+
+async draw will require the refresh area to be cleared, because it will be
+xblited, but sync draw can just ignore it.
+
+sync
+draw
+
+CenterPrint ()
+SlowPrint ()
+Screen_Update ();
+Con_Printf ();
+
+net 
+turn off messages option
+
+the refresh is allways rendered, unless the console is full screen
+
+
+console is:
+	notify lines
+	half
+	full
+	
+
+*/
+
+
 // only the refresh window will be updated unless these variables are flagged 
 int			scr_copytop;
 int			scr_copyeverything;
@@ -31,6 +83,7 @@ float		scr_con_current;
 float		scr_conlines;		// lines of console to display
 
 float		oldscreensize, oldfov;
+float		oldsbar;
 cvar_t		scr_viewsize = {"viewsize","100", true};
 cvar_t		scr_fov = {"fov","90"};	// 10 - 170
 cvar_t		scr_conspeed = {"scr_conspeed","300"};
@@ -51,6 +104,8 @@ int			scr_fullupdate;
 int			clearconsole;
 int			clearnotify;
 
+int			sb_lines;
+
 viddef_t	vid;				// global video state
 
 vrect_t		*pconupdate;
@@ -59,6 +114,7 @@ vrect_t		scr_vrect;
 qboolean	scr_disabled_for_loading;
 qboolean	scr_drawloading;
 float		scr_disabled_time;
+
 qboolean	scr_skipupdate;
 
 qboolean	block_drawing;
@@ -120,7 +176,7 @@ void SCR_EraseCenterString (void)
 		y = 48;
 
 	scr_copytop = 1;
-	Draw_TileClear (0, y,vid.width, 8*scr_erase_lines);
+	Draw_TileClear (0, y, vid.width, min(8*scr_erase_lines, vid.height - y - 1));
 }
 
 void SCR_DrawCenterString (void)
@@ -287,8 +343,10 @@ Keybinding command
 */
 void SCR_SizeUp_f (void)
 {
+	if (scr_viewsize.value < 120) {
 	Cvar_SetValue ("viewsize",scr_viewsize.value+10);
 	vid.recalc_refdef = 1;
+	}
 }
 
 
@@ -330,9 +388,9 @@ void SCR_Init (void)
 	Cmd_AddCommand ("sizeup",SCR_SizeUp_f);
 	Cmd_AddCommand ("sizedown",SCR_SizeDown_f);
 
-	scr_ram = Draw_PicFromWad ("ram");
-	scr_net = Draw_PicFromWad ("net");
-	scr_turtle = Draw_PicFromWad ("turtle");
+	scr_ram = W_GetLumpName ("ram");
+	scr_net = W_GetLumpName ("net");
+	scr_turtle = W_GetLumpName ("turtle");
 
 	scr_initialized = true;
 }
@@ -403,10 +461,9 @@ Backported by Jules Bean <jules@jellybean.co.uk> from
 quakeworld client
 ===============
 */
-
 void SCR_DrawFPS (void)
 {
-  	extern cvar_t show_fps;
+	extern cvar_t show_fps;
 	static double lastframetime;
 	double t;
 	extern int fps_count;
@@ -414,8 +471,8 @@ void SCR_DrawFPS (void)
 	int x, y;
 	char st[80];
 
-       	if (!show_fps.value)
-       		return;
+	if (!show_fps.value)
+		return;
 
 	t = Sys_DoubleTime();
 	if ((t - lastframetime) >= 1.0) {
@@ -452,7 +509,6 @@ void SCR_DrawPause (void)
 }
 
 
-
 /*
 ==============
 SCR_DrawLoading
@@ -470,8 +526,6 @@ void SCR_DrawLoading (void)
 		(vid.height - 48 - pic->height)/2, pic);
 }
 
-
-
 //=============================================================================
 
 
@@ -486,7 +540,7 @@ void SCR_SetUpToDrawConsole (void)
 	
 	if (scr_drawloading)
 		return;		// never a console with loading plaque
-		
+
 // decide on the height of the console
 	con_forcedup = !cl.worldmodel || cls.signon != SIGNONS;
 
@@ -557,7 +611,6 @@ void SCR_DrawConsole (void)
  
 ============================================================================== 
 */ 
- 
 
 typedef struct
 {
@@ -582,7 +635,7 @@ WritePCXfile
 ============== 
 */ 
 void WritePCXfile (char *filename, byte *data, int width, int height,
-	int rowbytes, byte *palette) 
+	int rowbytes, byte *palette)
 {
 	int		i, j, length;
 	pcx_t	*pcx;
@@ -668,10 +721,10 @@ void SCR_ScreenShot_f (void)
 	} 
 	if (i==100) 
 	{
-		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX file\n"); 
+		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX"); 
 		return;
- 	}
-
+	}
+ 
 // 
 // save the pcx file 
 // 
@@ -687,9 +740,7 @@ void SCR_ScreenShot_f (void)
 	Con_Printf ("Wrote %s\n", pcxname);
 } 
 
-
 //=============================================================================
-
 
 /*
 ===============
@@ -734,9 +785,6 @@ void SCR_EndLoadingPlaque (void)
 	scr_fullupdate = 0;
 	Con_ClearNotify ();
 }
-
-//=============================================================================
-
 char	*scr_notifystring;
 qboolean	scr_drawdialog;
 
@@ -771,6 +819,8 @@ void SCR_DrawNotifyString (void)
 		start++;		// skip the \n
 	} while (1);
 }
+
+//=============================================================================
 
 /*
 ==================
@@ -845,9 +895,9 @@ needs almost the entire 256k of stack space!
 void SCR_UpdateScreen (void)
 {
 	static float	oldscr_viewsize;
-	static float	oldlcd_x;
+	static float    oldlcd_x;
 	vrect_t		vrect;
-	
+
 	if (scr_skipupdate || block_drawing)
 		return;
 
@@ -862,11 +912,20 @@ void SCR_UpdateScreen (void)
 			Con_Printf ("load failed.\n");
 		}
 		else
-			return;
+		return;
 	}
 
+#ifdef _WIN32
+	{	// don't suck up any cpu if minimized
+		extern int Minimized;
+
+		if (Minimized)
+			return;
+	}
+#endif
+
 	if (cls.state == ca_dedicated)
-		return;				// stdout only
+		return;
 
 	if (!scr_initialized || !con_initialized)
 		return;				// not initialized yet
@@ -897,10 +956,16 @@ void SCR_UpdateScreen (void)
 		oldscreensize = scr_viewsize.value;
 		vid.recalc_refdef = true;
 	}
+
+	if (oldsbar != cl_sbar.value)
+	{
+		oldsbar = cl_sbar.value;
+		vid.recalc_refdef = true;
+	}
 	
 	if (vid.recalc_refdef)
 	{
-	// something changed, so reorder the screen
+		// something changed, so reorder the screen
 		SCR_CalcRefdef ();
 	}
 
@@ -921,14 +986,12 @@ void SCR_UpdateScreen (void)
 
 	SCR_SetUpToDrawConsole ();
 	SCR_EraseCenterString ();
-
+	
 	D_DisableBackBufferAccess ();	// for adapters that can't stay mapped in
 									//  for linear writes all the time
 
 	VID_LockBuffer ();
-
 	V_RenderView ();
-
 	VID_UnlockBuffer ();
 
 	D_EnableBackBufferAccess ();	// of all overlay stuff if drawing directly
@@ -967,9 +1030,10 @@ void SCR_UpdateScreen (void)
 		SCR_DrawFPS ();
 		SCR_CheckDrawCenterString ();
 		Sbar_Draw ();
-		SCR_DrawConsole ();
+		SCR_DrawConsole ();	
 		M_Draw ();
 	}
+
 
 	D_DisableBackBufferAccess ();	// for adapters that can't stay mapped in
 									//  for linear writes all the time
@@ -983,7 +1047,6 @@ void SCR_UpdateScreen (void)
 //
 // update one of three areas
 //
-
 	if (scr_copyeverything)
 	{
 		vrect.x = 0;
@@ -1013,9 +1076,8 @@ void SCR_UpdateScreen (void)
 		vrect.pnext = 0;
 	
 		VID_Update (&vrect);
-	}
+	}	
 }
-
 
 /*
 ==================

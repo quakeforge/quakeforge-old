@@ -76,6 +76,7 @@ void	VID_UnlockBuffer (void);
 #include "cdaudio.h"
 
 #include "glquake.h"
+#include "cvars.h"
 
 #ifndef max
 #define max(a,b) ((a) > (b) ? (a) : (b))

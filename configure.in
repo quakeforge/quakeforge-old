@@ -11,8 +11,8 @@ AC_DEFINE_UNQUOTED(VERSION,"$VERSION")
 dnl Set to yes for releases
 RELEASE=no
 
-dnl At some point this might be set to yes by default
-NEWSTYLE=no
+dnl Set this to no for Id defaults
+NEWSTYLE=yes
 
 AC_CANONICAL_SYSTEM
 AC_LANG_C

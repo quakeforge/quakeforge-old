@@ -117,6 +117,7 @@ void R_TimeRefresh_f (void);
 void R_ReadPointFile_f (void);
 texture_t *R_TextureAnimation (texture_t *base);
 
+/*
 typedef struct surfcache_s
 {
 	struct surfcache_s	*next;
@@ -130,6 +131,7 @@ typedef struct surfcache_s
 	struct texture_s	*texture;	// checked for animating textures
 	byte				data[4];	// width*height elements
 } surfcache_t;
+*/
 
 
 //====================================================

@@ -1,6 +1,12 @@
 NEWS for the QuakeForge project
 -------------------------------
 
+22 Jan 2000 - cl_sbar and cl_hudswap in uquake
+	The cvars cl_sbar and cl_hudswap noe work in uquake just like they
+	do in qw-client.  In uquake, cl_sbar defaults to 1 to satisfy the
+	least-surprise principle.  Set it to 0 if you want a qw-client like
+	HUD.
+
 22 Jan 2000 - changes to command line option -game
 	You may now specify multiple game directories with -game.  If for
 	example you wanted to use the original registered game with MegaTF
