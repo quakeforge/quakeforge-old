@@ -26,9 +26,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <signal.h>
 
 #include <asm/io.h>
-#include <dlfcn.h>
 
-/*#include "vga.h" */
+#include "vga.h"
 #include "vgakeyboard.h"
 #include "vgamouse.h"
 
@@ -72,6 +71,8 @@ int		UseMouse = 1;
 int		UseKeyboard = 1;
 
 int		mouserate = MOUSE_DEFAULTSAMPLERATE;
+
+cvar_t	_windowed_mouse = {"_windowed_mouse","0", true};
 
 cvar_t		vid_mode = {"vid_mode","5",false};
 cvar_t		vid_redrawfull = {"vid_redrawfull","0",false};
@@ -117,10 +118,12 @@ const char *gl_renderer;
 const char *gl_version;
 const char *gl_extensions;
 
+#ifndef QUAKEWORLD
 void (*qgl3DfxSetPaletteEXT) (GLuint *);
 void (*qglColorTableEXT) (int, int, int, int, int, const void *);
 
 static float vid_gamma = 1.0;
+#endif // !QUAKEWORLD
 
 qboolean is8bit = false;
 qboolean isPermedia = false;
@@ -220,11 +223,16 @@ void	VID_SetPalette (unsigned char *palette)
 	int		k;
 	unsigned short i;
 	unsigned	*table;
-	int dist, bestdist;
+	FILE *f;
+	char s[255];
+	float dist, bestdist;
+	static qboolean palflag = false;
 
 //
 // 8 8 8 encoding
 //
+	Con_Printf("Converting 8to24\n");
+
 	pal = palette;
 	table = d_8to24table;
 	for (i=0 ; i<256 ; i++)
@@ -234,59 +242,60 @@ void	VID_SetPalette (unsigned char *palette)
 		b = pal[2];
 		pal += 3;
 		
+//		v = (255<<24) + (r<<16) + (g<<8) + (b<<0);
+//		v = (255<<0) + (r<<8) + (g<<16) + (b<<24);
 		v = (255<<24) + (r<<0) + (g<<8) + (b<<16);
 		*table++ = v;
 	}
 	d_8to24table[255] &= 0xffffff;	// 255 is transparent
 
 	// JACK: 3D distance calcs - k is last closest, l is the distance.
-	for (i=0; i < (1<<15); i++) {
-		/* Maps
-		000000000000000
-		000000000011111 = Red  = 0x1F
-		000001111100000 = Blue = 0x03E0
-		111110000000000 = Grn  = 0x7C00
-		*/
-		r = ((i & 0x1F) << 3)+4;
-		g = ((i & 0x03E0) >> 2)+4;
-		b = ((i & 0x7C00) >> 7)+4;
-		pal = (unsigned char *)d_8to24table;
-		for (v=0,k=0,bestdist=10000*10000; v<256; v++,pal+=4) {
-			r1 = (int)r - (int)pal[0];
-			g1 = (int)g - (int)pal[1];
-			b1 = (int)b - (int)pal[2];
-			dist = (r1*r1)+(g1*g1)+(b1*b1);
-			if (dist < bestdist) {
-				k=v;
-				bestdist = dist;
+#ifdef QUAKEWORLD
+	// FIXME: Precalculate this and cache to disk.
+	if (palflag)
+		return;
+	palflag = true;
+
+	COM_FOpenFile("glquake/15to8.pal", &f);
+	if (f) {
+		fread(d_15to8table, 1<<15, 1, f);
+		fclose(f);
+	} else {
+#else // QUAKEWORLD
+	{
+#endif // QUAKEWORLD
+		for (i=0; i < (1<<15); i++) {
+			/* Maps
+ 			000000000000000
+ 			000000000011111 = Red  = 0x1F
+ 			000001111100000 = Blue = 0x03E0
+ 			111110000000000 = Grn  = 0x7C00
+ 			*/
+ 			r = ((i & 0x1F) << 3)+4;
+ 			g = ((i & 0x03E0) >> 2)+4;
+ 			b = ((i & 0x7C00) >> 7)+4;
+			pal = (unsigned char *)d_8to24table;
+			for (v=0,k=0,bestdist=10000.0; v<256; v++,pal+=4) {
+ 				r1 = (int)r - (int)pal[0];
+ 				g1 = (int)g - (int)pal[1];
+ 				b1 = (int)b - (int)pal[2];
+				dist = sqrt(((r1*r1)+(g1*g1)+(b1*b1)));
+				if (dist < bestdist) {
+					k=v;
+					bestdist = dist;
+				}
 			}
+			d_15to8table[i]=k;
 		}
-		d_15to8table[i]=k;
-	}
-}
-
-void CheckMultiTextureExtensions(void) 
-{
-	void *prjobj;
-
-	if (strstr(gl_extensions, "GL_SGIS_multitexture ") && !COM_CheckParm("-nomtex")) {
-		Con_Printf("Found GL_SGIS_multitexture...\n");
-
-		if ((prjobj = dlopen(NULL, RTLD_LAZY)) == NULL) {
-			Con_Printf("Unable to open symbol list for main program.\n");
-			return;
+#ifdef QUAKEWORLD
+		sprintf(s, "%s/glquake", com_gamedir);
+ 		Sys_mkdir (s);
+		sprintf(s, "%s/glquake/15to8.pal", com_gamedir);
+		if ((f = fopen(s, "wb")) != NULL) {
+			fwrite(d_15to8table, 1<<15, 1, f);
+			fclose(f);
 		}
-
-		qglMTexCoord2fSGIS = (void *) dlsym(prjobj, "glMTexCoord2fSGIS");
-		qglSelectTextureSGIS = (void *) dlsym(prjobj, "glSelectTextureSGIS");
-
-		if (qglMTexCoord2fSGIS && qglSelectTextureSGIS) {
-			Con_Printf("Multitexture extensions found.\n");
-			gl_mtexable = true;
-		} else
-			Con_Printf("Symbol not found, disabled.\n");
-
-		dlclose(prjobj);
+#endif // QUAKEWORLD
 	}
 }
 
@@ -308,8 +317,6 @@ void GL_Init (void)
 	Con_Printf ("GL_EXTENSIONS: %s\n", gl_extensions);
 
 //	Con_Printf ("%s %s\n", gl_renderer, gl_version);
-
-	CheckMultiTextureExtensions ();
 
 	glClearColor (1,0,0,0);
 	glCullFace(GL_FRONT);
@@ -368,15 +375,33 @@ void Init_KBD(void)
 		for (i=0 ; i<128 ; i++)
 			scantokey[i] = ' ';
 
+		scantokey[69] = KP_NUM;
+		scantokey[98] = KP_DIVIDE;
+		scantokey[55] = KP_MULTIPLY;
+
+		scantokey[71] = KP_HOME;
+		scantokey[72] = KP_UPARROW;
+		scantokey[73] = KP_PGUP;
+		scantokey[74] = KP_MINUS;
+
+		scantokey[75] = KP_LEFTARROW;
+		scantokey[76] = KP_5;
+		scantokey[77] = KP_RIGHTARROW;
+		scantokey[78] = KP_PLUS;
+
+		scantokey[79] = KP_END;
+		scantokey[80] = KP_DOWNARROW;
+		scantokey[81] = KP_PGDN;
+
+		scantokey[82] = KP_INS;
+		scantokey[83] = KP_DEL;
+		scantokey[96] = KP_ENTER;
+
 		scantokey[42] = K_SHIFT;
 		scantokey[54] = K_SHIFT;
-		scantokey[72] = K_UPARROW;
 		scantokey[103] = K_UPARROW;
-		scantokey[80] = K_DOWNARROW;
 		scantokey[108] = K_DOWNARROW;
-		scantokey[75] = K_LEFTARROW;
 		scantokey[105] = K_LEFTARROW;
-		scantokey[77] = K_RIGHTARROW;
 		scantokey[106] = K_RIGHTARROW;
 		scantokey[29] = K_CTRL;
 		scantokey[97] = K_CTRL;
@@ -384,12 +409,6 @@ void Init_KBD(void)
 		scantokey[100] = K_ALT;
 //		scantokey[58] = JK_CAPS;
 //		scantokey[69] = JK_NUM_LOCK;
-		scantokey[71] = K_HOME;
-		scantokey[73] = K_PGUP;
-		scantokey[79] = K_END;
-		scantokey[81] = K_PGDN;
-		scantokey[82] = K_INS;
-		scantokey[83] = K_DEL;
 		scantokey[1 ] = K_ESCAPE;
 		scantokey[28] = K_ENTER;
 		scantokey[15] = K_TAB;
@@ -465,8 +484,6 @@ void Init_KBD(void)
 		scantokey[21] = 'y';       
 		scantokey[44] = 'z';       
 
-		scantokey[78] = '+';
-		scantokey[74] = '-';
 
 		if (keyboard_init())
 			Sys_Error("keyboard_init() failed");
@@ -474,25 +491,12 @@ void Init_KBD(void)
 	}
 }
 
-#define NUM_RESOLUTIONS 16
+#define NUM_RESOLUTIONS 3
 
 static int resolutions[NUM_RESOLUTIONS][3]={ 
-	{320,200,  GR_RESOLUTION_320x200},
-	{320,240,  GR_RESOLUTION_320x240},
-	{400,256,  GR_RESOLUTION_400x256},
-	{400,300,  GR_RESOLUTION_400x300},
-	{512,384,  GR_RESOLUTION_512x384},
-	{640,200,  GR_RESOLUTION_640x200},
-	{640,350,  GR_RESOLUTION_640x350},
-	{640,400,  GR_RESOLUTION_640x400},
-	{640,480,  GR_RESOLUTION_640x480},
-	{800,600,  GR_RESOLUTION_800x600},
-	{960,720,  GR_RESOLUTION_960x720},
-	{856,480,  GR_RESOLUTION_856x480},
-	{512,256,  GR_RESOLUTION_512x256},
-	{1024,768, GR_RESOLUTION_1024x768},
-	{1280,1024,GR_RESOLUTION_1280x1024},
-	{1600,1200,GR_RESOLUTION_1600x1200}
+  { 512, 384, GR_RESOLUTION_512x384 },
+  { 640, 400, GR_RESOLUTION_640x400 },
+  { 640, 480, GR_RESOLUTION_640x480 }
 };
 
 int findres(int *width, int *height)
@@ -516,89 +520,58 @@ qboolean VID_Is8bit(void)
 	return is8bit;
 }
 
+#ifdef GL_EXT_SHARED
+void VID_Init8bitPalette() 
+{
+	// Check for 8bit Extensions and initialize them.
+	int i;
+	char thePalette[256*3];
+	char *oldPalette, *newPalette;
+
+	if (strstr(gl_extensions, "GL_EXT_shared_texture_palette") == NULL)
+		return;
+
+	Con_SafePrintf("8-bit GL extensions enabled.\n");
+	glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
+	oldPalette = (char *) d_8to24table; //d_8to24table3dfx;
+	newPalette = thePalette;
+	for (i=0;i<256;i++) {
+		*newPalette++ = *oldPalette++;
+		*newPalette++ = *oldPalette++;
+		*newPalette++ = *oldPalette++;
+		oldPalette++;
+	}
+	glColorTableEXT(GL_SHARED_TEXTURE_PALETTE_EXT, GL_RGB, 256, GL_RGB, GL_UNSIGNED_BYTE, (void *) thePalette);
+	is8bit = true;
+}
+
+#else
+extern void gl3DfxSetPaletteEXT(GLuint *pal);
+
 void VID_Init8bitPalette(void) 
 {
 	// Check for 8bit Extensions and initialize them.
 	int i;
-	void *prjobj;
+	GLubyte table[256][4];
+	char *oldpal;
 
-	if (COM_CheckParm("-no8bit"))
+	if (strstr(gl_extensions, "3DFX_set_global_palette") == NULL)
 		return;
 
-	if ((prjobj = dlopen(NULL, RTLD_LAZY)) == NULL) {
-		Con_Printf("Unable to open symbol list for main program.\n");
-		return;
+	Con_SafePrintf("8-bit GL extensions enabled.\n");
+	glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
+	oldpal = (char *) d_8to24table; //d_8to24table3dfx;
+	for (i=0;i<256;i++) {
+		table[i][2] = *oldpal++;
+		table[i][1] = *oldpal++;
+		table[i][0] = *oldpal++;
+		table[i][3] = 255;
+		oldpal++;
 	}
-
-	if (strstr(gl_extensions, "3DFX_set_global_palette") &&
-		(qgl3DfxSetPaletteEXT = dlsym(prjobj, "gl3DfxSetPaletteEXT")) != NULL) {
-		GLubyte table[256][4];
-		char *oldpal;
-
-		Con_SafePrintf("... Using 3DFX_set_global_palette\n");
-		glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
-		oldpal = (char *) d_8to24table; //d_8to24table3dfx;
-		for (i=0;i<256;i++) {
-			table[i][2] = *oldpal++;
-			table[i][1] = *oldpal++;
-			table[i][0] = *oldpal++;
-			table[i][3] = 255;
-			oldpal++;
-		}
-		qgl3DfxSetPaletteEXT((GLuint *)table);
-		is8bit = true;
-
-	} else if (strstr(gl_extensions, "GL_EXT_shared_texture_palette") &&
-		(qglColorTableEXT = dlsym(prjobj, "glColorTableEXT")) != NULL) {
-		char thePalette[256*3];
-		char *oldPalette, *newPalette;
-
-		Con_SafePrintf("... Using GL_EXT_shared_texture_palette\n");
-		glEnable( GL_SHARED_TEXTURE_PALETTE_EXT );
-		oldPalette = (char *) d_8to24table; //d_8to24table3dfx;
-		newPalette = thePalette;
-		for (i=0;i<256;i++) {
-			*newPalette++ = *oldPalette++;
-			*newPalette++ = *oldPalette++;
-			*newPalette++ = *oldPalette++;
-			oldPalette++;
-		}
-		qglColorTableEXT(GL_SHARED_TEXTURE_PALETTE_EXT, GL_RGB, 256, GL_RGB, GL_UNSIGNED_BYTE, (void *) thePalette);
-		is8bit = true;
-	
-	}
-
-	dlclose(prjobj);
+	gl3DfxSetPaletteEXT((GLuint *)table);
+	is8bit = true;
 }
-
-static void Check_Gamma (unsigned char *pal)
-{
-	float	f, inf;
-	unsigned char	palette[768];
-	int		i;
-
-	if ((i = COM_CheckParm("-gamma")) == 0) {
-		if ((gl_renderer && strstr(gl_renderer, "Voodoo")) ||
-			(gl_vendor && strstr(gl_vendor, "3Dfx")))
-			vid_gamma = 1;
-		else
-			vid_gamma = 0.7; // default to 0.7 on non-3dfx hardware
-	} else
-		vid_gamma = Q_atof(com_argv[i+1]);
-
-	for (i=0 ; i<768 ; i++)
-	{
-		f = pow ( (pal[i]+1)/256.0 , vid_gamma );
-		inf = f*255 + 0.5;
-		if (inf < 0)
-			inf = 0;
-		if (inf > 255)
-			inf = 255;
-		palette[i] = inf;
-	}
-
-	memcpy (pal, palette, sizeof(palette));
-}
+#endif
 
 void VID_Init(unsigned char *palette)
 {
@@ -607,6 +580,8 @@ void VID_Init(unsigned char *palette)
 	char	gldir[MAX_OSPATH];
 	int width = 640, height = 480;
 
+	S_Init();
+
 	Init_KBD();
 
 	Cvar_RegisterVariable (&vid_mode);
@@ -614,10 +589,10 @@ void VID_Init(unsigned char *palette)
 	Cvar_RegisterVariable (&vid_waitforrefresh);
 	Cvar_RegisterVariable (&gl_ztrick);
 	
-	vid.maxwarpwidth = WARP_WIDTH;
-	vid.maxwarpheight = WARP_HEIGHT;
-	vid.colormap = host_colormap;
-	vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
+        vid.maxwarpwidth = WARP_WIDTH;
+        vid.maxwarpheight = WARP_HEIGHT;
+        vid.colormap = host_colormap;
+        vid.fullbright = 256 - LittleLong (*((int *)vid.colormap + 2048));
 
 // interpret command-line params
 
@@ -657,8 +632,6 @@ void VID_Init(unsigned char *palette)
 	if (!fc)
 		Sys_Error("Unable to create 3DFX context.\n");
 
-	InitSig(); // trap evil signals
-
 	scr_width = width;
 	scr_height = height;
 
@@ -675,12 +648,13 @@ void VID_Init(unsigned char *palette)
 				(320.0 / 240.0);
 	vid.numpages = 2;
 
+	InitSig(); // trap evil signals
+
 	GL_Init();
 
 	sprintf (gldir, "%s/glquake", com_gamedir);
 	Sys_mkdir (gldir);
 
-	Check_Gamma(palette);
 	VID_SetPalette(palette);
 
 	// Check for 3DFX Extensions and initialize them.
@@ -764,7 +738,7 @@ IN_Commands
 */
 void IN_Commands (void)
 {
-	if (UseMouse && cls.state != ca_dedicated)
+	if (UseMouse)
 	{
 		// poll mouse values
 		while (mouse_update())
@@ -857,5 +831,3 @@ void IN_Move (usercmd_t *cmd)
 {
 	IN_MouseMove(cmd);
 }
-
-

@@ -134,6 +134,10 @@ if test "x$HAS_OGL" != xno; then
            [ int x = APIENTRY printf("");],
 	   HAS_APIENTRY=1 AC_MSG_RESULT(yes),
 	   HAS_APIENTRY=0 AC_MSG_RESULT(no))
+	if test "x$HAS_APIENTRY" != xno; then
+	    AC_DEFINE(GLAPIENTRY_IS_APIENTRY, 1)
+	fi
+
       fi
 
       if test "x$HAS_GLIDE" != xno; then
@@ -191,7 +195,7 @@ if test "x$HAS_OGL" = xyes; then
    fi
 fi
 if test "x$HAS_OGL" != xyes; then
-   OGL_CFLAGS="" OGL_LIBS="" HAS_APIENTRY=0
+   OGL_CFLAGS="" OGL_LIBS=""
 fi
 
 dnl Check for other libraries
@@ -257,8 +261,7 @@ AC_SUBST(GLIDE_LIBS)
 AC_SUBST(HAS_OGL)
 AC_SUBST(OGL_CFLAGS)
 AC_SUBST(OGL_LIBS)
-AC_DEFINE(GLAPIENTRY_IS_APIENTRY, $HAS_APIENTRY)
-AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, $HAS_INDEX8)
+AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, HAS_INDEX8)
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
@@ -413,5 +416,6 @@ AC_PATH_XTRA
 #
 # Output files
 #
+AC_CONFIG_HEADER(common/config.h)
 AC_OUTPUT(qw_client/Makefile qw_server/Makefile uquake/Makefile Makefile)
 

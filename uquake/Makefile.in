@@ -333,7 +333,7 @@ OBJSquake-3dfx = $(patsubst %,$(BUILD_DIR)/3dfx/%,$(addsuffix .@OBJEXT@, $(basen
 
 TDFX_CFLAGS  = -I/usr/include/glide -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@ -ldl
-TDFX_VID_SRC = gl_vidlinux.c
+TDFX_VID_SRC = gl_vidlinux_3dfx.c
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
