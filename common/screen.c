@@ -22,12 +22,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // screen.c -- master for refresh, status bar, console, chat, notify, etc
 
-#include "quakedef.h"
-#include "r_local.h"
 #include <qtypes.h>
+#include <quakedef.h>
+#include <r_local.h>
 #include <wad.h>
 #include <draw.h>
 #include <cvar.h>
+#include <console.h>
+#include <keys.h>
 #include <sbar.h>
 #include <keys.h>
 #include <sys.h>
@@ -42,6 +44,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <input.h>
 #include <plugin.h>
 #include <time.h>
+#include <mathlib.h>
 
 /*
 
@@ -116,6 +119,8 @@ cvar_t	*scr_showturtle;
 cvar_t	*scr_showpause;
 //cvar_t		scr_printspeed = {"scr_printspeed","8"};
 cvar_t	*scr_printspeed;
+//cvar_t		scr_allowsnap = {"scr_allowsnap", "1"};
+cvar_t	*scr_allowsnap;
 
 qboolean	scr_initialized;		// ready to draw
 
@@ -144,6 +149,7 @@ qboolean	scr_skipupdate;
 qboolean	block_drawing;
 
 void SCR_ScreenShot_f (void);
+void SCR_RSShot_f (void);
 
 /*
 ===============================================================================
@@ -407,6 +413,8 @@ void SCR_InitCvars (void)
 	scr_centertime = Cvar_Get ("scr_centertime","2",0,"None");
 //	Cvar_RegisterVariable (&scr_printspeed);
 	scr_printspeed = Cvar_Get ("scr_printspeed","8",0,"None");
+//	Cvar_RegisterVariable (&scr_allowsnap);
+	scr_allowsnap = Cvar_Get ("scr_allowsnap","1",0,"None");
 }
 
 /*
@@ -421,6 +429,9 @@ void SCR_Init (void)
 // register our commands
 //
 	Cmd_AddCommand ("screenshot",SCR_ScreenShot_f);
+#ifdef QUAKEWORLD
+	Cmd_AddCommand ("snap",SCR_RSShot_f);
+#endif
 	Cmd_AddCommand ("sizeup",SCR_SizeUp_f);
 	Cmd_AddCommand ("sizedown",SCR_SizeDown_f);
 
@@ -481,7 +492,11 @@ SCR_DrawNet
 */
 void SCR_DrawNet (void)
 {
+#ifdef QUAKEWORLD
+	if (cls.netchan.outgoing_sequence - cls.netchan.incoming_acknowledged < UPDATE_BACKUP-1)
+#else
 	if (realtime - cl.last_received_message < 0.3)
+#endif
 		return;
 	if (cls.demoplayback)
 		return;
@@ -653,7 +668,7 @@ WritePCXfile
 ============== 
 */ 
 void WritePCXfile (char *filename, byte *data, int width, int height,
-	int rowbytes, byte *palette)
+	int rowbytes, byte *palette, qboolean upload) 
 {
 	int		i, j, length;
 	pcx_t	*pcx;
@@ -708,7 +723,12 @@ void WritePCXfile (char *filename, byte *data, int width, int height,
 		
 // write output file 
 	length = pack - (byte *)pcx;
-	COM_WriteFile (filename, pcx, length);
+#ifdef QUAKEWORLD
+	if (upload)
+		CL_StartUpload((void *)pcx, length);
+	else
+#endif
+		COM_WriteFile (filename, pcx, length);
 } 
  
 
@@ -750,7 +770,7 @@ void SCR_ScreenShot_f (void)
 									//  buffer
 
 	WritePCXfile (pcxname, vid.buffer, vid.width, vid.height, vid.rowbytes,
-				  host_basepal);
+				  host_basepal, false);
 
 	D_DisableBackBufferAccess ();	// for adapters that can't stay mapped in
 									//  for linear writes all the time
@@ -758,8 +778,212 @@ void SCR_ScreenShot_f (void)
 	Con_Printf ("Wrote %s\n", pcxname);
 } 
 
-//=============================================================================
+/*
+Find closest color in the palette for named color
+*/
+int MipColor(int r, int g, int b)
+{
+	int i;
+	float dist;
+	int best = 0;
+	float bestdist;
+	int r1, g1, b1;
+	static int lr = -1, lg = -1, lb = -1;
+	static int lastbest;
 
+	if (r == lr && g == lg && b == lb)
+		return lastbest;
+
+	bestdist = 256*256*3;
+
+	for (i = 0; i < 256; i++) {
+		r1 = host_basepal[i*3] - r;
+		g1 = host_basepal[i*3+1] - g;
+		b1 = host_basepal[i*3+2] - b;
+		dist = r1*r1 + g1*g1 + b1*b1;
+		if (dist < bestdist) {
+			bestdist = dist;
+			best = i;
+		}
+	}
+	lr = r; lg = g; lb = b;
+	lastbest = best;
+	return best;
+}
+
+// in draw.c
+extern byte		*draw_chars;				// 8*8 graphic characters
+
+void SCR_DrawCharToSnap (int num, byte *dest, int width)
+{
+	int		row, col;
+	byte	*source;
+	int		drawline;
+	int		x;
+
+	row = num>>4;
+	col = num&15;
+	source = draw_chars + (row<<10) + (col<<3);
+
+	drawline = 8;
+
+	while (drawline--)
+	{
+		for (x=0 ; x<8 ; x++)
+			if (source[x])
+				dest[x] = source[x];
+			else
+				dest[x] = 98;
+		source += 128;
+		dest += width;
+	}
+
+}
+
+void SCR_DrawStringToSnap (const char *s, byte *buf, int x, int y, int width)
+{
+	byte *dest;
+	const unsigned char *p;
+
+	dest = buf + ((y * width) + x);
+
+	p = (const unsigned char *)s;
+	while (*p) {
+		SCR_DrawCharToSnap(*p++, dest, width);
+		dest += 8;
+	}
+}
+
+#ifdef QUAKEWORLD
+/* 
+================== 
+SCR_RSShot_f
+================== 
+*/  
+void SCR_RSShot_f (void) 
+{ 
+//	int     i, x, y;
+	int    x, y;
+	unsigned char		*src, *dest;
+	char		pcxname[80]; 
+//	char		checkname[MAX_OSPATH];
+	unsigned char		*newbuf;
+	int w, h;
+	int dx, dy, dex, dey, nx;
+	int r, b, g;
+	int count;
+	float fracw, frach;
+	char st[80];
+	time_t now;
+
+	if (CL_IsUploading())
+		return; // already one pending
+
+	if (cls.state < ca_onserver)
+		return; // gotta be connected
+
+	if (!scr_allowsnap->value) {
+		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
+		SZ_Print (&cls.netchan.message, "snap\n");
+		Con_Printf("Refusing remote screen shot request.\n");
+		return;
+	}
+
+	Con_Printf("Remote screen shot requested.\n");
+
+#if 0
+// 
+// find a file name to save it to 
+// 
+	strcpy(pcxname,"mquake00.pcx");
+		
+	for (i=0 ; i<=99 ; i++) 
+	{ 
+		pcxname[6] = i/10 + '0'; 
+		pcxname[7] = i%10 + '0'; 
+		snprintf(checkname, sizeof(checkname), "%s/%s", com_gamedir, pcxname);
+		if (Sys_FileTime(checkname) == -1)
+			break;	// file doesn't exist
+	} 
+	if (i==100) 
+	{
+		Con_Printf ("SCR_ScreenShot_f: Couldn't create a PCX"); 
+		return;
+	}
+#endif
+ 
+// 
+// save the pcx file 
+// 
+	D_EnableBackBufferAccess ();	// enable direct drawing of console to back
+									//  buffer
+
+	w = (vid.width < RSSHOT_WIDTH) ? vid.width : RSSHOT_WIDTH;
+	h = (vid.height < RSSHOT_HEIGHT) ? vid.height : RSSHOT_HEIGHT;
+
+	fracw = (float)vid.width / (float)w;
+	frach = (float)vid.height / (float)h;
+
+	newbuf = malloc(w*h);
+
+	for (y = 0; y < h; y++) {
+		dest = newbuf + (w * y);
+
+		for (x = 0; x < w; x++) {
+			r = g = b = 0;
+
+			dx = x * fracw;
+			dex = (x + 1) * fracw;
+			if (dex == dx) dex++; // at least one
+			dy = y * frach;
+			dey = (y + 1) * frach;
+			if (dey == dy) dey++; // at least one
+
+			count = 0;
+			for (/* */; dy < dey; dy++) {
+				src = vid.buffer + (vid.rowbytes * dy) + dx;
+				for (nx = dx; nx < dex; nx++) {
+					r += host_basepal[*src * 3];
+					g += host_basepal[*src * 3+1];
+					b += host_basepal[*src * 3+2];
+					src++;
+					count++;
+				}
+			}
+			r /= count;
+			g /= count;
+			b /= count;
+			*dest++ = MipColor(r, g, b);
+		}
+	}
+
+	time(&now);
+	strcpy(st, ctime(&now));
+	st[strlen(st) - 1] = 0;
+	SCR_DrawStringToSnap (st, newbuf, w - strlen(st)*8, 0, w);
+
+	strncpy(st, cls.servername, sizeof(st));
+	st[sizeof(st) - 1] = 0;
+	SCR_DrawStringToSnap (st, newbuf, w - strlen(st)*8, 10, w);
+
+	strncpy(st, name->string, sizeof(st));
+	st[sizeof(st) - 1] = 0;
+	SCR_DrawStringToSnap (st, newbuf, w - strlen(st)*8, 20, w);
+
+	WritePCXfile (pcxname, newbuf, w, h, w, host_basepal, true);
+
+	free(newbuf);
+
+	D_DisableBackBufferAccess ();	// for adapters that can't stay mapped in
+									//  for linear writes all the time
+
+//	Con_Printf ("Wrote %s\n", pcxname);
+	Con_Printf ("Sending shot to server...\n");
+} 
+#endif
+
+
+//=============================================================================
 /*
 ===============
 SCR_BeginLoadingPlaque
@@ -794,6 +1018,7 @@ void SCR_BeginLoadingPlaque (void)
 /*
 ===============
 SCR_EndLoadingPlaque
+
 
 ================
 */
@@ -941,6 +1166,9 @@ void SCR_UpdateScreen (void)
 			return;
 	}
 #endif
+
+	scr_copytop = 0;
+	scr_copyeverything = 0;
 
 	if (cls.state == ca_dedicated)
 		return;
