@@ -383,7 +383,7 @@ int main (int c, char **v)
 		nostdout = 1;
 	else {
 		fcntl(0, F_SETFL, fcntl (0, F_GETFL, 0) | FNDELAY);
-		printf ("Linux Quake -- Version %0.3f\n", LINUX_VERSION);
+		printf ("QuakeForge (Linux Quake) -- Version %0.3f\n", VERSION);
 	}
 
     oldtime = Sys_FloatTime () - 0.1;

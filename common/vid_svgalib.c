@@ -1018,11 +1018,3 @@ char *VID_ModeInfo (int modenum)
 		return (badmodestr);
 	}
 }
-
-void VID_LockBuffer ( void )
-{
-}
-
-void VID_UnlockBuffer ( void )
-{
-}

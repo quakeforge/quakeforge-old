@@ -166,14 +166,6 @@ void VID_ForceLockState (int lk)
 {
 }
 
-void VID_LockBuffer (void)
-{
-}
-
-void VID_UnlockBuffer (void)
-{
-}
-
 int VID_ForceUnlockedAndReturnState (void)
 {
 	return 0;

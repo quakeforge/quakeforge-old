@@ -19,46 +19,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // quakedef.h -- primary header for client
 
-//#define	GLTEST			// experimental stuff
 
-#define	QUAKE_GAME			// as opposed to utilities
-
-#define	VERSION				1.09
-#define	GLQUAKE_VERSION		1.00
-#define	D3DQUAKE_VERSION	0.01
-#define	WINQUAKE_VERSION	0.996
-#define	LINUX_VERSION		1.30
-#define	X11_VERSION			1.10
-
-//define	PARANOID			// speed sapping error checking
-
-#ifdef QUAKE2
 #define	GAMENAME	"id1"		// directory to look in by default
-#else
-#define	GAMENAME	"id1"
-#endif
-
-#include <math.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <setjmp.h>
 
 #if defined(_WIN32) && !defined(WINDED)
-
 #if defined(_M_IX86)
 #define __i386__	1
 #endif
-
-void	VID_LockBuffer (void);
-void	VID_UnlockBuffer (void);
-
-#else
-
-#define	VID_LockBuffer()
-#define	VID_UnlockBuffer()
-
 #endif
 
 #if defined __i386__ // && !defined __sun__
@@ -209,13 +176,8 @@ void	VID_UnlockBuffer (void);
 // Use for multiplayer testing only - VERY dangerous!!!
 // #define IDGODS
 
-#include "common.h"
-#include "bspfile.h"
-#include "vid.h"
-#include "sys.h"
-#include "zone.h"
-#include "mathlib.h"
 
+/*
 typedef struct
 {
 	vec3_t	origin;
@@ -223,99 +185,20 @@ typedef struct
 	int		modelindex;
 	int		frame;
 	int		colormap;
-	int		skin;
+	int		skinnum;
 	int		effects;
 } entity_state_t;
+*/
 
+#include <common_quakedef.h>
 
-#include "wad.h"
-#include "draw.h"
-#include "cvar.h"
-#include "screen.h"
-#include "net.h"
-#include "protocol.h"
-#include "cmd.h"
-#include "sbar.h"
-#include "sound.h"
-#include "render.h"
-#include "client.h"
 #include "progs.h"
 #include "server.h"
 
-#ifdef GLQUAKE
-#include "gl_model.h"
-#else
-#include "model.h"
-#include "d_iface.h"
-#endif
-
-#include "input.h"
 #include "world.h"
-#include "keys.h"
-#include "console.h"
-#include "view.h"
-#include "menu.h"
-#include "crc.h"
-#include "cdaudio.h"
-
-#ifdef GLQUAKE
-#include "glquake.h"
-#endif
-
-//=============================================================================
-
-// the host system specifies the base of the directory tree, the
-// command line parms passed to the program, and the amount of memory
-// available for the program to use
-
-typedef struct
-{
-	char	*basedir;
-	char	*cachedir;		// for development over ISDN lines
-	int		argc;
-	char	**argv;
-	void	*membase;
-	int		memsize;
-} quakeparms_t;
-
-
-//=============================================================================
-
-
-
-extern qboolean noclip_anglehack;
-
-
-//
-// host
-//
-extern	quakeparms_t host_parms;
-
-extern	cvar_t		sys_ticrate;
-extern	cvar_t		sys_nostdout;
-extern	cvar_t		developer;
-
-extern	qboolean	host_initialized;		// true if into command execution
-extern	double		host_frametime;
-extern	byte		*host_basepal;
-extern	byte		*host_colormap;
-extern	int			host_framecount;	// incremented every frame, never reset
-extern	double		realtime;			// not bounded in any way, changed at
-										// start of every frame, never reset
 
 void Host_ClearMemory (void);
-void Host_ServerFrame (void);
-void Host_InitCommands (void);
-void Host_Init (quakeparms_t *parms);
-void Host_Shutdown(void);
-void Host_Error (char *error, ...);
-void Host_EndGame (char *message, ...);
-void Host_Frame (float time);
-void Host_Quit_f (void);
-void Host_ClientCommands (char *fmt, ...);
-void Host_ShutdownServer (qboolean crash);
 
-extern qboolean		msg_suppress_1;		// suppresses resolution and cache size console output
 										//  an fullscreen DIB focus gain/loss
 extern int			current_skill;		// skill level for currently loaded level (in case
 										//  the user changes the cvar while the level is

@@ -761,8 +761,3 @@ void IN_Move (usercmd_t *cmd)
 {
 	IN_MouseMove(cmd);
 }
-
-
-void VID_UnlockBuffer() {}
-void VID_LockBuffer() {}
-

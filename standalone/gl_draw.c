@@ -410,9 +410,9 @@ void Draw_Init (void)
 
 	// hack the version number directly into the pic
 #if defined(__linux__)
-	sprintf (ver, "(Linux %2.2f, gl %4.2f) %4.2f", (float)LINUX_VERSION, (float)GLQUAKE_VERSION, (float)VERSION);
+	sprintf (ver, "SourceForge (Linux GL) Version %4.2f", (float)VERSION);
 #else
-	sprintf (ver, "(gl %4.2f) %4.2f", (float)GLQUAKE_VERSION, (float)VERSION);
+	sprintf (ver, "SourceForge (GL) Version %4.2f", (float)VERSION);
 #endif
 	dest = cb->data + 320*186 + 320 - 11 - 8*strlen(ver);
 	y = strlen(ver);
