@@ -1,0 +1,92 @@
+QuakeForge for Debian
+---------------------
+
+Well, it's finally here: 0.2!  It's just a CVS snapshot but it's stable
+enough that I am comfortable releasing it into woody at least.  If you
+didn't read the changelog.Debian and you want to know where quake went,
+shame on you for not reading it.  =>  For completeness, here's a full list
+of the binary names in 0.1.x and what they are in 0.2-d:
+
+  qw-client-3dfx -> qw-client-3dfx	quake-3dfx -> uquake-3dfx
+  qw-client-ggi  -> qw-client-ggi	quake-ggi  -> uquake-ggi
+  qw-client-gl   -> qw-client-glx	quake-gl   -> uquake-glx
+  qw-client-sdl  -> qw-client-sdl	quake-sdl  -> uquake-sdl
+  qw-client-svga -> qw-client-svga	quake-svga -> uquake-svga
+  qw-client-x11  -> qw-client-x11	quake-x11  -> uquake-x11
+  qw-server      -> qw-server
+
+In short, quake is now uquake (since that's what it was in CVS even in
+0.1.x) and the -gl target has been renamed to the more appropriate -glx.
+
+New Cvars
+
+  Some things have been added which will make the GL renderer targets (for
+  Debian these are -3dfx and -glx) look a little nicer.  Here they are:
+
+  r_fog         - set to something like 0.0005 to have a light global fog
+  r_volfog      - complicated, see below
+  r_sky         - set to 1 to use skyboxes instead of sky textures
+  r_skyname     - sets basename of the skybox you wanna use, see below
+  gl_conspin    - set nonzero (try 1, 0.5, etc) for QER spinning console
+  gl_conalpha   - defaults to 0.6, alpha consoles now actually work!
+  r_waterripple - set it around 5 to 8 for water to have little waves
+
+Skyboxes
+
+  In order to use skyboxes, you're going to need one.  Any skybox from
+  Quake2 should work nicely.  Drop the six .tga files into the gfx/env
+  subdirectory under any directory where QuakeForge looks for pak files
+  such as ~/.quake/base.  For this example I'm going to use a different
+  directory and add -game skybox to my command line.
+
+  First, I put my skyboxes in the appropriate directory:
+
+  knghtbrd@trinity:~/.quake$ ls skybox/gfx/env/
+  nightbk.pcx  nightlf.pcx  snow2bk.pcx  snow2lf.pcx  snowbk.pcx  snowlf.pcx
+  nightbk.tga  nightlf.tga  snow2bk.tga  snow2lf.tga  snowbk.tga  snowlf.tga
+  nightdn.pcx  nightrt.pcx  snow2dn.pcx  snow2rt.pcx  snowdn.pcx  snowrt.pcx
+  nightdn.tga  nightrt.tga  snow2dn.tga  snow2rt.tga  snowdn.tga  snowrt.tga
+  nightft.pcx  nightup.pcx  snow2ft.pcx  snow2up.pcx  snowft.pcx  snowup.pcx
+  nightft.tga  nightup.tga  snow2ft.tga  snow2up.tga  snowft.tga  snowup.tga
+    
+  Don't worry about the pcx files, they're only used for software renderers
+  and QuakeForge doesn't support them yet.  As you can see here, I have
+  three choices for skyboxes: night, snow, and snow2.  Let's use snow2.
+
+  To use it we would start the game with +r_skyname snow2 on the command
+  line.  You can put that in your autoexec.cfg if you'd prefer or even set
+  it from the console by hand.  It just doesn't take effect until you
+  reload the current map.  BTW, when you start a map without a skybox you
+  should see six warning/error messages that several sky*.tga files cannot
+  be found.  The default r_skyname value is sky and the engine tries to
+  load them whether you have r_sky turned on or not.  This IS a developer
+  version after all.
+
+
+Volumetric Fog
+
+  Quake has no support for volfog.  In order to make real use of it, we are
+  going to have to create a volfog brush.  (If you have no idea what I am
+  talking about, don't worry---I don't fully understand the map-making
+  aspect of QuakeForge either, I just code here!)  In the meantime, we're
+  borrowing the water brush for testing purposes.  You're going to need a
+  map which has been "watervis'd" (ie, you can actually see through the
+  water if you set r_wateralpha to .3 or so)
+
+  raptor suggests the settings r_wateralpha 0.3 and r_volfog 0.0009.  Note
+  that the current volumetric fog implementation has a few side effects and
+  uses the OpenGL stencil buffer.  Unless you have a g400 or something (I
+  don't) you're going to discover quickly that volfog eats more of your CPU
+  which is likely to lower your fps a bit unless you have a fast chip.
+  
+  We'll probably change how we render volumetric fog in the future so it
+  works better for more people.  A real volfog brush is likely so map
+  people can actually put areas of fog into maps sanely.
+
+
+I want to reiterate that this is a development release.  If you can break
+it, we'd like to know---especially if you can tell us how.  Send reports
+and other comments to quake-devel@lists.sourceforge.net
+
+  -- Joseph Carter <knghtbrd@debian.org>, Wed,  8 Mar 2000 02:27:27 -0800
+
