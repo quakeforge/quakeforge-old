@@ -6,7 +6,7 @@
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
-	Author: Brain Koropoff
+	Author: Brian Koropoff
 	Date: 03 May 2000
 
 	This program is free software; you can redistribute it and/or
@@ -44,6 +44,11 @@ extern server_entry_t	slist[MAX_SERVER_LIST];
 void Server_List_Init(void);
 void Server_List_Shutdown(void);
 int Server_List_Set(int i,char *addr,char *desc);
+int Server_List_Reset_NoFree(int i);
+int Server_List_Reset(int i);
+void Server_List_Switch(int a,int b);
+int Server_List_Len(void);
 int Server_List_Load(QFile *f);
+int Server_List_Save(QFile *f);
 char *gettokstart (char *str, int req, char delim);
 int gettoklen(char *str, int req, char delim);

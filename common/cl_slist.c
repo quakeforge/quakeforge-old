@@ -6,7 +6,7 @@
 	Copyright (C) 1999,2000  contributors of the QuakeForge project
 	Please see the file "AUTHORS" for a list of contributors
 
-	Author: Brain Koropoff
+	Author: Brian Koropoff
 	Date: 03 May 2000
 
 	This program is free software; you can redistribute it and/or
@@ -35,13 +35,15 @@
 #include <stdio.h>
 #include <quakeio.h>
 #include <string.h>
+#include <common.h>
+#include <console.h>
 
 //Better watch out for buffer overflows
 server_entry_t	slist[MAX_SERVER_LIST];
+extern cvar_t *fs_basepath;
 
 void Server_List_Init(void) { // Do this or everything else will sig11
 	int i;
-	
 	for(i=0;i < MAX_SERVER_LIST;i++) {
 		slist[i].server = '\0';
 		slist[i].description = '\0';
@@ -52,7 +54,13 @@ void Server_List_Init(void) { // Do this or everything else will sig11
 
 void Server_List_Shutdown(void) {  // I am the liberator of memory.
 	int i;
-	
+	QFile *f;
+	if (!(f = Qopen(va("%s/servers.txt",fs_basepath->string),"w"))) {
+		Con_Printf("Couldn't open servers.txt.\n");
+		return;
+	}
+	Server_List_Save(f);
+	Qclose(f);
 	for(i=0;i < MAX_SERVER_LIST;i++) {
 		if (slist[i].server)
 			free(slist[i].server);
@@ -73,11 +81,47 @@ int Server_List_Set(int i,char *addr,char *desc) {
 		slist[i].server = malloc(strlen(addr) + 1);
 		slist[i].description = malloc(len + 1);
 		strcpy(slist[i].server,addr);
-		strncpy(slist[i].description,desc,len);
-		slist[i].description[len] = '\0'; //In case it got cut off
+		strcpy(slist[i].description,desc);
 		return 0;  // Yay, we haven't segfaulted yet.
 	}
 	return 1; // Out of range
+}
+int Server_List_Reset_NoFree (int i) { //NEVER USE THIS UNLESS REALLY NEEDED
+	if (i < MAX_SERVER_LIST && i >= 0) {
+		slist[i].server = '\0';
+		slist[i].description = '\0';
+		slist[i].ping = 0;
+		return 0;
+	}
+	return 1;
+}
+
+int Server_List_Reset (int i) {
+	if (i < MAX_SERVER_LIST && i >= 0) {
+		if (slist[i].server)
+			free(slist[i].server);
+		if (slist[i].description)
+			free(slist[i].description);
+		slist[i].server = '\0';
+		slist[i].description = '\0';
+		slist[i].ping = 0;
+		return 0;
+	}
+	return 1;
+}
+
+void Server_List_Switch(int a,int b) {
+	server_entry_t temp;
+	memcpy(&temp,&slist[a],sizeof(temp));
+	memcpy(&slist[a],&slist[b],sizeof(temp));
+	memcpy(&slist[b],&temp,sizeof(temp));
+}
+
+int Server_List_Len (void) {
+	int i;
+	for (i = 0; i < MAX_SERVER_LIST && slist[i].server;i++)
+		;
+	return i;
 }
 
 int Server_List_Load (QFile *f) { // This could get messy
@@ -90,8 +134,8 @@ int Server_List_Load (QFile *f) { // This could get messy
 	char *addr;
 
 	// Init again to clear the list
-	Server_List_Shutdown();
-	Server_List_Init();
+//	Server_List_Shutdown();
+//	Server_List_Init();
 	while (serv < MAX_SERVER_LIST) {
 		//First, get a line
 		i = 0;
@@ -120,9 +164,19 @@ int Server_List_Load (QFile *f) { // This could get messy
 		if (c == EOF)  // We're done
 			return 0;
 	}
-	return 0;  //I'd love to see the day when there are enough servers
-}		   //for it to break out of the first while loop
+	return 0;
+}
 
+int Server_List_Save(QFile *f) {
+	int i;
+	for(i=0;i < MAX_SERVER_LIST;i++) {
+		if (slist[i].server)
+			Qprintf(f,"%s        %s\n",
+				slist[i].server,
+				slist[i].description);
+	}
+	return 0;
+}
 char *gettokstart (char *str, int req, char delim) {
 	char *start = str;
 	

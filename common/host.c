@@ -693,11 +693,11 @@ Host_Shutdown( void )
 #endif
 		VID_Shutdown();
 	}
-	Cvar_Shutdown ();
 	// New -- Shutdown server list
 #ifdef QUAKEWORLD
 	Server_List_Shutdown();
 #endif
+	Cvar_Shutdown();
 }
 
 /*
