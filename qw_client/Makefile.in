@@ -28,6 +28,7 @@ ifneq ($(SRC_DIR),.)
 SRC_DIR_INC = -I$(SRC_DIR)
 endif
 
+HAS_MGL    = @HAS_MGL@
 HAS_GGI    = @HAS_GGI@
 HAS_SVGA   = @HAS_SVGA@
 HAS_GLIDE  = @HAS_GLIDE@
@@ -71,6 +72,10 @@ ifeq ($(HAS_GGI),yes)
 GGIQUAKE = $(BIN_PREFIX)-ggi
 endif
 
+ifeq ($(HAS_MGL),yes)
+MGLQUAKE = $(BIN_PREFIX)-mgl
+endif
+
 ifeq ($(HAS_SDL),yes)
 SDLQUAKE = $(BIN_PREFIX)-sdl
 endif
@@ -82,7 +87,7 @@ else
 OPTFLAGS = -g
 endif
 
-targets       = $(GGIQUAKE) $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE) $(SDLQUAKE)
+targets       = $(MGLQUAKE) $(GGIQUAKE) $(SVGAQUAKE) $(GLQUAKE) $(TDFXQUAKE) $(X11QUAKE) $(SDLQUAKE)
 CLEAN_TARGETS = $(patsubst %,clean-%, $(targets))
 .PHONY: $(targets) ($CLEAN_TARGETS)
 
@@ -107,7 +112,7 @@ ifeq ($(INTEL_ARCH),yes)
 UQ_GENERAL_SRC         = worlda.s
 UQ_SWREND_SRC_PLAT     = dosasm.s
 CL_ADDITIONAL_GENERAL_SRC = sys_dosa.s math.s
-SWREND_SRC_PLAT = d_copy.s d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
+SWREND_SRC_PLAT = d_draw.s d_draw16.s d_parta.s d_polysa.s d_scana.s \
 	d_spr8.s d_varsa.s r_aclipa.s r_aliasa.s \
 	r_drawa.s r_edgea.s r_varsa.s surf16.s surf8.s
 else
@@ -153,10 +158,7 @@ QW_SRV_SYS_SRC = @QW_SRV_SYS_SRC@
 #
 # Networking source files
 #
-# XXX - Should not assume UNIX
-NET_SRC        = net_bsd.c net_udp.c
 QW_NET_SRC     = net_udp.c net_com.c mdfour.c
-UQ_NET_SRC     = net_dgrm.c net_loop.c net_main.c net_vcr.c $(NET_SRC)
 
 #
 # Common source files
@@ -275,6 +277,7 @@ clean-$(X11QUAKE):
 	rm -f $(OBJSquake-x11)
 endif
 
+
 ###########################################################################
 #
 # qw-client-svga
@@ -285,7 +288,7 @@ OBJSquake-svga= $(patsubst %,$(BUILD_DIR)/svga/%,$(addsuffix .@OBJEXT@, $(basena
 
 SVGA_CFLAGS  = @SVGA_CFLAGS@
 SVGA_LDFLAGS = @SVGA_LIBS@
-SVGA_VID_SRC = vid_svgalib.c
+SVGA_VID_SRC = vid_svgalib.c d_copy.s
 
 # This can be thought of as a macro that makes sure that the x11
 # sub-directory is created
@@ -327,6 +330,7 @@ $(BUILD_DIR)/../$(SVGAQUAKE): $(OBJSquake-svga)
 clean-$(SVGAQUAKE):
 	rm -f $(OBJSquake-svga)
 endif
+
 
 ###########################################################################
 #
@@ -376,6 +380,57 @@ endif
 
 ###########################################################################
 #
+# qw-client-mgl
+#
+ifneq ($(MGLQUAKE),)
+
+# Map the list of source files into a list of object files
+ALL_MGL_SRC = $(GENERAL_SRC) $(SW_REND_SRC) $(MGL_VID_SRC) model.c
+OBJSquake-mgl = $(patsubst %,$(BUILD_DIR)/mgl/%,$(addsuffix .@OBJEXT@, $(basename $(ALL_MGL_SRC) .c .s)))
+
+MGL_CFLAGS  = -DMGL @MGL_CFLAGS@
+MGL_LDFLAGS = @MGL_LIBS@ -lm
+MGL_VID_SRC = vid_win.c in_win.c
+
+# This can be thought of as a macro that makes sure that the mgl
+# sub-directory is created
+# XXX - can we avoid doing every compile?
+MAKE_SURE_mgl_DIR = @DIR=mgl; $(MAKE_SURE_DIR)
+
+$(BUILD_DIR)/mgl/%.o: $(SRC_DIR)/%.c
+	$(MAKE_SURE_mgl_DIR)
+	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/mgl/%.o: $(SRC_DIR)/%.s
+	$(MAKE_SURE_mgl_DIR)
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(BUILD_DIR)/mgl/%.o: $(COMMON_DIR)/%.c
+	$(MAKE_SURE_mgl_DIR)
+	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
+
+ifneq ($(QW_COMMON_DIR),)
+$(BUILD_DIR)/mgl/%.o: $(QW_COMMON_DIR)/%.c
+	$(MAKE_SURE_mgl_DIR)
+	$(CC) $(CFLAGS) $(MGL_CFLAGS) -o $@ -c $<
+endif
+
+$(BUILD_DIR)/mgl/%.o: $(COMMON_DIR)/%.s
+	$(MAKE_SURE_mgl_DIR)
+	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
+
+$(MGLQUAKE): $(BUILD_DIR)/../$(MGLQUAKE)
+
+$(BUILD_DIR)/../$(MGLQUAKE): $(OBJSquake-mgl)
+	$(CC) $(CFLAGS) $(OBJSquake-mgl) $(MGL_LDFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/../$(MGLQUAKE)
+# XXX - Can this be automated?
+clean-$(MGLQUAKE):
+	rm -f $(OBJSquake-mgl)
+endif
+
+
+###########################################################################
+#
 # qw-client-gl
 #
 ifneq ($(GLQUAKE),)
@@ -417,6 +472,7 @@ $(BUILD_DIR)/../$(GLQUAKE): $(OBJSquake-gl)
 clean-$(GLQUAKE):
 	rm -f $(OBJSquake-gl)
 endif
+
 
 ###########################################################################
 #
@@ -504,6 +560,7 @@ $(BUILD_DIR)/../$(SDLQUAKE): $(OBJSquake-sdl)
 clean-$(SDLQUAKE):
 	rm -f $(OBJSquake-sdl)
 endif
+
 
 ###########################################################################
 #
