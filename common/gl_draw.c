@@ -431,10 +431,11 @@ void Draw_Init (void)
 			draw_chars[i] = 255;	// proper transparent color
 
 	// now turn them into textures
-	char_texture = GL_LoadTexture ("charset", 128, 128, draw_chars, false, true);
+//	char_texture = GL_LoadTexture ("charset", 128, 128, draw_chars, false, true);	// 1999-12-27 Conwidth/height charset fix by TcT
 	cs_texture3 = GL_LoadTexture ("crosshair3", 16, 16, cs_data3,
 			false, true);
 	cs_texture = GL_LoadTexture ("crosshair", 8, 8, cs_data, false, true);
+	char_texture = GL_LoadTexture ("charset", 128, 128, draw_chars, false, true);	// 1999-12-27 Conwidth/height charset fix by TcT
 
 	// For some reason which I cannot claim to fathom, it seems to be
 	//  necessary to call GL_LoadTexture() here in descending (in terms
