@@ -1,4 +1,5 @@
 /*
+sound.h - client sound i/o functions
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,15 +20,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sound.h -- client sound i/o functions
 
 #ifndef __SOUND__
 #define __SOUND__
 
 #include <qtypes.h>
-#include <qstructs.h>
 #include <qdefs.h>
 #include <zone.h>
+#include <cvar.h>
 
 #define DEFAULT_SOUND_PACKET_VOLUME 255
 #define DEFAULT_SOUND_PACKET_ATTENUATION 1.0
@@ -95,6 +95,13 @@ typedef struct
 	int		samples;
 	int		dataofs;		// chunk starts this many bytes from file start
 } wavinfo_t;
+
+
+typedef struct {
+	int		playernum;
+	struct model_s	*worldmodel;
+} snd_t;
+extern snd_t	snd;
 
 void S_Init (void);
 void S_Startup (void);

@@ -1,4 +1,5 @@
 /*
+net_dgrm.c
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 
@@ -18,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// net_dgrm.c
 
 // This is enables a simple IP banning mechanism
 #define BAN_TEST
@@ -53,8 +53,10 @@ unsigned long inet_addr(const char *cp);
 #endif
 #endif	// BAN_TEST
 
-#include "quakedef.h"
-#include "net_dgrm.h"
+#include <quakedef.h>
+#include <client.h>
+#include <server.h>
+#include <net_dgrm.h>
 #include <qtypes.h>
 #include <cmd.h>
 #include <lib_replace.h>

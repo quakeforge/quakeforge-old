@@ -1,4 +1,5 @@
 /*
+sbar.c - status bar code
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
@@ -20,18 +21,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sbar.c -- status bar code
 
-#include "quakedef.h"
-#include "qtypes.h"
-#include "wad.h"
-#include "common.h"
-#include "client.h"
-#include "draw.h"
-#include "sbar.h"
-#include "screen.h"
-#include "cmd.h"
+#include <quakedef.h>
+#include <qtypes.h>
+#include <wad.h>
+#include <common.h>
+#include <client.h>
+#include <draw.h>
+#include <sbar.h>
+#include <screen.h>
+#include <cmd.h>
 #include <protocol.h>
+#ifdef UQUAKE
+#	include <server.h>
+#endif
 
 extern void M_DrawPic (int x, int y, qpic_t *pic);
 

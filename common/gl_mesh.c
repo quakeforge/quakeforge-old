@@ -1,4 +1,5 @@
 /*
+gl_mesh.c - triangle model functions
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -20,14 +21,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// gl_mesh.c: triangle model functions
 
-#include "qtypes.h"
-#include "quakedef.h"
-#include "model.h"
-#include "console.h"
-#include "common.h"
-#include "sys.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <model.h>
+#include <console.h>
+#include <common.h>
+#include <sys.h>
+#include <client.h>
 
 /*
 =================================================================

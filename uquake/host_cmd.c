@@ -31,6 +31,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <screen.h>
 #include <lib_replace.h>
 #include <protocol.h>
+#include <client.h>
+#include <server.h>
+#include <world.h>
 
 extern cvar_t	pausable;
 

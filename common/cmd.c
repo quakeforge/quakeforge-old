@@ -30,6 +30,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <lib_replace.h>
 #include <zone.h>
 #include <string.h>
+#include <net.h>
 #include <common_quakedef.h>
 
 void Cmd_ForwardToServer (void);
@@ -628,14 +629,13 @@ void Cmd_ForwardToServer (void)
 	if (cls.demoplayback)
 		return;		// not really connected
 
-#ifdef QUAKEWORLD
 	MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 	SZ_Print (&cls.netchan.message, Cmd_Argv(0));
 	if (Cmd_Argc() > 1) {
 		SZ_Print (&cls.netchan.message, " ");
 		SZ_Print (&cls.netchan.message, Cmd_Args());
 	}
-#elif UQUAKE
+#if 0
 	MSG_WriteByte (&cls.message, clc_stringcmd);
 	SZ_Print (&cls.message, Cmd_Argv(0));
 	if (Cmd_Argc() > 1) {
@@ -663,10 +663,9 @@ void Cmd_ForwardToServer_f (void)
 		return;		// not really connected
 
 	if (Cmd_Argc() > 1) {
-#ifdef QUAKEWORLD
 		MSG_WriteByte (&cls.netchan.message, clc_stringcmd);
 		SZ_Print (&cls.netchan.message, Cmd_Args());
-#elif UQUAKE
+#if 0
 		MSG_WriteByte (&cls.message, clc_stringcmd);
 		SZ_Print (&cls.message, Cmd_Args());
 #endif

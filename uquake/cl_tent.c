@@ -1,4 +1,5 @@
 /*
+cl_tent.c - client side temporary entities
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,15 +18,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl_tent.c -- client side temporary entities
 
-#include "quakedef.h"
+#include <quakedef.h>
 #include <qtypes.h>
 #include <sound.h>
 #include <mathlib.h>
 #include <protocol.h>
 #include <console.h>
 #include <sys.h>
+#include <client.h>
 
 int			num_temp_entities;
 entity_t	cl_temp_entities[MAX_TEMP_ENTITIES];

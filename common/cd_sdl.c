@@ -34,6 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 
 #include <quakedef.h>
+#include <client.h>
 
 static qboolean cdValid = false;
 static qboolean initialized = false;

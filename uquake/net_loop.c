@@ -1,4 +1,5 @@
 /*
+net_loop.c
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,10 +18,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// net_loop.c
 
-#include "quakedef.h"
-#include "net_loop.h"
+#include <quakedef.h>
+#include <client.h>
+#include <server.h>
+#include <net_loop.h>
 #include <lib_replace.h>
 #include <sys.h>
 #include <console.h>

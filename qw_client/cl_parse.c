@@ -33,6 +33,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sbar.h>
 #include <screen.h>
 #include <cvars.h>
+#include <client.h>
 
 char *svc_strings[] =
 {
@@ -256,7 +257,7 @@ void Model_NextDownload (void)
 	}
 
 	// all done
-	cl.worldmodel = cl.model_precache[1];	
+	snd.worldmodel = cl.worldmodel = cl.model_precache[1];	
 	R_NewMap ();
 	Hunk_Check ();		// make sure nothing is hurt
 
@@ -589,7 +590,8 @@ void CL_ParseServerData (void)
 	}
 
 	// parse player slot, high bit means spectator
-	cl.playernum = MSG_ReadByte ();
+	snd.playernum = cl.playernum = MSG_ReadByte ();
+	snd.playernum++;
 	if (cl.playernum & 128)
 	{
 		cl.spectator = true;

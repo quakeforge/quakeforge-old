@@ -23,9 +23,12 @@
 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "quakedef.h"
+#include <quakedef.h>
 #include <cvar.h>
 #include <mathlib.h>
+#include <client.h>
+#include <server.h>
+#include <world.h>
 
 cvar_t	cl_chasecam 		= {"cl_chasecam", "0", true};
 cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16", true};

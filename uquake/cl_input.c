@@ -1,4 +1,5 @@
 /*
+cl.input.c - builds an intended movement command to send to the server
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,13 +18,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// cl.input.c  -- builds an intended movement command to send to the server
 
 // Quake is a trademark of Id Software, Inc., (c) 1996 Id Software, Inc. All
 // rights reserved.
 
 #include <qtypes.h>
-#include "quakedef.h"
+#include <client.h>
+#include <quakedef.h>
 #include <mathlib.h>
 #include <lib_replace.h>
 #include <cmd.h>

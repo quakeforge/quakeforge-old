@@ -1,4 +1,5 @@
 /*
+cl_demo.c - demo functions for uquake
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 
@@ -20,7 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #include <qtypes.h>
-#include "quakedef.h"
+#include <client.h>
+#include <quakedef.h>
 #include <net.h>
 #include <sys.h>
 #include <mathlib.h>

@@ -1,4 +1,5 @@
 /*
+sv_main.c - server main program
 Copyright (C) 1996-1997 Id Software, Inc.
 Portions Copyright (C) 1999,2000  Nelson Rush.
 
@@ -18,9 +19,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sv_main.c -- server main program
 
-#include "quakedef.h"
+#include <quakedef.h>
+#include <client.h>
+#include <server.h>
+#include <world.h>
 #include <qtypes.h>
 #include <cvar.h>
 #include <protocol.h>

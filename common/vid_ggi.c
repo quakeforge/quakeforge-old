@@ -1,4 +1,5 @@
 /*
+vid_ggi.c - general LibGGI video driver
 Copyright (C) 1999       Marcus Sundberg [mackan@stacken.kth.se]
 Portions Copyright (C) 1996-1997  Id Software, Inc.
 
@@ -18,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// vid_ggi.c -- general LibGGI video driver
 
 #define _BSD
 
@@ -29,8 +29,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <string.h>
 #include <ggi/ggi.h>
 
-#include "quakedef.h"
-#include "d_local.h"
+#include <quakedef.h>
+#include <d_local.h>
 #include <sound.h>
 #include <keys.h>
 #include <cvar.h>
@@ -39,6 +39,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <lib_replace.h>
 #include <draw.h>
 #include <console.h>
+#include <client.h>
 
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];

@@ -1,4 +1,5 @@
 /*
+d_fill.c - clears a specified rectangle to the specified color
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,9 +20,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// d_clear: clears a specified rectangle to the specified color
 
-#include "quakedef.h"
+#include <quakedef.h>
+#include <vid.h>
 
 
 /*

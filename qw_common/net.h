@@ -1,4 +1,5 @@
 /*
+net.h - interface to the networking layer
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -23,10 +24,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _NET_H
 #define _NET_H
 
-// net.h -- quake's interface to the networking layer
 
-#include "qtypes.h"
-#include "common.h"
+#include <qtypes.h>
+#include <common.h>
+#include <cvar.h>
 
 #define	PORT_ANY	-1
 
@@ -125,7 +126,6 @@ void Netchan_Setup (netchan_t *chan, netadr_t adr, int qport);
 qboolean Netchan_CanPacket (netchan_t *chan);
 qboolean Netchan_CanReliable (netchan_t *chan);
 
-#include "qstructs.h"
 extern	cvar_t	hostname;
 
 #endif // _NET_H

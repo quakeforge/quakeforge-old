@@ -1,4 +1,5 @@
 /*
+mathlib.c - math primitives
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -20,12 +21,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// mathlib.c -- math primitives
 
 #include <math.h>
-#include "qtypes.h"
-#include "quakedef.h"
-#include "mathlib.h"
+#include <qtypes.h>
+#include <quakedef.h>
+#include <mathlib.h>
 
 void Sys_Error (char *error, ...);
 

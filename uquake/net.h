@@ -1,4 +1,5 @@
 /*
+net.h - interface to the networking layer
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,10 +18,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// net.h -- quake's interface to the networking layer
 
 #ifndef _NET_H
 #define _NET_H
+
+#include <cvar.h>
+#include <qstructs.h>
+#include <common.h>
 
 struct qsockaddr
 {
@@ -99,14 +103,15 @@ struct qsockaddr
 //		string	value
 
 //	note:
-//		There are two address forms used above.  The short form is just a
-//		port number.  The address that goes along with the port is defined as
-//		"whatever address you receive this reponse from".  This lets us use
-//		the host OS to solve the problem of multiple host addresses (possibly
-//		with no routing between them); the host will use the right address
-//		when we reply to the inbound connection request.  The long from is
-//		a full address and port in a string.  It is used for returning the
-//		address of a server that is not running locally.
+//		There are two address forms used above.  The short form is just
+//		a port number.  The address that goes along with the port is
+//		defined as "whatever address you receive this reponse from".
+//		This lets us use the host OS to solve the problem of multiple
+//		host addresses (possibly with no routing between them); the
+//		host will use the right address when we reply to the inbound
+//		connection request.  The long from is a full address and port
+//		in a string.  It is used for returning the address of a server
+//		that is not running locally.
 
 #define CCREQ_CONNECT		0x01
 #define CCREQ_SERVER_INFO	0x02
@@ -118,6 +123,45 @@ struct qsockaddr
 #define CCREP_SERVER_INFO	0x83
 #define CCREP_PLAYER_INFO	0x84
 #define CCREP_RULE_INFO		0x85
+
+typedef struct {
+	qboolean	fatal_error;
+	float		last_received;
+
+	float		frame_latency;
+	float		frame_rate;
+
+	int		drop_count;
+	int		good_count;
+
+#ifdef QUAKEWORLD
+	netadr_t	remote_address;
+	int		qport;
+#endif
+
+	double		cleartime;
+	double		rate;
+
+	int		incoming_sequence;
+	int		incoming_acknowledged;
+	int		incoming_reliable_acknowledged;
+	int		incoming_reliable_sequence;
+
+	int		outgoing_sequence;
+	int		outgoing_reliable;
+	int		last_reliable_sequence;
+
+	sizebuf_t	message;
+	byte		message_bug[MAX_MSGLEN];
+
+	int		reliable_length;
+	byte		reliable_buf[MAX_MSGLEN];
+
+#ifdef QUAKEWORLD
+	int		outgoing_size[MAX_LATENT];
+	int		outgoing_time[MAX_LATENT];
+#endif
+} netchan_t;
 
 typedef struct qsocket_s
 {

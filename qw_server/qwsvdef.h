@@ -1,4 +1,5 @@
 /*
+qwsvdef.h - primary header for server
 Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,7 +20,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// quakedef.h -- primary header for server
 
 #define	QUAKE_GAME			// as opposed to utilities
 #include <config.h>
@@ -38,25 +38,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <setjmp.h>
 #include <ctype.h>
 
-#include "bothdefs.h"
+#include <bothdefs.h>
 
-#include "common.h"
-#include "bspfile.h"
-#include "sys.h"
-#include "zone.h"
-#include "mathlib.h"
+#include <common.h>
+#include <bspfile.h>
+#include <sys.h>
+#include <zone.h>
+#include <mathlib.h>
 
-#include "cvar.h"
-#include "net.h"
-#include "protocol.h"
-#include "cmd.h"
-#include "model.h"
-#include "crc.h"
-#include "progs.h"
+#include <cvar.h>
+#include <net.h>
+#include <protocol.h>
+#include <cmd.h>
+#include <model.h>
+#include <crc.h>
+#include <progs.h>
 
-#include "server.h"
-#include "world.h"
-#include "pmove.h"
+#include <server.h>
+#include <world.h>
+#include <pmove.h>
+#include <qstructs.h>
 
 #ifndef max
 # define max(a,b) ((a) > (b) ? (a) : (b))

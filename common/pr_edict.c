@@ -1,4 +1,5 @@
 /*
+pr_edict.c - entity dictionary
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Portions Copyright (C) 1999,2000  Nelson Rush.
@@ -20,12 +21,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sv_edict.c -- entity dictionary
 
 #ifdef QUAKEWORLD
-#include "qwsvdef.h"
-#else
-#include "quakedef.h"
+#include <qwsvdef.h>
+#elif UQUAKE
+#	include <client.h>
+#	include <server.h>
+#	include <world.h>
+#	include <progs.h>
+#	include <quakedef.h>
 #endif
 
 #include <qtypes.h>

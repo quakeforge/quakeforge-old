@@ -1,4 +1,5 @@
 /*
+draw.c - the only file outside the refresh that touches the vid buffer
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -20,9 +21,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-// draw.c -- this is the only file outside the refresh that touches the
-// vid buffer
-
 #include <qtypes.h>
 #include <quakedef.h>
 #include <wad.h>
@@ -31,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <lib_replace.h>
 #include <console.h>
+#include <quakefs.h>
 
 typedef struct {
 	vrect_t	rect;

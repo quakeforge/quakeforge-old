@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys.h>
 #include <lib_replace.h>
 #include <cmd.h>
+#include <client.h>
 
 cvar_t          _windowed_mouse = {"_windowed_mouse","0", true};
 static float old_windowed_mouse = 0;

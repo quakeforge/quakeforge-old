@@ -18,6 +18,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifndef _BSPFILE_H
+#define _BSPFILE_H
+
+#include <render.h>
 
 // upper design bounds
 
@@ -298,6 +302,8 @@ typedef struct epair_s
 	char	*value;
 } epair_t;
 
+#if 0
+// this is defined in render.h now
 typedef struct
 {
 	vec3_t		origin;
@@ -305,6 +311,7 @@ typedef struct
 	int			numbrushes;
 	epair_t		*epairs;
 } entity_t;
+#endif
 
 extern	int			num_entities;
 extern	entity_t	entities[MAX_MAP_ENTITIES];
@@ -322,3 +329,5 @@ void 	GetVectorForKey (entity_t *ent, char *key, vec3_t vec);
 epair_t *ParseEpair (void);
 
 #endif
+
+#endif // _BSPFILE_H

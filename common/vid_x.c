@@ -1,4 +1,5 @@
 /*
+vid_x.c - general x video driver
 Copyright (C) 1996-1997	Id Software, Inc.
 Copyright (C) 1999-2000	contributors of the QuakeForge project
 Copyright (C) 2000	Marcus Sundberg [mackan@stacken.kth.se]
@@ -20,10 +21,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// vid_x.c -- general x video driver
 
 #define _BSD
-#include "config.h"
+#include <config.h>
 
 #include <ctype.h>
 #include <sys/time.h>
@@ -44,8 +44,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/extensions/XShm.h>
 #include <errno.h>
 
-#include "quakedef.h"
-#include "d_local.h"
+#include <quakedef.h>
+#include <d_local.h>
 #include <sound.h>
 #include <keys.h>
 #include <cvar.h>
@@ -55,6 +55,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <lib_replace.h>
 #include <draw.h>
 #include <console.h>
+#include <client.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>

@@ -1,4 +1,5 @@
 /*
+draw.h - functions outside the refresh allowed to touch the vid buffer
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -20,11 +21,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-// draw.h -- these are the only functions outside the refresh allowed
-// to touch the vid buffer
-
-#include "qtypes.h"
-#include "wad.h"
+#include <qtypes.h>
+#include <wad.h>
 
 extern	qpic_t		*draw_disc;	// also used on sbar
 

@@ -180,10 +180,10 @@ typedef struct
 
 #include <common_quakedef.h>
 
-#include "progs.h"
-#include "server.h"
+//#include "progs.h"
+//#include "server.h"
 
-#include "world.h"
+//#include "world.h"
 
 void Host_ClearMemory (void);
 

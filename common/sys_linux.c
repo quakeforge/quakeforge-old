@@ -25,7 +25,7 @@
 	USA.
 */
 
-#include "quakedef.h"
+#include <quakedef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -43,10 +43,11 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-#include "qtypes.h"
-#include "sys.h"
-#include "common.h"
+#include <qtypes.h>
+#include <sys.h>
+#include <common.h>
 #include <lib_replace.h>
+#include <client.h>
 
 #ifdef UQUAKE
 qboolean	isDedicated;

@@ -1,4 +1,5 @@
 /*
+snd_dma.c - main control for any streaming sound output device
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -19,25 +20,26 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// snd_dma.c -- main control for any streaming sound output device
 
 #include <string.h>
 #include <stdlib.h>
-#include "qtypes.h"
-#include "sound.h"
-#include "mathlib.h"
-#include "model.h"
-#include "lib_replace.h"
-#include "cvar.h"
-#include "cmd.h"
-#include "sys.h"
-#include "common_quakedef.h"
-#include "qargs.h"
+#include <qtypes.h>
+#include <sound.h>
+#include <mathlib.h>
+#include <model.h>
+#include <lib_replace.h>
+#include <cvar.h>
+#include <cmd.h>
+#include <sys.h>
+#include <common_quakedef.h>
+#include <qargs.h>
 #include <console.h>
 
 #ifdef _WIN32
-#include "winquake.h"
+#include <winquake.h>
 #endif
+
+snd_t	snd;
 
 void S_Play(void);
 void S_PlayVol(void);
@@ -45,9 +47,6 @@ void S_SoundList(void);
 void S_Update_();
 void S_StopAllSounds(qboolean clear);
 void S_StopAllSoundsC(void);
-
-// QuakeWorld hack
-#define	viewentity	playernum+1
 
 // =======================================================================
 // Internal sound data & structures
@@ -391,7 +390,7 @@ channel_t *SND_PickChannel(int entnum, int entchannel)
 		}
 
 		// don't let monster sounds override player sounds
-		if (channels[ch_idx].entnum == cl.viewentity && entnum != cl.viewentity && channels[ch_idx].sfx)
+		if (channels[ch_idx].entnum == snd.playernum && entnum != snd.playernum && channels[ch_idx].sfx)
 			continue;
 
 		if (channels[ch_idx].end - paintedtime < life_left)
@@ -422,10 +421,10 @@ void SND_Spatialize(channel_t *ch)
 	vec_t dist;
 	vec_t lscale, rscale, scale;
 	vec3_t source_vec;
-	sfx_t *snd;
+	sfx_t *sndfx;
 
 // anything coming from the view entity will allways be full volume
-	if (ch->entnum == cl.viewentity)
+	if (ch->entnum == snd.playernum)
 	{
 		ch->leftvol = ch->master_vol;
 		ch->rightvol = ch->master_vol;
@@ -434,7 +433,7 @@ void SND_Spatialize(channel_t *ch)
 
 // calculate stereo seperation and distance attenuation
 
-	snd = ch->sfx;
+	sndfx = ch->sfx;
 	VectorSubtract(ch->origin, listener_origin, source_vec);
 	
 	dist = VectorNormalize(source_vec) * ch->dist_mult;
@@ -693,10 +692,10 @@ void S_UpdateAmbientSounds (void)
 		return;
 
 // calc ambient sound levels
-	if (!cl.worldmodel)
+	if (!snd.worldmodel)
 		return;
 
-	l = Mod_PointInLeaf (listener_origin, cl.worldmodel);
+	l = Mod_PointInLeaf (listener_origin, snd.worldmodel);
 	if (!l || !ambient_level.value)
 	{
 		for (ambient_channel = 0 ; ambient_channel< NUM_AMBIENTS ; ambient_channel++)
@@ -1019,7 +1018,7 @@ void S_LocalSound (char *sound)
 		Con_Printf ("S_LocalSound: can't cache %s\n", sound);
 		return;
 	}
-	S_StartSound (cl.viewentity, -1, sfx, vec3_origin, 1, 1);
+	S_StartSound (snd.playernum, -1, sfx, vec3_origin, 1, 1);
 }
 
 

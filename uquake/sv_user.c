@@ -1,4 +1,5 @@
 /*
+sv_user.c - server code for moving users
 Copyright (C) 1996-1997 Id Software, Inc.
 
 This program is free software; you can redistribute it and/or
@@ -17,9 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// sv_user.c -- server code for moving users
 
-#include "quakedef.h"
+#include <quakedef.h>
 #include <qtypes.h>
 #include <mathlib.h>
 #include <lib_replace.h>
@@ -30,6 +30,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <keys.h>
 #include <protocol.h>
+#include <client.h>
+#include <server.h>
+#include <world.h>
 
 edict_t	*sv_player;
 

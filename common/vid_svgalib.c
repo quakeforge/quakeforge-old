@@ -1,11 +1,11 @@
 /*
+vid_svgalib.c - Linux SVGALib video routines
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999-2000  contributors of the QuakeForge project
+Please see the file "AUTHORS" for a list of contributors
 Copyright (C) 1999-2000  Nelson Rush.
 Copyright (C) 1999-2000  Marcus Sundberg [mackan@stacken.kth.se]
 Copyright (C) 1999-2000  XoXus [xoxus@usa.net]
-
-Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,8 +23,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "quakedef.h"
-#include "d_local.h"
+#include <quakedef.h>
+#include <common.h>
+#include <d_local.h>
 #include <sound.h>
 #include <cvar.h>
 #include <lib_replace.h>

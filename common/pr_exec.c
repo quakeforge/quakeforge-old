@@ -21,9 +21,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 #ifdef QUAKEWORLD
-#include "qwsvdef.h"
-#else
-#include "quakedef.h"
+#include <qwsvdef.h>
+#elif UQUAKE
+#	include <client.h>
+#	include <server.h>
+#	include <world.h>
+#	include <progs.h>
+#	include <quakedef.h>
 #endif
 
 #include <sys.h>
