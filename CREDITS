@@ -102,6 +102,9 @@ Win32 support:
   Marcus Sundberg <mackan@stacken.kth.se>
   Jason Nelson <jason_nelson@email.msn.com>
 
+Win32/Borland support:
+  Jukka Sorjonen <jukka.sorjonen@asikkala.fi>
+
 CD-ROM support/optimizations:
   Marcus Sundberg <mackan@stacken.kth.se>
   Loring Holden <lsh@cs.brown.edu>

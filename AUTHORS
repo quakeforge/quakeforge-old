@@ -236,3 +236,7 @@ N: Eric Windisch
 E: windisch@nni.com
 D: QW/Q1 tree merging
 D: GL renderer fixes/optimizations
+
+N: Jukka Sorjonen
+E: jukka.sorjonen@asikkala.fi
+D: win32/Borland support

@@ -34,7 +34,7 @@
 #include <mathlib.h>
 #include <sys.h>
 
-int			skytexturenum;
+extern int             skytexturenum;
 
 #ifndef GL_RGBA4
 #define	GL_RGBA4	0
