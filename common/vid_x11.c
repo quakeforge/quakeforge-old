@@ -25,17 +25,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define _BSD
 #include <config.h>
 
-#include <context_x11.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 #include <ctype.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#include <signal.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <X11/Xlib.h>
@@ -43,7 +42,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 #include <X11/extensions/XShm.h>
-#include <errno.h>
 
 #include <quakedef.h>
 #include <d_local.h>
@@ -57,6 +55,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <console.h>
 #include <client.h>
 #include <input.h>
+#include <context_x11.h>
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
@@ -65,21 +64,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];
 
-Window		x_win;
+Window				x_win;
 static Colormap		x_cmap;
-static GC		x_gc;
+static GC			x_gc;
 static Visual		*x_vis;
 static XVisualInfo	*x_visinfo;
-static Atom		aWMDelete = 0;
+static Atom			aWMDelete = 0;
 
 
 int XShmQueryExtension(Display *);
 int XShmGetEventBase(Display *);
 
-qboolean		doShm;
+qboolean				doShm;
 static XShmSegmentInfo	x_shminfo[2];
 
-static int		current_framebuffer;
+static int			current_framebuffer;
 static XImage		*x_framebuffer[2] = { 0, 0 };
 
 static int verbose = 0;
@@ -284,32 +283,6 @@ void VID_Gamma_f (void)
 
 		vid.recalc_refdef = 1;	// force a surface cache flush
 	}
-}
-
-// ========================================================================
-// makes a null cursor
-// ========================================================================
-
-static Cursor CreateNullCursor(Display *display, Window root)
-{
-    Pixmap cursormask;
-    XGCValues xgc;
-    GC gc;
-    XColor dummycolour;
-    Cursor cursor;
-
-    cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
-    xgc.function = GXclear;
-    gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
-    XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
-    dummycolour.pixel = 0;
-    dummycolour.red = 0;
-    dummycolour.flags = 04;
-    cursor = XCreatePixmapCursor(display, cursormask, cursormask,
-          &dummycolour,&dummycolour, 0,0);
-    XFreePixmap(display,cursormask);
-    XFreeGC(display,gc);
-    return cursor;
 }
 
 
@@ -603,9 +576,6 @@ void VID_Init (unsigned char *palette)
 			XSetWindowColormap(x_disp, x_win, x_cmap);
 		}
 	}
-
-// inviso cursor
-	XDefineCursor(x_disp, x_win, CreateNullCursor(x_disp, x_win));
 
 // create the GC
 	{
