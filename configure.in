@@ -249,14 +249,10 @@ fi
 
 dnl Make sure DGA works
 if test "x$HAS_DGA" = xyes; then
-   dnl FIXME: figure out why -lXxf86dga -lXxf86vm is getting into LIBS if
-   dnl        we don't save/restore them
-   save_LIBS="$LIBS"
-   AC_CHECK_LIB(Xxf86dga, XF86DGAQueryVersion,,
+   AC_CHECK_LIB(Xxf86dga, XF86DGAQueryVersion,qwfoo=qwfoo,
      HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
-   AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,,
+   AC_CHECK_LIB(Xxf86vm, XF86VidModeSwitchToMode,qwfoo=qwfoo,
      HAS_DGA=no, [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
-   LIBS="$save_LIBS"
 fi
 if test "x$HAS_DGA" != xyes; then
    DGA_LIBS=""
@@ -325,14 +321,14 @@ dnl Make sure -lGL or -lMesaGL works
 if test "x$HAS_OGL" = xyes; then
    AC_CHECK_LIB(GL, glColor4f, OGL_LIBS="$OGL_LIBS -lGL"
      HAS_OGL=yes
-     AC_CHECK_LIB(GL, XMesaSetFXmode, , HAS_XMESA=no,
+     AC_CHECK_LIB(GL, XMesaSetFXmode, qwfoo=qwfoo, HAS_XMESA=no,
        [ $OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS]),
      HAS_OGL=no,
      [$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
    if test "x$HAS_OGL" != xyes; then
       AC_CHECK_LIB(MesaGL, glColor4f, OGL_LIBS="$OGL_LIBS -lMesaGL"
         HAS_OGL=yes
-        AC_CHECK_LIB(MesaGL, XMesaSetFXmode, , HAS_XMESA=no,
+        AC_CHECK_LIB(MesaGL, XMesaSetFXmode, qwfoo=qwfoo, HAS_XMESA=no,
           [ $OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS]),
         HAS_OGL=no,
 	[$OGL_LIBS $X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
