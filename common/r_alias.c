@@ -747,13 +747,11 @@ void R_AliasDrawModel (alight_t *plighting)
 	if (r_affinetridesc.drawtype)	{
 		D_PolysetUpdateTables ();		// FIXME: precalc...
 	}
-#ifdef QUAKEWORLD 						// FIXME: Is this needed?
 #if id386
 	else
 	{
 		D_Aff8Patch (currententity->colormap);
 	}
-#endif
 #endif
 
 	acolormap = currententity->colormap;
