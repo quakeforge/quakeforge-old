@@ -405,7 +405,6 @@ void Con_Printf (char *fmt, ...)
 // write it to the scrollable buffer
 	Con_Print (msg);
 
-#if 0
 // update the screen immediately if the console is displayed
 	if (cls.state != ca_active)
 	{
@@ -419,7 +418,6 @@ void Con_Printf (char *fmt, ...)
 			inupdate = false;
 		}
 	}
-#endif
 }
 
 /*
