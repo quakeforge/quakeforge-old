@@ -40,13 +40,16 @@ typedef struct cvar_s
 	char    *string;
 	int	flags;
 	char 	*description;	// for "help" command
-//	qboolean archive;	// set to true to cause it to be saved to vars.rc
-//	qboolean info;		// added to serverinfo or userinfo when changed
-//	qboolean server;	// notifies players when changed (UQUAKE)
-//	qboolean heap;		// allocated off the heap, safe to free
-	float   value;
+	float	value;
 	struct cvar_s *next;
 } cvar_t;
+
+typedef struct cvar_alias_s
+{
+	char	*name;
+	cvar_t	*cvar;
+	struct cvar_alias_s	*next;
+} cvar_alias_t;
 
 #define CVAR_NONE		0
 #define	CVAR_ARCHIVE		1	// set to cause it to be saved to vars.rc
@@ -77,6 +80,8 @@ typedef struct cvar_s
 // CVAR_ROM as per the call.
 
 cvar_t	*Cvar_Get (char *name, char *value, int cvarflags, char *description);
+
+cvar_t	*Cvar_Alias_Get (char *name, cvar_t *cvar);
 
 void 	Cvar_Set (cvar_t *var, char *value);
 // equivelant to "<name> <variable>" typed at the console

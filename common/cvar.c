@@ -51,6 +51,7 @@
 cvar_t	*cvar_vars;
 char	*cvar_null_string = "";
 cvar_t	*developer;
+cvar_alias_t *calias_vars;
 
 /*
 ============
@@ -68,6 +69,44 @@ cvar_t *Cvar_FindVar (char *var_name)
 	return NULL;
 }
 
+cvar_t *Cvar_FindAlias (char *alias_name)
+{
+	cvar_alias_t	*alias;
+
+	for (alias = calias_vars ; alias ; alias=alias->next)
+		if (!Q_strcmp (alias_name, alias->name))
+			return alias->cvar;
+	return NULL;
+}
+
+cvar_t *Cvar_Alias_Get (char *name, cvar_t *cvar)
+{
+	cvar_alias_t	*alias;
+	cvar_t		*var;
+
+	if (Cmd_Exists (name))
+	{
+		Con_Printf ("CAlias_Get: %s is a command\n", name);
+		return NULL;
+	}
+	if (Cvar_FindVar(name))
+	{
+		Con_Printf ("CAlias_Get: tried to alias used cvar name %s\n",name);
+		return NULL;
+	}
+	var = Cvar_FindAlias(name);	
+	if (!var)
+	{
+		alias = (cvar_alias_t *) malloc(sizeof(cvar_alias_t));
+		alias->next = calias_vars;
+		calias_vars = alias;
+		alias->name = strdup(name);	
+		alias->cvar = cvar;
+		return alias->cvar;
+	}
+	return var;	
+}
+
 /*
 ============
 Cvar_VariableValue
@@ -78,6 +117,8 @@ float	Cvar_VariableValue (char *var_name)
 	cvar_t	*var;
 
 	var = Cvar_FindVar (var_name);
+	if (!var)
+		var = Cvar_FindAlias(var_name);
 	if (!var)
 		return 0;
 	return Q_atof (var->string);
@@ -95,6 +136,8 @@ char *Cvar_VariableString (char *var_name)
 
 	var = Cvar_FindVar (var_name);
 	if (!var)
+		var = Cvar_FindAlias(var_name);
+	if (!var)
 		return cvar_null_string;
 	return var->string;
 }
@@ -108,7 +151,8 @@ Cvar_CompleteVariable
 char *Cvar_CompleteVariable (char *partial)
 {
 	cvar_t		*cvar;
-	int			len;
+	cvar_alias_t	*alias;
+	int		len;
 
 	len = Q_strlen(partial);
 
@@ -119,11 +163,21 @@ char *Cvar_CompleteVariable (char *partial)
 	for (cvar=cvar_vars ; cvar ; cvar=cvar->next)
 		if (!strcmp (partial,cvar->name))
 			return cvar->name;
+	
+	// check aliases too :)
+	for (alias=calias_vars ; alias ; alias=alias->next)
+		if (!strcmp (partial, alias->name))
+			return alias->name;
 
 	// check partial match
 	for (cvar=cvar_vars ; cvar ; cvar=cvar->next)
 		if (!Q_strncmp (partial,cvar->name, len))
 			return cvar->name;
+
+	// check aliases too :)
+	for (alias=calias_vars ; alias ; alias=alias->next)
+		if (!Q_strncmp (partial, alias->name, len))
+			return alias->name;
 
 	return NULL;
 }
@@ -211,6 +265,8 @@ qboolean	Cvar_Command (void)
 // check variables
 	v = Cvar_FindVar (Cmd_Argv(0));
 	if (!v)
+		v = Cvar_FindAlias (Cmd_Argv(0));
+	if (!v)
 		return false;
 
 // perform a variable print or set
@@ -256,6 +312,8 @@ void Cvar_Set_f(void)
 	var_name = Cmd_Argv (1);
 	value = Cmd_Argv (2);
 	var = Cvar_FindVar (var_name);
+	if (!var)
+		var = Cvar_FindAlias (var_name);
 	if (var)
 	{
 		Cvar_Set (var, value);
@@ -279,6 +337,8 @@ void Cvar_Toggle_f (void)
 
 	var = Cvar_FindVar (Cmd_Argv(1));
 	if (!var)
+		var = Cvar_FindAlias(Cmd_Argv(1));
+	if (!var)
 	{
 		Con_Printf ("Unknown variable \"%s\"\n", Cmd_Argv(1));
 		return;
@@ -289,7 +349,7 @@ void Cvar_Toggle_f (void)
 
 void Cvar_Help_f (void)
 {
-	char *cvar_name;
+	char	*var_name;
 	cvar_t	*var;
 
 	if (Cmd_Argc() != 2)
@@ -298,11 +358,13 @@ void Cvar_Help_f (void)
 		return;
 	}
 
-	cvar_name = Cmd_Argv (1);
-	if((var = Cvar_FindVar(cvar_name)) != NULL)
+	var_name = Cmd_Argv (1);
+	var = Cvar_FindVar (var_name);
+	if (!var)
+		var = Cvar_FindAlias (var_name);
+	if (var)
 	{
-		Con_Printf ("description: %s\nvalue: %s\n",var->description,
-			    var->string);
+		Con_Printf ("%s\n",var->description);
 		return;
 	}
 	Con_Printf ("variable not found\n");
@@ -333,7 +395,9 @@ void Cvar_Init()
 void Cvar_Shutdown (void)
 {
 	cvar_t	*var,*next;
+	cvar_alias_t	*alias,*nextalias;
 
+	// Free cvars
 	var = cvar_vars;
 	while(var)
 	{
@@ -343,6 +407,15 @@ void Cvar_Shutdown (void)
 		free(var->name);
 		free(var);
 		var = next;
+	}
+	// Free aliases 
+	alias = calias_vars;
+	while(alias)
+	{
+		nextalias = alias->next;
+		free(alias->name);
+		free(alias);
+		alias = nextalias;
 	}
 }
 
