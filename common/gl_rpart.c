@@ -865,7 +865,7 @@ void R_DrawParticles (void)
 
 
 /*
-	R_FireballTrail
+	R_AddFire
 
 	Nifty ball of fire GL effect.  Kinda a meshing of the dlight and
 	particle engine code.
@@ -875,14 +875,17 @@ R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 {
 	float		len;
 	fire_t		*f;
+	dlight_t	*dl;
 	vec3_t		vec;
+	int			key;
 
 	VectorSubtract (end, start, vec);
 	len = VectorNormalize (vec);
+	key = ent-cl_entities+1;
 
 	if (len)
 	{
-		f = R_AllocFire (ent-cl_entities+1);
+		f = R_AllocFire (key);
 		VectorCopy (end, f->origin);
 		VectorCopy (start, f->owner);
 		f->size = 20;
@@ -892,6 +895,15 @@ R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 		f->color[1] = 0.7;
 		f->color[2] = 0.3;
 		f->color[3] = 1.0;
+
+		dl = CL_AllocDlight (key);
+		VectorCopy (end, dl->origin);
+		dl->radius = 200;
+		dl->die = cl.time + 0.5;
+		dl->color[0] = 0.9;
+		dl->color[1] = 0.7;
+		dl->color[2] = 0.3;
+		dl->color[3] = 0.66;
 	}
 }
 
@@ -935,7 +947,7 @@ R_AllocFire (int key)
 }
 
 /*
-	R_DrawFireball
+	R_DrawFire
 
 	draws one fireball - probably never need to call this directly
 */
@@ -987,7 +999,7 @@ R_DrawFire (fire_t *f)
 }
 
 /*
-	R_DrawFireballs
+	R_UpdateFires
 
 	Draws each fireball in sequence
 */
