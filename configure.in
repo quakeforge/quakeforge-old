@@ -808,6 +808,7 @@ AC_SUBST(HAVE_UDP)
 AC_SUBST(NET_SOURCE)
 AC_SUBST(VERSION)
 AC_SUBST(QF_VERSION)
+AC_SUBST(ac_configure_args)
 
 dnl Output files
 AC_CONFIG_HEADER(common/config.h)

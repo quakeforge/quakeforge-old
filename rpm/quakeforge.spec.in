@@ -110,11 +110,7 @@ Requires: quakeforge
 %setup -q
 
 %build
-%if "%{SND_STYLE}"=="'ALSA'"
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr --enable-alsa
-%else
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
-%endif
+CFLAGS="$RPM_OPT_FLAGS" ./configure @ac_configure_args@ --prefix=/usr
 make
 
 %install
