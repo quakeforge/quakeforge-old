@@ -1,4 +1,5 @@
 /*
+qstructs.h - common structures
 Copyright (C) 1996-1997  Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
@@ -124,6 +125,8 @@ typedef struct
 
 	entity_t	viewent;		// weapon model
 	int			playernum;
+	int			gametype;
+	int			maxclients;
 
 #ifdef QUAKEWORLD
 // QW specific!
@@ -163,8 +166,6 @@ typedef struct
 	qboolean	inwater;
 	float		viewheight;
 	float		idealpitch;
-	int			maxclients;
-	int			gametype;
 // frag scoreboard
 	scoreboard_t	*scores;		// [cl.maxclients]
 

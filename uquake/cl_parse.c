@@ -532,6 +532,7 @@ void CL_ParseServerMessage (void)
 {
 	int			cmd;
 	int			i;
+	char			ch;
 	
 //
 // if recording demos, copy the message out
@@ -601,12 +602,12 @@ void CL_ParseServerMessage (void)
 			Host_EndGame ("Server disconnected\n");
 
 		case svc_print:
-			i = MSG_ReadByte ();
-			if (i == 1) {
+			ch = MSG_ReadChar ();
+			if (ch == '\x01') {
 				S_LocalSound ("misc/talk.wav");
 				con_ormask = 128;
 			}
-			Con_Printf ("%s", MSG_ReadString ());
+			Con_Printf ("%c%s", ch, MSG_ReadString ());
 			con_ormask = 0;
 			break;
 			
