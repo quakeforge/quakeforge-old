@@ -33,7 +33,7 @@
 #define _BSD
 #include <config.h>
 
-#include <values.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -587,7 +587,7 @@ void VID_Init (unsigned char *palette)
 
 #ifdef HAS_VIDMODE
 		if (hasvidmode && vid_fullscreen->value) {
-			int smallest_mode=0, x=MAXINT, y=MAXINT;
+			int smallest_mode=0, x=INT_MAX, y=INT_MAX;
 
 			attribs.override_redirect=1;
 			attribmask|=CWOverrideRedirect;
