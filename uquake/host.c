@@ -672,6 +672,7 @@ void _Host_Frame (float time)
 	static double		time3 = 0;
 	int			pass1, pass2, pass3;
 
+	cl_visedicts = cl_visedicts_list[0];
 	if (setjmp (host_abortserver) )
 		return;			// something bad happened, or the server disconnected
 
