@@ -79,7 +79,6 @@ if test "x$enable_experimental" = xyes; then
    AC_DEFINE(_EXPERIMENTAL_)
 fi
 
-NEWSTYLE=no
 AC_ARG_ENABLE(newstyle,
 [  --enable-newstyle       compile with defaults a bit different than those
                           used by Id Software (does not affect gameplay)],
