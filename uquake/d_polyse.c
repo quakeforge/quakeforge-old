@@ -99,7 +99,7 @@ typedef struct {
 } adivtab_t;
 
 static adivtab_t	adivtab[32*32] = {
-#include "adivtab.h"
+#include "adivtab.-c"
 };
 
 byte	*skintable[MAX_LBM_HEIGHT];

@@ -1,5 +1,6 @@
 /*
 Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 2000 by individual developers of the QuakeForge
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -15,7 +16,6 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 */
 
 #include "quakedef.h"
@@ -23,24 +23,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 cvar_t registered = {"registered","0"};
 
 /*
-================
-COM_CheckRegistered
-
-Looks for the pop.txt file.
-Sets the "registered" cvar.
-================
-*/
-void register_check ()
+ * register_check
+ *
+ * Looks for gfx/pop.lmp (only found in ID's registered quake pak files)
+ * and sets the "registered" cvar to 1 if found.
+ */
+void
+register_check ()
 {
-    FILE *h;
+	FILE *h;
 
-    Cvar_RegisterVariable (&registered);
+	Cvar_RegisterVariable (&registered);
 
-    COM_FOpenFile("gfx/pop.lmp", &h);
+	COM_FOpenFile("gfx/pop.lmp", &h);
 
-    if (h) {
-	Cvar_Set ("registered", "1");
-	Con_Printf ("Playing registered version.\n");
-        fclose (h);
-    }
+	if (h) {
+		Cvar_Set ("registered", "1");
+		Con_Printf ("Playing registered version.\n");
+        	fclose (h);
+	}
 }
