@@ -1214,10 +1214,12 @@ if(r_fog.value) {
 
 //  More fog right here :)
 	glDisable(GL_FOG);
-//  End of all fog code...
 
+
+#ifndef QUAKEWORLD
 	// render mirror view
 	R_Mirror ();
+#endif
 	R_PolyBlend ();
 
 	if (r_speeds.value)
