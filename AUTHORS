@@ -60,6 +60,10 @@ N: Andrew Coles
 E: andycole123@ic24.net
 D: CD-ROM support/fixes
 
+N: André Cormier, Viagénie Inc.
+E: andre.cormier@viagenie.qc.ca
+D: BSD IPv6
+
 N: Bill Currie
 E: bill@taniwha.org
 D: QW/Q1 tree merging
@@ -87,6 +91,10 @@ D: Jumping bug fix
 N: Ryan C. Gordon
 E: ryan_gorden@hotmail.com
 D: Sound cleanups
+
+N: Jun-ichiro Hagino
+E: itojun@iijlab.net
+D: BSD IPv6
 
 N: Chase Hargraves
 E: absolutek@quakeforge.net
@@ -116,7 +124,7 @@ D: SDL support
 
 N: Pontus Lidman
 E: <pontus@lysator.liu.se>
-D: adding IPv6 support
+D: Initial/Linux IPv6 support
 
 N: Nye Liu (nyet)
 E: nyet@nbase.com
@@ -150,6 +158,10 @@ N: Dan Olson (theoddone33)
 E: theoddone@quakefiles.com
 D: Misc. code fixes
 D: Driver modules
+
+N: Florent Parent, Viagénie Inc.
+E: florent.parent@viagenie.qc.ca
+D: BSD IPv6
 
 N: Tane Piper
 E: descent@barrysworld.com
