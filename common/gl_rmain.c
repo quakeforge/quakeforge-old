@@ -328,11 +328,11 @@ GL_DrawAliasFrame (aliashdr_t *paliashdr, int posenum)
 
 			// normals and vertexes come from the frame list
 
-			l = shadedots[verts->lightnormalindex]
-				* shadelight[3];
+			l = shadedots[verts->lightnormalindex] * shadelight[3];
 			if (shadelight[0] || shadelight[1] || shadelight[2])
-				glColor3f (l*shadelight[0], l*shadelight[1],
-						l*shadelight[2]);
+				//glColor3f (l*shadelight[0], l*shadelight[1], l*shadelight[2]);
+				glColor3f (min(l+shadelight[0], 1), min(l+shadelight[1], 1), 
+						   min(l+shadelight[2], 1));
 			else
 				glColor3f (l, l, l);
 
@@ -481,12 +481,9 @@ R_DrawAliasModel (entity_t *e) {
 				// ZOID: models should be affected by
 				//       dlights as well
 				if (r_dynamic->value) {
-					shadelight[0] +=
-						cl_dlights[lnum].color[0];
-					shadelight[1] +=
-						cl_dlights[lnum].color[1];
-					shadelight[2] +=
-						cl_dlights[lnum].color[2];
+					shadelight[0] += cl_dlights[lnum].color[0];
+					shadelight[1] += cl_dlights[lnum].color[1];
+					shadelight[2] += cl_dlights[lnum].color[2];
 					shadelight[3] += add;
 				}
 			}

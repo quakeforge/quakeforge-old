@@ -1184,8 +1184,7 @@ void R_DrawBrushModel (entity_t *e)
 	{
 		for (k=0 ; k<MAX_DLIGHTS ; k++)
 		{
-			if ((cl_dlights[k].die < cl.time) ||
-				(!cl_dlights[k].radius))
+			if ((cl_dlights[k].die < cl.time) || (!cl_dlights[k].radius))
 				continue;
 
 			R_MarkLights (&cl_dlights[k], 1<<k,

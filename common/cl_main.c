@@ -754,7 +754,9 @@ void CL_FullServerinfo_f (void)
 		return;
 	}
 
+	Con_DPrintf("Cmd_Argv(1): '%s'\n", Cmd_Argv(1));
 	strcpy (cl.serverinfo, Cmd_Argv(1));
+	Con_DPrintf("cl.serverinfo: '%s'\n", cl.serverinfo);
 
 	if ((p = Info_ValueForKey(cl.serverinfo, "*qf_version")) && *p) {
 		if (!server_version)

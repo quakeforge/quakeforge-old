@@ -108,13 +108,13 @@ void R_InitBubble() {
 void R_RenderDlight (dlight_t *light)
 {
 	int		i, j;
-//	float	a;
+	float	a;
 	vec3_t	v;
 	float	rad;
-	float	*bub_sin, *bub_cos;
+//	float	*bub_sin, *bub_cos;
 
-	bub_sin = bubble_sintable;
-	bub_cos = bubble_costable;
+	//bub_sin = bubble_sintable;
+	//bub_cos = bubble_costable;
 	rad = light->radius * 0.35;
 
 	VectorSubtract (light->origin, r_origin, v);
@@ -137,12 +137,17 @@ void R_RenderDlight (dlight_t *light)
 	glColor3f (0,0,0);
 	for (i=16 ; i>=0 ; i--)
 	{
-//		a = i/16.0 * M_PI*2;
+		a = i/16.0 * M_PI*2;
+		for (j=0 ; j<3 ; j++)
+			v[j] = light->origin[j] + vright[j]*cos(a)*rad + vup[j]*sin(a)*rad;
+
+		/*
 		for (j=0 ; j<3 ; j++)
 			v[j] = light->origin[j] + (vright[j]*(*bub_cos) +
 				+ vup[j]*(*bub_sin)) * rad;
 		bub_sin++;
 		bub_cos++;
+		*/
 		glVertex3fv (v);
 	}
 	glEnd ();
