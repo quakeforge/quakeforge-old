@@ -33,7 +33,7 @@ typedef enum {NOT_WHITESPACE, WHITESPACE, TOKEN_AVAILABLE, LINE_DONE, FILE_DONE,
 typedef enum {NOSEG, DATASEG, TEXTSEG} segtype;
 
 int		tokennum;
-int		inline, outline;
+int		linein, lineout;
 
 char	*token;
 char	tokens[MAX_TOKENS][MAX_TOKEN_LENGTH+1];
@@ -398,30 +398,34 @@ void emitonejumpdata (void)
 {
 	int	i, isaddr, len;
 
-	if (tokens[1][0] == '*')
-	{
-		printf (" dword ptr[%s]", &tokens[1][1]);
-	}
-	else
-	{
-		isaddr = 0;
-		len = strlen(tokens[1]);
+	isaddr = 0;
+	len = strlen(tokens[1]);
+	
+	if (tokens[1][0] == '*') {
 
-		for (i=0 ; i<len ; i++)
-		{
-			if (tokens[1][i] == '(')
-			{
+		for (i=0 ; i<len ; i++) {
+			if (tokens[1][i] == '(') {
+				isaddr = 1;
+				break;
+			}
+		}
+		if ( !isaddr ) {
+			printf (" dword ptr [%s]", &tokens[1][1]);
+		} else {
+			emitanoperand (1, " dword ptr", 1);
+		}
+	} else {
+
+		for (i=0 ; i<len ; i++) {
+			if (tokens[1][i] == '(') {
 				isaddr = 1;
 				break;
 			}
 		}
 
-		if (!isaddr)
-		{
+		if (!isaddr) {
 			printf (" %s", tokens[1]);
-		}
-		else
-		{
+		} else {
 			emitanoperand (1, " dword ptr", 1);
 		}
 	}
@@ -430,7 +434,6 @@ void emitonejumpdata (void)
 
 void emitexterndef (void)
 {
-
 	printf (" %s:dword", tokens[1]);
 }
 
@@ -758,7 +761,7 @@ int	numparse = sizeof (parsedata) / sizeof (parsedata[0]);
 
 void errorexit (void)
 {
-	fprintf (stderr, "In line: %d, out line: %d\n", inline, outline);
+	fprintf (stderr, "In line: %d, out line: %d\n", linein, lineout);
 	exit (1);
 }
 
@@ -968,7 +971,7 @@ tokenstat parseline (void)
 				else
 					printf ("\n");
 
-				outline++;
+				lineout++;
 			}
 			return PARSED_OKAY;
 
@@ -1025,13 +1028,13 @@ void main (int argc, char **argv)
 
 	printf (" .386P\n"
             " .model FLAT\n");
-	inline = 1;
-	outline = 3;
+	linein = 1;
+	lineout = 3;
 
 	for ( ;; )
 	{
 		stat = parseline ();
-		inline++;
+		linein++;
 
 		switch (stat)
 		{
