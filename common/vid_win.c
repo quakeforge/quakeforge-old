@@ -427,9 +427,9 @@ void registerAllMemDrivers(void)
 
 void VID_InitMGLFull (HINSTANCE hInstance)
 {
-	int			i, xRes, yRes, bits, lowres, curmode, temp;
-	int			lowstretchedres, stretchedmode, lowstretched;
-    uchar		*m;
+	int	i, xRes, yRes, bits, lowres, curmode, temp;
+	int	lowstretchedres, lowstretched;
+	uchar	*m;
 
 // FIXME: NT is checked for because MGL currently has a bug that causes it
 // to try to use WinDirect modes even on NT
@@ -453,6 +453,7 @@ void VID_InitMGLFull (HINSTANCE hInstance)
 
 	if (m[0] != 0xFF)
 	{
+		int stretchedmode = 0;
 		lowres = lowstretchedres = 99999;
 		lowstretched = 0;
 		curmode = 0;
@@ -752,9 +753,9 @@ VID_InitFullDIB
 void VID_InitFullDIB (HINSTANCE hInstance)
 {
 	DEVMODE	devmode;
-	int		i, j, modenum, existingmode, originalnummodes, lowestres;
-	int		numlowresmodes, bpp, done;
-	int		cstretch, istretch, mstretch;
+	int	i, j, modenum, existingmode, originalnummodes, lowestres;
+	int	numlowresmodes, bpp, done;
+	int	cstretch, istretch;
 	BOOL	stat;
 
 // enumerate 8 bpp modes
@@ -997,6 +998,8 @@ void VID_InitFullDIB (HINSTANCE hInstance)
 // don't bother if we have a real VGA mode 0x13 mode
 	if (!is_mode0x13)
 	{
+		int mstretch = 0;
+
 		for (i=originalnummodes, cstretch=0 ; i<nummodes ; i++)
 		{
 			if (((modelist[i].width >> 1) < lowestres) &&
@@ -2096,8 +2099,8 @@ void VID_ForceMode_f (void)
 
 void	VID_Init (unsigned char *palette)
 {
-	int		i, bestmatch, bestmatchmetric, t, dr, dg, db;
-	int		basenummodes;
+	int	i, bestmatchmetric, t, dr, dg, db, bestmatch = 0;
+	int	basenummodes;
 	byte	*ptmp;
 
 	Cvar_RegisterVariable (&vid_mode);
@@ -3113,7 +3116,7 @@ void VID_MenuDraw (void)
 {
 	qpic_t		*p;
 	char		*ptr;
-	int			lnummodes, i, j, k, column, row, dup, dupmode;
+	int			lnummodes, i, j, k, column, row, dup;
 	char		temp[100];
 	vmode_t		*pv;
 	modedesc_t	tmodedesc;
@@ -3146,6 +3149,8 @@ void VID_MenuDraw (void)
 	// 5 360-wide modes, we'll run out of space
 		if (ptr && ((pv->width != 360) || COM_CheckParm("-allow360")))
 		{
+			int dupmode = 0;
+
 			dup = 0;
 
 			for (j=3 ; j<vid_wmodes ; j++)
