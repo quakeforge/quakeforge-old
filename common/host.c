@@ -558,6 +558,7 @@ Host_Init (quakeparms_t *parms)
 
 	// FIXME: stuff only +set here, shouldn't stuff all commands --KB
 	Cmd_StuffCmds_f ();
+	Cbuf_Execute_Sets ();
 	Cbuf_Execute ();
 
 	V_Init ();

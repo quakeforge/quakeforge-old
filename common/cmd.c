@@ -38,6 +38,7 @@
 #include <lib_replace.h>
 #include <zone.h>
 #include <string.h>
+#include <ctype.h>
 #include <net.h>
 #include <common_quakedef.h>
 
@@ -153,51 +154,53 @@ void Cbuf_InsertText (char *text)
 	}
 }
 
-/*
-============
-Cbuf_Execute
-============
-*/
-void Cbuf_Execute (void)
+static void
+extract_line(char *line)
 {
-	int		i;//, li;
+	int		i;
 	char	*text;
-	char	line[1024] = {0};
 	int	quotes;
 
-	while (cmd_text.cursize)
-	{
-// find a \n or ; line break
-		text = (char *)cmd_text.data;
+	// find a \n or ; line break
+	text = (char *)cmd_text.data;
+	quotes = 0;
+	for (i=0 ; i< cmd_text.cursize ; i++) {
+		if (text[i] == '"')
+			quotes++;
+		if ( !(quotes&1) &&  text[i] == ';')
+			break;	// don't break if inside a quoted string
+		if (text[i] == '\n' || text[i] == '\r')
+			break;
+	}
 
-		quotes = 0;
-		for (i=0 ; i< cmd_text.cursize ; i++)
-		{
-			if (text[i] == '"')
-				quotes++;
-			if ( !(quotes&1) &&  text[i] == ';')
-				break;	// don't break if inside a quoted string
-			if (text[i] == '\n' || text[i] == '\r')
-				break;
-		}
+	memcpy (line, text, i);
+	line[i] = '\0';
+	// delete the text from the command buffer and move remaining commands down
+	// this is necessary because commands (exec, alias) can insert data at the
+	// beginning of the text buffer
 
-		memcpy (line, text, i);
-		line[i] = '\0';
+	if (i == cmd_text.cursize)
+		cmd_text.cursize = 0;
+	else {
+		i++;
+		cmd_text.cursize -= i;
+		Q_memcpy (text, text+i, cmd_text.cursize);
+	}
+}
 
-// delete the text from the command buffer and move remaining commands down
-// this is necessary because commands (exec, alias) can insert data at the
-// beginning of the text buffer
+/*
 
-		if (i == cmd_text.cursize)
-			cmd_text.cursize = 0;
-		else
-		{
-			i++;
-			cmd_text.cursize -= i;
-			Q_memcpy (text, text+i, cmd_text.cursize);
-		}
+	Cbuf_Execute
 
-// execute the command line
+*/
+void
+Cbuf_Execute (void)
+{
+	char	line[1024] = {0};
+
+	while (cmd_text.cursize) {
+		extract_line (line);
+		// execute the command line
 		Cmd_ExecuteString (line, src_command);
 
 		if (cmd_wait)
@@ -206,6 +209,25 @@ void Cbuf_Execute (void)
 			cmd_wait = false;
 			break;
 		}
+	}
+}
+/*
+
+	Cbuf_Execute
+
+*/
+void
+Cbuf_Execute_Sets (void)
+{
+	char	line[1024] = {0};
+
+	while (cmd_text.cursize) {
+		extract_line (line);
+		// execute the command line
+		if (strncmp(line,"set",3)==0
+			&& isspace(line[3]))
+			printf("+%s\n",line),
+			Cmd_ExecuteString (line, src_command);
 	}
 }
 
