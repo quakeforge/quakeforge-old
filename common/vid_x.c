@@ -960,23 +960,6 @@ void VID_DitherOff(void)
     }
 }
 
-int Sys_OpenWindow(void)
-{
-	return 0;
-}
-
-void Sys_EraseWindow(int window)
-{
-}
-
-void Sys_DrawCircle(int window, int x, int y, int r)
-{
-}
-
-void Sys_DisplayWindow(int window)
-{
-}
-
 void Sys_SendKeyEvents(void)
 {
 // get events from x server
