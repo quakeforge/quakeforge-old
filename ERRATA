@@ -12,3 +12,5 @@ djsmoke <djsmoke@optonline.net>
 Joseph Carter <knghtbrd@debian.org>
  - make install is broken
 
+Tonik <tonik@quake.ru>
+ - F10 doesn't work in win32 targets compiled with the new MGL lib
