@@ -1,7 +1,6 @@
-<<<<<<< README
 QuakeForge - Release Notes
-Copyright © 1996-1997  Id Software, Inc.
-Copyright © 1999,2000  contributors of the QuakeForge Project
+Copyright (C) 1996-1997  Id Software, Inc.
+Copyright (C) 1999,2000  contributors of the QuakeForge Project
 Please see the file "AUTHORS" for a list of contributors
 
 This program is free software; you can redistribute it and/or modify it
@@ -266,8 +265,6 @@ See file "TESTIFY" for user testimonials on what works, where, and why.
 
 Please send user testimonials via e-mail to:
 	"Nelson Rush" <palisade@quakeforge.net>
-or to our mailing list, located at:
-	quake-devel@lists.sourceforge.net
 
-You can find more information on our web site, located at:
-	http://www.quakeforge.net/
+Visit http://www.quakeforge.net/ to find out more about subscribing to our
+mailing list and for more information.
