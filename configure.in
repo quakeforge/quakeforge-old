@@ -452,34 +452,26 @@ AC_CHECK_LIB(xil,xil_import, HAS_XIL=yes, HAS_XIL=no)
 # First we see if we can use mesa with glide support..
 # if not then try the MiniGL..
 
-TDFXGL_CFLAGS=""
-TDFXGL_LIBS=""
 TDFXGL_NAME=""
 AC_ARG_WITH(3dfx,
 [  --with-3dfx             support 3Dfx output for the V1/V2, if a argument
                           is specified it will be used as the GL wrapper lib
                           for glide.],
    HAS_3dfx=$withval, HAS_3dfx=auto)
-AC_MSG_CHECKING(for 3Dfx support)
-if test "x$HAS_3dfx" != xno; then
+if test "x$HAS_3dfx" != "xno" -a "x$HAS_SVGA" = "xyes" \
+	-a "x$HAS_GLIDE" = "xyes"; then
    if test "x$HAS_3dfx" != xauto; then
       TDFXGL_NAME="$HAS_3dfx"
    fi
-   if test -n "$HAS_GLIDE"; then
-      if test -n "$HAS_SVGA"; then
-	 if test -z "$TDFXGL_NAME"; then
-	    if test -n "$HAS_FXMESA"; then
-               TDFXGL_NAME=$OGL_NAME
-	    fi
-	 fi
-	 if test -z "$TDFXGL_NAME"; then
-	    AC_CHECK_LIB("3dfxgl", glColor4f, 
-	       TDFXGL_NAME=3dfxgl, TDFXGL_NAME=, 
-	       [$GLIDE_LIBS $TDFXGL_LIBS])
-	 fi
-      fi
+   if test -z "$TDFXGL_NAME"; then
+       dnl Check in reverse order of preference
+       for a in $OGL_NAME 3dfxgl; do
+	  AC_CHECK_LIB($a, fxMesaCreateContext, TDFXGL_NAME=$a, qwfoo=qwfoo,
+	  [$GLIDE_LIBS $TDFXGL_LIBS])
+       done
    fi
 fi
+AC_MSG_CHECKING(for 3Dfx support)
 if test -n "$TDFXGL_NAME"; then
    TDFXGL_CFLAGS="$GLIDE_CFLAGS"
    TDFXGL_LIBS="$TDFXGL_LIBS $GLIDE_LIBS -l$TDFXGL_NAME"
@@ -576,7 +568,6 @@ esac
 dnl Check for sound libraries
 AC_CHECK_LIB(mme,waveOutOpen,HAVE_LIBMME=yes)
 
-SOUND_LIBS=""
 SOUND_STYLE=""
 AC_MSG_CHECKING(for sound support)
 if test "x$enable_alsa" != "xno"; then
@@ -681,8 +672,6 @@ AC_HAVE_STRUCT_FIELD(struct ioc_read_toc_single_entry, entry,[
 
 dnl ========================================================================
 dnl Check for networking
-
-NET_LIBS=""
 
 dnl Check for network libraries
 if test "x$ac_cv_func_connect" != "xyes"; then
