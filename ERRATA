@@ -12,10 +12,5 @@ Joseph Carter <knghtbrd@debian.org>
                               server ":0.0" after 65 requests (64 known
 			      processed) with 0 events remaining."
 
-Tonik <tonik@quake.ru>
- - qw-server hangs in win32, partially fixed in local tree but client
-   connection process still goes no further than the "CONNECTING" stage.
-
 sdennis101@geocities.com
  - make install fails in common/
-
