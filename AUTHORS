@@ -33,6 +33,8 @@ D: Input handling fixes/optimizations
 D: GGI support
 D: Win32 support
 D: CD-ROM support/optimizations
+D: DGA/XMESA support.
+D: On-the-fly resizing of window in *-gl versions.
 
 N: Bill Currie
 E: bill@taniwha.org
