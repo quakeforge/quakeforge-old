@@ -1,7 +1,11 @@
 The original Quake, QuakeWorld, and QuakeWorld server:
   ID Software, Inc  http://www.idsoftware.com
 
-QuakeForge Maintainer:
+Project hosting and server resources:
+  VA Linux Systems, Inc  http://www.valinux.com
+  AbsoluteK <absolutek@quakeforge.net>
+
+Administration and project management:
   Nelson J. Rush <chesterrr@att.net>
 
 QW/Q1 tree merging:
@@ -21,8 +25,9 @@ Sound cleanups:
   Ryan C. Gordon <ryan_gordon@hotmail.com>
   Marcus Sundber <mackan@stacken.kth.se>
 
-3Dfx MiniGL target fixes/maintenance:
+GL renderer fixes/optimizations:
   Zephaniah E. Hull <warp@whitestar.soark.net>
+  Eric Windisch <windisch@nni.com>
 
 Input handling cleanups:
   Zephaniah E. Hull <warp@whitestar.soark.net>
