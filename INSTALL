@@ -64,10 +64,6 @@ this:
 Or on systems that have the `env' program, you can do it like this:
      env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
 
-***Note: If you have OpenGL in /usr/X11R6/lib, you will have to run configure
-with:
-./configure --enable-OpenGLINC=/usr/X11R6/include
-
 Compiling For Multiple Architectures
 ====================================
 
