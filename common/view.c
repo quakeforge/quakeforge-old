@@ -442,25 +442,22 @@ V_SetContentsColor (int contents)
 		return;
 	}
 
-	switch (contents)
-	{
-	case CONTENTS_SOLID:
-#ifdef QUAKEWORLD
-		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
-#else
-		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
+	switch (contents) {
+		case CONTENTS_EMPTY:
+			cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
+			break;
+		case CONTENTS_LAVA:
+			cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
+			break;
+		case CONTENTS_SOLID:
+#ifdef UQUAKE
+			cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
 #endif
-	case CONTENTS_EMPTY:
-		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
-		break;
-	case CONTENTS_LAVA:
-		cl.cshifts[CSHIFT_CONTENTS] = cshift_lava;
-		break;
-	case CONTENTS_SLIME:
-		cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
-		break;
-	default:
-		cl.cshifts[CSHIFT_CONTENTS] = cshift_water;
+		case CONTENTS_SLIME:
+			cl.cshifts[CSHIFT_CONTENTS] = cshift_slime;
+			break;
+		default:
+			cl.cshifts[CSHIFT_CONTENTS] = cshift_water;
 	}
 
 	if (v_contentblend->value > 0 && v_contentblend->value < 1)
@@ -617,8 +614,6 @@ V_BoundOffsets ( void )
 
 	ent = &cl_entities[cl.playernum + 1];
 #endif
-// absolutely bound refresh reletive to entity clipping hull
-// so the view can never be inside a solid wall
 
 #ifdef QUAKEWORLD
 	if (r_refdef.vieworg[0] < cl.simorg[0] - 14)
@@ -967,13 +962,15 @@ DropPunchAngle (void)
 */
 extern vrect_t scr_vrect;
 
-void V_RenderView (void)
+void
+V_RenderView (void)
 {
 #ifdef QUAKEWORLD
 //	if (cl.simangles[ROLL])
 //		Sys_Error ("cl.simangles[ROLL]");	// DEBUG
 cl.simangles[ROLL] = 0;	// FIXME
 #endif
+
 	if (cls.state != ca_active)
 		return;
 
@@ -982,8 +979,7 @@ cl.simangles[ROLL] = 0;	// FIXME
 	view_message = &view_frame->playerstate[cl.playernum];
 #else
 	// don't allow cheats in multiplayer
-	if (cl.maxclients > 1)
-	{
+	if (cl.maxclients > 1) {
 		Cvar_Set ("scr_ofsx", "0");
 		Cvar_Set ("scr_ofsy", "0");
 		Cvar_Set ("scr_ofsz", "0");
