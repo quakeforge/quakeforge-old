@@ -438,12 +438,11 @@ V_BonusFlash_f ( void )
 void
 V_SetContentsColor (int contents)
 {
-#ifdef QUAKEWORLD
 	if (!v_contentblend->value) {
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_empty;
 		return;
 	}
-#endif
+
 	switch (contents)
 	{
 	case CONTENTS_SOLID:
@@ -464,6 +463,9 @@ V_SetContentsColor (int contents)
 	default:
 		cl.cshifts[CSHIFT_CONTENTS] = cshift_water;
 	}
+
+	if (v_contentblend->value > 0 && v_contentblend->value < 1)
+		cl.cshifts[CSHIFT_CONTENTS].percent *= v_contentblend->value;
 }
 
 /*
