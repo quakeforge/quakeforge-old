@@ -702,7 +702,7 @@ void R_DrawViewModel (void)
 	if (!r_drawviewmodel.value)
 		return;
 
-	if (chase_active.value)
+	if (cl_chasecam.value)
 		return;
 #endif
 

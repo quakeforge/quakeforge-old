@@ -206,7 +206,7 @@ extern int			minimum_memory;
 //
 // chase
 //
-extern	cvar_t	chase_active;
+extern	cvar_t	cl_chasecam;
 
 void Chase_Init (void);
 void Chase_Reset (void);
