@@ -229,7 +229,7 @@ User testimonies:
    Linux 2.2, k6-2-350, quake-gl mesa 3.1 glide2x voodoo2 8M
    Linux 2.0, k6-2-266, quake-x11 -bpp 16
    Linux 2.2, Slackware 7, PII-300, Xfree86 3.3.5, TNT(Velocity 4400/new GLX), Mesa 3.1
-      libvga.so.1.0.4, tested all clients, GL freeze problem (dont use new GLX drivers)
+      libvga.so.1.4.0, tested all clients, GL freeze problem (dont use new GLX drivers)
    FreeBSD 2.2.8 - X11
    FreeBSD 3.2 - X11
    FreeBSD 4.0 - X11 and TNT2/GLX
