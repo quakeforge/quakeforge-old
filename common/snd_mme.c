@@ -20,7 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "quakedef.h"
 #include <mme/mmsystem.h>
-#include <mme/mme_public.h>
+#ifdef HAVE_MME_MME_PUBLIC_H
+# include <mme/mme_public.h>
+#endif
 
 // 64K is > 1 second at 16-bit, 11025 Hz
 #define	WAV_BUFFERS		64

@@ -19,10 +19,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "quakedef.h"
 #include "winquake.h"
+#ifdef HAVE_MMSYSTEM_H
+# include <mmsystem.h>
+#endif
 
+#ifdef HAVE_DSOUND
 #define iDirectSoundCreate(a,b,c)	pDirectSoundCreate(a,b,c)
 
 HRESULT (WINAPI *pDirectSoundCreate)(GUID FAR *lpGUID, LPDIRECTSOUND FAR *lplpDS, IUnknown FAR *pUnkOuter);
+#endif
 
 // 64K is > 1 second at 16-bit, 22050 Hz
 #define	WAV_BUFFERS				64
@@ -35,8 +40,10 @@ typedef enum {SIS_SUCCESS, SIS_FAILURE, SIS_NOTAVAIL} sndinitstat;
 static qboolean	wavonly;
 static qboolean	dsound_init;
 static qboolean	wav_init;
-static qboolean	snd_firsttime = true, snd_isdirect, snd_iswave;
-static qboolean	primary_format_set;
+static qboolean	snd_firsttime = true, snd_iswave;
+#ifdef HAVE_DSOUND
+static qboolean	primary_format_set, snd_isdirect;
+#endif
 
 static int	sample16;
 static int	snd_sent, snd_completed;
@@ -61,8 +68,10 @@ DWORD	gSndBufSize;
 
 MMTIME		mmstarttime;
 
+#ifdef HAVE_DSOUND
 LPDIRECTSOUND pDS;
 LPDIRECTSOUNDBUFFER pDSBuf, pDSPBuf;
+#endif
 
 HINSTANCE hInstDS;
 
@@ -114,6 +123,7 @@ void FreeSound (void)
 {
 	int		i;
 
+#ifdef HAVE_DSOUND
 	if (pDSBuf)
 	{
 		pDSBuf->lpVtbl->Stop(pDSBuf);
@@ -131,6 +141,7 @@ void FreeSound (void)
 		pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_NORMAL);
 		pDS->lpVtbl->Release(pDS);
 	}
+#endif
 
 	if (hWaveOut)
 	{
@@ -158,9 +169,11 @@ void FreeSound (void)
 
 	}
 
+#ifdef HAVE_DSOUND
 	pDS = NULL;
 	pDSBuf = NULL;
 	pDSPBuf = NULL;
+#endif
 	hWaveOut = 0;
 	hData = 0;
 	hWaveHdr = 0;
@@ -178,6 +191,7 @@ SNDDMA_InitDirect
 Direct-Sound support
 ==================
 */
+#ifdef HAVE_DSOUND
 sndinitstat SNDDMA_InitDirect (void)
 {
 	DSBUFFERDESC	dsbuf;
@@ -414,6 +428,7 @@ sndinitstat SNDDMA_InitDirect (void)
 
 	return SIS_SUCCESS;
 }
+#endif /* HAVE_DSOUND */
 
 
 /*
@@ -558,7 +573,7 @@ Returns false if nothing is found.
 ==================
 */
 
-int SNDDMA_Init(void)
+qboolean SNDDMA_Init(void)
 {
 	sndinitstat	stat;
 
@@ -569,6 +584,7 @@ int SNDDMA_Init(void)
 
 	stat = SIS_FAILURE;	// assume DirectSound won't initialize
 
+#ifdef HAVE_DSOUND
 	/* Init DirectSound */
 	if (!wavonly)
 	{
@@ -590,6 +606,7 @@ int SNDDMA_Init(void)
 			}
 		}
 	}
+#endif
 
 // if DirectSound didn't succeed in initializing, try to initialize
 // waveOut sound, unless DirectSound failed because the hardware is
@@ -638,8 +655,9 @@ how many sample are required to fill it up.
 */
 int SNDDMA_GetDMAPos(void)
 {
-	MMTIME	mmtime;
 	int		s;
+#ifdef HAVE_DSOUND
+	MMTIME	mmtime;
 	DWORD	dwWrite;
 
 	if (dsound_init) 
@@ -647,9 +665,9 @@ int SNDDMA_GetDMAPos(void)
 		mmtime.wType = TIME_SAMPLES;
 		pDSBuf->lpVtbl->GetCurrentPosition(pDSBuf, &mmtime.u.sample, &dwWrite);
 		s = mmtime.u.sample - mmstarttime.u.sample;
-	}
-	else if (wav_init)
-	{
+	} else
+#endif /* HAVE_DSOUND */
+	if (wav_init) {
 		s = snd_sent * WAV_BUFFER_SIZE;
 	}
 

@@ -12,6 +12,11 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_MAKE_SET
 
+dnl Checks for header files.
+AC_CHECK_HEADERS(unistd.h windows.h sys/ioctl.h sys/mman.h \
+	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
+	dsound.h mmsystem.h mme/mmsystem.h mme/mme_public.h)
+
 dnl checks for compiler characteristics
 AC_C_BIGENDIAN
 
@@ -351,24 +356,73 @@ AC_SUBST(INTEL_ARCH)
 #
 # Sound available?
 #
+
+dnl Check for sound libraries
+AC_CHECK_LIB(mme,waveOutOpen,HAVE_LIBMME=yes)
+
 SND_LIBS=""
 AC_MSG_CHECKING(for sound support)
-case "${target}" in
-changequote(,)dnl
-   i[34567]86-*-linux-gnu*)
-      SND_STYLE="Linux" ;;
-   *-solaris*) 
-      SND_STYLE="Solaris" ;;
-   *-dec-osf[34]*)                                                             
-      SND_STYLE="MME"                                            
-      SND_LIBS="-lmme"                                                         
-       ;;          
-   *)
-      SND_STYLE="Null" ;;
-# XXX - need to add dos, Windows
-changequote([,])dnl
-esac
-if test "x$SND_STYLE" = xNull; then
+
+SND_STYLE=""
+if test "x$ac_cv_header_sys_soundcard_h" = "xyes"; then
+  AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <sys/soundcard.h>
+#ifdef SNDCTL_DSP_SETTRIGGER
+QF_maGiC_VALUE
+#endif
+    ], SND_STYLE="OSS")
+fi
+if test -z "$SND_STYLE" -a "x$ac_cv_header_linux_soundcard_h" = "xyes"; then
+  AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <linux/soundcard.h>
+#ifdef SNDCTL_DSP_SETTRIGGER
+QF_maGiC_VALUE
+#endif
+    ], SND_STYLE="OSS")
+fi
+if test -z "$SND_STYLE" -a "x$ac_cv_header_machine_soundcard_h" = "xyes"; then
+  AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <machine/soundcard.h>
+#ifdef SNDCTL_DSP_SETTRIGGER
+QF_maGiC_VALUE
+#endif
+    ], SND_STYLE="OSS")
+fi
+
+if test -z "$SND_STYLE" -a "x$ac_cv_header_sys_audioio_h" = "xyes"; then
+  AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <sys/audioio.h>
+#ifdef AUDIO_SETINFO
+QF_maGiC_VALUE
+#endif
+    ], SND_STYLE="Solaris")
+fi
+if test -z "$SND_STYLE" -a "x$ac_cv_header_mme_mmsystem_h" = "xyes" -a \
+	"x$HAVE_LIBMME" = "xyes"; then
+  AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <mme/mmsystem.h>
+#ifdef WAVE_OPEN_SHAREABLE
+QF_maGiC_VALUE
+#endif
+    ], SND_STYLE="MME"
+       SND_LIBS="-lmme")
+fi
+
+if test -z "$SND_STYLE" -a "x$ac_cv_header_windows_h" = "xyes" -a \
+	"x$ac_cv_header_mmsystem_h" = "xyes"; then
+  AC_EGREP_CPP([QF_maGiC_VALUE],[
+#include <windows.h>
+#include <mmsystem.h>
+#ifdef GMEM_MOVEABLE
+#ifdef WAVE_FORMAT_PCM
+QF_maGiC_VALUE
+#endif
+#endif
+    ], SND_STYLE="Windows"
+    )
+fi
+
+if test "x$SND_STYLE" = "x"; then
 AC_MSG_RESULT(no)
 else
 AC_MSG_RESULT(yes ($SND_STYLE style))

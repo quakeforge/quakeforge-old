@@ -26,9 +26,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef SERVERONLY
 #include <ddraw.h>
-#include <dsound.h>
+#ifdef HAVE_MMSYSTEM_H
+# include <mmsystem.h>
+#endif
+#ifdef HAVE_DSOUND_H
+# include <dsound.h>
+# define HAVE_DSOUND
+#endif
 #ifndef GLQUAKE
-#include <mgraph.h>
+//#include <mgraph.h>
 #endif
 #endif
 
@@ -47,8 +53,10 @@ extern LPDIRECTDRAWSURFACE	lpPrimary;
 extern LPDIRECTDRAWSURFACE	lpFrontBuffer;
 extern LPDIRECTDRAWSURFACE	lpBackBuffer;
 extern LPDIRECTDRAWPALETTE	lpDDPal;
+#ifdef HAVE_DSOUND
 extern LPDIRECTSOUND pDS;
 extern LPDIRECTSOUNDBUFFER pDSBuf;
+#endif
 
 extern DWORD gSndBufSize;
 //#define SNDBUFSIZE 65536

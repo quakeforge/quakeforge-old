@@ -112,8 +112,8 @@ CD_AUDIO_SRC   = cd_wrapper.c
 SND_STYLE      = @SND_STYLE@
 SND_SRC = snd_null.c
 
-ifeq ($(SND_STYLE),Linux)
-SND_SRC = snd_dma.c snd_linux.c snd_mixa.s
+ifeq ($(SND_STYLE),OSS)
+SND_SRC = snd_dma.c snd_oss.c
 endif
 ifeq ($(SND_STYLE),Solaris)
 SND_SRC = snd_dma.c snd_sun.c
@@ -121,8 +121,11 @@ endif
 ifeq ($(SND_STYLE),MME)
 SND_SRC = snd_dma.c snd_mme.c
 endif
+ifeq ($(SND_STYLE),Windows)
+SND_SRC = snd_dma.c snd_win.c
+endif
 
-SND_SRC        += snd_mem.c snd_mix.c
+SND_SRC        += snd_mem.c snd_mix.c snd_mixa.s
 
 X11_VID_SRC    = @X11_VID_SRC@
 QW_X11_VID_SRC = vid_x.c
