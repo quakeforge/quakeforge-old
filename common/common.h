@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #include <register_check.h>
 #include <qtypes.h>
+#include <cvar.h>
 
 #define	MAX_INFO_STRING	196
 #define	MAX_SERVERINFO_STRING	512
