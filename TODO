@@ -3,12 +3,13 @@ QuakeForge project.  If you'd like to add something to this list or point
 out that something has been done we forgot to remove, please send an email
 to quake-devel@lists.sourceforge.net with details.
 
- * On unix systems /etc/quakerc should be read as a system-wide config
+ * On unix systems /etc/qfrc should be read as a system-wide config
    file which should be able to specify console commands and other things
    like where to find the id1, qw, and other -game specified dirs
- * On unix systems ~/.quake should overlay a shared data directory.  Files
-   in a user's ~/.quake directory should take precedence over files in the
-   shared data dir and all files written should be placed into ~/.quake
+ * On unix systems ~/.quakeforge should overlay a shared data directory.
+   Files in a user's ~/.quakeforge directory should take precedence over
+   files in the shared data dir and all files written should be placed
+   into ~/.quakeforge
  * Devise and implement a way to ensure original gameplay compatibility
    while still letting us expand and extend the quake engine
  * Audio support for more platforms
@@ -51,8 +52,9 @@ to quake-devel@lists.sourceforge.net with details.
  * C equivalents of the SVGALib target's asm (Linux Alpha has SVGALib)
  * Wheel mouse support (make it bindable so that it can be bound to
    anything, ie. previous weapon/next weapon)
- * add threading support
- * add tty target (text quake) someone mentioned there is a text svgalib
+ * add threading support (ie. network code)
+ * add tty target (Nelson is working on this, it's done, I just need to
+make a target for it.)
  * add walls that emit light
  * port to Amiga (someone is working on this)
  * port to MacOS (this has already been done as a seperate project, ala
@@ -65,3 +67,13 @@ to quake-devel@lists.sourceforge.net with details.
  * bullets leave "holes" in walls, and disappear as threshold is reached
  * make explosions also leave marks, but dynamic marks, ie. blast can
    affect multiple surfaces.
+ * implement pak3 loading support (in progress)
+ * make a pak conversion tool
+ * allow fire (ie. torches) to burn the player when touched.
+ * allow projectiles from weapons to pass through teleporters
+ * allow water to "move", ie. if the water is behind glass and the glass
+is shot, the water flows out onto the floor.
+ * add breakable objects, ie. glass
+ * allow user to switch video modes while running the engine.
+ * add ladders and vines on walls so the user can climb to another part of
+the level.
