@@ -155,15 +155,24 @@ void Sys_DebugLog(char *file, char *fmt, ...) {
 
 	va_list argptr; 
 	static char data[1024];
-	int fd;
+	FILE *stream;
+	unsigned char *p;
+	//int fd;
     
 	va_start(argptr, fmt);
 	vsprintf(data, fmt, argptr);
 	va_end(argptr);
 // fd = open(file, O_WRONLY | O_BINARY | O_CREAT | O_APPEND, 0666);
+	stream = fopen(file, "a");
+	for (p = (unsigned char *) data; *p; p++) {
+	    putc(trans_table[*p], stream);
+	}
+	fclose(stream);
+	/*
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	write(fd, data, strlen(data));
 	close(fd);
+	*/
 }
 
 void Sys_EditFile(char *filename) {
