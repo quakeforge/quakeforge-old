@@ -259,8 +259,10 @@ sndinitstat SNDDMA_InitDirect (void)
 		FreeSound ();
 		return SIS_FAILURE;
 	}
-
-	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_EXCLUSIVE))
+// Changed DSSCL_EXCLUSIVE to DSSCL_NORMAL
+//      -- Robert S. Elsner <sockman@ngfc.com>
+	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_NORMAL))
+//	if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_EXCLUSIVE))
 	{
 		Con_SafePrintf ("Set coop level failed\n");
 		FreeSound ();
@@ -335,6 +337,9 @@ sndinitstat SNDDMA_InitDirect (void)
 	}
 	else
 	{
+// Removed the option for -primarysound
+//     -- Robert S. Elsner <sockman@ngfc.com>
+#if 0		
 		if (DS_OK != pDS->lpVtbl->SetCooperativeLevel (pDS, mainwindow, DSSCL_WRITEPRIMARY))
 		{
 			Con_SafePrintf ("Set coop level failed\n");
@@ -350,6 +355,7 @@ sndinitstat SNDDMA_InitDirect (void)
 
 		pDSBuf = pDSPBuf;
 //		Con_SafePrintf ("Using primary sound buffer\n");
+#endif
 	}
 
 	// Make sure mixer is active
