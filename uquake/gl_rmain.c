@@ -1086,12 +1086,7 @@ r_refdef must be set before the first call
 */
 void R_RenderView (void)
 {
-//<<<<<<< gl_rmain.c
-//	double	time1, time2;
-//=======
 	double	time1 = 0, time2 = 0;
-//	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.20};
-//>>>>>>> 1.3
 
 	// Fixme: the last argument should be a cvar... r_fog_gamma
 	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.15};
