@@ -123,7 +123,10 @@ $(BUILD_DIR)/../$(SRVQUAKE): $(ALL_SRV_OBJS)
 distclean: clean
 	rm -f config.cache config.log config.status Makefile
 
-clean: $(CLEAN_TARGETS)
+clean-qw-server:
+	rm -f $(BUILD_DIR)/../qw-server
+
+clean: clean-qw-server
 	rm -rf $(BUILD_DIR)
 
 install: $(targets)
