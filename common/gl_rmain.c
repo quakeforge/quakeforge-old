@@ -84,8 +84,13 @@ cvar_t	r_mirroralpha = {"r_mirroralpha","1"};
 cvar_t	r_wateralpha = {"r_wateralpha","1"};
 cvar_t	r_dynamic = {"r_dynamic","1"};
 cvar_t	r_novis = {"r_novis","0"};
+#ifdef QUAKEWORLD
 cvar_t	r_netgraph = {"r_netgraph","0"};
+#else
+cvar_t  r_fog = {"r_fog", "0"};
+#endif
 
+cvar_t	gl_finish = {"gl_finish","0"};
 cvar_t	gl_clear = {"gl_clear","0"};
 cvar_t	gl_cull = {"gl_cull","1"};
 cvar_t	gl_texsort = {"gl_texsort","1"};
@@ -95,12 +100,18 @@ cvar_t	gl_polyblend = {"gl_polyblend","1"};
 cvar_t	gl_flashblend = {"gl_flashblend","1"};
 cvar_t	gl_playermip = {"gl_playermip","0"};
 cvar_t	gl_nocolors = {"gl_nocolors","0"};
+#ifdef QUAKEWORLD
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","1"};
 cvar_t	gl_reporttjunctions = {"gl_reporttjunctions","0"};
-cvar_t	gl_finish = {"gl_finish","0"};
+#else
+cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","0"};
+cvar_t	gl_doubleeyes = {"gl_doubleeys", "1"};
+#endif
 
 extern	cvar_t	gl_ztrick;
+#ifdef QUAKEWORLD
 extern	cvar_t	scr_fov;
+#endif
 /*
 =================
 R_CullBox
@@ -229,8 +240,10 @@ void R_DrawSpriteModel (entity_t *e)
 	glEnable (GL_ALPHA_TEST);
 	glBegin (GL_QUADS);
 
+#ifdef QUAKEWORLD
 	glEnable (GL_ALPHA_TEST);
 	glBegin (GL_QUADS);
+#endif
 
 	glTexCoord2f (0, 1);
 	VectorMA (e->origin, frame->down, up, point);
@@ -494,7 +507,12 @@ void R_DrawAliasModel (entity_t *e)
 		shadelight = 192 - ambientlight;
 
 	// ZOID: never allow players to go totally black
+#ifdef QUAKEWORLD
 	if (!strcmp(clmodel->name, "progs/player.mdl")) {
+#else
+	i = currententity - cl_entities;
+	if (i >= 1 && i<=cl.maxclients /* && !strcmp (currententity->model->name, "progs/player.mdl") */)
+#endif
 		if (ambientlight < 8)
 			ambientlight = shadelight = 8;
 
@@ -528,9 +546,13 @@ void R_DrawAliasModel (entity_t *e)
     glPushMatrix ();
 	R_RotateForEntity (e);
 
+#ifdef QUAKEWORLD
 	if (!strcmp (clmodel->name, "progs/eyes.mdl") ) {
+#else
+	if (!strcmp (clmodel->name, "progs/eyes.mdl" && gl_doubleeyes.value) ) {
+#endif
 		glTranslatef (paliashdr->scale_origin[0], paliashdr->scale_origin[1], paliashdr->scale_origin[2] - (22 + 8));
-	// double size of eyes, since they are really hard to see in gl
+		// double size of eyes, since they are really hard to see in gl
 		glScalef (paliashdr->scale[0]*2, paliashdr->scale[1]*2, paliashdr->scale[2]*2);
 	} else {
 		glTranslatef (paliashdr->scale_origin[0], paliashdr->scale_origin[1], paliashdr->scale_origin[2]);
@@ -542,6 +564,7 @@ void R_DrawAliasModel (entity_t *e)
 
 	// we can't dynamically colormap textures, so they are cached
 	// seperately for the players.  Heads are just uncolored.
+#ifdef QUAKEWORLD
 	if (currententity->scoreboard && !gl_nocolors.value)
 	{
 		i = currententity->scoreboard - cl.players;
@@ -552,6 +575,14 @@ void R_DrawAliasModel (entity_t *e)
 		if (i >= 0 && i<MAX_CLIENTS)
 		    GL_Bind(playertextures + i);
 	}
+#else
+	if (currententity->colormap != vid.colormap && !gl_nocolors.value)
+	{
+		i = currententity - cl_entities;
+		if (i >= 1 && i<=cl.maxclients /* && !strcmp (currententity->model->name, "progs/player.mdl") */)
+		    GL_Bind(playertextures - 1 + i);
+	}
+#endif
 
 	if (gl_smoothmodels.value)
 		glShadeModel (GL_SMOOTH);
@@ -603,7 +634,11 @@ void R_DrawEntitiesOnList (void)
 	// draw sprites seperately, because of alpha blending
 	for (i=0 ; i<cl_numvisedicts ; i++)
 	{
+#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
+#else
+		currententity = cl_visedicts[i];
+#endif
 
 		switch (currententity->model->type)
 		{
@@ -622,7 +657,11 @@ void R_DrawEntitiesOnList (void)
 
 	for (i=0 ; i<cl_numvisedicts ; i++)
 	{
+#ifdef QUAKEWORLD
 		currententity = &cl_visedicts[i];
+#else
+		currententity = cl_visedicts[i];
+#endif
 
 		switch (currententity->model->type)
 		{
@@ -651,17 +690,29 @@ void R_DrawViewModel (void)
 	dlight_t	*dl;
 	int			ambientlight, shadelight;
 
+#ifdef QUAKEWORLD
 	if (!r_drawviewmodel.value || !Cam_DrawViewModel())
 		return;
+#else
+	if (!r_drawviewmodel.value)
+		return;
+
+	if (chase_active.value)
+		return;
+#endif
 
 	if (envmap)
 		return;
 
 	if (!r_drawentities.value)
 		return;
-
+#ifdef QUAKEWORLD
 	if (cl.stats[STAT_ITEMS] & IT_INVISIBILITY)
 		return;
+#else
+	if (cl.items & IT_INVISIBILITY)
+		return;
+#endif
 
 	if (cl.stats[STAT_HEALTH] <= 0)
 		return;
@@ -716,9 +767,7 @@ void R_PolyBlend (void)
 	if (!v_blend[3])
 		return;
 
-//Con_Printf("R_PolyBlend(): %4.2f %4.2f %4.2f %4.2f\n",v_blend[0], v_blend[1],	v_blend[2],	v_blend[3]);
-
- 	GL_DisableMultitexture();
+	GL_DisableMultitexture();
 
 	glDisable (GL_ALPHA_TEST);
 	glEnable (GL_BLEND);
@@ -778,7 +827,6 @@ void R_SetFrustum (void)
 	}
 	else
 	{
-
 		// rotate VPN right by FOV_X/2 degrees
 		RotatePointAroundVector( frustum[0].normal, vup, vpn, -(90-r_refdef.fov_x / 2 ) );
 		// rotate VPN left by FOV_X/2 degrees
@@ -807,10 +855,15 @@ R_SetupFrame
 void R_SetupFrame (void)
 {
 // don't allow cheats in multiplayer
+#ifdef QUAKEWORLD
 	r_fullbright.value = 0;
 	r_lightmap.value = 0;
 	if (!atoi(Info_ValueForKey(cl.serverinfo, "watervis")))
 		r_wateralpha.value = 1;
+#else
+	if (cl.maxclients > 1)
+		Cvar_Set ("r_fullbright", "0");
+#endif
 
 	R_AnimateLight ();
 
@@ -859,6 +912,7 @@ R_SetupGL
 void R_SetupGL (void)
 {
 	float	screenaspect;
+	//float	yfov;
 	extern	int glwidth, glheight;
 	int		x, x2, y2, y, w, h;
 
@@ -1023,7 +1077,7 @@ void R_Clear (void)
 	glDepthRange (gldepthmin, gldepthmax);
 }
 
-#if 0 //!!! FIXME, Zoid, mirror is disabled for now
+#ifndef QUAKEWORLD //!!! FIXME, Zoid, mirror is disabled for now
 /*
 =============
 R_Mirror
@@ -1065,7 +1119,6 @@ void R_Mirror (void)
 	R_RenderScene ();
 	R_DrawWaterSurfaces ();
 
-
 	gldepthmin = 0;
 	gldepthmax = 0.5;
 	glDepthRange (gldepthmin, gldepthmax);
@@ -1102,7 +1155,11 @@ r_refdef must be set before the first call
 */
 void R_RenderView (void)
 {
-	double	time1 = 0, time2;
+	double	time1 = 0, time2 = 0;
+#ifndef QUAKEWORLD
+	// Fixme: the last argument should be a cvar... r_fog_gamma
+	GLfloat colors[4] = {(GLfloat) 0.0, (GLfloat) 0.0, (GLfloat) 1, (GLfloat) 0.15};
+#endif
 
 	if (r_norefresh.value)
 		return;
@@ -1126,13 +1183,44 @@ void R_RenderView (void)
 	R_Clear ();
 
 	// render normal view
+#ifndef QUAKEWORLD
+	// XXX
+
+/***** Experimental silly looking fog ******
+****** Use r_fullbright if you enable ******
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+	glFogfv(GL_FOG_COLOR, colors);
+	glFogf(GL_FOG_END, 512.0);
+	glEnable(GL_FOG);
+********************************************/
+
+/* 
+Eric Windisch: I basicly rewrote what carmack had here to
+display _much_ prettier. small hack
+*/ 
+
+if(r_fog.value) {
+        
+	// fixme: would be nice if the user could select what fogmode... (r_fog_mode)
+        glFogi (GL_FOG_MODE, GL_EXP2);
+        glFogfv (GL_FOG_COLOR, colors);
+	// fixme: GL_FOG_DENSITY should have r_fog_density var
+        glFogf (GL_FOG_DENSITY, .0005); 
+        glEnable(GL_FOG);
+}
+#endif
 	R_RenderScene ();
 	R_DrawViewModel ();
 	R_DrawWaterSurfaces ();
 
-	// render mirror view
-//	R_Mirror ();
+#ifndef QUAKEWORLD
+//  More fog right here :)
+	glDisable(GL_FOG);
+//  End of all fog code...
 
+	// render mirror view
+	R_Mirror ();
+#endif
 	R_PolyBlend ();
 
 	if (r_speeds.value)
