@@ -137,16 +137,16 @@ void Cvar_Set (char *var_name, char *value)
 		Con_Printf ("Cvar_Set: variable %s not found\n", var_name);
 		return;
 	}
-
+	if(var->type&CVAR_ROM && !var->first) return;
 #ifdef SERVERONLY
-	if (var->info)
+	if (var->type&CVAR_SERVERINFO)
 	{
 		Info_SetValueForKey (svs.info, var_name, value, MAX_SERVERINFO_STRING);
 		SV_SendServerInfoChange(var_name, value);
 //		SV_BroadcastCommand ("fullserverinfo \"%s\"\n", svs.info);
 	}
 #else
-	if (var->info)
+	if (var->type&CVAR_USERINFO)
 	{
 		Info_SetValueForKey (cls.userinfo, var_name, value, MAX_INFO_STRING);
 		if (cls.state >= ca_connected)
@@ -162,6 +162,7 @@ void Cvar_Set (char *var_name, char *value)
 	var->string = Z_Malloc (Q_strlen(value)+1);
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
+	var->first = false;
 }
 #elif defined(UQUAKE)
 void Cvar_Set (char *var_name, char *value)
@@ -176,6 +177,9 @@ void Cvar_Set (char *var_name, char *value)
 		return;
 	}
 
+	// Don't change if this is a CVAR_ROM
+	if(var->type&CVAR_ROM && !var->first) return;
+	
 	changed = Q_strcmp(var->string, value);
 	
 	Z_Free (var->string);	// free the old value string
@@ -183,11 +187,12 @@ void Cvar_Set (char *var_name, char *value)
 	var->string = Z_Malloc (Q_strlen(value)+1);
 	Q_strcpy (var->string, value);
 	var->value = Q_atof (var->string);
-	if (var->server && changed)
+	if (var->type&CVAR_NOTIFY && changed)
 	{
 		if (sv.active)
 			SV_BroadcastPrintf ("\"%s\" changed to \"%s\"\n", var->name, var->string);
 	}
+	var->first = false;
 }
 #endif
 
@@ -239,6 +244,7 @@ void Cvar_RegisterVariable (cvar_t *variable)
 	variable->string = Z_Malloc (1);	
 	
 // set it through the function to be consistant
+	variable->first = true;
 	Cvar_Set (variable->name, value);
 }
 
@@ -283,7 +289,7 @@ void Cvar_WriteVariables (QFile *f)
 	cvar_t	*var;
 	
 	for (var = cvar_vars ; var ; var = var->next)
-		if (var->archive)
+		if (var->type&CVAR_ARCHIVE)
 			Qprintf (f, "%s \"%s\"\n", var->name, var->string);
 }
 
@@ -308,7 +314,7 @@ void Cvar_Set_f(void)
 	else 
 	{
 		var = (cvar_t*)calloc(1,sizeof(cvar_t));
-		var->heap = 1;
+		var->type=CVAR_USER_CREATED|CVAR_HEAP;
 		var->name = strdup (var_name);
 		var->string = value;
 		Cvar_RegisterVariable (var);

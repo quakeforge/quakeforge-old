@@ -91,31 +91,31 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 qboolean	noclip_anglehack;		// remnant from old quake
 
 
-cvar_t	rcon_password = {"rcon_password", "", false};
+cvar_t	rcon_password = {"rcon_password", "", CVAR_NONE};
 
 cvar_t	rcon_address = {"rcon_address", ""};
 
 cvar_t	cl_timeout = {"cl_timeout", "60"};
 
 // these two are not intended to be set directly
-cvar_t	cl_name = {"_cl_name", "player", true};
-cvar_t	cl_color = {"_cl_color", "0", true};
+cvar_t	cl_name = {"_cl_name", "player", CVAR_ARCHIVE};
+cvar_t	cl_color = {"_cl_color", "0", CVAR_ARCHIVE};
 
 cvar_t	cl_shownet = {"cl_shownet","0"};	// can be 0, 1, or 2
 cvar_t	cl_nolerp = {"cl_nolerp","0"};
 
-cvar_t	cl_sbar 	= {"cl_sbar", "1", true};
-cvar_t	cl_hudswap	= {"cl_hudswap", "1", true};
-cvar_t	cl_maxfps	= {"cl_maxfps", "0", true};
+cvar_t	cl_sbar 	= {"cl_sbar", "1", CVAR_ARCHIVE};
+cvar_t	cl_hudswap	= {"cl_hudswap", "1", CVAR_ARCHIVE};
+cvar_t	cl_maxfps	= {"cl_maxfps", "0", CVAR_ARCHIVE};
 
-cvar_t	lookspring = {"lookspring","0", true};
-cvar_t	lookstrafe = {"lookstrafe","0", true};
-cvar_t	sensitivity = {"sensitivity","3", true};
+cvar_t	lookspring = {"lookspring","0", CVAR_ARCHIVE};
+cvar_t	lookstrafe = {"lookstrafe","0", CVAR_ARCHIVE};
+cvar_t	sensitivity = {"sensitivity","3", CVAR_ARCHIVE};
 
-cvar_t	m_pitch = {"m_pitch","0.022", true};
-cvar_t	m_yaw = {"m_yaw","0.022", true};
-cvar_t	m_forward = {"m_forward","1", true};
-cvar_t	m_side = {"m_side","0.8", true};
+cvar_t	m_pitch = {"m_pitch","0.022", CVAR_ARCHIVE};
+cvar_t	m_yaw = {"m_yaw","0.022", CVAR_ARCHIVE};
+cvar_t	m_forward = {"m_forward","1", CVAR_ARCHIVE};
+cvar_t	m_side = {"m_side","0.8", CVAR_ARCHIVE};
 
 cvar_t	entlatency = {"entlatency", "20"};
 cvar_t	cl_predict_players = {"cl_predict_players", "1"};
@@ -131,16 +131,16 @@ static qboolean allowremotecmd = true;
 //
 // info mirrors
 //
-cvar_t	password = {"password", "", false, true};
-cvar_t	spectator = {"spectator", "", false, true};
-cvar_t	name = {"name","unnamed", true, true};
-cvar_t	team = {"team","", true, true};
-cvar_t	skin = {"skin","", true, true};
-cvar_t	topcolor = {"topcolor","0", true, true};
-cvar_t	bottomcolor = {"bottomcolor","0", true, true};
-cvar_t	rate = {"rate","2500", true, true};
-cvar_t	noaim = {"noaim","0", true, true};
-cvar_t	msg = {"msg","1", true, true};
+cvar_t	password = {"password", "", CVAR_USERINFO|CVAR_SERVERINFO };
+cvar_t	spectator = {"spectator", "",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	name = {"name","unnamed", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	team = {"team","", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	skin = {"skin","", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	topcolor = {"topcolor","0", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	bottomcolor = {"bottomcolor","0", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	rate = {"rate","2500", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	noaim = {"noaim","0", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	msg = {"msg","1", CVAR_ARCHIVE|CVAR_USERINFO|CVAR_SERVERINFO};
 
 extern cvar_t cl_hightrack;
 

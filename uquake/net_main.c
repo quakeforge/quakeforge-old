@@ -76,14 +76,14 @@ cvar_t	net_messagetimeout = {"net_messagetimeout","300"};
 cvar_t	hostname = {"hostname", "UNNAMED"};
 
 qboolean	configRestored = false;
-cvar_t	config_com_port = {"_config_com_port", "0x3f8", true};
-cvar_t	config_com_irq = {"_config_com_irq", "4", true};
-cvar_t	config_com_baud = {"_config_com_baud", "57600", true};
-cvar_t	config_com_modem = {"_config_com_modem", "1", true};
-cvar_t	config_modem_dialtype = {"_config_modem_dialtype", "T", true};
-cvar_t	config_modem_clear = {"_config_modem_clear", "ATZ", true};
-cvar_t	config_modem_init = {"_config_modem_init", "", true};
-cvar_t	config_modem_hangup = {"_config_modem_hangup", "AT H", true};
+cvar_t	config_com_port = {"_config_com_port", "0x3f8", CVAR_ARCHIVE};
+cvar_t	config_com_irq = {"_config_com_irq", "4", CVAR_ARCHIVE};
+cvar_t	config_com_baud = {"_config_com_baud", "57600", CVAR_ARCHIVE};
+cvar_t	config_com_modem = {"_config_com_modem", "1", CVAR_ARCHIVE};
+cvar_t	config_modem_dialtype = {"_config_modem_dialtype", "T", CVAR_ARCHIVE};
+cvar_t	config_modem_clear = {"_config_modem_clear", "ATZ", CVAR_ARCHIVE};
+cvar_t	config_modem_init = {"_config_modem_init", "", CVAR_ARCHIVE};
+cvar_t	config_modem_hangup = {"_config_modem_hangup", "AT H", CVAR_ARCHIVE};
 
 extern int	vcrFile;
 qboolean recording = false;

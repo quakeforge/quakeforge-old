@@ -62,8 +62,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <strings.h>
 #endif
 
-cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
-cvar_t		m_filter = {"m_filter","0", true};
+cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
+cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
 
 static qboolean	mouse_avail;
 static float	mouse_x, mouse_y;

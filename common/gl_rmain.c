@@ -128,7 +128,7 @@ cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","1"};
 #else
 cvar_t	gl_keeptjunctions = {"gl_keeptjunctions","0"};
 #endif
-cvar_t	gl_doubleeyes = {"gl_doubleeyes", "1", true};
+cvar_t	gl_doubleeyes = {"gl_doubleeyes", "1", CVAR_ARCHIVE};
 
 extern	cvar_t	gl_ztrick;
 #ifdef QUAKEWORLD

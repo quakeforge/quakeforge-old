@@ -63,14 +63,17 @@ typedef struct cvar_s
 {
 	char    *name;
 	char    *string;
-	qboolean archive;	// set to true to cause it to be saved to vars.rc
-	qboolean info;		// added to serverinfo or userinfo when changed
-	qboolean server;	// notifies players when changed (UQUAKE)
-	qboolean heap;		// allocated off the heap, safe to free
+	unsigned int	type;
+	qboolean first;		// determine if this is the first write
+//	qboolean archive;	// set to true to cause it to be saved to vars.rc
+//	qboolean info;		// added to serverinfo or userinfo when changed
+//	qboolean server;	// notifies players when changed (UQUAKE)
+//	qboolean heap;		// allocated off the heap, safe to free
 	float   value;
 	struct cvar_s *next;
 } cvar_t;
 
+#define CVAR_NONE		0
 #define	CVAR_ARCHIVE		1	// set to cause it to be saved to vars.rc
 								// used for system variables, not for player
 								// specific configurations
@@ -79,14 +82,11 @@ typedef struct cvar_s
 #define	CVAR_SYSTEMINFO		8	// these cvars will be duplicated on all clients
 #define	CVAR_INIT			16	// don't allow change from console at all,
 								// but can be set from the command line
-#define	CVAR_LATCH			32	// will only change when C code next does
-								// a Cvar_Get(), so it can't be changed
-								// without proper initialization.  modified
-								// will be set, even though the value hasn't
-								// changed yet
+#define	CVAR_NOTIFY			32	// Will notify players when changed.
+
 #define	CVAR_ROM			64	// display only, cannot be set by user at all
 #define	CVAR_USER_CREATED	128	// created by a set command
-#define	CVAR_TEMP			256	// can be set even when cheats are disabled, but is not archived
+#define	CVAR_HEAP			256	// allocated off the heap, safe to free 
 #define CVAR_CHEAT			512	// can not be changed if cheats are disabled
 #define CVAR_NORESTART		1024	// do not clear when a cvar_restart is issued
 

@@ -47,10 +47,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 unsigned		d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
-static cvar_t	vid_mode =				{"vid_mode", "5", false};
-static cvar_t	vid_redrawfull =		{"vid_redrawfull", "0", false};
-static cvar_t	vid_waitforrefresh =	{"vid_waitforrefresh", "0", true};
-cvar_t	gl_ztrick = {"gl_ztrick", "0", true};
+static cvar_t	vid_mode =				{"vid_mode", "5", CVAR_NONE};
+static cvar_t	vid_redrawfull =		{"vid_redrawfull", "0", CVAR_NONE};
+static cvar_t	vid_waitforrefresh =	{"vid_waitforrefresh", "0", CVAR_ARCHIVE};
+cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
  
 static fxMesaContext fc = NULL;
 static int	scr_width, scr_height;

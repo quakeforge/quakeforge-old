@@ -62,7 +62,7 @@ extern int			global_dx, global_dy;
 // globals
 //
 
-cvar_t					_windowed_mouse = {"_windowed_mouse","1", true};
+cvar_t					_windowed_mouse = {"_windowed_mouse","1", CVAR_ARCHIVE};
 int					x_root, y_root;
 int					x_root_old, y_root_old;
 //

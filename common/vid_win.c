@@ -72,23 +72,23 @@ viddef_t	vid;				// global video state
 #define MODE_FULLSCREEN_DEFAULT	(MODE_WINDOWED + 3)
 
 // Note that 0 is MODE_WINDOWED
-cvar_t		vid_mode = {"vid_mode","0", false};
+cvar_t		vid_mode = {"vid_mode","0", CVAR_NONE};
 // Note that 0 is MODE_WINDOWED
-cvar_t		_vid_default_mode = {"_vid_default_mode","0", true};
+cvar_t		_vid_default_mode = {"_vid_default_mode","0", CVAR_ARCHIVE};
 // Note that 3 is MODE_FULLSCREEN_DEFAULT
-cvar_t		_vid_default_mode_win = {"_vid_default_mode_win","3", true};
+cvar_t		_vid_default_mode_win = {"_vid_default_mode_win","3", CVAR_ARCHIVE};
 cvar_t		vid_wait = {"vid_wait","0"};
-cvar_t		vid_nopageflip = {"vid_nopageflip","0", true};
-cvar_t		_vid_wait_override = {"_vid_wait_override", "0", true};
-cvar_t		vid_config_x = {"vid_config_x","800", true};
-cvar_t		vid_config_y = {"vid_config_y","600", true};
-cvar_t		vid_stretch_by_2 = {"vid_stretch_by_2","1", true};
-cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
-cvar_t		vid_fullscreen_mode = {"vid_fullscreen_mode","3", true};
-cvar_t		vid_windowed_mode = {"vid_windowed_mode","0", true};
-cvar_t		block_switch = {"block_switch","0", true};
-cvar_t		vid_window_x = {"vid_window_x", "0", true};
-cvar_t		vid_window_y = {"vid_window_y", "0", true};
+cvar_t		vid_nopageflip = {"vid_nopageflip","0", CVAR_ARCHIVE};
+cvar_t		_vid_wait_override = {"_vid_wait_override", "0", CVAR_ARCHIVE};
+cvar_t		vid_config_x = {"vid_config_x","800", CVAR_ARCHIVE};
+cvar_t		vid_config_y = {"vid_config_y","600", CVAR_ARCHIVE};
+cvar_t		vid_stretch_by_2 = {"vid_stretch_by_2","1", CVAR_ARCHIVE};
+cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
+cvar_t		vid_fullscreen_mode = {"vid_fullscreen_mode","3", CVAR_ARCHIVE};
+cvar_t		vid_windowed_mode = {"vid_windowed_mode","0", CVAR_ARCHIVE};
+cvar_t		block_switch = {"block_switch","0", CVAR_ARCHIVE};
+cvar_t		vid_window_x = {"vid_window_x", "0", CVAR_ARCHIVE};
+cvar_t		vid_window_y = {"vid_window_y", "0", CVAR_ARCHIVE};
 
 typedef struct {
 	int		width;

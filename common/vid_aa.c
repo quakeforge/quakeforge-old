@@ -47,9 +47,9 @@ static byte vid_current_palette[768];
 
 static int	UseDisplay = 1;
 
-static cvar_t	vid_mode = {"vid_mode","5",false};
-static cvar_t	vid_redrawfull = {"vid_redrawfull","0",false};
-static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",true};
+static cvar_t	vid_mode = {"vid_mode","5",CVAR_NONE};
+static cvar_t	vid_redrawfull = {"vid_redrawfull","0",CVAR_NONE};
+static cvar_t	vid_waitforrefresh = {"vid_waitforrefresh","0",CVAR_ARCHIVE};
  
 static char	*framebuffer_ptr;
 

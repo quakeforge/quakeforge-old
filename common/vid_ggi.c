@@ -44,8 +44,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 viddef_t	vid; // global video state
 unsigned short	d_8to16table[256];
 
-cvar_t		_windowed_mouse = {"_windowed_mouse","0", true};
-cvar_t		m_filter = {"m_filter","0", true};
+cvar_t		_windowed_mouse = {"_windowed_mouse","0", CVAR_ARCHIVE};
+cvar_t		m_filter = {"m_filter","0", CVAR_ARCHIVE};
 
 #define NUM_STDBUTTONS	3
 #define NUM_BUTTONS	10

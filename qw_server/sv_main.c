@@ -78,17 +78,17 @@ cvar_t pausable	= {"pausable", "1"};
 //
 // game rules mirrored in svs.info
 //
-cvar_t	fraglimit = {"fraglimit","0",false,true};
-cvar_t	timelimit = {"timelimit","0",false,true};
-cvar_t	teamplay = {"teamplay","0",false,true};
-cvar_t	samelevel = {"samelevel","0", false, true};
-cvar_t	maxclients = {"maxclients","8", false, true};
-cvar_t	maxspectators = {"maxspectators","8", false, true};
-cvar_t	deathmatch = {"deathmatch","1", false, true};			// 0, 1, or 2
-cvar_t	spawn = {"spawn","0", false, true};
-cvar_t	watervis = {"watervis", "0", false, true};
+cvar_t	fraglimit = {"fraglimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	timelimit = {"timelimit","0",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	teamplay = {"teamplay","0",CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	samelevel = {"samelevel","0", CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	maxclients = {"maxclients","8", CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	maxspectators = {"maxspectators","8", CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	deathmatch = {"deathmatch","1", CVAR_USERINFO|CVAR_SERVERINFO};			// 0, 1, or 2
+cvar_t	spawn = {"spawn","0", CVAR_USERINFO|CVAR_SERVERINFO};
+cvar_t	watervis = {"watervis", "0", CVAR_USERINFO|CVAR_SERVERINFO};
 
-cvar_t	hostname = {"hostname","unnamed", false, true};
+cvar_t	hostname = {"hostname","unnamed", CVAR_USERINFO|CVAR_SERVERINFO};
 
 QFile	*sv_logfile;
 QFile	*sv_fraglogfile;

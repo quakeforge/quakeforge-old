@@ -57,7 +57,7 @@ static int	mx, my;
 static void IN_init_kb();
 static void IN_init_mouse();
 
-cvar_t	_windowed_mouse = {"_windowed_mouse", "1", true};
+cvar_t	_windowed_mouse = {"_windowed_mouse", "1", CVAR_ARCHIVE};
 cvar_t	m_filter = {"m_filter","0"};
 
 static cvar_t mouse_button_commands[3] =

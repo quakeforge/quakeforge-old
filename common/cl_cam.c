@@ -59,10 +59,10 @@ double cam_lastviewtime;
 int spec_track = 0; // player# of who we are tracking
 int autocam = CAM_NONE;
 
-cvar_t	cl_chasecam 		= {"cl_chasecam", "0", true};
-cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16", true};
-cvar_t	cl_chasecam_back	= {"cl_chasecam_back", "100", true};
-cvar_t	cl_chasecam_right = {"cl_chasecam_right", "0", true};
+cvar_t	cl_chasecam 		= {"cl_chasecam", "0", CVAR_ARCHIVE};
+cvar_t	cl_chasecam_up		= {"cl_chasecam_up", "16",CVAR_ARCHIVE};
+cvar_t	cl_chasecam_back	= {"cl_chasecam_back", "100", CVAR_ARCHIVE};
+cvar_t	cl_chasecam_right = {"cl_chasecam_right", "0", CVAR_ARCHIVE};
 
 vec3_t	chase_pos;
 vec3_t	chase_angles;

@@ -88,7 +88,7 @@ float	old_mouse_x, old_mouse_y;
 
 
 cvar_t	in_joystick = {"joystick","1"};
-cvar_t	joy_numbuttons = {"joybuttons","4", true};
+cvar_t	joy_numbuttons = {"joybuttons","4", CVAR_ARCHIVE};
 
 qboolean	joy_avail;
 int		joy_oldbuttonstate;
@@ -103,7 +103,7 @@ qboolean		extern_avail;
 int				extern_buttons;
 int				extern_oldbuttonstate;
 int				extern_buttonstate;
-cvar_t	aux_look = {"auxlook","1", true};
+cvar_t	aux_look = {"auxlook","1", CVAR_ARCHIVE};
 externControl_t	*extern_control;
 void IN_StartupExternal (void);
 void IN_ExternalMove (usercmd_t *cmd);

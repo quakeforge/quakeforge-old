@@ -87,10 +87,10 @@ unsigned short	d_8to16table[256];
 unsigned	d_8to24table[256];
 unsigned char	d_15to8table[65536];
 
-cvar_t	_windowed_mouse = {"_windowed_mouse", "0", true};
+cvar_t	_windowed_mouse = {"_windowed_mouse", "0", CVAR_ARCHIVE};
 cvar_t	m_filter = {"m_filter", "0"};
-cvar_t	vid_mode = {"vid_mode", "0", false};
-cvar_t  vid_glx_fullscreen = {"vid_glx_fullscreen", "0", false};
+cvar_t	vid_mode = {"vid_mode", "0", CVAR_NONE};
+cvar_t  vid_glx_fullscreen = {"vid_glx_fullscreen", "0", CVAR_NONE};
 
 static int	fullscreen = 0;
 
@@ -104,7 +104,7 @@ static int	nummodes;
 static XF86VidModeModeInfo **vidmodes;
 static int	hasdgavideo = 0, hasvidmode = 0;
 static int	dgamouse = 0;
-static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", true};
+static cvar_t	vid_dga_mouseaccel = {"vid_dga_mouseaccel", "1", CVAR_ARCHIVE};
 #endif
 
 #ifdef XMESA
@@ -139,7 +139,7 @@ int		texture_extension_number = 1;
 
 float		gldepthmin, gldepthmax;
 
-cvar_t	gl_ztrick = {"gl_ztrick", "0", true};
+cvar_t	gl_ztrick = {"gl_ztrick", "0", CVAR_ARCHIVE};
 
 const char *gl_vendor;
 const char *gl_renderer;
