@@ -86,6 +86,7 @@ Other engines:
 -          Unreal-style camera rooms
 -          Working fullbright in GL targets
 -          Packet compression ala Qizmo
+-          Serial support for *nix
 +          Make "map" cmd give map info when called w/ no args
 
 
