@@ -756,8 +756,10 @@ COM_LoadGameDirectory(char *dir)
 	}
 	closedir(dir_ptr);
 
-	qsort(pakfiles, count - 1, sizeof(char *), 
-			(int (*)(const void *, const void *)) strcmp);
+	// XXX WARNING!!! This is /NOT/ subtable for strcmp!!!!!
+	// This passes 'char **' instead of 'char *' to the cmp function!
+	qsort(pakfiles, count, sizeof(char *), 
+			(int (*)(const void *, const void *)) Q_qstrcmp);
 
 	for (i = 0; i < count; i++) {
 		pak = COM_LoadPackFile(pakfiles[i]);

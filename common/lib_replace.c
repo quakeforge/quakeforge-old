@@ -30,6 +30,7 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /*
 ============================================================================
@@ -175,33 +176,33 @@ float Q_atof (char *str)
 
 // Note, this is /NOT/ a work-alike strcmp, this groups numbers sanely.
 //int Q_qstrcmp(const char *val, const char *ref)
-int Q_qstrcmp(const char *ref, const char *val)
+int Q_qstrcmp(char **os1, char **os2)
 {
-	int vc, rc;
-	long vl, rl;
-	const char *vp, *rp;
+	int in1, in2, n1, n2;
+	char *s1, *s2;
+	s1 = *os1;
+	s2 = *os2;
 
-	if (!val) val= "";
-	if (!ref) ref= "";
-	for (;;) {
-		vp= val;  while (*vp && !isdigit(*vp)) vp++;
-		rp= ref;  while (*rp && !isdigit(*rp)) rp++;
-		for (;;) {
-			vc= val == vp ? 0 : *val++;
-			rc= ref == rp ? 0 : *ref++;
-			if (!rc && !vc) break;
-			if (vc && !isalpha(vc)) vc += 256; /* assumes ASCII character set */
-			if (rc && !isalpha(rc)) rc += 256;
-			if (vc != rc) return vc - rc;
+	while (1) {
+		in1 = in2 = n1 = n2 = 0;
+
+		if ((in1 = isdigit(*s1)))
+			n1 = strtol(s1, &s1, 10);
+
+		if ((in2 = isdigit(*s2)))
+			n2 = strtol(s2, &s2, 10);
+
+		if (in1 && in2) {
+			if (n1 != n2)
+				return n1-n2;
+		} else {
+			if (*s1 != *s2)
+				return *s1 - *s2;
+			else if (*s1 == '\0')
+				return *s1 - *s2;
+			s1++;
+			s2++;
 		}
-		val= vp;
-		ref= rp;
-		vl=0;  if (isdigit(*vp)) vl= strtol(val,(char**)&val,10);
-		rl=0;  if (isdigit(*rp)) rl= strtol(ref,(char**)&ref,10);
-		if (vl != rl) return vl - rl;
-		if (!*val && !*ref) return 0;
-		if (!*val) return -1;
-		if (!*ref) return +1;
 	}
 }
 
