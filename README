@@ -133,7 +133,7 @@ have problems with transparency. Under some conditions, these drivers
 may lock the X Window System server, possibly rendering the system
 unusable. The currently-recommended drivers for video cards with Riva
 128/128ZX/TNT/TNT2/TNT2 Ultra chipsets are those from the Utah GLX
-project, located at http://glx.on.openprojects.net/ -- for the Vanta
+project, located at http://utah-glx.sourceforge.net/ -- for the Vanta
 and GeForce 256 chipsets, there is no suggested hardware-accelerated
 OpenGL alternative at this time. We believe the bug to be in nVidia's
 drivers, because our code seems to work under other OpenGL
