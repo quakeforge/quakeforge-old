@@ -19,11 +19,13 @@ BuildRoot: /var/tmp/%{name}-root
 %define SND_STYLE  '@SND_STYLE@'
 
 %description
-Umm, it's Quake man, Quake. You know, that game by id software?
-
-This is the QuakeForge Project's rendition of id's GPLed Quake 1 sources.
-Quakeforge aims for maximum compatability and platform support but also
-includes various enhancements.
+The QuakeForge project's aim is to create a long lasting project to work on
+developing and extending the Quake(R) source release (and any future releases)
+while maintaining backwards compatibility with the original Quake(R). We plan
+to further its gaming abilities and even develop it beyond its original purpose
+as a game and into a virtual world. Currently we are merging QW and Q1,
+smoothing the engine out, fixing bugs/cheats, better organizing the engine,
+adding features, and porting to as many platforms as developers are willing.
 
 %package server
 Summary: quakeworld server
