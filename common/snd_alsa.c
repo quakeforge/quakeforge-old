@@ -183,9 +183,9 @@ qboolean SNDDMA_Init(void)
 		frag_size/=2;
 	}
 
-	err_msg="audio flush";
-	if ((rc=snd_pcm_channel_flush(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
-		goto error;
+//	err_msg="audio flush";
+//	if ((rc=snd_pcm_channel_flush(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
+//		goto error;
 	err_msg="audio munmap";
 	if ((rc=snd_pcm_munmap(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
 		goto error;
