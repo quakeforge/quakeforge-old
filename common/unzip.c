@@ -35,6 +35,15 @@
 #define CASESENSITIVITYDEFAULT_NO
 #endif
 
+
+#ifndef UNZ_BUFSIZE
+#define UNZ_BUFSIZE (16384)
+#endif
+
+#ifndef UNZ_MAXFILENAMEINZIP
+#define UNZ_MAXFILENAMEINZIP (256)
+#endif
+
 #ifndef ALLOC
 # define ALLOC(size) (malloc(size))
 #endif
@@ -88,7 +97,7 @@ typedef struct
 	uLong crc32_wait;           /* crc32 we must obtain after decompress all */
 	uLong rest_read_compressed; /* number of byte to be decompressed */
 	uLong rest_read_uncompressed;/*number of byte to be obtained after decomp*/
-	QFile* file;                 /* io structore of the zipfile */
+	FILE* file;                 /* io structore of the zipfile */
 	uLong compression_method;   /* compression method (0==store) */
 	uLong byte_before_the_zipfile;/* byte before the zipfile, (>0 for sfx)*/
 } file_in_zip_read_info_s;
@@ -98,7 +107,7 @@ typedef struct
 */
 typedef struct
 {
-	QFile* file;                 /* io structore of the zipfile */
+	FILE* file;                 /* io structore of the zipfile */
 	unz_global_info gi;       /* public global information */
 	uLong byte_before_the_zipfile;/* byte before the zipfile, (>0 for sfx)*/
 	uLong num_file;             /* number of the current file in the zipfile*/
@@ -125,7 +134,7 @@ typedef struct
 
 
 local int unzlocal_getByte(fin,pi)
-	QFile *fin;
+	FILE *fin;
 	int *pi;
 {
     unsigned char c;
@@ -149,7 +158,7 @@ local int unzlocal_getByte(fin,pi)
    Reads a long in LSB order from the given gz_stream. Sets 
 */
 local int unzlocal_getShort (fin,pX)
-	QFile* fin;
+	FILE* fin;
     uLong *pX;
 {
     uLong x ;
@@ -171,7 +180,7 @@ local int unzlocal_getShort (fin,pX)
 }
 
 local int unzlocal_getLong (fin,pX)
-	QFile* fin;
+	FILE* fin;
     uLong *pX;
 {
     uLong x ;
@@ -266,7 +275,7 @@ extern int ZEXPORT unzStringFileNameCompare (fileName1,fileName2,iCaseSensitivit
     the global comment)
 */
 local uLong unzlocal_SearchCentralDir(fin)
-	QFile *fin;
+	FILE *fin;
 {
 	unsigned char* buf;
 	uLong uSizeFile;
@@ -336,7 +345,7 @@ extern unzFile ZEXPORT unzOpen (path)
 	unz_s us;
 	unz_s *s;
 	uLong central_pos,uL;
-	QFile * fin ;
+	FILE * fin ;
 
 	uLong number_disk;          /* number of the current dist, used for 
 								   spaning ZIP, unsupported, always 0*/
@@ -527,10 +536,12 @@ local int unzlocal_GetCurrentFileInfoInternal (file,
 
 	/* we check the magic */
 	if (err==UNZ_OK)
+	{
 		if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK)
 			err=UNZ_ERRNO;
 		else if (uMagic!=0x02014b50)
 			err=UNZ_BADZIPFILE;
+	}
 
 	if (unzlocal_getShort(s->file,&file_info.version) != UNZ_OK)
 		err=UNZ_ERRNO;
@@ -607,10 +618,12 @@ local int unzlocal_GetCurrentFileInfoInternal (file,
 			uSizeRead = extraFieldBufferSize;
 
 		if (lSeek!=0)
+		{
 			if (fseek(s->file,lSeek,SEEK_CUR)==0)
 				lSeek=0;
 			else
 				err=UNZ_ERRNO;
+		}
 		if ((file_info.size_file_extra>0) && (extraFieldBufferSize>0))
 			if (fread(extraField,(uInt)uSizeRead,1,s->file)!=1)
 				err=UNZ_ERRNO;
@@ -631,11 +644,13 @@ local int unzlocal_GetCurrentFileInfoInternal (file,
 		else
 			uSizeRead = commentBufferSize;
 
-		if (lSeek!=0)
+		if (lSeek!=0) 
+		{
 			if (fseek(s->file,lSeek,SEEK_CUR)==0)
 				lSeek=0;
 			else
 				err=UNZ_ERRNO;
+		}
 		if ((file_info.size_file_comment>0) && (commentBufferSize>0))
 			if (fread(szComment,(uInt)uSizeRead,1,s->file)!=1)
 				err=UNZ_ERRNO;
@@ -815,14 +830,17 @@ local int unzlocal_CheckCurrentFileCoherencyHeader (s,piSizeVar,
 		return UNZ_ERRNO;
 
 
-	if (err==UNZ_OK)
-		if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK)
+	if (err==UNZ_OK) {
+		if (unzlocal_getLong(s->file,&uMagic) != UNZ_OK) {
 			err=UNZ_ERRNO;
-		else if (uMagic!=0x04034b50)
+		} else if (uMagic!=0x04034b50) {
 			err=UNZ_BADZIPFILE;
+		}
+	}
 
-	if (unzlocal_getShort(s->file,&uData) != UNZ_OK)
+	if (unzlocal_getShort(s->file,&uData) != UNZ_OK) {
 		err=UNZ_ERRNO;
+	}
 /*
 	else if ((err==UNZ_OK) && (uData!=s->cur_file_info.wVersion))
 		err=UNZ_BADZIPFILE;
@@ -1258,7 +1276,7 @@ extern int ZEXPORT unzGetGlobalComment (file, szComment, uSizeBuf)
 	char *szComment;
 	uLong uSizeBuf;
 {
-	int err=UNZ_OK;
+//	int err=UNZ_OK;
 	unz_s* s;
 	uLong uReadThis ;
 	if (file==NULL)

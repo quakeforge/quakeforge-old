@@ -61,21 +61,16 @@ QUAKE FILESYSTEM
 =============================================================================
 */
 
-/* Begin Generations */
-#if defined(_EXPERIMENTAL_) && defined(GENERATIONS)
-#include "unzip.h"
-#endif
-
+#ifdef GENERATIONS
+#include <unzip.h>
 typedef unsigned char byte_t;
 char	gamedirfile[MAX_OSPATH];
 
-#if 0
 #ifndef _AIX
 typedef unsigned int uint_t;
 typedef unsigned short ushort_t;
 #endif
 #endif
-/* End Generations */
 
 int com_filesize;
 
@@ -540,7 +535,7 @@ pack_t *COM_LoadPackFile (char *packfile)
 	return pack;
 }
 
-#if defined(_EXPERIMENTAL_) && defined(GENERATIONS)
+#ifdef GENERATIONS
 int
 COM_pakzip_checkfile(unzFile *pak, const char *path)
 {
@@ -564,14 +559,10 @@ COM_pakzip_close(unzFile *pak)
     unzCloseCurrentFile(pak);
 }
 
-
-
 int
 COM_pakzip_read(unzFile *pak, void *buf, uint_t size, uint_t nmemb)
 {
-    int len;
-   
-    len = unzReadCurrentFile(pak, buf, size * nmemb);
+    int len = unzReadCurrentFile(pak, buf, size * nmemb);
     return len / size;
 }
 
@@ -613,20 +604,19 @@ COM_pakzip_readfile(unzFile *pak, const char *path, uint_t bufsize, byte_t *buf)
     return len;
 }
 
-#endif
 
-#if defined _EXPERIMENTAL_ && GENERATIONS 
 pack_t *COM_LoadPackZipFile (char *packfile)
 {
-
-	int                             i;
+	int				i=0;
 	packfile_t              	*newfiles;
 	float                  		numpackfiles;
 	unzFile            		*pak;
 	pack_t 				*pack_old;
 	int 				status;
-	dpackfile_t            		info[MAX_FILES_IN_PACK];
-	char szCurrentFileName[UNZ_MAXFILENAMEINZIP+1];
+
+//	This following variable info is unused ATM.
+//	dpackfile_t            		info[MAX_FILES_IN_PACK];
+	char szCurrentFileName[256];
 
 	pak = unzOpen(packfile);
 
@@ -641,7 +631,7 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 	status=unzGoToFirstFile(pak);
 
 	while(status == UNZ_OK) {
-		unzGetCurrentFileInfo(pak,NULL,&szCurrentFileName,64,NULL,0,NULL,0);
+//		unzGetCurrentFileInfo(pak,NULL,&szCurrentFileName,64,NULL,0,NULL,0);
 
 		if(strcmp(newfiles[i].name, szCurrentFileName)==0)
 			break;
@@ -671,7 +661,7 @@ pack_t *COM_LoadPackZipFile (char *packfile)
 	COM_pakzip_close(pak);
 	return pack_old;
 }
-#endif 
+#endif
 
 void
 COM_LoadGameDirectory(char *dir)
@@ -697,9 +687,9 @@ COM_LoadGameDirectory(char *dir)
 		}
 	}
 
-#if defined _EXPERIMENTAL_ && GENERATIONS
+#ifdef GENERATIONS
 	for (done=false, i=0 ; !done ; i++ ) {	// Load all Pak3 files.
-		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pk3", dir, i);
+		snprintf(pakfile, sizeof(pakfile), "%s/pak%i.qz", dir, i);
 		
 		pak = COM_LoadPackZipFile(pakfile);
  
