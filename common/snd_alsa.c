@@ -60,6 +60,7 @@ qboolean SNDDMA_Init(void)
 	int card=0,dev=0;
 	int rc;
 	char *err_msg="";
+	int rate,format,bps,stereo,frag_size;
 
 	if ((rc=snd_pcm_open(&pcm_handle,card,dev,SND_PCM_OPEN_PLAYBACK))<0) {
 		Con_Printf( "Error: audio open error: %s\n", snd_strerror(rc));
@@ -69,7 +70,37 @@ qboolean SNDDMA_Init(void)
 	memset(&cinfo, 0, sizeof(cinfo));
 	cinfo.channel = SND_PCM_CHANNEL_PLAYBACK;
 	snd_pcm_channel_info(pcm_handle, &cinfo);
-	Con_Printf("%08x %08x\n",cinfo.flags,cinfo.formats);
+	Con_Printf("%08x %08x %08x\n",cinfo.flags,cinfo.formats,cinfo.rates);
+	if (cinfo.rates & SND_PCM_RATE_44100) {
+		rate=44100;
+		frag_size=512;	/* assuming stereo 8 bit */
+	} else if (cinfo.rates & SND_PCM_RATE_22050) {
+		rate=22050;
+		frag_size=256;	/* assuming stereo 8 bit */
+	} else if (cinfo.rates & SND_PCM_RATE_11025) {
+		rate=11025;
+		frag_size=128;	/* assuming stereo 8 bit */
+	} else {
+		Con_Printf( "ALSA: desired rates not supported\n");
+		goto error_2;
+	}
+	if (cinfo.formats & SND_PCM_FMT_S16_LE) {
+		format=SND_PCM_SFMT_S16_LE;
+		bps=16;
+		frag_size*=2;
+	} else if (cinfo.formats & SND_PCM_FMT_U8) {
+		format=SND_PCM_SFMT_U8;
+		bps=8;
+	} else {
+		Con_Printf( "ALSA: desired formats not supported\n");
+		goto error_2;
+	}
+	if (cinfo.max_voices>=2) {
+		stereo=1;
+	} else {
+		stereo=0;
+		frag_size/=2;
+	}
 
 	err_msg="audio flush";
 	if ((rc=snd_pcm_flush_channel(pcm_handle, SND_PCM_CHANNEL_PLAYBACK))<0)
@@ -82,12 +113,12 @@ qboolean SNDDMA_Init(void)
 	params.channel = SND_PCM_CHANNEL_PLAYBACK;
 	params.mode = SND_PCM_MODE_BLOCK;
 	params.format.interleave=1;
-	params.format.format=SND_PCM_SFMT_U8;
-	params.format.rate=11025;
-	params.format.voices=2;
+	params.format.format=format;
+	params.format.rate=rate;
+	params.format.voices=stereo+1;
 	params.start_mode = SND_PCM_START_GO;
 	params.stop_mode = SND_PCM_STOP_ROLLOVER;
-	params.buf.block.frag_size=128;
+	params.buf.block.frag_size=frag_size;
 	params.buf.block.frags_min=1;
 	params.buf.block.frags_max=-1;
 //	err_msg="audio flush";
@@ -114,18 +145,27 @@ qboolean SNDDMA_Init(void)
 	shm=&sn;
 	memset((dma_t*)shm,0,sizeof(*shm));
     shm->splitbuffer = 0;
-	shm->channels=2;
-	shm->samples=setup.buf.block.frags*setup.buf.block.frag_size;	// mono samples in buffer
+	shm->channels=setup.format.voices;
 	shm->submission_chunk=128;					// don't mix less than this #
 	shm->samplepos=0;							// in mono samples
-	shm->samplebits=8;
-	shm->speed=11025;
+	shm->samplebits=setup.format.format==SND_PCM_SFMT_S16_LE?16:8;
+	shm->samples=setup.buf.block.frags*setup.buf.block.frag_size/(shm->samplebits/8);	// mono samples in buffer
+	shm->speed=setup.format.rate;
 	shm->buffer=(unsigned char*)mmap_data;
+    Con_Printf("%5d stereo\n", shm->channels - 1);
+    Con_Printf("%5d samples\n", shm->samples);
+    Con_Printf("%5d samplepos\n", shm->samplepos);
+    Con_Printf("%5d samplebits\n", shm->samplebits);
+    Con_Printf("%5d submission_chunk\n", shm->submission_chunk);
+    Con_Printf("%5d speed\n", shm->speed);
+    Con_Printf("0x%x dma buffer\n", shm->buffer);
+	Con_Printf("%5d total_channels\n", total_channels);
 
 	snd_inited=1;
 	return 1;
  error:
 	Con_Printf( "Error: %s: %s\n", err_msg, snd_strerror(rc));
+ error_2:
 	snd_pcm_close(pcm_handle);
 	return 0;
 }
@@ -133,7 +173,7 @@ qboolean SNDDMA_Init(void)
 int SNDDMA_GetDMAPos(void)
 {
 	if (!snd_inited) return 0;
-	shm->samplepos=(mmap_control->status.frag_io+1)*setup.buf.block.frag_size;
+	shm->samplepos=(mmap_control->status.frag_io+1)*setup.buf.block.frag_size/(shm->samplebits/8);
 	return shm->samplepos;
 }
 
