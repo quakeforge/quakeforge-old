@@ -104,6 +104,14 @@ void	VID_UnlockBuffer (void);
 # define vsnprintf _vsnprintf
 #endif
 
+#ifndef HAVE_SOCKLEN_T
+# ifdef HAVE_SIZE
+typedef size_t socklen_t;
+# else
+typedef unsigned int socklen_t;
+# endif
+#endif
+
 #define MAX_NUM_ARGVS	50
 
 
