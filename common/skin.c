@@ -133,11 +133,15 @@ byte	*Skin_Cache (skin_t *skin)
 //
 // load the pic from disk
 //
-	snprintf(name, sizeof(name), "skins/%s.pcx", skin->name);
+
+	if (developer->value)
+		snprintf(name, sizeof(name), "skins/%s.pcx", skin->name);
 	out = LoadPCX (name, &skin->cache, 320, 200);
 	if (out == NULL) {
 		Con_Printf ("Couldn't load skin %s\n", name);
-		snprintf(name, sizeof(name), "skins/%s.pcx", baseskin->string);
+		if (developer->value)
+			snprintf(name, sizeof(name), "skins/%s.pcx",
+					baseskin->string);
 		out = LoadPCX (name, &skin->cache, 320, 200);
 		if (out == NULL) {
 			skin->failedload = true;
