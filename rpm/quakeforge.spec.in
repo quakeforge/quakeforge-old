@@ -35,12 +35,12 @@ Requires: quakeforge
 %description server
 
 %if "%{HAS_OGL}"=="'yes'"
-%package gl
+%package glx
 Summary: OpenGL(tm) support
 Group: Amusements/Games
 Requires: quakeforge
 
-%description gl
+%description glx
 %endif
 
 %if "%{HAS_TDFXGL}"=="'yes'"
@@ -128,49 +128,49 @@ make DESTDIR="$RPM_BUILD_ROOT" install
 /usr/bin/qw-server
 
 %if "%{HAS_OGL}"=="'yes'"
-%files gl
-/usr/bin/quake-gl
-/usr/bin/qw-client-gl
+%files glx
+/usr/bin/uquake-glx
+/usr/bin/qw-client-glx
 %endif
 
 %if "%{HAS_TDFXGL}"=="'yes'"
 %files 3dfx
-/usr/bin/quake-3dfx
+/usr/bin/uquake-3dfx
 /usr/bin/qw-client-3dfx
 %endif
 
 %if "%{HAS_X11}"=="'yes'"
 %files x11
-/usr/bin/quake-x11
+/usr/bin/uquake-x11
 /usr/bin/qw-client-x11
 %endif
 
 %if "%{HAS_SVGA}"=="'yes'"
 %files svga
-/usr/bin/quake-svga
+/usr/bin/uquake-svga
 /usr/bin/qw-client-svga
 %endif
 
 %if "%{HAS_VGA}"=="'yes'"
 %files vga
-/usr/bin/quake-vga
+/usr/bin/uquake-vga
 /usr/bin/qw-client-vga
 %endif
 
 %if "%{HAS_MGL}"=="'yes'"
 %files gml
-/usr/bin/quake-mgl
+/usr/bin/uquake-mgl
 /usr/bin/qw-client-mgl
 %endif
 
 %if "%{HAS_GGI}"=="'yes'"
 %files ggi
-/usr/bin/quake-ggi
+/usr/bin/uquake-ggi
 /usr/bin/qw-client-ggi
 %endif
 
 %if "%{HAS_SDL}"=="'yes'"
 %files sdl
-/usr/bin/quake-sdl
+/usr/bin/uquake-sdl
 /usr/bin/qw-client-sdl
 %endif

@@ -309,7 +309,7 @@ if test "x$HAS_OGL" != xno; then
       OGL_INCLUDES="-I${x_includes:-.}"
    fi
    save_CPPFLAGS="$CPPFLAGS"
-   CPPFLAGS="$CPPFLAGS $OGL_CFLAGS"
+   CPPFLAGS="$CPPFLAGS $OGL_INCLUDES"
    AC_CHECK_HEADER(GL/gl.h, HAS_OGL=yes, HAS_OGL=no)
    if test "x$HAS_OGL" != xno; then
       AC_CHECK_HEADER(GL/xmesa.h, HAS_XMESA=yes, HAS_XMESA=no)

@@ -3,10 +3,18 @@
 # Quake general stuff
 #
 
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+datadir = @datadir@
+
 top_builddir	= ..
-PROJECT_DIR	:= @top_srcdir@
+PROJECT_DIR	:= ${top_srcdir}
 BIN_PREFIX	:= qw-server
-SRC_DIR		:= @srcdir@
 MODULE		:= qw_server
 OBJ_PATTERN	= $(BUILD_DIR)/%.@OBJEXT@
 

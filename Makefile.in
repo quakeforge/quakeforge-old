@@ -1,4 +1,4 @@
-SRC_DIR = @srcdir@
+srcdir = @srcdir@
 HAVE_UDP = @HAVE_UDP@
 
 ifeq ($(HAVE_UDP),yes)
@@ -43,12 +43,12 @@ changelog:
 
 # Code to automatically re-configure, only runs if you are compiling in the
 # source directory
-ifeq ($(SRC_DIR),.)
+ifeq ($(srcdir),.)
 configure: configure.in acconfig.h
 	./bootstrap
 
-CONFIG_SRC    = Makefile.in qw_client/Makefile.in qw_server/Makefile.in \
-		uquake/Makefile.in common/Makefile.in \
+CONFIG_SRC    = Makefile.in Rules.mk.in qw_client/Makefile.in \
+		qw_server/Makefile.in uquake/Makefile.in common/Makefile.in \
 		rpm/build_rpm.in rpm/quakeforge.spec.in
 
 $(patsubst %.in,%,$(CONFIG_SRC)): configure $(CONFIG_SRC)

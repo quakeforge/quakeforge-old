@@ -3,10 +3,18 @@
 # Quake general stuff
 #
 
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+datadir = @datadir@
+
 top_builddir	= ..
-PROJECT_DIR	:= @top_srcdir@
+PROJECT_DIR	:= ${top_srcdir}
 BIN_PREFIX	:= uquake
-SRC_DIR		:= @srcdir@
 MODULE		:= uquake
 OBJ_PATTERN	= $(BUILD_DIR)/common_lib/%.@OBJEXT@ $(BUILD_DIR)/%.@OBJEXT@
 

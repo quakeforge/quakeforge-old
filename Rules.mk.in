@@ -12,7 +12,7 @@ CC		:= @CC@
 
 
 LDFLAGS		+= @LDFLAGS@ @LIBS@
-INCLUDES	+= -I$(SRC_DIR) -I$(COMMON_DIR) @OGL_INCLUDES@ -I$(top_builddir)/common
+INCLUDES	+= -I$(srcdir) -I$(COMMON_DIR) @OGL_INCLUDES@ -I$(top_builddir)/common
 CFLAGS		+= @CFLAGS@ $(INCLUDES)
 
 MAKE_SURE_DIR = if test -d "$$DIR"; then \
@@ -52,11 +52,11 @@ endif
 # Compilation rules
 #
 
-$(OBJ_PATTERN): $(SRC_DIR)/%.c
+$(OBJ_PATTERN): $(srcdir)/%.c
 	@DIR=$(@D); $(MAKE_SURE_DIR)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(OBJ_PATTERN): $(SRC_DIR)/%.s
+$(OBJ_PATTERN): $(srcdir)/%.s
 	@DIR=$(@D); $(MAKE_SURE_DIR)
 	$(CC) $(CFLAGS) -x assembler-with-cpp -o $@ -c $<
 

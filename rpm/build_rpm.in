@@ -7,6 +7,7 @@ if [ "$srcdir" = "." ]; then
     srcdir=..
 fi
 
+rm -rf BUILD SPECS RPMS SOURCES SRPMS
 mkdir -p BUILD SPECS RPMS/{noarch,i386,i686} SOURCES SRPMS
 rm -rf ${temp_dir}/quakeforge-${version}
 cp -a $srcdir ${temp_dir}/quakeforge-${version}
