@@ -63,7 +63,6 @@
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
-#undef HAS_DGA
 #ifdef HAS_DGA
 # include <X11/extensions/xf86dga.h>
 #endif
@@ -476,6 +475,9 @@ void VID_Init(unsigned char *palette)
 			hasdga = hasdgavideo = 0;
 		}
 	}
+	Con_SafePrintf ("hasdga = %i\nhasdgavideo = %i\n", hasdga, hasdgavideo);
+#endif
+#ifdef HAS_VIDMODE
 	hasvidmode = VID_CheckVMode(x_disp, NULL, NULL);
 	if (hasvidmode) {
 		if (! XF86VidModeGetAllModeLines(x_disp, DefaultScreen(x_disp),
@@ -484,7 +486,7 @@ void VID_Init(unsigned char *palette)
 			hasvidmode = 0;
 		}
 	}
-	Con_SafePrintf ("hasdga = %i\nhasdgavideo = %i\nnummodes = %i\nhasvidmode = %i\n", hasdga, hasdgavideo, nummodes, hasvidmode);
+	Con_SafePrintf ("hasvidmode = %i\nnummodes = %i\n", hasvidmode, nummodes);
 #endif
 #ifdef HAVE_DLOPEN
 	dlhand = dlopen(NULL, RTLD_LAZY);
