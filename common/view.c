@@ -746,9 +746,7 @@ void
 V_CalcRefdef ( void )
 {
 	entity_t	*view;
-#ifdef QUAKEWORLD
-	int			h;
-#else
+#ifdef UQUAKE
 	entity_t	*ent;
 	vec3_t		angles;
 #endif
@@ -758,7 +756,6 @@ V_CalcRefdef ( void )
 	static float oldz = 0;
 
 #ifdef QUAKEWORLD
-	h = cl.stats[STAT_VIEWHEIGHT] + 22;
 #endif
 	V_DriftPitch ();
 
@@ -821,9 +818,9 @@ V_CalcRefdef ( void )
 	else if (view_message->flags & PF_DEAD)
 		r_refdef.vieworg[2] -= 16;	// corpse view height
 	else
-		r_refdef.vieworg[2] += h;	// view height
+		r_refdef.vieworg[2] += cl.stats[STAT_VIEWHEIGHT] + 22;	// view height
 
-	if (view_message->flags & PF_DEAD)		// PF_GIB will also set PF_DEAD
+	if (view_message->flags & PF_DEAD)	// PF_GIB will also set PF_DEAD
 		r_refdef.viewangles[ROLL] = 80;	// dead view angle
 #else
 // offsets
@@ -862,7 +859,7 @@ V_CalcRefdef ( void )
 
 #ifdef QUAKEWORLD
 	VectorCopy (cl.simorg, view->origin);
-	view->origin[2] += h;
+	view->origin[2] += cl.stats[STAT_VIEWHEIGHT] + 22;
 #else
 	VectorCopy (ent->origin, view->origin);
 	view->origin[2] += cl.viewheight;
