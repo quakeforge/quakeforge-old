@@ -185,12 +185,15 @@ fi
 
 dnl Make sure -lGL or -lMesaGL works
 if test "x$HAS_OGL" = xyes; then
+   save_LIBS="$LIBS"
+   LIBS="$X_LIBS -lXext -lX11 $X_EXTRA_LIBS $LIBS"   
    AC_CHECK_LIB(GL, glColor4f, OGL_LIBS="$OGL_LIBS -lGL"
      HAS_OGL=yes, HAS_OGL=no, [$OGL_LIBS])
    if test "x$HAS_OGL" != xyes; then
       AC_CHECK_LIB(MesaGL, glColor4f, OGL_LIBS="$OGL_LIBS -lMesaGL"
         HAS_OGL=yes, HAS_OGL=no, [$OGL_LIBS])
    fi
+   LIBS="$save_LIBS"
 fi
 if test "x$HAS_OGL" != xyes; then
    OGL_CFLAGS="" OGL_LIBS=""
@@ -236,16 +239,12 @@ else
    TDFXGL_LIBS=""
    HAS_TDFXGL="no"
 fi
-AC_SUBST(HAS_TDFXGL)
-AC_SUBST(TDFXGL_CFLAGS)
-AC_SUBST(TDFXGL_LIBS)
 
 
 AC_SUBST(X_LIBS)
 AC_SUBST(X_CFLAGS)
 AC_SUBST(X11_SHM_LIB)
 AC_SUBST(HAS_X11)
-echo "HAS_DGA is ($HAS_DGA)"
 if test "x$HAS_DGA" = xyes; then
    AC_DEFINE(HAS_DGA,1)
 fi
@@ -261,6 +260,9 @@ AC_SUBST(HAS_OGL)
 AC_SUBST(OGL_CFLAGS)
 AC_SUBST(OGL_LIBS)
 AC_DEFINE(HAVE_GL_COLOR_INDEX8_EXT, HAS_INDEX8)
+AC_SUBST(HAS_TDFXGL)
+AC_SUBST(TDFXGL_CFLAGS)
+AC_SUBST(TDFXGL_LIBS)
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
