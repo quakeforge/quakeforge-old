@@ -24,7 +24,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifndef _SERVER_H
 #define _SERVER_H
 
+#include "config.h"
+
+#ifdef HAS_ZLIB
 #include <zlib.h>
+#else
+#include "nozip.h"
+#endif
 
 #include <progs.h>
 

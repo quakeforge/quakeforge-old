@@ -63,9 +63,11 @@ QUAKE FILESYSTEM
 typedef unsigned char byte_t;
 char	gamedirfile[MAX_OSPATH];
 
+#if 0
 #ifndef _AIX
 typedef unsigned int uint_t;
 typedef unsigned short ushort_t;
+#endif
 #endif
 /* End Generations */
 

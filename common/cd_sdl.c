@@ -53,7 +53,9 @@ static void CDAudio_Eject()
 
 void CDAudio_Play(byte track, qboolean looping)
 {
-	CDstatus cd_stat;
+        /* Initialize cd_stat to avoid warning */
+        /* XXX - Does this default value make sense? */
+	CDstatus cd_stat = CD_ERROR;
 	if(!cd_id || !enabled) return;
 	
 	if(!cdValid)

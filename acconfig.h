@@ -41,5 +41,14 @@
 /* Define this to use experimental code */
 #undef _EXPERIMENTAL_
 
-@BOTTOM@
+/* Define this to use zlib */
+#undef HAS_ZLIB
 
+/* Define this if your system has socklen_t */
+#undef HAS_SOCKLEN_T
+#ifndef HAS_SOCKLEN_T
+typedef int socklen_t;
+#   define HAS_SOCKLEN_T
+#endif
+
+@BOTTOM@

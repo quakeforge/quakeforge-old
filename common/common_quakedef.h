@@ -35,6 +35,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #include <setjmp.h>
 #include <time.h>
+#ifdef HAVE_STRING_H
+#include <strings.h>
+#endif
 
 #if defined(_WIN32) && !defined(WINDED)
 void	VID_LockBuffer (void);

@@ -30,7 +30,7 @@ AC_CHECK_HEADERS(unistd.h fcntl.h dlfcn.h windows.h sys/ioctl.h sys/mman.h \
 	sys/socket.h netinet/in.h netdb.h arpa/inet.h sys/filio.h \
 	sys/soundcard.h linux/soundcard.h machine/soundcard.h sys/audioio.h \
 	dsound.h mmsystem.h initguid.h mme/mmsystem.h mme/mme_public.h \
-	sys/asoundlib.h)
+	sys/asoundlib.h string.h strings.h memory.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_PROG_GCC_TRADITIONAL
@@ -39,6 +39,11 @@ AC_C_INLINE
 AC_HEADER_TIME
 AC_STRUCT_TM
 AC_C_BIGENDIAN
+AC_MSG_CHECKING(for socklen_t in sys/socket.h)
+AC_TRY_COMPILE([#include "sys/socket.h"],
+        [ socklen_t x = 0;],
+        AC_DEFINE(HAS_SOCKLEN_T) AC_MSG_RESULT(yes),
+        AC_MSG_RESULT(no))
 
 dnl Check for symbol underscore prefix 
 dnl !!! FIXME !!! Do some real check here...
@@ -91,6 +96,10 @@ AC_ARG_ENABLE(alsa,
 [  --enable-alsa           enable alsa support],
 )	
 
+AC_ARG_ENABLE(zlib,
+[  --enable-zlib           enable zlib support],
+)
+
 dnl Checks for stricmp/strcasecmp
 AC_CHECK_FUNC(stricmp,,
   AC_CHECK_FUNC(strcasecmp, AC_DEFINE(stricmp,strcasecmp)))
@@ -114,9 +123,21 @@ fi
 dnl Checks for working -lm
 AC_CHECK_LIB(m, pow,, AC_MSG_ERROR([math library (-lm) appears broken]))
      
+if test "x$disable_zlib" = "xyes"; then
 dnl Check for working -lz
-AC_CHECK_LIB(z, gzopen, LIBS="$LIBS -lz"
-  HAS_ZLIB=yes, HAS_ZLIB=no, [$LIBS])
+dnl Note - must have gztell *and* gzgets in -lz *and* zlib.h
+AC_CHECK_LIB(z, gztell, HAS_ZLIB=yes, HAS_ZLIB=no, [$LIBS])
+if test "x$HAS_ZLIB" = "xyes"; then
+   AC_CHECK_LIB(z, gzgets, HAS_ZLIB=yes, HAS_ZLIB=no, [$LIBS])
+   if test "x$HAS_ZLIB" = "xyes"; then
+      AC_CHECK_HEADER(zlib.h, HAS_ZLIB=yes, HAS_ZLIB=no)
+      if test "x$HAS_ZLIB" = "xyes"; then
+         LIBS="-lz $LIBS"
+         AC_DEFINE(HAS_ZLIB)
+      fi
+   fi
+fi
+fi
 
 dnl Checks for X11 support
 dnl (XoXus: Since vid_x.c relies on XShm being there, this now disables
@@ -492,10 +513,6 @@ case "${target}" in
    i?86-*-*)
       INTEL_ARCH=yes
       AC_MSG_RESULT(yes)
-          ;;
-   *) AC_MSG_RESULT(no)
-esac
-
 AC_MSG_CHECKING(to see if we should disable x86 optimizations)
 AC_ARG_ENABLE(asmopt,
 [  --disable-asmopt             Disable assembler optimization (on ia32 machines)],
@@ -506,6 +523,11 @@ if test "x$NO_ASMOPT" = xyes; then
 else
 	AC_MSG_RESULT(no)	
 fi
+          ;;
+   *) AC_MSG_RESULT(no)
+      NO_ASMOPT=yes
+esac
+
 
 dnl Check for sound libraries
 AC_CHECK_LIB(mme,waveOutOpen,HAVE_LIBMME=yes)

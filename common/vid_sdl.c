@@ -25,6 +25,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "keys.h"
 #include "quakedef.h"
 #include "d_local.h"
+#include "sound.h"
+#include "cvar.h"
+#include "draw.h"
 
 cvar_t          _windowed_mouse = {"_windowed_mouse","0", true};
 static float old_windowed_mouse = 0;

@@ -23,9 +23,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "quakedef.h"
 #include <lib_replace.h>
 
-static void CD_f(void);
-
 #if defined(USE_LINUX_CD) || defined(USE_BSD_CD)
+static void CD_f(void);
 # include "cd_linux.c"
 #elif defined(_WIN32)
 # include "cd_win.c"

@@ -23,6 +23,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "qwsvdef.h"
 
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 quakeparms_t host_parms;
 
 qboolean	host_initialized;		// true if into command execution (compatability)

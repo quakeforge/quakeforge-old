@@ -36,6 +36,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <sys/dir.h>
 #endif
 
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif
+
 extern cvar_t	sys_nostdout;
 
 cvar_t	sys_extrasleep = {"sys_extrasleep","0"};

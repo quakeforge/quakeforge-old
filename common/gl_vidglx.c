@@ -439,9 +439,9 @@ void	VID_SetPalette (unsigned char *palette)
 		snprintf(s, sizeof(s), "%s/glquake", com_gamedir);
  		Sys_mkdir (s);
 		snprintf(s, sizeof(s), "%s/glquake/15to8.pal", com_gamedir);
-		if ((f = fopen(s, "wb")) != NULL) {
-			fwrite(d_15to8table, 1<<15, 1, f);
-			fclose(f);
+		if ((f = gzopen(s, "wb")) != NULL) {
+			gzwrite(f, d_15to8table, 1<<15);
+			gzclose(f);
 		}
 	}
 }

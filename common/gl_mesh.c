@@ -329,24 +329,24 @@ void GL_MakeAliasModelDisplayLists (model_t *m, aliashdr_t *hdr)
 		// save out the cached version
 		//
 		snprintf(fullpath, sizeof(fullpath), "%s/%s", com_gamedir, cache);
-		f = fopen (fullpath, "wb");
+		f = gzopen (fullpath, "wb");
 #ifdef QUAKEWORLD
 		if (!f) {
 			char gldir[MAX_OSPATH];
 
 			snprintf(gldir, sizeof(gldir), "%s/glquake", com_gamedir);
 			Sys_mkdir (gldir);
-			f = fopen (fullpath, "wb");
+			f = gzopen (fullpath, "wb");
 		}
 #endif
 
 		if (f)
 		{
-			fwrite (&numcommands, 4, 1, f);
-			fwrite (&numorder, 4, 1, f);
-			fwrite (commands, numcommands * sizeof(commands[0]), 1, f);
-			fwrite (vertexorder, numorder * sizeof(vertexorder[0]), 1, f);
-			fclose (f);
+			gzwrite(f, &numcommands, 4);
+			gzwrite(f, &numorder, 4);
+			gzwrite(f, commands, numcommands * sizeof(commands[0]));
+			gzwrite(f, vertexorder, numorder * sizeof(vertexorder[0]));
+			gzclose (f);
 		}
 	}
 

@@ -1,5 +1,4 @@
 /*
-Copyright (C) 1996-1997 Id Software, Inc.
 Copyright (C) 1999,2000  contributors of the QuakeForge project
 Please see the file "AUTHORS" for a list of contributors
 
@@ -21,34 +20,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // comndef.h  -- general definitions
 
-#ifndef _QUAKEFS_H
-#define _QUAKEFS_H
+#ifndef _NOZIP_H
+#define _NOZIP_H
 #include "config.h"
 
-#ifdef HAS_ZLIB
-#include <zlib.h>
-#else
-#include "nozip.h"
+#ifndef HAS_ZLIB
+#define gzFile  FILE
+#define gzdopen fdopen
+#define gzread(F, BUF, LEN)  fread(BUF, LEN, 1, F)
+#define gzwrite(F, BUF, LEN) fwrite(BUF, LEN, 1, F)
+/* #define gzwrite(F, BUF, SIZE,LEN) fwrite( */
+#define gzflush(FILE, VAL)   fflush(FILE)
+#define gzprintf fprintf
+#define gzgetc fgetc
+#define gzseek fseek
+#define gztell ftell
+#define gzopen fopen
+#define gzclose fclose
+#define gzgets(FILE,BUF,SIZE) fgets(BUF,SIZE,FILE)
 #endif
-
-//============================================================================
-
-#define	MAX_OSPATH	128		// max length of a filesystem pathname
-
-extern int com_filesize;
-struct cache_user_s;
-
-extern	char	com_gamedir[MAX_OSPATH];
-
-void COM_WriteFile (char *filename, void *data, int len);
-int COM_FOpenFile (char *filename, gzFile **file);
-void COM_CloseFile (FILE *h);
-
-byte *COM_LoadStackFile (char *path, void *buffer, int bufsize);
-byte *COM_LoadTempFile (char *path);
-byte *COM_LoadHunkFile (char *path);
-void COM_LoadCacheFile (char *path, struct cache_user_s *cu);
-void COM_CreatePath (char *path);
-void COM_Gamedir (char *dir);
-
-#endif // _QUAKEFS_H
+#endif // _NOZIP_H
