@@ -199,23 +199,29 @@ void COM_Maplist_f (void)
 	struct dirent	*dirent;
 	char		buf[MAX_OSPATH];
 
-	for (search = com_searchpaths ; search ; search = search->next)
-	{ 
-		if (!Q_strcmp (search->filename, ""))
-			continue;
-		snprintf (buf, sizeof(buf), "%s/maps", search->filename);
-		dir_ptr = opendir(buf);
-		Con_Printf ("Looking in %s...\n",buf);
-		if (!dir_ptr)
-			continue;
-		while ((dirent = readdir (dir_ptr)))
-		{
-			if (!fnmatch ("*.bsp", dirent->d_name, 0))
-			{
-				Con_Printf ("%s\n", dirent->d_name);
+	for (search = com_searchpaths ; search ; search = search->next) {
+		if (search->pack) {
+			int i;
+			pack_t *pak = search->pack;
+			Con_Printf ("Looking in %s...\n",search->filename);
+			for (i=0 ; i<pak->numfiles ; i++) {
+				char *name=pak->files[i].name;
+				if (!fnmatch ("maps/*.bsp", name, FNM_PATHNAME)
+					|| !fnmatch ("maps/*.bsp.gz", name, FNM_PATHNAME))
+					Con_Printf ("%s\n", name+5);
 			}
+		} else {
+			snprintf (buf, sizeof(buf), "%s/maps", search->filename);
+			dir_ptr = opendir(buf);
+			Con_Printf ("Looking in %s...\n",buf);
+			if (!dir_ptr)
+				continue;
+			while ((dirent = readdir (dir_ptr)))
+				if (!fnmatch ("*.bsp", dirent->d_name, 0)
+					|| !fnmatch ("*.bsp.gz", dirent->d_name, 0))
+					Con_Printf ("%s\n", dirent->d_name);
+			closedir (dir_ptr);
 		}
-		closedir (dir_ptr);
 	}
 }
 
