@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 #include <X11/extensions/xf86dga.h>
 #include <X11/extensions/xf86vmode.h>
 #endif
@@ -74,7 +74,7 @@ static float	old_mouse_x, old_mouse_y;
 static int	mouse_grabbed = 0;
 #define	mouse_shouldgrab ((int)vid_glx_fullscreen.value ||(int)_windowed_mouse.value)
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 static int	nummodes;
 static XF86VidModeModeInfo **vidmodes;
 static int	hasdga = 0, hasdgavideo = 0, hasvidmode = 0;
@@ -171,7 +171,7 @@ do_grabs(int grab)
 		XGrabKeyboard(dpy, win, False, GrabModeAsync, GrabModeAsync,
 			      CurrentTime);
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 		if (hasdga) {
 			XF86DGADirectVideo(dpy, screen, XF86DGADirectMouse);
 			dgamouse = 1;
@@ -186,7 +186,7 @@ do_grabs(int grab)
 		/*
 		  Release grab
 		*/
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 		if (dgamouse) {
 			XF86DGADirectVideo(dpy, screen, 0);
 			dgamouse = 0;
@@ -218,7 +218,7 @@ do_fullscreen(int full)
 		return;
 	}
 #endif
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 	if (hasvidmode) {
 		static int prev_x = 0, prev_y = 0, prev_w = 640, prev_h = 480;
 
@@ -280,7 +280,7 @@ VID_Shutdown(void)
 
 	glXDestroyContext(dpy, ctx);
 	ctx = NULL;
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 	if (hasvidmode) {
 		int i;
 
@@ -532,7 +532,7 @@ void VID_Init(unsigned char *palette)
 	Cvar_RegisterVariable(&gl_ztrick);
 	Cvar_RegisterVariable(&_windowed_mouse);
         Cvar_RegisterVariable(&vid_glx_fullscreen);
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 	Cvar_RegisterVariable(&vid_dga_mouseaccel);
 #endif
 
@@ -581,7 +581,7 @@ void VID_Init(unsigned char *palette)
 		exit(1);
 	}
 
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 	{
 		int maj_ver;
 
@@ -815,7 +815,7 @@ GetEvent(void)
 		break;
 
 	case MotionNotify:
-#if defined(HAS_DGA) && defined(_EXPERIMENTAL_))
+#if defined(HAS_DGA) && defined(_EXPERIMENTAL_)
 		if (dgamouse) {
 			mouse_x += (float)x_event.xmotion.x_root
 				* vid_dga_mouseaccel.value;
