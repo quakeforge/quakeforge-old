@@ -449,7 +449,7 @@ ALL_GL_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 	      $(BUILD_DIR)/common_lib.a \
 	      $(TARGET_DIR)/sound_lib.a
 
-GL_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@
+GL_CFLAGS  = @OGL_CFLAGS@
 GL_LDFLAGS = $(X11_LDFLAGS) @OGL_LIBS@ @DGA_LIBS@ @DYN_LIBS@
 
 $(BUILD_DIR)/gl_vidglx.o: $(COMMON_DIR)/gl_vidglx.c
@@ -477,7 +477,7 @@ ALL_TDFX_OBJS = $(patsubst %,$(BUILD_DIR)/%,$(addsuffix .@OBJEXT@,\
 		$(BUILD_DIR)/common_lib.a \
 		$(TARGET_DIR)/sound_lib.a
 
-TDFX_CFLAGS  = -DGLQUAKE @OGL_CFLAGS@ @GLIDE_CFLAGS@
+TDFX_CFLAGS  = @OGL_CFLAGS@ @GLIDE_CFLAGS@
 TDFX_LDFLAGS = @SVGA_LIBS@ @TDFXGL_LIBS@
 
 $(BUILD_DIR)/gl_vidlinux_3dfx.@OBJEXT@: $(COMMON_DIR)/gl_vidlinux_3dfx.c
