@@ -363,6 +363,9 @@ extern cvar_t	cl_nolerp;
 extern cvar_t	cl_warncmd;
 extern cvar_t	name;
 #endif // QUAKEWORLD
+extern cvar_t	rate;
+extern cvar_t	host_speeds;
+extern cvar_t	cl_maxfps;
 extern cvar_t	cl_upspeed;
 extern cvar_t	cl_forwardspeed;
 extern cvar_t	cl_backspeed;
@@ -422,6 +425,10 @@ void CL_Init (void);
 void Host_WriteConfiguration (void);
 
 void CL_EstablishConnection (char *host);
+void CL_CheckForResend (void);
+void CL_SendConnectPacket (void);
+void SetPal (int i);
+void CL_RelinkEntities (void);
 
 #ifdef UQUAKE
 void CL_Signon1 (void);
