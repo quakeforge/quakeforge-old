@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // console
 //
 
-#define		CON_TEXTSIZE	16384
+#define		CON_TEXTSIZE	65536
 typedef struct
 {
 	char	text[CON_TEXTSIZE];
