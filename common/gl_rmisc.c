@@ -37,7 +37,9 @@
 #include <lib_replace.h>
 #include <cmd.h>
 
-extern void R_InitBubble();
+void R_InitBubble();
+
+void R_FireColor_f();
 
 extern cvar_t *r_clearcolor;
 
@@ -194,6 +196,8 @@ void R_Init (void)
 	Cmd_AddCommand ("timerefresh", R_TimeRefresh_f);
 	Cmd_AddCommand ("envmap", R_Envmap_f);
 	Cmd_AddCommand ("pointfile", R_ReadPointFile_f);
+
+	Cmd_AddCommand ("r_firecolor", R_FireColor_f);
 
 	r_norefresh = Cvar_Get ("r_norefresh", "0", CVAR_NONE,
 			"None");

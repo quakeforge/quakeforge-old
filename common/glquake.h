@@ -254,7 +254,8 @@ typedef struct {
 	float	size;
 	float	die, decay;		// duration settings
 	float	minlight;		// lighting threshold
-	float	color[4];		// RGBA
+	float	_color[4];		// RGBA
+	float	*color;
 } fire_t;
 
 void R_AddFire (vec3_t, vec3_t, entity_t *ent);

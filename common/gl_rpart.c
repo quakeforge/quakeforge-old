@@ -36,6 +36,8 @@
 #include <lib_replace.h>
 #include <console.h>
 #include <server.h>
+#include <stdlib.h>
+#include <cmd.h>
 
 #define MAX_PARTICLES			2048	// max particles at once
 #define ABSOLUTE_MIN_PARTICLES		512	// min particle clamp
@@ -868,6 +870,9 @@ void R_DrawParticles (void)
 	Nifty ball of fire GL effect.  Kinda a meshing of the dlight and
 	particle engine code.
 */
+float r_firecolor_flame[4]={0.9,0.7,0.3,1.0};
+float r_firecolor_light[4]={0.9,0.7,0.3,0.66};
+
 void
 R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 {
@@ -892,19 +897,13 @@ R_AddFire (vec3_t start, vec3_t end, entity_t *ent)
 		f->size = 20;
 		f->die = cl.time + 0.5;
 		f->decay = -1;
-		f->color[0] = 0.9;
-		f->color[1] = 0.7;
-		f->color[2] = 0.3;
-		f->color[3] = 1.0;
+		f->color=r_firecolor_flame;
 
 		dl = CL_AllocDlight (key);
 		VectorCopy (end, dl->origin);
 		dl->radius = 200;
 		dl->die = cl.time + 0.5;
-		dl->color[0] = 0.9;
-		dl->color[1] = 0.7;
-		dl->color[2] = 0.3;
-		dl->color[3] = 0.66;
+		dl->color=r_firecolor_light;
 	}
 }
 
@@ -926,6 +925,7 @@ R_AllocFire (int key)
 			{
 				memset (f, 0, sizeof(*f));
 				f->key = key;
+				f->color = f->_color;
 				return f;
 			}
 	}
@@ -937,6 +937,7 @@ R_AllocFire (int key)
 		{
 			memset (f, 0, sizeof(*f));
 			f->key = key;
+			f->color = f->_color;
 			return f;
 		}
 	}
@@ -944,6 +945,7 @@ R_AllocFire (int key)
 	f = &r_fires[0];
 	memset (f, 0, sizeof(*f));
 	f->key = key;
+	f->color = f->_color;
 	return f;	
 }
 
@@ -1036,3 +1038,27 @@ R_UpdateFires (void)
 	glDepthMask (1);
 }
 
+void
+R_FireColor_f()
+{
+	int i;
+
+	if (Cmd_Argc() == 1) {
+		Con_Printf ("r_firecolor %f %f %f %f %f\n",
+					r_firecolor_flame[0],
+					r_firecolor_flame[1],
+					r_firecolor_flame[2],
+					r_firecolor_flame[3],
+					r_firecolor_light[3]);
+		return;
+	}
+	if (Cmd_Argc() !=6) {
+		Con_Printf ("Usage r_firecolor R G B Af Al\n");
+		return;
+	}
+	for (i=0; i<4; i++) {
+		r_firecolor_flame[i]=atof(Cmd_Argv(i+1));
+		r_firecolor_light[i]=r_firecolor_flame[i];
+	}
+	r_firecolor_light[3]=atof(Cmd_Argv(i+1));
+}
