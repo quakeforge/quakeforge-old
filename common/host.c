@@ -60,6 +60,7 @@ jmp_buf 	host_abort;
 double		realtime;				// without any filtering or bounding
 double		oldrealtime;			// last frame run
 qboolean	isDedicated;
+qboolean	vid_initialized;
 int			fps_count;
 int 		vcrFile = -1;
 double		host_time;
@@ -582,6 +583,10 @@ Host_Init ( quakeparms_t *parms)
 //		IN->Init();
 //			Not the best place to load the plugin...
 		VID_Init(host_basepal);
+		// DDOI - I made this so host.c wouldn't try to unload a plugin
+		// that it hasn't loaded.  Could be done better I'm sure.
+		vid_initialized = true;
+
 		Draw_Init();
 		SCR_Init();
 		R_Init();
@@ -642,8 +647,11 @@ Host_Shutdown( void )
 	CDAudio_Shutdown ();
 	NET_Shutdown ();
 	S_Shutdown();
-	IN->Shutdown();
-	plugin_unload(IN->handle);
+	// Don't unload what hasn't been loaded!
+	if (vid_initialized == true) {
+		IN->Shutdown();
+		plugin_unload(IN->handle);
+	}
 
 #if QUAKEWORLD		
 	if (host_basepal) {

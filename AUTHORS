@@ -52,6 +52,7 @@ E: knghtbrd@debian.org
 D: QW/Q1 tree merging
 D: Autoconf support and portability
 D: Documentation
+D: Driver module support/design
 
 N: Peter Andreasen
 E: pandr@pandr.dk
@@ -124,6 +125,7 @@ D: Help with the speed cheat fix
 N: Dan Olson
 E: theoddone@quakefiles.com
 D: Misc. code fixes
+D: Driver modules
 
 N: Mads Bondo Dydensborg
 E: madsdyd@challenge.dk

@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <cmd.h>
 #include <sys.h>
 #include <console.h>
+#include <plugin.h>
 
 #include <stdio.h>
 #ifdef HAVE_UNISTD_H
@@ -491,6 +492,8 @@ VID_Init(unsigned char *palette)
 	int w, h, d;
 	int err;
 
+	plugin_load("./in_svgalib.so");
+	IN->Init();
 	/* Sound gets initialized here */
 	S_Init();
 	

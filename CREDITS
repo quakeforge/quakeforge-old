@@ -119,3 +119,10 @@ Network code fixes/cleanups:
 
 IPv6 support (not complete):
   Pontus Lidman <pontus@lysator.liu.se>
+
+Driver modules:
+  Zephaniah E. Hull <warp@whitestar.soark.net>
+  Bill Currie <bill@taniwha.org>
+  Joseph Carter <knghtbrd@debian.org>
+  Dan Olson <theoddone@quakefiles.com>
+
