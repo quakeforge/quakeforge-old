@@ -28,8 +28,7 @@
 
 #include <quakedef.h>
 
-#include "dga_check.h"
-
+#include <stdlib.h>
 #include <X11/Xlib.h>
 
 #ifdef HAS_DGA
@@ -37,22 +36,34 @@
 #include <X11/extensions/xf86vmode.h>
 #endif
 
+#include "dga_check.h"
+
+
 /*
   VID_CheckDGA
 
   Check for the presence of the XFree86-DGA X server extension
 */
 int
-VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver)
+VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo)
 {
 #ifdef HAS_DGA
-	int event_base, error_base;
-	
+	int event_base, error_base, dgafeat;
+
 	if (! XF86DGAQueryExtension(dpy, &event_base, &error_base)) {
 		return 0;
 	}
 
-	return XF86DGAQueryVersion(dpy, maj_ver, min_ver);
+	if (! XF86DGAQueryVersion(dpy, maj_ver, min_ver)) {
+		return 0;
+	}
+	if (! XF86DGAQueryDirectVideo(dpy, DefaultScreen(dpy), &dgafeat)) {
+		*hasvideo = 0;
+	} else {
+		*hasvideo = (dgafeat & XF86DGADirectPresent);
+	}
+
+	return 1;
 #else
 	return 0;
 #endif	// HAS_DGA
@@ -65,16 +76,43 @@ VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver)
   Check for the presence of the XFree86-VidMode X server extension
 */
 int
-VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver)
+VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver, int *num_modes,
+	       struct qfvm_modes **modes)
 {
 #ifdef HAS_DGA
+	XF86VidModeModeInfo **vidmodes;
 	int event_base, error_base;
+	int ret, i;
 	
 	if (! XF86VidModeQueryExtension(dpy, &event_base, &error_base)) {
 		return 0;
 	}
 
-	return XF86VidModeQueryVersion(dpy, maj_ver, min_ver);
+	if (! XF86VidModeQueryVersion(dpy, maj_ver, min_ver)) {
+		return 0;
+	}
+
+	if (! XF86VidModeGetAllModeLines(dpy, DefaultScreen(dpy),
+					 num_modes, &vidmodes)) {
+		return 0;
+	}
+	if (*num_modes <= 0) return 0;
+
+	ret = 0;
+	*modes = malloc(sizeof(struct qfvm_modes) * *num_modes);
+	if (*modes) {
+		ret = 1;
+		for (i = 0; i < *num_modes; i++) {
+			(*modes)[i].x = vidmodes[i]->hdisplay;
+			(*modes)[i].y = vidmodes[i]->vdisplay;
+		}
+	}
+	for (i = 0; i < *num_modes; i++) {
+		if (vidmodes[i]->private) XFree(vidmodes[i]->private);
+	}
+	XFree(vidmodes);
+
+	return ret;
 #else
 	return 0;
 #endif	// HAS_DGA

@@ -36,13 +36,21 @@
 
   Check for the presence of the XFree86-DGA support in the X server
 */
-int VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver);
+int VID_CheckDGA(Display *dpy, int *maj_ver, int *min_ver, int *hasvideo);
+
 
 /*
   VID_CheckVMode
 
   Check for the presence of the XFree86-VMode X server extension
 */
-int VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver);
+
+struct qfvm_modes {
+	int	x;
+	int	y;
+};
+
+int VID_CheckVMode(Display *dpy, int *maj_ver, int *min_ver, int *num_modes,
+		   struct qfvm_modes **modes);
 
 #endif /* DGA_CHECK_H */
